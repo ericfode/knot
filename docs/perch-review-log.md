@@ -192,3 +192,28 @@ One corpus pass was interrupted when final adapter edits arrived during the
 run. Its receipt is preserved separately, never added to final coverage.
 Procedure patch: finish adapter edits/offline gates and freeze the installation
 before paid corpus dispatch. No package source or publication changed.
+
+## 2026-09-26 — compiler frontend seed restrictions
+
+The first lexer draft failed repeatedly on actual Bend restrictions: reserved
+definition names, computed scrutinees, scrutinee order, and an unannotated local
+constructor. The CLI draft also used a local destructure inside `do`, and put an
+affine `Result` in a reusable list. These were seed syntax/type failures, not
+Perch findings. `src/AGENTS.md` now records the reusable implementation idioms:
+parameter helpers, lazy `choose`, `bind`, explicit constructor annotations and
+fuel-first recursion. No elapsed-time estimate was reconstructed.
+
+Reference tests exposed two incorrect language assumptions before checking was
+implemented: forward live calls are rejected by declaration-event order, and
+constructor initializers require a type annotation. The accepted shadowing
+fixture now carries that annotation; both rejected forms remain independent
+negative fixtures. See [literal cases](../tests/subsets/frontend-cases.json),
+[reference diagnostics and gate receipt](../tests/subsets/receipts/frontend.json)
+and [law review](../research/compiler-frontend/LAW_REVIEW.md).
+
+Procedure patch: run a representative positive and its nearest negative through
+the pinned reference before adding the next surface-language rule. Seed errors
+must change the implementation/declared profile, never be relabeled as ownership
+evidence. The finished lexer/parser passes both backend lanes and four
+type-correct semantic mutation tests; Perch answered 282 targeted checks with
+no above-floor findings. Checking and Wasm emission remain outstanding.

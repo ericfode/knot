@@ -1,0 +1,133 @@
+{
+  "profile": "knot-enum-1",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "scope": "Literal source observations for the parser checkpoint; semantic negatives are only rejected by the reference until Knot checking is implemented.",
+  "cases": [
+    {
+      "file": "s1/flag.bend",
+      "tree": "type Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/data-reuse.bend",
+      "tree": "type Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/erased-forward.bend",
+      "tree": "type Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/shadowing.bend",
+      "tree": "type Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/nested-match.bend",
+      "tree": "type Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/forward-type.bend",
+      "tree": "def make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()",
+      "reference": {
+        "exit": 0,
+        "value": "On{}",
+        "diagnostic_contains": null
+      }
+    },
+    {
+      "file": "s1/affine-reuse.bend",
+      "tree": "type Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "consumed more than once"
+      }
+    },
+    {
+      "file": "s1/erased-live.bend",
+      "tree": "type Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "a live scrutinee"
+      }
+    },
+    {
+      "file": "s1/missing-arm.bend",
+      "tree": "type Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "cases for On"
+      }
+    },
+    {
+      "file": "s1/forward-call.bend",
+      "tree": "type Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "a filled definition"
+      }
+    },
+    {
+      "file": "s1/constructor-mismatch.bend",
+      "tree": "type Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "observed : Other"
+      }
+    },
+    {
+      "file": "s1/constructor-arity.bend",
+      "tree": "type Flag Type(Off{}; On{}); def main()->Flag Off{On{}}",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "Off with 0 fields"
+      }
+    },
+    {
+      "file": "s1/shadowing-type.bend",
+      "tree": "type Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "observed : Other"
+      }
+    },
+    {
+      "file": "s1/unannotated-constructor.bend",
+      "tree": "type Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x",
+      "reference": {
+        "exit": 1,
+        "value": null,
+        "diagnostic_contains": "an annotated term (cannot infer)"
+      }
+    }
+  ]
+}

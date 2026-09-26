@@ -654,11 +654,14 @@ transferred to Knot, and source-to-model correspondence is not assumed.
 
 ## First implementation increment after accepting the plan
 
-Create the S0 contract and one seed-built S1 path: **parse, resolve, check, and
-evaluate a no-Base `Flag` program and its negative twins**. Proposed files are
-`src/syntax.bend`, `src/resolve.bend`, `src/check.bend`, `src/eval.bend`,
-`tests/subsets/s1/`, and a versioned contract/fixture manifest. These paths are
-proposals, not existing code. Use a single explicit binder representation and
+Complete the S0 contract and one seed-built S1 path: **parse, resolve, check, and
+evaluate a no-Base `Flag` program and its negative twins**. The first checkpoint
+now has `src/syntax.bend`, `src/lex.bend`, `src/parse.bend`, an inspection CLI,
+`tests/subsets/s1/` and a literal fixture manifest. `src/SPEC.md` pins the enum
+profile to Bend 2.0.29. Native and Bun agree on all 14 syntax-tree fixtures;
+four boundary laws and four semantic mutants pass their specified gates.
+This is a parser checkpoint, not S1 completion. `src/resolve.bend`,
+`src/check.bend` and `src/eval.bend` remain to implement. Use a single explicit binder representation and
 structured outcomes. Include shadowing, affine overuse, erased live use,
 constructor mismatch, and missing-arm negatives. Run under the selected seed
 and compare with the pinned reference interpreter.

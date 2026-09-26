@@ -12,9 +12,11 @@ tasks** as the execution model. The working GPU path is WebGPU with WGSL compute
 shaders and bounded task exchange between dispatches. The compiler itself may
 bootstrap and self-host sequentially on CPU.
 
-The Whiteboard is a design discussion. The compatibility pin, detailed runtime
-representation, host ABI, and implementation milestones remain proposals.
-This repository contains no compiler implementation yet.
+The first [compiler contract](src/SPEC.md) pins an enum slice to Bend 2.0.29.
+Its Bend lexer/parser runs on native and Bun, with four checked boundary laws,
+14 reference fixtures and explicit resource diagnostics. Resolution, checking,
+independent value evaluation and Wasm emission remain the active milestone.
+The broader compatibility profile and runtime representation remain proposals.
 
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
 executable: 12 checked Bend laws, owned checkpoints and slots, and 38 actual
@@ -30,6 +32,8 @@ separate gates.
 - [Checked Bend binary-join contract](research/execution-models/README.md)
 - [Adaptive task protocol and actual-device evidence](research/adaptive-tasks/README.md)
 - [Live semantic review of research artifacts](research/PERCH_REPORT.md)
+- [Compiler frontend corpus and executable gate](tests/subsets/README.md)
+- [Frontend boundary laws and review](research/compiler-frontend/LAW_REVIEW.md)
 
 ## Reference
 
