@@ -53,7 +53,7 @@ before emission. Namespace and lowering-origin preservation belong to the
 compiler's use of these APIs. None of these host package releases establishes
 Wasm/GPU execution or a concurrent runtime ownership protocol.
 
-## Frontend requirements handoff
+## Compiler requirements handoff
 
 On 2026-09-26 Compiler Planning completed the first enum-profile lexer/parser
 under [`src/`](../src/SPEC.md). The [frontend receipt](../tests/subsets/receipts/frontend.json)
@@ -73,12 +73,38 @@ helper/boundary laws, and seven type-valid semantic mutants. The coordinator
 matched all 69 input hashes, three seed-file hashes and both generated artifacts;
 all recorded reference/lane outcomes match the unchanged literal expectations,
 and all seven mutant records pass type/build before differing semantically.
-These are checks of retained evidence, not rerun experiments. The receipt's
-SHA-256 is `43d49f1fac09fa367f690de5a5a9057457a6717048c474be105aa2d77bb985cc`.
+These were checks of retained evidence, not rerun experiments. The receipt at
+that checkpoint had SHA-256 `43d49f1fac09fa367f690de5a5a9057457a6717048c474be105aa2d77bb985cc`;
+the Wasm milestone below reran the gate and retains a newer receipt.
 The [checker law packet](../research/compiler-checker/LAW_REVIEW.md) distinguishes
 helper laws and finite cases from a general checker-soundness theorem.
 `Checked` observes a resolved term; independent evaluation and direct Wasm
-emission remain the next compiler increments.
+emission were the next compiler increments.
+
+**Executable Wasm update, 2026-09-26, commit `a884b14`:** The
+[nullary-enum milestone](../research/compiler-wasm/README.md) now includes an
+independent Bend evaluator and direct Bend-to-Wasm binary emission. Its
+[execution receipt](../tests/compiler-wasm/receipts/wasm.json) records 25 source
+programs and 90 fixed reference calls, with byte-identical modules from native
+and Bun compiler builds and matching evaluator/Node Wasm observations. The
+coordinator matched 86 input hashes, 50 retained module/disassembly hashes,
+four toolchain files and 22 unique loaded files in the
+[trust inventory](../research/compiler-wasm/receipts/trust.json). The recorded
+calls match the literal manifest on both lanes; seven mutant records pass
+type/build before their semantic failures. This handoff inspected retained
+evidence and did not rerun the experiments. Receipt SHA-256:
+`83dd96a7e93dcc38731dec399c0faf13e5c478ae379749d2956a570efeea58f9`.
+
+The emitter consumes `0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend` through
+OutputBuilder's published checked API, unchanged. Its loaded byte-source hash
+matches the published closure. This is host-side package use by the native/Bun
+compiler; it does not establish that the package itself runs on Wasm or GPU.
+The complete proof entry checks 18 laws, including three concrete LEB
+normalizations; there is no general codec round-trip or compiler-refinement
+theorem. The [reproduction guide](../tests/compiler-wasm/README.md) and
+[contract](../src/CONTRACT.json) retain exact ABI, outcome and budget limits.
+The compiler remains seed-built: self-hosting and source-to-GPU lowering are
+later milestones. No new package assignment or publication is needed here.
 
 The pinned Bend 2.0.29 profile requires live function calls to follow declaration
 order; forward datatype references are accepted. Constructor-valued local
@@ -87,14 +113,15 @@ reference restriction to parameter scrutinees rather than computed or local
 values. Keep these compatibility constraints in fixtures and diagnostics;
 they do not require changing a published support package.
 
-The compiler's current environment contracts and next emitter requirements are:
+The compiler's current environment and emission contracts are:
 
 | Need | Contract and reuse boundary | Defining witnesses |
 | --- | --- | --- |
 | Lexical-level environments | Preserve each binding's lexical level, quantity, type ID, parameter status and optional branch-known tag. Lookup selects the nearest binder, including repeated parameter names. Symbols identify spellings, not lexical binders. Vec/IntMap can hold reusable metadata; their Data contracts do not supply an affine runtime environment. | Same spelling at distinct levels; repeated parameters shadow earlier names; initializer cannot see its new binder; inner shadowing leaves outer identity intact; renamed binders preserve behavior. |
 | Match refinement and eligibility | In a nullary constructor arm, replace occurrences of the matched binder with fresh values of the known type/tag. Refine by lexical level only within that branch. Matching advances the minimum eligible parameter level; a local binding closes outer parameters to further matching. | Matched-duplicate succeeds with fresh constructors; no refinement escapes to sibling arms; earlier, already matched, computed and local scrutinees are rejected. This is not a duplication rule for general owned payloads or constructor fields. |
 | Per-binder quantity usage | After refinement, only live affine references contribute lexical levels. Sequential sets must be disjoint; alternative sets are unioned. Sequence scrutinee usage before refined arm usage, remove locals on scope exit, and retain initializer usage even for unused locals. Erased terms still require scope/type checks but consume no runtime value. A future IntMap representation must preserve this algebra and binder alignment; wrapping U32 counts are not equivalent. | Sequential reuse fails; use in separate alternatives is not summed; fresh known constructors consume no old binder; branch-local levels do not alias live outer binders; erased live inspection fails with a nearby valid control. |
-| Wasm integer encodings | Add checked ULEB128 lengths/indices and signed LEB128 i32 constants above OutputBuilder's published raw-byte API. Validate encoded lengths, section/body sizes and index bounds before reporting complete emission. | Unsigned 7-bit boundaries, signed sign-extension boundaries and i32 extrema; canonical encodings and independent round trips; byte-limit failure cannot return a successful partial module. |
+| Lexical-to-Wasm locals | Map source lexical levels to compact live local indexes; omit erased parameters, arguments and initializers. Alternatives inherit the same incoming local map and can reuse physical slots; reserve their maximum allocation count. | Erased parameters between live arguments; nearest-binder shadowing; branch-local reuse; the 129th live parameter. Source binder identity must survive compacted numbering. |
+| Wasm integer encodings | Compiler-private `wasm-bytes.bend` now supplies ULEB128 lengths/indices and nonnegative signed-i32 enum constants above OutputBuilder's checked raw-byte API. Signed encoding rejects values above 2^31-1; this is not a general negative-i32 codec or separately published package. | Signed-positive 64 is `[192,0]`; unsigned 128 is `[128,1]`; U32 max is `[255,255,255,255,15]`. Those codec laws are concrete normalizations. Emitted high-index/tag fixtures and exact output limits add finite execution evidence. |
 
 The concrete environment is in [scope.bend](../src/scope.bend): live affine-set
 composition at lines 13–25, known-tag occurrences at 45–55, and extension,
@@ -105,6 +132,21 @@ not two references to the consumed parameter. Preserve this observation when
 replacing the environment or usage-set representation. Current scope lookup and
 set merging use bounded lists with linear/quadratic work; this checkpoint does
 not claim the efficient indexed replacement has been implemented.
+
+The [byte helpers](../src/wasm-bytes.bend) distinguish builder capacity failure
+(`Exhausted` during emission) from an impossible invalid emitted byte
+(`InternalFailure`). [Wasm lowering](../src/wasm.bend) compacts live parameters
+at lines 33–38 and takes the maximum branch local count at 78–81. Raw Wasm
+arguments must belong to the declared enum: the evaluator checks this domain,
+while the Node adapter checks live arity and the profile-wide 0..255 bound.
+
+The next source-profile work is owned constructor fields and structural
+recursion. It requires checked field/record layouts, explicit allocation,
+ownership transfer and drop behavior, and a continuation representation shared
+by Wasm and the GPU path. Preserve the enum controls while widening that
+contract; fresh nullary constructor refinement does not license copying owned
+fields. The current evaluator's reusable enum values and scalar Wasm locals
+do not provide that heap or ownership protocol.
 
 Compiler Planning retains `src/`, its corpus and frontend research ownership.
 This update records consumer requirements; it assigns no package implementation
@@ -128,7 +170,7 @@ The next component boundaries, in priority order, are:
 | Indexed owning slot store | Refine the checked single-slot protocol into indexed affine storage. A failed put returns both the original store and uninserted owner; take invalidates the slot. Specify arena lifetime and any eventual generation reuse. | Two takes cannot acquire one payload twice; failed put loses no payload; foreign, stale and out-of-range handles fail without changing unrelated slots. |
 | Continuation, frame and join records | Capture code tag, owned environment, frames, checkpoint and logical join destination. State suspension/resumption and transfer against a sequential reference model. | Resuming preserves future results and effect position; transfer invalidates the old executable owner; reversed child arrival still yields ordered results; duplicate delivery and repeated completion fail. |
 | Bounded frontier/queue | Refine ordered contents against an independent list model, with explicit capacity and transfer into/out of the owning store. Preserve logical destination and join slot through compaction or reordering. | Empty/full failure preserves queue and payload ownership; FIFO order and length agree where promised; every obligation appears exactly once across ready, running, suspended and waiting states. |
-| Checked layouts and codecs | Specify checked size/offset/alignment arithmetic and explicit record encodings. Consume OutputBuilder's published raw-byte path; add ULEB/SLEB as separate algorithms. | Reject overflow, invalid tags and truncated records; round trips cover field and 7-bit/sign boundaries; failed allocation preserves owned inputs. |
+| Checked layouts and codecs | Specify checked size/offset/alignment arithmetic and explicit record encodings. OutputBuilder and compiler-private ULEB/nonnegative signed-LEB helpers now exist; general record codecs and wider numeric encoding remain separate work. | Reject overflow, invalid tags and truncated records; round trips cover field and 7-bit/sign boundaries; failed allocation preserves owned inputs. Existing finite codec checks do not establish these broader contracts. |
 
 These are separate follow-on ownership units. `packages/threads.json` records
 only the six completed package assignments. Their published Data contracts stay
@@ -167,8 +209,8 @@ The fixed 48-byte operation and 64-byte task layouts are probe contracts,
 not a general checked layout implementation.
 
 These results establish bounded tree-task feasibility with handwritten WGSL
-and a native Node host. Wasm hosting, Bend-source lowering, generic affine
-continuation storage, a general heap, performance, and full CPU/device simulation
+and a native Node host. Wasm hosting of this GPU probe, Bend-source GPU lowering,
+generic affine continuation storage, a general heap, performance, and full CPU/device simulation
 remain open. Use [E2, E6–E8 and G1–G4](EXECUTION-MODEL-LAWS.md) and the
 [detailed component handoff](EXECUTION-MODEL-DEPENDENCIES.md) for subsequent
 refinement and publication obligations. The six published package contracts
