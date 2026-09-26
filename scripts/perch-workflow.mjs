@@ -96,6 +96,8 @@ export async function runPerch(args, {
     const requested = actual.indexOf('--rules');
     const ruleList = requested >= 0 ? actual[requested + 1] : actual.find(a => a.startsWith('--rules='))?.slice(8);
     const installed = JSON.parse(await readFile(join(ROOT, 'node_modules/@lakeday/perch/package.json'), 'utf8'));
+    // File checks return an array; named checks put the same unit at the top level.
+    const units = result?.units ?? (result?.context ? [result] : []);
     const receipt = {
       schema: 1, id: randomUUID(), at: started.toISOString(), command,
       target: result?.path ?? target, revision, source_sha256: sourceHash,
@@ -112,7 +114,7 @@ export async function runPerch(args, {
       parser_coverage: result?.parser_coverage ?? null,
       // Parsed units retain attribution and the exact local context identities.
       // Answers carry probabilities only; no source bodies or credentials.
-      units: (result?.units ?? []).map(unit => ({
+      units: units.map(unit => ({
         path: unit.path, name: unit.name, line: unit.line, end_line: unit.end_line,
         checked: unit.checked,
         asked: unit.asked?.map(({ rule, broken, floor }) => ({ rule, broken, floor })),

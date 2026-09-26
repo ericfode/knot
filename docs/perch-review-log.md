@@ -270,3 +270,43 @@ mistake still occurred on the first attempt, so model escalation does not replac
 compiler validation. This is one synthetic case; broader productivity, native/GPU
 behavior and model superiority remain unestablished. Generation cost and isolated
 latency were unavailable. No package source, law, test oracle or threshold changed.
+
+## 2026-09-26 — owner-chat pass and named-unit receipt repair
+
+All nine Knot chats participated in the bounded review or its documentation
+applicability decision. [Consolidated report](perch-thread-pass-2026-09-26.md) and
+[receipt index](perch-thread-pass-2026-09-26.json) retain 1,499 Bend/law checks in
+235 completed provider requests: six packages plus the compiler/checker and
+selected earlier parser/task declarations. No source/law findings were reported.
+Twenty compiler declaration contexts were truncated. Published package sources
+were unchanged. Do not turn this clean count into a precision estimate.
+
+Symbols first identified a confirmed evidence defect: named checks returned their
+unit at the top level, but the wrapper saved only file-check `units` arrays.
+Source, IntMap and TermStore independently found the same gap. The model had
+received the correct context; the historical usage receipt lost its attribution.
+Owners retained raw CLI output or supplemental context instead of repeating paid
+checks. Normalize both result shapes before recording units. A regression failed
+before the fix and passed after it; all 21 offline tests and law-rule wiring pass.
+This was inspection-led, not a semantic model discovery. Exact unit/hash retention
+belongs in the wrapper contract whenever adding another CLI result shape.
+
+The tooling chat's two additional provider requests emitted a destination advisory
+(false-positive for operator-controlled local CLI configuration) and a size
+advisory (unresolved; no behavioral defect established). The five offline style
+tests passed. Keep both adjudications; no correct-code rewrite or rule-threshold
+change was justified. The support survey corrected a stale calibration blocker;
+shared documentation now distinguishes the implemented checker from unfinished
+evaluation and Wasm emission. No new style ranking was manufactured from unrelated
+implementations, and no stronger-model repair was needed.
+
+The compiler owner also reported seed friction during its preceding implementation:
+matching catalog/scope metadata before an earlier AST field violated binder order;
+flattening expression constructor cases into the outer match fixed it. Passing a
+recursive function as a bare callback failed the decreasing-call rule; an explicit
+thunk calling on the smaller argument fixed it. Future dispatcher scaffolds should
+inspect the expression constructor before later metadata and keep the decreasing
+call visible. Existing src/AGENTS.md already requires binder order and structural
+fuel; the checker receipts provide concrete examples. No new duplicate rule or
+elapsed-time estimate was added. Seven independent semantic mutants, 49 reference
+fixtures on two backends and checked helper laws remain the acceptance evidence.

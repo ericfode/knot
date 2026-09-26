@@ -13,9 +13,11 @@ shaders and bounded task exchange between dispatches. The compiler itself may
 bootstrap and self-host sequentially on CPU.
 
 The first [compiler contract](src/SPEC.md) pins an enum slice to Bend 2.0.29.
-Its Bend lexer/parser runs on native and Bun, with four checked boundary laws,
-14 reference fixtures and explicit resource diagnostics. Resolution, checking,
-independent value evaluation and Wasm emission remain the active milestone.
+Its Bend lexer, parser, resolver and checker run on native and Bun. The checker
+checkpoint passes 49 reference fixtures, 98 exact resolved-term observations and
+seven semantic mutation tests, with seven new helper/boundary laws beside the
+four frontend laws. `Checked` does not mean a value was evaluated or an artifact
+was built: independent value evaluation and Wasm emission remain outstanding.
 The broader compatibility profile and runtime representation remain proposals.
 
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
@@ -34,6 +36,8 @@ separate gates.
 - [Live semantic review of research artifacts](research/PERCH_REPORT.md)
 - [Compiler frontend corpus and executable gate](tests/subsets/README.md)
 - [Frontend boundary laws and review](research/compiler-frontend/LAW_REVIEW.md)
+- [Resolver/checker corpus and executable gate](tests/compiler-checker/README.md)
+- [Checker laws, ownership semantics and limits](research/compiler-checker/LAW_REVIEW.md)
 
 ## Reference
 
@@ -61,12 +65,13 @@ File targets check each declaration; `file.bend::name` checks a single unit.
 - [Perch review log and calibration decisions](docs/perch-review-log.md)
 - [Performance checks and model repair experiments](docs/perch-performance-2026-09-26.md)
 - [Ranked style review: conceptual compression and high-dopamine reading](docs/perch-style.md)
+- [Owner-chat Perch pass, changes and code excerpts](docs/perch-thread-pass-2026-09-26.md)
 
 ```sh
 npm ci
 npm run lint:rules
-# After privately setting a TypeSafe key and adding compiler source:
-npm run lint -- src/parser.bend
+# After privately setting a TypeSafe key:
+npm run lint -- src/parse.bend::run --rules compiler-checker-trust,bend-fuel-completeness
 ```
 
 Targeted checks retain local usage receipts; `npm run lint:history` summarizes

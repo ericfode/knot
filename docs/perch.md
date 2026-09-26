@@ -55,6 +55,11 @@ unit receipt. The target declaration itself remains complete. A malformed local
 helper fails preflight before a model request. A syntactically valid context is
 not evidence of type checking or dependency completeness.
 
+Named-declaration checks retain their unit and context identities in the same
+`units` receipt array as file checks. Early named-check receipts omitted that
+metadata; retain their raw output or supplemental context evidence when auditing
+those historical runs. Do not infer missing identities from a newer source tree.
+
 For live checks, privately populate `.env` from `.env.example`, or export
 `PERCH_API_KEY` / `TYPESAFE_API_KEY`. Perch loads `.env` from the Git root.
 Keys are available from [TypeSafe](https://console.typesafe.ai).
@@ -87,8 +92,9 @@ standalone parsing: analysis never invokes `book_load`, downloads dependencies,
 executes a program or checks its proofs. Complexity/risk metrics are unavailable
 rather than invented. A static call graph is partial, not a resolution/type proof.
 
-Compiler selectors cover `src/` and `compiler/`; these locations are still
-provisional and currently have no production compiler targets. The shared law
+Compiler selectors cover `src/` and `compiler/`. The committed enum frontend
+under `src/` supplies applicable parsed declarations; a successful source review
+does not establish a completed compiler pipeline or Wasm backend. The shared law
 rules cover bounded research packets too. Performance source rules cover growing
 prefix copies, invariant recomputation, sequential linked-list indexing and
 amortized storage growth. Their calibration and the bounded repair pilot are in
