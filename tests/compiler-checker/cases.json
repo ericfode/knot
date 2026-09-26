@@ -1,0 +1,545 @@
+{
+  "profile": "knot-enum-1",
+  "scope": "Resolution/checking and literal resolved-term observations, not evaluation or Wasm",
+  "cases": [
+    {
+      "file": "tests/subsets/s1/affine-reuse.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/constructor-arity.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-arity\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "Off with 0 fields"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/constructor-mismatch.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Other"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/data-reuse.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(2:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/erased-forward.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nforward(0:0)->0=call0($0:0;v0.1)\nmain()->0=call1(v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/erased-live.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-scrutinee\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a live scrutinee"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/flag.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/forward-call.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a filled definition"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/forward-type.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nmake()->0=v0.1\nmain()->0=call0()"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/missing-arm.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "cases for On"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/nested-match.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nboth(1:0,1:0)->0=case $0 [0=>case $1 [0=>v0.1;1=>v0.0];1=>$1:0]\nmain()->0=call0(v0.0;v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/shadowing-type.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Other"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/shadowing.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nshadow(1:0)->0=let1 $1:0=call0($0:0) in let1 $2:0=v0.1 in $2:0\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/subsets/s1/unannotated-constructor.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tannotation-required\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "an annotated term (cannot infer)"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/branch-duplicate.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/branch-maximum.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nf(1:0,1:0)->0=case $0 [0=>$1:0;1=>$1:0]\nmain()->0=call0(v0.0;v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/call-arity.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcall-arity\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : @x:Flag -> Flag"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-affine-reuse.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-argument.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\ntwice(2:0)->0=$0:0\nf(1:0)->0=call0($0:0)\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-promote.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=let2 $1:0=$0:0 in call0($1:0;$1:0)\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-arm.bend",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-constructor.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tduplicate-constructor\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "duplicate declaration: Off"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-global.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tduplicate-global\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "duplicate declaration: f"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-parameters.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nf(1:0,1:0)->0=$1:0\nmain()->0=call0(v0.0;v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-affine-copy.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf(1:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-binding.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nf(0:0)->0=let0 $1:0=$0:0 in v0.1\nmain()->0=call0(v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-forward-call.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf()->0=call0(call2();v0.1)\nlater()->0=v0.0\nmain()->0=call1()"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-free-name.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tfree-name\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : missing"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-live-in-erased.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : -x"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-type-live.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : -y"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-type-mismatch.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Other"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/local-reusable-type.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/local-shadow-call.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tnot-callable\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a function type"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-after-let.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-again.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\talready-matched\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "an undestructed scrutinee"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-backwards.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/matched-duplicate.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=case $0 [0=>call0(v0.0;v0.0);1=>call0(v0.1;v0.1)]\nmain()->0=call1(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/matched-return.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nf(1:0)->0=case $0 [0=>v0.0;1=>v0.1]\nmain()->0=call0(v0.1)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/overloaded-constructor.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tduplicate-constructor\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "duplicate declaration: On"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/recursive-call.bend",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/renamed.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\ntoggle(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/reordered-arms.bend",
+      "knot": {
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [1=>v0.0;0=>v0.1]\nmain()->0=call0(v0.0)"
+      },
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/reusable-type.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unknown-type.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-type\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Missing"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-affine-let.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-bad-function.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Other"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-erased-use.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : -ghost"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/used-affine-let.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "consumed more than once"
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/wrong-pattern-type.bend",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tpattern-type\t"
+      },
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a constructor of Flag"
+      }
+    }
+  ]
+}

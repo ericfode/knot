@@ -1,0 +1,630 @@
+{
+  "path": "src/checked-display.bend",
+  "name": "src/checked-display.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 5,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 10,
+  "units": [
+    {
+      "path": "src/checked-display.bend",
+      "name": "term",
+      "line": 7,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 5,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 23,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.21999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.36,
+          "floor": 0.7
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/checked-display.bend",
+            "source_sha256": "6f6184f62376d5b527405e4304e38ed989fff960a258b9909226126d48050c79"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "4a53c508ba8d05adfca9bb10a559979e096d5da9095605cf0d34a9c9bb389b73"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/checked-display.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/checked-display.bend",
+      "name": "parameter",
+      "line": 25,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 5,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 27,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.06999999999999995,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.42000000000000004,
+          "floor": 0.7
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/checked-display.bend",
+            "source_sha256": "6f6184f62376d5b527405e4304e38ed989fff960a258b9909226126d48050c79"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Parameter",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/checked-display.bend",
+      "name": "parameters",
+      "line": 29,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 5,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 33,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.43000000000000005,
+          "floor": 0.7
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/checked-display.bend",
+            "source_sha256": "6f6184f62376d5b527405e4304e38ed989fff960a258b9909226126d48050c79"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Parameter",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/checked-display.bend",
+      "name": "functions",
+      "line": 35,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 5,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 39,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.24,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.36,
+          "floor": 0.7
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/checked-display.bend",
+            "source_sha256": "6f6184f62376d5b527405e4304e38ed989fff960a258b9909226126d48050c79"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "4a53c508ba8d05adfca9bb10a559979e096d5da9095605cf0d34a9c9bb389b73"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Parameter",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/checked-display.bend",
+      "name": "book",
+      "line": 41,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 5,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 43,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.22999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.37,
+          "floor": 0.7
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/checked-display.bend",
+            "source_sha256": "6f6184f62376d5b527405e4304e38ed989fff960a258b9909226126d48050c79"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "4a53c508ba8d05adfca9bb10a559979e096d5da9095605cf0d34a9c9bb389b73"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Parameter",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/checked-display.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}

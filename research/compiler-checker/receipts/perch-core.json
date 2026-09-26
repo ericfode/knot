@@ -1,0 +1,396 @@
+{
+  "path": "src/core.bend",
+  "name": "src/core.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 4,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 8,
+  "units": [
+    {
+      "path": "src/core.bend",
+      "name": "invalid",
+      "line": 32,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 33,
+      "asked": [
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.31000000000000005,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/core.bend",
+            "source_sha256": "c8341c310680b35e292e60fa2b1ab691e5ce0b07b26d695a07c03a652e8b4fc0"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/core.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "At",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/core.bend",
+      "name": "unsupported",
+      "line": 34,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 35,
+      "asked": [
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.22999999999999998,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/core.bend",
+            "source_sha256": "c8341c310680b35e292e60fa2b1ab691e5ce0b07b26d695a07c03a652e8b4fc0"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/core.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "At",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/core.bend",
+      "name": "exhausted",
+      "line": 36,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 37,
+      "asked": [
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.26,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/core.bend",
+            "source_sha256": "c8341c310680b35e292e60fa2b1ab691e5ce0b07b26d695a07c03a652e8b4fc0"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "1747ef052e6ee974b2673078db92f9a352f8933a9ad54b573de059b0ae3c8d7b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/core.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "At",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/core.bend",
+      "name": "internal",
+      "line": 38,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 39,
+      "asked": [
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.33999999999999997,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/core.bend",
+            "source_sha256": "c8341c310680b35e292e60fa2b1ab691e5ce0b07b26d695a07c03a652e8b4fc0"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/core.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/core.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 2,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}

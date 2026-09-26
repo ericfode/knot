@@ -1,0 +1,27 @@
+{
+  "path": "research/adaptive-tasks/LAW_REVIEW.md",
+  "name": "research/adaptive-tasks/LAW_REVIEW.md",
+  "line": 1,
+  "parser": null,
+  "end_line": null,
+  "asked": [
+    {
+      "rule": "law-state-composition",
+      "said": "For stateful operations in this packet, laws specify how successive calls compose and which unrelated observations survive each update. Examples are push then pop, write then read, growth preserving old elements, repeated interning returning one identity, or a failed write preserving state. Only proving each call returns a well-formed value while allowing it to erase other entries breaks this rule. A genuinely stateless operation may state that no state-composition obligation applies. Scope lifetime and ID validity explicitly; do not demand global identity when only one store's lifetime is promised.",
+      "broken": 0.28,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-proof-claim-integrity",
+      "said": "Inspect the proof and validation claims in this packet. Universal quantified proofs, concrete normalization examples, runtime tests, source analysis, benchmarks, and model judgments are labeled separately and tied to the reviewed source hashes and compiler version. A hole, unfilled law, unsafe proof dependency, unrun check, or exhausted checker is not an unconditional proof. Any unsafe or native trust dependency is explicit. Formal statements about a reference model do not by themselves prove the optimized public API refines that model. Probability and a green command with zero relevant checks do not establish a theorem. Missing evidence cannot be promoted to verified status. A compile-fail negative test supports only the checker phase and diagnostic it actually reaches. A parse error cannot establish affine ownership or Data-element rejection; generic nonzero exit status is insufficient.",
+      "broken": 0.35,
+      "floor": 0.8
+    }
+  ],
+  "context": null,
+  "checked": 2,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

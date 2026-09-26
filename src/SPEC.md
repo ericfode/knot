@@ -26,20 +26,29 @@ digits, underscores or dots. Keywords cannot be identifiers.
   Constructor initializers require it, as in `x : Flag = On{}`; an unannotated
   variable or call can infer its type from an already known declaration.
   A binding is visible in the remainder of its body, not in its own initializer.
-  Shadowing creates a new binding. Reusable bindings require `Data` values.
+  Shadowing creates a new binding. Repeated parameter names also shadow earlier
+  parameters, as in the pinned seed. Reusable bindings require `Data` values.
 - A body may end in a match on one function parameter. Every constructor of the
   scrutinee type must occur exactly once. Arms can contain bindings and nested
   matches. Constructor patterns have no fields in this profile.
   The pinned Bend parser rejects computed and local-binding scrutinees; Knot
   retains that restriction rather than accepting a different surface language.
-- Calls form an acyclic graph. Every function is checked, including unused
+  Matches follow parameter order: after matching a parameter, earlier parameters
+  cannot be matched. A local binding closes all outer parameters to further
+  matching. Already matched parameters cannot be matched again. Inside an arm,
+  uses of its matched parameter become the known nullary constructor; this may
+  construct several fresh values without reusing the consumed affine value.
+- Live calls form an acyclic graph. Erased arguments may contain forward calls;
+  self-calls remain unsupported in any context. Every function is checked, including unused
   definitions. No executable artifact is emitted until the entire book passes.
 
 Constructor names must be unique across the book in this first profile.
-Overloading constructors across types is unsupported; a repeated constructor
-within one datatype is invalid. Top-level type/function names share a namespace.
-Duplicate parameters, free names, type/arity mismatches, duplicate/missing arms,
+Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
+Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
+
+Duplicate arms are outside this profile and report Unsupported: the pinned
+reference can accept overlapping nullary patterns, choosing the first match.
 
 Constructor fields, recursive calls, generic/dependent types, imports, literals,
 closures, wildcard/multi-scrutinee patterns, laws, templates, foreign code and
@@ -53,7 +62,8 @@ Resolved occurrences use lexical levels within a function environment, never
 display-name lookup. New bindings append a level; shadowing resolves to the
 nearest binding. Levels in mutually exclusive branch scopes may be reused.
 Sequential expressions add affine usage; alternatives take the maximum. Match
-scrutinee usage is sequenced before branch usage. Erased contexts still undergo
+scrutinee usage is sequenced before branch usage after constructor refinement.
+Erased contexts still undergo
 scope and type checking but do not consume runtime values. Erased arguments and
 initializers are absent from emitted execution. A call consumes each live
 argument once, including transfer of a Data value to a reusable callee binder.
@@ -98,6 +108,22 @@ checker traversal, evaluator transitions and output bytes. Exhaustion is
 inconclusive. Exact defaults and CLI overrides will be frozen in the executable
 contract manifest before this milestone is marked complete. No claim is made
 that the development implementations already satisfy the complete contract.
+
+## Current checker bounds
+
+`check-cli.bend path [character-budget checker-depth]` defaults to 65,536 source
+characters and depth 512; parser depth is 512. Both frontend and checker depth
+are recursion-depth bounds, not total work counters. Overrides permit checker
+depth 0 through 4,096 and source budgets 0 through 65,536. The catalog allows
+256 types, 256 functions, 256 constructors per type and 256 parameters per
+function; lexical levels are limited to 4,096 per branch scope. Exceeding any
+of these bounds is exhaustion. Catalog passes and environment/set scans are
+structural list traversals bounded by these limits and the source cap. Lookup
+and affine-set merging are deliberately simple linear/quadratic algorithms.
+No performance claim or general checker-soundness proof is made.
+
+The checker CLI prints a resolved-term observation and emits no executable.
+Its `Checked` result is not `Built`; evaluation and Wasm emission remain pending.
 
 ## Required evidence
 
