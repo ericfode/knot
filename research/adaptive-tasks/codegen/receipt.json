@@ -1,0 +1,104 @@
+{
+  "date": "2026-09-26T21:10:21.867855+00:00",
+  "scope": "Actual upstream-generated CPU code and verbatim GPU-packer capture; no Knot emitter",
+  "seed": {
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "verified_against": "raw.githubusercontent.com/bendlang/bend at this commit",
+    "files": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "inputs": {
+    "slot.bend": "f8350b71240146dc6061543d32b36ca40f0f420953e074b12f76b90389314cf2",
+    "task.bend": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+    "conformance.bend": "7f4e05b5f5c3317099bdaf9a4b45e20761c8b93e7d8f73667aa20fe978846713",
+    "fixtures.bend": "2f9b69eb971020e36ca2800d6327345819884b0c04497ce95f69cf9ebda01dac",
+    "oracle.bend": "bd065f518ef381c777dae17e1cc2f9250b87e9db66d8b74f1b98ecd011926096",
+    "gpu/check.mjs": "65291bcf2a290cab6c4148305ad79f3741e6c868cb03bf6c620a5f0febb499d9",
+    "gpu/tasks.wgsl": "1e86fc742f88c9044ab341a461ab6c74a0598b0de35780eddfd93f6c0056e3e7"
+  },
+  "outputs": {
+    "conformance.c": "8dd4325db9e45b97fe264e94a8a37d8784838e55769cb988c91308f72d96247c",
+    "conformance.js": "810b0dbf1a015e7375ef613d2c16b957cec35bc0e11c8e1c2efba99f239c5f42",
+    "conformance.stdout": "3d78fdcccb05aeae385df2b5cd1adee5d4342d659d6a22d050640088f6fefc6e",
+    "cpu_frames.records.json": "9a62b3c28162aa9ae474267804b540ba514a78f1d6f51bcb043841a8144d5504",
+    "capture-gpu.mjs": "5b750524a2495a150c30061cf2ad6060b16b0fceadcb09f2206ece536868c4dd",
+    "generate.py": "118a627b407dc1ea4f4a6cc7556d3bec6b7fa7e7cfd6082a224e05a9d54cc1ec"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/research/adaptive-tasks/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/research/adaptive-tasks/codegen/conformance.c"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/research/adaptive-tasks/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/research/adaptive-tasks/codegen/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "clang",
+        "-std=c11",
+        "-O3",
+        "/Users/ericfode/src/knot/research/adaptive-tasks/codegen/conformance.c",
+        "-lpthread",
+        "-lm",
+        "-o",
+        "/var/folders/qk/fd8vdrxn2tddl_02lm8sy3nc0000gn/T/knot-codegen-view-8po23lnm/conformance"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "tools": {
+    "node": "v22.22.3",
+    "bun": "1.3.14",
+    "clang": "Apple clang version 21.0.0 (clang-2100.1.1.101)"
+  },
+  "js_execution": {
+    "argv": [
+      "node",
+      "/Users/ericfode/src/knot/research/adaptive-tasks/codegen/conformance.js"
+    ],
+    "exit": 0,
+    "stdout": "0,73,11\n0,73,231817934\n1,73,231817934\n1,73,231817934\n1,73,231817934\n0,73,11\n1,73,231817934\n1,41,226\nrejected:7,9\nextracted:7\nmissing\n",
+    "stderr": ""
+  },
+  "native_execution": {
+    "argv": [
+      "/var/folders/qk/fd8vdrxn2tddl_02lm8sy3nc0000gn/T/knot-codegen-view-8po23lnm/conformance"
+    ],
+    "exit": 0,
+    "stdout": "0,73,11\n0,73,231817934\n1,73,231817934\n1,73,231817934\n1,73,231817934\n0,73,11\n1,73,231817934\n1,41,226\nrejected:7,9\nextracted:7\nmissing\n",
+    "stderr": ""
+  },
+  "gpu_record_capture": {
+    "argv": [
+      "node",
+      "/Users/ericfode/src/knot/research/adaptive-tasks/codegen/capture-gpu.mjs"
+    ],
+    "exit": 0,
+    "stdout": "{\n  \"fixture\": {\"name\":\"cpu_frames\",\"tree\":[1,[0,7,0],[2,[0,11,3],3,5]],\"expected\":231817934},\n  \"packer\": {\"path\":\"research/adaptive-tasks/gpu/check.mjs\",\"firstLine\":20,\"lastLine\":56,\"sha256\":\"df84d65c90ab2ea1035df835d1e8efada8d119f655aab3460450f93e2f00ade0\"},\n  \"root\": 3,\n  \"opFields\": [\"kind\",\"left\",\"right\",\"seed\",\"ticks\",\"factor\",\"bias\",\"parent\",\"slot\",\"pad0\",\"pad1\",\"pad2\"],\n  \"operations\": [\n    [0,4294967295,4294967295,7,0,0,0,3,0,0,0,0],\n    [0,4294967295,4294967295,11,3,0,0,2,0,0,0,0],\n    [2,1,4294967295,0,0,3,5,3,1,0,0,0],\n    [1,0,2,0,0,0,0,4294967295,0,0,0,0]\n  ],\n  \"taskFields\": [\"state\",\"remaining\",\"value\",\"left_value\",\"right_value\",\"mask\",\"last_worker\",\"moves\",\"runs\",\"steps\",\"destination\",\"slot\",\"factor\",\"bias\",\"completed_round\",\"pad\"],\n  \"initialTasks\": [\n    [0,0,0,0,0,0,4294967295,0,0,0,3,0,0,0,4294967295,0],\n    [0,0,0,0,0,0,4294967295,0,0,0,2,0,0,0,4294967295,0],\n    [0,0,0,0,0,0,4294967295,0,0,0,3,1,0,0,4294967295,0],\n    [1,0,0,0,0,0,4294967295,0,0,0,4294967295,0,0,0,4294967295,0]\n  ]\n}\n",
+    "stderr": ""
+  },
+  "gpu_execution": "not repeated; existing device receipt covers unchanged fixture/packer/shader",
+  "gpu_receipt_sha256": "c9f979d35aae00e2fe1bc00a67fc5cc48608fb9f8706157156687fdae86d46eb",
+  "status": "pass"
+}

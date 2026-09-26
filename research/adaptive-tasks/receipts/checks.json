@@ -1,0 +1,1483 @@
+{
+  "date": "2026-09-26T20:45:36.586155+00:00",
+  "scope": "Bend affine slot/task protocol and handwritten WGSL probe",
+  "hashes": {
+    "slot.bend": "f8350b71240146dc6061543d32b36ca40f0f420953e074b12f76b90389314cf2",
+    "task.bend": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+    "oracle.bend": "bd065f518ef381c777dae17e1cc2f9250b87e9db66d8b74f1b98ecd011926096",
+    "fixtures.bend": "2f9b69eb971020e36ca2800d6327345819884b0c04497ce95f69cf9ebda01dac",
+    "LAWS.bend": "0c27192115eeb532b975fa642cd9d25e6e2187ca97431a838acfa20ec61bfc87",
+    "PROOF.bend": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125",
+    "conformance.bend": "7f4e05b5f5c3317099bdaf9a4b45e20761c8b93e7d8f73667aa20fe978846713",
+    "check.py": "b4bb232c66b99b25a17d40f8c99cdbab7cf1cb84e5502e8169b96d1933e03e02",
+    "gpu/tasks.wgsl": "1e86fc742f88c9044ab341a461ab6c74a0598b0de35780eddfd93f6c0056e3e7",
+    "gpu/check.mjs": "65291bcf2a290cab6c4148305ad79f3741e6c868cb03bf6c620a5f0febb499d9",
+    "gpu/adapter.mjs": "962680b02b087801827548f857af260af7fd0b6a5e114e5b1be42879e3d28a38",
+    "gpu/package.json": "14aac67eceef1e374fbb13dd31cecb8b4a07e53569d5a262d535fbfb082bbe8c",
+    "gpu/package-lock.json": "0ac2fa59aca64615977ddb6e3ecd68a84b9c75452dfb690f8e136257d43272f9",
+    "tests/affine-valid.bend": "04a1bf62271666e51ad9655d6ddf4aa075ec2b2e8bd1ecca1f7de223aa049a2d",
+    "tests/affine-task-reuse.bend": "ccc2c547528b7737b1428915d0f8c1652137be3e1c36227111939f857ab821fc",
+    "tests/affine-slot-reuse.bend": "b87625ca64ef34a911c5fa1db4c4243851a21dd1b3d6f10cbee69a1b58e20604"
+  },
+  "reference": {
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "verified_against": "raw.githubusercontent.com/bendlang/bend at this commit",
+    "files": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "proof": {
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.06016950006596744
+  },
+  "valid_control": {
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.061949332943186164
+  },
+  "negative_quantity": {
+    "affine-task-reuse.bend": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: copy_task\n3 | \n4>| def copy_task(x: T.Run) -> T.Run & T.Run:\n  |               ^\n5 |   (x,x)\n",
+      "seconds": 0.06046437518671155
+    },
+    "affine-slot-reuse.bend": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: take_twice\n4 | \n5>| def take_twice(x: S.Slot<T.Payload>) -> S.Take<T.Payload> & S.Take<T.Payload>:\n  |                ^\n6 |   (S.take(T.Payload,x),S.take(T.Payload,x))\n",
+      "seconds": 0.06200316594913602
+    }
+  },
+  "js_conformance": {
+    "exit": 0,
+    "stdout": "0,73,11\n0,73,231817934\n1,73,231817934\n1,73,231817934\n1,73,231817934\n0,73,11\n1,73,231817934\n1,41,226\nrejected:7,9\nextracted:7\nmissing\n",
+    "stderr": "",
+    "seconds": 0.07357983314432204
+  },
+  "fixture_sha256": "d5f41f0b5cd34be4496649bf59bd72595dbc3d12b283afce9a023d477bfee476",
+  "fixtures": [
+    {
+      "name": "ordered",
+      "tree": [
+        1,
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          0,
+          9,
+          0
+        ]
+      ],
+      "expected": 226
+    },
+    {
+      "name": "right_finishes_first",
+      "tree": [
+        1,
+        [
+          0,
+          7,
+          17
+        ],
+        [
+          0,
+          9,
+          0
+        ]
+      ],
+      "expected": 748112063
+    },
+    {
+      "name": "left_finishes_first",
+      "tree": [
+        1,
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          0,
+          9,
+          17
+        ]
+      ],
+      "expected": 369886205
+    },
+    {
+      "name": "balanced",
+      "tree": [
+        1,
+        [
+          1,
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    704,
+                    5
+                  ],
+                  [
+                    0,
+                    705,
+                    1
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    706,
+                    2
+                  ],
+                  [
+                    0,
+                    707,
+                    3
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    708,
+                    4
+                  ],
+                  [
+                    0,
+                    709,
+                    5
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    710,
+                    1
+                  ],
+                  [
+                    0,
+                    711,
+                    2
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    712,
+                    3
+                  ],
+                  [
+                    0,
+                    713,
+                    4
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    714,
+                    5
+                  ],
+                  [
+                    0,
+                    715,
+                    1
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    716,
+                    2
+                  ],
+                  [
+                    0,
+                    717,
+                    3
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    718,
+                    4
+                  ],
+                  [
+                    0,
+                    719,
+                    5
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    720,
+                    1
+                  ],
+                  [
+                    0,
+                    721,
+                    2
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    722,
+                    3
+                  ],
+                  [
+                    0,
+                    723,
+                    4
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    724,
+                    5
+                  ],
+                  [
+                    0,
+                    725,
+                    1
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    726,
+                    2
+                  ],
+                  [
+                    0,
+                    727,
+                    3
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    728,
+                    4
+                  ],
+                  [
+                    0,
+                    729,
+                    5
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    730,
+                    1
+                  ],
+                  [
+                    0,
+                    731,
+                    2
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    732,
+                    3
+                  ],
+                  [
+                    0,
+                    733,
+                    4
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    734,
+                    5
+                  ],
+                  [
+                    0,
+                    735,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          1,
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    736,
+                    2
+                  ],
+                  [
+                    0,
+                    737,
+                    3
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    738,
+                    4
+                  ],
+                  [
+                    0,
+                    739,
+                    5
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    740,
+                    1
+                  ],
+                  [
+                    0,
+                    741,
+                    2
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    742,
+                    3
+                  ],
+                  [
+                    0,
+                    743,
+                    4
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    744,
+                    5
+                  ],
+                  [
+                    0,
+                    745,
+                    1
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    746,
+                    2
+                  ],
+                  [
+                    0,
+                    747,
+                    3
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    748,
+                    4
+                  ],
+                  [
+                    0,
+                    749,
+                    5
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    750,
+                    1
+                  ],
+                  [
+                    0,
+                    751,
+                    2
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    752,
+                    3
+                  ],
+                  [
+                    0,
+                    753,
+                    4
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    754,
+                    5
+                  ],
+                  [
+                    0,
+                    755,
+                    1
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    756,
+                    2
+                  ],
+                  [
+                    0,
+                    757,
+                    3
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    758,
+                    4
+                  ],
+                  [
+                    0,
+                    759,
+                    5
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    760,
+                    1
+                  ],
+                  [
+                    0,
+                    761,
+                    2
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    762,
+                    3
+                  ],
+                  [
+                    0,
+                    763,
+                    4
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    0,
+                    764,
+                    5
+                  ],
+                  [
+                    0,
+                    765,
+                    1
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    0,
+                    766,
+                    2
+                  ],
+                  [
+                    0,
+                    767,
+                    3
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "expected": 3930325335
+    },
+    {
+      "name": "skewed_splittable",
+      "tree": [
+        1,
+        [
+          1,
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      832,
+                      3
+                    ],
+                    [
+                      0,
+                      833,
+                      4
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      834,
+                      5
+                    ],
+                    [
+                      0,
+                      835,
+                      1
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      836,
+                      2
+                    ],
+                    [
+                      0,
+                      837,
+                      3
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      838,
+                      4
+                    ],
+                    [
+                      0,
+                      839,
+                      5
+                    ]
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      840,
+                      1
+                    ],
+                    [
+                      0,
+                      841,
+                      2
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      842,
+                      3
+                    ],
+                    [
+                      0,
+                      843,
+                      4
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      844,
+                      5
+                    ],
+                    [
+                      0,
+                      845,
+                      1
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      846,
+                      2
+                    ],
+                    [
+                      0,
+                      847,
+                      3
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      848,
+                      4
+                    ],
+                    [
+                      0,
+                      849,
+                      5
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      850,
+                      1
+                    ],
+                    [
+                      0,
+                      851,
+                      2
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      852,
+                      3
+                    ],
+                    [
+                      0,
+                      853,
+                      4
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      854,
+                      5
+                    ],
+                    [
+                      0,
+                      855,
+                      1
+                    ]
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      856,
+                      2
+                    ],
+                    [
+                      0,
+                      857,
+                      3
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      858,
+                      4
+                    ],
+                    [
+                      0,
+                      859,
+                      5
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      860,
+                      1
+                    ],
+                    [
+                      0,
+                      861,
+                      2
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      862,
+                      3
+                    ],
+                    [
+                      0,
+                      863,
+                      4
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      864,
+                      5
+                    ],
+                    [
+                      0,
+                      865,
+                      1
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      866,
+                      2
+                    ],
+                    [
+                      0,
+                      867,
+                      3
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      868,
+                      4
+                    ],
+                    [
+                      0,
+                      869,
+                      5
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      870,
+                      1
+                    ],
+                    [
+                      0,
+                      871,
+                      2
+                    ]
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      872,
+                      3
+                    ],
+                    [
+                      0,
+                      873,
+                      4
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      874,
+                      5
+                    ],
+                    [
+                      0,
+                      875,
+                      1
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      876,
+                      2
+                    ],
+                    [
+                      0,
+                      877,
+                      3
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      878,
+                      4
+                    ],
+                    [
+                      0,
+                      879,
+                      5
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      880,
+                      1
+                    ],
+                    [
+                      0,
+                      881,
+                      2
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      882,
+                      3
+                    ],
+                    [
+                      0,
+                      883,
+                      4
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      884,
+                      5
+                    ],
+                    [
+                      0,
+                      885,
+                      1
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      886,
+                      2
+                    ],
+                    [
+                      0,
+                      887,
+                      3
+                    ]
+                  ]
+                ]
+              ],
+              [
+                1,
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      888,
+                      4
+                    ],
+                    [
+                      0,
+                      889,
+                      5
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      890,
+                      1
+                    ],
+                    [
+                      0,
+                      891,
+                      2
+                    ]
+                  ]
+                ],
+                [
+                  1,
+                  [
+                    1,
+                    [
+                      0,
+                      892,
+                      3
+                    ],
+                    [
+                      0,
+                      893,
+                      4
+                    ]
+                  ],
+                  [
+                    1,
+                    [
+                      0,
+                      894,
+                      5
+                    ],
+                    [
+                      0,
+                      895,
+                      1
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          0,
+          19,
+          1
+        ]
+      ],
+      "expected": 1341333429
+    },
+    {
+      "name": "opaque_heavy_leaf",
+      "tree": [
+        1,
+        [
+          0,
+          23,
+          71
+        ],
+        [
+          1,
+          [
+            1,
+            [
+              1,
+              [
+                0,
+                136,
+                2
+              ],
+              [
+                0,
+                137,
+                3
+              ]
+            ],
+            [
+              1,
+              [
+                0,
+                138,
+                4
+              ],
+              [
+                0,
+                139,
+                5
+              ]
+            ]
+          ],
+          [
+            1,
+            [
+              1,
+              [
+                0,
+                140,
+                1
+              ],
+              [
+                0,
+                141,
+                2
+              ]
+            ],
+            [
+              1,
+              [
+                0,
+                142,
+                3
+              ],
+              [
+                0,
+                143,
+                4
+              ]
+            ]
+          ]
+        ]
+      ],
+      "expected": 2520421600
+    },
+    {
+      "name": "serial_frames",
+      "tree": [
+        2,
+        [
+          2,
+          [
+            2,
+            [
+              2,
+              [
+                2,
+                [
+                  2,
+                  [
+                    2,
+                    [
+                      2,
+                      [
+                        2,
+                        [
+                          2,
+                          [
+                            2,
+                            [
+                              2,
+                              [
+                                2,
+                                [
+                                  2,
+                                  [
+                                    2,
+                                    [
+                                      2,
+                                      [
+                                        0,
+                                        29,
+                                        3
+                                      ],
+                                      3,
+                                      5
+                                    ],
+                                    3,
+                                    5
+                                  ],
+                                  3,
+                                  5
+                                ],
+                                3,
+                                5
+                              ],
+                              3,
+                              5
+                            ],
+                            3,
+                            5
+                          ],
+                          3,
+                          5
+                        ],
+                        3,
+                        5
+                      ],
+                      3,
+                      5
+                    ],
+                    3,
+                    5
+                  ],
+                  3,
+                  5
+                ],
+                3,
+                5
+              ],
+              3,
+              5
+            ],
+            3,
+            5
+          ],
+          3,
+          5
+        ],
+        3,
+        5
+      ],
+      "expected": 637557866
+    },
+    {
+      "name": "single",
+      "tree": [
+        0,
+        4294967295,
+        11
+      ],
+      "expected": 1473173116
+    },
+    {
+      "name": "nested_frames",
+      "tree": [
+        2,
+        [
+          1,
+          [
+            2,
+            [
+              0,
+              3,
+              7
+            ],
+            7,
+            11
+          ],
+          [
+            0,
+            5,
+            2
+          ]
+        ],
+        13,
+        17
+      ],
+      "expected": 147613089
+    },
+    {
+      "name": "cpu_frames",
+      "tree": [
+        1,
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          2,
+          [
+            0,
+            11,
+            3
+          ],
+          3,
+          5
+        ]
+      ],
+      "expected": 231817934
+    }
+  ],
+  "mutants": [
+    {
+      "name": "wrong_tick",
+      "intended_observation": "LCG payload update",
+      "rejecting_law": "one_tick",
+      "typechecks": true,
+      "proof_rejected": true,
+      "runtime_witness_differs": true,
+      "diagnostic": "Error:\n- expected : task.Checkpoint{task.Work{d, n, task.OwnedWord{U32.add(U32.mul(x, 1664525), 1013904224)}, fs}}\n- observed : task.Checkpoint{task.Work{d, n, task.OwnedWord{U32.add(U32.mul(x, 1664525), 1013904223)}, fs}}\nContext:\n- d  : U32\n- n  : Nat\n- x  : U32\n- fs : List<&1, task.Frame>\nLocation: LAWS.one_tick\n15 |     case 1n+k: {==}\n16>| def L.one_tick(d,n,x,fs): {==}\n   |                           ^^^^\n17 | def L.binary_order(d,a,b): {==}\n",
+      "stdout": "0,73,11\n0,73,1405520627\n1,73,1405520627\n1,73,1405520627\n1,73,1405520627\n0,73,11\n1,73,1405520627\n1,41,226\nrejected:7,9\nextracted:7\nmissing\n"
+    },
+    {
+      "name": "swapped_join",
+      "intended_observation": "source-ordered result slots",
+      "rejecting_law": "binary_order",
+      "typechecks": true,
+      "proof_rejected": true,
+      "runtime_witness_differs": true,
+      "diagnostic": "Error:\n- expected : task.Delivered{d, task.OwnedWord{U32.add(U32.mul(b, 31), a)}}\n- observed : task.Delivered{d, task.OwnedWord{U32.add(U32.mul(a, 31), b)}}\nContext:\n- d : U32\n- a : U32\n- b : U32\nLocation: LAWS.binary_order\n16 | def L.one_tick(d,n,x,fs): {==}\n17>| def L.binary_order(d,a,b): {==}\n   |                            ^^^^\n18 | def L.frame_captures(d,x,f,b): {==}\n",
+      "stdout": "0,73,11\n0,73,2891381938\n1,73,2891381938\n1,73,2891381938\n1,73,2891381938\n0,73,11\n1,73,2891381938\n1,41,286\nrejected:7,9\nextracted:7\nmissing\n"
+    },
+    {
+      "name": "lost_destination",
+      "intended_observation": "delivery destination",
+      "rejecting_law": "binary_order",
+      "typechecks": true,
+      "proof_rejected": true,
+      "runtime_witness_differs": true,
+      "diagnostic": "Error:\n- expected : task.Delivered{0, task.OwnedWord{U32.add(U32.mul(a, 31), b)}}\n- observed : task.Delivered{d, task.OwnedWord{U32.add(U32.mul(a, 31), b)}}\nContext:\n- d : U32\n- a : U32\n- b : U32\nLocation: LAWS.binary_order\n16 | def L.one_tick(d,n,x,fs): {==}\n17>| def L.binary_order(d,a,b): {==}\n   |                            ^^^^\n18 | def L.frame_captures(d,x,f,b): {==}\n",
+      "stdout": "0,73,11\n0,73,231817934\n1,0,231817934\n1,0,231817934\n1,0,231817934\n0,73,11\n1,0,231817934\n1,0,226\nrejected:7,9\nextracted:7\nmissing\n"
+    },
+    {
+      "name": "discard_zero_budget",
+      "intended_observation": "zero budget preserves residual work",
+      "rejecting_law": "zero_fuel",
+      "typechecks": true,
+      "proof_rejected": true,
+      "runtime_witness_differs": true,
+      "diagnostic": "Error:\n- expected : task.Delivered{0, task.OwnedWord{0}}\n- observed : r\nContext:\n- r : task.Run\nLocation: LAWS.zero_fuel\n10 | def L.take_twice(A,x): {==}\n11>| def L.zero_fuel(r): {==}\n   |                     ^^^^\n12 | def L.delivered_absorbs(n,d,p):\n",
+      "stdout": "1,0,0\n1,0,0\n1,0,0\n1,0,0\n1,0,0\n1,0,0\n1,0,0\n1,0,0\nrejected:7,9\nextracted:7\nmissing\n"
+    },
+    {
+      "name": "overwrite_owned_slot",
+      "intended_observation": "failed insertion retains old and new owners",
+      "rejecting_law": "put_full",
+      "typechecks": true,
+      "proof_rejected": true,
+      "runtime_witness_differs": true,
+      "diagnostic": "Error:\n- expected : slot.Inserted{slot.Occupied{y}}\n- observed : slot.Rejected{slot.Occupied{x}, y}\nContext:\n- A : Type\n- x : A\n- y : A\nLocation: LAWS.put_full\n5 | def L.put_empty(A,x): {==}\n6>| def L.put_full(A,x,y): {==}\n  |                        ^^^^\n7 | def L.take_full(A,x): {==}\n",
+      "stdout": "0,73,11\n0,73,231817934\n1,73,231817934\n1,73,231817934\n1,73,231817934\n0,73,11\n1,73,231817934\n1,41,226\ninserted\nextracted:7\nmissing\n"
+    }
+  ],
+  "native_conformance": {
+    "build": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.3217883750330657
+    },
+    "run": {
+      "exit": 0,
+      "stdout": "0,73,11\n0,73,231817934\n1,73,231817934\n1,73,231817934\n1,73,231817934\n0,73,11\n1,73,231817934\n1,41,226\nrejected:7,9\nextracted:7\nmissing\n",
+      "stderr": "",
+      "seconds": 0.21666558412835002
+    }
+  },
+  "native_fixtures": {
+    "build": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.33611304103396833
+    },
+    "run": {
+      "exit": 0,
+      "stdout": "{\"name\":\"ordered\",\"tree\":[1,[0,7,0],[0,9,0]],\"expected\":226}\n{\"name\":\"right_finishes_first\",\"tree\":[1,[0,7,17],[0,9,0]],\"expected\":748112063}\n{\"name\":\"left_finishes_first\",\"tree\":[1,[0,7,0],[0,9,17]],\"expected\":369886205}\n{\"name\":\"balanced\",\"tree\":[1,[1,[1,[1,[1,[1,[0,704,5],[0,705,1]],[1,[0,706,2],[0,707,3]]],[1,[1,[0,708,4],[0,709,5]],[1,[0,710,1],[0,711,2]]]],[1,[1,[1,[0,712,3],[0,713,4]],[1,[0,714,5],[0,715,1]]],[1,[1,[0,716,2],[0,717,3]],[1,[0,718,4],[0,719,5]]]]],[1,[1,[1,[1,[0,720,1],[0,721,2]],[1,[0,722,3],[0,723,4]]],[1,[1,[0,724,5],[0,725,1]],[1,[0,726,2],[0,727,3]]]],[1,[1,[1,[0,728,4],[0,729,5]],[1,[0,730,1],[0,731,2]]],[1,[1,[0,732,3],[0,733,4]],[1,[0,734,5],[0,735,1]]]]]],[1,[1,[1,[1,[1,[0,736,2],[0,737,3]],[1,[0,738,4],[0,739,5]]],[1,[1,[0,740,1],[0,741,2]],[1,[0,742,3],[0,743,4]]]],[1,[1,[1,[0,744,5],[0,745,1]],[1,[0,746,2],[0,747,3]]],[1,[1,[0,748,4],[0,749,5]],[1,[0,750,1],[0,751,2]]]]],[1,[1,[1,[1,[0,752,3],[0,753,4]],[1,[0,754,5],[0,755,1]]],[1,[1,[0,756,2],[0,757,3]],[1,[0,758,4],[0,759,5]]]],[1,[1,[1,[0,760,1],[0,761,2]],[1,[0,762,3],[0,763,4]]],[1,[1,[0,764,5],[0,765,1]],[1,[0,766,2],[0,767,3]]]]]]],\"expected\":3930325335}\n{\"name\":\"skewed_splittable\",\"tree\":[1,[1,[1,[1,[1,[1,[1,[0,832,3],[0,833,4]],[1,[0,834,5],[0,835,1]]],[1,[1,[0,836,2],[0,837,3]],[1,[0,838,4],[0,839,5]]]],[1,[1,[1,[0,840,1],[0,841,2]],[1,[0,842,3],[0,843,4]]],[1,[1,[0,844,5],[0,845,1]],[1,[0,846,2],[0,847,3]]]]],[1,[1,[1,[1,[0,848,4],[0,849,5]],[1,[0,850,1],[0,851,2]]],[1,[1,[0,852,3],[0,853,4]],[1,[0,854,5],[0,855,1]]]],[1,[1,[1,[0,856,2],[0,857,3]],[1,[0,858,4],[0,859,5]]],[1,[1,[0,860,1],[0,861,2]],[1,[0,862,3],[0,863,4]]]]]],[1,[1,[1,[1,[1,[0,864,5],[0,865,1]],[1,[0,866,2],[0,867,3]]],[1,[1,[0,868,4],[0,869,5]],[1,[0,870,1],[0,871,2]]]],[1,[1,[1,[0,872,3],[0,873,4]],[1,[0,874,5],[0,875,1]]],[1,[1,[0,876,2],[0,877,3]],[1,[0,878,4],[0,879,5]]]]],[1,[1,[1,[1,[0,880,1],[0,881,2]],[1,[0,882,3],[0,883,4]]],[1,[1,[0,884,5],[0,885,1]],[1,[0,886,2],[0,887,3]]]],[1,[1,[1,[0,888,4],[0,889,5]],[1,[0,890,1],[0,891,2]]],[1,[1,[0,892,3],[0,893,4]],[1,[0,894,5],[0,895,1]]]]]]],[0,19,1]],\"expected\":1341333429}\n{\"name\":\"opaque_heavy_leaf\",\"tree\":[1,[0,23,71],[1,[1,[1,[0,136,2],[0,137,3]],[1,[0,138,4],[0,139,5]]],[1,[1,[0,140,1],[0,141,2]],[1,[0,142,3],[0,143,4]]]]],\"expected\":2520421600}\n{\"name\":\"serial_frames\",\"tree\":[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[0,29,3],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],3,5],\"expected\":637557866}\n{\"name\":\"single\",\"tree\":[0,4294967295,11],\"expected\":1473173116}\n{\"name\":\"nested_frames\",\"tree\":[2,[1,[2,[0,3,7],7,11],[0,5,2]],13,17],\"expected\":147613089}\n{\"name\":\"cpu_frames\",\"tree\":[1,[0,7,0],[2,[0,11,3],3,5]],\"expected\":231817934}\n",
+      "stderr": "",
+      "seconds": 0.18440641602501273
+    }
+  },
+  "gpu_command": {
+    "exit": 0,
+    "stdout": "{\"status\":\"pass\",\"adapter\":{\"vendor\":\"apple\",\"architecture\":\"metal-3\",\"device\":\"apple-m5-max\",\"description\":\"Metal driver on macOS Version 26.5.2 (Build 25F84)\",\"isFallbackAdapter\":false,\"backend\":\"metal\"},\"cases\":38,\"dispatches\":1713,\"maxLogicalWorkerMoves\":374,\"performanceClaim\":false}\n",
+    "stderr": "",
+    "seconds": 0.32742558396421373
+  },
+  "gpu_receipt_sha256": "c9f979d35aae00e2fe1bc00a67fc5cc48608fb9f8706157156687fdae86d46eb",
+  "gpu_mutants": [
+    {
+      "name": "device_swapped_join",
+      "witness": "ordered",
+      "shader_pipeline_created": true,
+      "rejected_by": "actual-device result disagrees with Bend oracle",
+      "diagnostic": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: ordered: oracle mismatch\n\n286 !== 226\n\n    at run (file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:144:14)\n    at async file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:161:68 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 286,\n  expected: 226,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.22.3\n"
+    },
+    {
+      "name": "device_lost_capture",
+      "witness": "serial_frames",
+      "shader_pipeline_created": true,
+      "rejected_by": "actual-device result disagrees with Bend oracle",
+      "diagnostic": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: serial_frames: oracle mismatch\n+ actual - expected\n\n+ 529941066\n- 637557866\n\n    at run (file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:144:14)\n    at async file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:161:68 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 529941066,\n  expected: 637557866,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.22.3\n"
+    },
+    {
+      "name": "device_early_finish",
+      "witness": "right_finishes_first",
+      "shader_pipeline_created": true,
+      "rejected_by": "actual-device result disagrees with Bend oracle",
+      "diagnostic": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: right_finishes_first: oracle mismatch\n+ actual - expected\n\n+ 429224146\n- 748112063\n\n    at run (file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:144:14)\n    at async file:///Users/ericfode/src/knot/research/adaptive-tasks/gpu/check.mjs:161:68 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 429224146,\n  expected: 748112063,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.22.3\n"
+    }
+  ],
+  "status": "pass"
+}
