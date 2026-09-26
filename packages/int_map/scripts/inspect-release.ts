@@ -1,0 +1,28 @@
+// Exact pinned CLI pkg_files dry run; package semantics stay in Bend.
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import * as Bend from "../../../.toolchain/bend-2.0.29-574b6d3/bend2/bend.ts";
+const root=path.resolve(import.meta.dir,"../../..");
+const pkg=path.resolve(import.meta.dir,"..");
+const cli=fs.readFileSync(path.join(root,".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"),"utf8");
+const exact=cli.slice(cli.indexOf("function pkg_files("),cli.indexOf("function sha256("));
+if(!exact.startsWith("function pkg_files(")) throw Error("pinned CLI function missing");
+const js=new Bun.Transpiler({loader:"ts"}).transformSync(exact);
+const pkg_files=new Function("fs","path","BASE",js+"\nreturn pkg_files;")(fs,path,Bend.BASE_BEND);
+const entry=path.join(pkg,"release.bend");
+const seen=new Map(); const book=Bend.book_nil();
+await Bend.book_load(book,entry,"",seen); Bend.book_valid(book);
+if(book.hols!==0) throw Error("proof holes: "+book.hols);
+const files=pkg_files(entry,book,seen);
+const sha=(s:string)=>crypto.createHash("sha256").update(s).digest("hex");
+const paths=Object.keys(files).sort();
+const expected="0x"+sha(paths.map(p=>sha(files[p])+" "+p+"\n").join("")).slice(0,32);
+const allowed=["LAWS.bend","LICENSE","PROOF.bend","conformance.bend","example.bend","fixtures.bend","main.bend","model.bend","release.bend"].sort();
+if(JSON.stringify(paths)!==JSON.stringify(allowed)) throw Error("Unexpected closure: "+JSON.stringify(paths));
+const original=Object.entries(book.tlds).filter(([k,t]:any)=>!t.b);
+const unsafe=original.filter(([k,t]:any)=>t.u||t.i).map(([k])=>k);
+if(unsafe.length) throw Error("original unsafe/foreign declarations: "+unsafe.join(","));
+const result={expected_hash:expected,proof_holes:book.hols,closure:paths.map(p=>({path:p,sha256:sha(files[p]),bytes:Buffer.byteLength(files[p])})),bytes:paths.reduce((n,p)=>n+Buffer.byteLength(files[p]),0),license:"MIT-0",original_unsafe_foreign:unsafe,pkg_files_extraction_sha256:sha(exact),compiler_source_sha256:sha(cli),base_foreign:Object.entries(book.tlds).filter(([k,t]:any)=>t.b&&t.i).map(([k])=>k),base_unsafe:Object.entries(book.tlds).filter(([k,t]:any)=>t.b&&t.u).map(([k])=>k)};
+fs.writeFileSync(path.join(pkg,"build/closure.json"),JSON.stringify(result,null,2)+"\n");
+console.log(JSON.stringify({expected_hash:expected,files:paths,proof_holes:book.hols,bytes:result.bytes}));

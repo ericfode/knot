@@ -1,0 +1,60 @@
+{
+  "reported_production_findings": 0,
+  "confirmed_production_defects": 0,
+  "reported_control_findings": 2,
+  "control_adjudications": [
+    {
+      "target": "packages/term_store/review/broken/LAW_REVIEW.md",
+      "receipt_id": "0798b2e2-6601-4c79-9a8a-b6706f694fba",
+      "expected_broken": true,
+      "reported_broken": true,
+      "probability_broken": 0.86,
+      "adjudication": "confirmed",
+      "evidence": "Cancel installs Ready(0) after fuel exhaustion, fabricating completed success."
+    },
+    {
+      "target": "packages/term_store/review/clean/LAW_REVIEW.md",
+      "receipt_id": "0560ee6b-5fc7-420a-98dc-b3727b05948d",
+      "expected_broken": false,
+      "reported_broken": false,
+      "probability_broken": 0.28,
+      "adjudication": "correct clean control",
+      "evidence": "Incomplete work stays NotReady/Incomplete; terminal outcomes preserve their payload."
+    },
+    {
+      "target": "packages/term_store/review/held_out_broken/LAW_REVIEW.md",
+      "receipt_id": "c564e9ec-957a-484c-8aa8-aff5495f6f92",
+      "expected_broken": true,
+      "reported_broken": true,
+      "probability_broken": 0.88,
+      "adjudication": "confirmed",
+      "evidence": "Result on Pending/Evaluating returns completed success 1 without a completed computation."
+    },
+    {
+      "target": "packages/term_store/review/held_out_clean/LAW_REVIEW.md",
+      "receipt_id": "c10e76eb-2162-45c0-b080-1c88f9fecd42",
+      "expected_broken": false,
+      "reported_broken": false,
+      "probability_broken": 0.26,
+      "adjudication": "correct clean control",
+      "evidence": "Incomplete work stays NotReady/Incomplete; terminal outcomes preserve their payload."
+    }
+  ],
+  "reported_false_positives": 0,
+  "reported_duplicates": 0,
+  "unresolved_reported_findings": 0,
+  "control_misses": 0,
+  "subthreshold_review": [
+    {
+      "rule": "bend-machine-arithmetic",
+      "range_probability_broken": [
+        0.56,
+        0.74
+      ],
+      "classification": "no confirmed defect; not reported findings",
+      "evidence": "release/LAWS/PROOF and simple fixtures contain no indexing arithmetic. Main guards final-scope increment and relies on checked pinned Vec. PRNG wrap is intentional; model/conformance domains are bounded; benchmark failures accumulate False and cannot become success."
+    }
+  ],
+  "source_changes": [],
+  "rule_changes": []
+}

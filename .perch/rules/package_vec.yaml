@@ -1,0 +1,18 @@
+# Advisory. Live calibration evidence and misses are recorded in
+# packages/vec/PERCH_REPORT.md; this rule is not a correctness gate.
+- name: vec-logical-state-observation
+  where: "packages/vec/**/LAW_REVIEW.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Judge only the packet's current validation of vector pop state. It rejects
+    a pop that clears the final live slot but incorrectly keeps the old logical
+    length. A list conversion that drops None slots cannot detect that defect:
+    the packet also checks the decremented logical length independently of the
+    filtered values. Accepting that stale-length pop, or claiming filtered list
+    equality establishes correct logical length, breaks this rule. A historical
+    missed defect is allowed if the packet shows its corrected length check now
+    rejects the same candidate. For a range/read-only packet, explicit logical
+    bounds and rejection of length inferred from filtered values satisfy this
+    rule. Judge the observations, not the packet's clean/broken label.

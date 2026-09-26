@@ -1,0 +1,248 @@
+{
+  "sources": {
+    "LAWS.bend": "bbd74050a1a1fc5ae7af9f8fce892023de197f8e37dcfdf87ef000af718f0950",
+    "PROOF.bend": "06e8c1044639d44fbfc6eeea3618b8dc8a4f75c25a2409918c97c86deda782af",
+    "benchmark.bend": "d28dbdb645e5e132917653cf8434f59a37c4b0438944af28a430fbb1771793b8",
+    "conformance.bend": "93ede95e703f52c7efe436a98681d6003068b10819e423a1c3a3c0012f9e0c69",
+    "example.bend": "d1e38d7f3f98a1db77eca3df5640fd1b67ad5b0a815162b2e1d6d12313a70800",
+    "main.bend": "83029b603921ea8a978c3f9a424fb256e0737d8041836c2749f8bd1b5e0be12c",
+    "model.bend": "2ba69937a36ee689bec25bcc2f99a83bdcf8373eb88e30813800388d7a8495ea",
+    "observations.bend": "c0d4d88f9e6324db3ec5698280d5ffa807b5b78304d02127fb6b75627ce39cb0",
+    "proof_observations.bend": "495a5d4767a750b176387d568489a556e23af935e8a05960c12839ce2ce4fc1f",
+    "release.bend": "e5cd3a2902d6f871978777683442df9fe03f76221f37058a1b56212b7e469adb",
+    "types.bend": "43e2cd88043f6f1b7c183e017931bc68dabae516b35a4eab9e319187442a9141"
+  },
+  "mutants": [
+    {
+      "name": "erase_file_on_read",
+      "witness": "O.get(\"ab\",1)",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11739429109729826
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.06938541703857481
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11562841711565852
+      },
+      "status": "semantic-kill",
+      "sha256": "71929014304a1d28c407bd22ae25748b8291b950600058a62463ea64158efe93"
+    },
+    {
+      "name": "discard_content",
+      "witness": "O.get(\"a\ud83d\ude00\",1)",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.1159371251706034
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07355375005863607
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11537658399902284
+      },
+      "status": "semantic-kill",
+      "sha256": "bf7a6e3858056caf3f8c58a98c83dc1c92d597e7b725d4b68fd21824c0378b6e"
+    },
+    {
+      "name": "stale_bump",
+      "witness": "O.bump(\"ab\",T.Cursor{7,1},T.Cursor{7,2},Some{'b'})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11766483285464346
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07417437504045665
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.1176781659014523
+      },
+      "status": "semantic-kill",
+      "sha256": "ae7f4a1a6f7f0509e1e60d290b67781e69a02aa01fcd4a04987e91ef538d7570"
+    },
+    {
+      "name": "rewind_checkpoint",
+      "witness": "O.bump(\"ab\",T.Cursor{7,1},T.Cursor{7,2},Some{'b'})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.12653379095718265
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07236875011585653
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11703766696155071
+      },
+      "status": "semantic-kill",
+      "sha256": "75d6e219d25878c5aad43db1142978519f1a108e10a5f37b848ff60b6c5a8e2b"
+    },
+    {
+      "name": "accept_foreign",
+      "witness": "O.restore(\"a\",T.Cursor{8,0},Fail{T.ForeignFile{}})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11638158396817744
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07382566598244011
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11497233295813203
+      },
+      "status": "semantic-kill",
+      "sha256": "8e04a866f0c5b7e1282a64db67e5e65636d74838dc890d12393bceb60cafa1d1"
+    },
+    {
+      "name": "empty_extraction",
+      "witness": "O.extract(\"ab\",T.Span{7,0,2},Done{\"ab\"})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11687016696669161
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07377308397553861
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11517329211346805
+      },
+      "status": "semantic-kill",
+      "sha256": "e45f3e3cab0f0065a6ce03f96f473fbdc66c0f9fae2222f0bb9518098396a107"
+    },
+    {
+      "name": "cr_newline",
+      "witness": "O.locate(\"a\\rb\",2)",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11541795800440013
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.0737332918215543
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11376179102808237
+      },
+      "status": "semantic-kill",
+      "sha256": "9fab155e7908f4653ae7750b500d4d893408ab76610b1ee7b36cc73ca6327536"
+    },
+    {
+      "name": "wrong_line_boundary",
+      "witness": "O.locate(\"a\\nb\",2)",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11780725000426173
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07003624993376434
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11509520816616714
+      },
+      "status": "semantic-kill",
+      "sha256": "aab153255ff6708d96296ae219c369734777a1f09274d46ce20fb066915acef0"
+    },
+    {
+      "name": "reject_eof",
+      "witness": "O.cursor(\"ab\",2,Done{T.Cursor{7,2}})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11726750014349818
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07260470907203853
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11598995910026133
+      },
+      "status": "semantic-kill",
+      "sha256": "aa41bee7b13bdef5eba3d5a98305d8b0e12e6c1d5241620551f5c011e1e93a2d"
+    },
+    {
+      "name": "noncanonical_column",
+      "witness": "O.offset(\"a\\nb\",T.Location{0,2})",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11405929201282561
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07221974991261959
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.11317320819944143
+      },
+      "status": "semantic-kill",
+      "sha256": "adf1bbaf4fed469fa33564f3a1c7c1e3af380ef4051d16e63e680549ca87eec3"
+    },
+    {
+      "name": "accept_surrogate",
+      "witness": "O.rejected(T.InvalidScalar{},S.Source.new(7,SCon{Chr{55296},\"\"}))",
+      "baseline": {
+        "code": 0,
+        "output": "1\n",
+        "seconds": 0.11385229206643999
+      },
+      "typecheck": {
+        "code": 0,
+        "output": "All terms check.\n",
+        "seconds": 0.07324629183858633
+      },
+      "mutant": {
+        "code": 0,
+        "output": "0\n",
+        "seconds": 0.1124677921179682
+      },
+      "status": "semantic-kill",
+      "sha256": "86cd4ee35c875b24ff7d2a6ead905fe2630445e39f178e77a76e7296695e0862"
+    }
+  ]
+}

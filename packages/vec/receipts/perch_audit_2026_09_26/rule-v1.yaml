@@ -1,0 +1,20 @@
+# Draft advisory rule. Deterministic mutant identified the gap; provider
+# calibration is unavailable without credentials and is not claimed.
+- name: vec-logical-state-observation
+  where: "packages/vec/**/LAW_REVIEW.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect only the vector pop/growth state-observation section of this packet.
+    When unused array slots are represented by None and to_list skips such slots,
+    preserved list contents alone cannot detect a stale logical length or a hole
+    in the live prefix. The packet must also constrain logical length and show
+    that a type-correct stale-length pop mutant fails an unchanged observation.
+    A clean control records both the returned value and remaining order together
+    with the decremented logical length. A broken control relies only on a
+    filtered list or declares that list equality proves complete state equality.
+    A held-out range/read example must check its logical bounds against length,
+    even if capacity exceeds length. Do not infer private representation validity
+    from a list conversion that discards missing slots. This is about the stated
+    observations, not formatting or the number of tests.

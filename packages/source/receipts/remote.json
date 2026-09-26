@@ -1,0 +1,97 @@
+{
+  "initially_empty_cache": true,
+  "cache": "/Users/ericfode/src/knot/packages/source/build/remote_cache_1a33rayr",
+  "consumer_source": "import Base\nimport 0x88d5b48c03f82f217d3a2aa0656744f4/release.bend as Release\nimport 0x88d5b48c03f82f217d3a2aa0656744f4/conformance.bend as Checks\nimport 0x88d5b48c03f82f217d3a2aa0656744f4/main.bend as S\nimport 0x88d5b48c03f82f217d3a2aa0656744f4/types.bend as T\n\ndef read(r: Result<T.Error,String>) -> Bool:\n  match r:\n    case Fail{e}: False{}\n    case Done{x}: String.eq(x,\"\ud83d\ude00\")\n\ndef extracted(pair: S.Source & Result<T.Error,String>) -> Bool:\n  (s,r) = pair\n  read(r)\n\ndef built(r: Result<T.Error,S.Source>) -> Bool:\n  match r:\n    case Fail{e}: False{}\n    case Done{s}: extracted(S.Source.extract(s,T.Span{91,1,2}))\n\ndef main() -> Bool:\n  Bool.and(Checks.all(),Bool.and(String.eq(Release.main(),\"\ud83d\ude00\"),built(S.Source.new(91,\"a\ud83d\ude00\\n\u03b2\"))))\n",
+  "consumer_sha256": "80ca825096ceda7e3cc1fcb6bb5fa2106a42ea535e9062695c54445b2849fc7d",
+  "check": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/source/tests/remote_consumer.bend",
+      "--check-only"
+    ],
+    "exit_code": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.3623891659080982
+  },
+  "backends": {
+    "native": {
+      "compile": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/source/tests/remote_consumer.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/source/build/remote_consumer"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 1.0411315418314189
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/source/build/remote_consumer"
+        ],
+        "exit_code": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.18375129182823002
+      }
+    },
+    "js": {
+      "compile": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/source/tests/remote_consumer.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/source/build/remote_consumer.js"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.3168771250639111
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/source/build/remote_consumer.js"
+        ],
+        "exit_code": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.022097958019003272
+      }
+    }
+  },
+  "files": {
+    "LAWS.bend": "bbd74050a1a1fc5ae7af9f8fce892023de197f8e37dcfdf87ef000af718f0950",
+    "LICENSE": "bc2ac04e3b5c4bd68c8944c0998a09006cf3edea8e3d423dae211c46a2f208bc",
+    "PROOF.bend": "06e8c1044639d44fbfc6eeea3618b8dc8a4f75c25a2409918c97c86deda782af",
+    "benchmark.bend": "d28dbdb645e5e132917653cf8434f59a37c4b0438944af28a430fbb1771793b8",
+    "conformance.bend": "93ede95e703f52c7efe436a98681d6003068b10819e423a1c3a3c0012f9e0c69",
+    "example.bend": "d1e38d7f3f98a1db77eca3df5640fd1b67ad5b0a815162b2e1d6d12313a70800",
+    "main.bend": "83029b603921ea8a978c3f9a424fb256e0737d8041836c2749f8bd1b5e0be12c",
+    "model.bend": "2ba69937a36ee689bec25bcc2f99a83bdcf8373eb88e30813800388d7a8495ea",
+    "observations.bend": "c0d4d88f9e6324db3ec5698280d5ffa807b5b78304d02127fb6b75627ce39cb0",
+    "proof_observations.bend": "495a5d4767a750b176387d568489a556e23af935e8a05960c12839ce2ce4fc1f",
+    "release.bend": "e5cd3a2902d6f871978777683442df9fe03f76221f37058a1b56212b7e469adb",
+    "tests/invalid_scalars.bend": "47ff1cdf3a9d1609b240994dc1773a197644a8d6c7368dfc7aa6798e8a8c49f0",
+    "types.bend": "43e2cd88043f6f1b7c183e017931bc68dabae516b35a4eab9e319187442a9141"
+  },
+  "recomputed_hash": "0x88d5b48c03f82f217d3a2aa0656744f4",
+  "vec_files_verified": {
+    "LAWS.bend": "bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd",
+    "LICENSE": "32e3179e84a458307a4c8f6f0c9cc561b0cec94f369dd787c36057a245d9f880",
+    "PROOF.bend": "09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871",
+    "benchmark.bend": "77a93e08e2e170f629b68aca07dab2456b38c05ebb345afd2355e93df406c42b",
+    "conformance.bend": "eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91",
+    "example.bend": "7079c1ae8a556f433975b91447af3fa3d6a4ba7a13d49eeae4264331c9e37726",
+    "generic.bend": "adf3a1fd8e094d004379998985c76d50ad7ebcda323fcb935caedb0248f935f0",
+    "main.bend": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0",
+    "model.bend": "4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9",
+    "observations.bend": "d31a1cc102a0e435f8458e071a1757946713d0ea25cd5446af59e6c840e4ffaa",
+    "release.bend": "974e90fd20208c59d76e5482eccbaebc81154b905dacce7c471a9db936f72819",
+    "trace.bend": "9378a64a7edfa9b89bc40fe52c598f3bf248292e2c2260ed25e03bfb10075ecd",
+    "witnesses.bend": "e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a"
+  }
+}

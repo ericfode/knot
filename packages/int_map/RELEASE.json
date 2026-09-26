@@ -1,0 +1,177 @@
+{
+  "package": "int_map",
+  "status": "complete",
+  "timestamp": "2026-09-26T18:37:01.228909+00:00",
+  "compiler": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "command": "scripts/bend-reference"
+  },
+  "dependencies": [
+    "pinned Base only"
+  ],
+  "license": "MIT-0",
+  "expected_hash": "0x99e32f5f97dad3791a32b01d133555c5",
+  "closure": [
+    {
+      "path": "LAWS.bend",
+      "sha256": "95f0f9551cfcd8b5e0b16437405177f4e79f8305c4b9a503bfda68d2a9eea311",
+      "bytes": 4509
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "b1555c91af9ac6f8d84cd242aed3c969de38acd58603151c6c8e0868bb58c6e4",
+      "bytes": 936
+    },
+    {
+      "path": "PROOF.bend",
+      "sha256": "64a59a7d38a2daac8bdbf31006c27f6de88733edbca5176e953386881e7715e6",
+      "bytes": 4548
+    },
+    {
+      "path": "conformance.bend",
+      "sha256": "987b5f1fe814cefdc58ad39f95618bfcc58002983f021825c3c024b8c32b1de6",
+      "bytes": 887
+    },
+    {
+      "path": "example.bend",
+      "sha256": "58bb16bafcdb56f6e488d49e9e5fabc40c4930e688a8d65fca48cc7af1a309f6",
+      "bytes": 685
+    },
+    {
+      "path": "fixtures.bend",
+      "sha256": "22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e",
+      "bytes": 7993
+    },
+    {
+      "path": "main.bend",
+      "sha256": "e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a",
+      "bytes": 3486
+    },
+    {
+      "path": "model.bend",
+      "sha256": "62ede4569dd2d11dd8d23734afbaca21710f58bc73a14cee5fb82efe684109fa",
+      "bytes": 1458
+    },
+    {
+      "path": "release.bend",
+      "sha256": "71f59b2447b6c0e769ec6d73ce43d7e060d4f31226fb7367875f33d24d98992f",
+      "bytes": 366
+    }
+  ],
+  "closure_bytes": 24868,
+  "deterministic_gates": {
+    "pass": true,
+    "proof_holes": 0,
+    "receipt": "receipts/gates.json",
+    "mutants_killed": 11,
+    "cpu": true,
+    "javascript": true,
+    "gpu": false
+  },
+  "perch": {
+    "eligible_rules": 9,
+    "completed_model_requests": 0,
+    "calibration": "unavailable: PERCH_API_KEY not set",
+    "receipt": "receipts/perch.json"
+  },
+  "receipts": [
+    {
+      "label": "publish",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "--publish"
+      ],
+      "exit": 0,
+      "stdout": "0x99e32f5f97dad3791a32b01d133555c5\nimport 0x99e32f5f97dad3791a32b01d133555c5/release.bend as Release\n",
+      "stderr": "Publishing to BendHub: public and permanent, under https://bend-lang.com/bender/terms#s18\nLicense: MIT-0 (LICENSE)\npublishing 9 files, 24868 bytes, as 0x99e32f5f97dad3791a32b01d133555c5 (mining its proof of work)\n"
+    },
+    {
+      "label": "fresh_native_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "fresh_native_run",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer"
+      ],
+      "exit": 0,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\nREMOTE snapshot/union=ok\n",
+      "stderr": ""
+    },
+    {
+      "label": "fresh_javascript_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "fresh_javascript_run",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/remote-consumer.js"
+      ],
+      "exit": 0,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\nREMOTE snapshot/union=ok\n",
+      "stderr": ""
+    }
+  ],
+  "returned_hash": "0x99e32f5f97dad3791a32b01d133555c5",
+  "import_api": "import 0x99e32f5f97dad3791a32b01d133555c5/main.bend as M",
+  "import_proofs": "import 0x99e32f5f97dad3791a32b01d133555c5/PROOF.bend as Proof",
+  "fresh_cache": {
+    "path": "/Users/ericfode/src/knot/packages/int_map/build/fresh-bend-lib-2_3gf388",
+    "initially_empty": true,
+    "consumer_sha256": "4e0dc0919dd370881ce357c4550e8c37953eb73f2d75ee51cc63cffbae1700d9",
+    "files": [
+      "LAWS.bend",
+      "LICENSE",
+      "PROOF.bend",
+      "conformance.bend",
+      "example.bend",
+      "fixtures.bend",
+      "main.bend",
+      "model.bend",
+      "release.bend"
+    ],
+    "all_file_hashes_match": true,
+    "native_output_matches": true,
+    "javascript_output_matches": true
+  },
+  "environment": {
+    "architecture": "arm64",
+    "c_compiler": "Apple clang 21.0.0 (clang-2100.1.1.101)",
+    "bun": "1.3.14"
+  },
+  "proof_boundary": {
+    "public_universal_theorems": 7,
+    "structural_auxiliary_theorems": 9,
+    "constructive_domain_witnesses": 1,
+    "concrete_normalization_laws": 6,
+    "full_universal_model_refinement": false,
+    "u32_bit_injectivity_theorem": false
+  },
+  "evidence_sha256": {
+    "receipts/closure.json": "14e8f696470e2498ee42b13c35f4133f16b6cdf89772a2f30e3b2eea8f07c8c5",
+    "receipts/gates.json": "73a02b200569399396ff1bcd2a4d56564918c7d22f9095539c7fe16276835efd",
+    "receipts/mutations.json": "94b48dd7b9811b518d15d01870491badf218e6c530a463a224433349b3228eea",
+    "receipts/perch.json": "65fea14ff47ecd2a1cf4065ff3b3fb2f2a57d3930a50e842ac6f54a234e4580e",
+    "receipts/performance.json": "85dbdce4312554efba780bc4723d68e0bffecbb7001d40fc526d6731af9872b5",
+    "receipts/remote-consumer.bend": "4e0dc0919dd370881ce357c4550e8c37953eb73f2d75ee51cc63cffbae1700d9"
+  }
+}

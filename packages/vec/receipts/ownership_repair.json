@@ -1,0 +1,56 @@
+{
+  "reason": "Release audit found that the original closure-element fixture failed parsing before reaching its intended Data kind check. That result is disqualified as evidence for the element-domain restriction.",
+  "disqualified_element_check": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/vec/tests/element_negative.bend",
+      "--check-only"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n3 | \n4>| def illegal() -> V.Vec<U32 -> U32>:\n  |                       ^\n5 |   V.Vec.new(U32 -> U32)\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n",
+    "seconds": 0.044745041988790035
+  },
+  "original_fixture": "import Base\nimport ../main.bend as V\n\ndef illegal() -> V.Vec<U32 -> U32>:\n  V.Vec.new(U32 -> U32)\n",
+  "repair": "Parenthesize the function type and require exact expected/observed kind diagnostic fields. Also require the affine-duplication diagnostic for the ownership negative.",
+  "corrected_fixture": "import Base\nimport ../main.bend as V\n\ndef illegal() -> V.Vec<(U32 -> U32)>:\n  V.Vec.new((U32 -> U32))\n",
+  "corrected_checks": {
+    "affine_negative": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/affine_negative.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: illegal\n3 | \n4>| def illegal(v: V.Vec<U32>) -> V.Vec<U32> & V.Vec<U32>:\n  |             ^\n5 |   (v,v)\n",
+      "seconds": 0.062464416958391666,
+      "verified_diagnostic": {
+        "expected": "v",
+        "observed": "v (consumed more than once)",
+        "location": "illegal"
+      },
+      "classification": "affine-quantity-rejection",
+      "fixture_sha256": "1bd7c6720817144796d17c64335b05967d065e6cd7007ef6244f60bdf91ecd51"
+    },
+    "element_negative": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/element_negative.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: illegal\n3 | \n4>| def illegal() -> V.Vec<(U32 -> U32)>:\n  |                         ^^^^^^^^^^\n5 |   V.Vec.new((U32 -> U32))\n",
+      "seconds": 0.06078895810060203,
+      "verified_diagnostic": {
+        "expected": "Data",
+        "observed": "Type",
+        "location": "illegal"
+      },
+      "classification": "element-kind-rejection",
+      "fixture_sha256": "bc33c9c751fe83b7f70129d7c348c7d1cb027390b71fc418cbdfa6e75fa0e18c"
+    }
+  },
+  "published_source_hash_unchanged": "0xd684886d10b431b9dce6c3b2d1ef1980"
+}

@@ -1,0 +1,53 @@
+
+> lint:doctor
+> perch doctor --json
+
+{
+  "versions": {
+    "perch": "0.3.5",
+    "node": "v22.22.3",
+    "platform": "darwin arm64"
+  },
+  "out": "/Users/ericfode/src/knot/.perch",
+  "checks": [
+    {
+      "name": "node",
+      "ok": true,
+      "found": "v22.22.3"
+    },
+    {
+      "name": "key",
+      "ok": false,
+      "found": "PERCH_API_KEY is not set",
+      "fix": "export it, or put it in a .env beside the repository"
+    },
+    {
+      "name": "git",
+      "ok": true,
+      "found": "git version 2.50.1 (Apple Git-155)"
+    },
+    {
+      "name": "repository",
+      "ok": true,
+      "found": "/Users/ericfode/src/knot"
+    },
+    {
+      "name": "commit",
+      "ok": true,
+      "found": "3540128"
+    },
+    {
+      "name": "results",
+      "ok": true,
+      "found": "/Users/ericfode/src/knot/.perch"
+    },
+    {
+      "name": "rules",
+      "ok": true,
+      "found": "0 in perch.yaml"
+    }
+  ],
+  "scan": null,
+  "run": null,
+  "log": []
+}

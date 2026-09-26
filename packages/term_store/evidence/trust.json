@@ -1,0 +1,26 @@
+{
+  "compiler": "Bend 2.0.29 at 574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "loaded_base_foreign_count": 42,
+  "loaded_unsafe_declarations": [
+    "Array.fork",
+    "Array.join"
+  ],
+  "package_unsafe_or_TODO_tokens": false,
+  "core_effects": [],
+  "native_operations": [
+    "U32 arithmetic and comparisons",
+    "Nat conversions",
+    "Vec Array.new/get/set/swap lowered to native blocks"
+  ],
+  "unsafe_Array_fork_join_reachable": "No call in TermStore modules or pinned Vec main; declarations loaded from Base only",
+  "backend_evidence": [
+    "native Apple ARM64 CPU",
+    "Bun JavaScript"
+  ],
+  "unvalidated": [
+    "GPU",
+    "Wasm"
+  ],
+  "native_lowering_observation": "Emitted C uses blk_read(H,arr,loc,i) -> H[loc+i] and blk_write -> H[loc+i]=v after Vec logical bound check; generated artifact is ignored .build/benchmark.c",
+  "expected_safety_boundary": "Bend checker/normalizer/compiler, unmodified Base, published Vec, C and Bun runtime, host allocation"
+}

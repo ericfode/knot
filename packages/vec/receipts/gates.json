@@ -1,0 +1,163 @@
+{
+  "proof": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/vec/PROOF.bend",
+      "--check-only"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.15317795798182487
+  },
+  "conformance": {
+    "js": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/conformance.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.09371899999678135
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/build/conformance.js"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.03682641708292067
+      }
+    },
+    "native": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/conformance"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5511942079756409
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/vec/build/conformance"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.1360964998602867
+      }
+    }
+  },
+  "generic": {
+    "js": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/generic.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/generic.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08081645797938108
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/build/generic.js"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.014584416057914495
+      }
+    },
+    "native": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/generic.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/generic"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.3556747501716018
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/vec/build/generic"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.1821572920307517
+      }
+    }
+  },
+  "ownership": {
+    "affine_negative": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/affine_negative.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: illegal\n3 | \n4>| def illegal(v: V.Vec<U32>) -> V.Vec<U32> & V.Vec<U32>:\n  |             ^\n5 |   (v,v)\n",
+      "seconds": 0.062464416958391666,
+      "verified_diagnostic": {
+        "expected": "v",
+        "observed": "v (consumed more than once)",
+        "location": "illegal"
+      },
+      "classification": "affine-quantity-rejection",
+      "fixture_sha256": "1bd7c6720817144796d17c64335b05967d065e6cd7007ef6244f60bdf91ecd51"
+    },
+    "element_negative": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/element_negative.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: illegal\n3 | \n4>| def illegal() -> V.Vec<(U32 -> U32)>:\n  |                         ^^^^^^^^^^\n5 |   V.Vec.new((U32 -> U32))\n",
+      "seconds": 0.06078895810060203,
+      "verified_diagnostic": {
+        "expected": "Data",
+        "observed": "Type",
+        "location": "illegal"
+      },
+      "classification": "element-kind-rejection",
+      "fixture_sha256": "bc33c9c751fe83b7f70129d7c348c7d1cb027390b71fc418cbdfa6e75fa0e18c"
+    }
+  },
+  "source_sha256": {
+    "conformance.bend": "eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91",
+    "PROOF.bend": "09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871",
+    "LAWS.bend": "bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd",
+    "release.bend": "974e90fd20208c59d76e5482eccbaebc81154b905dacce7c471a9db936f72819",
+    "observations.bend": "d31a1cc102a0e435f8458e071a1757946713d0ea25cd5446af59e6c840e4ffaa",
+    "main.bend": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0",
+    "example.bend": "7079c1ae8a556f433975b91447af3fa3d6a4ba7a13d49eeae4264331c9e37726",
+    "benchmark.bend": "77a93e08e2e170f629b68aca07dab2456b38c05ebb345afd2355e93df406c42b",
+    "trace.bend": "9378a64a7edfa9b89bc40fe52c598f3bf248292e2c2260ed25e03bfb10075ecd",
+    "model.bend": "4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9",
+    "generic.bend": "adf3a1fd8e094d004379998985c76d50ad7ebcda323fcb935caedb0248f935f0",
+    "witnesses.bend": "e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a"
+  }
+}

@@ -1,0 +1,439 @@
+{
+  "source_sha256": "cb6cb77a20a60026e7efd9a65e6d945f5dce923f299614e3899e4f59b57e283b",
+  "pass_": true,
+  "rows": [
+    {
+      "name": "scaling_native_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/scaling.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "n=1\nshift=0\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\nn=1\nshift=16\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "64"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "0"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "4097"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "65537"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "4294967296"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after",
+        "not-a-number"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_javascript_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/scaling.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "n=1\nshift=0\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\nn=1\nshift=16\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "64"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "0"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "4097"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "65537"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "4294967296"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "scaling_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/scaling-after.js",
+        "not-a-number"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_native_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/benchmark.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "n=1\nshift=0\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\nn=1\nshift=16\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "64"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_native_valid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "0"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "4097"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "65537"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "4294967296"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_native_invalid",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after",
+        "not-a-number"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_javascript_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/benchmark.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "n=1\nshift=0\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\nn=1\nshift=16\nretained_nonempty_nodes=33\nmax_key_depth=32\nunion_sum=2\nsource_set_trie_constructors=33\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "64"
+      ],
+      "exit": 0,
+      "stdout": "n=64\nshift=0\nretained_nonempty_nodes=1791\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\nn=64\nshift=16\nretained_nonempty_nodes=783\nmax_key_depth=32\nunion_sum=4160\nsource_set_trie_constructors=2112\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_javascript_valid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n",
+      "stderr": ""
+    },
+    {
+      "name": "benchmark_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "0"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "4097"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "65537"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "4294967296"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "benchmark_javascript_invalid",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/perch-audit/benchmark-after.js",
+        "not-a-number"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "expected positive size <=4096\n"
+    },
+    {
+      "name": "unchanged_release_proofs",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    }
+  ]
+}

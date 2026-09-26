@@ -1,0 +1,252 @@
+[
+  {
+    "name": "allocation-stale-id",
+    "witness_group": "store-values-growth-update-preservation",
+    "before": "Done{Id{scope,slot}}",
+    "after": "Done{Id{scope,U32.add(slot,1)}}",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07816191692836583
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 1.0173863749951124
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "FAIL store-values-growth-update-preservation\n",
+      "seconds": 0.11151225003413856
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "update-wrong-slot",
+    "witness_group": "store-values-growth-update-preservation",
+    "before": "V.Vec.set(T,v,i,x)",
+    "after": "V.Vec.set(T,v,0,x)",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07680349983274937
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.9879745421931148
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "FAIL store-values-growth-update-preservation\n",
+      "seconds": 0.11357716703787446
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "accept-foreign-scope",
+    "witness_group": "store-values-growth-update-preservation",
+    "before": "get_scoped(T,k,v,i,U32.is_eq(k,j))",
+    "after": "get_scoped(T,k,v,i,True{})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07407416705973446
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.9496036248747259
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "FAIL store-values-growth-update-preservation\n",
+      "seconds": 0.10708241607062519
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "scope-reuse",
+    "witness_group": "lifetime-separation",
+    "before": "Scopes{U32.add(next,1),True{}}",
+    "after": "Scopes{next,True{}}",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.08765991707332432
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.9979854170233011
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\nPASS first-order-term-payloads\nPASS memo-transition-result-preservation\n",
+      "stderr": "FAIL lifetime-separation\n",
+      "seconds": 0.10967416688799858
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "scope-exhaustion-wrap",
+    "witness_group": "scope-exhaustion",
+    "before": "(Scopes{next,False{}},Done{next})",
+    "after": "(Scopes{0,True{}},Done{next})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06737062497995794
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 1.0058984579518437
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\nPASS first-order-term-payloads\nPASS memo-transition-result-preservation\nPASS lifetime-separation\n",
+      "stderr": "FAIL scope-exhaustion\n",
+      "seconds": 0.11492637498304248
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "finish-before-begin",
+    "witness_group": "memo-transition-result-preservation",
+    "before": "case Succeed{x}:\n          (Pending{},Fail{InvalidTransition{}})",
+    "after": "case Succeed{x}:\n          (Ready{x},Done{Unit{}})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07549179205670953
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.9337855828925967
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\nPASS first-order-term-payloads\n",
+      "stderr": "FAIL memo-transition-result-preservation\n",
+      "seconds": 0.10962858400307596
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "cancel-remains-evaluating",
+    "witness_group": "memo-transition-result-preservation",
+    "before": "case Cancel{}:\n          (Pending{},Done{Unit{}})",
+    "after": "case Cancel{}:\n          (Evaluating{},Done{Unit{}})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07681991695426404
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.8898692498914897
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\nPASS first-order-term-payloads\n",
+      "stderr": "FAIL memo-transition-result-preservation\n",
+      "seconds": 0.11137541593052447
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "terminal-false-success",
+    "witness_group": "memo-transition-result-preservation",
+    "before": "(Ready{x},Fail{InvalidTransition{}})",
+    "after": "(Ready{x},Done{Unit{}})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06772387493401766
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.8886701660230756
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\nPASS first-order-term-payloads\n",
+      "stderr": "FAIL memo-transition-result-preservation\n",
+      "seconds": 0.10982799995690584
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "completed-value-discarded",
+    "witness_group": "first-order-term-payloads",
+    "before": "case Ready{x}:\n      Done{Done{x}}",
+    "after": "case Ready{x}:\n      Fail{NotReady{}}",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06647574994713068
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.87991095893085
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\n",
+      "stderr": "FAIL first-order-term-payloads\n",
+      "seconds": 0.10885641700588167
+    },
+    "semantic_kill": true
+  },
+  {
+    "name": "memo-success-without-write",
+    "witness_group": "first-order-term-payloads",
+    "before": "memo_wrap(T,E,Unit,Store.set(Cell<T,E>,s,id,cell))",
+    "after": "(Memo{s},Done{Unit{}})",
+    "typecheck": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07111999997869134
+    },
+    "compile": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.8760894159786403
+    },
+    "assertion": {
+      "exit": 1,
+      "stdout": "PASS store-values-growth-update-preservation\nPASS zero-limit\n",
+      "stderr": "FAIL first-order-term-payloads\n",
+      "seconds": 0.18277229205705225
+    },
+    "semantic_kill": true
+  }
+]

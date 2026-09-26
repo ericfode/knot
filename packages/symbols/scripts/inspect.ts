@@ -1,0 +1,28 @@
+// Uses the pinned CLI's exact pkg_files function without publishing or changing it.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import * as Bend from '../../../.toolchain/bend-2.0.29-574b6d3/bend2/bend.ts';
+const root=path.resolve(import.meta.dir,'../../..');
+const pkg=path.join(root,'packages/symbols');
+const entry=path.join(pkg,'release.bend');
+const base=path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2/base.bend');
+const cli=fs.readFileSync(path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2/main.ts'),'utf8');
+const fn=cli.slice(cli.indexOf('function pkg_files('),cli.indexOf('\nfunction sha256(',cli.indexOf('function pkg_files(')));
+const code=new Bun.Transpiler({loader:'ts'}).transformSync(fn);
+const pkgFiles=new Function('fs','path','BASE',code+'\nreturn pkg_files;')(fs,path,base);
+const book=Bend.book_nil(); const seen=new Map<string,string|null>();
+await Bend.book_load(book,entry,'',seen); Bend.book_valid(book); if(book.hols)throw Error('holes: '+book.hols);
+const files=pkgFiles(entry,book,seen) as Record<string,string>;
+const hash=(text:string)=>crypto.createHash('sha256').update(text).digest('hex');
+const paths=Object.keys(files).sort();
+const manifest=paths.map(p=>({path:p,sha256:hash(files[p]),bytes:Buffer.byteLength(files[p])}));
+const expected='0x'+hash(manifest.map(f=>f.sha256+' '+f.path+'\n').join('')).slice(0,32);
+const unsafe=Object.entries(book.tlds).filter(([k,t]:any)=>t.u===true).map(([k])=>k);
+const foreign=Object.entries(book.tlds).filter(([k,t]:any)=>t.i!==undefined).map(([k])=>k);
+const dependencyImports=fs.readFileSync(path.join(pkg,'main.bend'),'utf8').split('\n').filter(x=>x.startsWith('import ')&&!x.includes(' Base'));
+const allowed=['release.bend','main.bend','model.bend','protocol.bend','observe.bend','cases.bend','LAWS.bend','PROOF.bend','example.bend','conformance.bend','benchmark.bend','LICENSE'].sort();
+const ready=JSON.stringify(paths)===JSON.stringify(allowed)&&dependencyImports.length===1&&/^import 0x[0-9a-f]{32}\/.+ as V$/.test(dependencyImports[0]);
+const receipt={compiler:'Bend 2.0.29',revision:'574b6d39a235b539eb19a5c532993a0abb3d11ad',holes:book.hols,entry:'release.bend',expected_hash:expected,files:manifest,dependency_imports:dependencyImports,closure_ready:ready,whole_book_unsafe:unsafe,whole_book_foreign:foreign,pkg_files_function_sha256:hash(fn),note:ready?'Only owned original sources plus MIT-0 license; pinned hub dependencies excluded by upstream closure rules.':'NOT PUBLISHABLE: dependency is still local, so exact closure includes sibling files.'};
+fs.writeFileSync(path.join(pkg,'receipts/closure.json'),JSON.stringify(receipt,null,2)+'\n');
+console.log(JSON.stringify({holes:book.hols,expected_hash:expected,paths,closure_ready:ready,whole_book_unsafe:unsafe,foreign_count:foreign.length},null,2));

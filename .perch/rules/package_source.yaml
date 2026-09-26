@@ -1,0 +1,18 @@
+# 2026-09-26: live broken probability 76%, clean 20%, held-out clean 19%.
+# Lower the reporting floor to recover this miss; keep advisory pending broader
+# controls. Evidence: docs/perch-calibration/source-checkpoint-2026-09-26.json.
+- name: source-checkpoint-observation
+  where: "{packages/source/LAW_REVIEW.md,packages/source/tests/perch/*.md}"
+  each: file
+  min: 70
+  gate: false
+  ensure: >
+    Inspect only the checkpoint/restore evidence in this packet. The expected
+    restored file and offset come from the caller's original cursor before
+    checkpoint, not from reading the checkpoint under test. Exhibit a nonzero
+    original offset, movement after saving, and restoration to the original
+    offset with unchanged source content. A test that saves checkpoint(c), then
+    asserts restore(saved) equals saved without also comparing saved to c can
+    pass when checkpoint silently rewinds c to zero, so it breaks this rule.
+    A literal nonzero expected offset or independent original-cursor observation
+    is acceptable. Do not infer missing observations from unseen files.

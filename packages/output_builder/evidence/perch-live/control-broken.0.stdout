@@ -1,0 +1,21 @@
+
+> lint
+> node scripts/perch-workflow.mjs check packages/output_builder/tests/perch/broken/LAW_REVIEW.md --rules output-builder-linear-assembly --json
+
+{
+  "path": "packages/output_builder/tests/perch/broken/LAW_REVIEW.md",
+  "name": "packages/output_builder/tests/perch/broken/LAW_REVIEW.md",
+  "line": 1,
+  "checked": 1,
+  "broken": [
+    {
+      "rule": "output-builder-linear-assembly",
+      "said": "Inspect only the assembly algorithm and cost argument in this packet. Repeated fragment append or composition must not traverse the prior output. Finish must copy each fragment occurrence a bounded number of times, including skewed compositions and empty fragments. A cost claim based only on character count while ignoring arbitrarily many empty chunks fails. A right-suffix tree traversal with constant-time construction and O(N+K) finish for N emitted characters or bytes and K expanded tree nodes passes. Repeatedly appending accumulated output as the left operand fails even when content laws pass. Treat timings as measurements, not universal cost proofs.",
+      "broken": 0.8200000000000001,
+      "floor": 0.8
+    }
+  ],
+  "issues": null,
+  "note": null,
+  "clean": false
+}

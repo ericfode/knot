@@ -1,0 +1,607 @@
+{
+  "source_sha256": {
+    "BYTE_LAWS.bend": "cffc93ff7f84fec0e39e26fabdd8ee1b74a93f34cbf875403acc7d44d76b599a",
+    "BYTE_PROOF.bend": "969180966cbeebb904be36ba3a84b69147a47c64f22eaaad14e82b4160a54df9",
+    "LAWS.bend": "7c0b887642a77a3b8522b9c05a66ae61045b618b6bd062510530f5a2a783b569",
+    "PROOF.bend": "b6851d6a3738b754309c7d803f39c6c5e7e3d5eec6c376f83b8f61cc53d539f7",
+    "byte_model.bend": "d70023c2847de95e68f84db86f42c5fc7f1ed094166a492f2d108319ef43a396",
+    "bytes.bend": "b1c672949a72bcbc37509e31a1a20715eb73813904a50157328ded9ed0069ff1",
+    "conformance.bend": "f1f4bc8a01dbfa28fc62298ac3185fdcdca7e23569ed929ed8bf692ccd54ced5",
+    "example.bend": "8ab3b54a35ecd7e3ee1112fe0a80cb4d3c1c59930e906c116c564f7418c08ad3",
+    "main.bend": "4121b71f530bbb0d4cb05f7ff2ce3f2f65bbe5a5e3c1bb2f059a15b2c0491bb8",
+    "model.bend": "5a38de9bb16563d90077fd3e112084a420cc3b2cd55492a0e03c11d7c9101157",
+    "performance.bend": "aca3145dfcc2ed0582c9781c4ecd404dd9c54e662c2e6f7eb6dce89eff6e9560",
+    "release.bend": "d13eb60779d4941ebbfdec4478345c61ec60dc0f8118f2ef3e7a1910966fd988"
+  },
+  "proof": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/output_builder/PROOF.bend",
+      "--check-only"
+    ],
+    "code": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.07399916695430875
+  },
+  "release_check": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/output_builder/release.bend",
+      "--check-only"
+    ],
+    "code": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.07615720899775624
+  },
+  "native_build": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/output_builder/conformance.bend",
+      "-o",
+      "/Users/ericfode/src/knot/packages/output_builder/build/conformance"
+    ],
+    "code": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.5411531659774482
+  },
+  "native_run": {
+    "command": [
+      "/Users/ericfode/src/knot/packages/output_builder/build/conformance"
+    ],
+    "code": 0,
+    "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\nPASS byte-success-failure-persistence\nPASS byte-composition-order-limits\nPASS byte-associativity-with-sufficient-limits\nPASS byte-capacities-0-through-64\nPASS invalid-max-u32\nPASS invalid-before-capacity\nPASS checked-add-overflow-boundary\nPASS raw-char-preservation\n",
+    "stderr": "",
+    "seconds": 0.10572491586208344
+  },
+  "js_build": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/output_builder/build/js_conformance.bend",
+      "-o",
+      "/Users/ericfode/src/knot/packages/output_builder/build/conformance.js"
+    ],
+    "code": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.0828067499678582
+  },
+  "js_run": {
+    "command": [
+      "bun",
+      "/Users/ericfode/src/knot/packages/output_builder/build/conformance.js"
+    ],
+    "code": 0,
+    "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\nPASS byte-success-failure-persistence\nPASS byte-composition-order-limits\nPASS byte-associativity-with-sufficient-limits\nPASS byte-capacities-0-through-64\nPASS invalid-max-u32\nPASS invalid-before-capacity\nPASS checked-add-overflow-boundary\n",
+    "stderr": "",
+    "seconds": 0.017671291949227452
+  },
+  "mutations": [
+    {
+      "name": "discard-fragment",
+      "source_sha256": "ce4d0585f455958643348254821b63694266d124fcfc57deac3e950f1eda8858",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-fragment/main.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.05956325004808605
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-fragment/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-fragment/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.6496700420975685
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-fragment/run"
+        ],
+        "code": 1,
+        "stdout": "",
+        "stderr": "FAIL text-512-triples\n",
+        "seconds": 0.10715558310039341
+      },
+      "witness": "text-512-triples",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "reverse-compose",
+      "source_sha256": "5efed7afd79f39ccfbac2db39d881ae2340c51d91b3d2e9e81a029c549acff00",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-compose/main.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.05857579200528562
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-compose/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-compose/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5573496669530869
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-compose/run"
+        ],
+        "code": 1,
+        "stdout": "",
+        "stderr": "FAIL text-512-triples\n",
+        "seconds": 0.10855612508021295
+      },
+      "witness": "text-512-triples",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "discard-prior",
+      "source_sha256": "f3d5a95a6e6d695d3100762305a2789cab710393cc74b8cd945ec10164c8d0bc",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-prior/main.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.057305708061903715
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-prior/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-prior/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5412109578028321
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/discard-prior/run"
+        ],
+        "code": 1,
+        "stdout": "",
+        "stderr": "FAIL text-512-triples\n",
+        "seconds": 0.10981425014324486
+      },
+      "witness": "text-512-triples",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "newline-corruption",
+      "source_sha256": "ea8e8da3a00649232234e3c6dffb77fed59bd10ff23f57272c97f7f0cdd4f412",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/newline-corruption/main.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.059779416071251035
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/newline-corruption/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/newline-corruption/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5498677501454949
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/newline-corruption/run"
+        ],
+        "code": 1,
+        "stdout": "PASS text-512-triples\n",
+        "stderr": "FAIL character-newline\n",
+        "seconds": 0.10809916583821177
+      },
+      "witness": "character-newline",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "reverse-emit",
+      "source_sha256": "5f31a6834e86976b2d044e61591f6d00b3565d27909206ae1e081b474f4b1ffd",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-emit/main.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.05911308387294412
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-emit/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-emit/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5467552079353482
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/reverse-emit/run"
+        ],
+        "code": 1,
+        "stdout": "",
+        "stderr": "FAIL text-512-triples\n",
+        "seconds": 0.10400520800612867
+      },
+      "witness": "text-512-triples",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "accept-256",
+      "source_sha256": "e7e2eb7612c74b6fc7bbc61aba8922b5f4fa9ae5e26be23a759418998a9d4118",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/accept-256/bytes.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.05995575012639165
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/accept-256/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/accept-256/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5435247500427067
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/accept-256/run"
+        ],
+        "code": 1,
+        "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\n",
+        "stderr": "FAIL byte-success-failure-persistence\n",
+        "seconds": 0.10740104201249778
+      },
+      "witness": "byte-success-failure-persistence",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "one-past-capacity",
+      "source_sha256": "048f8aedb992e30c27f7275516fcbe0bf6dda450e89d5244bcd87c33038fa238",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/one-past-capacity/bytes.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.061141959158703685
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/one-past-capacity/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/one-past-capacity/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5442619170062244
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/one-past-capacity/run"
+        ],
+        "code": 1,
+        "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\n",
+        "stderr": "FAIL byte-success-failure-persistence\n",
+        "seconds": 0.10918458318337798
+      },
+      "witness": "byte-success-failure-persistence",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "drop-right-bytes",
+      "source_sha256": "21971ece9c1c079ede624aa157c0e1913cf89c513210d5e3fa3e1fe7a17c66c9",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/drop-right-bytes/bytes.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.06079908297397196
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/drop-right-bytes/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/drop-right-bytes/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.54804458306171
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/drop-right-bytes/run"
+        ],
+        "code": 1,
+        "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\n",
+        "stderr": "FAIL byte-success-failure-persistence\n",
+        "seconds": 0.10827370802871883
+      },
+      "witness": "byte-success-failure-persistence",
+      "classification": "semantic kill"
+    },
+    {
+      "name": "wrong-remaining-room",
+      "source_sha256": "a47dfc0ffd58f3751b56d7e226ed1cd8baa96f5bdff13c0ce04a3c3560908b2a",
+      "typecheck": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/wrong-remaining-room/bytes.bend",
+          "--check-only"
+        ],
+        "code": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "",
+        "seconds": 0.060632542008534074
+      },
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/wrong-remaining-room/conformance.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/wrong-remaining-room/run"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.5478269171435386
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/output_builder/build/mutants/wrong-remaining-room/run"
+        ],
+        "code": 1,
+        "stdout": "PASS text-512-triples\nPASS character-newline\nPASS snapshot-new\nPASS snapshot-old\nPASS text-left-identity\nPASS text-right-identity\nPASS byte-success-failure-persistence\n",
+        "stderr": "FAIL byte-composition-order-limits\n",
+        "seconds": 0.1081589579116553
+      },
+      "witness": "byte-composition-order-limits",
+      "classification": "semantic kill"
+    }
+  ],
+  "scaling": [
+    {
+      "n": 1000,
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_1000.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_1000"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.4316699590999633
+      },
+      "runs": [
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_1000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n2001,1000,4001,128000\n",
+          "stderr": "",
+          "seconds": 0.11789012490771711
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_1000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n2001,1000,4001,128000\n",
+          "stderr": "",
+          "seconds": 0.009976208908483386
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_1000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n2001,1000,4001,128000\n",
+          "stderr": "",
+          "seconds": 0.009964000200852752
+        }
+      ],
+      "census": "2001,1000,4001,128000"
+    },
+    {
+      "n": 2000,
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_2000.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_2000"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.4441277920268476
+      },
+      "runs": [
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_2000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n4001,2000,8001,256000\n",
+          "stderr": "",
+          "seconds": 0.12266345787793398
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_2000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n4001,2000,8001,256000\n",
+          "stderr": "",
+          "seconds": 0.017331500072032213
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_2000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n4001,2000,8001,256000\n",
+          "stderr": "",
+          "seconds": 0.01671037496998906
+        }
+      ],
+      "census": "4001,2000,8001,256000"
+    },
+    {
+      "n": 4000,
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_4000.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_4000"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.4317705410066992
+      },
+      "runs": [
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_4000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n8001,4000,16001,512000\n",
+          "stderr": "",
+          "seconds": 0.13626170810312033
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_4000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n8001,4000,16001,512000\n",
+          "stderr": "",
+          "seconds": 0.030703957891091704
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_4000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n8001,4000,16001,512000\n",
+          "stderr": "",
+          "seconds": 0.030647083185613155
+        }
+      ],
+      "census": "8001,4000,16001,512000"
+    },
+    {
+      "n": 8000,
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_8000.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/output_builder/build/perf_8000"
+        ],
+        "code": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.4253141670487821
+      },
+      "runs": [
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_8000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n16001,8000,32001,1024000\n",
+          "stderr": "",
+          "seconds": 0.16550724999979138
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_8000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n16001,8000,32001,1024000\n",
+          "stderr": "",
+          "seconds": 0.06074420805089176
+        },
+        {
+          "command": [
+            "/Users/ericfode/src/knot/packages/output_builder/build/perf_8000"
+          ],
+          "code": 0,
+          "stdout": "PASS tiny-content\nPASS uneven-content\nPASS empty-fragments\nPASS byte-tiny-content\n16001,8000,32001,1024000\n",
+          "stderr": "",
+          "seconds": 0.06031520804390311
+        }
+      ],
+      "census": "16001,8000,32001,1024000"
+    }
+  ]
+}

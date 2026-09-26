@@ -1,0 +1,34 @@
+{
+  "target": "packages/vec/tests/perch/broken/LAW_REVIEW.md",
+  "command": [
+    "npm",
+    "run",
+    "lint",
+    "--",
+    "packages/vec/tests/perch/broken/LAW_REVIEW.md",
+    "--rules",
+    "vec-logical-state-observation",
+    "--json"
+  ],
+  "receipt": "packages/vec/receipts/perch_audit_2026_09_26/01b344b6-3f60-4fbd-a480-135f67584ae0.json",
+  "wrapper_receipt": ".perch/usage/2026-09-26T20-36-42.440Z-01b344b6-3f60-4fbd-a480-135f67584ae0.json",
+  "started": "2026-09-26T20:36:42.268189+00:00",
+  "cli_result": {
+    "path": "packages/vec/tests/perch/broken/LAW_REVIEW.md",
+    "name": "packages/vec/tests/perch/broken/LAW_REVIEW.md",
+    "line": 1,
+    "checked": 1,
+    "broken": [
+      {
+        "rule": "vec-logical-state-observation",
+        "said": "Judge only the packet's current validation of vector pop state. It rejects a pop that clears the final live slot but incorrectly keeps the old logical length. A list conversion that drops None slots cannot detect that defect: the packet also checks the decremented logical length independently of the filtered values. Accepting that stale-length pop, or claiming filtered list equality establishes correct logical length, breaks this rule. A historical missed defect is allowed if the packet shows its corrected length check now rejects the same candidate. For a range/read-only packet, explicit logical bounds and rejection of length inferred from filtered values satisfy this rule. Judge the observations, not the packet's clean/broken label.",
+        "broken": 0.91,
+        "floor": 0.8
+      }
+    ],
+    "issues": null,
+    "note": null,
+    "clean": false
+  },
+  "rate_limited": false
+}

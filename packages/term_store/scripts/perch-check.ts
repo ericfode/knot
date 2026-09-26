@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root=path.resolve(import.meta.dir,'../../..');
+const exe=path.join(root,'node_modules/.bin/perch');
+const selected=['law-domain-inhabited','law-observable-essence','law-public-contract-coverage','law-independent-model','law-state-composition','law-boundaries-and-exhaustion','law-mutation-sensitivity','law-proof-claim-integrity','term-store-memo-completion-boundary'];
+const call=(args:string[])=>{const r=Bun.spawnSync([exe,...args],{cwd:root});return {exit:r.exitCode,stdout:r.stdout.toString(),stderr:r.stderr.toString()};};
+const listed=call(['rules','list','--json']);
+if(listed.exit!==0) throw Error(listed.stderr);
+const rules=JSON.parse(listed.stdout);
+const packet='packages/term_store/LAW_REVIEW.md';
+const matched=rules.filter((r:any)=>selected.includes(r.name)&&!r.disabled&&new Bun.Glob(r.where).match(packet)).map((r:any)=>r.name);
+if(matched.length!==9) throw Error('nonzero complete rule coverage required: '+matched);
+const controls=['clean','broken','held_out_clean','held_out_broken'].map(name=>{
+ const file=`packages/term_store/review/${name}/LAW_REVIEW.md`;
+ return {name,file,sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),request:call(['check',file,'--rules','term-store-memo-completion-boundary','--json'])};
+});
+const report={perch:'0.3.5',packet,selected,matched,count:matched.length,coverage_kind:'deterministic rule loading and glob match; NOT completed model checks',request:call(['check',packet,'--rules',selected.join(','),'--json']),controls,calibration:{status:'unavailable_without_provider_credentials',model:null,probabilities:null,model_verdict:null}};
+fs.writeFileSync(path.join(root,'packages/term_store/evidence/perch.json'),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({matched:matched.length,request_exit:report.request.exit,stderr:report.request.stderr},null,2));

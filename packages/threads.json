@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-26",
+  "coordinatorThreadId": "01a0ded6-ed33-72d2-a28e-e84b2895faaa",
+  "projectId": "719c1584-6f65-4e87-9a62-7bd922e198ee",
+  "workspace": "/Users/ericfode/src/knot",
+  "scope": "Six priority compiler-support packages",
+  "completion": "Verified BendHub publication and a fresh remote consumer for every package",
+  "packages": [
+    {
+      "name": "vec",
+      "title": "Build and publish Bend Vec",
+      "threadId": "01a0deeb-80e3-7f42-b3e4-119e3a3736fc",
+      "hostId": "local",
+      "reasoning": "xhigh",
+      "directory": "packages/vec",
+      "rulesFile": ".perch/rules/package_vec.yaml",
+      "dependencies": []
+    },
+    {
+      "name": "source",
+      "title": "Build and publish Bend source buffers",
+      "threadId": "01a0deee-adbd-73a0-9a11-709737a94d56",
+      "hostId": "local",
+      "reasoning": "high",
+      "directory": "packages/source",
+      "rulesFile": ".perch/rules/package_source.yaml",
+      "dependencies": [
+        "vec"
+      ]
+    },
+    {
+      "name": "output_builder",
+      "title": "Build and publish Bend output builder",
+      "threadId": "01a0deee-b07f-77e1-a03b-809505e9b827",
+      "hostId": "local",
+      "reasoning": "high",
+      "directory": "packages/output_builder",
+      "rulesFile": ".perch/rules/package_output_builder.yaml",
+      "dependencies": []
+    },
+    {
+      "name": "int_map",
+      "title": "Build and publish Bend integer maps",
+      "threadId": "01a0deee-b662-7730-98de-0679e0f47959",
+      "hostId": "local",
+      "reasoning": "xhigh",
+      "directory": "packages/int_map",
+      "rulesFile": ".perch/rules/package_int_map.yaml",
+      "dependencies": []
+    },
+    {
+      "name": "symbols",
+      "title": "Build and publish Bend symbol interning",
+      "threadId": "01a0deee-ba32-7262-ac71-aa75e2356709",
+      "hostId": "local",
+      "reasoning": "high",
+      "directory": "packages/symbols",
+      "rulesFile": ".perch/rules/package_symbols.yaml",
+      "dependencies": [
+        "vec"
+      ]
+    },
+    {
+      "name": "term_store",
+      "title": "Build and publish Bend term storage",
+      "threadId": "01a0deee-be28-7643-a44a-5d387a7d5d41",
+      "hostId": "local",
+      "reasoning": "xhigh",
+      "directory": "packages/term_store",
+      "rulesFile": ".perch/rules/package_term_store.yaml",
+      "dependencies": [
+        "vec"
+      ]
+    }
+  ],
+  "coordination": {
+    "automationId": "complete-bend-package-campaign",
+    "kind": "heartbeat",
+    "intervalMinutes": 15,
+    "completionAction": "pause after all six verified remote releases",
+    "status": "PAUSED",
+    "completion": "All six packages published and remotely verified on 2026-09-26"
+  },
+  "releaseCatalog": "packages/releases.json"
+}

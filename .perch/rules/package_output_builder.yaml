@@ -1,0 +1,15 @@
+- name: output-builder-linear-assembly
+  where: "packages/output_builder/**/LAW_REVIEW.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect only the assembly algorithm and cost argument in this packet.
+    Repeated fragment append or composition must not traverse the prior output.
+    Finish must copy each fragment occurrence a bounded number of times,
+    including skewed compositions and empty fragments. A cost claim based only
+    on character count while ignoring arbitrarily many empty chunks fails.
+    A right-suffix tree traversal with constant-time construction and O(N+K)
+    finish for N emitted characters or bytes and K expanded tree nodes passes.
+    Repeatedly appending accumulated output as the left operand fails even when
+    content laws pass. Treat timings as measurements, not universal cost proofs.

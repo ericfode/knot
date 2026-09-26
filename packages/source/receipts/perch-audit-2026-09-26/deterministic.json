@@ -1,0 +1,98 @@
+{
+  "commands": [
+    {
+      "command": [
+        "scripts/bend-reference",
+        "packages/source/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.25950791710056365
+    },
+    {
+      "command": [
+        "scripts/bend-reference",
+        "packages/source/conformance.bend",
+        "-o",
+        "packages/source/build/perch_audit/conformance"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.8259663749486208
+    },
+    {
+      "command": [
+        "packages/source/build/perch_audit/conformance"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "seconds": 0.2125542089343071
+    },
+    {
+      "command": [
+        "scripts/bend-reference",
+        "packages/source/conformance.bend",
+        "-o",
+        "packages/source/build/perch_audit/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.11721983388997614
+    },
+    {
+      "command": [
+        "bun",
+        "packages/source/build/perch_audit/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "seconds": 0.020363999996334314
+    },
+    {
+      "command": [
+        "scripts/bend-reference",
+        "packages/source/tests/invalid_scalars.bend",
+        "-o",
+        "packages/source/build/perch_audit/invalid_scalars"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.31517087505199015
+    },
+    {
+      "command": [
+        "packages/source/build/perch_audit/invalid_scalars"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "seconds": 0.17908958299085498
+    }
+  ],
+  "release_hash": "0x88d5b48c03f82f217d3a2aa0656744f4",
+  "release_closure_unchanged": {
+    "LAWS.bend": true,
+    "LICENSE": true,
+    "PROOF.bend": true,
+    "benchmark.bend": true,
+    "conformance.bend": true,
+    "example.bend": true,
+    "main.bend": true,
+    "model.bend": true,
+    "observations.bend": true,
+    "proof_observations.bend": true,
+    "release.bend": true,
+    "tests/invalid_scalars.bend": true,
+    "types.bend": true
+  },
+  "prior_mutation_source_hashes_unchanged": true,
+  "mutation_replay": "not repeated: no Bend changes; eleven recorded type-correct semantic kills remain tied to identical source",
+  "new_bend_semantics": false
+}

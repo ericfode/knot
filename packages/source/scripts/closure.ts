@@ -1,0 +1,21 @@
+// Exact publication closure obtained from the pinned CLI's own pkg_files body.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import * as Bend from '../../../.toolchain/bend-2.0.29-574b6d3/bend2/bend.ts';
+const root=path.resolve(import.meta.dir,'../../..');
+const compiler=path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2');
+const source=fs.readFileSync(path.join(compiler,'main.ts'),'utf8');
+const from=source.indexOf('function pkg_files('), to=source.indexOf('\nfunction sha256(',from);
+if(from<0||to<0) throw new Error('Pinned closure implementation not found');
+const js=new Bun.Transpiler({loader:'ts'}).transformSync(source.slice(from,to));
+const pkgFiles=new Function('fs','path','BASE',js+'\nreturn pkg_files;')(fs,path,fs.realpathSync(path.join(compiler,'base.bend')));
+const entry=path.join(root,'packages/source/release.bend');
+const seen=new Map(); const book=Bend.book_nil(); await Bend.book_load(book,entry,'',seen); Bend.book_valid(book);
+if(book.hols) throw new Error(`Incomplete book: ${book.hols}`);
+const files=pkgFiles(entry,book,seen); const paths=Object.keys(files).sort();
+const sha=(x:string)=>crypto.createHash('sha256').update(x).digest('hex');
+const hash='0x'+sha(paths.map(p=>sha(files[p])+' '+p+'\n').join('')).slice(0,32);
+const report={compiler:'2.0.29',revision:'574b6d39a235b539eb19a5c532993a0abb3d11ad',holes:book.hols,expected_hash:hash,files:Object.fromEntries(paths.map(p=>[p,{bytes:Buffer.byteLength(files[p]),sha256:sha(files[p])}])),dependency_imports:[...seen].filter(([p,ns])=>ns?.startsWith('0x')),loaded_trust_inventory:Object.entries(book.tlds).filter(([k,t]:any)=>t.u||t.i).map(([k,t]:any)=>({name:k,base:t.b===true,unsafe:t.u===true,foreign:t.i??null})),note:'Trust inventory covers all loaded Base declarations, not only the executed entry. pkg_files extracted from the pinned CLI; stored dependency packages and Base excluded by that exact code.'};
+fs.writeFileSync(path.join(root,'packages/source/receipts/closure.json'),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({holes:book.hols,hash,paths},null,2));

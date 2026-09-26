@@ -1,0 +1,49 @@
+{
+  "kind": "emitted-native-source-inspection",
+  "artifact": "build/benchmark.c",
+  "artifact_sha256": "aa98f6292e040e9a7c4ddb469ccc671aff5b993c697b601956a1d5363e51d1f5",
+  "sources": {
+    "LAWS.bend": "bbd74050a1a1fc5ae7af9f8fce892023de197f8e37dcfdf87ef000af718f0950",
+    "PROOF.bend": "06e8c1044639d44fbfc6eeea3618b8dc8a4f75c25a2409918c97c86deda782af",
+    "benchmark.bend": "d28dbdb645e5e132917653cf8434f59a37c4b0438944af28a430fbb1771793b8",
+    "conformance.bend": "93ede95e703f52c7efe436a98681d6003068b10819e423a1c3a3c0012f9e0c69",
+    "example.bend": "d1e38d7f3f98a1db77eca3df5640fd1b67ad5b0a815162b2e1d6d12313a70800",
+    "main.bend": "83029b603921ea8a978c3f9a424fb256e0737d8041836c2749f8bd1b5e0be12c",
+    "model.bend": "2ba69937a36ee689bec25bcc2f99a83bdcf8373eb88e30813800388d7a8495ea",
+    "observations.bend": "c0d4d88f9e6324db3ec5698280d5ffa807b5b78304d02127fb6b75627ce39cb0",
+    "proof_observations.bend": "495a5d4767a750b176387d568489a556e23af935e8a05960c12839ce2ce4fc1f",
+    "release.bend": "e5cd3a2902d6f871978777683442df9fe03f76221f37058a1b56212b7e469adb",
+    "types.bend": "43e2cd88043f6f1b7c183e017931bc68dabae516b35a4eab9e319187442a9141"
+  },
+  "evidence": [
+    {
+      "line": 1046,
+      "text": "return H[loc + i];"
+    },
+    {
+      "line": 1059,
+      "text": "INLINE u32 blk_at(Term a, u64 i, u32 lgs) {"
+    },
+    {
+      "line": 1627,
+      "text": "Term _at_1 = blk_at(_a_2, _i_0, 1);"
+    },
+    {
+      "line": 2491,
+      "text": "Term _at_1 = blk_at(_v_11, _v_7, 1);"
+    },
+    {
+      "line": 3205,
+      "text": "Term _at_1 = blk_at(_a_0, _i_1, 1);"
+    },
+    {
+      "line": 4417,
+      "text": "Term _at_1 = blk_at(_old_0, _i_0, 1);"
+    },
+    {
+      "line": 4497,
+      "text": "Term _at_3 = blk_at(_fresh_2, _i_2, 1);"
+    }
+  ],
+  "conclusion": "Emitted array accesses use blk_at index arithmetic and blk_read with direct H[loc+i]. Vec provides logical bounds. Structural Array tree indexing is not used for the benchmark indexed reads. This is code inspection, not a backend correctness proof."
+}

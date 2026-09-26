@@ -1,0 +1,18 @@
+# Advisory draft. Live calibration requires provider credentials.
+- name: package-int-map-union-observation
+  where: "packages/int_map/**/LAW_REVIEW.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Judge only this packet's union_with collision observation. The packet must
+    exhibit an overlapping key with distinct left and right values and an
+    expected result from a noncommutative combiner, and exhibit a one-sided key
+    whose unchanged value proves the combiner was not applied there. Addition,
+    maximum, length, or size alone cannot distinguish reversed arguments or
+    accidental combining on one-sided keys. A trace Join(left,right) or an
+    arithmetic combiner such as 100*left+right with concrete distinct operands
+    satisfies the direction requirement. An explicit equality to a single
+    Join also distinguishes duplicated combining. Do not infer observations
+    from unseen files. This rule judges adequacy of the collision observation,
+    not universal correctness or the rest of the packet.

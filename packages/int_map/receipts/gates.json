@@ -1,0 +1,125 @@
+{
+  "date": "2026-09-26T18:35:38.617160+00:00",
+  "source_sha256": {
+    "LAWS.bend": "95f0f9551cfcd8b5e0b16437405177f4e79f8305c4b9a503bfda68d2a9eea311",
+    "PROOF.bend": "64a59a7d38a2daac8bdbf31006c27f6de88733edbca5176e953386881e7715e6",
+    "benchmark.bend": "77a420bb48003b31e4f24862fffe3227d629fc81f809246386919f5c040549b2",
+    "conformance.bend": "987b5f1fe814cefdc58ad39f95618bfcc58002983f021825c3c024b8c32b1de6",
+    "example.bend": "58bb16bafcdb56f6e488d49e9e5fabc40c4930e688a8d65fca48cc7af1a309f6",
+    "fixtures.bend": "22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e",
+    "main.bend": "e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a",
+    "model.bend": "62ede4569dd2d11dd8d23734afbaca21710f58bc73a14cee5fb82efe684109fa",
+    "release.bend": "71f59b2447b6c0e769ec6d73ce43d7e060d4f31226fb7367875f33d24d98992f",
+    "scaling.bend": "a65fdc9d14b907e479237bd05db08b5da4f0f5a7bb44f4cbaae7fc377d69d175",
+    "LICENSE": "b1555c91af9ac6f8d84cd242aed3c969de38acd58603151c6c8e0868bb58c6e4"
+  },
+  "steps": [
+    {
+      "name": "proof",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "seconds": 0.507783125154674,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "name": "release_check",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "seconds": 0.6004725000821054,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "name": "native_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/release"
+      ],
+      "exit": 0,
+      "seconds": 1.3639239170588553,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "native_run",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/release"
+      ],
+      "exit": 0,
+      "seconds": 0.24673891603015363,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "javascript_build",
+      "args": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.5231626669410616,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "javascript_run",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.06429479201324284,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "semantic_mutants",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/mutations.py"
+      ],
+      "exit": 0,
+      "seconds": 1.9289052919484675,
+      "stdout": "{\"name\": \"discard_set\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"86c6de24d3dd76365f25f7556546035ea70ffeff6cc399d56cb41c0058f97188\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"lose_sibling\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"d4beb880acd2ee1e7124f4001dbeb0e6a546241c2ea9b143351e7dad94cb1a5d\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"truncate_high_bit\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"ad5a15024a641999f731d816eb89599ee87528391786c3c5b44fe2fdc803ce37\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"all-32-bits/complements\", \"killed\": true, \"output\": \"all-32-bits/complements\\n\"}\n{\"name\": \"stale_remove\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"9585b12728d4438e1dbe3779ae7c99033695986539694e017bbb3332867231c6\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"false_contains\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"8c34c09f5afc6f5d94b80a744cae5ea7ad201068198cb2e1b7390aa9c36bd2f7\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"bad_size\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"71e7a6ebf4c896916a00342fbfc33456c7d91d0fd3c74a9ddbd0ef7054ac9de1\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"discard_fold\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"64cf3334c013dbb32dd8f6890295aaf624710fcacf8eb28f963b7322fe1e4cbf\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_fold\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"d303f970ec1ab2155f6554d09c5d8d4aa7ccd575eebe2d6bcf9559a5e8a5b232\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_combiner\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"185f62242c2646f827f007b15e3c11fc413633c15bbab5ce01c3e5585c759d50\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"combine_singleton\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"e301312ce9287917f321c70e4fe981b4577cd708484cf0a3a485e9a41467042f\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"double_combine\", \"baseline_sha256\": \"e3e62df90a23f8f80ad6a0730f434b16035d1dda43fb93764fe03504d1c3f83a\", \"mutant_sha256\": \"451f08e4316e51ffb798cfca15a0d5d0fe97d1726ca084be59966aa928814656\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "scaling",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/performance.py"
+      ],
+      "exit": 0,
+      "seconds": 4.554312374908477,
+      "stdout": "[{\"n\": 64, \"backend\": \"native\", \"seconds\": [0.18617404205724597, 0.005240750033408403, 0.002999792108312249], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}, {\"n\": 64, \"backend\": \"javascript\", \"seconds\": [0.023831458995118737, 0.02093895897269249, 0.01891550002619624], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}]\n[{\"n\": 256, \"backend\": \"native\", \"seconds\": [0.004684207960963249, 0.004352333024144173, 0.0047413751017302275], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}, {\"n\": 256, \"backend\": \"javascript\", \"seconds\": [0.023656333796679974, 0.023985874839127064, 0.022551416885107756], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}]\n[{\"n\": 1024, \"backend\": \"native\", \"seconds\": [0.010498875053599477, 0.01072704209946096, 0.011858124984428287], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}, {\"n\": 1024, \"backend\": \"javascript\", \"seconds\": [0.03713887487538159, 0.0348709998652339, 0.02948549995198846], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}]\n[{\"n\": 4096, \"backend\": \"native\", \"seconds\": [0.03892954089678824, 0.04019545787014067, 0.04027154203504324], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}, {\"n\": 4096, \"backend\": \"javascript\", \"seconds\": [0.06492108292877674, 0.06208487483672798, 0.06139695807360113], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "exact_closure",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/inspect-release.ts"
+      ],
+      "exit": 0,
+      "seconds": 0.5811858330853283,
+      "stdout": "{\"expected_hash\":\"0x99e32f5f97dad3791a32b01d133555c5\",\"files\":[\"LAWS.bend\",\"LICENSE\",\"PROOF.bend\",\"conformance.bend\",\"example.bend\",\"fixtures.bend\",\"main.bend\",\"model.bend\",\"release.bend\"],\"proof_holes\":0,\"bytes\":24868}\n",
+      "stderr": ""
+    }
+  ],
+  "deterministic_pass": true,
+  "proof_holes": 0,
+  "gpu_validated": false
+}

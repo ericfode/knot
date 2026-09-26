@@ -1,0 +1,159 @@
+{
+  "model": "jev-1.13.0",
+  "requested_model": "jev-latest",
+  "perch_version": "0.3.5",
+  "invocations": 25,
+  "provider_responses": 25,
+  "checked_rule_file_pairs": 114,
+  "production_bend_files": 13,
+  "production_source_findings": 0,
+  "law_packet_findings": 0,
+  "control_findings": 3,
+  "adjudications": [
+    {
+      "target": "packages/vec/tests/perch/broken/LAW_REVIEW.md",
+      "receipt": "packages/vec/receipts/perch_audit_2026_09_26/01b344b6-3f60-4fbd-a480-135f67584ae0.json",
+      "rule": "vec-logical-state-observation",
+      "probability": 0.91,
+      "classification": "confirmed",
+      "scope": "intentional broken control, not shipped package defect",
+      "evidence": "Control explicitly accepts unchanged logical length after pop; independently type-correct stale-pop mutant fails LAWS.pop_length and unchanged runtime oracle. See deterministic.json."
+    },
+    {
+      "target": "packages/vec/tests/perch/heldout_broken/LAW_REVIEW.md",
+      "receipt": "packages/vec/receipts/perch_audit_2026_09_26/bdce6ca1-2df7-4977-89d0-5d7dbdfa40c8.json",
+      "rule": "vec-logical-state-observation",
+      "probability": 0.9299999999999999,
+      "classification": "confirmed",
+      "scope": "intentional broken control, not shipped package defect",
+      "evidence": "Control explicitly accepts unchanged logical length after pop; independently type-correct stale-pop mutant fails LAWS.pop_length and unchanged runtime oracle. See deterministic.json."
+    },
+    {
+      "target": "packages/vec/tests/perch/heldout_after_refinement/LAW_REVIEW.md",
+      "receipt": "packages/vec/receipts/perch_audit_2026_09_26/dce59f85-e7f4-4400-8ae6-6e3593d39695.json",
+      "rule": "vec-logical-state-observation",
+      "probability": 0.9,
+      "classification": "confirmed",
+      "scope": "intentional broken control, not shipped package defect",
+      "evidence": "Control explicitly accepts unchanged logical length after pop; independently type-correct stale-pop mutant fails LAWS.pop_length and unchanged runtime oracle. See deterministic.json."
+    }
+  ],
+  "source_hashes": {
+    "packages/vec/LAWS.bend": "bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd",
+    "packages/vec/PROOF.bend": "09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871",
+    "packages/vec/benchmark.bend": "77a93e08e2e170f629b68aca07dab2456b38c05ebb345afd2355e93df406c42b",
+    "packages/vec/conformance.bend": "eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91",
+    "packages/vec/example.bend": "7079c1ae8a556f433975b91447af3fa3d6a4ba7a13d49eeae4264331c9e37726",
+    "packages/vec/generic.bend": "adf3a1fd8e094d004379998985c76d50ad7ebcda323fcb935caedb0248f935f0",
+    "packages/vec/main.bend": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0",
+    "packages/vec/model.bend": "4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9",
+    "packages/vec/observations.bend": "d31a1cc102a0e435f8458e071a1757946713d0ea25cd5446af59e6c840e4ffaa",
+    "packages/vec/release.bend": "974e90fd20208c59d76e5482eccbaebc81154b905dacce7c471a9db936f72819",
+    "packages/vec/trace.bend": "9378a64a7edfa9b89bc40fe52c598f3bf248292e2c2260ed25e03bfb10075ecd",
+    "packages/vec/witnesses.bend": "e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a",
+    "packages/vec/tests/remote_consumer.bend": "546305f607b678a3b73acf2996af250838932881dcd3643d35c12546bfa987eb"
+  },
+  "final_law_packet": {
+    "receipt": "packages/vec/receipts/perch_audit_2026_09_26/74653924-b4a5-4d28-bd15-843e2487673e.json",
+    "source_sha256": "f0ca169fc459739d7c50d2c2e2bdc5ef1717c68dc7f1ddc8420a95876e984f4d",
+    "scores": {
+      "law-domain-inhabited": 0.47,
+      "law-observable-essence": 0.62,
+      "law-public-contract-coverage": 0.43000000000000005,
+      "law-independent-model": 0.4,
+      "law-state-composition": 0.27,
+      "law-boundaries-and-exhaustion": 0.42000000000000004,
+      "law-mutation-sensitivity": 0.4,
+      "law-proof-claim-integrity": 0.55,
+      "vec-logical-state-observation": 0.06999999999999995
+    }
+  },
+  "vec_rule": {
+    "before_sha256": "8404368b56688b22f50d5043767124fd7de36070a0b3cf41613ba62eba0ac95b",
+    "after_sha256": "e1be88f7e45a07c408f1b34e144d6bc6a0708e1736f39c1af0d92f26695d7e93",
+    "floor": 0.8,
+    "gate": false,
+    "refinement": "Narrow current-validation judgment; distinguish historical repaired defects from accepting stale logical length. No threshold change."
+  },
+  "selected_rule_snapshots": {
+    ".perch/rules/bend.yaml": "d91d28c179a03c891d6d589d47a6090ba34ffba79cfa518c50c2b2791a2f195a",
+    ".perch/rules/laws.yaml": "01c09cb19b1701c470f69987103ec40db08e8ea2f988d52fdbdde7da72e8dbdb"
+  },
+  "control_outcomes": [
+    {
+      "case": "clean",
+      "expected_broken": false,
+      "source_sha256": "301bc5366c97de047c6f533b607b840996283ab8c42077b9554c3016189ac645",
+      "before": {
+        "probability_broken": 0.12,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/6303bf5f-3a29-4960-93b5-d27dd20d38b6.json"
+      },
+      "after": {
+        "probability_broken": 0.08999999999999997,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/a2d0ab54-8dc0-4c43-bb2d-fb13192a1cad.json"
+      }
+    },
+    {
+      "case": "broken",
+      "expected_broken": true,
+      "source_sha256": "f9b7afaa5dc62d13899868b40ce83a56f35810a53a3020fd990a3f9cb4365f6a",
+      "before": {
+        "probability_broken": 0.53,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/ee3fce19-af05-49ad-8a79-2fc15c5d5904.json"
+      },
+      "after": {
+        "probability_broken": 0.91,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/01b344b6-3f60-4fbd-a480-135f67584ae0.json"
+      }
+    },
+    {
+      "case": "heldout",
+      "expected_broken": false,
+      "source_sha256": "dc18f8f9825ec73bbc20dd0f722d8cec506df3e21276b963212a3ea96e28401d",
+      "before": {
+        "probability_broken": 0.24,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/fffb3480-89d4-471e-b32d-ccceb50248f6.json"
+      },
+      "after": {
+        "probability_broken": 0.08999999999999997,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/4f34e857-66b3-4084-8204-581296a1231f.json"
+      }
+    },
+    {
+      "case": "heldout_broken",
+      "expected_broken": true,
+      "source_sha256": "c68726edb98b20de463e96e386b1c71b92449f41005a4d1190b8ea1391a5ee0e",
+      "before": {
+        "probability_broken": 0.6,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/37a7e5b6-3dbf-4e49-858d-fabbfefae3b9.json"
+      },
+      "after": {
+        "probability_broken": 0.9299999999999999,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/bdce6ca1-2df7-4977-89d0-5d7dbdfa40c8.json"
+      }
+    },
+    {
+      "case": "heldout_after_refinement",
+      "expected_broken": true,
+      "source_sha256": "72b2d082e70cd85af1b9d5453f890d902e82cc2a245fe648ffd31d41bd5bbe37",
+      "before": null,
+      "after": {
+        "probability_broken": 0.9,
+        "receipt": "packages/vec/receipts/perch_audit_2026_09_26/dce59f85-e7f4-4400-8ae6-6e3593d39695.json"
+      }
+    }
+  ],
+  "source_package_rule_floor": "source-checkpoint-observation remains 70; not edited; prior source calibration not generalized to Vec",
+  "publication": "All 13 uploaded files identical to 0xd684886d10b431b9dce6c3b2d1ef1980; no republish",
+  "new_files": [
+    "tests/perch/heldout_broken/LAW_REVIEW.md",
+    "tests/perch/heldout_after_refinement/LAW_REVIEW.md",
+    "scripts/live_perch_audit.py",
+    "PERCH_REPORT.md"
+  ],
+  "changed_files": [
+    ".perch/rules/package_vec.yaml",
+    "packages/vec/LAW_REVIEW.md",
+    "packages/vec/STATUS.md"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "published_source_unchanged": {
+    "LAWS.bend": "bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd",
+    "LICENSE": "32e3179e84a458307a4c8f6f0c9cc561b0cec94f369dd787c36057a245d9f880",
+    "PROOF.bend": "09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871",
+    "benchmark.bend": "77a93e08e2e170f629b68aca07dab2456b38c05ebb345afd2355e93df406c42b",
+    "conformance.bend": "eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91",
+    "example.bend": "7079c1ae8a556f433975b91447af3fa3d6a4ba7a13d49eeae4264331c9e37726",
+    "generic.bend": "adf3a1fd8e094d004379998985c76d50ad7ebcda323fcb935caedb0248f935f0",
+    "main.bend": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0",
+    "model.bend": "4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9",
+    "observations.bend": "d31a1cc102a0e435f8458e071a1757946713d0ea25cd5446af59e6c840e4ffaa",
+    "release.bend": "974e90fd20208c59d76e5482eccbaebc81154b905dacce7c471a9db936f72819",
+    "trace.bend": "9378a64a7edfa9b89bc40fe52c598f3bf248292e2c2260ed25e03bfb10075ecd",
+    "witnesses.bend": "e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a"
+  },
+  "proof": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "packages/vec/PROOF.bend",
+      "--check-only"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.1732237502001226
+  },
+  "stale_length_mutant": {
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "packages/vec/tests/generated/pop_stale_length/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.07201400003395975
+    },
+    "proof": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "packages/vec/tests/generated/pop_stale_length/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : 3\n- observed : 2\nContext:\n- T : Data\n- a : T\n- b : T\n- x : T\nLocation: LAWS.pop_length\n25 | def Laws.push_success(T,a,b,x): {==}\n26>| def Laws.pop_length(T,a,b,x): {==}\n   |                               ^^^^\n27 | def Laws.maximum_plan(): {==}\n",
+      "seconds": 0.16230041603557765
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "packages/vec/tests/generated/pop_stale_length/mutation_probe.bend",
+          "-o",
+          "packages/vec/build/perch_stale_pop_probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.10460029100067914
+      },
+      "run": {
+        "command": [
+          "bun",
+          "packages/vec/build/perch_stale_pop_probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.015785666881129146
+      }
+    },
+    "sha256": "094b685f578f8e2ef20ef0ec19b26dd486809f38413933cd2c760ba6b872f85e"
+  },
+  "offline_wiring": {
+    "command": "npm run lint:verify",
+    "exit": 0,
+    "workflow_tests_passed": 1,
+    "eight_shared_law_rules_selected": true,
+    "provider_contacted": false,
+    "evidence": "Observed directly in this audit before receipt creation; source wrapper tests and check-law-rule-wiring passed."
+  }
+}

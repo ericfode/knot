@@ -1,0 +1,92 @@
+# Evidence and calibration plans: docs/bend-lint-suggestions.md.
+# These inspect source text, not a Bend AST or Bend call graph.
+- name: bend-fuel-completeness
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect fuel-bounded recursive traversals in this Bend 2 file. When a result
+    promises complete parsing, traversal, construction, or search, exhausting Nat
+    fuel before the input is consumed is an explicit failure or partial result,
+    or a stated bound covers every recursive step. Silently substituting an empty
+    tree, missing node, truncated token stream, or successful partial parse breaks
+    this rule. For a split n/2 and n-n/2, the larger child and the leaf step count
+    toward the depth bound. An intentionally bounded approximation with explicit
+    partial status is allowed. If no such traversal exists, this rule holds.
+
+- name: bend-machine-arithmetic
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect arithmetic used for bounds, indices, sizes, and signed differences in
+    this Bend 2 file. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic.
+    Subtraction used as a nonnegative count needs an established ordering; a
+    difference that can be negative must retain its intended signed meaning.
+    A masked or wrapped storage index does not itself validate a source position.
+    Report a concrete path where wraparound or conversion violates the operation's
+    stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations,
+    or an explicit modular representation is allowed. Do not invent caller bounds
+    or declare a bug solely because supporting code is outside this file.
+
+- name: bend-borrow-lifetime
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed
+    value is not retained in a returned closure, data structure, or deferred task
+    past the owning value's lifetime. Consumed affine File, Socket, Chan, Array,
+    or closure values are not reused or made reusable merely by adding Data or +.
+    Read-only borrowed inputs may be shared between synchronous fork/join branches
+    when the owner stays alive until they join. Explicit owned Data copies are
+    allowed. Report only a visible escape or reuse, not the mere presence of a
+    borrow, a closure, or parallel code. If none exist, this rule holds.
+
+- name: bend-ordered-f32
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect F32 folds and reductions whose contract requires deterministic results
+    or equality with a serial reference. Independent calculations may run in
+    parallel, but their values enter the stateful fold in the specified order.
+    Completion order, regrouping, tree reduction, fused arithmetic, or changed
+    rounding must not be substituted under an exact-equality contract. An explicitly
+    approximate contract with an error budget is allowed. F32 arithmetic is not
+    associative real arithmetic. Do not flag an integer reduction or parallel work
+    that preserves the fold order. If no such contract appears, this rule holds.
+
+- name: bend-effect-boundary
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect foreign imports and effect sequencing in this Bend 2 file. Host IO
+    stays behind an explicit IO boundary and does not enter a pure parser, proof
+    reduction, or GPU computation. A foreign operation's error result is handled
+    or propagated before its returned value or resource is used. Unsupported
+    backends fail explicitly instead of pretending the operation succeeded.
+    Ordinary pure functions may be called from IO. If no foreign or fallible
+    effects are present, this rule holds.
+
+- name: bend-device-stack
+  where: "**/*.bend"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Inspect large-input traversals visibly called from a Bend 2 GPU bang in this
+    file, or explicitly documented as device-reachable. A traversal does not
+    retain one non-tail continuation per list element or nest append chains
+    proportional to an unbounded input without an explicit practical bound or
+    stack-safe representation. Termination fuel by itself does not establish a
+    safe machine-stack bound. Tail-recursive loops and balanced bounded-depth
+    trees are allowed. Name the retained continuation and the input controlling
+    depth. Do not infer unseen GPU reachability or flag recursion alone. If
+    no such traversal is visible, this rule holds.

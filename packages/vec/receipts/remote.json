@@ -1,0 +1,121 @@
+{
+  "cache": "/Users/ericfode/src/knot/packages/vec/build/remote_cache_4gqv64wi",
+  "cache_initially_empty": true,
+  "consumer_source": "import Base\nimport 0xd684886d10b431b9dce6c3b2d1ef1980/release.bend as Release\nimport 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V\n\ndef read(pair: V.Vec<U32> & Result<V.Error,U32>) -> Bool:\n  (v,r) = pair\n  match r:\n    case Fail{e}: False{}\n    case Done{x}: U32.is_eq(x,42)\n\ndef pushed(pair: V.Vec<U32> & Result<V.Error,Unit>) -> Bool:\n  (v,r) = pair\n  read(V.Vec.get(U32,v,0))\n\ndef main() -> Bool:\n  Bool.and(Release.main(),pushed(V.Vec.push(U32,V.Vec.new(U32),42)))\n",
+  "consumer_sha256": "546305f607b678a3b73acf2996af250838932881dcd3643d35c12546bfa987eb",
+  "check": {
+    "command": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.bend",
+      "--check-only"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "",
+    "seconds": 0.2445396250113845
+  },
+  "backends": {
+    "native": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.bin"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.6558612091466784
+      },
+      "run": {
+        "command": [
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.bin"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.1873822920024395
+      }
+    },
+    "js": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.23008279083296657
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/build/consumer_remote_cache_4gqv64wi.js"
+        ],
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": "",
+        "seconds": 0.01852079201489687
+      }
+    }
+  },
+  "fetched_files": [
+    {
+      "name": "LAWS.bend",
+      "sha256": "bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd"
+    },
+    {
+      "name": "LICENSE",
+      "sha256": "32e3179e84a458307a4c8f6f0c9cc561b0cec94f369dd787c36057a245d9f880"
+    },
+    {
+      "name": "PROOF.bend",
+      "sha256": "09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871"
+    },
+    {
+      "name": "benchmark.bend",
+      "sha256": "77a93e08e2e170f629b68aca07dab2456b38c05ebb345afd2355e93df406c42b"
+    },
+    {
+      "name": "conformance.bend",
+      "sha256": "eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91"
+    },
+    {
+      "name": "example.bend",
+      "sha256": "7079c1ae8a556f433975b91447af3fa3d6a4ba7a13d49eeae4264331c9e37726"
+    },
+    {
+      "name": "generic.bend",
+      "sha256": "adf3a1fd8e094d004379998985c76d50ad7ebcda323fcb935caedb0248f935f0"
+    },
+    {
+      "name": "main.bend",
+      "sha256": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0"
+    },
+    {
+      "name": "model.bend",
+      "sha256": "4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9"
+    },
+    {
+      "name": "observations.bend",
+      "sha256": "d31a1cc102a0e435f8458e071a1757946713d0ea25cd5446af59e6c840e4ffaa"
+    },
+    {
+      "name": "release.bend",
+      "sha256": "974e90fd20208c59d76e5482eccbaebc81154b905dacce7c471a9db936f72819"
+    },
+    {
+      "name": "trace.bend",
+      "sha256": "9378a64a7edfa9b89bc40fe52c598f3bf248292e2c2260ed25e03bfb10075ecd"
+    },
+    {
+      "name": "witnesses.bend",
+      "sha256": "e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a"
+    }
+  ],
+  "recomputed_hash": "0xd684886d10b431b9dce6c3b2d1ef1980"
+}

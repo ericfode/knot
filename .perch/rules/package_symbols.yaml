@@ -1,0 +1,16 @@
+# Advisory draft. Offline wiring is not provider calibration.
+- name: symbols-bidirectional-preservation
+  where: "packages/symbols/{LAW_REVIEW.md,tests/perch/*.md}"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Review only the interner transition described in this packet. For an existing
+    name, return its old ID with both the forward index and reverse contents
+    unchanged, even at capacity. For an absent name, add its forward entry only
+    after reverse append succeeds, keeping all earlier mappings. Failure preserves
+    both indexes. Equal returned lengths or a reverse-only snapshot are insufficient
+    evidence: the packet must observe a previous name through forward lookup or
+    repeated intern after the transition as well as its original reverse name.
+    Resetting the forward map during insertion or exhaustion violates this rule.
+    Do not require hashed storage or globally unique IDs across independent tables.

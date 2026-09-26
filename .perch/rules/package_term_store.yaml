@@ -1,0 +1,18 @@
+# Advisory. Deterministic mutation witnesses cover these defects; model calibration
+# remains unavailable until provider credentials exist.
+- name: term-store-memo-completion-boundary
+  where: "packages/term_store/**/LAW_REVIEW.md"
+  each: file
+  min: 80
+  gate: false
+  ensure: >
+    Read only the memo transition/result table and the cancellation example in
+    this packet. A completed success may be observed only after an explicit
+    Evaluating-to-Ready transition, and its payload must be the supplied value.
+    Pending, Evaluating, an absent ID, and cancelled or exhausted work cannot be
+    returned as a completed success. Failed is a terminal error preserving the
+    supplied failure payload; it is not a successful value. A failed transition
+    preserves the cell, including completed cells. Cancel may return a cell to
+    Pending or leave it incomplete with an explicit error, but cannot fabricate
+    Ready. A busy/incomplete error is correct, not a defect. Judge the exact
+    table/example shown, not conventions or unseen implementation files.

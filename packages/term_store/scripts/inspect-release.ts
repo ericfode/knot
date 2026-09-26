@@ -1,0 +1,26 @@
+// Build/release introspection. Load the exact pinned pkg_files implementation;
+// do not reimplement package semantics or silently broaden the upload closure.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root = path.resolve(import.meta.dir,'../../..');
+const compiler = path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2');
+const B = await import(path.join(compiler,'bend.ts'));
+const entry = path.join(root,'packages/term_store/release.bend');
+const book=B.book_nil(), seen=new Map<string,string|null>();
+await B.book_load(book,entry,'',seen);
+const source=fs.readFileSync(path.join(compiler,'main.ts'),'utf8');
+const begin=source.indexOf('function pkg_files('), end=source.indexOf('\nfunction sha256(',begin);
+if(begin<0||end<0) throw Error('pinned publisher function not found');
+const fn = new Function('fs','path','BASE',source.slice(begin,end).replace(': string, book: Bend.Book,',', book,').replace('seen: Map<string, string | null>): Record<string, string>', 'seen)').replace('const raws =','const raws =').replaceAll(': [string, string][]','').replace(': Record<string, string>','')+'\nreturn pkg_files;')(fs,path,B.BASE_BEND);
+const files=fn(entry,book,seen) as Record<string,string>;
+const digest=(s:string)=>crypto.createHash('sha256').update(s).digest('hex');
+const names=Object.keys(files).sort();
+if(names.some(n=>n.startsWith('..')||n.includes('/')||!(n.endsWith('.bend')||n==='LICENSE'))) throw Error('unexpected upload path '+names);
+const rows=names.map(name=>({name,bytes:Buffer.byteLength(files[name]),sha256:digest(files[name])}));
+const expected='0x'+digest(names.map(p=>digest(files[p])+' '+p+'\n').join('')).slice(0,32);
+const foreign=Object.entries(book.tlds).filter(([k,t]:any)=>t.i).map(([k]:any)=>k);
+const unsafe=Object.entries(book.tlds).filter(([k,t]:any)=>t.u).map(([k]:any)=>k);
+const report={expected_hash:expected,entry:'release.bend',files:rows,total_bytes:rows.reduce((n,r)=>n+r.bytes,0),loaded_foreign:foreign,loaded_unsafe:unsafe,closure_method:'Exact pkg_files function extracted from pinned main.ts; Base and hash packages excluded as in publisher.'};
+fs.writeFileSync(path.join(root,'packages/term_store/evidence/closure.json'),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({expected_hash:expected,files:names,total_bytes:report.total_bytes},null,2));
