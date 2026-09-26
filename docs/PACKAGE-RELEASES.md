@@ -58,8 +58,11 @@ with another Bend version, a whole compiler, or a device backend is not inferred
 ## Workflow improvements
 
 Eight shared law rules and six narrow package rules are installed. Offline
-selection/request checks passed; live Perch calibration remains unavailable
-without a provider key. All model rules remain advisory.
+selection/request checks passed. Live calibration was unavailable at release
+time; the subsequent [Perch audit](perch-audit-2026-09-26.md) records completed
+provider responses and 19/24 shared-law controls classified correctly, with five
+missed violations. All model rules remain advisory. Later review does not
+rewrite the original release receipts or establish stronger proof claims.
 
 Two concrete audit findings strengthened [the deterministic law gate](LAW-QUALITY-GATE.md):
 
