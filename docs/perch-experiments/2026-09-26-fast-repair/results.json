@@ -1,0 +1,522 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-26T21:15:35.426370+00:00",
+  "scope": "Luna 6 only; prior Luna 5.6 outputs excluded after user correction",
+  "one_shot_passed": 1,
+  "one_shot_total": 3,
+  "passed_after_at_most_one_retry": 2,
+  "total": 3,
+  "note": "No parent edits to generated candidates. No generation latency, response model ID, token usage or dollar cost exposed by agent tool. Evaluation durations are not inference latency. Pre-repair Perch findings used original file-level context; parsed-unit recheck is separate.",
+  "rows": [
+    {
+      "case": "growing-prefix-copy",
+      "attempt": 1,
+      "requested_model": "gpt-6-luna",
+      "response_model_id": null,
+      "reasoning_effort": "low",
+      "agent": "/root/repair_luna6_prefix",
+      "source": "gpt-6-luna/growing-prefix-copy.bend",
+      "candidate_sha256": "26a4e4a24b4e666f65ae7517af33cab547fdc2d3322f4ec8e567b8dc87847acf",
+      "passed": true,
+      "status": "passed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 0,
+          "seconds": 0.087150749983266
+        },
+        {
+          "name": "compile",
+          "exit_code": 0,
+          "seconds": 0.0751322079449892
+        },
+        {
+          "name": "instrument",
+          "exit_code": 0,
+          "seconds": 0.037198208970949054
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "seconds": 0.03752491716295481
+        }
+      ],
+      "correctness": {
+        "pass": true,
+        "probes": [
+          {
+            "probe": 0,
+            "n": 0,
+            "pass": true
+          },
+          {
+            "probe": 1,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 2,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 3,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 4,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 5,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 6,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 7,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 8,
+            "n": 5,
+            "pass": true
+          },
+          {
+            "probe": 9,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 10,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 11,
+            "n": 7,
+            "pass": true
+          },
+          {
+            "probe": 12,
+            "n": 16,
+            "pass": true
+          },
+          {
+            "probe": 13,
+            "n": 31,
+            "pass": true
+          },
+          {
+            "probe": 14,
+            "n": 65,
+            "pass": true
+          },
+          {
+            "probe": 15,
+            "n": 127,
+            "pass": true
+          },
+          {
+            "probe": 16,
+            "n": 255,
+            "pass": true
+          },
+          {
+            "probe": 17,
+            "n": 513,
+            "pass": true
+          },
+          {
+            "probe": 18,
+            "n": 1024,
+            "pass": true
+          }
+        ]
+      },
+      "performance": {
+        "pass": true,
+        "metric": "generated JS function entries + loop iterations + object/array allocations",
+        "rows": [
+          {
+            "n": 32,
+            "functions": 38,
+            "loops": 0,
+            "allocations": 33,
+            "work": 71,
+            "ratio": null,
+            "linear_budget": 2176,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 64,
+            "functions": 70,
+            "loops": 0,
+            "allocations": 65,
+            "work": 135,
+            "ratio": 1.9014084507042253,
+            "linear_budget": 4224,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 128,
+            "functions": 134,
+            "loops": 0,
+            "allocations": 129,
+            "work": 263,
+            "ratio": 1.9481481481481482,
+            "linear_budget": 8320,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 256,
+            "functions": 262,
+            "loops": 0,
+            "allocations": 257,
+            "work": 519,
+            "ratio": 1.973384030418251,
+            "linear_budget": 16512,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 512,
+            "functions": 518,
+            "loops": 0,
+            "allocations": 513,
+            "work": 1031,
+            "ratio": 1.9865125240847785,
+            "linear_budget": 32896,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 1024,
+            "functions": 1030,
+            "loops": 0,
+            "allocations": 1025,
+            "work": 2055,
+            "ratio": 1.9932104752667312,
+            "linear_budget": 65664,
+            "correct": true,
+            "pass": true
+          }
+        ]
+      },
+      "diagnostics": "",
+      "compiled_sha256": "bd11384e5aa3360ab3ca4d937ab2691e4a7e002b8efc4cef24e638bf2ffa3e9b",
+      "instrumented_sha256": "11b5900d57821dc80dbf3775321170bda2371f3a3fdbd2658408939029a6063d",
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "evaluation_seconds": 0.2387501250486821,
+      "generation_latency_seconds": null,
+      "token_usage": null
+    },
+    {
+      "case": "invariant-summary",
+      "attempt": 1,
+      "requested_model": "gpt-6-luna",
+      "response_model_id": null,
+      "reasoning_effort": "low",
+      "agent": "/root/repair_luna6_invariant",
+      "source": "gpt-6-luna/invariant-summary.bend",
+      "candidate_sha256": "af63cca1e6b2c23c890e17a16097d8e8d06a7c847830eb539805cf6b5c0aa618",
+      "passed": false,
+      "status": "compile-failed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 1,
+          "seconds": 0.08666870789602399
+        }
+      ],
+      "correctness": null,
+      "performance": null,
+      "diagnostics": "Error:\n- expected : s\n- observed : s (consumed more than once)\nContext:\n- h : U32\n- t : List<&2, U32>\nLocation: candidate.add_total\n7 | \n8>| def add_total(xs: List<&2,U32>, s: U32) -> List<&2,U32>:\n  |                                 ^\n9 |   match xs:",
+      "compiled_sha256": null,
+      "instrumented_sha256": null,
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "evaluation_seconds": 0.08852999983355403,
+      "generation_latency_seconds": null,
+      "token_usage": null
+    },
+    {
+      "case": "indexed-linked-list",
+      "attempt": 1,
+      "requested_model": "gpt-6-luna",
+      "response_model_id": null,
+      "reasoning_effort": "low",
+      "agent": "/root/repair_luna6_indexed",
+      "source": "gpt-6-luna/indexed-linked-list.bend",
+      "candidate_sha256": "00a4ea29d6ca6a838c65f7c9b39ac80e070d7592ebe726a2f23c7e63a326920f",
+      "passed": false,
+      "status": "compile-failed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 1,
+          "seconds": 0.06265187496319413
+        }
+      ],
+      "correctness": null,
+      "performance": null,
+      "diagnostics": "Error:\n- message  : a declared constructor (unknown: candidate.Cons)\nLocation:\n5 |     case Nil{}: Nil{}\n6>|     case Cons{head, tail}:\n  |          ^^^^^^^^^^^^^^^^\n7 |       U32.mul(head,U32.add(i,1u)) <> walk(tail,U32.add(i,1u))",
+      "compiled_sha256": null,
+      "instrumented_sha256": null,
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "evaluation_seconds": 0.0646601659245789,
+      "generation_latency_seconds": null,
+      "token_usage": null
+    },
+    {
+      "case": "invariant-summary",
+      "attempt": 2,
+      "requested_model": "gpt-6-luna",
+      "response_model_id": null,
+      "reasoning_effort": "low",
+      "agent": "/root/repair_luna6_invariant",
+      "source": "gpt-6-luna/invariant-summary.retry.bend",
+      "candidate_sha256": "1c82bc4c89a6ed6958a4e79def138425309a7f2b4779bd7387bd60534f888ce0",
+      "passed": true,
+      "status": "passed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 0,
+          "seconds": 0.07305416720919311
+        },
+        {
+          "name": "compile",
+          "exit_code": 0,
+          "seconds": 0.06271029193885624
+        },
+        {
+          "name": "instrument",
+          "exit_code": 0,
+          "seconds": 0.03249762509949505
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "seconds": 0.03353416710160673
+        }
+      ],
+      "correctness": {
+        "pass": true,
+        "probes": [
+          {
+            "probe": 0,
+            "n": 0,
+            "pass": true
+          },
+          {
+            "probe": 1,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 2,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 3,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 4,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 5,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 6,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 7,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 8,
+            "n": 5,
+            "pass": true
+          },
+          {
+            "probe": 9,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 10,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 11,
+            "n": 7,
+            "pass": true
+          },
+          {
+            "probe": 12,
+            "n": 16,
+            "pass": true
+          },
+          {
+            "probe": 13,
+            "n": 31,
+            "pass": true
+          },
+          {
+            "probe": 14,
+            "n": 65,
+            "pass": true
+          },
+          {
+            "probe": 15,
+            "n": 127,
+            "pass": true
+          },
+          {
+            "probe": 16,
+            "n": 255,
+            "pass": true
+          },
+          {
+            "probe": 17,
+            "n": 513,
+            "pass": true
+          },
+          {
+            "probe": 18,
+            "n": 1024,
+            "pass": true
+          }
+        ]
+      },
+      "performance": {
+        "pass": true,
+        "metric": "generated JS function entries + loop iterations + object/array allocations",
+        "rows": [
+          {
+            "n": 32,
+            "functions": 71,
+            "loops": 0,
+            "allocations": 33,
+            "work": 104,
+            "ratio": null,
+            "linear_budget": 2176,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 64,
+            "functions": 135,
+            "loops": 0,
+            "allocations": 65,
+            "work": 200,
+            "ratio": 1.9230769230769231,
+            "linear_budget": 4224,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 128,
+            "functions": 263,
+            "loops": 0,
+            "allocations": 129,
+            "work": 392,
+            "ratio": 1.96,
+            "linear_budget": 8320,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 256,
+            "functions": 519,
+            "loops": 0,
+            "allocations": 257,
+            "work": 776,
+            "ratio": 1.9795918367346939,
+            "linear_budget": 16512,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 512,
+            "functions": 1031,
+            "loops": 0,
+            "allocations": 513,
+            "work": 1544,
+            "ratio": 1.9896907216494846,
+            "linear_budget": 32896,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 1024,
+            "functions": 2055,
+            "loops": 0,
+            "allocations": 1025,
+            "work": 3080,
+            "ratio": 1.994818652849741,
+            "linear_budget": 65664,
+            "correct": true,
+            "pass": true
+          }
+        ]
+      },
+      "diagnostics": "",
+      "compiled_sha256": "12ff11fa48f5f2d47b34d1e4f6afba1e81b5ea032a6e90caa275f25b38710c02",
+      "instrumented_sha256": "fa08c080ce4b1b0075e20287ff99b28eb411523c438c39e8ca3ce103aa0d2b57",
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "evaluation_seconds": 0.20383291691541672,
+      "generation_latency_seconds": null,
+      "token_usage": null
+    },
+    {
+      "case": "indexed-linked-list",
+      "attempt": 2,
+      "requested_model": "gpt-6-luna",
+      "response_model_id": null,
+      "reasoning_effort": "low",
+      "agent": "/root/repair_luna6_indexed",
+      "source": "gpt-6-luna/indexed-linked-list.retry.bend",
+      "candidate_sha256": "1e1d2b21f6c227c7acc07f6abba508a33718d6561fbc65690bc02ec6ca5ff1eb",
+      "passed": false,
+      "status": "compile-failed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 1,
+          "seconds": 0.052876709029078484
+        }
+      ],
+      "correctness": null,
+      "performance": null,
+      "diagnostics": "Error:\n- message  : a declared constructor (unknown: candidate.List.Cons)\nLocation:\n5 |     case Nil{}: Nil{}\n6>|     case List.Cons{head, tail}:\n  |          ^^^^^^^^^^^^^^^^^^^^^\n7 |       U32.mul(head,U32.add(i,1u)) <> walk(tail,U32.add(i,1u))",
+      "compiled_sha256": null,
+      "instrumented_sha256": null,
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "evaluation_seconds": 0.05437262495979667,
+      "generation_latency_seconds": null,
+      "token_usage": null
+    }
+  ]
+}

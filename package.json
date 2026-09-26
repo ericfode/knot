@@ -1,0 +1,22 @@
+{
+  "name": "knot-tooling",
+  "private": true,
+  "description": "Development tools for the Knot Bend compiler workspace",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "perch": "node scripts/perch-workflow.mjs",
+    "lint": "node scripts/perch-workflow.mjs check",
+    "lint:scan": "node scripts/perch-workflow.mjs scan",
+    "lint:check": "node scripts/perch-workflow.mjs check",
+    "lint:rules": "perch rules list",
+    "lint:doctor": "perch doctor",
+    "lint:history": "node scripts/perch-workflow.mjs history",
+    "lint:verify": "node --test tests/perch-workflow.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs && node scripts/check-law-rule-wiring.mjs",
+    "postinstall": "node scripts/install-perch-bend.mjs"
+  },
+  "devDependencies": {
+    "@lakeday/perch": "0.3.5"
+  }
+}

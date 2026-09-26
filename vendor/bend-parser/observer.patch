@@ -1,0 +1,304 @@
+--- upstream/bend2/bend.ts
++++ vendor/bend-parser/bend.mts
+@@ -1,3 +1,5 @@
++// MODIFIED by Knot: pure parser copy; loader removed, additive observation/context hooks.
++// Upstream bendlang/bend @ 574b6d39a235b539eb19a5c532993a0abb3d11ad. See README.md.
+ // NOTE: this file was 99% human-designed and audited.
+ // It includes Bend's trusted kernel, including interpreter and checker.
+ // It has a bit of AI slop, but it is the most robust file in the repo. 
+@@ -237,10 +239,6 @@
+ // shown against the goal; ?TODO alone checks at any goal and marks
+ // the book incomplete.
+ 
+-import * as fs from "node:fs";
+-import * as os from "node:os";
+-import * as path from "node:path";
+-import * as url from "node:url";
+ 
+ // Core
+ // ====
+@@ -333,7 +331,15 @@
+ export type Body  = Match | Local | LTerm
+ 
+ // Parser
+-export type Parse = { book: Book; dir: string; str: string; pos: number; stk: Array<[Name, number]>; frs: number; ns: string; al: Record<Name, Name>; };
++export type ParseObserver = {
++  declaration?: (kind: string, name: Name, beg: number, end: number, term?: Body, tele?: LTerm[]) => void;
++  call?: (term: LTerm, beg: number, end: number) => void;
++  externalLaw?: (name: Name, resolved: Name, beg: number, end: number) => Def | undefined;
++  externalConstructor?: (name: Name, fields: number) => Ctr | null;
++  externalTemplate?: (name: Name) => number;
++  missingDatatype?: (name: Name, span: Span) => void;
++};
++export type Parse = { book: Book; dir: string; str: string; pos: number; stk: Array<[Name, number]>; frs: number; ns: string; al: Record<Name, Name>; observer?: ParseObserver; declBeg?: number; tokenEnd?: number; skipEnd?: number; };
+ export type Span  = { src: string; beg: number; end: number; };
+ 
+ // Machine
+@@ -890,133 +896,7 @@
+   return { $: "ADT", n: tld.n, g: tld.g, T: tld.T, c: tld.c.filter((c) => !r.has(c.k)) };
+ }
+ 
+-export const BEND_DIR = import.meta.url.startsWith("file:///$bunfs/")
+-  ? path.join(path.dirname(fs.realpathSync(process.execPath)), "..", "bend2")
+-  : url.fileURLToPath(new URL(".", import.meta.url));
+-export const BASE_BEND = fs.realpathSync(path.join(BEND_DIR, "base.bend"));
+-const BEND_LIB = path.resolve(process.env.BEND_LIB ?? path.join(os.homedir(), ".bend", "lib"));
+-export const BEND_HUB   = process.env.BEND_HUB ?? "https://hub.bend-lang.com";
+-
+-export const NAMED = /^([a-z][a-z0-9-]{0,63})@((?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*)){3})$/;
+-
+-async function hub_get(book: Book, sub: string, hash: string, spn?: Span): Promise<string> {
+-  const res = await fetch(BEND_HUB + "/" + sub);
+-  const src = res.ok ? await res.text() : "";
+-  const sum = Buffer.from(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(src))).toString("hex");
+-  if (!res.ok || hash.length < 32 || sum.slice(0, hash.length) !== hash || path.posix.normalize("/" + sub) !== "/" + sub) {
+-    throw Err(book, ctx_nil(), "a file at " + BEND_HUB + "/" + sub + " hashing to " + hash, undefined, spn);
+-  }
+-  return src;
+-}
+-
+-async function name_hash(book: Book, nv: string, spn?: Span): Promise<string> {
+-  if (!NAMED.test(nv)) {
+-    throw Err(book, ctx_nil(), "a package as <name>@<version>: a-z, 0-9 and -, 1 to 64 characters, at four numbers like 1.0.0.0", "'" + nv + "'", spn);
+-  }
+-  const at  = path.join(BEND_LIB, "names", nv);
+-  const old = fs.existsSync(at) ? fs.readFileSync(at, "utf8").trim() : "";
+-  if (/^0x[0-9a-f]{32}$/.test(old)) {
+-    return old;
+-  }
+-  const res = await fetch(BEND_HUB + "/name/" + nv).catch(() => null);
+-  const got = res?.ok ? (await res.text()).trim() : "";
+-  if (!/^0x[0-9a-f]{32}$/.test(got)) {
+-    throw Err(book, ctx_nil(), "a package named " + nv + " on " + BEND_HUB
+-      + (res?.status === 410 ? " (it was taken down)" : ""), undefined, spn);
+-  }
+-  fs.mkdirSync(path.dirname(at), { recursive: true });
+-  fs.writeFileSync(at, got + "\n");
+-  return got;
+-}
+-
+-async function book_file(book: Book, file: string, spn?: Span): Promise<string> {
+-  if (file.startsWith(BEND_LIB + "/") && !fs.existsSync(file)) {
+-    const pkg = file.slice(BEND_LIB.length + 1).split("/")[0];
+-    const man = await hub_get(book, pkg + "/manifest", pkg.slice(2), spn);
+-    const fls = man.trim().split("\n").map((l) => l.split(" "));
+-    const srs = await Promise.all(fls.map(([h, p]) =>
+-      hub_get(book, pkg + "/" + p, h, spn)));
+-    fls.forEach(([, p], i) => {
+-      const at = BEND_LIB + "/" + pkg + "/" + p;
+-      fs.mkdirSync(path.dirname(at), { recursive: true });
+-      fs.writeFileSync(at, srs[i]);
+-    });
+-  }
+-  if (!fs.existsSync(file)) {
+-    throw Err(book, ctx_nil(), "no such file: " + file, undefined, spn);
+-  }
+-  return fs.realpathSync(file);
+-}
+-
+-export async function book_load(book: Book, file: string, ns: string, seen: Map<string, string | null>, spn?: Span): Promise<number> {
+-  const real = await book_file(book, file, spn);
+-  if (seen.has(real)) {
+-    if (seen.get(real) === null) {
+-      throw Err(book, ctx_nil(), "an import cycle through " + file, undefined, spn);
+-    }
+-    return book.order.length;
+-  }
+-  seen.set(real, null);
+-  const dir   = real.slice(0, real.lastIndexOf("/") + 1);
+-  const text  = fs.readFileSync(real, "utf8");
+-  const lines = text.split("\n");
+-  const body  = lines.slice();
+-  const al    : Record<Name, Name> = Object.create(null);
+-  const hub   = (s: string): boolean => /^0x[0-9a-f]+\//.test(s);
+-  const ok    = (s: string, lib: boolean): boolean => hub(s) === lib
+-    && /^(\/|(\.\.\/)*)([A-Za-z_][\w-]*\/)*[A-Za-z_][\w-]*$/.test(s.replace(/^0x[0-9a-f]+\//, ""));
+-  for (let i = 0, at = 0; i < lines.length; at += lines[i].length + 1, i++) {
+-    const line = lines[i].trim();
+-    if (line === "" || line.startsWith("#")) {
+-      continue;
+-    }
+-    if (!/^import(\s|$)/.test(line)) {
+-      break;
+-    }
+-    const m   = /^import\s+(\S+)(?:\s+as\s+([A-Za-z_]\w*))?\s*(?:#.*)?$/.exec(line);
+-    const beg = at + lines[i].indexOf(m?.[1] ?? line);
+-    const sp  = { src: text, beg, end: beg };
+-    if (m === null || (m[2] === undefined && m[1] !== "Base")) {
+-      throw Err(book, ctx_nil(), "an import ('import Base', or 'import <path> as <Name>')", "'" + line + "'", sp);
+-    }
+-    body[i] = "";
+-    if (m[2] === undefined) {
+-      await book_load(book, BASE_BEND, "", seen, sp);
+-      continue;
+-    }
+-    if (!m[1].endsWith(".bend")) {
+-      throw Err(book, ctx_nil(), "an import of a .bend file", "'" + m[1] + "'", sp);
+-    }
+-    if (m[2] in al) {
+-      throw Err(book, ctx_nil(), "a fresh alias (" + m[2] + " names an earlier import)", "'" + line + "'", sp);
+-    }
+-    const bad = () => Err(book, ctx_nil(), "an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)", "'" + m[1] + "'", sp);
+-    const nv  = /^([^/]*@[^/]*)\//.exec(m[1]);
+-    const as  = nv === null ? m[1] : await name_hash(book, nv[1], sp) + m[1].slice(nv[1].length);
+-    const rel = path.posix.normalize(as);
+-    if (!ok(as.replace(/^\.\//, "").slice(0, -5), hub(as))) {
+-      throw bad();
+-    }
+-    const got = await book_file(book, hub(as) ? BEND_LIB + "/" + rel : path.posix.resolve(dir, rel), sp);
+-    const lib = fs.existsSync(BEND_LIB) ? fs.realpathSync(BEND_LIB) + "/" : "\0";
+-    const sub = (got.startsWith(lib) ? got.slice(lib.length)
+-      : path.posix.join(path.posix.dirname(ns), path.posix.relative(dir, got))).replace(/\.bend$/, "");
+-    if (!ok(sub, got.startsWith(lib)) || (hub(ns) && !got.startsWith(lib))) {
+-      throw bad();
+-    }
+-    al[m[2]] = sub;
+-    await book_load(book, got, sub, seen, sp);
+-  }
+-  const n0 = book.order.length;
+-  parse_book(book, dir, body.join("\n"), ns, al);
+-  if (real === BASE_BEND) {
+-    for (const k of book.order.slice(n0)) {
+-      book.tlds[k].b = true;
+-    }
+-  }
+-  seen.set(real, ns);
+-  return n0;
+-}
++// Knot: omitted I/O-only module loading and hub/cache functions.
+ 
+ // Tele
+ // ====
+@@ -1506,6 +1386,8 @@
+ }
+ 
+ export function parse_skip(p: Parse): void {
++  // Knot: track consumed-token boundaries before trivia without changing parsing.
++  if (p.pos !== p.skipEnd) p.tokenEnd = p.pos;
+   const s = p.str;
+   while (p.pos < s.length) {
+     const n = s.charCodeAt(p.pos);
+@@ -1519,8 +1401,10 @@
+       }
+       continue;
+     }
++    p.skipEnd = p.pos;
+     return;
+   }
++  p.skipEnd = p.pos;
+ }
+ 
+ export function parse_eat(p: Parse, s: string): void {
+@@ -1675,7 +1559,7 @@
+       return parse_bind(p, t);
+     }
+     case "Ctr": {
+-      const ctr = book_ctr(book, t.k);
++      const ctr = book_ctr(book, t.k) ?? p.observer?.externalConstructor?.(t.k, t.x.length) ?? null;
+       if (ctr === null) {
+         throw Err(book, ctx_nil(), "a declared constructor (unknown: " + t.k + ")", undefined, t.s);
+       }
+@@ -1776,6 +1660,7 @@
+         return Var(t.k, -1, s);
+       }
+       if (tld === undefined || tld.$ !== "ADT" || tld.g === 0 || tld.g < tld.n && t.$ !== "ADT") {
++        if (tld === undefined) p.observer?.missingDatatype?.(k, s);
+         parse_fail(p, "a quantified datatype after + (+D<..> sets D's leading quantities to &2)");
+       }
+       const xs = t.$ === "ADT" ? t.x : Array.from({ length: tld.n }, (): LTerm => Qua(Lone(), s));
+@@ -1989,7 +1874,7 @@
+       }
+       parse_bump(p);
+       const hd = p.book.tlds[out.$ === "Ref" ? out.k : ""];
+-      const x  = hd?.$ === "Def" ? hd.x : 0;
++      const x  = hd?.$ === "Def" ? hd.x : p.observer?.externalTemplate?.(out.$ === "Ref" ? out.k : "") ?? 0;
+       const ts: LTerm[] = [];
+       for (parse_skip(p); x > 0 && parse_at(p, "~"); parse_skip(p)) {
+         if (ts.length === x) {
+@@ -2001,6 +1886,7 @@
+         parse_take(p, ",");
+       }
+       const xs = ts.concat(parse_term_args(p, ")"));
++      p.observer?.call?.(out, beg, p.pos);
+       const s  = parse_span(p, beg);
+       for (const a of xs) {
+         out = App(out, a, s);
+@@ -2383,7 +2269,7 @@
+   const book = p.book;
+   const nm  = parse_name(p);
+   const q   = parse_reso(p, nm);
+-  const tld = book.tlds[q];
++  const tld = book.tlds[q] ?? p.observer?.externalLaw?.(nm, q, p.pos - nm.length, p.pos);
+   const law = tld?.$ === "Def" && tld.v === null && tld.b !== true && !tld.i ? tld : undefined;
+   const k   = law ? q : parse_fresh(p, nm);
+   const un  = parse_take(p, "?") || u;
+@@ -2396,6 +2282,7 @@
+   const tele = parse_tele(p, ")", tk);
+   parse_skip(p);
+   let def: Def;
++  let signature: LTerm | undefined;
+   if (law) {
+     if (tele.some((cell) => cell[3].$ !== "Qnt")) {
+       parse_fail(p, "a name");
+@@ -2404,12 +2291,13 @@
+       parse_fail(p, "a name for each ~ clause of the law (" + String(law.x) + ")");
+     }
+     def = law;
++    book.tlds[k] = law; // Knot: also register context-only imported law placeholders.
+     def.n = tele.length;
+   } else {
+     if (!parse_take(p, "->")) {
+       parse_fail(p, "'->' (a def with no return type fills a law; no law named " + nm + " is in scope)");
+     }
+-    def = book.tlds[k] = { $: "Def", n: tele.length, x: tk.length, T: term_higher(tele_bind(tele, parse_term(p))), v: null, m: p.ns };
++    def = book.tlds[k] = { $: "Def", n: tele.length, x: tk.length, T: term_higher(signature = tele_bind(tele, parse_term(p))), v: null, m: p.ns };
+   }
+   def.u ||= un;
+   parse_eat(p, ":");
+@@ -2432,18 +2320,24 @@
+     }
+   } else {
+     const vars = tele.map((cell): PVar => ({ $: "PVar", k: cell[1], i: cell[2], q: Lone(), s: cell[4] }));
+-    def.v = term_higher(term_lower(term_higher(body_flatten(parse_body(p), vars, () => p.frs++))));
+-  }
++    const body = parse_body(p);
++    p.observer?.declaration?.(law ? "law_fill" : "definition", nm, p.declBeg ?? 0,
++      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]));
++    def.v = term_higher(term_lower(term_higher(body_flatten(body, vars, () => p.frs++))));
++  }
++  if (def.i) p.observer?.declaration?.("foreign_definition", nm, p.declBeg ?? 0,
++    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]));
+   book.order.push(k);
+ }
+ 
+-export function parse_book(book: Book, dir: string, src: string, ns: string, al: Record<Name, Name>): void {
+-  const p: Parse = { book, dir, str: src, pos: 0, stk: [], frs: 0, ns, al };
++export function parse_book(book: Book, dir: string, src: string, ns: string, al: Record<Name, Name>, observer?: ParseObserver): void {
++  const p: Parse = { book, dir, str: src, pos: 0, stk: [], frs: 0, ns, al, observer };
+   while (true) {
+     parse_skip(p);
+     if (p.pos >= p.str.length) {
+       return;
+     }
++    p.declBeg = p.pos;
+     p.frs = 0;
+     parse_close(p, 0);
+     if (parse_take(p, "@")) {
+@@ -2487,6 +2381,8 @@
+         cs.push(ctr);
+         book.ctrs[c] = ctr;
+       }
++      p.observer?.declaration?.("datatype", k, p.declBeg ?? 0,
++        p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos);
+       book.order.push(k);
+       continue;
+     }
+@@ -2529,6 +2425,8 @@
+       const T = cls.reduceRight((T, [all, q, c, i, A, s]) =>
+         all ? All(q, c, i, A, T, s) : App(App(Ref("Exists", s), A, s), Lam(c, i, T, s), s), parse_block(p));
+       const n = cls.findIndex((c) => !c[0]);
++      p.observer?.declaration?.("law", k, p.declBeg ?? 0,
++        p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, T);
+       book.tlds[k] = { $: "Def", n: n < 0 ? cls.length : n, T: term_higher(T), v: null, x: tc, m: p.ns };
+       book.order.push(k);
+       continue;

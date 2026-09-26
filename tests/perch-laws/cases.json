@@ -1,0 +1,170 @@
+[
+  {
+    "id": "c01",
+    "rule": "law-domain-inhabited",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Family: bounded vector append. Domain: a finite list xs of U32 values, maximum 3, length(xs) < 3. Behavioral law: observing push(xs, x) yields xs followed by [x]. Concrete domain/antecedent witnesses: xs=[] and x=7; xs=[2,5] and x=9. The nonempty witness has length 2 < 3. Invalid-input law: length(xs)=3 rejects append and preserves xs; witness xs=[2,5,9], x=11. These are constructible lists and ordinary integer comparisons; no Empty values or unsafe assumptions are used."
+  },
+  {
+    "id": "c02",
+    "rule": "law-domain-inhabited",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Family: vector append. The advertised behavioral law is forall xs, x, p: Empty, observe(push(xs,x)) = xs ++ [x]. Its proof eliminates p. We claim this establishes append for nonempty vectors. No Empty constructor or witness for p exists; xs=[7] and x=9 are the examples, but neither provides p. The API itself takes only xs and x. There is no other law for append."
+  },
+  {
+    "id": "c03",
+    "rule": "law-domain-inhabited",
+    "split": "held-out",
+    "expected": "violates",
+    "packet": "Family: arena allocation. Every store in this package has maximum capacity 0. The sole allocation law assumes length(store) < maximum(store), then states fresh lookup returns the supplied value. All lengths are nonnegative. The evidence gives an empty store with length=0 and maximum=0 as the satisfying witness. Allocation success is advertised as covered by that law; there is no separate positive-capacity store constructor."
+  },
+  {
+    "id": "c04",
+    "rule": "law-observable-essence",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Purpose: emit exactly the ordered text fragments supplied by the caller. Public observations are finish(empty) = [], finish(append(b,s)) = finish(b) ++ s, and finish(combine(a,b)) = finish(a) ++ finish(b). Here ++ is independent mathematical list concatenation, and the equations range over all valid builders and character lists. In particular append(append(empty,[a]),[b,c]) emits [a,b,c]. Auxiliary representation-length lemmas are explicitly not the behavioral contract. A reversing or constant builder violates these content equations."
+  },
+  {
+    "id": "c05",
+    "rule": "law-observable-essence",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Purpose: output a caller's text fragments in their original order. The complete advertised behavioral laws are length(finish(empty))=0 and length(finish(append(b,s)))=length(finish(b))+length(s). No law constrains character values or order. The implementation that emits exactly the right number of zero codepoints satisfies every stated law. We nevertheless call these laws a complete specification of the output builder."
+  },
+  {
+    "id": "c06",
+    "rule": "law-observable-essence",
+    "split": "held-out",
+    "expected": "violates",
+    "packet": "Purpose: memoize exact evaluated values and return them after completion. The only result laws say lookup returns a well-formed Option and lookup(store,k)=lookup(store,k). There is no relation between complete(store,k,value) and a later lookup. An implementation that returns None for every lookup satisfies the entire advertised contract, including after complete(store,3,42)."
+  },
+  {
+    "id": "c07",
+    "rule": "law-public-contract-coverage",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Family inventory: empty, get, and set on a persistent U32 map; these are the only public operations promised here. Coverage matrix: empty -> all keys absent; get -> independent association-list lookup for present and absent keys; set -> retrieval of the supplied value, overwrite replacing the previous value, unrelated-key preservation, and previous-map persistence. All U32 keys and values are accepted, so these three operations have no typed failure branch. Concrete boundary checks include 0 and 4294967295. remove is neither exported nor promised by this package."
+  },
+  {
+    "id": "c08",
+    "rule": "law-public-contract-coverage",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Public inventory: empty, get, set, remove, and clear on a map. The complete coverage matrix lists only empty absence, get present/absent, and set retrieval/preservation. Neither remove nor clear has a law, deterministic behavioral check, or documented omission. The report declares every public operation covered because its test suite has 100 cases. Removal of a missing key and clearing a nonempty map are unmentioned."
+  },
+  {
+    "id": "c09",
+    "rule": "law-public-contract-coverage",
+    "split": "held-out",
+    "expected": "satisfies",
+    "packet": "This packet covers the cursor movement family only. Public movement operations: peek, bump, checkpoint, restore. Matrix: peek current/EOF without movement; bump advances one codepoint or returns EOF unchanged; checkpoint returns current position without movement; restore returns to a checkpoint from the same source or rejects an invalid source/bounds unchanged. Other package families have a separate indexed matrix. rebalance_index is private and not part of the promised API; the absence of a public behavioral law for that helper is not a public API omission."
+  },
+  {
+    "id": "c10",
+    "rule": "law-independent-model",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Family: Vec.get. Optimized storage reads a native array at a checked logical index. The oracle observes an ordinary list by matching Nil/Cons and recursively consuming one list node per decrement of the requested index. The abstraction relation states that each occupied array slot corresponds in order to the list. Conformance compares get's Option result to list lookup. The oracle never calls Vec.get or any wrapper around native array indexing. Both sides use ordinary U32 comparisons as primitives."
+  },
+  {
+    "id": "c11",
+    "rule": "law-independent-model",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Family: Vec.get. The function reference_get(v,i) is defined as Vec.get(v,i). The advertised refinement equation is Vec.get(v,i) = reference_get(v,i), and the runtime oracle calls reference_get on the same implementation. There is no independent list observation or expected-value assertion. If Vec.get wraps a bad index to zero, reference_get wraps it identically and the comparison still passes."
+  },
+  {
+    "id": "c12",
+    "rule": "law-independent-model",
+    "split": "held-out",
+    "expected": "satisfies",
+    "packet": "Family: usage-count union. The optimized trie combines values with a supplied U32 modular addition function. The independent model is an association list traversed by structural equality and insertion; it invokes the same specified primitive modular addition only when both maps contain the key. It never calls trie union or trie lookup. Sharing this declared arithmetic primitive does not copy the trie traversal, index calculations, or shape-dependent implementation into the oracle."
+  },
+  {
+    "id": "c13",
+    "rule": "law-state-composition",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Family: persistent map.set. For all valid maps m, keys k,j and value v: get(set(m,k,v),k)=Some(v); when j differs from k, get(set(m,k,v),j)=get(m,j). Observing m after creating the new map returns exactly its original entries. Sequential overwrite is last-write-wins, and writes to distinct keys commute under all lookups. Witness m={1:7}, set key 2 to 9 preserves key 1, while then replacing key 2 with 4 changes only key 2. No global identity or cross-store ID claim is made."
+  },
+  {
+    "id": "c14",
+    "rule": "law-state-composition",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Family: mutable map.set with state threading. The only law states get(set(m,k,v),k)=Some(v). There are no unrelated-key or sequential-use laws. An implementation that discards the entire old map and creates a singleton satisfies the law. The contract nevertheless promises a general updateable environment retaining existing bindings, and contains no lifetime restriction that permits clearing them."
+  },
+  {
+    "id": "c15",
+    "rule": "law-state-composition",
+    "split": "held-out",
+    "expected": "satisfies",
+    "packet": "Family: stateless ASCII whitespace classification. classify(codepoint) returns True precisely for the declared four codepoints and False for all others. It has no store, identifier, mutation, retained resource, or history-dependent result. This packet explicitly marks state composition and unrelated-store preservation inapplicable, with that reason. Exact classification behavior is specified independently; no stateful API is hidden by the family boundary."
+  },
+  {
+    "id": "c16",
+    "rule": "law-boundaries-and-exhaustion",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Family: checked get for a vector of logical length n. Success requires 0 <= i < n and returns the stored value. i=n and any larger U32 index return Bounds without array access or state change. Cases: empty n=0/i=0; singleton [9]/i=0; singleton/i=1; length=3/capacity=4/i=3; i=4294967295. No arithmetic increases i, and get does not allocate, consume fuel, or grow capacity, so allocation/fuel overflow categories are explicitly inapplicable."
+  },
+  {
+    "id": "c17",
+    "rule": "law-boundaries-and-exhaustion",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Family: vector get with logical length 3 and capacity 4. Bounds are implemented by i modulo capacity, followed by native array access. The laws cover only successful reads at indices 0,1,2 and claim all U32 indices are checked. i=3 reads unused storage; i=4 returns slot 0. There is no explicit Bounds error or failure-preserves-state property. Wrapped physical indices are called logical validation."
+  },
+  {
+    "id": "c18",
+    "rule": "law-boundaries-and-exhaustion",
+    "split": "held-out",
+    "expected": "violates",
+    "packet": "Family: fuel-bounded memo evaluation. When fuel reaches zero, the evaluator returns Ready(defaultValue) and inserts it into the successful result cache. The contract promises a complete evaluated value, not an approximation, and supplies no bound proving the input has finished when fuel is zero. The tests exercise only inputs that finish before exhaustion; there is no partial or exhausted result state."
+  },
+  {
+    "id": "c19",
+    "rule": "law-mutation-sensitivity",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "Synthetic calibration record, not an executed package receipt. Suppose the supplied evidence records: mutant M1 changes builder combination from left-then-right to right-then-left; its unchanged implementation entry parses and type-checks successfully. The unchanged order assertion combines fragments [a] and [b,c], expects [a,b,c], observes [b,c,a], and rejects with the designated order-mismatch result. A separate bad-bounds mutant also parses/type-checks and is rejected by the designated index-equals-length assertion. No syntax, harness, or timeout failure is classified as a semantic kill; the two specified non-equivalent mutants do not survive. Evaluate the adequacy of this stated mutation methodology, not whether this synthetic record is a real run."
+  },
+  {
+    "id": "c20",
+    "rule": "law-mutation-sensitivity",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "Synthetic calibration record. A vector append mutant replaces its function body with a missing identifier. The compiler rejects it before type checking the function. The mutation harness counts any nonzero exit as killed; the package report calls this evidence that append's observable-order law catches a semantic defect. No mutant ever passed the implementation type-check step and no unchanged behavioral assertion ran."
+  },
+  {
+    "id": "c21",
+    "rule": "law-mutation-sensitivity",
+    "split": "held-out",
+    "expected": "violates",
+    "packet": "Synthetic calibration record. The mutant that silently drops map entries parses and type-checks. A test process then times out downloading an unrelated fixture, and the harness labels the mutant killed because its command was nonzero. The intended unrelated-key-preservation assertion never executes and no concrete witness/result is recorded. The report declares the semantic mutation gate passed."
+  },
+  {
+    "id": "c22",
+    "rule": "law-proof-claim-integrity",
+    "split": "clean",
+    "expected": "satisfies",
+    "packet": "This packet makes a limited, honest claim: the independent list model has candidate universally quantified equations, but their Bend proofs are not yet executed. No theorem or release gate is marked verified. Planned optimized-API comparisons are finite runtime checks, not a refinement proof. Native array allocation is an explicit external trust dependency. Current source hashes and compiler observations must be supplied with actual receipts before any status becomes verified. No model probability or unrun command is represented as evidence of a theorem."
+  },
+  {
+    "id": "c23",
+    "rule": "law-proof-claim-integrity",
+    "split": "broken",
+    "expected": "violates",
+    "packet": "The report says the optimized map is universally verified because PROOF.bend has three literal equalities for keys 0,1,2. There is no quantified theorem, no abstraction relation, and no bridge from model lookup to trie lookup. A remaining law body is ?TODO. The report labels this release fully proved and cites a successful Perch scan with zero relevant files as its proof certificate."
+  },
+  {
+    "id": "c24",
+    "rule": "law-proof-claim-integrity",
+    "split": "held-out",
+    "expected": "violates",
+    "packet": "The packet proves a quantified theorem about a simple list model and honestly records that the theorem checked. The optimized native-array implementation is never related to that model and has no conformance result. Nevertheless the release statement says the optimized public API inherits the model's universal correctness automatically. The native primitive and model-to-array refinement gap are omitted from the stated trust boundary."
+  }
+]

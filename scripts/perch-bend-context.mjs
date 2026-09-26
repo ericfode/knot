@@ -1,0 +1,181 @@
+// Review context is separate from the side-effect-free parser. Only explicitly
+// referenced local Bend imports are read, always from the current working tree.
+import { createHash } from 'node:crypto';
+import { readFile, realpath } from 'node:fs/promises';
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { analyzeBendSource } from './perch-bend.mjs';
+
+const hash = source => createHash('sha256').update(source).digest('hex');
+const identifier = (path, declaration) => `${path}::${declaration.qualified_name}`;
+const within = (root, path) => {
+  const rel = relative(root, path);
+  return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
+};
+
+export function bendDeclarationSource(source, declaration, location = declaration.location) {
+  const body = Buffer.from(source).subarray(location.start.byte, location.end.byte).toString('utf8');
+  // Keep the declaration's immediately adjacent contract comment, without
+  // borrowing a previous declaration or sibling that happens to share a line.
+  if (location.start.column !== 1) return body;
+  const lines = source.split('\n');
+  const comments = [];
+  for (let i = location.start.line - 2; i >= 0 && /^\s*#/.test(lines[i]); i--) comments.unshift(lines[i]);
+  return comments.length ? `${comments.join('\n')}\n${body}` : body;
+}
+
+/** One immutable working-tree source snapshot per file-check invocation. */
+export async function createBendReview({ root, path, source, analysis, limits = {} }) {
+  const bounds = { helpers: 16, files: 12, bytes: 48_000, callers: 4, ...limits };
+  const realRoot = await realpath(root);
+  const files = new Map();
+  const loads = new Map();
+  const contexts = new Map();
+  const makeFile = (filePath, text, parsed) => ({
+    path: filePath, source: text, analysis: parsed, source_sha256: hash(text),
+    declarations: new Map(parsed.declarations.map(decl => [decl.qualified_name, decl])),
+    imports: parsed.references.filter(ref => ref.kind === 'import'),
+  });
+  const primary = makeFile(path, source, analysis);
+  files.set(path, primary);
+
+  async function importedFile(from, module) {
+    if (!module.startsWith('./') && !module.startsWith('../')) return { reason: 'nonlocal-import' };
+    const absolute = resolve(root, dirname(from.path), module);
+    if (!absolute.endsWith('.bend') || !within(resolve(root), absolute)) return { reason: 'outside-workspace' };
+    const filePath = relative(resolve(root), absolute).split(sep).join('/');
+    if (files.has(filePath)) return { file: files.get(filePath) };
+    if (!loads.has(filePath)) loads.set(filePath, (async () => {
+      let actual, text;
+      try {
+        actual = await realpath(absolute);
+        if (!within(realRoot, actual)) return { reason: 'outside-workspace' };
+        text = await readFile(actual, 'utf8');
+      } catch (error) {
+        return { reason: `unavailable-local-import:${error.code ?? 'read-error'}` };
+      }
+      const parsed = await analyzeBendSource(text);
+      if (parsed.parser_status !== 'parsed') throw new Error(`Bend context ${filePath} does not parse: ${parsed.parser_message ?? parsed.parser_status}`);
+      const file = makeFile(filePath, text, parsed);
+      files.set(filePath, file);
+      return { file };
+    })());
+    return loads.get(filePath);
+  }
+
+  async function resolveReference(file, name, admitted) {
+    const local = file.declarations.get(name);
+    if (local) return { file, declaration: local };
+    const dot = name.indexOf('.');
+    const imported = dot < 0 ? null : file.imports.find(ref => ref.alias === name.slice(0, dot));
+    if (!imported) return { reason: 'unresolved-or-builtin' };
+    if (admitted.size >= bounds.files) return { reason: 'context-file-limit', truncated: true };
+    const loaded = await importedFile(file, imported.module);
+    if (!loaded.file) return loaded;
+    admitted.add(loaded.file.path);
+    const declaration = loaded.file.declarations.get(name.slice(dot + 1));
+    return declaration ? { file: loaded.file, declaration } : { reason: 'declaration-not-in-import', file: loaded.file };
+  }
+
+  function entry(file, declaration, location) {
+    return {
+      name: declaration.qualified_name ?? declaration.name, path: file.path,
+      line: location?.start.line ?? declaration.line,
+      end_line: location?.end.line ?? declaration.end_line,
+      source: bendDeclarationSource(file.source, declaration, location),
+    };
+  }
+
+  async function contextFor(name) {
+    const declaration = primary.declarations.get(name);
+    if (!declaration) throw new Error(`No parsed Bend declaration ${path}::${name}.`);
+    const admitted = new Set([path]);
+    const used = new Set([path]);
+    const visited = new Set([identifier(path, declaration)]);
+    const unresolved = new Map();
+    const calls = [], calledBy = [], laws = [], datatypes = [];
+    const calleeNodes = [], callerNodes = [];
+    const pending = [{ file: primary, declaration }];
+    let bytes = 0, truncated = false;
+    const add = (list, item) => {
+      const size = Buffer.byteLength(item.source);
+      if (bytes + size > bounds.bytes) { truncated = true; return false; }
+      bytes += size;
+      used.add(item.path);
+      list.push(item);
+      return true;
+    };
+    const node = (file, decl) => ({ ...decl, id: identifier(file.path, decl), path: file.path });
+    const note = (file, name, reason, limited = false) => {
+      unresolved.set(`${file.path}:${name}:${reason}`, { path: file.path, name, reason });
+      truncated ||= limited;
+    };
+
+    if (declaration.law_location) add(laws, entry(primary, declaration, declaration.law_location));
+    if (declaration.syntax_kind === 'bend_law_fill') {
+      const target = await resolveReference(primary, name, admitted);
+      if (target.declaration && target.declaration !== declaration) add(laws, entry(target.file, target.declaration));
+      else {
+        // A fill's own dotted name is already a local declaration. Resolve its
+        // declared alias explicitly to recover the matching source law.
+        const dot = name.indexOf('.');
+        const imported = primary.imports.find(ref => ref.alias === name.slice(0, dot));
+        if (imported) {
+          const loaded = await importedFile(primary, imported.module);
+          const law = loaded.file?.declarations.get(name.slice(dot + 1));
+          if (law) add(laws, entry(loaded.file, law, law.law_location));
+          else note(primary, name, loaded.reason ?? 'imported-law-unavailable');
+        }
+      }
+    }
+    while (pending.length) {
+      const current = pending.shift();
+      const references = current.file.analysis.references.filter(ref => ref.source === current.declaration.id && ref.kind !== 'import');
+      for (const reference of references) {
+        const target = await resolveReference(current.file, reference.name, admitted);
+        if (!target.declaration) { note(current.file, reference.name, target.reason, target.truncated); continue; }
+        const id = identifier(target.file.path, target.declaration);
+        if (visited.has(id)) continue;
+        if (calls.length >= bounds.helpers) { note(current.file, reference.name, 'context-helper-limit', true); continue; }
+        visited.add(id);
+        if (add(calls, entry(target.file, target.declaration))) {
+          calleeNodes.push({ node: node(target.file, target.declaration), lines: target.file.source.split('\n'), calls: [] });
+          pending.push(target);
+          if (target.declaration.law_location) add(laws, entry(target.file, target.declaration, target.declaration.law_location));
+        }
+      }
+    }
+    // Only direct callers already present in the target file; no repository
+    // discovery and no unrelated file/name fallback.
+    const callers = new Set(primary.analysis.references.filter(ref => ref.kind !== 'import' && ref.name === name && ref.source !== declaration.id).map(ref => ref.source));
+    for (const caller of primary.analysis.declarations.filter(decl => callers.has(decl.id))) {
+      if (calledBy.length >= bounds.callers) { truncated = true; break; }
+      if (add(calledBy, entry(primary, caller))) callerNodes.push({ node: node(primary, caller), lines: source.split('\n'), site: null });
+    }
+    for (const filePath of [...used]) {
+      const file = files.get(filePath);
+      for (const datatype of file.analysis.datatype_declarations ?? []) add(datatypes, entry(file, datatype));
+    }
+    const provenance = {
+      basis: 'working-tree',
+      files: [...used].sort().map(path => ({ path, source_sha256: files.get(path).source_sha256 })),
+      unresolved: [...unresolved.values()], truncated,
+      limits: bounds,
+    };
+    return {
+      seen: { calls, called_by: calledBy, laws, datatypes,
+        imports: primary.imports.map(({ module, alias }) => ({ module, alias })),
+        context_notes: { basis: provenance.basis, unresolved: provenance.unresolved, truncated } },
+      provenance,
+      builtin: { node: node(primary, declaration),
+        methods: analysis.declarations.map(decl => node(primary, decl)),
+        imports: primary.imports.map(ref => ({ name: ref.imported_name, alias: ref.alias ?? ref.imported_name, module: ref.module })),
+        callees: calleeNodes, callers: callerNodes },
+    };
+  }
+  return {
+    forUnit(name) {
+      if (!contexts.has(name)) contexts.set(name, contextFor(name));
+      return contexts.get(name);
+    },
+  };
+}

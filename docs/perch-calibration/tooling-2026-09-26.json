@@ -1,0 +1,4517 @@
+{
+  "at": "2026-09-26T20:47:34.195Z",
+  "scope": "Root tooling snapshot; pinned vendor parser and third-party dependencies excluded",
+  "snapshot": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+  "files": [
+    {
+      "path": "scripts/perch-workflow.mjs",
+      "sha256": "a87e146f943995ac206735ed2d1fe4fe7afa7a9a52be309d43b1409201fdd27e"
+    },
+    {
+      "path": "scripts/calibrate-law-rules.mjs",
+      "sha256": "78445b3190ddddec76782fe3150ffb66a404b2b1e67cd2391ad37bc26e36293f"
+    },
+    {
+      "path": "scripts/check-law-rule-wiring.mjs",
+      "sha256": "30627382e72ca4454dbd086e4e68f2e0ac48268be07fb22a3f7945eaa7dd0676"
+    },
+    {
+      "path": "scripts/install-perch-bend.mjs",
+      "sha256": "59335c6533e0750a2e7d3bfe66496dfce5438fa6793185725ff675196da06186"
+    },
+    {
+      "path": "scripts/perch-bend.mjs",
+      "sha256": "e7200daa7450df91898fce0a512a8ee101112345bb4977ada7486a866538af1a"
+    },
+    {
+      "path": "scripts/bend-reference",
+      "sha256": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3"
+    }
+  ],
+  "exit": 3,
+  "result": {
+    "run": {
+      "id": "0d264ceefa3ba170",
+      "status": "complete",
+      "target": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+      "github": null,
+      "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+      "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+      "model": "jev-latest",
+      "paths": [],
+      "parallel": 3,
+      "scan_id": "46e5e0f75876ec48",
+      "out": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90/.perch/runs/0d264ceefa3ba170",
+      "created_at": "2026-09-26T20:47:32.751Z",
+      "methods": 24,
+      "to_read": 24,
+      "rules": 0,
+      "filters": [],
+      "edges": 15,
+      "calls": 24,
+      "carried": 0,
+      "skipped": 0,
+      "checked": 552,
+      "visited": [
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.228Z",
+          "id": "16bbb315",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource",
+          "line": 103,
+          "end_line": 234,
+          "hash": "825e802768389a47b4a48f234c28d018079374bc8d993aae0debdd0b2c082f97",
+          "key": "feb9e3511fa403502abe46dfe9851ea1b9f220d7ead14536b6b7ee6c28026490",
+          "risk": 84.585907,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.44,
+          "kind": {
+            "choice": "state_mutation",
+            "probability": 0.21,
+            "probabilities": {
+              "inverted_condition": 0.04,
+              "wrong_return": 0.2,
+              "ordering": 0.09,
+              "state_mutation": 0.21,
+              "missing_null_handling": 0.14,
+              "resource_leak": 0,
+              "boundary": 0.11,
+              "swallowed_error": 0.21
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.19,
+              "1": 0.63,
+              "2": 0.15,
+              "3": 0.03
+            },
+            "score": 1.02,
+            "confidence": 0.6,
+            "level": "P2",
+            "predicted": 1.98
+          },
+          "does_what_it_claims": 0.83,
+          "exposed": 0.92,
+          "injection": 0.09,
+          "path_traversal": 0.21,
+          "unsafe_deserialization": 0.18,
+          "secret_exposure": 0.08,
+          "missing_authorization": 0.22,
+          "weak_crypto": 0.07,
+          "unvalidated_destination": 0.06,
+          "resource_exhaustion": 0.63,
+          "unsafe_reflection": 0.3,
+          "disabled_safeguard": 0.1,
+          "buffer_overflow": 0.2,
+          "use_after_free": 0.06,
+          "uninitialized_use": 0.15,
+          "integer_overflow": 0.25,
+          "race_condition": 0.16,
+          "type_confusion": 0.53,
+          "where": {
+            "line": 109,
+            "confidence": 0.08,
+            "text": "parser_status: 'parsed',"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::parseImports",
+              "probability": 0.12
+            },
+            {
+              "callee": "scripts/perch-bend.mjs::sourcePoints",
+              "probability": 0.07
+            },
+            {
+              "callee": "scripts/perch-bend.mjs::analyzeBendSource.unsupported",
+              "probability": 0.06
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::parseImports",
+            "confidence": 0.83,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/perch-bend.mjs::sourcePoints": 0.12,
+              "scripts/perch-bend.mjs::analyzeBendSource.unsupported": 0,
+              "scripts/perch-bend.mjs::parseImports": 0.87
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::parseImports",
+            "scripts/perch-bend.mjs::sourcePoints",
+            "scripts/perch-bend.mjs::analyzeBendSource.unsupported"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.228Z",
+          "id": "0c8c46eb",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-workflow.mjs::runPerch",
+          "path": "scripts/perch-workflow.mjs",
+          "name": "runPerch",
+          "line": 32,
+          "end_line": 134,
+          "hash": "36ba14324e65a1ebc6e66230786328e2ef61c49e5e1368c80e9ada6908376b48",
+          "key": "5e786c23e6f1bfa7b9fa1497665fedba5a67ae8983c7b506fdee7dc91d625fe7",
+          "risk": 80.471232,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.74,
+          "kind": {
+            "choice": "swallowed_error",
+            "probability": 0.27,
+            "probabilities": {
+              "missing_null_handling": 0.17,
+              "boundary": 0.09,
+              "wrong_return": 0.12,
+              "resource_leak": 0.03,
+              "state_mutation": 0.25,
+              "ordering": 0.04,
+              "swallowed_error": 0.27,
+              "inverted_condition": 0.03
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.18,
+              "2": 0.31,
+              "3": 0.47
+            },
+            "score": 2.23,
+            "confidence": 0.23,
+            "level": "P1",
+            "predicted": 0.79
+          },
+          "does_what_it_claims": 0.76,
+          "exposed": 0.96,
+          "injection": 0.28,
+          "path_traversal": 0.52,
+          "unsafe_deserialization": 0.14,
+          "secret_exposure": 0.31,
+          "missing_authorization": 0.77,
+          "weak_crypto": 0.21,
+          "unvalidated_destination": 0.69,
+          "resource_exhaustion": 0.63,
+          "unsafe_reflection": 0.55,
+          "disabled_safeguard": 0.17,
+          "buffer_overflow": 0.18,
+          "use_after_free": 0.1,
+          "uninitialized_use": 0.17,
+          "integer_overflow": 0.15,
+          "race_condition": 0.47,
+          "type_confusion": 0.72,
+          "where": {
+            "line": 89,
+            "confidence": 0.31,
+            "text": "if (['no-coverage', 'unreadable-result', 'no-provider-coverage', 'partial-parser-coverage', 'partial-provider-coverage'].includes(status)) {"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-workflow.mjs::classify",
+              "probability": 0.16
+            },
+            {
+              "callee": "scripts/perch-workflow.mjs::ruleIdentity",
+              "probability": 0.16
+            },
+            {
+              "callee": "scripts/perch-workflow.mjs::hash",
+              "probability": 0.13
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/perch-workflow.mjs::classify",
+            "confidence": 0.88,
+            "probabilities": {
+              "scripts/perch-workflow.mjs::classify": 0.91,
+              "none": 0.01,
+              "scripts/perch-workflow.mjs::ruleIdentity": 0.08,
+              "scripts/perch-workflow.mjs::hash": 0
+            }
+          },
+          "callees": [
+            "scripts/perch-workflow.mjs::classify",
+            "scripts/perch-workflow.mjs::ruleIdentity",
+            "scripts/perch-workflow.mjs::hash"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.228Z",
+          "id": "a2a7d11e",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::parseImports",
+          "path": "scripts/perch-bend.mjs",
+          "name": "parseImports",
+          "line": 31,
+          "end_line": 66,
+          "hash": "4fa0a83bf250e768834731836eb674382b15c111e19c3fb4b2cb9329e7bf7c4f",
+          "key": "4d28631a51f6a4beb0122b5bde3385111633751543bfd6c6cd4f118a45373620",
+          "risk": 69.230284,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.58,
+          "kind": {
+            "choice": "boundary",
+            "probability": 0.48,
+            "probabilities": {
+              "inverted_condition": 0.12,
+              "missing_null_handling": 0.16,
+              "ordering": 0.02,
+              "resource_leak": 0,
+              "boundary": 0.48,
+              "wrong_return": 0.14,
+              "swallowed_error": 0.04,
+              "state_mutation": 0.04
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.39,
+              "2": 0.49,
+              "3": 0.09
+            },
+            "score": 1.64,
+            "confidence": 0.46,
+            "level": "P1",
+            "predicted": 1.3599999999999999
+          },
+          "does_what_it_claims": 0.74,
+          "exposed": 0.88,
+          "injection": 0.09,
+          "path_traversal": 0.19,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.07,
+          "missing_authorization": 0.16,
+          "weak_crypto": 0.08,
+          "unvalidated_destination": 0.06,
+          "resource_exhaustion": 0.47,
+          "unsafe_reflection": 0.19,
+          "disabled_safeguard": 0.11,
+          "buffer_overflow": 0.18,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.19,
+          "integer_overflow": 0.35,
+          "race_condition": 0.15,
+          "type_confusion": 0.42,
+          "where": {
+            "line": 43,
+            "confidence": 0.09,
+            "text": "if (m === null || (m[2] === undefined && m[1] !== 'Base')) {"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::parseImports.fail",
+              "probability": 0.13
+            }
+          ],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource",
+              "probability": 0.19
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::analyzeBendSource",
+            "confidence": 0.88,
+            "probabilities": {
+              "scripts/perch-bend.mjs::parseImports.fail": 0.06,
+              "scripts/perch-bend.mjs::analyzeBendSource": 0.93,
+              "none": 0.01
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::parseImports.fail"
+          ],
+          "callers": [
+            "scripts/perch-bend.mjs::analyzeBendSource"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.361Z",
+          "id": "274e50af",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::termReferences",
+          "path": "scripts/perch-bend.mjs",
+          "name": "termReferences",
+          "line": 77,
+          "end_line": 97,
+          "hash": "e809829496de12988332aa3304338456e521e5a99cd930cca35b37f776ab2faf",
+          "key": "2e737c855a4cd55278e36d4cce94f35de0e7a76e9decfc096b2d8fc95ea84cf3",
+          "risk": 62.684378,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.31,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.35,
+            "probabilities": {
+              "missing_null_handling": 0.35,
+              "wrong_return": 0.05,
+              "boundary": 0.07,
+              "swallowed_error": 0.01,
+              "inverted_condition": 0.08,
+              "resource_leak": 0,
+              "state_mutation": 0.26,
+              "ordering": 0.18
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.25,
+              "2": 0.67,
+              "3": 0.03
+            },
+            "score": 1.68,
+            "confidence": 0.63,
+            "level": "P1",
+            "predicted": 1.3199999999999998
+          },
+          "does_what_it_claims": 0.84,
+          "exposed": 0.7,
+          "injection": 0.06,
+          "path_traversal": 0.11,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.07,
+          "missing_authorization": 0.13,
+          "weak_crypto": 0.07,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.6,
+          "unsafe_reflection": 0.14,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.15,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.09,
+          "integer_overflow": 0.09,
+          "race_condition": 0.17,
+          "type_confusion": 0.49,
+          "where": {
+            "line": 81,
+            "confidence": 0.16,
+            "text": "if (term.$ === 'Var' || term.$ === 'Ref') return;"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::lexicalReference",
+              "probability": 0.09
+            }
+          ],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource.declaration",
+              "probability": 0.13
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::lexicalReference",
+            "confidence": 0.67,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/perch-bend.mjs::lexicalReference": 0.77,
+              "scripts/perch-bend.mjs::analyzeBendSource.declaration": 0.22
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::lexicalReference"
+          ],
+          "callers": [
+            "scripts/perch-bend.mjs::analyzeBendSource.declaration"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.361Z",
+          "id": "c96911dc",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::sourcePoints",
+          "path": "scripts/perch-bend.mjs",
+          "name": "sourcePoints",
+          "line": 10,
+          "end_line": 28,
+          "hash": "0d33f743747191fdc1659f8aaf417df268b05190671aa871b579bf4fa78f3f30",
+          "key": "d83c59c0f8016135303225753c1268b0e178c4d73a29c3638f5216ee6b4cc8d4",
+          "risk": 42.501141,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.39,
+          "kind": {
+            "choice": "boundary",
+            "probability": 0.5599999999999999,
+            "probabilities": {
+              "boundary": 0.5599999999999999,
+              "ordering": 0.02,
+              "state_mutation": 0.02,
+              "swallowed_error": 0.01,
+              "wrong_return": 0.11,
+              "missing_null_handling": 0.27,
+              "resource_leak": 0,
+              "inverted_condition": 0.01
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.11,
+              "1": 0.25,
+              "2": 0.61,
+              "3": 0.03
+            },
+            "score": 1.57,
+            "confidence": 0.51,
+            "level": "P1",
+            "predicted": 1.44
+          },
+          "does_what_it_claims": 0.74,
+          "exposed": 0.84,
+          "injection": 0.06,
+          "path_traversal": 0.06,
+          "unsafe_deserialization": 0.1,
+          "secret_exposure": 0.05,
+          "missing_authorization": 0.1,
+          "weak_crypto": 0.06,
+          "unvalidated_destination": 0.04,
+          "resource_exhaustion": 0.5,
+          "unsafe_reflection": 0.13,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.26,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.24,
+          "integer_overflow": 0.33,
+          "race_condition": 0.16,
+          "type_confusion": 0.19,
+          "where": {
+            "line": 17,
+            "confidence": 0.36,
+            "text": "if (char.length === 2) points[at + 1] = { line, column, byte };"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource",
+              "probability": 0.11
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::analyzeBendSource",
+            "confidence": 0.86,
+            "probabilities": {
+              "none": 0.07,
+              "scripts/perch-bend.mjs::analyzeBendSource": 0.93
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-bend.mjs::analyzeBendSource"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.361Z",
+          "id": "2ae0e67d",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::lexicalReference",
+          "path": "scripts/perch-bend.mjs",
+          "name": "lexicalReference",
+          "line": 68,
+          "end_line": 74,
+          "hash": "8d5eda1ccf4f329c8cd4b2138ce4d683e18b6bfe8944d02ad98c63d151857fe0",
+          "key": "5478aadc09c161f1dd0748aafc92193c00dee6f5ad0dec0c9a4a4878b5b7b4a1",
+          "risk": 41.76427,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.31,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.35,
+            "probabilities": {
+              "resource_leak": 0,
+              "state_mutation": 0.09,
+              "swallowed_error": 0.01,
+              "ordering": 0.02,
+              "wrong_return": 0.19,
+              "inverted_condition": 0.16,
+              "boundary": 0.18,
+              "missing_null_handling": 0.35
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.09,
+              "1": 0.39,
+              "2": 0.51,
+              "3": 0.01
+            },
+            "score": 1.45,
+            "confidence": 0.42,
+            "level": "P2",
+            "predicted": 1.5599999999999998
+          },
+          "does_what_it_claims": 0.71,
+          "exposed": 0.66,
+          "injection": 0.07,
+          "path_traversal": 0.15,
+          "unsafe_deserialization": 0.09,
+          "secret_exposure": 0.06,
+          "missing_authorization": 0.12,
+          "weak_crypto": 0.07,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.2,
+          "unsafe_reflection": 0.14,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.18,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.1,
+          "integer_overflow": 0.12,
+          "race_condition": 0.13,
+          "type_confusion": 0.44,
+          "where": {
+            "line": 72,
+            "confidence": 0.54,
+            "text": "if (!NAME.test(spelling) || spelling !== term.k && '@import/' + spelling !== term.k) return null;"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::termReferences",
+              "probability": 0.1
+            },
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource.call",
+              "probability": 0.12
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::termReferences",
+            "confidence": 0.45,
+            "probabilities": {
+              "scripts/perch-bend.mjs::analyzeBendSource.call": 0.3,
+              "none": 0.07,
+              "scripts/perch-bend.mjs::termReferences": 0.63
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-bend.mjs::termReferences",
+            "scripts/perch-bend.mjs::analyzeBendSource.call"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.515Z",
+          "id": "ac982f07",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.externalLaw",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.externalLaw",
+          "line": 145,
+          "end_line": 150,
+          "hash": "543060f3f37a93bdddfd25988131a5b91f78eadf7e3fb4d9db637856f6d40545",
+          "key": "20689dd1b193394e5a70df0592569b3769e7513fc7211545911675297efd7700",
+          "risk": 30.211817,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.48,
+          "kind": {
+            "choice": "wrong_return",
+            "probability": 0.77,
+            "probabilities": {
+              "swallowed_error": 0.06,
+              "wrong_return": 0.77,
+              "missing_null_handling": 0.06,
+              "ordering": 0.06,
+              "resource_leak": 0,
+              "boundary": 0.01,
+              "inverted_condition": 0.02,
+              "state_mutation": 0.02
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.17,
+              "1": 0.56,
+              "2": 0.22,
+              "3": 0.04
+            },
+            "score": 1.13,
+            "confidence": 0.52,
+            "level": "P2",
+            "predicted": 1.88
+          },
+          "does_what_it_claims": 0.35,
+          "exposed": 0.71,
+          "injection": 0.07,
+          "path_traversal": 0.09,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.05,
+          "missing_authorization": 0.23,
+          "weak_crypto": 0.07,
+          "unvalidated_destination": 0.04,
+          "resource_exhaustion": 0.13,
+          "unsafe_reflection": 0.34,
+          "disabled_safeguard": 0.07,
+          "buffer_overflow": 0.09,
+          "use_after_free": 0.06,
+          "uninitialized_use": 0.14,
+          "integer_overflow": 0.14,
+          "race_condition": 0.11,
+          "type_confusion": 0.17,
+          "where": {
+            "line": 149,
+            "confidence": 0.45,
+            "text": "return { $: 'Def', n: 0, x: 0, T: Qnt(), v: null, m: '' };"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::analyzeBendSource.unsupported",
+              "probability": 0.07
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::analyzeBendSource.unsupported",
+            "confidence": 0.71,
+            "probabilities": {
+              "none": 0.15,
+              "scripts/perch-bend.mjs::analyzeBendSource.unsupported": 0.85
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::analyzeBendSource.unsupported"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.515Z",
+          "id": "16e53b1b",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.declaration",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.declaration",
+          "line": 155,
+          "end_line": 161,
+          "hash": "7879975bf3056d948c37cdaf1981e2601dd0854b682253931f986bfa14ef196c",
+          "key": "0c22e05da47ae4a37271cf2d09f0c7db88eecf4d7a39a8e2015c123490d6b65b",
+          "risk": 27.699278,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.3,
+          "kind": {
+            "choice": "state_mutation",
+            "probability": 0.41,
+            "probabilities": {
+              "missing_null_handling": 0.4,
+              "boundary": 0.02,
+              "wrong_return": 0.05,
+              "swallowed_error": 0.01,
+              "inverted_condition": 0.05,
+              "resource_leak": 0,
+              "state_mutation": 0.41,
+              "ordering": 0.06
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.28,
+              "2": 0.42,
+              "3": 0.03
+            },
+            "score": 1.22,
+            "confidence": 0.15,
+            "level": "P2",
+            "predicted": 1.7899999999999998
+          },
+          "does_what_it_claims": 0.59,
+          "exposed": 0.62,
+          "injection": 0.06,
+          "path_traversal": 0.07,
+          "unsafe_deserialization": 0.1,
+          "secret_exposure": 0.05,
+          "missing_authorization": 0.13,
+          "weak_crypto": 0.06,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.57,
+          "unsafe_reflection": 0.2,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.07,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.15,
+          "integer_overflow": 0.06,
+          "race_condition": 0.16,
+          "type_confusion": 0.35,
+          "where": {
+            "line": 156,
+            "confidence": 0.36,
+            "text": "if (kind === 'datatype') return;"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::termReferences",
+              "probability": 0.08
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::termReferences",
+            "confidence": 0.98,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/perch-bend.mjs::termReferences": 0.99
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::termReferences"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.515Z",
+          "id": "f8d7f660",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.call",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.call",
+          "line": 151,
+          "end_line": 154,
+          "hash": "e96c0aca933ebb93ac0ef0822346693a320327e9f08d342d461db313035509d8",
+          "key": "5c403a2004bc8e5c20edfedab6c2c049068d3cf0e283e57994d24a99329a8cf9",
+          "risk": 22.064895,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.15,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.46,
+            "probabilities": {
+              "resource_leak": 0,
+              "state_mutation": 0.31,
+              "inverted_condition": 0.08,
+              "swallowed_error": 0.01,
+              "ordering": 0.05,
+              "wrong_return": 0.05,
+              "boundary": 0.04,
+              "missing_null_handling": 0.46
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.56,
+              "1": 0.25,
+              "2": 0.18,
+              "3": 0.01
+            },
+            "score": 0.63,
+            "confidence": 0.37,
+            "level": "P2",
+            "predicted": 2.36
+          },
+          "does_what_it_claims": 0.48,
+          "exposed": 0.53,
+          "injection": 0.06,
+          "path_traversal": 0.08,
+          "unsafe_deserialization": 0.1,
+          "secret_exposure": 0.04,
+          "missing_authorization": 0.1,
+          "weak_crypto": 0.07,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.22,
+          "unsafe_reflection": 0.12,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.1,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.11,
+          "integer_overflow": 0.09,
+          "race_condition": 0.1,
+          "type_confusion": 0.25,
+          "where": {
+            "line": 153,
+            "confidence": 0.27,
+            "text": "if (ref) calls.push(ref);"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-bend.mjs::lexicalReference",
+              "probability": 0.07
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::lexicalReference",
+            "confidence": 0.96,
+            "probabilities": {
+              "none": 0.02,
+              "scripts/perch-bend.mjs::lexicalReference": 0.98
+            }
+          },
+          "callees": [
+            "scripts/perch-bend.mjs::lexicalReference"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.640Z",
+          "id": "0e406381",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.missingDatatype",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.missingDatatype",
+          "line": 136,
+          "end_line": 138,
+          "hash": "964648350e7e43838923331c07adac72775fadad3ca36a13be534ca801af9bb6",
+          "key": "6311ad61e179c031f842e4b1980f232967a9734df7567c047f1037aacb9698b8",
+          "risk": 21.170804,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.34,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.77,
+            "probabilities": {
+              "wrong_return": 0.1,
+              "state_mutation": 0,
+              "resource_leak": 0,
+              "swallowed_error": 0.05,
+              "boundary": 0.05,
+              "inverted_condition": 0.02,
+              "missing_null_handling": 0.77,
+              "ordering": 0.01
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.51,
+              "1": 0.27,
+              "2": 0.17,
+              "3": 0.05
+            },
+            "score": 0.77,
+            "confidence": 0.23,
+            "level": "P2",
+            "predicted": 2.2399999999999998
+          },
+          "does_what_it_claims": 0.35,
+          "exposed": 0.64,
+          "injection": 0.06,
+          "path_traversal": 0.08,
+          "unsafe_deserialization": 0.08,
+          "secret_exposure": 0.05,
+          "missing_authorization": 0.14,
+          "weak_crypto": 0.06,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.12,
+          "unsafe_reflection": 0.16,
+          "disabled_safeguard": 0.05,
+          "buffer_overflow": 0.09,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.09,
+          "integer_overflow": 0.06,
+          "race_condition": 0.12,
+          "type_confusion": 0.15,
+          "where": {
+            "line": 137,
+            "confidence": 0.41,
+            "text": "if (name.startsWith('@import/')) throw { dependencyContext: true, message: `Imported datatype ${name.slice(8)} requires quantity/arity context for + syntax.`, span };"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.640Z",
+          "id": "85ff584c",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.externalConstructor",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.externalConstructor",
+          "line": 139,
+          "end_line": 141,
+          "hash": "3496d5fb492c1ce61e6463343c1dc7f43dcb9d1220cd6916307c1873843ea3e6",
+          "key": "fd3720c8754f7be5c101e3e3b96058fcbdbf43ccf262c7288d4fe28a946bfe87",
+          "risk": 20.968212,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.23,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.52,
+            "probabilities": {
+              "state_mutation": 0.01,
+              "missing_null_handling": 0.52,
+              "wrong_return": 0.38,
+              "inverted_condition": 0.06,
+              "ordering": 0.01,
+              "resource_leak": 0,
+              "swallowed_error": 0,
+              "boundary": 0.02
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.5,
+              "1": 0.33,
+              "2": 0.16,
+              "3": 0.01
+            },
+            "score": 0.69,
+            "confidence": 0.31,
+            "level": "P2",
+            "predicted": 2.32
+          },
+          "does_what_it_claims": 0.53,
+          "exposed": 0.62,
+          "injection": 0.06,
+          "path_traversal": 0.25,
+          "unsafe_deserialization": 0.16,
+          "secret_exposure": 0.06,
+          "missing_authorization": 0.2,
+          "weak_crypto": 0.16,
+          "unvalidated_destination": 0.07,
+          "resource_exhaustion": 0.15,
+          "unsafe_reflection": 0.18,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.07,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.07,
+          "integer_overflow": 0.05,
+          "race_condition": 0.09,
+          "type_confusion": 0.19,
+          "where": {
+            "line": 140,
+            "confidence": 0.87,
+            "text": "return name.startsWith('@import/') ? { k: name, n: fields, T: Qnt() } : null;"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.640Z",
+          "id": "964a1531",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.externalTemplate",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.externalTemplate",
+          "line": 142,
+          "end_line": 144,
+          "hash": "2721a27afaf939bf04386bc0f66aeb49874aad09237d4b1c49fccb4b4cb59e84",
+          "key": "66777238852568101eb4ab31a670e3ce6002a844fa6728b251229878db76ea3e",
+          "risk": 19.429043,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.19,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.65,
+            "probabilities": {
+              "resource_leak": 0,
+              "state_mutation": 0,
+              "swallowed_error": 0,
+              "ordering": 0,
+              "wrong_return": 0.24,
+              "inverted_condition": 0.06,
+              "boundary": 0.05,
+              "missing_null_handling": 0.65
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.51,
+              "1": 0.28,
+              "2": 0.2,
+              "3": 0.01
+            },
+            "score": 0.71,
+            "confidence": 0.29,
+            "level": "P2",
+            "predicted": 2.29
+          },
+          "does_what_it_claims": 0.48,
+          "exposed": 0.65,
+          "injection": 0.05,
+          "path_traversal": 0.09,
+          "unsafe_deserialization": 0.08,
+          "secret_exposure": 0.04,
+          "missing_authorization": 0.1,
+          "weak_crypto": 0.08,
+          "unvalidated_destination": 0.06,
+          "resource_exhaustion": 0.11,
+          "unsafe_reflection": 0.11,
+          "disabled_safeguard": 0.05,
+          "buffer_overflow": 0.06,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.07,
+          "integer_overflow": 0.07,
+          "race_condition": 0.08,
+          "type_confusion": 0.1,
+          "where": {
+            "line": 143,
+            "confidence": 0.78,
+            "text": "return name.startsWith('@import/') ? Infinity : 0;"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.760Z",
+          "id": "4e177024",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::analyzeBendSource.unsupported",
+          "path": "scripts/perch-bend.mjs",
+          "name": "analyzeBendSource.unsupported",
+          "line": 122,
+          "end_line": 122,
+          "hash": "17e8afbafe1b11691329b98683ccd9a4f868096798949b7359b73c55f57b0196",
+          "key": "bd2d8fae91df8be0db33a9b72d685663c94edd26478e795034fa3d2f0063fde9",
+          "risk": 9.025231,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.12,
+          "kind": {
+            "choice": "state_mutation",
+            "probability": 0.46,
+            "probabilities": {
+              "missing_null_handling": 0.39,
+              "wrong_return": 0.06,
+              "boundary": 0.01,
+              "swallowed_error": 0.02,
+              "inverted_condition": 0.01,
+              "resource_leak": 0,
+              "state_mutation": 0.46,
+              "ordering": 0.05
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.32,
+              "1": 0.45,
+              "2": 0.22,
+              "3": 0.01
+            },
+            "score": 0.94,
+            "confidence": 0.43,
+            "level": "P2",
+            "predicted": 2.08
+          },
+          "does_what_it_claims": 0.53,
+          "exposed": 0.68,
+          "injection": 0.06,
+          "path_traversal": 0.07,
+          "unsafe_deserialization": 0.1,
+          "secret_exposure": 0.06,
+          "missing_authorization": 0.12,
+          "weak_crypto": 0.05,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.16,
+          "unsafe_reflection": 0.16,
+          "disabled_safeguard": 0.07,
+          "buffer_overflow": 0.06,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.09,
+          "integer_overflow": 0.06,
+          "race_condition": 0.1,
+          "type_confusion": 0.12,
+          "where": {
+            "line": 122,
+            "confidence": 1,
+            "text": "const unsupported = (message, loc = null) => analysis.diagnostics.push({ kind: 'unsupported', message, location: loc });"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource",
+              "probability": 0.08
+            },
+            {
+              "caller": "scripts/perch-bend.mjs::analyzeBendSource.externalLaw",
+              "probability": 0.08
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::analyzeBendSource",
+            "confidence": 0.24,
+            "probabilities": {
+              "none": 0.02,
+              "scripts/perch-bend.mjs::analyzeBendSource": 0.5,
+              "scripts/perch-bend.mjs::analyzeBendSource.externalLaw": 0.48
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-bend.mjs::analyzeBendSource",
+            "scripts/perch-bend.mjs::analyzeBendSource.externalLaw"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.760Z",
+          "id": "3751c58a",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-bend.mjs::parseImports.fail",
+          "path": "scripts/perch-bend.mjs",
+          "name": "parseImports.fail",
+          "line": 36,
+          "end_line": 36,
+          "hash": "9a1fd3f7e8825945cd7df0860d000d9acadad9b4914bdc2b320ca3d27e25466b",
+          "key": "9246ef448508395a4aa181d2cab782214a6207275a986ee88ee26b7418f5f0b6",
+          "risk": 8.532446,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.3,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.44,
+            "probabilities": {
+              "swallowed_error": 0.04,
+              "wrong_return": 0.05,
+              "ordering": 0.03,
+              "missing_null_handling": 0.44,
+              "boundary": 0.2,
+              "resource_leak": 0,
+              "inverted_condition": 0.22,
+              "state_mutation": 0.02
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.5599999999999999,
+              "2": 0.15,
+              "3": 0.04
+            },
+            "score": 0.98,
+            "confidence": 0.53,
+            "level": "P2",
+            "predicted": 2.02
+          },
+          "does_what_it_claims": 0.59,
+          "exposed": 0.66,
+          "injection": 0.06,
+          "path_traversal": 0.11,
+          "unsafe_deserialization": 0.09,
+          "secret_exposure": 0.04,
+          "missing_authorization": 0.08,
+          "weak_crypto": 0.06,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.14,
+          "unsafe_reflection": 0.11,
+          "disabled_safeguard": 0.04,
+          "buffer_overflow": 0.09,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.11,
+          "integer_overflow": 0.1,
+          "race_condition": 0.1,
+          "type_confusion": 0.18,
+          "where": {
+            "line": 36,
+            "confidence": 1,
+            "text": "const fail = (message, beg, end) => { throw { importSyntax: true, message, beg, end }; };"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-bend.mjs::parseImports",
+              "probability": 0.09
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-bend.mjs::parseImports",
+            "confidence": 0.99,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/perch-bend.mjs::parseImports": 0.99
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-bend.mjs::parseImports"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.760Z",
+          "id": "f5b92b6a",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-workflow.mjs::usageSummary",
+          "path": "scripts/perch-workflow.mjs",
+          "name": "usageSummary",
+          "line": 136,
+          "end_line": 152,
+          "hash": "1226acab8e6669598139a9d02618e198f427f0a13bc8759230b152699be0afc6",
+          "key": "60ea499c0cfe794524270f33083f72371df3c5c138469c07f8bc5a0471474083",
+          "risk": 52.302645,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.32,
+          "kind": {
+            "choice": "swallowed_error",
+            "probability": 0.87,
+            "probabilities": {
+              "resource_leak": 0,
+              "state_mutation": 0,
+              "ordering": 0.01,
+              "swallowed_error": 0.87,
+              "wrong_return": 0.03,
+              "inverted_condition": 0,
+              "boundary": 0,
+              "missing_null_handling": 0.09
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.16,
+              "1": 0.68,
+              "2": 0.15,
+              "3": 0.01
+            },
+            "score": 1,
+            "confidence": 0.67,
+            "level": "P2",
+            "predicted": 1.99
+          },
+          "does_what_it_claims": 0.7,
+          "exposed": 0.8,
+          "injection": 0.18,
+          "path_traversal": 0.34,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.07,
+          "missing_authorization": 0.45,
+          "weak_crypto": 0.08,
+          "unvalidated_destination": 0.07,
+          "resource_exhaustion": 0.62,
+          "unsafe_reflection": 0.23,
+          "disabled_safeguard": 0.1,
+          "buffer_overflow": 0.08,
+          "use_after_free": 0.06,
+          "uninitialized_use": 0.14,
+          "integer_overflow": 0.09,
+          "race_condition": 0.22,
+          "type_confusion": 0.69,
+          "where": {
+            "line": 148,
+            "confidence": 0.4,
+            "text": "} catch { malformed++; }"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.881Z",
+          "id": "b226fbd1",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-workflow.mjs::classify",
+          "path": "scripts/perch-workflow.mjs",
+          "name": "classify",
+          "line": 22,
+          "end_line": 29,
+          "hash": "02be6de4bb4fd48b29eacb9e04692a2e0c0096c47cda496b069898025427b507",
+          "key": "81e7a682f6a5e7995229e687234f181776a1f6908848bb4aaea2b9383be8c86d",
+          "risk": 41.38023,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.38,
+          "kind": {
+            "choice": "wrong_return",
+            "probability": 0.25,
+            "probabilities": {
+              "missing_null_handling": 0.14,
+              "wrong_return": 0.25,
+              "boundary": 0.24,
+              "swallowed_error": 0.06,
+              "inverted_condition": 0.16,
+              "resource_leak": 0,
+              "state_mutation": 0.01,
+              "ordering": 0.14
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.07,
+              "1": 0.34,
+              "2": 0.52,
+              "3": 0.07
+            },
+            "score": 1.58,
+            "confidence": 0.44,
+            "level": "P1",
+            "predicted": 1.41
+          },
+          "does_what_it_claims": 0.74,
+          "exposed": 0.85,
+          "injection": 0.12,
+          "path_traversal": 0.2,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.16,
+          "missing_authorization": 0.15,
+          "weak_crypto": 0.09,
+          "unvalidated_destination": 0.08,
+          "resource_exhaustion": 0.15,
+          "unsafe_reflection": 0.15,
+          "disabled_safeguard": 0.05,
+          "buffer_overflow": 0.08,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.1,
+          "integer_overflow": 0.08,
+          "race_condition": 0.16,
+          "type_confusion": 0.41,
+          "where": {
+            "line": 24,
+            "confidence": 0.25,
+            "text": "if (code === 0 && result?.checked === 0) return 'no-coverage';"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-workflow.mjs::runPerch",
+              "probability": 0.19
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-workflow.mjs::runPerch",
+            "confidence": 0.99,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/perch-workflow.mjs::runPerch": 0.99
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-workflow.mjs::runPerch"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.881Z",
+          "id": "5187e9e1",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-workflow.mjs::ruleIdentity",
+          "path": "scripts/perch-workflow.mjs",
+          "name": "ruleIdentity",
+          "line": 12,
+          "end_line": 20,
+          "hash": "99239555c4c369ce95f792a5f01a6143e9f83262869c4f2c192265ffb9313adf",
+          "key": "ec521dd11ad2f134c5204e5a32d8ee4f35543530cbbbebab8c98d9f8f27cb439",
+          "risk": 25.302685,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.37,
+          "kind": {
+            "choice": "swallowed_error",
+            "probability": 0.77,
+            "probabilities": {
+              "inverted_condition": 0,
+              "ordering": 0.07,
+              "wrong_return": 0.07,
+              "state_mutation": 0,
+              "missing_null_handling": 0.07,
+              "resource_leak": 0,
+              "boundary": 0.02,
+              "swallowed_error": 0.77
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.1,
+              "1": 0.41,
+              "2": 0.42,
+              "3": 0.07
+            },
+            "score": 1.47,
+            "confidence": 0.32,
+            "level": "P2",
+            "predicted": 1.54
+          },
+          "does_what_it_claims": 0.69,
+          "exposed": 0.87,
+          "injection": 0.17,
+          "path_traversal": 0.33,
+          "unsafe_deserialization": 0.14,
+          "secret_exposure": 0.1,
+          "missing_authorization": 0.45,
+          "weak_crypto": 0.17,
+          "unvalidated_destination": 0.11,
+          "resource_exhaustion": 0.6,
+          "unsafe_reflection": 0.24,
+          "disabled_safeguard": 0.1,
+          "buffer_overflow": 0.08,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.08,
+          "integer_overflow": 0.09,
+          "race_condition": 0.17,
+          "type_confusion": 0.22,
+          "where": {
+            "line": 16,
+            "confidence": 0.25,
+            "text": "const files = ['perch.yaml', ...names.map(name => `.perch/rules/${name}`)];"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/perch-workflow.mjs::hash",
+              "probability": 0.07
+            }
+          ],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-workflow.mjs::runPerch",
+              "probability": 0.15
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-workflow.mjs::runPerch",
+            "confidence": 0.8,
+            "probabilities": {
+              "none": 0.02,
+              "scripts/perch-workflow.mjs::runPerch": 0.86,
+              "scripts/perch-workflow.mjs::hash": 0.12
+            }
+          },
+          "callees": [
+            "scripts/perch-workflow.mjs::hash"
+          ],
+          "callers": [
+            "scripts/perch-workflow.mjs::runPerch"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:33.881Z",
+          "id": "14cb3b34",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/perch-workflow.mjs::hash",
+          "path": "scripts/perch-workflow.mjs",
+          "name": "hash",
+          "line": 10,
+          "end_line": 10,
+          "hash": "3208ad51a29cbbf5228160e13d5e62b0a003e41b88046183ddf16ee9c91d2600",
+          "key": "8cf92bded9c9361d5af8e498433c70423f27071f35d26200636e52bec7ba8ad5",
+          "risk": 7.437755,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.15,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.88,
+            "probabilities": {
+              "missing_null_handling": 0.88,
+              "boundary": 0.01,
+              "inverted_condition": 0,
+              "state_mutation": 0.01,
+              "wrong_return": 0.05,
+              "ordering": 0.01,
+              "resource_leak": 0,
+              "swallowed_error": 0.04
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.16,
+              "1": 0.17,
+              "2": 0.62,
+              "3": 0.05
+            },
+            "score": 1.58,
+            "confidence": 0.47,
+            "level": "P1",
+            "predicted": 1.44
+          },
+          "does_what_it_claims": 0.84,
+          "exposed": 0.87,
+          "injection": 0.09,
+          "path_traversal": 0.16,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.1,
+          "missing_authorization": 0.11,
+          "weak_crypto": 0.1,
+          "unvalidated_destination": 0.07,
+          "resource_exhaustion": 0.31,
+          "unsafe_reflection": 0.14,
+          "disabled_safeguard": 0.05,
+          "buffer_overflow": 0.07,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.08,
+          "integer_overflow": 0.07,
+          "race_condition": 0.1,
+          "type_confusion": 0.1,
+          "where": {
+            "line": 10,
+            "confidence": 1,
+            "text": "const hash = text => createHash('sha256').update(text).digest('hex');"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/perch-workflow.mjs::runPerch",
+              "probability": 0.12
+            },
+            {
+              "caller": "scripts/perch-workflow.mjs::ruleIdentity",
+              "probability": 0.08
+            }
+          ],
+          "follow": {
+            "method": "scripts/perch-workflow.mjs::ruleIdentity",
+            "confidence": 0.34,
+            "probabilities": {
+              "scripts/perch-workflow.mjs::ruleIdentity": 0.56,
+              "none": 0.04,
+              "scripts/perch-workflow.mjs::runPerch": 0.4
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/perch-workflow.mjs::runPerch",
+            "scripts/perch-workflow.mjs::ruleIdentity"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.046Z",
+          "id": "676acf46",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/install-perch-bend.mjs::install",
+          "path": "scripts/install-perch-bend.mjs",
+          "name": "install",
+          "line": 67,
+          "end_line": 85,
+          "hash": "03f939119dfb4d3ae334d98106eebfc690435c4892de0511f5fa788bce1e0b0f",
+          "key": "91cd8b9910277ff9adfda9324afdd75e205327c150a19434adb10a0154fae5c3",
+          "risk": 47.197151,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.51,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.32,
+            "probabilities": {
+              "boundary": 0.1,
+              "wrong_return": 0.02,
+              "inverted_condition": 0.02,
+              "missing_null_handling": 0.32,
+              "resource_leak": 0.02,
+              "ordering": 0.14,
+              "state_mutation": 0.25,
+              "swallowed_error": 0.13
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.08,
+              "1": 0.26,
+              "2": 0.22,
+              "3": 0.44
+            },
+            "score": 2.03,
+            "confidence": 0.03,
+            "level": "P1",
+            "predicted": 0.98
+          },
+          "does_what_it_claims": 0.68,
+          "exposed": 0.9,
+          "injection": 0.2,
+          "path_traversal": 0.3,
+          "unsafe_deserialization": 0.21,
+          "secret_exposure": 0.11,
+          "missing_authorization": 0.66,
+          "weak_crypto": 0.25,
+          "unvalidated_destination": 0.07,
+          "resource_exhaustion": 0.46,
+          "unsafe_reflection": 0.32,
+          "disabled_safeguard": 0.13,
+          "buffer_overflow": 0.12,
+          "use_after_free": 0.06,
+          "uninitialized_use": 0.12,
+          "integer_overflow": 0.1,
+          "race_condition": 0.56,
+          "type_confusion": 0.61,
+          "where": {
+            "line": 69,
+            "confidence": 0.34,
+            "text": "if (installed.version !== '0.3.5') throw new Error('Bend adapter requires reviewed Perch 0.3.5; refusing an unreviewed upgrade.');"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/install-perch-bend.mjs::patchPerch",
+              "probability": 0.1
+            },
+            {
+              "callee": "scripts/install-perch-bend.mjs::sha",
+              "probability": 0.11
+            }
+          ],
+          "misused_by": [],
+          "follow": {
+            "method": "scripts/install-perch-bend.mjs::patchPerch",
+            "confidence": 0.99,
+            "probabilities": {
+              "scripts/install-perch-bend.mjs::sha": 0.01,
+              "none": 0,
+              "scripts/install-perch-bend.mjs::patchPerch": 0.99
+            }
+          },
+          "callees": [
+            "scripts/install-perch-bend.mjs::patchPerch",
+            "scripts/install-perch-bend.mjs::sha"
+          ],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.046Z",
+          "id": "d9d65fc9",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/install-perch-bend.mjs::patchPerch",
+          "path": "scripts/install-perch-bend.mjs",
+          "name": "patchPerch",
+          "line": 20,
+          "end_line": 65,
+          "hash": "1bf9418bbcf2b2ebc42b65faeb5d9679680d02d2e23adb8b914a9a3340e55322",
+          "key": "bd76c0fe91f306f8f7e9082688e162af3f49abb616ee3c046e913a403039a729",
+          "risk": 36.021603,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.43,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.34,
+            "probabilities": {
+              "boundary": 0.07,
+              "swallowed_error": 0.02,
+              "resource_leak": 0,
+              "missing_null_handling": 0.34,
+              "inverted_condition": 0.03,
+              "wrong_return": 0.19,
+              "ordering": 0.3,
+              "state_mutation": 0.05
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.24,
+              "2": 0.44,
+              "3": 0.3
+            },
+            "score": 2.01,
+            "confidence": 0.42,
+            "level": "P1",
+            "predicted": 0.9800000000000004
+          },
+          "does_what_it_claims": 0.67,
+          "exposed": 0.79,
+          "injection": 0.23,
+          "path_traversal": 0.2,
+          "unsafe_deserialization": 0.38,
+          "secret_exposure": 0.25,
+          "missing_authorization": 0.31,
+          "weak_crypto": 0.21,
+          "unvalidated_destination": 0.07,
+          "resource_exhaustion": 0.42,
+          "unsafe_reflection": 0.26,
+          "disabled_safeguard": 0.14,
+          "buffer_overflow": 0.1,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.12,
+          "integer_overflow": 0.1,
+          "race_condition": 0.21,
+          "type_confusion": 0.59,
+          "where": {
+            "line": 40,
+            "confidence": 0.17,
+            "text": "patched = replaceOnce(patched, fileReturn, `  const bend = languageOf(path) === \"bend\" ? await analyzer.analyzeSource(text3, \"bend\") : null;"
+          },
+          "misuse": [
+            {
+              "callee": "scripts/install-perch-bend.mjs::replaceOnce",
+              "probability": 0.19
+            }
+          ],
+          "misused_by": [
+            {
+              "caller": "scripts/install-perch-bend.mjs::install",
+              "probability": 0.13
+            }
+          ],
+          "follow": {
+            "method": "scripts/install-perch-bend.mjs::replaceOnce",
+            "confidence": 0.45,
+            "probabilities": {
+              "scripts/install-perch-bend.mjs::install": 0.36,
+              "scripts/install-perch-bend.mjs::replaceOnce": 0.64,
+              "none": 0
+            }
+          },
+          "callees": [
+            "scripts/install-perch-bend.mjs::replaceOnce"
+          ],
+          "callers": [
+            "scripts/install-perch-bend.mjs::install"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.046Z",
+          "id": "7e0204db",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/install-perch-bend.mjs::replaceOnce",
+          "path": "scripts/install-perch-bend.mjs",
+          "name": "replaceOnce",
+          "line": 15,
+          "end_line": 18,
+          "hash": "3a679dbbe3a88120047b35949a6c9083cfd13c2adc4e1905bb087a99365acce9",
+          "key": "d3615a49f3d4c46c506df278554752b67cea655b7720e6c58a983650cc956049",
+          "risk": 23.65936,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.44,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.5,
+            "probabilities": {
+              "missing_null_handling": 0.5,
+              "ordering": 0.02,
+              "wrong_return": 0.08,
+              "inverted_condition": 0.06,
+              "swallowed_error": 0.01,
+              "state_mutation": 0,
+              "boundary": 0.33,
+              "resource_leak": 0
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.52,
+              "2": 0.36,
+              "3": 0.08
+            },
+            "score": 1.47,
+            "confidence": 0.44,
+            "level": "P2",
+            "predicted": 1.52
+          },
+          "does_what_it_claims": 0.76,
+          "exposed": 0.66,
+          "injection": 0.11,
+          "path_traversal": 0.11,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.07,
+          "missing_authorization": 0.09,
+          "weak_crypto": 0.1,
+          "unvalidated_destination": 0.05,
+          "resource_exhaustion": 0.37,
+          "unsafe_reflection": 0.13,
+          "disabled_safeguard": 0.05,
+          "buffer_overflow": 0.09,
+          "use_after_free": 0.04,
+          "uninitialized_use": 0.07,
+          "integer_overflow": 0.08,
+          "race_condition": 0.26,
+          "type_confusion": 0.12,
+          "where": {
+            "line": 16,
+            "confidence": 0.65,
+            "text": "if (source.split(before).length !== 2) throw new Error(`Perch patch anchor changed: ${before.slice(0, 70)}`);"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/install-perch-bend.mjs::patchPerch",
+              "probability": 0.2
+            }
+          ],
+          "follow": {
+            "method": "scripts/install-perch-bend.mjs::patchPerch",
+            "confidence": 1,
+            "probabilities": {
+              "none": 0,
+              "scripts/install-perch-bend.mjs::patchPerch": 1
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/install-perch-bend.mjs::patchPerch"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.176Z",
+          "id": "1cb95580",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/install-perch-bend.mjs::sha",
+          "path": "scripts/install-perch-bend.mjs",
+          "name": "sha",
+          "line": 12,
+          "end_line": 12,
+          "hash": "4ecb2bc0ca2c869b697fea2de64408b130085a3f7ffe08d9f52b67d9e36dd69a",
+          "key": "6040b19b0ea3ea341c6f483fe0a76e28a13dcbb7cc6053dd0a1edfb7813656fc",
+          "risk": 7.437755,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.14,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.8,
+            "probabilities": {
+              "ordering": 0.02,
+              "resource_leak": 0.01,
+              "state_mutation": 0.02,
+              "missing_null_handling": 0.8,
+              "wrong_return": 0.06,
+              "swallowed_error": 0.05,
+              "boundary": 0.03,
+              "inverted_condition": 0.01
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.28,
+              "1": 0.21,
+              "2": 0.29,
+              "3": 0.22
+            },
+            "score": 1.44,
+            "confidence": 0.01,
+            "level": "P2",
+            "predicted": 1.55
+          },
+          "does_what_it_claims": 0.64,
+          "exposed": 0.82,
+          "injection": 0.12,
+          "path_traversal": 0.2,
+          "unsafe_deserialization": 0.12,
+          "secret_exposure": 0.1,
+          "missing_authorization": 0.23,
+          "weak_crypto": 0.14,
+          "unvalidated_destination": 0.06,
+          "resource_exhaustion": 0.33,
+          "unsafe_reflection": 0.18,
+          "disabled_safeguard": 0.06,
+          "buffer_overflow": 0.1,
+          "use_after_free": 0.05,
+          "uninitialized_use": 0.1,
+          "integer_overflow": 0.08,
+          "race_condition": 0.17,
+          "type_confusion": 0.15,
+          "where": {
+            "line": 12,
+            "confidence": 1,
+            "text": "const sha = data => createHash('sha256').update(data).digest('hex');"
+          },
+          "misuse": [],
+          "misused_by": [
+            {
+              "caller": "scripts/install-perch-bend.mjs::install",
+              "probability": 0.12
+            }
+          ],
+          "follow": {
+            "method": "scripts/install-perch-bend.mjs::install",
+            "confidence": 0.98,
+            "probabilities": {
+              "none": 0.01,
+              "scripts/install-perch-bend.mjs::install": 0.99
+            }
+          },
+          "callees": [],
+          "callers": [
+            "scripts/install-perch-bend.mjs::install"
+          ],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.176Z",
+          "id": "443c47d2",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/check-law-rule-wiring.mjs::run",
+          "path": "scripts/check-law-rule-wiring.mjs",
+          "name": "run",
+          "line": 33,
+          "end_line": 38,
+          "hash": "8782f56b4cef180cf7ead74b07f8745fe82a91ff77770d759e30c8aac5a54737",
+          "key": "7bf396307788386b2507294f3742ae336e7fec13b4bd191743ce23e247dc11be",
+          "risk": 22.171531,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.17,
+          "kind": {
+            "choice": "state_mutation",
+            "probability": 0.33,
+            "probabilities": {
+              "inverted_condition": 0.01,
+              "missing_null_handling": 0.19,
+              "ordering": 0.05,
+              "state_mutation": 0.33,
+              "wrong_return": 0.15,
+              "swallowed_error": 0.08,
+              "resource_leak": 0.16,
+              "boundary": 0.03
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.57,
+              "1": 0.3,
+              "2": 0.1,
+              "3": 0.03
+            },
+            "score": 0.59,
+            "confidence": 0.41,
+            "level": "P2",
+            "predicted": 2.41
+          },
+          "does_what_it_claims": 0.51,
+          "exposed": 0.72,
+          "injection": 0.21,
+          "path_traversal": 0.25,
+          "unsafe_deserialization": 0.16,
+          "secret_exposure": 0.4,
+          "missing_authorization": 0.33,
+          "weak_crypto": 0.09,
+          "unvalidated_destination": 0.25,
+          "resource_exhaustion": 0.32,
+          "unsafe_reflection": 0.26,
+          "disabled_safeguard": 0.22,
+          "buffer_overflow": 0.08,
+          "use_after_free": 0.07,
+          "uninitialized_use": 0.1,
+          "integer_overflow": 0.08,
+          "race_condition": 0.14,
+          "type_confusion": 0.3,
+          "where": {
+            "line": 35,
+            "confidence": 0.45,
+            "text": "const code = await main(args, { env: { PERCH_API_KEY: 'offline-wiring-only' },"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        },
+        {
+          "type": "read",
+          "at": "2026-09-26T20:47:34.176Z",
+          "id": "876bd30c",
+          "run_id": "0d264ceefa3ba170",
+          "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+          "github": null,
+          "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+          "method": "scripts/calibrate-law-rules.mjs::digest",
+          "path": "scripts/calibrate-law-rules.mjs",
+          "name": "digest",
+          "line": 14,
+          "end_line": 14,
+          "hash": "f7dd9884a0ae09bf7a203b0e234080eb3f53e8af2805551d34cca735a5e95fee",
+          "key": "3fca354ed287abad386db0babe853795a3df138fc593c5e8113db455706a9a48",
+          "risk": 7.437755,
+          "model": "jev-1.13.0",
+          "answers_set": "1192bfc86d1763e3",
+          "has_bug": 0.27,
+          "kind": {
+            "choice": "missing_null_handling",
+            "probability": 0.59,
+            "probabilities": {
+              "resource_leak": 0.05,
+              "ordering": 0.07,
+              "inverted_condition": 0.03,
+              "swallowed_error": 0.15,
+              "state_mutation": 0.02,
+              "wrong_return": 0.03,
+              "boundary": 0.06,
+              "missing_null_handling": 0.59
+            }
+          },
+          "severity": {
+            "probabilities": {
+              "0": 0.77,
+              "1": 0.12,
+              "2": 0.08,
+              "3": 0.03
+            },
+            "score": 0.37,
+            "confidence": 0.63,
+            "level": "P3",
+            "predicted": 2.63
+          },
+          "does_what_it_claims": 0.65,
+          "exposed": 0.74,
+          "injection": 0.27,
+          "path_traversal": 0.39,
+          "unsafe_deserialization": 0.11,
+          "secret_exposure": 0.08,
+          "missing_authorization": 0.49,
+          "weak_crypto": 0.11,
+          "unvalidated_destination": 0.06,
+          "resource_exhaustion": 0.46,
+          "unsafe_reflection": 0.21,
+          "disabled_safeguard": 0.1,
+          "buffer_overflow": 0.11,
+          "use_after_free": 0.06,
+          "uninitialized_use": 0.13,
+          "integer_overflow": 0.08,
+          "race_condition": 0.19,
+          "type_confusion": 0.46,
+          "where": {
+            "line": 14,
+            "confidence": 1,
+            "text": "const digest = data => createHash('sha256').update(data).digest('hex');"
+          },
+          "misuse": [],
+          "misused_by": [],
+          "follow": {
+            "method": null,
+            "confidence": 1,
+            "probabilities": {
+              "none": 1
+            }
+          },
+          "callees": [],
+          "callers": [],
+          "status": "read"
+        }
+      ],
+      "broken": [],
+      "failed": [],
+      "usage": {
+        "input_tokens": 115864,
+        "output_tokens": 18386
+      },
+      "incomplete": [],
+      "coverage": [
+        {
+          "name": "has_bug",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 1
+        },
+        {
+          "name": "kind",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": null
+        },
+        {
+          "name": "severity",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": null
+        },
+        {
+          "name": "refactor",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "does_what_it_claims",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "documented",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "exposed",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": null
+        },
+        {
+          "name": "injection",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "path_traversal",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "unsafe_deserialization",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "secret_exposure",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "missing_authorization",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 1
+        },
+        {
+          "name": "weak_crypto",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "unvalidated_destination",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "resource_exhaustion",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "unsafe_reflection",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "disabled_safeguard",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "buffer_overflow",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "use_after_free",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "uninitialized_use",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "integer_overflow",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "race_condition",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 0
+        },
+        {
+          "name": "type_confusion",
+          "from": "builtin",
+          "where": "**/*",
+          "units": 24,
+          "broken": 1
+        }
+      ],
+      "remaining": 0,
+      "completed_at": "2026-09-26T20:47:34.180Z"
+    },
+    "parser_coverage": {
+      "supported": 5,
+      "parsed": 5,
+      "parse_failures": 0,
+      "parser_diagnostics": [],
+      "excluded": 2
+    },
+    "issues": [
+      {
+        "type": "read",
+        "at": "2026-09-26T20:47:33.228Z",
+        "id": "0c8c46eb",
+        "run_id": "0d264ceefa3ba170",
+        "root": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+        "github": null,
+        "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+        "method": "scripts/perch-workflow.mjs::runPerch",
+        "path": "scripts/perch-workflow.mjs",
+        "name": "runPerch",
+        "line": 32,
+        "end_line": 134,
+        "hash": "36ba14324e65a1ebc6e66230786328e2ef61c49e5e1368c80e9ada6908376b48",
+        "key": "5e786c23e6f1bfa7b9fa1497665fedba5a67ae8983c7b506fdee7dc91d625fe7",
+        "risk": 80.471232,
+        "model": "jev-1.13.0",
+        "answers_set": "1192bfc86d1763e3",
+        "has_bug": 0.74,
+        "kind": {
+          "choice": "swallowed_error",
+          "probability": 0.27,
+          "probabilities": {
+            "missing_null_handling": 0.17,
+            "boundary": 0.09,
+            "wrong_return": 0.12,
+            "resource_leak": 0.03,
+            "state_mutation": 0.25,
+            "ordering": 0.04,
+            "swallowed_error": 0.27,
+            "inverted_condition": 0.03
+          }
+        },
+        "severity": {
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.18,
+            "2": 0.31,
+            "3": 0.47
+          },
+          "score": 2.23,
+          "confidence": 0.23,
+          "level": "P1",
+          "predicted": 0.79
+        },
+        "does_what_it_claims": 0.76,
+        "exposed": 0.96,
+        "injection": 0.28,
+        "path_traversal": 0.52,
+        "unsafe_deserialization": 0.14,
+        "secret_exposure": 0.31,
+        "missing_authorization": 0.77,
+        "weak_crypto": 0.21,
+        "unvalidated_destination": 0.69,
+        "resource_exhaustion": 0.63,
+        "unsafe_reflection": 0.55,
+        "disabled_safeguard": 0.17,
+        "buffer_overflow": 0.18,
+        "use_after_free": 0.1,
+        "uninitialized_use": 0.17,
+        "integer_overflow": 0.15,
+        "race_condition": 0.47,
+        "type_confusion": 0.72,
+        "where": {
+          "line": 89,
+          "confidence": 0.31,
+          "text": "if (['no-coverage', 'unreadable-result', 'no-provider-coverage', 'partial-parser-coverage', 'partial-provider-coverage'].includes(status)) {"
+        },
+        "misuse": [
+          {
+            "callee": "scripts/perch-workflow.mjs::classify",
+            "probability": 0.16
+          },
+          {
+            "callee": "scripts/perch-workflow.mjs::ruleIdentity",
+            "probability": 0.16
+          },
+          {
+            "callee": "scripts/perch-workflow.mjs::hash",
+            "probability": 0.13
+          }
+        ],
+        "misused_by": [],
+        "follow": {
+          "method": "scripts/perch-workflow.mjs::classify",
+          "confidence": 0.88,
+          "probabilities": {
+            "scripts/perch-workflow.mjs::classify": 0.91,
+            "none": 0.01,
+            "scripts/perch-workflow.mjs::ruleIdentity": 0.08,
+            "scripts/perch-workflow.mjs::hash": 0
+          }
+        },
+        "callees": [
+          "scripts/perch-workflow.mjs::classify",
+          "scripts/perch-workflow.mjs::ruleIdentity",
+          "scripts/perch-workflow.mjs::hash"
+        ],
+        "callers": [],
+        "metrics": {
+          "risk_score": 80.471232,
+          "maintainability_index": 26.81349,
+          "cyclomatic_complexity": 38,
+          "max_nesting": 4,
+          "sloc": 81
+        },
+        "file": {
+          "risk_score": 88.175404,
+          "maintainability_index": 14.960917,
+          "cyclomatic_complexity": 67,
+          "max_nesting": 4,
+          "sloc": 148
+        }
+      }
+    ],
+    "usage": {
+      "jev-1.13.0": {
+        "requests": 24,
+        "input": 115864,
+        "output": 18386,
+        "cost": 0.004866288000000001
+      }
+    }
+  },
+  "receipts": [
+    {
+      "schema": 1,
+      "id": "66d0363b-7a75-4bac-87a5-4ff51448dadd",
+      "at": "2026-09-26T20:47:32.560Z",
+      "command": "scan",
+      "target": null,
+      "revision": "0f72115537d17f6d7e2f336d0b842b08bdbf491d",
+      "source_sha256": null,
+      "rules_sha256": "3ffab8f32cfd8ba94cc2d53d9c426b3d6a3e642b4f868398a7968733eb5ef807",
+      "selected_rules": null,
+      "perch_version": "0.3.5",
+      "requested_model": "jev-latest",
+      "resolved_model": "jev-1.13.0",
+      "provider_requests": 24,
+      "provider_responses": 24,
+      "models": [
+        "jev-1.13.0"
+      ],
+      "answers": [
+        {
+          "rule": "has_bug",
+          "probability_true": 0.44
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.83
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.92
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.22
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.63
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.3
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.53
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "misuse_1",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "misuse_2",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.58
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.88
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.47
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.35
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.42
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.76
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.96
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.28
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.52
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.31
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.77
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.69
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.63
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.55
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.47
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.72
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "misuse_1",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "misuse_2",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.31
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.71
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.66
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.44
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "misused_by_1",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.39
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.84
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.5
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.26
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.24
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.33
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.31
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.84
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.7
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.6
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.49
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.48
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.53
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.22
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.3
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.59
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.62
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.57
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.35
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.48
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.35
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.71
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.23
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.34
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.48
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.65
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.34
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.35
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.64
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.23
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.53
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.62
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.32
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.7
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.8
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.34
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.45
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.62
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.23
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.22
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.69
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.3
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.59
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.66
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.53
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.68
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "misused_by_1",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.84
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.87
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.31
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "misused_by_1",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.37
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.69
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.87
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.33
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.45
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.6
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.24
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.22
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.38
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.85
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.41
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.51
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.68
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.9
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.3
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.66
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.46
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.32
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.56
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.61
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "misuse_1",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.43
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.67
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.79
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.23
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.38
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.31
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.42
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.26
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.59
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.44
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.76
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.66
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.37
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.04
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.26
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.27
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.65
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.27
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.39
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.49
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.46
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.11
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.13
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.46
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.51
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.72
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.21
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.16
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.4
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.33
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.09
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.25
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.32
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.26
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.22
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.07
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.3
+        },
+        {
+          "rule": "has_bug",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.64
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.82
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.2
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.12
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.23
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.33
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.18
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.06
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.05
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.08
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "misused_by_0",
+          "probability_true": 0.12
+        }
+      ],
+      "usage": {
+        "input_tokens": 115864,
+        "output_tokens": 18386
+      },
+      "elapsed_ms": 1634,
+      "upstream_exit": 3,
+      "exit": 3,
+      "status": "findings",
+      "checked": null,
+      "parser": null,
+      "parser_coverage": {
+        "supported": 5,
+        "parsed": 5,
+        "parse_failures": 0,
+        "parser_diagnostics": [],
+        "excluded": 2
+      },
+      "findings": [],
+      "issue_count": 1,
+      "adjudication": "unreviewed"
+    }
+  ]
+}

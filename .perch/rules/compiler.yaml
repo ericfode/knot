@@ -1,0 +1,51 @@
+# Provisional source locations; revise selectors when the compiler layout is chosen.
+- name: compiler-pattern-sharing
+  where: "{src,compiler}/**/*.{bend,ts,js,rs,c,cpp}"
+  each: method
+  min: 80
+  gate: false
+  ensure: >
+    Judge the parsed target declaration, using supplied helpers to establish its
+    behavior. Do not flag an unrelated declaration merely present in context.
+    Inspect pattern lowering and generated decision trees. A shared continuation
+    or large recursive body is not copied into the Cartesian product of numeric
+    alternatives merely to distinguish control cases. Joint numeric matches,
+    wildcard fallbacks, and optimization passes preserve branch priority and
+    reasonable sharing. A small intentional duplication or a match on a compact
+    algebraic datatype is allowed. Flag a concrete multiplication of substantial
+    code, not an arbitrary preference for Boolean guards. If this declaration does not
+    implement pattern lowering or code generation, this rule holds.
+
+- name: compiler-checker-trust
+  where: "{src,compiler}/**/*.{bend,ts,js,rs,c,cpp}"
+  each: method
+  min: 80
+  gate: false
+  ensure: >
+    Judge the parsed target declaration, using supplied helpers to establish its
+    behavior. Do not flag an unrelated declaration merely present in context.
+    Inspect compiler paths that accept terms, proofs, or optimization results.
+    Timeouts, normalization fuel exhaustion, missing law bodies, parse failures,
+    and unsupported constructs cannot be converted to successful verification.
+    Unsafe primitives and assumed axioms remain explicit trust dependencies.
+    A test on concrete inputs is not promoted into a universal proof. Jev or any
+    other probabilistic model verdict cannot authorize accepting an ill-typed or
+    unproved program. Merely recognizing unsafe syntax is allowed. If this declaration
+    makes no acceptance decision, this rule holds.
+
+- name: compiler-cache-identity
+  where: "{src,compiler}/**/*.{bend,ts,js,rs,c,cpp}"
+  each: method
+  min: 80
+  gate: false
+  ensure: >
+    Judge the parsed target declaration, using supplied helpers to establish its
+    behavior. Do not flag an unrelated declaration merely present in context.
+    Inspect memoization, incremental compilation, and artifact reuse. A reused
+    result is tied to every semantic input that can change that result, such as
+    source and imported interfaces, binding context, compiler semantics, target,
+    and relevant flags. Partial, failed, or timed-out work cannot be reused as a
+    completed verified result. Intentional omission of an input is allowed when
+    the result is explicitly independent of it. Identify a visible missing input
+    or unsafe promotion; absence of an implementation in the supplied context is not
+    evidence. If this declaration does not cache or reuse results, this rule holds.

@@ -1,0 +1,87 @@
+One-shot Bend repair experiment. Do not use tools, inspect files, run code, or delegate. Return ONLY the complete replacement Bend source, without fences or explanation. You have one generation. Preserve the contract.
+
+# indexed-linked-list
+
+Public entry: `def solve(xs: List<&2,U32>) -> List<&2,U32>`. The input
+may be marked `+xs` when reused; quantities must check.
+
+Domain: every finite standard Base list of U32 values, with length at most
+2^32-1. Empty and singleton inputs are valid. Every arithmetic operation is
+U32 arithmetic modulo 2^32, including multiplication and addition.
+
+For input [x0, ..., x(n-1)], return [x0*1, x1*2, ..., x(n-1)*n]. Preserve input order and all positions, including repeated values.
+
+The result is the entire observable output. Do not print, mutate external state,
+ignore elements, reorder elements, or return a checksum instead of the list.
+
+Required performance: O(n) dynamic work and O(n) result storage in the pinned
+Bend 2.0.29 JavaScript backend, excluding host input construction and output
+validation. Dynamic work includes generated function entries, loop iterations,
+and allocations. A bounded number of full traversals is allowed.
+
+Keep the implementation self-contained in one `.bend` file using `import Base`
+only. Preserve the public entry and behavior; internal helper names may change.
+Use ordinary Base lists, U32, Nat, Bool, Maybe, and pure helper definitions.
+No arrays, strings, external imports, foreign functions, IO, unsafe declarations,
+axioms, holes, GPU/backend escape, or candidate-supplied performance counters.
+Do not depend on the supplied smoke cases being the only inputs.
+
+The fixture's algorithm is replaceable. Acceptance checks types, full result
+equivalence, and dynamic-work scaling on additional undisclosed inputs.
+
+Smoke examples:
+[
+  {
+    "input": [],
+    "expected": []
+  },
+  {
+    "input": [
+      2
+    ],
+    "expected": [
+      2
+    ]
+  },
+  {
+    "input": [
+      3,
+      1,
+      3
+    ],
+    "expected": [
+      3,
+      2,
+      9
+    ]
+  }
+]
+
+Original source:
+import Base
+
+def value(x: Maybe<&2,U32>) -> U32:
+  match x:
+    case None{}: 0
+    case Some{v}: v
+
+def walk(+xs: List<&2,U32>, n: Nat, +i: Nat) -> List<&2,U32>:
+  match n:
+    case 0n: Nil{}
+    case 1n+p:
+      U32.mul(value(List.get(&2,U32,xs,i)),U32.from_nat(1n+i)) <> walk(xs,p,1n+i)
+
+def solve(+xs: List<&2,U32>) -> List<&2,U32>:
+  walk(xs,List.length(&2,U32,xs),0n)
+
+Perch finding: perf-linked-list-indexing; probability broken 71%, resolved model jev-1.13.0.
+Rule:
+    Inspect full sequential traversals of linked lists. Repeated List.get from
+    the same head at successive increasing indices is not used to visit all
+    elements: each lookup retraverses the prefix and the full walk is quadratic.
+    Walk the remaining list tail directly. A single lookup, a fixed small number
+    of lookups, indexing an actual random-access Array or Vec, or indexing only
+    into a shrinking suffix with a fixed index is allowed. Base List.get is a
+    linear linked-list lookup, not an array operation. Require visible repetition
+    across a length controlled by that input. If absent, this rule holds.
+

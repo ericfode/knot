@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "rule": "source-checkpoint-observation",
+  "rule_file": ".perch/rules/package_source.yaml",
+  "rule_file_sha256_before": "bbf2dc23a4e3402dc31211e68fa2faa4197f497332ac21311ca5a8329db20e6b",
+  "requested_model": "jev-latest",
+  "resolved_model": "jev-1.13.0",
+  "old_min": 80,
+  "new_min": 70,
+  "gate": false,
+  "controls": [
+    {
+      "path": "packages/source/tests/perch/clean.md",
+      "source_sha256": "269dc439e7e3a8fd174c30c93a6127ecc3623291a814932b23d972d5f7167ee0",
+      "receipt_id": "aeb8b3c9-dd64-4e48-9ada-f6732aeecbeb",
+      "at": "2026-09-26T20:26:52.844Z",
+      "resolved_model": "jev-1.13.0",
+      "expected_broken": false,
+      "probability_true": 0.8,
+      "probability_broken": 0.2,
+      "reported_at_80": false,
+      "reported_at_70": false
+    },
+    {
+      "path": "packages/source/tests/perch/broken.md",
+      "source_sha256": "f802bb094cba2d7fc5eef537e565d776818a83134381cf09e708a0242fe084a1",
+      "receipt_id": "8f485226-89db-4a98-b5af-3764715f9bb4",
+      "at": "2026-09-26T20:26:52.867Z",
+      "resolved_model": "jev-1.13.0",
+      "expected_broken": true,
+      "probability_true": 0.24,
+      "probability_broken": 0.76,
+      "reported_at_80": false,
+      "reported_at_70": true
+    },
+    {
+      "path": "packages/source/tests/perch/held_out.md",
+      "source_sha256": "c2bcc1d28087773848c95af16bd0a9c17007160ed6c2f33e0f8c5f0f5e63b1d3",
+      "receipt_id": "8c6d14c7-26ec-4e21-b3b8-1d9af412a7e7",
+      "at": "2026-09-26T20:26:52.884Z",
+      "resolved_model": "jev-1.13.0",
+      "expected_broken": false,
+      "probability_true": 0.81,
+      "probability_broken": 0.19,
+      "reported_at_80": false,
+      "reported_at_70": false
+    }
+  ],
+  "scope": "Three live control observations; preliminary threshold tuning, not a production accuracy estimate. Threshold replay requires no extra provider call. A new held-out broken control remains to be checked before promotion.",
+  "rule_file_sha256_after": "a600fbba95db9304f17dc2ec82743eea2eac2f681b09357718044c7f6958dbc5",
+  "verification": "Actual CLI replay of retained provider probabilities: clean 0, broken 3, held-out clean 0. No provider contacted during replay."
+}

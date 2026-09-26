@@ -1,0 +1,2118 @@
+{
+  "schema": 1,
+  "started": "2026-09-26T21:16:04.866Z",
+  "completed": "2026-09-26T21:16:09.586Z",
+  "note": "Synthetic controls measure only these supplied cases. Held-out sources were frozen before initial calibration; they cease to be unseen after this run. No probabilities are deterministic proof.",
+  "planned": 15,
+  "executed": 15,
+  "covered": 15,
+  "correct": 15,
+  "rows": [
+    {
+      "id": "growing-prefix-copy/baseline",
+      "rule": "perf-growing-prefix-copy",
+      "split": "baseline",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+      "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499",
+      "receipt": ".perch/usage/2026-09-26T21-16-04.969Z-d4dc0bbb-dd2b-43ee-82d9-803536898233.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 378,
+      "checked": 2,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+          "name": "collect",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.8200000000000001,
+              "floor": 0.7
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.8200000000000001,
+              "floor": 0.7
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "List.append",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+          "name": "solve",
+          "line": 9,
+          "end_line": 10,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.75,
+              "floor": 0.7
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.75,
+              "floor": 0.7
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "List.append",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.8200000000000001,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "growing-prefix-copy/clean",
+      "rule": "perf-growing-prefix-copy",
+      "split": "clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+      "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a",
+      "receipt": ".perch/usage/2026-09-26T21-16-05.350Z-070981b1-99ed-481e-ac73-aef982a0467e.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 360,
+      "checked": 2,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+          "name": "collect",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.41000000000000003,
+              "floor": 0.7
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+          "name": "solve",
+          "line": 9,
+          "end_line": 10,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.27,
+              "floor": 0.7
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.41000000000000003,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "growing-prefix-copy/held-out/broken",
+      "rule": "perf-growing-prefix-copy",
+      "split": "held-out/broken",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+      "source_sha256": "13998e7d027ff414b428aa790186101018f968ce98af46729577b4d11d3d4a1f",
+      "receipt": ".perch/usage/2026-09-26T21-16-05.711Z-11d8ff23-32b5-4a61-bbd3-08f313d23a44.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 420,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+          "name": "append_one",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.7
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.7
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "source_sha256": "13998e7d027ff414b428aa790186101018f968ce98af46729577b4d11d3d4a1f"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+          "name": "build",
+          "line": 8,
+          "end_line": 11,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.81,
+              "floor": 0.7
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.81,
+              "floor": 0.7
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "source_sha256": "13998e7d027ff414b428aa790186101018f968ce98af46729577b4d11d3d4a1f"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+          "name": "solve",
+          "line": 13,
+          "end_line": 14,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.8,
+              "floor": 0.7
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.8,
+              "floor": 0.7
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "source_sha256": "13998e7d027ff414b428aa790186101018f968ce98af46729577b4d11d3d4a1f"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/broken.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.81,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "growing-prefix-copy/held-out/clean",
+      "rule": "perf-growing-prefix-copy",
+      "split": "held-out/clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+      "source_sha256": "6e839718fbda060a8fb851fe67e64bdb542b01723afb6372d6b10e092e3fb2dc",
+      "receipt": ".perch/usage/2026-09-26T21-16-06.131Z-c16daf3d-b8de-4bb2-ae15-04c02e6858f9.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 160,
+      "checked": 1,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+          "name": "solve",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.22999999999999998,
+              "floor": 0.7
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+                "source_sha256": "6e839718fbda060a8fb851fe67e64bdb542b01723afb6372d6b10e092e3fb2dc"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/growing-prefix-copy/held-out/clean.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.22999999999999998,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 1,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "invariant-summary/baseline",
+      "rule": "perf-loop-invariant-work",
+      "split": "baseline",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+      "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a",
+      "receipt": ".perch/usage/2026-09-26T21-16-06.292Z-ab38744f-0688-4d05-9986-ff364b67de61.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 393,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+          "name": "total",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.8200000000000001,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.8200000000000001,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+          "name": "annotate",
+          "line": 8,
+          "end_line": 12,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.74,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.74,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+          "name": "solve",
+          "line": 14,
+          "end_line": 15,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.62,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.62,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.8200000000000001,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "invariant-summary/clean",
+      "rule": "perf-loop-invariant-work",
+      "split": "clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+      "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d",
+      "receipt": ".perch/usage/2026-09-26T21-16-06.686Z-3f4cf200-115f-470c-a5f9-b9cbf6bf8dfe.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 408,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+          "name": "total",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.16000000000000003,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+          "name": "annotate",
+          "line": 8,
+          "end_line": 12,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.17000000000000004,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+          "name": "solve",
+          "line": 14,
+          "end_line": 15,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.19999999999999996,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.19999999999999996,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "invariant-summary/held-out/broken",
+      "rule": "perf-loop-invariant-work",
+      "split": "held-out/broken",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+      "source_sha256": "52302414cf93c5462a8a21b0ab066824f87bdeef09d11a9756aadc7d29ac64dd",
+      "receipt": ".perch/usage/2026-09-26T21-16-07.095Z-9b36e88d-f1fc-4cc6-a8ec-e958ba2dad7d.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 334,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+          "name": "sum_into",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.6699999999999999,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.6699999999999999,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "source_sha256": "52302414cf93c5462a8a21b0ab066824f87bdeef09d11a9756aadc7d29ac64dd"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+          "name": "build",
+          "line": 8,
+          "end_line": 11,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "source_sha256": "52302414cf93c5462a8a21b0ab066824f87bdeef09d11a9756aadc7d29ac64dd"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+          "name": "solve",
+          "line": 13,
+          "end_line": 14,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.72,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.72,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "source_sha256": "52302414cf93c5462a8a21b0ab066824f87bdeef09d11a9756aadc7d29ac64dd"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/broken.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.79,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "invariant-summary/held-out/clean",
+      "rule": "perf-loop-invariant-work",
+      "split": "held-out/clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+      "source_sha256": "b5e4f33df47c136e31346c59013cec89864a32155b9177c7f32dcc5defe373c9",
+      "receipt": ".perch/usage/2026-09-26T21-16-07.430Z-0c51d04c-2d6b-4f94-9a76-adefe81e044a.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 376,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+          "name": "sum_into",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.17000000000000004,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "source_sha256": "b5e4f33df47c136e31346c59013cec89864a32155b9177c7f32dcc5defe373c9"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+          "name": "build",
+          "line": 8,
+          "end_line": 11,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.13,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "source_sha256": "b5e4f33df47c136e31346c59013cec89864a32155b9177c7f32dcc5defe373c9"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+          "name": "solve",
+          "line": 13,
+          "end_line": 14,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.15000000000000002,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "source_sha256": "b5e4f33df47c136e31346c59013cec89864a32155b9177c7f32dcc5defe373c9"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/invariant-summary/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.17000000000000004,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "indexed-linked-list/baseline",
+      "rule": "perf-linked-list-indexing",
+      "split": "baseline",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+      "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e",
+      "receipt": ".perch/usage/2026-09-26T21-16-07.806Z-922b5ba4-9161-44e9-a896-7de869aa3cca.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 389,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+          "name": "value",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.5900000000000001,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+          "name": "walk",
+          "line": 8,
+          "end_line": 12,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.6,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "Nat",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "List.get",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32.from_nat",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+          "name": "solve",
+          "line": 14,
+          "end_line": 15,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.79,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "List.length",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "Nat",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "List.get",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+                "name": "U32.from_nat",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.79,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "indexed-linked-list/clean",
+      "rule": "perf-linked-list-indexing",
+      "split": "clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+      "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25",
+      "receipt": ".perch/usage/2026-09-26T21-16-08.197Z-e86bbcf9-0c75-47d4-96ce-f25707522242.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 262,
+      "checked": 2,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+          "name": "walk",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.12,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+          "name": "solve",
+          "line": 9,
+          "end_line": 10,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.12,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.12,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "indexed-linked-list/held-out/broken",
+      "rule": "perf-linked-list-indexing",
+      "split": "held-out/broken",
+      "expected": "violates",
+      "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+      "source_sha256": "2b1a2e4ff71dd5c290cf399cf9207ad0efecd2992db4450d6f41ad873df4a32a",
+      "receipt": ".perch/usage/2026-09-26T21-16-08.460Z-543c4810-a749-4649-af09-9525ea71c01f.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 358,
+      "checked": 3,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+          "name": "lookup",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.63,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.63,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "source_sha256": "2b1a2e4ff71dd5c290cf399cf9207ad0efecd2992db4450d6f41ad873df4a32a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "Nat",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+          "name": "emit",
+          "line": 9,
+          "end_line": 13,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.76,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.76,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "source_sha256": "2b1a2e4ff71dd5c290cf399cf9207ad0efecd2992db4450d6f41ad873df4a32a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "Nat",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32.from_nat",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+          "name": "solve",
+          "line": 15,
+          "end_line": 16,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.74,
+              "floor": 0.6
+            }
+          ],
+          "broken": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.74,
+              "floor": 0.6
+            }
+          ],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "source_sha256": "2b1a2e4ff71dd5c290cf399cf9207ad0efecd2992db4450d6f41ad873df4a32a"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "Nat",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/broken.bend",
+                "name": "U32.from_nat",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.76,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "indexed-linked-list/held-out/clean",
+      "rule": "perf-linked-list-indexing",
+      "split": "held-out/clean",
+      "expected": "holds",
+      "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+      "source_sha256": "47a4a61746f311d777c6f2b62c7889931380446d1eafb1081c21d5689cd26a85",
+      "receipt": ".perch/usage/2026-09-26T21-16-08.818Z-a7b673b8-edf1-43d2-b62d-624d2765c445.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 335,
+      "checked": 2,
+      "units": [
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+          "name": "emit",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.08999999999999997,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "source_sha256": "47a4a61746f311d777c6f2b62c7889931380446d1eafb1081c21d5689cd26a85"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+          "name": "solve",
+          "line": 8,
+          "end_line": 9,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+              "broken": 0.09999999999999998,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "source_sha256": "47a4a61746f311d777c6f2b62c7889931380446d1eafb1081c21d5689cd26a85"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "List.reverse",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "tests/perch-performance/cases/indexed-linked-list/held-out/clean.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.09999999999999998,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "amortized-growth/baseline",
+      "rule": "perf-amortized-growth",
+      "split": "baseline",
+      "expected": "violates",
+      "path": "tests/perch-performance-growth/baseline.mjs",
+      "unit": "Bytes.append",
+      "source_sha256": "d2f706953592955aea31dceb225c47b911f536d226420fe2daa6be6add9305ab",
+      "receipt": ".perch/usage/2026-09-26T21-16-09.155Z-090bd453-b06f-4d77-b541-4b5c43c27def.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 133,
+      "checked": 1,
+      "units": [],
+      "probability_broken": 0.81,
+      "parser": null
+    },
+    {
+      "id": "amortized-growth/clean",
+      "rule": "perf-amortized-growth",
+      "split": "clean",
+      "expected": "holds",
+      "path": "tests/perch-performance-growth/clean.mjs",
+      "unit": "Bytes.append",
+      "source_sha256": "be1293ef2255ce3bbc16ddef1302fa8e38b6b3ef1ca3829b6b391927e400d16f",
+      "receipt": ".perch/usage/2026-09-26T21-16-09.288Z-2933bb52-1541-43c8-8295-cfb9d7f4988a.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 139,
+      "checked": 1,
+      "units": [],
+      "probability_broken": 0.15000000000000002,
+      "parser": null
+    },
+    {
+      "id": "amortized-growth/held-out",
+      "rule": "perf-amortized-growth",
+      "split": "held-out",
+      "expected": "violates",
+      "path": "tests/perch-performance-growth/held-out.mjs",
+      "unit": "encode",
+      "source_sha256": "c3d09c383ee5ef5f2f3cc2661a681838be36d95a7b9325090716c9fe5f316884",
+      "receipt": ".perch/usage/2026-09-26T21-16-09.430Z-8a095165-8eaf-4128-9899-02528ae2dbaf.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 3,
+      "covered": true,
+      "finding": true,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 156,
+      "checked": 1,
+      "units": [],
+      "probability_broken": 0.81,
+      "parser": null
+    }
+  ]
+}

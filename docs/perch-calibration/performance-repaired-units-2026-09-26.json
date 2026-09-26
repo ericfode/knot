@@ -1,0 +1,320 @@
+{
+  "schema": 1,
+  "started": "2026-09-26T21:16:39.547Z",
+  "completed": "2026-09-26T21:16:40.360Z",
+  "note": "Synthetic controls measure only these supplied cases. Held-out sources were frozen before initial calibration; they cease to be unseen after this run. No probabilities are deterministic proof.",
+  "planned": 2,
+  "executed": 2,
+  "covered": 2,
+  "correct": 2,
+  "rows": [
+    {
+      "id": "growing-prefix-copy",
+      "rule": "perf-growing-prefix-copy",
+      "split": "accepted-repair",
+      "expected": "holds",
+      "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+      "source_sha256": "26a4e4a24b4e666f65ae7517af33cab547fdc2d3322f4ec8e567b8dc87847acf",
+      "receipt": ".perch/usage/2026-09-26T21-16-39.645Z-44165d2f-c387-4dd1-809f-7d2703eab6da.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 330,
+      "checked": 2,
+      "units": [
+        {
+          "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+          "name": "map_values",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.19999999999999996,
+              "floor": 0.7
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "source_sha256": "26a4e4a24b4e666f65ae7517af33cab547fdc2d3322f4ec8e567b8dc87847acf"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+          "name": "solve",
+          "line": 9,
+          "end_line": 10,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-growing-prefix-copy",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+              "broken": 0.21999999999999997,
+              "floor": 0.7
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "source_sha256": "26a4e4a24b4e666f65ae7517af33cab547fdc2d3322f4ec8e567b8dc87847acf"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/growing-prefix-copy.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.21999999999999997,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    },
+    {
+      "id": "invariant-summary",
+      "rule": "perf-loop-invariant-work",
+      "split": "accepted-repair",
+      "expected": "holds",
+      "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+      "source_sha256": "1c82bc4c89a6ed6958a4e79def138425309a7f2b4779bd7387bd60534f888ce0",
+      "receipt": ".perch/usage/2026-09-26T21-16-39.976Z-d60c7988-61e9-4fa2-b67a-ef5014a4a897.json",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "exit": 0,
+      "covered": true,
+      "finding": false,
+      "correct": true,
+      "model": "jev-1.13.0",
+      "elapsed_ms": 383,
+      "checked": 3,
+      "units": [
+        {
+          "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+          "name": "total",
+          "line": 3,
+          "end_line": 6,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.19999999999999996,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "source_sha256": "1c82bc4c89a6ed6958a4e79def138425309a7f2b4779bd7387bd60534f888ce0"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+          "name": "add_total",
+          "line": 8,
+          "end_line": 11,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.25,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "source_sha256": "1c82bc4c89a6ed6958a4e79def138425309a7f2b4779bd7387bd60534f888ce0"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+          "name": "solve",
+          "line": 13,
+          "end_line": 14,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-loop-invariant-work",
+              "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+              "broken": 0.16000000000000003,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "source_sha256": "1c82bc4c89a6ed6958a4e79def138425309a7f2b4779bd7387bd60534f888ce0"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/invariant-summary.retry.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "probability_broken": 0.25,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-427d42ad892820bd",
+        "status": "parsed",
+        "declarations": 3,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      }
+    }
+  ]
+}

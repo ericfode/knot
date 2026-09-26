@@ -1,0 +1,180 @@
+{
+  "at": "2026-09-26T20:49:12.092Z",
+  "snapshot": "/Users/ericfode/src/knot/.local/perch-tooling-lTEA90",
+  "source_sha256": "75d8743b29289d388994691629bcfbdd39baf3557b8d58223100e04826d0cb6a",
+  "exit": 3,
+  "result": {
+    "path": "scripts/perch-workflow.mjs",
+    "name": "runPerch",
+    "line": 32,
+    "parser": null,
+    "checked": 1,
+    "broken": [],
+    "issues": [
+      {
+        "type": "defect",
+        "label": "type_confusion",
+        "from": "type_confusion",
+        "probability": 0.74,
+        "floor": 0.7,
+        "text": "type_confusion 74%"
+      },
+      {
+        "type": "security",
+        "label": "unvalidated_destination",
+        "from": "unvalidated_destination",
+        "probability": 0.7296,
+        "floor": 0.7,
+        "text": "unvalidated_destination 73%"
+      },
+      {
+        "type": "defect",
+        "label": "error_ignored",
+        "from": "has_bug",
+        "probability": 0.67,
+        "floor": 0.6,
+        "text": "error_ignored 67%"
+      }
+    ],
+    "note": null,
+    "clean": false
+  },
+  "receipts": [
+    {
+      "schema": 1,
+      "id": "df0f9b25-3653-42f0-b6b8-78454f2a3d4a",
+      "at": "2026-09-26T20:49:11.667Z",
+      "command": "check",
+      "target": "scripts/perch-workflow.mjs",
+      "revision": "59e129bf95f7b6b1d2bf37305695c2699e7a39f6",
+      "source_sha256": "75d8743b29289d388994691629bcfbdd39baf3557b8d58223100e04826d0cb6a",
+      "rules_sha256": "3ffab8f32cfd8ba94cc2d53d9c426b3d6a3e642b4f868398a7968733eb5ef807",
+      "selected_rules": [
+        "defect",
+        "security"
+      ],
+      "perch_version": "0.3.5",
+      "requested_model": "jev-latest",
+      "resolved_model": "jev-1.13.0",
+      "provider_requests": 1,
+      "provider_responses": 1,
+      "models": [
+        "jev-1.13.0"
+      ],
+      "answers": [
+        {
+          "rule": "has_bug",
+          "probability_true": 0.67
+        },
+        {
+          "rule": "does_what_it_claims",
+          "probability_true": 0.78
+        },
+        {
+          "rule": "documented",
+          "probability_true": 0.73
+        },
+        {
+          "rule": "exposed",
+          "probability_true": 0.96
+        },
+        {
+          "rule": "injection",
+          "probability_true": 0.28
+        },
+        {
+          "rule": "path_traversal",
+          "probability_true": 0.52
+        },
+        {
+          "rule": "unsafe_deserialization",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "secret_exposure",
+          "probability_true": 0.33
+        },
+        {
+          "rule": "missing_authorization",
+          "probability_true": 0.7
+        },
+        {
+          "rule": "weak_crypto",
+          "probability_true": 0.19
+        },
+        {
+          "rule": "unvalidated_destination",
+          "probability_true": 0.76
+        },
+        {
+          "rule": "resource_exhaustion",
+          "probability_true": 0.66
+        },
+        {
+          "rule": "unsafe_reflection",
+          "probability_true": 0.59
+        },
+        {
+          "rule": "disabled_safeguard",
+          "probability_true": 0.14
+        },
+        {
+          "rule": "buffer_overflow",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "use_after_free",
+          "probability_true": 0.1
+        },
+        {
+          "rule": "uninitialized_use",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "integer_overflow",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "race_condition",
+          "probability_true": 0.42
+        },
+        {
+          "rule": "type_confusion",
+          "probability_true": 0.74
+        },
+        {
+          "rule": "misuse_0",
+          "probability_true": 0.15
+        },
+        {
+          "rule": "misuse_1",
+          "probability_true": 0.17
+        },
+        {
+          "rule": "misuse_2",
+          "probability_true": 0.15
+        }
+      ],
+      "usage": {
+        "input_tokens": 10331,
+        "output_tokens": 1793
+      },
+      "elapsed_ms": 423,
+      "upstream_exit": 3,
+      "exit": 3,
+      "status": "findings",
+      "checked": 1,
+      "parser": null,
+      "parser_coverage": null,
+      "findings": [],
+      "issue_count": 3,
+      "adjudication": "unreviewed"
+    }
+  ],
+  "adjudication": "Initial advisory led to a deterministic counterexample: a scan of only note.md selected zero methods and zero file rules yet returned0. New regression failed before the fix and passes after it. The vague model label/location alone did not establish the cause.",
+  "residual_adjudication": {
+    "unvalidated_destination": "false-positive for an operator-configured CLI endpoint; reviewed source does not choose the destination",
+    "type_confusion": "unresolved: no reproduced type-confusion failure; real CLI rejects malformed noul responses in the focused offline test",
+    "error_ignored": "unresolved residual model advisory; the reproduced zero-coverage case is fixed and negative-path gates pass"
+  }
+}

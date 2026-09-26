@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+source_dir="$root/.toolchain/bend-2.0.29-574b6d3"
+if [ ! -f "$source_dir/bend2/main.ts" ]; then
+  echo 'Pinned Bend source is missing; see docs/PACKAGE-CAMPAIGN.md.' >&2
+  exit 1
+fi
+exec bun "$source_dir/bend2/main.ts" "$@"

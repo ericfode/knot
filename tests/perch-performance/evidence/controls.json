@@ -1,0 +1,2550 @@
+{
+  "schema": 1,
+  "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+  "passed": true,
+  "compiler": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "backend": "JavaScript"
+  },
+  "environment": {
+    "node": "v22.22.3",
+    "bun": "1.3.14",
+    "python": "Python 3.14.3"
+  },
+  "metric": "actual generated JS function entries + loop iterations + object/array allocations",
+  "controls": [
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/baseline/main.bend",
+      "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1128,
+        "64": 4296,
+        "128": 16776,
+        "256": 66312,
+        "512": 263688,
+        "1024": 1051656
+      },
+      "work_counts_by_size": {
+        "32": [
+          534,
+          33,
+          561
+        ],
+        "64": [
+          2086,
+          65,
+          2145
+        ],
+        "128": [
+          8262,
+          129,
+          8385
+        ],
+        "256": [
+          32902,
+          257,
+          33153
+        ],
+        "512": [
+          131334,
+          513,
+          131841
+        ],
+        "1024": [
+          524806,
+          1025,
+          525825
+        ]
+      },
+      "compiled_sha256": "c0edd05c10154f09468d62a24abc5588284eb83b801c85b461ec7f4e52e544f8",
+      "instrumented_sha256": "fb8dd6cab66225b7426b9e1556ca2b65840e3e702179a7750781c74a51b68ea7",
+      "instrumentation_sites": {
+        "functions": 30,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/clean/main.bend",
+      "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 140,
+        "64": 268,
+        "128": 524,
+        "256": 1036,
+        "512": 2060,
+        "1024": 4108
+      },
+      "work_counts_by_size": {
+        "32": [
+          8,
+          66,
+          66
+        ],
+        "64": [
+          8,
+          130,
+          130
+        ],
+        "128": [
+          8,
+          258,
+          258
+        ],
+        "256": [
+          8,
+          514,
+          514
+        ],
+        "512": [
+          8,
+          1026,
+          1026
+        ],
+        "1024": [
+          8,
+          2050,
+          2050
+        ]
+      },
+      "compiled_sha256": "c585d11fa747d94fafc38d1947b9f628e8fb0243b6c8bef5614491b49b1db067",
+      "instrumented_sha256": "3a2b172088e539dcc0da82fd089c10c3ae988fd87764f2db21df846725bc4e4b",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 6,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/held-out/broken.bend",
+      "source_sha256": "13998e7d027ff414b428aa790186101018f968ce98af46729577b4d11d3d4a1f",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1128,
+        "64": 4296,
+        "128": 16776,
+        "256": 66312,
+        "512": 263688,
+        "1024": 1051656
+      },
+      "work_counts_by_size": {
+        "32": [
+          534,
+          33,
+          561
+        ],
+        "64": [
+          2086,
+          65,
+          2145
+        ],
+        "128": [
+          8262,
+          129,
+          8385
+        ],
+        "256": [
+          32902,
+          257,
+          33153
+        ],
+        "512": [
+          131334,
+          513,
+          131841
+        ],
+        "1024": [
+          524806,
+          1025,
+          525825
+        ]
+      },
+      "compiled_sha256": "2966db73f48438817117bd33993cb12346cbf12db1ecc721a2ead21cbbe2bb92",
+      "instrumented_sha256": "e9a9ac6f4629eb321c39671f5659ba5b69d34478a72e910730047a4d607fb7a0",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/held-out/clean.bend",
+      "source_sha256": "6e839718fbda060a8fb851fe67e64bdb542b01723afb6372d6b10e092e3fb2dc",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 70,
+        "64": 134,
+        "128": 262,
+        "256": 518,
+        "512": 1030,
+        "1024": 2054
+      },
+      "work_counts_by_size": {
+        "32": [
+          37,
+          0,
+          33
+        ],
+        "64": [
+          69,
+          0,
+          65
+        ],
+        "128": [
+          133,
+          0,
+          129
+        ],
+        "256": [
+          261,
+          0,
+          257
+        ],
+        "512": [
+          517,
+          0,
+          513
+        ],
+        "1024": [
+          1029,
+          0,
+          1025
+        ]
+      },
+      "compiled_sha256": "4cae03a7808b0fb4013b54f987bf296d1781e677cd2204225661839c7365a03f",
+      "instrumented_sha256": "a2ca57bca5658f40819c38ab13ec771c28bee606d4e64047ee3263917cea7113",
+      "instrumentation_sites": {
+        "functions": 27,
+        "loops": 4,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/fresh-held-out/broken.bend",
+      "source_sha256": "6fb1a7ae3b0a6420d11455df5b1872a1900e983ceebccfd7805c7c11ce8b667e",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1194,
+        "64": 4426,
+        "128": 17034,
+        "256": 66826,
+        "512": 264714,
+        "1024": 1053706
+      },
+      "work_counts_by_size": {
+        "32": [
+          567,
+          33,
+          594
+        ],
+        "64": [
+          2151,
+          65,
+          2210
+        ],
+        "128": [
+          8391,
+          129,
+          8514
+        ],
+        "256": [
+          33159,
+          257,
+          33410
+        ],
+        "512": [
+          131847,
+          513,
+          132354
+        ],
+        "1024": [
+          525831,
+          1025,
+          526850
+        ]
+      },
+      "compiled_sha256": "445965f3ce717257d426ee2973f67b694e9c62a90272fe89b9363c27051204d2",
+      "instrumented_sha256": "20bfc87093ce0e3ec9c2dd469a37e5950c43a432dccd0a7acfd649061c9512a7",
+      "instrumentation_sites": {
+        "functions": 32,
+        "loops": 5,
+        "allocations": 21
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/fresh-held-out/clean.bend",
+      "source_sha256": "145b6a452e48d8a9a211c56f3e2a1edb9408c7be8662826215b6342a16b2746e",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 265,
+        "64": 521,
+        "128": 1033,
+        "256": 2057,
+        "512": 4105,
+        "1024": 8201
+      },
+      "work_counts_by_size": {
+        "32": [
+          135,
+          0,
+          130
+        ],
+        "64": [
+          263,
+          0,
+          258
+        ],
+        "128": [
+          519,
+          0,
+          514
+        ],
+        "256": [
+          1031,
+          0,
+          1026
+        ],
+        "512": [
+          2055,
+          0,
+          2050
+        ],
+        "1024": [
+          4103,
+          0,
+          4098
+        ]
+      },
+      "compiled_sha256": "b457647d59853b3c28c3f1cd5263bc4d4e67414b88f9f5f12b9ad1c58e23c226",
+      "instrumented_sha256": "58a4009a8a8e75f89c1d696e8c1164fdcfc04a407ddf8196ebd7b813448cefed",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 4,
+        "allocations": 21
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/mutants/wrong-order.bend",
+      "source_sha256": "f3655515132c7b58526d2e689c31999b1c501f7a5639fc08dcdefe04c896e9d3",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_at_mismatch": 7,
+          "actual_length": 2
+        },
+        {
+          "probe": 5,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 7,
+          "actual_at_mismatch": 4,
+          "actual_length": 2
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 4,
+          "actual_at_mismatch": 1,
+          "actual_length": 4
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 1,
+          "actual_at_mismatch": 10,
+          "actual_length": 5
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 4214260482,
+          "actual_length": 3
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 1293838429,
+          "actual_length": 7
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 22,
+          "actual_length": 16
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 22,
+          "actual_length": 31
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 2081333072,
+          "actual_length": 65
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 1712112988,
+          "actual_at_mismatch": 22,
+          "actual_length": 127
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 3806579568,
+          "actual_length": 255
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 774355205,
+          "actual_length": 513
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_at_mismatch": 498243015,
+          "actual_length": 1024
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 209,
+        "64": 401,
+        "128": 785,
+        "256": 1553,
+        "512": 3089,
+        "1024": 6161
+      },
+      "work_counts_by_size": {
+        "32": [
+          11,
+          99,
+          99
+        ],
+        "64": [
+          11,
+          195,
+          195
+        ],
+        "128": [
+          11,
+          387,
+          387
+        ],
+        "256": [
+          11,
+          771,
+          771
+        ],
+        "512": [
+          11,
+          1539,
+          1539
+        ],
+        "1024": [
+          11,
+          3075,
+          3075
+        ]
+      },
+      "compiled_sha256": "936351232d7a3469d4ddf87f275c55b011fdb4b28caf2a7d38cc5acfe141da36",
+      "instrumented_sha256": "602538fda355329a33b88240cb2b3c23ca59bbe6772e4db9d06439000cfd8caf",
+      "instrumentation_sites": {
+        "functions": 33,
+        "loops": 6,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "cases/growing-prefix-copy/mutants/smoke-shortcut.bend",
+      "source_sha256": "1009aff71203b244bf3850f90449ccc4b9b90089164260acf95e36c38466305b",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 207,
+        "64": 136,
+        "128": 264,
+        "256": 520,
+        "512": 1032,
+        "1024": 2056
+      },
+      "work_counts_by_size": {
+        "32": [
+          75,
+          66,
+          66
+        ],
+        "64": [
+          135,
+          0,
+          1
+        ],
+        "128": [
+          263,
+          0,
+          1
+        ],
+        "256": [
+          519,
+          0,
+          1
+        ],
+        "512": [
+          1031,
+          0,
+          1
+        ],
+        "1024": [
+          2055,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "43464132e4997272e2a6faf03d10eca65107b39eff6a9eb8c2b567ec049654fa",
+      "instrumented_sha256": "68ed093c3a7c004b35ad7b16bd0efb67a3146c17b0b923815f220c6e93943bb9",
+      "instrumentation_sites": {
+        "functions": 36,
+        "loops": 6,
+        "allocations": 20
+      }
+    },
+    {
+      "case": "growing-prefix-copy",
+      "source": "mutants/constant-empty.bend",
+      "source_sha256": "15c590fb51d3bdf39d8887ef0f69c4f7d58eb8a699e6bdd728ea42cbc2175935",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 1,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1,
+          "actual_length": 0
+        },
+        {
+          "probe": 2,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_length": 0
+        },
+        {
+          "probe": 3,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_length": 0
+        },
+        {
+          "probe": 5,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 7,
+          "actual_length": 0
+        },
+        {
+          "probe": 6,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 13,
+          "actual_length": 0
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 22,
+          "actual_length": 0
+        },
+        {
+          "probe": 9,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1,
+          "actual_length": 0
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 6,
+        "64": 6,
+        "128": 6,
+        "256": 6,
+        "512": 6,
+        "1024": 6
+      },
+      "work_counts_by_size": {
+        "32": [
+          5,
+          0,
+          1
+        ],
+        "64": [
+          5,
+          0,
+          1
+        ],
+        "128": [
+          5,
+          0,
+          1
+        ],
+        "256": [
+          5,
+          0,
+          1
+        ],
+        "512": [
+          5,
+          0,
+          1
+        ],
+        "1024": [
+          5,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "6037bbdf8bb0364bccd98046d7d25d82836ddba270db23fedaab4dcf16502907",
+      "instrumented_sha256": "d20e3fa5079a3dbfd57e735d40fcd8aac54deb5701af22cbf1ee5f4f276cffcb",
+      "instrumentation_sites": {
+        "functions": 27,
+        "loops": 4,
+        "allocations": 16
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/baseline/main.bend",
+      "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1127,
+        "64": 4295,
+        "128": 16775,
+        "256": 66311,
+        "512": 263687,
+        "1024": 1051655
+      },
+      "work_counts_by_size": {
+        "32": [
+          1094,
+          0,
+          33
+        ],
+        "64": [
+          4230,
+          0,
+          65
+        ],
+        "128": [
+          16646,
+          0,
+          129
+        ],
+        "256": [
+          66054,
+          0,
+          257
+        ],
+        "512": [
+          263174,
+          0,
+          513
+        ],
+        "1024": [
+          1050630,
+          0,
+          1025
+        ]
+      },
+      "compiled_sha256": "1edb814ff821689bcc298e6681e6aae2dea87ba81e78abfd1e1ab192981b8e99",
+      "instrumented_sha256": "a20d17be55bdf7f0dd2c9370425e703935bb77461903a255d2bddcb95ddddd73",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 4,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/clean/main.bend",
+      "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 104,
+        "64": 200,
+        "128": 392,
+        "256": 776,
+        "512": 1544,
+        "1024": 3080
+      },
+      "work_counts_by_size": {
+        "32": [
+          71,
+          0,
+          33
+        ],
+        "64": [
+          135,
+          0,
+          65
+        ],
+        "128": [
+          263,
+          0,
+          129
+        ],
+        "256": [
+          519,
+          0,
+          257
+        ],
+        "512": [
+          1031,
+          0,
+          513
+        ],
+        "1024": [
+          2055,
+          0,
+          1025
+        ]
+      },
+      "compiled_sha256": "790142ccd25fd8db69c91b11182a90f050d8dcd621c1b7d4649d9f688aefbb79",
+      "instrumented_sha256": "b235f2940db75704f302b9d1fae5c987fb9f87f1272992d4ebe0be6692ee1ad6",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 4,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/held-out/broken.bend",
+      "source_sha256": "52302414cf93c5462a8a21b0ab066824f87bdeef09d11a9756aadc7d29ac64dd",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1228,
+        "64": 4492,
+        "128": 17164,
+        "256": 67084,
+        "512": 265228,
+        "1024": 1054732
+      },
+      "work_counts_by_size": {
+        "32": [
+          40,
+          1122,
+          66
+        ],
+        "64": [
+          72,
+          4290,
+          130
+        ],
+        "128": [
+          136,
+          16770,
+          258
+        ],
+        "256": [
+          264,
+          66306,
+          514
+        ],
+        "512": [
+          520,
+          263682,
+          1026
+        ],
+        "1024": [
+          1032,
+          1051650,
+          2050
+        ]
+      },
+      "compiled_sha256": "9f327dda55d3c9ce8d0e39e300d7e5417472616e439ef9981feebf2771bab7ee",
+      "instrumented_sha256": "e39152256b18656de737075b487502e6f276a2b1f7657a081fca9fff298b4684",
+      "instrumentation_sites": {
+        "functions": 33,
+        "loops": 7,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/held-out/clean.bend",
+      "source_sha256": "b5e4f33df47c136e31346c59013cec89864a32155b9177c7f32dcc5defe373c9",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 174,
+        "64": 334,
+        "128": 654,
+        "256": 1294,
+        "512": 2574,
+        "1024": 5134
+      },
+      "work_counts_by_size": {
+        "32": [
+          9,
+          99,
+          66
+        ],
+        "64": [
+          9,
+          195,
+          130
+        ],
+        "128": [
+          9,
+          387,
+          258
+        ],
+        "256": [
+          9,
+          771,
+          514
+        ],
+        "512": [
+          9,
+          1539,
+          1026
+        ],
+        "1024": [
+          9,
+          3075,
+          2050
+        ]
+      },
+      "compiled_sha256": "702be468196ba745db5b4be4c8f465930c4378bfd2b0315a993a89429ba9b5f4",
+      "instrumented_sha256": "71b3289735eef9c368a6124fbf0d6459684be60df1b9e3f4c0864c2e9303725e",
+      "instrumentation_sites": {
+        "functions": 33,
+        "loops": 7,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/fresh-held-out/broken.bend",
+      "source_sha256": "7033325ab7b918b578416d5110d5e5da902073e5b933fc5de6ab0709a8670c14",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 1191,
+        "64": 4423,
+        "128": 17031,
+        "256": 66823,
+        "512": 264711,
+        "1024": 1053703
+      },
+      "work_counts_by_size": {
+        "32": [
+          102,
+          1056,
+          33
+        ],
+        "64": [
+          198,
+          4160,
+          65
+        ],
+        "128": [
+          390,
+          16512,
+          129
+        ],
+        "256": [
+          774,
+          65792,
+          257
+        ],
+        "512": [
+          1542,
+          262656,
+          513
+        ],
+        "1024": [
+          3078,
+          1049600,
+          1025
+        ]
+      },
+      "compiled_sha256": "d67252701b836fd73169d9f00f74323f77d18e11bd72933c13a2ab25e5348efb",
+      "instrumented_sha256": "ae6e330075ebb1caa2d4e90853683290d29f2583c7c6590b16c79267cdc4df19",
+      "instrumentation_sites": {
+        "functions": 32,
+        "loops": 5,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/fresh-held-out/clean.bend",
+      "source_sha256": "1ff3d4ca7bbb4b7248f3c4919d26d63e6b3f063079e8e25cf474845915366fbe",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 106,
+        "64": 202,
+        "128": 394,
+        "256": 778,
+        "512": 1546,
+        "1024": 3082
+      },
+      "work_counts_by_size": {
+        "32": [
+          40,
+          33,
+          33
+        ],
+        "64": [
+          72,
+          65,
+          65
+        ],
+        "128": [
+          136,
+          129,
+          129
+        ],
+        "256": [
+          264,
+          257,
+          257
+        ],
+        "512": [
+          520,
+          513,
+          513
+        ],
+        "1024": [
+          1032,
+          1025,
+          1025
+        ]
+      },
+      "compiled_sha256": "8b4809035a86a049ed50296865d4025ce9b6e2bfbd56f0e7cc42bd2de3d66eb3",
+      "instrumented_sha256": "9dfb24efde41c8a142c9b398e0adef9c241d88e6a826121daa33cf7ecbd38b3c",
+      "instrumentation_sites": {
+        "functions": 32,
+        "loops": 5,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/mutants/wrong-order.bend",
+      "source_sha256": "1bbf04d14107c9f745005db6e44f3cd1ac1b3075276e55016acad63d4fc32964",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_at_mismatch": 5,
+          "actual_length": 2
+        },
+        {
+          "probe": 5,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 5,
+          "actual_at_mismatch": 4,
+          "actual_length": 2
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 0,
+          "actual_at_mismatch": 4294967295,
+          "actual_length": 4
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 24,
+          "actual_at_mismatch": 27,
+          "actual_length": 5
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1459265061,
+          "actual_at_mismatch": 707025,
+          "actual_length": 3
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 263782639,
+          "actual_at_mismatch": 695062116,
+          "actual_length": 7
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2632585006,
+          "actual_at_mismatch": 2632585014,
+          "actual_length": 16
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 3365795114,
+          "actual_at_mismatch": 3365795122,
+          "actual_length": 31
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1851924932,
+          "actual_at_mismatch": 1114046858,
+          "actual_length": 65
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 1,
+          "expected_at_mismatch": 884627603,
+          "actual_at_mismatch": 313923281,
+          "actual_length": 127
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1604621408,
+          "actual_at_mismatch": 10169734,
+          "actual_length": 255
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2496400618,
+          "actual_at_mismatch": 1322863255,
+          "actual_length": 513
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 534981009,
+          "actual_at_mismatch": 2132717780,
+          "actual_length": 1024
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 173,
+        "64": 333,
+        "128": 653,
+        "256": 1293,
+        "512": 2573,
+        "1024": 5133
+      },
+      "work_counts_by_size": {
+        "32": [
+          74,
+          33,
+          66
+        ],
+        "64": [
+          138,
+          65,
+          130
+        ],
+        "128": [
+          266,
+          129,
+          258
+        ],
+        "256": [
+          522,
+          257,
+          514
+        ],
+        "512": [
+          1034,
+          513,
+          1026
+        ],
+        "1024": [
+          2058,
+          1025,
+          2050
+        ]
+      },
+      "compiled_sha256": "c64aa2af003cb2b6f4eeed254e46b99e868329bc9039e0cf5b3dfdcfd7597b60",
+      "instrumented_sha256": "8eb5ec47c8e360a146776f323377a24d136d67f5b6b529b878b3cb6499ba84c6",
+      "instrumentation_sites": {
+        "functions": 35,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "cases/invariant-summary/mutants/smoke-shortcut.bend",
+      "source_sha256": "34b9a00a9bc846128b931d596d4c48f9222367b2cb400bca864c37f3d93cacfa",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1851924932,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 313923273,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1604621408,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2496400618,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 534981009,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 171,
+        "64": 136,
+        "128": 264,
+        "256": 520,
+        "512": 1032,
+        "1024": 2056
+      },
+      "work_counts_by_size": {
+        "32": [
+          138,
+          0,
+          33
+        ],
+        "64": [
+          135,
+          0,
+          1
+        ],
+        "128": [
+          263,
+          0,
+          1
+        ],
+        "256": [
+          519,
+          0,
+          1
+        ],
+        "512": [
+          1031,
+          0,
+          1
+        ],
+        "1024": [
+          2055,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "e30146b4319775df521430e26e14252d702e8573e3c24c7344740557aa3d84f2",
+      "instrumented_sha256": "8cf0ca29b0adfacc07ff6bb7943feb530c05b41b7937773f1999985640e2e31d",
+      "instrumentation_sites": {
+        "functions": 36,
+        "loops": 4,
+        "allocations": 18
+      }
+    },
+    {
+      "case": "invariant-summary",
+      "source": "mutants/constant-empty.bend",
+      "source_sha256": "15c590fb51d3bdf39d8887ef0f69c4f7d58eb8a699e6bdd728ea42cbc2175935",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 1,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 0,
+          "actual_length": 0
+        },
+        {
+          "probe": 2,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2,
+          "actual_length": 0
+        },
+        {
+          "probe": 3,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_length": 0
+        },
+        {
+          "probe": 5,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 5,
+          "actual_length": 0
+        },
+        {
+          "probe": 6,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 16,
+          "actual_length": 0
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967294,
+          "actual_length": 0
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 31,
+          "actual_length": 0
+        },
+        {
+          "probe": 9,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 0,
+          "actual_length": 0
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1459265061,
+          "actual_length": 0
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 263782639,
+          "actual_length": 0
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2632585006,
+          "actual_length": 0
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 3365795114,
+          "actual_length": 0
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1851924932,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 313923273,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1604621408,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2496400618,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 534981009,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 6,
+        "64": 6,
+        "128": 6,
+        "256": 6,
+        "512": 6,
+        "1024": 6
+      },
+      "work_counts_by_size": {
+        "32": [
+          5,
+          0,
+          1
+        ],
+        "64": [
+          5,
+          0,
+          1
+        ],
+        "128": [
+          5,
+          0,
+          1
+        ],
+        "256": [
+          5,
+          0,
+          1
+        ],
+        "512": [
+          5,
+          0,
+          1
+        ],
+        "1024": [
+          5,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "6037bbdf8bb0364bccd98046d7d25d82836ddba270db23fedaab4dcf16502907",
+      "instrumented_sha256": "d20e3fa5079a3dbfd57e735d40fcd8aac54deb5701af22cbf1ee5f4f276cffcb",
+      "instrumentation_sites": {
+        "functions": 27,
+        "loops": 4,
+        "allocations": 16
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/baseline/main.bend",
+      "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 824,
+        "64": 2664,
+        "128": 9416,
+        "256": 35208,
+        "512": 135944,
+        "1024": 534024
+      },
+      "work_counts_by_size": {
+        "32": [
+          231,
+          528,
+          65
+        ],
+        "64": [
+          455,
+          2080,
+          129
+        ],
+        "128": [
+          903,
+          8256,
+          257
+        ],
+        "256": [
+          1799,
+          32896,
+          513
+        ],
+        "512": [
+          3591,
+          131328,
+          1025
+        ],
+        "1024": [
+          7175,
+          524800,
+          2049
+        ]
+      },
+      "compiled_sha256": "2a3d01c498951bce22c69cb769ab34802f17371fbe6af25eb53924c4a8dd7789",
+      "instrumented_sha256": "9a27989f14c6dcd9f9b3f988222178ad45c7f5c5f0fcf593099c8f76c882ac24",
+      "instrumentation_sites": {
+        "functions": 33,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/clean/main.bend",
+      "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 71,
+        "64": 135,
+        "128": 263,
+        "256": 519,
+        "512": 1031,
+        "1024": 2055
+      },
+      "work_counts_by_size": {
+        "32": [
+          38,
+          0,
+          33
+        ],
+        "64": [
+          70,
+          0,
+          65
+        ],
+        "128": [
+          134,
+          0,
+          129
+        ],
+        "256": [
+          262,
+          0,
+          257
+        ],
+        "512": [
+          518,
+          0,
+          513
+        ],
+        "1024": [
+          1030,
+          0,
+          1025
+        ]
+      },
+      "compiled_sha256": "4d33884c6361d46cd9df496ec5d39c7c168ec79364eaa002fe4903fadd05b869",
+      "instrumented_sha256": "057d0ea0b302d8ab7f2f352bb4bacba2eb4188d71ea757efae0dbc3f6c5dd37f",
+      "instrumentation_sites": {
+        "functions": 29,
+        "loops": 4,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/held-out/broken.bend",
+      "source_sha256": "2b1a2e4ff71dd5c290cf399cf9207ad0efecd2992db4450d6f41ad873df4a32a",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 695,
+        "64": 2407,
+        "128": 8903,
+        "256": 34183,
+        "512": 133895,
+        "1024": 529927
+      },
+      "work_counts_by_size": {
+        "32": [
+          134,
+          528,
+          33
+        ],
+        "64": [
+          262,
+          2080,
+          65
+        ],
+        "128": [
+          518,
+          8256,
+          129
+        ],
+        "256": [
+          1030,
+          32896,
+          257
+        ],
+        "512": [
+          2054,
+          131328,
+          513
+        ],
+        "1024": [
+          4102,
+          524800,
+          1025
+        ]
+      },
+      "compiled_sha256": "6ce4188261d45a878b2549b5c796a614d01cf0b39e5233890a2d5b210dd47e4d",
+      "instrumented_sha256": "34d35e6aa9edbafcc8cb31f8f0d282ff045d4b50746c4e48e485890a002f35c2",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 5,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/held-out/clean.bend",
+      "source_sha256": "47a4a61746f311d777c6f2b62c7889931380446d1eafb1081c21d5689cd26a85",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 140,
+        "64": 268,
+        "128": 524,
+        "256": 1036,
+        "512": 2060,
+        "1024": 4108
+      },
+      "work_counts_by_size": {
+        "32": [
+          8,
+          66,
+          66
+        ],
+        "64": [
+          8,
+          130,
+          130
+        ],
+        "128": [
+          8,
+          258,
+          258
+        ],
+        "256": [
+          8,
+          514,
+          514
+        ],
+        "512": [
+          8,
+          1026,
+          1026
+        ],
+        "1024": [
+          8,
+          2050,
+          2050
+        ]
+      },
+      "compiled_sha256": "0ba7483c082a096aaa6bf2e6cf8b5b308db7c9aa71cb975c597333514bfb07b9",
+      "instrumented_sha256": "420c29762ae385825034e26287bca91e73b50e0a10b80a603f2c4c6647b351fd",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 6,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/fresh-held-out/broken.bend",
+      "source_sha256": "2d848d9a1f7bb1d3da46f42f9dc65b3c505c601a19505740cd9f5cda1bb09cea",
+      "expected_correctness": true,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 759,
+        "64": 2535,
+        "128": 9159,
+        "256": 34695,
+        "512": 134919,
+        "1024": 531975
+      },
+      "work_counts_by_size": {
+        "32": [
+          166,
+          528,
+          65
+        ],
+        "64": [
+          326,
+          2080,
+          129
+        ],
+        "128": [
+          646,
+          8256,
+          257
+        ],
+        "256": [
+          1286,
+          32896,
+          513
+        ],
+        "512": [
+          2566,
+          131328,
+          1025
+        ],
+        "1024": [
+          5126,
+          524800,
+          2049
+        ]
+      },
+      "compiled_sha256": "a0390fbff61f5049efdc23e3dae30edad16e0742c659bf2ab553394314c30203",
+      "instrumented_sha256": "55dce636e1d8b97807a844b75109419394cb5727dfb6064a3ab7dd907b866b52",
+      "instrumentation_sites": {
+        "functions": 32,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/fresh-held-out/clean.bend",
+      "source_sha256": "34a7470f421aca45928c04fe221887701c5da9a9014348c9d5921be1b8d28f99",
+      "expected_correctness": true,
+      "expected_performance": true,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": true,
+      "probes": 19,
+      "failures": [],
+      "performance_pass": true,
+      "work_by_size": {
+        "32": 135,
+        "64": 263,
+        "128": 519,
+        "256": 1031,
+        "512": 2055,
+        "1024": 4103
+      },
+      "work_counts_by_size": {
+        "32": [
+          102,
+          0,
+          33
+        ],
+        "64": [
+          198,
+          0,
+          65
+        ],
+        "128": [
+          390,
+          0,
+          129
+        ],
+        "256": [
+          774,
+          0,
+          257
+        ],
+        "512": [
+          1542,
+          0,
+          513
+        ],
+        "1024": [
+          3078,
+          0,
+          1025
+        ]
+      },
+      "compiled_sha256": "89815fd35716aad79dcb6edaea39aed6fa974d97c94c30fd3b6e92c6bd7d0b7d",
+      "instrumented_sha256": "4f69f3bbb186f2598defc6315deac88230fc5cc23a4fff06fcf2678a494a278f",
+      "instrumentation_sites": {
+        "functions": 31,
+        "loops": 4,
+        "allocations": 17
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/mutants/wrong-order.bend",
+      "source_sha256": "0d5e9c6deb645846c8ef8dc1c5d9013d89bbe3f5690459d0b649049363a00467",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1,
+          "actual_at_mismatch": 4,
+          "actual_length": 2
+        },
+        {
+          "probe": 6,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_at_mismatch": 12,
+          "actual_length": 3
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 4294967292,
+          "actual_length": 4
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 7,
+          "actual_at_mismatch": 35,
+          "actual_length": 5
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 4214260481,
+          "actual_length": 3
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 3018956332,
+          "actual_length": 7
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 112,
+          "actual_length": 16
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 217,
+          "actual_length": 31
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 3577532677,
+          "actual_length": 65
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 4294967169,
+          "actual_length": 127
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 1436715995,
+          "actual_length": 255
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 3565721004,
+          "actual_length": 513
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_at_mismatch": 3994880000,
+          "actual_length": 1024
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 140,
+        "64": 268,
+        "128": 524,
+        "256": 1036,
+        "512": 2060,
+        "1024": 4108
+      },
+      "work_counts_by_size": {
+        "32": [
+          41,
+          33,
+          66
+        ],
+        "64": [
+          73,
+          65,
+          130
+        ],
+        "128": [
+          137,
+          129,
+          258
+        ],
+        "256": [
+          265,
+          257,
+          514
+        ],
+        "512": [
+          521,
+          513,
+          1026
+        ],
+        "1024": [
+          1033,
+          1025,
+          2050
+        ]
+      },
+      "compiled_sha256": "e43ce5d5f2d5581a6c8388f9e60f476c6e6e12c1500cacaaf631971cd0c1b21a",
+      "instrumented_sha256": "9fe8b20cfb3af688c7a0db4d97b0570ca05cf4768e7a44f182d125d6c2bc5394",
+      "instrumentation_sites": {
+        "functions": 33,
+        "loops": 5,
+        "allocations": 19
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "cases/indexed-linked-list/mutants/smoke-shortcut.bend",
+      "source_sha256": "c8ed5cedbd7ae6b9f8cb712b64be18479bcb7824385d73a49da57d3629a81dff",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 138,
+        "64": 136,
+        "128": 264,
+        "256": 520,
+        "512": 1032,
+        "1024": 2056
+      },
+      "work_counts_by_size": {
+        "32": [
+          105,
+          0,
+          33
+        ],
+        "64": [
+          135,
+          0,
+          1
+        ],
+        "128": [
+          263,
+          0,
+          1
+        ],
+        "256": [
+          519,
+          0,
+          1
+        ],
+        "512": [
+          1031,
+          0,
+          1
+        ],
+        "1024": [
+          2055,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "a1f7fc21123a404df2fc00cbac43cdaddf1b2877c0e64af1987fc296e4bcc4b2",
+      "instrumented_sha256": "69a0367badd23a42787c5ecf88bfe5dedc0d04bccac4822a729b61514311db54",
+      "instrumentation_sites": {
+        "functions": 34,
+        "loops": 4,
+        "allocations": 18
+      }
+    },
+    {
+      "case": "indexed-linked-list",
+      "source": "mutants/constant-empty.bend",
+      "source_sha256": "15c590fb51d3bdf39d8887ef0f69c4f7d58eb8a699e6bdd728ea42cbc2175935",
+      "expected_correctness": false,
+      "expected_performance": false,
+      "expectation_met": true,
+      "compiled": true,
+      "correctness_pass": false,
+      "probes": 19,
+      "failures": [
+        {
+          "probe": 1,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 0,
+          "actual_length": 0
+        },
+        {
+          "probe": 2,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1,
+          "actual_length": 0
+        },
+        {
+          "probe": 3,
+          "n": 1,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 4,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 1,
+          "actual_length": 0
+        },
+        {
+          "probe": 5,
+          "n": 2,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 2,
+          "actual_length": 0
+        },
+        {
+          "probe": 6,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4,
+          "actual_length": 0
+        },
+        {
+          "probe": 7,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 8,
+          "n": 5,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 7,
+          "actual_length": 0
+        },
+        {
+          "probe": 9,
+          "n": 4,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 0,
+          "actual_length": 0
+        },
+        {
+          "probe": 10,
+          "n": 3,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 11,
+          "n": 7,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 12,
+          "n": 16,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 13,
+          "n": 31,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 14,
+          "n": 65,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 15,
+          "n": 127,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 16,
+          "n": 255,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 17,
+          "n": 513,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        },
+        {
+          "probe": 18,
+          "n": 1024,
+          "pass": false,
+          "mismatch": 0,
+          "expected_at_mismatch": 4294967295,
+          "actual_length": 0
+        }
+      ],
+      "performance_pass": false,
+      "work_by_size": {
+        "32": 6,
+        "64": 6,
+        "128": 6,
+        "256": 6,
+        "512": 6,
+        "1024": 6
+      },
+      "work_counts_by_size": {
+        "32": [
+          5,
+          0,
+          1
+        ],
+        "64": [
+          5,
+          0,
+          1
+        ],
+        "128": [
+          5,
+          0,
+          1
+        ],
+        "256": [
+          5,
+          0,
+          1
+        ],
+        "512": [
+          5,
+          0,
+          1
+        ],
+        "1024": [
+          5,
+          0,
+          1
+        ]
+      },
+      "compiled_sha256": "6037bbdf8bb0364bccd98046d7d25d82836ddba270db23fedaab4dcf16502907",
+      "instrumented_sha256": "d20e3fa5079a3dbfd57e735d40fcd8aac54deb5701af22cbf1ee5f4f276cffcb",
+      "instrumentation_sites": {
+        "functions": 27,
+        "loops": 4,
+        "allocations": 16
+      }
+    }
+  ]
+}
