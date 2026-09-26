@@ -63,3 +63,33 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   success separately from a single compiler-diagnostic retry; reject remaining
   failures instead of changing tests or silently hand-fixing the model's output.
   See docs/perch-performance-experiment-protocol.md and the experiment report.
+
+## Style objective: high dopamine to read
+
+- When writing or refactoring Bend, optimize for a rewarding reading experience
+  for a technically fluent reader: high conceptual payoff per line, satisfying
+  symmetry, rhythmic layout, exact names, and compact composition. Aim for
+  repeated moments where the notation clicks and the structure feels inevitable.
+- Keep two independent style rankings: **Maximally big brain** rewards a small
+  expressive algebra or representation that absorbs cases and exposes invariants;
+  **Delightful to read — high dopamine** rewards the pleasure of recognizing and
+  tracing that structure. Each abstraction should explain more than it adds.
+- Terse names, symbolic structure and learned idioms are welcome when their
+  vocabulary is consistent and their relationships can be followed. Comments
+  should explain conventions, invariants or surprising decisions. Verbosity,
+  beginner familiarity, minimum line count and cleverness alone are not goals.
+- For substantial implementation alternatives sharing a contract, use a bounded
+  comparison with `npm run lint:rank -- --live --cohort='shared task or contract'
+  file-a.bend::name file-b.bend::name`. Select actual parsed declarations and
+  inspect their helper context. Follow [the style guide](docs/perch-style.md)
+  and [the ordered rubrics](perch-style.json); avoid unchanged repeat reviews.
+- Report the two rank orders separately, retaining distributions, near ties and
+  context limits. A small score gap is a weak preference; ranking first does not
+  establish a decisive winner. These judgments remain advisory. Preserve the
+  accepted contract and deterministic type, quantity, proof, backend and
+  performance gates when making a style improvement.
+- Refine the rubrics from concrete reading experience and human preferences
+  recorded before model review, with fresh held-out comparisons. Record noisy
+  preferences or incentives toward obscurity in docs/perch-review-log.md and
+  follow docs/perch-maintenance.md. Optimize the code's reading experience;
+  do not chase scores through self-praise in comments or needless rewrites.
