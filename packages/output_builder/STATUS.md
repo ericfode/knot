@@ -40,3 +40,9 @@ evidence/publish.stdout, evidence/publish.stderr, evidence/remote.json.
 Reproduce using the three commands in RELEASE.json. Raw Buffer constructors are
 unchecked: checked API users must not forge metadata. Runtime resource limits
 and repeated-finish costs are documented in SPEC.md and INTERFACE.md.
+
+
+A later bounded parsed Perch pass reviewed all 20 implementation declarations
+with helper context plus the current law packet: 21 completed provider responses,
+109 answers, no findings. No source changes; proof check and all 12 published
+closure identities reverified. See PERCH_PARSED_REPORT.md and evidence/perch-parsed/.
