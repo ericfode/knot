@@ -1,76 +1,124 @@
-# Ranked style review
+# Style quality checks
 
-The target is **high dopamine to read**: dense code with conceptual payoff,
-satisfying symmetry, an expressive little vocabulary, and repeated moments
-where the structure clicks. Terse notation and learned idioms can serve that
-taste. Readability here means rewarding a fluent reader, not maximizing prose
-or minimizing unfamiliarity.
+The target is a distinctive code aesthetic: **Maximally big brain**,
+**Delightful to read — high dopamine**, and **Highly memetic**. Every existing
+parsed declaration is assessed against all three; an alternative implementation
+is not required. Rankings are a secondary view of those independent ratings.
 
-Two independent ordinal rubrics live in [perch-style.json](../perch-style.json):
-
-| Ranking | What earns a high position |
+| Axis | Desired experience |
 | --- | --- |
-| Maximally big brain | A small algebra or representation absorbs cases; definitions compose; each abstraction explains more than it adds. |
-| Delightful to read — high dopamine | Exact names, rhythmic layout, balanced forms and dense composition produce satisfying recognition and a memorable sense of fit. |
+| Maximally big brain | A small expressive algebra or representation absorbs cases and exposes invariants. Each abstraction explains more than it adds. |
+| Delightful to read — high dopamine | Exact names, rhythmic layout, symmetry and dense composition create repeated satisfying moments where the structure clicks. |
+| Highly memetic | The code has its own ideas, vocabulary and felt rhythm: an earned hook gets into your head, rewards insider fluency, and makes you want to read, write and share more of this particular style. |
 
-Each rubric has five descriptive levels. The command asks a typed Score question
-for each axis, then sorts by its expected level. The terminal displays ranks;
-JSON retains the underlying scores, confidence and complete distributions.
-No combined score or style failure is produced. Correctness and performance
-remain separate gates. Comments praising the code are explicitly ignored.
+Memetic is used in the internet sense. Mere recall or ease of teaching is not the
+whole goal. The form should land: motifs repeat with variation, an expression
+has a satisfying turn, and mechanism, words and visual shape establish a
+recognizable identity. Knowing the vocabulary unlocks the ideas and creates a
+shared grammar. A distinctive aesthetic can teach the reader what to anticipate
+and then reward that anticipation. This describes the desired reading experience,
+not a measured psychological effect. Decorative slogans and self-praise do not
+substitute for the code's actual character.
 
-## Use
+Terse notation, learned idioms and dense composition are welcome. Simple helpers
+can qualify through one fitting operation or resonant expression; adding layers
+solely to look clever would work against the goal. Correctness, quantity, proofs,
+backend behavior and performance remain independent deterministic gates.
+
+## Run it
 
 ```sh
-npm run lint:rank -- --live \
-  --cohort='Map each U32 x to 3*x+1 modulo 2^32 over a reusable list, preserving length and order.' \
-  tests/perch-style/a.bend::solve \
-  tests/perch-style/b.bend::solve \
-  tests/perch-style/c.bend::solve
+# Rate each existing declaration in a file. No competitor needed.
+npm run lint:style -- --live src/scope.bend
+
+# Rate one parsed declaration, including datatypes.
+npm run lint:style -- --live src/scope.bend::alternatives
+npm run lint:style -- --live src/scope.bend::Scope
+
+# Rate the project and retain the complete report.
+npm run lint:style -- --live --all --output=.local/style-project.json
 ```
 
-Compare alternatives to a shared task or genuinely comparable units; describe
-that task with `--cohort`. A whole file selects its parsed declarations; `::name`
-selects one. At least two distinct units are required, with a default maximum
-of 12. Prefer explicit named targets. The command uses the existing project key
-and endpoint. Both questions share one provider request per unit.
+`lint:rank` remains an alias. `--cohort='optional purpose or contract'` adds context
+when useful; omitting it rates each declaration relative to its own purpose.
+`--json` prints the structured report. An output path ending in `.gz` saves the
+same JSON losslessly compressed; `--reuse` accepts either form. `--jobs=N` sets concurrency from 1 to 16;
+project mode defaults to 8, explicit targets to 1. The maximum inventory size is
+5,000 declarations by default; exceeding it fails preflight rather than silently
+truncating coverage. No automatic request retries are made.
 
-Add `--json` for structured output and `--output=path.json` to retain evidence.
-An existing output path is rejected before model calls. Every dispatched run
-also leaves an ignored `.perch/usage/` receipt. Provider failures retain failed
-coverage and produce no partial ranking. Syntax, empty selections and excessive
-scope are rejected before calls. Requests are not automatically retried.
+`--all` discovers tracked and nonignored new `.bend` files using Git. It includes
+compiler code, packages, research, laws, proofs, fixtures and retained experiments.
+Ignored dependencies, caches and build directories are not project source. Exact
+parser spans identify definitions, law declarations/fills and datatypes. Files
+that cannot be parsed or supplied with valid context are listed in
+`inventory.unranked`; files without any supported declaration are listed separately.
+An incomplete run cannot claim that everything was rated.
 
-The implementation in [scripts/perch-style.mjs](../scripts/perch-style.mjs) uses
-the same pinned Bend parser and working-copy helper/law/datatype context as
-normal Perch checks. Hashes identify the source, bounded context and rubric.
-Context limits and unresolved references remain visible. Parsing does not
-establish typing, proof acceptance, behavioral equivalence or backend support.
+Function/law context uses the same pinned Bend parser and bounded working-copy
+helpers as normal Perch checks. Datatype context includes sibling datatypes and
+up to four direct same-file users found through parsed references; imported and
+transitive datatype dependencies are explicitly unresolved. Every target retains
+source and context hashes, truncation markers and unresolved references. Syntax
+parsing does not establish typing or dependency completeness.
 
-Perch 0.3.5 recognizes Score configuration, but its custom-check execution path
-still expects a `noul` answer. This project command supplies the ordinal path
-directly through the same provider; native `perch check` and `perch rules list`
-do not run or list these rubrics. Existing defect rules remain unchanged.
-The provider's [Score documentation](https://docs.typesafe.ai/primitives/score)
-defines the ordered criteria and response distribution, and the
-[API reference](https://docs.typesafe.ai/api) defines the request format.
+Input/context hashes are checked before requests and again afterward. Changes
+during review are reported; the ratings still refer to the recorded snapshot.
+An existing output file is rejected before paid requests. Every dispatched run
+also writes a secret-free local receipt under `.perch/usage/`.
 
-## Interpret ranks
+`--reuse=path/to/earlier.json` reuses only rows with matching target source,
+request-state, context, parser, rubric and requested-model identities. Reused and
+fresh rows must resolve to one model. Completed answers from a failed run are
+retained for explicit reuse; a provider failure itself yields no partial rankings
+or assessments. This allows recovery without paying again for unchanged answers.
 
-A rank is an ordering within this cohort, not a probability that the code is
-good. Equal scores share a rank. Adjacent gaps below 0.25 on the 0–4 rubric
-are marked `near tie above`; this threshold is a display convention, not a
-significance test. The first item in a near-tied group is not a decisive winner.
-Confidence describes concentration of the level distribution, not agreement
-with the user's taste. Inspect the distribution when making a style decision.
+## Interpret the result
 
-Each candidate is evaluated independently; the model does not see the other
-candidates or their order. Sorting happens locally. This supports reuse of
-descriptive rubrics but does not establish pairwise preference accuracy.
-Do not compare unrelated algorithms, different rubric hashes or different
-resolved models as though their positions were interchangeable.
+[perch-style.json](../perch-style.json) contains three five-level ordered rubrics.
+A request asks all three typed Score questions together. Each declaration receives
+its own distributions, independent of other candidates or their order.
 
-## Pilot — 2026-09-26
+The current target on every axis is **level 3 or 4**. Sum the normalized
+probability mass on those two levels:
+
+- At least 60%: `meets_target`.
+- At most 40%: `below_target`.
+- Between those bounds: `uncertain`.
+
+All three axes must meet the target for a declaration to pass automatically.
+The 60% policy is an explicit provisional review threshold, not a calibrated
+probability of agreement with the user. Full distributions remain available;
+model confidence is distribution concentration, not correctness or taste agreement.
+A high rank alone cannot satisfy the quality bar. Even the first-ranked item can
+be below target.
+
+Exit 0 means complete, current coverage and all selected units meeting every bar.
+Exit 3 means style attention is needed: below-target, uncertain or stale source.
+Exit 1 means the run failed or coverage is incomplete. These checks guide review;
+they do not replace semantic gates or authorize changing a correct contract.
+
+Inspect low-rated code, identify a concrete improvement, and retain the original
+contract and independent tests. Record disagreements and compare actual proposed
+changes when available. Do not force obscurity, branding, verbosity or churn to
+satisfy the model. Human preferences and held-out examples must guide calibration.
+
+Perch 0.3.5's ordinary custom-check path expects Noul answers. This project's
+companion command supplies the Score path through the same provider and existing
+project credentials. Normal `npm run lint` still reports defect/performance/law
+checks; **it does not include these style ratings**. During development, run both
+applicable checks and report their coverage separately.
+
+The complete project pass and a live example are recorded in
+[the three-axis report](perch-style-project-2026-09-26.md).
+
+## Historical two-axis comparison pilot
+
+The pilot below used version 1, required competing implementations, and did not
+include the memetic axis. Its distributions are historical evidence and must not
+be combined with the current rubric as if the instructions were identical.
+
+### Pilot — 2026-09-26
 
 Three [specimens](../tests/perch-style/README.md) implement the same list mapping.
 The frozen performance evaluator independently accepted all three: Bend 2.0.29
@@ -106,8 +154,9 @@ Twenty-one offline tests and the law-rule wiring gate passed, including malforme
 answers, missing credentials, partial failure, model drift, exact declaration
 selection and secret-free receipt checks.
 
-The next calibration input should be real compiler alternatives with a human
-preference recorded before model review. Check fresh held-out examples after
-any rubric change. Track preference agreement and unwanted verbosity or
-cleverness incentives separately from defect precision. Keep the style command
-opt-in and advisory until that evidence exists.
+That pilot's proposed next step was a comparison of real compiler alternatives.
+The user's later instruction supersedes comparison-only coverage: routinely
+assess existing declarations against the three quality targets. Human preferences
+recorded before review and fresh held-out examples are still needed to calibrate
+agreement with the intended taste. Track unwanted obscurity, verbosity and novelty
+incentives separately from defect precision; preserve deterministic acceptance.

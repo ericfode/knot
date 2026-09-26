@@ -1,0 +1,267 @@
+{
+  "schema": 1,
+  "cli_result": {
+    "path": "scripts/perch-style.mjs",
+    "name": "runStyleRanking",
+    "line": 229,
+    "parser": null,
+    "end_line": 344,
+    "asked": [
+      {
+        "rule": "perf-amortized-growth",
+        "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds.",
+        "broken": 0.18000000000000005,
+        "floor": 0.8
+      }
+    ],
+    "context": null,
+    "checked": 2,
+    "broken": [],
+    "issues": [
+      {
+        "type": "refactor",
+        "label": "too_big",
+        "from": "refactor",
+        "probability": 0.91,
+        "floor": 0.6,
+        "text": "too_big 91%"
+      },
+      {
+        "type": "security",
+        "label": "unvalidated_destination",
+        "from": "unvalidated_destination",
+        "probability": 0.816,
+        "floor": 0.7,
+        "text": "unvalidated_destination 82%"
+      },
+      {
+        "type": "defect",
+        "label": "error_ignored",
+        "from": "has_bug",
+        "probability": 0.64,
+        "floor": 0.6,
+        "text": "error_ignored 64%"
+      }
+    ],
+    "note": null,
+    "clean": false
+  },
+  "root_receipt": ".perch/usage/2026-09-26T23-49-08.594Z-1937ae68-b19f-4beb-b3c3-5b11da2e969a.json",
+  "usage": {
+    "schema": 1,
+    "id": "1937ae68-b19f-4beb-b3c3-5b11da2e969a",
+    "at": "2026-09-26T23:49:08.594Z",
+    "command": "check",
+    "target": "scripts/perch-style.mjs",
+    "revision": "bc99d215646760123bbcda7e74778b6259298ff3",
+    "source_sha256": "699ffdcc7c13b0650dc8007efce5fe059a11cb6aec76c48e578bd57232257d4b",
+    "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+    "selected_rules": null,
+    "perch_version": "0.3.5",
+    "requested_model": "jev-latest",
+    "resolved_model": "jev-1.13.0",
+    "provider_requests": 2,
+    "provider_responses": 2,
+    "models": [
+      "jev-1.13.0"
+    ],
+    "answers": [
+      {
+        "rule": "perf-amortized-growth",
+        "probability_true": 0.82
+      },
+      {
+        "rule": "has_bug",
+        "probability_true": 0.64
+      },
+      {
+        "rule": "does_what_it_claims",
+        "probability_true": 0.59
+      },
+      {
+        "rule": "documented",
+        "probability_true": 0.72
+      },
+      {
+        "rule": "exposed",
+        "probability_true": 0.96
+      },
+      {
+        "rule": "injection",
+        "probability_true": 0.27
+      },
+      {
+        "rule": "path_traversal",
+        "probability_true": 0.6
+      },
+      {
+        "rule": "unsafe_deserialization",
+        "probability_true": 0.15
+      },
+      {
+        "rule": "secret_exposure",
+        "probability_true": 0.43
+      },
+      {
+        "rule": "missing_authorization",
+        "probability_true": 0.62
+      },
+      {
+        "rule": "weak_crypto",
+        "probability_true": 0.22
+      },
+      {
+        "rule": "unvalidated_destination",
+        "probability_true": 0.85
+      },
+      {
+        "rule": "resource_exhaustion",
+        "probability_true": 0.52
+      },
+      {
+        "rule": "unsafe_reflection",
+        "probability_true": 0.58
+      },
+      {
+        "rule": "disabled_safeguard",
+        "probability_true": 0.16
+      },
+      {
+        "rule": "buffer_overflow",
+        "probability_true": 0.2
+      },
+      {
+        "rule": "use_after_free",
+        "probability_true": 0.1
+      },
+      {
+        "rule": "uninitialized_use",
+        "probability_true": 0.21
+      },
+      {
+        "rule": "integer_overflow",
+        "probability_true": 0.3
+      },
+      {
+        "rule": "race_condition",
+        "probability_true": 0.58
+      },
+      {
+        "rule": "type_confusion",
+        "probability_true": 0.67
+      },
+      {
+        "rule": "bend-fuel-completeness",
+        "probability_true": 0.65
+      },
+      {
+        "rule": "bend-machine-arithmetic",
+        "probability_true": 0.3
+      },
+      {
+        "rule": "bend-borrow-lifetime",
+        "probability_true": 0.7
+      },
+      {
+        "rule": "bend-ordered-f32",
+        "probability_true": 0.86
+      },
+      {
+        "rule": "bend-effect-boundary",
+        "probability_true": 0.55
+      },
+      {
+        "rule": "bend-device-stack",
+        "probability_true": 0.88
+      },
+      {
+        "rule": "compiler-pattern-sharing",
+        "probability_true": 0.81
+      },
+      {
+        "rule": "compiler-checker-trust",
+        "probability_true": 0.62
+      },
+      {
+        "rule": "compiler-cache-identity",
+        "probability_true": 0.59
+      },
+      {
+        "rule": "perf-growing-prefix-copy",
+        "probability_true": 0.83
+      },
+      {
+        "rule": "perf-loop-invariant-work",
+        "probability_true": 0.53
+      },
+      {
+        "rule": "perf-linked-list-indexing",
+        "probability_true": 0.87
+      },
+      {
+        "rule": "perf-amortized-growth",
+        "probability_true": 0.83
+      },
+      {
+        "rule": "misuse_0",
+        "probability_true": 0.21
+      },
+      {
+        "rule": "misuse_1",
+        "probability_true": 0.2
+      },
+      {
+        "rule": "misuse_2",
+        "probability_true": 0.22
+      },
+      {
+        "rule": "misuse_3",
+        "probability_true": 0.11
+      },
+      {
+        "rule": "misuse_4",
+        "probability_true": 0.11
+      },
+      {
+        "rule": "misuse_5",
+        "probability_true": 0.13
+      },
+      {
+        "rule": "misused_by_0",
+        "probability_true": 0.17
+      }
+    ],
+    "usage": {
+      "input_tokens": 23613,
+      "output_tokens": 2427
+    },
+    "elapsed_ms": 3142,
+    "upstream_exit": 3,
+    "exit": 3,
+    "status": "findings",
+    "checked": 2,
+    "parser": null,
+    "parser_coverage": null,
+    "units": [],
+    "findings": [],
+    "issue_count": 3,
+    "adjudication": "unreviewed"
+  },
+  "adjudications": [
+    {
+      "label": "unvalidated_destination",
+      "status": "false-positive",
+      "evidence": "Operator-controlled local CLI output and provider configuration. Workspace realpath checks constrain source; output preflight rejects existing evidence and final writes use wx."
+    },
+    {
+      "label": "too_big",
+      "status": "unresolved",
+      "evidence": "The CLI coordinates preflight, reuse, evaluation and reporting; size is a refactoring suggestion without an established behavior defect."
+    },
+    {
+      "label": "error_ignored",
+      "status": "unresolved",
+      "evidence": "No ignored error reproduced. Offline tests cover provider failure, missing key, unauthorized response, malformed score, model drift, invalid inventory file, and changed source; exits and receipt status expose each. No specific failing path was supplied."
+    }
+  ]
+}

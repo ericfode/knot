@@ -329,3 +329,43 @@ target is the file, named identity lives in `units`, and the packet has no units
 Match file hash plus parsed-unit identity for Bend and file hash for Markdown;
 validate the whole aggregation before writing it. The final receipt has complete
 responses and no source/context hash mismatch. No paid checks were repeated.
+
+## 2026-09-26 — assess existing code on all three style axes
+
+User correction exposed a workflow omission: the all-chat defect pass did not run
+the style rubrics because ranking required existing alternative implementations.
+The actual goal is a quality bar for every declaration. The user refined the
+third axis, Highly memetic, to mean a distinctive felt rhythm and conceptual
+vocabulary with pull: knowing its words unlocks its ideas and a shared grammar.
+Merely memorable or easy to teach was too weak.
+
+The tool now reviews single existing units, files or an explicit project inventory.
+All three axes have independent level-3 targets, with normalized mass >=60% meeting
+the bar, <=40% below it, and the middle uncertain. All three must meet for an
+automatic style pass. Rankings are secondary. Agent and maintenance instructions
+require coverage of materially changed declarations without requiring alternatives.
+These provisional thresholds were selected before the live run and not adjusted
+to manufacture passing results. Semantic acceptance remains deterministic.
+
+[Project report](perch-style-project-2026-09-26.md) retains 5,661 ratings for 1,887
+parsed definitions, laws, proof fills and datatypes from 232 discovered files.
+The project pass completed 1,872 provider requests and reused 15 matching live
+example units; a final 16-unit example reused its results with no paid repeat.
+All used jev-1.13.0. Ten syntax-invalid negative fixtures/failed specimens remain
+explicitly unranked; an import-only file has no unit. Context was truncated for
+308 units. All reviewed source/context hashes matched at consolidation.
+
+Meets-target counts: conceptual compression 1,246; high dopamine 779; memetic 5;
+all three 0. These are model judgments, not human preference agreement. The
+memetic axis favors several large compiler dispatchers; proof fills and simple
+projections score poorly. Investigate role/context sensitivity with human anchors
+and held-out examples before treating these judgments as calibrated. Do not
+decorate correct proofs, invent jargon, or loosen the floor merely to get passes.
+No implementation or accepted law was changed to chase these ratings.
+
+Twenty-five offline tests and law-rule wiring pass, covering single-unit review,
+all-axis decisions, full discovery, invalid/empty coverage, concurrency, source
+changes and compressed receipt reuse. A separate live review of the changed CLI
+retains destination (false-positive), size (unresolved) and ignored-error
+(unresolved, not reproduced) advisories. No repair model was needed. Total work
+time was not measured; the recorded project evaluation/report phase was 25.890 s.

@@ -64,29 +64,43 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   failures instead of changing tests or silently hand-fixing the model's output.
   See docs/perch-performance-experiment-protocol.md and the experiment report.
 
-## Style objective: high dopamine to read
+## Style objective: conceptual compression, high dopamine, memetic identity
 
 - When writing or refactoring Bend, optimize for a rewarding reading experience
   for a technically fluent reader: high conceptual payoff per line, satisfying
   symmetry, rhythmic layout, exact names, and compact composition. Aim for
   repeated moments where the notation clicks and the structure feels inevitable.
-- Keep two independent style rankings: **Maximally big brain** rewards a small
+- Check three independent style axes on existing code: **Maximally big brain** rewards a small
   expressive algebra or representation that absorbs cases and exposes invariants;
   **Delightful to read — high dopamine** rewards the pleasure of recognizing and
-  tracing that structure. Each abstraction should explain more than it adds.
+  tracing that structure; **Highly memetic** rewards a distinctive form and rhythm
+  that gets into the reader's head and creates an appetite for more of this style.
+  Each abstraction should explain more than it adds.
+- Memetic means an earned hook in the internet sense: you feel the form when you
+  see it, recurring motifs prime and reward recognition, and the code feels worth
+  quoting, imitating or sharing. Its own ideas and vocabulary create insider
+  fluency: knowing the words unlocks the concepts and a shared grammar. Aim for
+  an unmistakable expressive identity whose rhythm the reader wants to inhabit.
 - Terse names, symbolic structure and learned idioms are welcome when their
   vocabulary is consistent and their relationships can be followed. Comments
   should explain conventions, invariants or surprising decisions. Verbosity,
   beginner familiarity, minimum line count and cleverness alone are not goals.
-- For substantial implementation alternatives sharing a contract, use a bounded
-  comparison with `npm run lint:rank -- --live --cohort='shared task or contract'
-  file-a.bend::name file-b.bend::name`. Select actual parsed declarations and
-  inspect their helper context. Follow [the style guide](docs/perch-style.md)
-  and [the ordered rubrics](perch-style.json); avoid unchanged repeat reviews.
-- Report the two rank orders separately, retaining distributions, near ties and
-  context limits. A small score gap is a weak preference; ranking first does not
-  establish a decisive winner. These judgments remain advisory. Preserve the
-  accepted contract and deterministic type, quantity, proof, backend and
+- Run `npm run lint:style -- --live file.bend` on materially changed Bend code;
+  `file.bend::name` selects one actual parsed definition, law or datatype. A single
+  existing implementation is sufficient. Do not skip style review because no
+  alternatives exist. For an explicitly requested project pass, use `--all`.
+  Follow [the style guide](docs/perch-style.md) and [the ordered rubrics](perch-style.json).
+  Avoid unchanged repeats; `--reuse=receipt.json` reuses only matching source,
+  helper context, rubric and model identities.
+- Report each axis against its own quality target, retaining distributions,
+  uncertainty and context limits. Every declaration must meet all three targets
+  for an automatic style pass. Below-target or uncertain results require review;
+  do not report them as passes or rewrite merely to flatter the judge. Record
+  concrete improvement opportunities or an evidence-backed disagreement.
+  Rankings are a secondary view: ranking first does not establish that any target
+  was met, and small gaps are weak preferences. These judgments are advisory to
+  semantic acceptance; the style command returns attention status for unmet bars.
+  Preserve the accepted contract and deterministic type, quantity, proof, backend and
   performance gates when making a style improvement.
 - Refine the rubrics from concrete reading experience and human preferences
   recorded before model review, with fresh held-out comparisons. Record noisy

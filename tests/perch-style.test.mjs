@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { prepareStyleTargets, rankRows, runStyleRanking, validateScore } from '../scripts/perch-style.mjs';
+import { assessStyle, prepareStyleTargets, rankRows, runStyleRanking, validateScore } from '../scripts/perch-style.mjs';
 
 const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
 const targets = ['a.bend::solve', 'b.bend::solve'];
@@ -12,8 +13,8 @@ const key = 'offline-secret-must-not-be-recorded';
 const source = 'import Base\nimport ./helper.bend as H\ndef solve(x: U32) -> U32: H.next(x)\ndef unrelated() -> U32: 999\n';
 const score = level => ({ type: 'score', score: level, confidence: 1,
   probabilities: Object.fromEntries(config.dimensions[0].levels.map((_, i) => [i, i === level ? 1 : 0])) });
-const response = (brain = 3, delight = 2, model = 'offline-style-fixture') => ({ ok: true, json: async () => ({
-  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight) },
+const response = (brain = 3, delight = 2, model = 'offline-style-fixture', memetic = 3) => ({ ok: true, json: async () => ({
+  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight), highly_memetic: score(memetic) },
   usage: { input_tokens: 100, output_tokens: 10 },
 }) });
 
@@ -39,7 +40,7 @@ test('rank preflight uses exact parsed units and working-copy helpers; all input
   const run = selection => runStyleRanking(['--live', '--cohort=Add one', ...selection], {
     root, env: { PERCH_API_KEY: key }, fetchImpl: async () => { calls++; return response(); },
   });
-  await assert.rejects(run([targets[0]]), /at least two/);
+  await assert.rejects(run([]), /at least one/);
   await assert.rejects(run([...targets, 'b.bend::missing']), /No applicable parsed declaration/);
   await assert.rejects(prepareStyleTargets(['a.bend', 'b.bend'], 'Add one', { ...config, max_units: 2 }, root), /limited to 2/);
   await writeFile(join(root, 'b.bend'), 'def broken( -> U32: 0\n');
@@ -50,7 +51,7 @@ test('rank preflight uses exact parsed units and working-copy helpers; all input
   assert.equal(calls, 0);
 });
 
-test('one request per unit carries two ordinal questions; receipts rank each axis without source or secrets', async t => {
+test('one request per unit carries three ordinal questions; receipts assess each axis without source or secrets', async t => {
   const root = await fixture(t), requests = [], output = [];
   const code = await runStyleRanking(args, { root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x),
     fetchImpl: async (_url, request) => {
@@ -59,10 +60,10 @@ test('one request per unit carries two ordinal questions; receipts rank each axi
       return requests.length === 1 ? response(4, 1) : response(2, 4);
     },
   });
-  assert.equal(code, 0);
+  assert.equal(code, 3, 'completed review with unmet style targets needs attention');
   assert.equal(requests.length, 2);
   for (const request of requests) {
-    assert.equal(Object.keys(request.questions).length, 2);
+    assert.equal(Object.keys(request.questions).length, 3);
     assert.ok(Object.values(request.questions).every(q => q.type === 'score' && q.criteria.length === 5));
   }
   const report = JSON.parse(output[0]);
@@ -73,6 +74,9 @@ test('one request per unit carries two ordinal questions; receipts rank each axi
   assert.equal(report.rankings[1].entries[0].target, targets[1]);
   assert.equal(report.typechecked, false);
   assert.equal(report.behavioral_equivalence_checked, false);
+  assert.equal(report.assessments.length, 6);
+  assert.equal(report.style_summary.meets_all, 0);
+  assert.equal(report.style_summary.needs_review, 2);
   const receipts = await readdir(join(root, '.perch/usage'));
   assert.equal(receipts.length, 1);
   const saved = await readFile(join(root, '.perch/usage', receipts[0]), 'utf8');
@@ -97,8 +101,94 @@ test('partial transport failure records incomplete coverage, stops requests, and
   assert.equal(report.provider_requests, 2);
   assert.equal(report.provider_responses, 1);
   assert.deepEqual(report.rows, []);
+  assert.equal(report.completed_rows.length, 1, 'retain valid answers for explicit reuse after a failure');
   assert.deepEqual(report.rankings, []);
   assert.ok(!JSON.stringify([report, errors]).includes(key));
+});
+
+test('a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar', async t => {
+  const root = await fixture(t), output = [];
+  const code = await runStyleRanking(['--live', '--json', targets[0]], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), fetchImpl: async (_url, request) => {
+      const input = JSON.parse(request.body);
+      assert.match(input.state.cohort, /No alternative implementation is required/);
+      return response(3, 3, 'offline-style-fixture', 3);
+    },
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 0);
+  assert.equal(report.provider_requests, 1);
+  assert.equal(report.style_summary.meets_all, 1);
+  const uncertain = { ...score(3), score: 2.5, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
+  const assessment = assessStyle([{ target: 'x', answers: { maximally_big_brain: score(4), delightful_to_read: uncertain, highly_memetic: score(1) } }], config);
+  assert.deepEqual(assessment.map(a => a.status), ['meets_target', 'uncertain', 'below_target']);
+});
+
+test('whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs', async t => {
+  const root = await fixture(t), output = [];
+  execFileSync('git', ['init', '-q'], { cwd: root });
+  await writeFile(join(root, '.gitignore'), 'ignored.bend\n');
+  await writeFile(join(root, 'ignored.bend'), 'def hidden(): 0\n');
+  await writeFile(join(root, 'types.bend'), 'import Base\ntype Flag is Data: Off{} On{}\n');
+  await writeFile(join(root, 'empty.bend'), 'import Base\n');
+  await writeFile(join(root, 'broken.bend'), 'def broken( -> U32: 0\n');
+  execFileSync('git', ['add', 'a.bend'], { cwd: root });
+  const code = await runStyleRanking(['--live', '--all', '--json', '--jobs=2'], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), stderr: () => {},
+    fetchImpl: async () => response(3, 3),
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 1, 'an unreadable file must not masquerade as full coverage');
+  assert.equal(report.status, 'incomplete');
+  assert.equal(report.coverage.ranked, 5);
+  assert.equal(report.provider_requests, 5);
+  const datatype = report.rows.find(r => r.target === 'types.bend::Flag');
+  assert.equal(datatype.kind, 'bend_datatype');
+  assert.equal(datatype.context.files[0].path, 'types.bend');
+  assert.deepEqual(report.inventory.unranked.map(f => f.path), ['broken.bend']);
+  assert.deepEqual(report.inventory.empty_files, ['empty.bend']);
+  assert.ok(!report.inventory.discovered_files.includes('ignored.bend'));
+  assert.equal(report.rankings.length, 3);
+});
+
+test('explicit reuse avoids paid repeats and invalidates when helper context changes', async t => {
+  const root = await fixture(t);
+  const run = (extra, output) => runStyleRanking(['--live', '--json', targets[0], ...extra], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), fetchImpl: async () => response(3, 3),
+  });
+  const first = [];
+  assert.equal(await run(['--output=first.json.gz'], first), 0);
+  const second = [];
+  assert.equal(await run(['--reuse=first.json.gz'], second), 0);
+  assert.equal(JSON.parse(second[0]).provider_requests, 0);
+  assert.equal(JSON.parse(second[0]).reused_units, 1);
+  await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
+  const third = [];
+  assert.equal(await run(['--reuse=first.json.gz'], third), 0);
+  assert.equal(JSON.parse(third[0]).provider_requests, 1);
+  assert.equal(JSON.parse(third[0]).reused_units, 0);
+});
+
+test('concurrent responses preserve target attribution and changes during review are disclosed', async t => {
+  const root = await fixture(t), output = [];
+  const code = await runStyleRanking(['--live', '--json', '--jobs=2', ...targets], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), stderr: () => {},
+    fetchImpl: async (_url, request) => {
+      const input = JSON.parse(request.body);
+      if (input.state.source.includes('H.next')) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+        await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
+        return response(4, 3);
+      }
+      return response(3, 4);
+    },
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 3, 'changed working copy needs attention even if recorded snapshot met targets');
+  assert.deepEqual(report.source_freshness.changed_sources, ['helper.bend']);
+  assert.deepEqual(report.rows.map(r => r.target), targets);
+  assert.equal(report.rows[0].answers.maximally_big_brain.score, 4);
+  assert.equal(report.rows[1].answers.delightful_to_read.score, 4);
 });
 
 test('missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings', async t => {

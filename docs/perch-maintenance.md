@@ -24,13 +24,18 @@ the request or verdict. Receipts omit credentials, source text, and raw provider
 errors. They are local operational data, not a public artifact.
 Native `scan` results still live in Perch's own store; read those as well.
 
-Opt-in `lint:rank` runs use `command: style-rank` receipts and
-[perch-style.json](../perch-style.json). Review these as ordinal preferences,
-not passed checks or defect precision. Compare model/rubric/context identities,
-near ties, and human preferences recorded before model review. Retain fresh
-held-out alternatives after rubric changes; do not promote the small style
-pilot into an accuracy claim. The [style guide](perch-style.md) defines the
-desired taste and current evidence limits.
+`lint:style` (`lint:rank` is an alias) uses `command: style-rank` receipts and
+[perch-style.json](../perch-style.json). Review materially changed declarations
+against all three absolute style targets: conceptual compression, high dopamine,
+and memetic identity. No alternative implementation or comparison cohort is
+required. Report below-target and uncertain units instead of hiding them behind
+a clean defect-check count. Rankings remain a secondary view. Compare model,
+rubric and context identities, distributions, and human preferences recorded
+before model review. Existing matching receipts can be explicitly reused;
+unchanged project-wide repeats are unnecessary. Retain fresh held-out examples
+after rubric changes; do not promote the small historical two-axis pilot into
+an accuracy claim for the current three-axis rubric. The [style guide](perch-style.md)
+defines the desired taste and current evidence limits.
 
 Record a concise entry in `docs/perch-review-log.md` after meaningful rework,
 a discovered missed defect, a false positive, or repeated unhelpful findings.
