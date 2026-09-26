@@ -62,9 +62,23 @@ observations across native and Bun, and four type-valid semantic mutants.
 The coordinator matched all 24 recorded input hashes and both generated parser
 artifact hashes without rerunning the experiments. `Parsed` is a syntax result:
 the eight semantic negatives also parse and are rejected by the pinned reference.
-Resolution, type/quantity checking, independent evaluation, and Wasm emission
-remain subsequent parts of the compiler milestone. The [law review](../research/compiler-frontend/LAW_REVIEW.md)
+At that checkpoint, resolution, type/quantity checking, independent evaluation,
+and Wasm emission remained subsequent parts of the compiler milestone. The [law review](../research/compiler-frontend/LAW_REVIEW.md)
 states the finite coverage and the limited universal proof claims.
+
+**Checker update, 2026-09-26, commit `df82e1f`:** Compiler Planning now resolves
+and checks this enum profile. The [checker receipt](../tests/compiler-checker/receipts/checker.json)
+records 49 reference fixtures, 98 exact native/Bun observations, seven additional
+helper/boundary laws, and seven type-valid semantic mutants. The coordinator
+matched all 69 input hashes, three seed-file hashes and both generated artifacts;
+all recorded reference/lane outcomes match the unchanged literal expectations,
+and all seven mutant records pass type/build before differing semantically.
+These are checks of retained evidence, not rerun experiments. The receipt's
+SHA-256 is `43d49f1fac09fa367f690de5a5a9057457a6717048c474be105aa2d77bb985cc`.
+The [checker law packet](../research/compiler-checker/LAW_REVIEW.md) distinguishes
+helper laws and finite cases from a general checker-soundness theorem.
+`Checked` observes a resolved term; independent evaluation and direct Wasm
+emission remain the next compiler increments.
 
 The pinned Bend 2.0.29 profile requires live function calls to follow declaration
 order; forward datatype references are accepted. Constructor-valued local
@@ -73,13 +87,24 @@ reference restriction to parameter scrutinees rather than computed or local
 values. Keep these compatibility constraints in fixtures and diagnostics;
 they do not require changing a published support package.
 
-The next compiler increment has these requirements:
+The compiler's current environment contracts and next emitter requirements are:
 
 | Need | Contract and reuse boundary | Defining witnesses |
 | --- | --- | --- |
-| Lexical-level environments | Resolve each occurrence to a binder level; append new bindings, preserve shadowing and branch scope. Symbols identify spellings, not lexical binders. Vec/IntMap can hold reusable binder/type metadata; their Data contracts do not supply an affine runtime environment. | Same spelling at distinct levels; initializer cannot see its new binder; inner shadowing leaves outer identity intact; renamed binders preserve behavior. |
-| Per-binder quantity usage | Sequential usage adds; mutually exclusive alternatives take maximum. Sequence scrutinee usage before arm usage. Erased terms still require scope/type checks but consume no runtime value. IntMap's `union_with` can combine maps; because U32 addition wraps, the compiler must choose checked or saturating counts and align shared lexical levels before branch joins. | Affine reuse across sequential expressions fails; use in separate alternatives is not summed; branch-local levels do not alias live outer binders; erased live inspection fails with a nearby valid control. |
+| Lexical-level environments | Preserve each binding's lexical level, quantity, type ID, parameter status and optional branch-known tag. Lookup selects the nearest binder, including repeated parameter names. Symbols identify spellings, not lexical binders. Vec/IntMap can hold reusable metadata; their Data contracts do not supply an affine runtime environment. | Same spelling at distinct levels; repeated parameters shadow earlier names; initializer cannot see its new binder; inner shadowing leaves outer identity intact; renamed binders preserve behavior. |
+| Match refinement and eligibility | In a nullary constructor arm, replace occurrences of the matched binder with fresh values of the known type/tag. Refine by lexical level only within that branch. Matching advances the minimum eligible parameter level; a local binding closes outer parameters to further matching. | Matched-duplicate succeeds with fresh constructors; no refinement escapes to sibling arms; earlier, already matched, computed and local scrutinees are rejected. This is not a duplication rule for general owned payloads or constructor fields. |
+| Per-binder quantity usage | After refinement, only live affine references contribute lexical levels. Sequential sets must be disjoint; alternative sets are unioned. Sequence scrutinee usage before refined arm usage, remove locals on scope exit, and retain initializer usage even for unused locals. Erased terms still require scope/type checks but consume no runtime value. A future IntMap representation must preserve this algebra and binder alignment; wrapping U32 counts are not equivalent. | Sequential reuse fails; use in separate alternatives is not summed; fresh known constructors consume no old binder; branch-local levels do not alias live outer binders; erased live inspection fails with a nearby valid control. |
 | Wasm integer encodings | Add checked ULEB128 lengths/indices and signed LEB128 i32 constants above OutputBuilder's published raw-byte API. Validate encoded lengths, section/body sizes and index bounds before reporting complete emission. | Unsigned 7-bit boundaries, signed sign-extension boundaries and i32 extrema; canonical encodings and independent round trips; byte-limit failure cannot return a successful partial module. |
+
+The concrete environment is in [scope.bend](../src/scope.bend): live affine-set
+composition at lines 13–25, known-tag occurrences at 45–55, and extension,
+branch refinement and match eligibility at 61–88. The
+[matched-duplicate fixture](../tests/compiler-checker/fixtures/matched-duplicate.bend)
+uses `first(x,x)` in each arm: the resolved arguments are two fresh constructors,
+not two references to the consumed parameter. Preserve this observation when
+replacing the environment or usage-set representation. Current scope lookup and
+set merging use bounded lists with linear/quadratic work; this checkpoint does
+not claim the efficient indexed replacement has been implemented.
 
 Compiler Planning retains `src/`, its corpus and frontend research ownership.
 This update records consumer requirements; it assigns no package implementation
