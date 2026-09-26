@@ -28,7 +28,10 @@ Verified against Bend 2.0.29 / 574b6d39a235b539eb19a5c532993a0abb3d11ad:
   fetched file SHA-256 values and recomputed package hash match the reviewed upload.
 - Perch: the original release recorded unavailable live inference. A subsequent
   live audit completed on jev-1.13.0; see PERCH_REPORT.md for full source coverage,
-  advisory control calibration, misses and adjudication. Published Bend is unchanged.
+  advisory control calibration, misses and adjudication. A later parsed pass
+  reviewed 35 implementation declarations (350 checks) and the law packet
+  (9 checks), with 36 completed responses and no findings; see
+  PERCH_PARSED_REPORT.md. Published Bend is unchanged.
 
 Limits: Data elements only; Vec is affine. Allocation policy errors are explicit,
 actual host OOM remains a runtime failure. No GPU execution or all-state universal

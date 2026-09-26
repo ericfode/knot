@@ -1,0 +1,100 @@
+{
+  "scope": "Fresh parsed implementation and law-packet review; no unchanged test fixture sweep",
+  "model": "jev-1.13.0",
+  "targets": [
+    {
+      "target": "packages/vec/main.bend",
+      "declarations": 35,
+      "checks": 350,
+      "provider_responses": 35,
+      "receipt": "implementation-receipt.json",
+      "source_sha256": "baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0"
+    },
+    {
+      "target": "packages/vec/LAW_REVIEW.md",
+      "checks": 9,
+      "provider_responses": 1,
+      "receipt": "law-packet-receipt.json",
+      "source_sha256": "f0ca169fc459739d7c50d2c2e2bdc5ef1717c68dc7f1ddc8420a95876e984f4d"
+    }
+  ],
+  "public_declarations": [
+    "Vec.maximum",
+    "Vec.bounded",
+    "Vec.new",
+    "Vec.length",
+    "Vec.capacity",
+    "Vec.limit",
+    "Vec.get",
+    "Vec.swap",
+    "Vec.set",
+    "Vec.reserve",
+    "Vec.push",
+    "Vec.pop",
+    "Vec.slice",
+    "Vec.to_list"
+  ],
+  "helpers": [
+    "slot_result",
+    "observed",
+    "get_if",
+    "swap_if",
+    "discard_value",
+    "set_result",
+    "plan_step",
+    "unpack",
+    "copy_slots",
+    "allocate",
+    "reserve_grow",
+    "reserve_limit",
+    "push_ready",
+    "push_reserved",
+    "push_if",
+    "pop_if",
+    "prepend_slot",
+    "collect",
+    "slice_collected",
+    "list_collected",
+    "slice_if"
+  ],
+  "findings": {
+    "confirmed": [],
+    "false_positive": [],
+    "duplicate": [],
+    "unresolved": []
+  },
+  "context": {
+    "basis": "working-tree",
+    "truncated_units": [],
+    "unresolved_reason": "unresolved-or-builtin",
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    },
+    "parser_profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "parser_metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "changes_this_pass": [
+    "owned review driver",
+    "parsed-unit and law-packet receipts",
+    "current proof and published-hash validation",
+    "audit report and index links"
+  ],
+  "unchanged": [
+    "all 13 uploaded package files",
+    "accepted laws and proof bodies",
+    "implementation, independent model, conformance and benchmark",
+    "all rules",
+    "published content hash"
+  ],
+  "prior_work_not_repeated": "Previous whole-file audit, dedicated-rule calibration/refinement, corrected negative fixture, runtime/mutation/scaling gates",
+  "style": "No equivalent implementation alternatives available; mechanism explanations only; no ordinal ranking requested or fabricated."
+}

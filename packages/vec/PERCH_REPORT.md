@@ -1,5 +1,8 @@
 # Vec live Perch audit — 2026-09-26
 
+> Subsequent parsed-declaration pass: [PERCH_PARSED_REPORT.md](PERCH_PARSED_REPORT.md).
+> The whole-file audit below is historical.
+
 **No production finding was reported.** 13 Bend files and the current law packet received live `jev-1.13.0` checks. A missed-control defect in the dedicated rule was repaired without changing Bend semantics, accepted laws, or its 80% floor. All 13 uploaded files still match `0xd684886d10b431b9dce6c3b2d1ef1980`; nothing was republished.
 
 Perch 0.3.5 requested `jev-latest`, resolved to `jev-1.13.0`: **25 invocations, 25 completed provider responses, 114 rule/file checks**. No zero-coverage, error, rate-limit retry, or partial request was counted. Commands used the root `npm run lint -- <path> --rules <names> --json` wrapper. Credentials were never read, copied or printed by the audit script.
