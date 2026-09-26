@@ -1,0 +1,76 @@
+{
+  "rows": [
+    {
+      "name": "proof-zero-holes",
+      "args": [
+        "scripts/bend-reference",
+        "packages/int_map/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "seconds": 0.5417020001914352,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "name": "native-compile",
+      "args": [
+        "scripts/bend-reference",
+        "packages/int_map/conformance.bend",
+        "-o",
+        "packages/int_map/build/perch-declarations-2026-09-26/conformance"
+      ],
+      "exit": 0,
+      "seconds": 0.916153458179906,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "native-conformance",
+      "args": [
+        "packages/int_map/build/perch-declarations-2026-09-26/conformance"
+      ],
+      "exit": 0,
+      "seconds": 0.28380120918154716,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\n",
+      "stderr": ""
+    },
+    {
+      "name": "javascript-compile",
+      "args": [
+        "scripts/bend-reference",
+        "packages/int_map/conformance.bend",
+        "-o",
+        "packages/int_map/build/perch-declarations-2026-09-26/conformance.js"
+      ],
+      "exit": 0,
+      "seconds": 0.12218695809133351,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "javascript-conformance",
+      "args": [
+        "bun",
+        "packages/int_map/build/perch-declarations-2026-09-26/conformance.js"
+      ],
+      "exit": 0,
+      "seconds": 0.07886695815250278,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\n",
+      "stderr": ""
+    }
+  ],
+  "published_hash": "0x99e32f5f97dad3791a32b01d133555c5",
+  "published_files_unchanged": {
+    "LAWS.bend": true,
+    "LICENSE": true,
+    "PROOF.bend": true,
+    "conformance.bend": true,
+    "example.bend": true,
+    "fixtures.bend": true,
+    "main.bend": true,
+    "model.bend": true,
+    "release.bend": true
+  },
+  "republished": false
+}

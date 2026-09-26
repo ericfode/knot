@@ -55,3 +55,9 @@ U32 bit-injectivity theorem, no heap-allocation telemetry. Fold/size/union
 behavior is covered by concrete laws and runtime/model checks, not a universal
 refinement proof. SPEC.md describes the reachable-map domain, native/unsafe
 trust dependencies, temporary path allocations, and reclamation costs.
+
+Fresh bounded declaration review (2026-09-26): 223 checks, 24 completed provider
+responses, 23 source declarations plus the law packet, no reported package
+findings. Proof and native/JS conformance rerun successfully. No package code or
+published source changed in this pass. PERCH_DECLARATION_REPORT.md records exact
+scope, context limits, receipts and a shared wrapper-metadata proposal.
