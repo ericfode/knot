@@ -53,6 +53,39 @@ before emission. Namespace and lowering-origin preservation belong to the
 compiler's use of these APIs. None of these host package releases establishes
 Wasm/GPU execution or a concurrent runtime ownership protocol.
 
+## Frontend requirements handoff
+
+On 2026-09-26 Compiler Planning completed the first enum-profile lexer/parser
+under [`src/`](../src/SPEC.md). The [frontend receipt](../tests/subsets/receipts/frontend.json)
+records four checked boundary laws, 14 reference fixtures, 24 boundary
+observations across native and Bun, and four type-valid semantic mutants.
+The coordinator matched all 24 recorded input hashes and both generated parser
+artifact hashes without rerunning the experiments. `Parsed` is a syntax result:
+the eight semantic negatives also parse and are rejected by the pinned reference.
+Resolution, type/quantity checking, independent evaluation, and Wasm emission
+remain subsequent parts of the compiler milestone. The [law review](../research/compiler-frontend/LAW_REVIEW.md)
+states the finite coverage and the limited universal proof claims.
+
+The pinned Bend 2.0.29 profile requires live function calls to follow declaration
+order; forward datatype references are accepted. Constructor-valued local
+initializers require a type annotation. The source contract also retains the
+reference restriction to parameter scrutinees rather than computed or local
+values. Keep these compatibility constraints in fixtures and diagnostics;
+they do not require changing a published support package.
+
+The next compiler increment has these requirements:
+
+| Need | Contract and reuse boundary | Defining witnesses |
+| --- | --- | --- |
+| Lexical-level environments | Resolve each occurrence to a binder level; append new bindings, preserve shadowing and branch scope. Symbols identify spellings, not lexical binders. Vec/IntMap can hold reusable binder/type metadata; their Data contracts do not supply an affine runtime environment. | Same spelling at distinct levels; initializer cannot see its new binder; inner shadowing leaves outer identity intact; renamed binders preserve behavior. |
+| Per-binder quantity usage | Sequential usage adds; mutually exclusive alternatives take maximum. Sequence scrutinee usage before arm usage. Erased terms still require scope/type checks but consume no runtime value. IntMap's `union_with` can combine maps; because U32 addition wraps, the compiler must choose checked or saturating counts and align shared lexical levels before branch joins. | Affine reuse across sequential expressions fails; use in separate alternatives is not summed; branch-local levels do not alias live outer binders; erased live inspection fails with a nearby valid control. |
+| Wasm integer encodings | Add checked ULEB128 lengths/indices and signed LEB128 i32 constants above OutputBuilder's published raw-byte API. Validate encoded lengths, section/body sizes and index bounds before reporting complete emission. | Unsigned 7-bit boundaries, signed sign-extension boundaries and i32 extrema; canonical encodings and independent round trips; byte-limit failure cannot return a successful partial module. |
+
+Compiler Planning retains `src/`, its corpus and frontend research ownership.
+This update records consumer requirements; it assigns no package implementation
+and changes none of the six published sources. Additional package work and
+release decisions remain separate from the paused campaign heartbeat.
+
 ## Accepted runtime direction and follow-on ownership
 
 On 2026-09-26 the user selected **adaptive continuation tasks** in Compiler
