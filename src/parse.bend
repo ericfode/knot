@@ -8,7 +8,7 @@ type Mode is Data:
   Book{}
   Declaration{}
   Constructors{parent: U32, column: U32}
-  Parameters{}
+  Parameters{close: String}
   Arguments{close: String}
   Term{}
   Body{parent: U32}
@@ -75,11 +75,21 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
       S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,word),u => Done{t},u =>
         Fail{S.Invalid{"parse",String.append("expected-",word),S.at(h)}})
 
+def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  match rest:
+    case Con{h,t}:
+      S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"<"),Bool.or(S.matches(h,"-"),S.matches(h,"("))),u =>
+        unsupported(rest,"parameter-type"),u => Done{Parsed{S.Parameter{name,quantity,typ},rest}})
+    case Nil{}: invalid(rest,"parameter")
+
 def parameter_parts(+quantity: U32, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{+name,Con{+colon,Con{+typ,+rest}}}:
-      S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.and(S.matches(colon,":"),S.identifier(typ))),u =>
-        Done{Parsed{S.Parameter{name,quantity,typ},rest}},u => invalid(ts,"parameter"))
+      S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.or(S.matches(colon,","),S.matches(colon,"}"))),u =>
+        unsupported(ts,"bare-quantity-field"),u =>
+      S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),S.matches(colon,":")),u =>
+        S.choose(Result<S.Error,Parsed>,S.identifier(typ),u => parameter_end(name,quantity,typ,rest),u =>
+          unsupported(Con{typ,rest},"parameter-type")),u => invalid(ts,"parameter")))
     case _: invalid(ts,"parameter")
 
 def parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -104,13 +114,6 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
           invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
-
-def constructor_close(+ts: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
-  match ts:
-    case Con{+h,+t}:
-      S.choose(Result<S.Error,List<&2,S.Token>>,S.matches(h,"}"),u => Done{t},u =>
-        Fail{S.Unsupported{"parse","constructor-fields",S.at(h)}})
-    case _: Fail{S.Invalid{"parse","constructor",S.here(ts)}}
 
 # One recursive dispatcher makes the parser's depth budget explicit and avoids
 # unchecked mutual recursion. Every recursive invocation decreases fuel.
@@ -140,17 +143,18 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.identifier(name),Bool.or(U32.is_eq(column,0),U32.is_eq(S.column(name),column))),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(tail,"{"),open =>
-              S.bind(List<&2,S.Token>,Parsed,constructor_close(open),closed =>
-                then(body_end(S.Constructor{name,Nil{}},closed),ctor => after =>
-                  then(run(n,Constructors{parent,S.column(name)},S.skip_lines(after)),more => end => prepend(ctor,more,end))))),u =>
+              then(run(n,Parameters{"}"},open),fields => closed =>
+                then(wrap_call(name,True{},fields,closed),value => end =>
+                  then(body_end(value,end),ctor => after =>
+                    then(run(n,Constructors{parent,S.column(name)},S.skip_lines(after)),more => end => prepend(ctor,more,end)))))),u =>
             unsupported(tokens,"constructor-fields-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
-    case 1n+ +n Parameters{}:
+    case 1n+ +n Parameters{+close}:
       match tokens:
         case Con{+h,+t}:
-          S.choose(Result<S.Error,Parsed>,S.matches(h,")"),u =>
+          S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(parameter(tokens),p => rest => run(n,ListTail{")",p,True{}},rest)))
+            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{}},rest)))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Arguments{+close}:
       match tokens:
@@ -165,7 +169,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
-            then(run(n,Bool.pick(Mode,parameters,Parameters{},Arguments{close}),t),more => rest => prepend(head,more,rest)),u =>
+            then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close}),t),more => rest => prepend(head,more,rest)),u =>
             invalid(tokens,"argument-separator")))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{}:
@@ -207,7 +211,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           run(n,TypeKind{name},kind)),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"def"),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,"("),args =>
-          then(run(n,Parameters{},args),params => rest => run(n,FunctionTail{name,params},rest))),u =>
+          then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},rest))),u =>
         unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name"))
     case 1n+ +n TypeKind{+name}:
       match tokens:

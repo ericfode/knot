@@ -33,12 +33,12 @@ def show(-A: Data, result: Result<S.Error,List<&2,A>>) -> String:
     case Fail{e}: D.error(e)
 
 def main() -> IO(Unit):
-  +ts : List<&2,C.Enum> = [C.Enum{token(0),False{},[token(0)]}]
+  +ts : List<&2,C.Datatype> = [C.Datatype{token(0),False{},[C.Constructor{token(0),Nil{}}]}]
   do IO<Unit>:
-    IO.print(show(S.Token,G.constructors(ctors(256n,0),Nil{},0)))
-    IO.print(show(S.Token,G.constructors(ctors(257n,0),Nil{},0)))
-    IO.print(show(C.Enum,G.collect_types(types(256n,0),0)))
-    IO.print(show(C.Enum,G.collect_types(types(257n,0),0)))
+    IO.print(show(C.Constructor,G.constructors(ctors(256n,0),Nil{},0)))
+    IO.print(show(C.Constructor,G.constructors(ctors(257n,0),Nil{},0)))
+    IO.print(show(C.Datatype,G.collect_types(types(256n,0),0)))
+    IO.print(show(C.Datatype,G.collect_types(types(257n,0),0)))
     IO.print(show(C.Parameter,G.parameters(params(256n,0),ts,0)))
     IO.print(show(C.Parameter,G.parameters(params(257n,0),ts,0)))
     IO.print(show(C.Signature,G.collect_signatures(funcs(256n,0),ts,0)))

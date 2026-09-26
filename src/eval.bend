@@ -57,14 +57,14 @@ def enter(function: C.Function, args: List<&2,C.Term>, caller: List<&2,Entry>, f
   match function:
     case C.Function{C.Signature{token,params,result},body}: Arguments{params,args,0,caller,Nil{},body,frames}
 
-def enum_tag(types: List<&2,C.Enum>, +index: U32, +tag: U32) -> Result<S.Error,Unit>:
+def enum_tag(types: List<&2,C.Datatype>, +index: U32, +tag: U32) -> Result<S.Error,Unit>:
   match types:
     case Nil{}: internal(Unit,"type-index")
-    case Con{C.Enum{name,data,ctors},+tail}:
+    case Con{C.Datatype{name,data,ctors},+tail}:
       S.choose(Result<S.Error,Unit>,U32.is_eq(index,0),u =>
-        S.choose(Result<S.Error,Unit>,U32.is_lt(tag,U32.from_nat(List.length(&2,S.Token,ctors))),u => Done{Unit{}},u => host(Unit,"argument-range")),u => enum_tag(tail,U32.sub(index,1),tag))
+        S.choose(Result<S.Error,Unit>,U32.is_lt(tag,U32.from_nat(List.length(&2,C.Constructor,ctors))),u => Done{Unit{}},u => host(Unit,"argument-range")),u => enum_tag(tail,U32.sub(index,1),tag))
 
-def host_argument(args: List<&2,U32>, type_id: U32, types: List<&2,C.Enum>, next: U32 -> Result<S.Error,State>) -> Result<S.Error,State>:
+def host_argument(args: List<&2,U32>, type_id: U32, types: List<&2,C.Datatype>, next: U32 -> Result<S.Error,State>) -> Result<S.Error,State>:
   match args:
     case Nil{}: host(State,"argument-arity")
     case Con{+tag,tail}:
@@ -128,16 +128,16 @@ def invoke(+book: C.Book, name: String, +args: List<&2,U32>, +fuel: Nat) -> Resu
     case C.Book{types,functions}:
       S.bind(C.Function,Value,function_named(functions,name),function => run(fuel,start(function,args),book))
 
-def constructor_name(ctors: List<&2,S.Token>, +tag: U32) -> Result<S.Error,String>:
+def constructor_name(ctors: List<&2,C.Constructor>, +tag: U32) -> Result<S.Error,String>:
   match ctors:
     case Nil{}: internal(String,"result-tag")
-    case Con{+head,+tail}:
+    case Con{C.Constructor{+head,fields},+tail}:
       S.choose(Result<S.Error,String>,U32.is_eq(tag,0),u => Done{String.append(S.text(head),"{}")},u => constructor_name(tail,U32.sub(tag,1)))
 
-def result_name(types: List<&2,C.Enum>, +index: U32, +tag: U32) -> Result<S.Error,String>:
+def result_name(types: List<&2,C.Datatype>, +index: U32, +tag: U32) -> Result<S.Error,String>:
   match types:
     case Nil{}: internal(String,"result-type")
-    case Con{C.Enum{name,data,+ctors},+tail}:
+    case Con{C.Datatype{name,data,+ctors},+tail}:
       S.choose(Result<S.Error,String>,U32.is_eq(index,0),u => constructor_name(ctors,tag),u => result_name(tail,U32.sub(index,1),tag))
 
 def describe(value: Value, book: C.Book) -> Result<S.Error,String>:

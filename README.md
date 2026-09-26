@@ -21,6 +21,11 @@ matches; fields and recursion remain outside this profile. This is a seed-built
 compiler that emits Wasm programs. Compiling itself and lowering source to the
 GPU remain subsequent milestones.
 
+The approved [longer goal](docs/SELF-HOSTING-GOAL.md) ends with a reproducible
+whole-compiler bootstrap and compiler-generated GPU execution. The first
+[structural increment](research/compiler-structural/SPEC.md) resolves and
+validates constructor field declarations; field execution remains unsupported.
+
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
 executable: 12 checked Bend laws, owned checkpoints and slots, and 38 actual
 WebGPU runs on an Apple M5 Max. The device code is handwritten WGSL driven by a

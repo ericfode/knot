@@ -1,14 +1,16 @@
 import Base
 import ./syntax.bend as S
 
-type Enum is Data:
-  Enum{token: S.Token, reusable: Bool, constructors: List<&2,S.Token>}
+type Constructor is Data:
+  Constructor{token: S.Token, fields: List<&2,Parameter>}
+type Datatype is Data:
+  Datatype{token: S.Token, reusable: Bool, constructors: List<&2,Constructor>}
 type Parameter is Data:
   Parameter{token: S.Token, quantity: U32, type_id: U32}
 type Signature is Data:
   Signature{token: S.Token, parameters: List<&2,Parameter>, result: U32}
 type Catalog is Data:
-  Catalog{types: List<&2,Enum>, signatures: List<&2,Signature>}
+  Catalog{types: List<&2,Datatype>, signatures: List<&2,Signature>}
 
 # Levels identify binders independently of display names. Branch scopes may
 # reuse levels. Branch and Sequence are internal traversal containers only.
@@ -23,7 +25,7 @@ type Term is Data:
 type Function is Data:
   Function{signature: Signature, body: Term}
 type Book is Data:
-  Book{types: List<&2,Enum>, functions: List<&2,Function>}
+  Book{types: List<&2,Datatype>, functions: List<&2,Function>}
 type Binding is Data:
   Binding{token: S.Token, level: U32, quantity: U32, type_id: U32, parameter: Bool, known: Maybe<&2,U32>}
 type Checked is Data:

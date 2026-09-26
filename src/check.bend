@@ -15,17 +15,17 @@ def expected(+token: S.Token, wanted: Maybe<&2,U32>, +value: C.Checked) -> Resul
     case Some{type_id} C.Checked{term,actual,uses}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(type_id,actual),u => Done{value},u => C.invalid(C.Checked,"type-mismatch",token))
 
-def enum_at(types: List<&2,C.Enum>, +index: U32) -> Result<S.Error,C.Enum>:
+def enum_at(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
   match types:
-    case Nil{}: C.internal(C.Enum,"type-index")
+    case Nil{}: C.internal(C.Datatype,"type-index")
     case Con{+head,+tail}:
-      S.choose(Result<S.Error,C.Enum>,U32.is_eq(index,0),u => Done{head},u => enum_at(tail,U32.sub(index,1)))
+      S.choose(Result<S.Error,C.Datatype>,U32.is_eq(index,0),u => Done{head},u => enum_at(tail,U32.sub(index,1)))
 
 def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
   match reference:
     case G.TypeRef{index,definition}: Done{Some{index}}
 
-def annotation(types: List<&2,C.Enum>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
+def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
   match token:
     case None{}: Done{None{}}
     case Some{name}:
@@ -37,7 +37,7 @@ def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(type_id,target),u => Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}},u => C.invalid(C.Checked,"type-mismatch",token))
     case _ None{}: C.invalid(C.Checked,"annotation-required",token)
 
-def constructor(args: List<&2,S.Node>, +types: List<&2,C.Enum>, +token: S.Token, +wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
+def constructor(args: List<&2,S.Node>, +types: List<&2,C.Datatype>, +token: S.Token, +wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match args:
     case Nil{}: S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),reference => constant(reference,token,wanted))
     case _: C.invalid(C.Checked,"constructor-arity",token)
@@ -72,7 +72,7 @@ def let_result(value: C.Checked, body: C.Checked, +token: S.Token, +level: U32, 
       S.bind(List<&2,U32>,C.Checked,E.sequential(uses,E.remove(body_uses,level),token),merged =>
         Done{C.Checked{C.Let{token,level,q,type_id,initial,result},result_type,merged}})
 
-def pattern(node: S.Node, +types: List<&2,C.Enum>) -> Result<S.Error,G.ConstructorRef>:
+def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.ConstructorRef>:
   match node:
     case S.Constructor{token,Nil{}}: G.find_constructor(types,token,0)
     case S.Constructor{token,args}: C.invalid(G.ConstructorRef,"pattern-arity",token)
@@ -85,15 +85,15 @@ def pattern_id(reference: G.ConstructorRef, +type_id: U32, +seen: List<&2,U32>, 
       S.choose(Result<S.Error,U32>,U32.is_eq(actual,type_id),u =>
         S.choose(Result<S.Error,U32>,E.contains(seen,tag),u => C.unsupported(U32,"duplicate-arm",token),u => Done{tag}),u => C.invalid(U32,"pattern-type",token))
 
-def complete_arms(definition: C.Enum, seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,Unit>:
+def complete_arms(definition: C.Datatype, seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,Unit>:
   match definition:
-    case C.Enum{name,data,tokens}:
-      S.choose(Result<S.Error,Unit>,Nat.is_eq(List.length(&2,S.Token,tokens),List.length(&2,U32,seen)),u => Done{Unit{}},u => C.invalid(Unit,"missing-arm",token))
+    case C.Datatype{name,data,tokens}:
+      S.choose(Result<S.Error,Unit>,Nat.is_eq(List.length(&2,C.Constructor,tokens),List.length(&2,U32,seen)),u => Done{Unit{}},u => C.invalid(Unit,"missing-arm",token))
 
-def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Enum>, +type_id: U32, +seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,Unit>:
+def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +type_id: U32, +seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,Unit>:
   match nodes:
     case Nil{}:
-      S.bind(C.Enum,Unit,enum_at(types,type_id),definition => complete_arms(definition,seen,token))
+      S.bind(C.Datatype,Unit,enum_at(types,type_id),definition => complete_arms(definition,seen,token))
     case Con{S.Arm{+arm,pat,body},+tail}:
       S.bind(G.ConstructorRef,Unit,pattern(pat,types),reference =>
         S.bind(U32,Unit,pattern_id(reference,type_id,seen,arm),tag => patterns(tail,types,type_id,Con{tag,seen},token)))
@@ -118,13 +118,13 @@ def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>,
       S.bind(C.Checked,C.Checked,next(params),value =>
         S.bind(C.Checked,C.Checked,call_result(value,token,index,result),checked => expected(token,wanted,checked)))
 
-def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Enum>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
     case C.Checked{term,+type_id,uses}:
-      S.bind(C.Enum,C.Checked,enum_at(types,type_id),definition =>
+      S.bind(C.Datatype,C.Checked,enum_at(types,type_id),definition =>
         S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id))))
 
-def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, types: List<&2,C.Enum>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:
     case C.Binding{+name,+level,+q,+type_id,+param,+known} Some{target}:
       S.bind(Unit,C.Checked,patterns(arms,types,type_id,Nil{},token),u =>
@@ -195,10 +195,26 @@ def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.C
             S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,rest,catalog,U32.add(index,1),depth),remaining => Done{Con{head,remaining}}))
     case _: C.internal(List<&2,C.Function>,"function-node")
 
+# Until values/patterns and storage land, a fielded declaration cannot enter
+# the enum body checker or become a Built artifact, even when it is unused.
+def enum_constructors(ctors: List<&2,C.Constructor>) -> Result<S.Error,Unit>:
+  match ctors:
+    case Nil{}: Done{Unit{}}
+    case Con{C.Constructor{token,Nil{}},tail}: enum_constructors(tail)
+    case Con{C.Constructor{token,Con{head,tail}},rest}:
+      C.unsupported(Unit,"constructor-fields",token)
+
+def enum_profile(types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match types:
+    case Nil{}: Done{Unit{}}
+    case Con{C.Datatype{token,data,ctors},tail}:
+      S.bind(Unit,Unit,enum_constructors(ctors),u => enum_profile(tail))
+
 def resolved(+catalog: C.Catalog, nodes: List<&2,S.Node>, depth: Nat) -> Result<S.Error,C.Book>:
   match catalog:
     case C.Catalog{+types,sigs}:
-      S.bind(List<&2,C.Function>,C.Book,functions(nodes,sigs,catalog,0,depth),bodies => Done{C.Book{types,bodies}})
+      S.bind(Unit,C.Book,enum_profile(types),u =>
+        S.bind(List<&2,C.Function>,C.Book,functions(nodes,sigs,catalog,0,depth),bodies => Done{C.Book{types,bodies}}))
 
 def check(depth: Nat, root: S.Node) -> Result<S.Error,C.Book>:
   match depth root:

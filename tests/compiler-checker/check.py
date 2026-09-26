@@ -40,7 +40,7 @@ MUTANTS=[
  ('accept-erased-live','scope.bend','Bool.and(live,U32.is_eq(q,0)),u =>','False{},u =>','erased-type-live'),
  ('lose-refinement','scope.bend','Scope{refine(bindings,level,tag),next','Scope{bindings,next','matched-duplicate'),
  ('lose-shadow-identity','scope.bend','C.Binding{token,next,q,type_id,False{}','C.Binding{token,0,q,type_id,False{}','shadowing'),
- ('accept-missing-arm','check.bend','Nat.is_eq(List.length(&2,S.Token,tokens),List.length(&2,U32,seen))','True{}','missing-arm'),
+ ('accept-missing-arm','check.bend','Nat.is_eq(List.length(&2,C.Constructor,tokens),List.length(&2,U32,seen))','True{}','missing-arm'),
  ('accept-wrong-reference-type','check.bend','U32.is_eq(type_id,actual),u => Done{value}','True{},u => Done{value}','shadowing-type'),
  ('execute-erased-arguments','scope.bend','Bool.and(live,U32.is_ne(q,0))','live','erased-forward'),
 ]

@@ -1,0 +1,246 @@
+{
+  "profile": "knot-structural-declarations-1",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "cases": [
+    {
+      "file": "fixtures/bare-quantity-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tbare-quantity-field\t"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tbare-quantity-field\t"
+      }
+    },
+    {
+      "file": "fixtures/data-erased-type.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Payload Type{0 Payload[];}\n2 Box Data{0 Box[x@93:94:7:7=0:1;];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/data-owns-type.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data\n- observed : Type"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      }
+    },
+    {
+      "file": "fixtures/duplicate-field.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a fresh field name (duplicate declaration: x)"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tduplicate-field\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tduplicate-field\t"
+      }
+    },
+    {
+      "file": "fixtures/duplicate-field-across-constructors.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Box Type{0 Left[x@59:60:5:7=1:0;];1 Right[x@76:77:6:8=1:0;];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/field-quantities.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Payload Type{0 Payload[];}\n2 Box Data{0 Box[ghost@93:98:7:7=0:1;value@109:114:7:23=1:0;shared@123:129:7:37=2:0;];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/forward-field-type.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Box Data{0 Box[value@24:29:2:6=1:1;];}\n1 Flag Data{0 Off[];1 On[];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/function-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "file": "fixtures/many-owns-type.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data\n- observed : Type"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      }
+    },
+    {
+      "file": "fixtures/mutual-types.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Tree Type{0 Tip[];1 Branch[children@36:44:3:9=1:1;];}\n1 Forest Type{0 Empty[];1 More[head@92:96:6:7=1:0;tail@104:108:6:19=1:1;];}\n2 Flag Data{0 Off[];1 On[];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/nested-type-kind.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data\n- observed : Type"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      }
+    },
+    {
+      "file": "fixtures/plain-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Box Type{0 Box[value@58:63:5:6=1:0;];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/recursive-tree.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 0,
+        "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Tree Data{0 Leaf[value@60:65:5:7=1:0;];1 Fork[left@80:84:6:7=1:1;right@92:97:6:19=1:1;];}"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "file": "fixtures/type-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "catalog": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t"
+      },
+      "compiler": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t"
+      }
+    },
+    {
+      "file": "fixtures/unknown-field-type.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "observed : Missing"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-type\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-type\t"
+      }
+    },
+    {
+      "file": "fixtures/unused-invalid-fields.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "expected : Data\n- observed : Type"
+      },
+      "catalog": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      },
+      "compiler": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t"
+      }
+    }
+  ]
+}

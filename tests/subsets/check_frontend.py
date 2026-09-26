@@ -110,7 +110,7 @@ def main():
             ('source-exact', ' ' * 65536, [], 0, 'Parsed\t'),
             ('source-over', ' ' * 65537, [], 4, 'Exhausted\tlex'),
             ('import', 'import Base\n', [], 3, 'Unsupported\tparse'),
-            ('fields', 'type Box is Type:\n  Box{x: Box}\n', [], 3, 'Unsupported\tparse\tconstructor-fields'),
+            ('fields', 'type Box is Type:\n  Box{x: Box}\n', [], 0, 'Parsed\ttype Box Type(Box{1 x:Box})'),
             ('literal', 'def main() -> Flag:\n  "text"\n', [], 3, 'Unsupported\tlex\tliteral'),
             ('unicode', '# é\n', [], 3, 'Unsupported\tlex\tnon-ascii'),
             ('missing-colon', 'def main() -> Flag\n  On{}\n', [], 2, 'Invalid\tparse\tfunction-result'),

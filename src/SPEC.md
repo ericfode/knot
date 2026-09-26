@@ -56,6 +56,14 @@ effects remain explicitly unsupported. This restriction leaves recursive trees
 and field-bound variables outstanding for the broader S1 stage. A recognized
 unsupported form makes no claim about the validity of its remaining contents.
 
+The parser and catalog now have a separate
+[structural declaration checkpoint](../research/compiler-structural/SPEC.md).
+They preserve ordered field signatures and validate their declared kinds and
+quantities, including forward/mutual type references. A fielded datatype still
+reports `Unsupported check constructor-fields` before function-body checking.
+Known invalid field declarations can report Invalid first. This extends
+declaration inspection, not the accepted executable language or Wasm ABI.
+
 ## Binding and quantity semantics
 
 Resolved occurrences use lexical levels within a function environment, never
@@ -114,7 +122,7 @@ emission never calls the evaluator.
 characters and depth 512; parser depth is 512. Both frontend and checker depth
 are recursion-depth bounds, not total work counters. Overrides permit checker
 depth 0 through 4,096 and source budgets 0 through 65,536. The catalog allows
-256 types, 256 functions, 256 constructors per type and 256 parameters per
+256 types, 256 functions, 256 constructors per type, 256 fields per constructor and 256 parameters per
 function; lexical levels are limited to 4,096 per branch scope. Exceeding any
 of these bounds is exhaustion. Catalog passes and environment/set scans are
 structural list traversals bounded by these limits and the source cap. Lookup
