@@ -148,6 +148,24 @@ contract; fresh nullary constructor refinement does not license copying owned
 fields. The current evaluator's reusable enum values and scalar Wasm locals
 do not provide that heap or ownership protocol.
 
+**Structural-runtime handoff, 2026-09-26:** The approved longer goal is full
+Bend self-hosting through reproducible Wasm A2/A3, followed by compiler-generated
+WebGPU adaptive continuation tasks. The [runtime support plan](RUNTIME-SUPPORT-PLAN.md)
+maps the six existing packages to declaration/live-slot layouts, bounded owning
+storage, reusable Data lifetime, portable fresh handles, capture/join ownership,
+bounded frontiers and reclamation across suspended tasks. It defines the smallest
+acceptance probe and a semantic mutant for each missing contract. A fresh
+[13-case pinned-reference pass](runtime-support-reference-2026-09-26.json)
+matched seven accepted and six rejected field declarations; those checks do not
+establish runtime allocation. GC, reference counting and arena strategies remain
+unselected until their affine Type and reusable Data obligations are demonstrated.
+As required by the [active goal](SELF-HOSTING-GOAL.md), qualify GPU storage and
+lifetimes alongside structural runtime work; final generated-device acceptance
+follows A2/A3.
+This integration plan belongs to the ongoing compiler work; the package
+implementation/publication campaign remains paused and published ownership is
+unchanged.
+
 Compiler Planning retains `src/`, its corpus and frontend research ownership.
 This update records consumer requirements; it assigns no package implementation
 and changes none of the six published sources. Additional package work and

@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "observed_utc": "2026-09-26T23:35:18.234515+00:00",
+  "scope": "Pinned reference declaration-kind and name-resolution observations; not Knot field compilation or runtime storage validation",
+  "reference_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "version": "bend 2.0.29",
+  "reference_sha256": {
+    "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "prior_owner_probe": {
+    "path": ".local/compiler-structural/seed-probes.json",
+    "sha256": "6efe7215aa1c63fb22cadb410b71bd0bcdcdad4051361e817302169bf166a714",
+    "note": "Used for expected acceptance outcomes; new observations above include exact current source identities."
+  },
+  "cases": [
+    {
+      "path": "tests/compiler-structural/fixtures/data-erased-type.bend",
+      "sha256": "4d92b723477f8673e82e0b855612fd48667828a8d657abbe5dd96b6cb67dcb8e",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Payload is Type:\n  Payload{}\ntype Box is Data:\n  Box{-x: Payload}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/data-erased-type.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/data-owns-type.bend",
+      "sha256": "bad15c6ae2c30b1239d35d1786775cb1085d56b7e72e6d97c036605966bfb1ef",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Payload is Type:\n  Payload{}\ntype Box is Data:\n  Box{x: Payload}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/data-owns-type.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: Box\n6 | type Box is Data:\n7>|   Box{x: Payload}\n  |          ^^^^^^^\n8 | def main() -> Flag:\n"
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
+      "sha256": "0040bf176744762c03b7a5de18adf58531a48aade1786c6e463ba18904f66c4e",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Box is Type:\n  Left{x: Flag}\n  Right{x: Flag}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/duplicate-field.bend",
+      "sha256": "4da623b33ddd703abfd4a36d3dadee09a1485a4740a4bc9c146570f3cfe18a24",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Box is Type:\n  Box{x: Flag, x: Flag}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/duplicate-field.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a fresh field name (duplicate declaration: x)\n- observed : 'x'\nLocation:\n4 | type Box is Type:\n5>|   Box{x: Flag, x: Flag}\n  |                ^\n6 | def main() -> Flag:\n"
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/field-quantities.bend",
+      "sha256": "1811a2d0fcd4bfc66cf10e29d8e3ec42e3518fe6a2c4c9e46488689e6402a8ad",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Payload is Type:\n  Payload{}\ntype Box is Data:\n  Box{-ghost: Payload, value: Flag, +shared: Flag,}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/field-quantities.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/forward-field-type.bend",
+      "sha256": "4e0390963702285456506b7b892b66805bfff0e25e9820d3555d8d37b32de709",
+      "source": "type Box is Data:\n  Box{value: Flag}\ntype Flag is Data:\n  Off{}\n  On{}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/forward-field-type.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/many-owns-type.bend",
+      "sha256": "18a353b3c5faee5e95eface31813e722cdd810ddfd93788f85f498ff3cb49e6b",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Payload is Type:\n  Payload{}\ntype Box is Type:\n  Box{+x: Payload}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/many-owns-type.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: Box\n6 | type Box is Type:\n7>|   Box{+x: Payload}\n  |           ^^^^^^^\n8 | def main() -> Flag:\n"
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/mutual-types.bend",
+      "sha256": "207c8c569c449aa9e25a3eeccf3c32abc0c2611b962d00d7af61d9e696fd6e28",
+      "source": "type Tree is Type:\n  Tip{}\n  Branch{children: Forest}\ntype Forest is Type:\n  Empty{}\n  More{head: Tree, tail: Forest}\ntype Flag is Data:\n  Off{}\n  On{}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/mutual-types.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/nested-type-kind.bend",
+      "sha256": "c7fb244217f50732dd17916dc5037654330d77f4273fd3d2935cd51727d50c6c",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Owned is Type:\n  Owned{}\ntype Middle is Type:\n  Middle{x: Owned}\ntype Outer is Data:\n  Outer{x: Middle}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/nested-type-kind.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: Outer\n 8 | type Outer is Data:\n 9>|   Outer{x: Middle}\n   |            ^^^^^^\n10 | def main() -> Flag:\n"
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/plain-field.bend",
+      "sha256": "bf1107eef9904d5e85147a4133e57438535a89aa9ae6b4199479c948da65ae87",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Box is Type:\n  Box{value: Flag}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/plain-field.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/recursive-tree.bend",
+      "sha256": "0c98afb2c49c9a9f8f5b51d0c491a7f7be44d715a73516a5881dbac60b7c6c72",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Tree is Data:\n  Leaf{value: Flag}\n  Fork{left: Tree, right: Tree}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/recursive-tree.bend"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/unknown-field-type.bend",
+      "sha256": "55512dc7b80e94a2dd033b377c3c32a6183c78b9afde1941b95cc3320e9cdd54",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Box is Type:\n  Box{x: Missing}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/unknown-field-type.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a defined name\n- observed : Missing\nLocation: Box\n4 | type Box is Type:\n5>|   Box{x: Missing}\n  |          ^^^^^^^\n6 | def main() -> Flag:\n"
+    },
+    {
+      "path": "tests/compiler-structural/fixtures/unused-invalid-fields.bend",
+      "sha256": "22880245af9b1a57d71ce988b4d7caef89bbd407bcddd1065cd37237ecad6f08",
+      "source": "type Flag is Data:\n  Off{}\n  On{}\ntype Unused is Data:\n  Unused{x: Owned}\ntype Owned is Type:\n  Owned{}\ndef main() -> Flag:\n  On{}\n",
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/tests/compiler-structural/fixtures/unused-invalid-fields.bend"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: Unused\n4 | type Unused is Data:\n5>|   Unused{x: Owned}\n  |             ^^^^^\n6 | type Owned is Type:\n"
+    }
+  ],
+  "summary": {
+    "passed_expected_outcomes": 13,
+    "accepted": 7,
+    "rejected": 6,
+    "runtime_field_allocation_tested": false,
+    "gpu_tested": false,
+    "laws_proved": 0
+  }
+}
