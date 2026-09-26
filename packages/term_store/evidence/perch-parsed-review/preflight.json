@@ -1,0 +1,3051 @@
+{
+  "parser_status": "parsed",
+  "total_main_declarations": 44,
+  "rows": [
+    {
+      "name": "Scopes.claim",
+      "line": 176,
+      "end_line": 179,
+      "context": {
+        "calls": [
+          {
+            "name": "claim_available",
+            "path": "packages/term_store/main.bend",
+            "line": 125,
+            "end_line": 130,
+            "source": "def claim_available(+next: U32, available: Bool) -> Scopes & Result<Error,U32>:\n  match available:\n    case False{}:\n      (Scopes{next,False{}},Fail{ScopeExhausted{}})\n    case True{}:\n      claim_fresh(next,U32.is_eq(next,4294967295))"
+          },
+          {
+            "name": "claim_fresh",
+            "path": "packages/term_store/main.bend",
+            "line": 40,
+            "end_line": 45,
+            "source": "def claim_fresh(+next: U32, last: Bool) -> Scopes & Result<Error,U32>:\n  match last:\n    case True{}:\n      (Scopes{next,False{}},Done{next})\n    case False{}:\n      (Scopes{U32.add(next,1),True{}},Done{next})"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Store.new",
+            "path": "packages/term_store/main.bend",
+            "line": 192,
+            "end_line": 193,
+            "source": "def Store.new(-T: Data, scopes: Scopes, limit: U32) -> Scopes & Result<Error,Store<T>>:\n  new_claimed(T,limit,Scopes.claim(scopes))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Scopes",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Scopes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Scopes.claim(s: Scopes) -> Scopes & Result<Error,U32>:\n  match s:\n    case Scopes{n,a}:\n      claim_available(n,a)"
+    },
+    {
+      "name": "Store.new",
+      "line": 192,
+      "end_line": 193,
+      "context": {
+        "calls": [
+          {
+            "name": "new_claimed",
+            "path": "packages/term_store/main.bend",
+            "line": 168,
+            "end_line": 170,
+            "source": "def new_claimed(-T: Data,limit: U32,p: Scopes & Result<Error,U32>) -> Scopes & Result<Error,Store<T>>:\n  (s,r) = p\n  (s,make_store(T,r,limit))"
+          },
+          {
+            "name": "Scopes.claim",
+            "path": "packages/term_store/main.bend",
+            "line": 176,
+            "end_line": 179,
+            "source": "def Scopes.claim(s: Scopes) -> Scopes & Result<Error,U32>:\n  match s:\n    case Scopes{n,a}:\n      claim_available(n,a)"
+          },
+          {
+            "name": "make_store",
+            "path": "packages/term_store/main.bend",
+            "line": 47,
+            "end_line": 52,
+            "source": "def make_store(-T: Data, scope: Result<Error,U32>, limit: U32) -> Result<Error,Store<T>>:\n  match scope:\n    case Fail{e}:\n      Fail{e}\n    case Done{s}:\n      Done{Store{s,V.Vec.bounded(T,limit)}}"
+          },
+          {
+            "name": "claim_available",
+            "path": "packages/term_store/main.bend",
+            "line": 125,
+            "end_line": 130,
+            "source": "def claim_available(+next: U32, available: Bool) -> Scopes & Result<Error,U32>:\n  match available:\n    case False{}:\n      (Scopes{next,False{}},Fail{ScopeExhausted{}})\n    case True{}:\n      claim_fresh(next,U32.is_eq(next,4294967295))"
+          },
+          {
+            "name": "claim_fresh",
+            "path": "packages/term_store/main.bend",
+            "line": 40,
+            "end_line": 45,
+            "source": "def claim_fresh(+next: U32, last: Bool) -> Scopes & Result<Error,U32>:\n  match last:\n    case True{}:\n      (Scopes{next,False{}},Done{next})\n    case False{}:\n      (Scopes{U32.add(next,1),True{}},Done{next})"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Memo.new",
+            "path": "packages/term_store/main.bend",
+            "line": 232,
+            "end_line": 233,
+            "source": "def Memo.new(-T: Data,-E: Data,scopes: Scopes,limit: U32) -> Scopes & Result<Error,Memo<T,E>>:\n  memo_new_done(T,E,Store.new(Cell<T,E>,scopes,limit))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Scopes",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.bounded",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Scopes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.bounded",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.new(-T: Data, scopes: Scopes, limit: U32) -> Scopes & Result<Error,Store<T>>:\n  new_claimed(T,limit,Scopes.claim(scopes))"
+    },
+    {
+      "name": "Store.alloc",
+      "line": 213,
+      "end_line": 216,
+      "context": {
+        "calls": [
+          {
+            "name": "alloc_length",
+            "path": "packages/term_store/main.bend",
+            "line": 209,
+            "end_line": 211,
+            "source": "def alloc_length(-T: Data,+k: U32,x: T,p: V.Vec<T> & U32) -> Store<T> & Result<Error,Id>:\n  (v,n) = p\n  alloc_pushed(T,k,n,V.Vec.push(T,v,x))"
+          },
+          {
+            "name": "alloc_pushed",
+            "path": "packages/term_store/main.bend",
+            "line": 181,
+            "end_line": 183,
+            "source": "def alloc_pushed(-T: Data,+k: U32,n: U32,p: V.Vec<T> & Result<V.Error,Unit>) -> Store<T> & Result<Error,Id>:\n  (v,r) = p\n  (Store{k,v},allocated(k,n,r))"
+          },
+          {
+            "name": "allocated",
+            "path": "packages/term_store/main.bend",
+            "line": 149,
+            "end_line": 154,
+            "source": "def allocated(scope: U32, slot: U32, r: Result<V.Error,Unit>) -> Result<Error,Id>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{u}:\n      Done{Id{scope,slot}}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Memo.alloc",
+            "path": "packages/term_store/main.bend",
+            "line": 235,
+            "end_line": 238,
+            "source": "def Memo.alloc(-T: Data,-E: Data,m: Memo<T,E>) -> Memo<T,E> & Result<Error,Id>:\n  match m:\n    case Memo{s}:\n      memo_wrap(T,E,Id,Store.alloc(Cell<T,E>,s,Pending{}))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.length",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.push",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.length",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.push",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.alloc(-T: Data, s: Store<T>, value: T) -> Store<T> & Result<Error,Id>:\n  match s:\n    case Store{+k,v}:\n      alloc_length(T,k,value,V.Vec.length(T,v))"
+    },
+    {
+      "name": "Store.get",
+      "line": 218,
+      "end_line": 223,
+      "context": {
+        "calls": [
+          {
+            "name": "get_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 195,
+            "end_line": 200,
+            "source": "def get_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, valid: Bool) -> Store<T> & Result<Error,T>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,T,k,V.Vec.get(T,v,i))"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Memo.inspect",
+            "path": "packages/term_store/main.bend",
+            "line": 240,
+            "end_line": 243,
+            "source": "def Memo.inspect(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Cell<T,E>>:\n  match m:\n    case Memo{s}:\n      memo_wrap(T,E,Cell<T,E>,Store.get(Cell<T,E>,s,id))"
+          },
+          {
+            "name": "Memo.apply",
+            "path": "packages/term_store/main.bend",
+            "line": 271,
+            "end_line": 274,
+            "source": "def Memo.apply(-T: Data,-E: Data,m: Memo<T,E>,+id: Id,action: Action<T,E>) -> Memo<T,E> & Result<Error,Unit>:\n  match m:\n    case Memo{s}:\n      memo_read(T,E,id,action,Store.get(Cell<T,E>,s,id))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.get",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.get",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.get(-T: Data, s: Store<T>, id: Id) -> Store<T> & Result<Error,T>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          get_scoped(T,k,v,i,U32.is_eq(k,j))"
+    },
+    {
+      "name": "Store.set",
+      "line": 225,
+      "end_line": 230,
+      "context": {
+        "calls": [
+          {
+            "name": "set_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 202,
+            "end_line": 207,
+            "source": "def set_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, x: T, valid: Bool) -> Store<T> & Result<Error,Unit>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,Unit,k,V.Vec.set(T,v,i,x))"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "memo_commit",
+            "path": "packages/term_store/main.bend",
+            "line": 245,
+            "end_line": 250,
+            "source": "def memo_commit(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,cell: Cell<T,E>,r: Result<Error,Unit>) -> Memo<T,E> & Result<Error,Unit>:\n  match r:\n    case Fail{e}:\n      (Memo{s},Fail{e})\n    case Done{u}:\n      memo_wrap(T,E,Unit,Store.set(Cell<T,E>,s,id,cell))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.set",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.set",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.set(-T: Data, s: Store<T>, id: Id, value: T) -> Store<T> & Result<Error,Unit>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          set_scoped(T,k,v,i,value,U32.is_eq(k,j))"
+    },
+    {
+      "name": "Store.length",
+      "line": 132,
+      "end_line": 135,
+      "context": {
+        "calls": [
+          {
+            "name": "metadata",
+            "path": "packages/term_store/main.bend",
+            "line": 110,
+            "end_line": 112,
+            "source": "def metadata(-T: Data,k: U32,p: V.Vec<T> & U32) -> Store<T> & U32:\n  (v,n) = p\n  (Store{k,v},n)"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.length",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.length",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.length(-T: Data, s: Store<T>) -> Store<T> & U32:\n  match s:\n    case Store{k,v}:\n      metadata(T,k,V.Vec.length(T,v))"
+    },
+    {
+      "name": "Store.limit",
+      "line": 137,
+      "end_line": 140,
+      "context": {
+        "calls": [
+          {
+            "name": "metadata",
+            "path": "packages/term_store/main.bend",
+            "line": 110,
+            "end_line": 112,
+            "source": "def metadata(-T: Data,k: U32,p: V.Vec<T> & U32) -> Store<T> & U32:\n  (v,n) = p\n  (Store{k,v},n)"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.limit",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.limit",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.limit(-T: Data, s: Store<T>) -> Store<T> & U32:\n  match s:\n    case Store{k,v}:\n      metadata(T,k,V.Vec.limit(T,v))"
+    },
+    {
+      "name": "Store.snapshot",
+      "line": 156,
+      "end_line": 159,
+      "context": {
+        "calls": [
+          {
+            "name": "snapshot_done",
+            "path": "packages/term_store/main.bend",
+            "line": 114,
+            "end_line": 116,
+            "source": "def snapshot_done(-T: Data,k: U32,p: V.Vec<T> & List<T>) -> Store<T> & List<T>:\n  (v,xs) = p\n  (Store{k,v},xs)"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.to_list",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.to_list",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Store.snapshot(-T: Data, s: Store<T>) -> Store<T> & List<T>:\n  match s:\n    case Store{k,v}:\n      snapshot_done(T,k,V.Vec.to_list(T,v))"
+    },
+    {
+      "name": "Cell.step",
+      "line": 65,
+      "end_line": 90,
+      "context": {
+        "calls": [],
+        "called_by": [
+          {
+            "name": "memo_found",
+            "path": "packages/term_store/main.bend",
+            "line": 260,
+            "end_line": 265,
+            "source": "def memo_found(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,action: Action<T,E>,r: Result<Error,Cell<T,E>>) -> Memo<T,E> & Result<Error,Unit>:\n  match r:\n    case Fail{e}:\n      (Memo{s},Fail{e})\n    case Done{c}:\n      memo_stepped(T,E,s,id,Cell.step(T,E,c,action))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Cell.step(-T: Data,-E: Data,+cell: Cell<T,E>, action: Action<T,E>) -> Cell<T,E> & Result<Error,Unit>:\n  match cell:\n    case Pending{}:\n      match action:\n        case Begin{}:\n          (Evaluating{},Done{Unit{}})\n        case Succeed{x}:\n          (Pending{},Fail{InvalidTransition{}})\n        case Reject{e}:\n          (Pending{},Fail{InvalidTransition{}})\n        case Cancel{}:\n          (Pending{},Fail{InvalidTransition{}})\n    case Evaluating{}:\n      match action:\n        case Begin{}:\n          (Evaluating{},Fail{InvalidTransition{}})\n        case Succeed{x}:\n          (Ready{x},Done{Unit{}})\n        case Reject{e}:\n          (Failed{e},Done{Unit{}})\n        case Cancel{}:\n          (Pending{},Done{Unit{}})\n    case Ready{+x}:\n      (Ready{x},Fail{InvalidTransition{}})\n    case Failed{+e}:\n      (Failed{e},Fail{InvalidTransition{}})"
+    },
+    {
+      "name": "Cell.result",
+      "line": 92,
+      "end_line": 101,
+      "context": {
+        "calls": [],
+        "called_by": [
+          {
+            "name": "memo_observed",
+            "path": "packages/term_store/main.bend",
+            "line": 161,
+            "end_line": 166,
+            "source": "def memo_observed(-T: Data,-E: Data,r: Result<Error,Cell<T,E>>) -> Result<Error,Result<E,T>>:\n  match r:\n    case Fail{e}:\n      Fail{e}\n    case Done{c}:\n      Cell.result(T,E,c)"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Cell.result(-T: Data,-E: Data,cell: Cell<T,E>) -> Result<Error,Result<E,T>>:\n  match cell:\n    case Pending{}:\n      Fail{NotReady{}}\n    case Evaluating{}:\n      Fail{NotReady{}}\n    case Ready{x}:\n      Done{Done{x}}\n    case Failed{e}:\n      Done{Fail{e}}"
+    },
+    {
+      "name": "Memo.new",
+      "line": 232,
+      "end_line": 233,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_new_done",
+            "path": "packages/term_store/main.bend",
+            "line": 172,
+            "end_line": 174,
+            "source": "def memo_new_done(-T: Data,-E: Data,p: Scopes & Result<Error,Store<Cell<T,E>>>) -> Scopes & Result<Error,Memo<T,E>>:\n  (s,r) = p\n  (s,make_memo(T,E,r))"
+          },
+          {
+            "name": "Store.new",
+            "path": "packages/term_store/main.bend",
+            "line": 192,
+            "end_line": 193,
+            "source": "def Store.new(-T: Data, scopes: Scopes, limit: U32) -> Scopes & Result<Error,Store<T>>:\n  new_claimed(T,limit,Scopes.claim(scopes))"
+          },
+          {
+            "name": "make_memo",
+            "path": "packages/term_store/main.bend",
+            "line": 103,
+            "end_line": 108,
+            "source": "def make_memo(-T: Data,-E: Data,r: Result<Error,Store<Cell<T,E>>>) -> Result<Error,Memo<T,E>>:\n  match r:\n    case Fail{e}:\n      Fail{e}\n    case Done{s}:\n      Done{Memo{s}}"
+          },
+          {
+            "name": "new_claimed",
+            "path": "packages/term_store/main.bend",
+            "line": 168,
+            "end_line": 170,
+            "source": "def new_claimed(-T: Data,limit: U32,p: Scopes & Result<Error,U32>) -> Scopes & Result<Error,Store<T>>:\n  (s,r) = p\n  (s,make_store(T,r,limit))"
+          },
+          {
+            "name": "Scopes.claim",
+            "path": "packages/term_store/main.bend",
+            "line": 176,
+            "end_line": 179,
+            "source": "def Scopes.claim(s: Scopes) -> Scopes & Result<Error,U32>:\n  match s:\n    case Scopes{n,a}:\n      claim_available(n,a)"
+          },
+          {
+            "name": "make_store",
+            "path": "packages/term_store/main.bend",
+            "line": 47,
+            "end_line": 52,
+            "source": "def make_store(-T: Data, scope: Result<Error,U32>, limit: U32) -> Result<Error,Store<T>>:\n  match scope:\n    case Fail{e}:\n      Fail{e}\n    case Done{s}:\n      Done{Store{s,V.Vec.bounded(T,limit)}}"
+          },
+          {
+            "name": "claim_available",
+            "path": "packages/term_store/main.bend",
+            "line": 125,
+            "end_line": 130,
+            "source": "def claim_available(+next: U32, available: Bool) -> Scopes & Result<Error,U32>:\n  match available:\n    case False{}:\n      (Scopes{next,False{}},Fail{ScopeExhausted{}})\n    case True{}:\n      claim_fresh(next,U32.is_eq(next,4294967295))"
+          },
+          {
+            "name": "claim_fresh",
+            "path": "packages/term_store/main.bend",
+            "line": 40,
+            "end_line": 45,
+            "source": "def claim_fresh(+next: U32, last: Bool) -> Scopes & Result<Error,U32>:\n  match last:\n    case True{}:\n      (Scopes{next,False{}},Done{next})\n    case False{}:\n      (Scopes{U32.add(next,1),True{}},Done{next})"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Scopes",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.bounded",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Scopes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.bounded",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Memo.new(-T: Data,-E: Data,scopes: Scopes,limit: U32) -> Scopes & Result<Error,Memo<T,E>>:\n  memo_new_done(T,E,Store.new(Cell<T,E>,scopes,limit))"
+    },
+    {
+      "name": "Memo.alloc",
+      "line": 235,
+      "end_line": 238,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_wrap",
+            "path": "packages/term_store/main.bend",
+            "line": 118,
+            "end_line": 120,
+            "source": "def memo_wrap(-T: Data,-E: Data,-R: Type,p: Store<Cell<T,E>> & Result<Error,R>) -> Memo<T,E> & Result<Error,R>:\n  (s,r) = p\n  (Memo{s},r)"
+          },
+          {
+            "name": "Store.alloc",
+            "path": "packages/term_store/main.bend",
+            "line": 213,
+            "end_line": 216,
+            "source": "def Store.alloc(-T: Data, s: Store<T>, value: T) -> Store<T> & Result<Error,Id>:\n  match s:\n    case Store{+k,v}:\n      alloc_length(T,k,value,V.Vec.length(T,v))"
+          },
+          {
+            "name": "alloc_length",
+            "path": "packages/term_store/main.bend",
+            "line": 209,
+            "end_line": 211,
+            "source": "def alloc_length(-T: Data,+k: U32,x: T,p: V.Vec<T> & U32) -> Store<T> & Result<Error,Id>:\n  (v,n) = p\n  alloc_pushed(T,k,n,V.Vec.push(T,v,x))"
+          },
+          {
+            "name": "alloc_pushed",
+            "path": "packages/term_store/main.bend",
+            "line": 181,
+            "end_line": 183,
+            "source": "def alloc_pushed(-T: Data,+k: U32,n: U32,p: V.Vec<T> & Result<V.Error,Unit>) -> Store<T> & Result<Error,Id>:\n  (v,r) = p\n  (Store{k,v},allocated(k,n,r))"
+          },
+          {
+            "name": "allocated",
+            "path": "packages/term_store/main.bend",
+            "line": 149,
+            "end_line": 154,
+            "source": "def allocated(scope: U32, slot: U32, r: Result<V.Error,Unit>) -> Result<Error,Id>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{u}:\n      Done{Id{scope,slot}}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.length",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.push",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.length",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.push",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Memo.alloc(-T: Data,-E: Data,m: Memo<T,E>) -> Memo<T,E> & Result<Error,Id>:\n  match m:\n    case Memo{s}:\n      memo_wrap(T,E,Id,Store.alloc(Cell<T,E>,s,Pending{}))"
+    },
+    {
+      "name": "Memo.inspect",
+      "line": 240,
+      "end_line": 243,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_wrap",
+            "path": "packages/term_store/main.bend",
+            "line": 118,
+            "end_line": 120,
+            "source": "def memo_wrap(-T: Data,-E: Data,-R: Type,p: Store<Cell<T,E>> & Result<Error,R>) -> Memo<T,E> & Result<Error,R>:\n  (s,r) = p\n  (Memo{s},r)"
+          },
+          {
+            "name": "Store.get",
+            "path": "packages/term_store/main.bend",
+            "line": 218,
+            "end_line": 223,
+            "source": "def Store.get(-T: Data, s: Store<T>, id: Id) -> Store<T> & Result<Error,T>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          get_scoped(T,k,v,i,U32.is_eq(k,j))"
+          },
+          {
+            "name": "get_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 195,
+            "end_line": 200,
+            "source": "def get_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, valid: Bool) -> Store<T> & Result<Error,T>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,T,k,V.Vec.get(T,v,i))"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Memo.result",
+            "path": "packages/term_store/main.bend",
+            "line": 252,
+            "end_line": 253,
+            "source": "def Memo.result(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Result<E,T>>:\n  memo_result_done(T,E,Memo.inspect(T,E,m,id))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.get",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.get",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Memo.inspect(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Cell<T,E>>:\n  match m:\n    case Memo{s}:\n      memo_wrap(T,E,Cell<T,E>,Store.get(Cell<T,E>,s,id))"
+    },
+    {
+      "name": "Memo.apply",
+      "line": 271,
+      "end_line": 274,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_read",
+            "path": "packages/term_store/main.bend",
+            "line": 267,
+            "end_line": 269,
+            "source": "def memo_read(-T: Data,-E: Data,id: Id,action: Action<T,E>,p: Store<Cell<T,E>> & Result<Error,Cell<T,E>>) -> Memo<T,E> & Result<Error,Unit>:\n  (s,r) = p\n  memo_found(T,E,s,id,action,r)"
+          },
+          {
+            "name": "Store.get",
+            "path": "packages/term_store/main.bend",
+            "line": 218,
+            "end_line": 223,
+            "source": "def Store.get(-T: Data, s: Store<T>, id: Id) -> Store<T> & Result<Error,T>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          get_scoped(T,k,v,i,U32.is_eq(k,j))"
+          },
+          {
+            "name": "memo_found",
+            "path": "packages/term_store/main.bend",
+            "line": 260,
+            "end_line": 265,
+            "source": "def memo_found(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,action: Action<T,E>,r: Result<Error,Cell<T,E>>) -> Memo<T,E> & Result<Error,Unit>:\n  match r:\n    case Fail{e}:\n      (Memo{s},Fail{e})\n    case Done{c}:\n      memo_stepped(T,E,s,id,Cell.step(T,E,c,action))"
+          },
+          {
+            "name": "get_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 195,
+            "end_line": 200,
+            "source": "def get_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, valid: Bool) -> Store<T> & Result<Error,T>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,T,k,V.Vec.get(T,v,i))"
+          },
+          {
+            "name": "memo_stepped",
+            "path": "packages/term_store/main.bend",
+            "line": 256,
+            "end_line": 258,
+            "source": "# First-order continuations keep computed pair elimination explicit in Bend.\ndef memo_stepped(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,p: Cell<T,E> & Result<Error,Unit>) -> Memo<T,E> & Result<Error,Unit>:\n  (c,r) = p\n  memo_commit(T,E,s,id,c,r)"
+          },
+          {
+            "name": "Cell.step",
+            "path": "packages/term_store/main.bend",
+            "line": 65,
+            "end_line": 90,
+            "source": "def Cell.step(-T: Data,-E: Data,+cell: Cell<T,E>, action: Action<T,E>) -> Cell<T,E> & Result<Error,Unit>:\n  match cell:\n    case Pending{}:\n      match action:\n        case Begin{}:\n          (Evaluating{},Done{Unit{}})\n        case Succeed{x}:\n          (Pending{},Fail{InvalidTransition{}})\n        case Reject{e}:\n          (Pending{},Fail{InvalidTransition{}})\n        case Cancel{}:\n          (Pending{},Fail{InvalidTransition{}})\n    case Evaluating{}:\n      match action:\n        case Begin{}:\n          (Evaluating{},Fail{InvalidTransition{}})\n        case Succeed{x}:\n          (Ready{x},Done{Unit{}})\n        case Reject{e}:\n          (Failed{e},Done{Unit{}})\n        case Cancel{}:\n          (Pending{},Done{Unit{}})\n    case Ready{+x}:\n      (Ready{x},Fail{InvalidTransition{}})\n    case Failed{+e}:\n      (Failed{e},Fail{InvalidTransition{}})"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "memo_commit",
+            "path": "packages/term_store/main.bend",
+            "line": 245,
+            "end_line": 250,
+            "source": "def memo_commit(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,cell: Cell<T,E>,r: Result<Error,Unit>) -> Memo<T,E> & Result<Error,Unit>:\n  match r:\n    case Fail{e}:\n      (Memo{s},Fail{e})\n    case Done{u}:\n      memo_wrap(T,E,Unit,Store.set(Cell<T,E>,s,id,cell))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "memo_wrap",
+            "path": "packages/term_store/main.bend",
+            "line": 118,
+            "end_line": 120,
+            "source": "def memo_wrap(-T: Data,-E: Data,-R: Type,p: Store<Cell<T,E>> & Result<Error,R>) -> Memo<T,E> & Result<Error,R>:\n  (s,r) = p\n  (Memo{s},r)"
+          },
+          {
+            "name": "Store.set",
+            "path": "packages/term_store/main.bend",
+            "line": 225,
+            "end_line": 230,
+            "source": "def Store.set(-T: Data, s: Store<T>, id: Id, value: T) -> Store<T> & Result<Error,Unit>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          set_scoped(T,k,v,i,value,U32.is_eq(k,j))"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          },
+          {
+            "name": "set_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 202,
+            "end_line": 207,
+            "source": "def set_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, x: T, valid: Bool) -> Store<T> & Result<Error,Unit>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,Unit,k,V.Vec.set(T,v,i,x))"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "Memo.begin",
+            "path": "packages/term_store/main.bend",
+            "line": 276,
+            "end_line": 277,
+            "source": "def Memo.begin(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Unit>:\n  Memo.apply(T,E,m,id,Begin{})"
+          },
+          {
+            "name": "Memo.succeed",
+            "path": "packages/term_store/main.bend",
+            "line": 279,
+            "end_line": 280,
+            "source": "def Memo.succeed(-T: Data,-E: Data,m: Memo<T,E>,id: Id,value: T) -> Memo<T,E> & Result<Error,Unit>:\n  Memo.apply(T,E,m,id,Succeed{value})"
+          },
+          {
+            "name": "Memo.fail",
+            "path": "packages/term_store/main.bend",
+            "line": 282,
+            "end_line": 283,
+            "source": "def Memo.fail(-T: Data,-E: Data,m: Memo<T,E>,id: Id,error: E) -> Memo<T,E> & Result<Error,Unit>:\n  Memo.apply(T,E,m,id,Reject{error})"
+          },
+          {
+            "name": "Memo.cancel",
+            "path": "packages/term_store/main.bend",
+            "line": 285,
+            "end_line": 286,
+            "source": "def Memo.cancel(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Unit>:\n  Memo.apply(T,E,m,id,Cancel{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.get",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.set",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.get",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.set",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Memo.apply(-T: Data,-E: Data,m: Memo<T,E>,+id: Id,action: Action<T,E>) -> Memo<T,E> & Result<Error,Unit>:\n  match m:\n    case Memo{s}:\n      memo_read(T,E,id,action,Store.get(Cell<T,E>,s,id))"
+    },
+    {
+      "name": "Memo.result",
+      "line": 252,
+      "end_line": 253,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_result_done",
+            "path": "packages/term_store/main.bend",
+            "line": 189,
+            "end_line": 191,
+            "source": "def memo_result_done(-T: Data,-E: Data,p: Memo<T,E> & Result<Error,Cell<T,E>>) -> Memo<T,E> & Result<Error,Result<E,T>>:\n  (m,r) = p\n  (m,memo_observed(T,E,r))"
+          },
+          {
+            "name": "Memo.inspect",
+            "path": "packages/term_store/main.bend",
+            "line": 240,
+            "end_line": 243,
+            "source": "def Memo.inspect(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Cell<T,E>>:\n  match m:\n    case Memo{s}:\n      memo_wrap(T,E,Cell<T,E>,Store.get(Cell<T,E>,s,id))"
+          },
+          {
+            "name": "memo_observed",
+            "path": "packages/term_store/main.bend",
+            "line": 161,
+            "end_line": 166,
+            "source": "def memo_observed(-T: Data,-E: Data,r: Result<Error,Cell<T,E>>) -> Result<Error,Result<E,T>>:\n  match r:\n    case Fail{e}:\n      Fail{e}\n    case Done{c}:\n      Cell.result(T,E,c)"
+          },
+          {
+            "name": "memo_wrap",
+            "path": "packages/term_store/main.bend",
+            "line": 118,
+            "end_line": 120,
+            "source": "def memo_wrap(-T: Data,-E: Data,-R: Type,p: Store<Cell<T,E>> & Result<Error,R>) -> Memo<T,E> & Result<Error,R>:\n  (s,r) = p\n  (Memo{s},r)"
+          },
+          {
+            "name": "Store.get",
+            "path": "packages/term_store/main.bend",
+            "line": 218,
+            "end_line": 223,
+            "source": "def Store.get(-T: Data, s: Store<T>, id: Id) -> Store<T> & Result<Error,T>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          get_scoped(T,k,v,i,U32.is_eq(k,j))"
+          },
+          {
+            "name": "Cell.result",
+            "path": "packages/term_store/main.bend",
+            "line": 92,
+            "end_line": 101,
+            "source": "def Cell.result(-T: Data,-E: Data,cell: Cell<T,E>) -> Result<Error,Result<E,T>>:\n  match cell:\n    case Pending{}:\n      Fail{NotReady{}}\n    case Evaluating{}:\n      Fail{NotReady{}}\n    case Ready{x}:\n      Done{Done{x}}\n    case Failed{e}:\n      Done{Fail{e}}"
+          },
+          {
+            "name": "get_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 195,
+            "end_line": 200,
+            "source": "def get_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, valid: Bool) -> Store<T> & Result<Error,T>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,T,k,V.Vec.get(T,v,i))"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.get",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.get",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def Memo.result(-T: Data,-E: Data,m: Memo<T,E>,id: Id) -> Memo<T,E> & Result<Error,Result<E,T>>:\n  memo_result_done(T,E,Memo.inspect(T,E,m,id))"
+    },
+    {
+      "name": "memo_commit",
+      "line": 245,
+      "end_line": 250,
+      "context": {
+        "calls": [
+          {
+            "name": "memo_wrap",
+            "path": "packages/term_store/main.bend",
+            "line": 118,
+            "end_line": 120,
+            "source": "def memo_wrap(-T: Data,-E: Data,-R: Type,p: Store<Cell<T,E>> & Result<Error,R>) -> Memo<T,E> & Result<Error,R>:\n  (s,r) = p\n  (Memo{s},r)"
+          },
+          {
+            "name": "Store.set",
+            "path": "packages/term_store/main.bend",
+            "line": 225,
+            "end_line": 230,
+            "source": "def Store.set(-T: Data, s: Store<T>, id: Id, value: T) -> Store<T> & Result<Error,Unit>:\n  match s:\n    case Store{+k,v}:\n      match id:\n        case Id{j,i}:\n          set_scoped(T,k,v,i,value,U32.is_eq(k,j))"
+          },
+          {
+            "name": "set_scoped",
+            "path": "packages/term_store/main.bend",
+            "line": 202,
+            "end_line": 207,
+            "source": "def set_scoped(-T: Data, k: U32, v: V.Vec<T>, i: U32, x: T, valid: Bool) -> Store<T> & Result<Error,Unit>:\n  match valid:\n    case False{}:\n      (Store{k,v},Fail{WrongScope{}})\n    case True{}:\n      observed(T,Unit,k,V.Vec.set(T,v,i,x))"
+          },
+          {
+            "name": "observed",
+            "path": "packages/term_store/main.bend",
+            "line": 185,
+            "end_line": 187,
+            "source": "def observed(-T: Data,-R: Type,k: U32,p: V.Vec<T> & Result<V.Error,R>) -> Store<T> & Result<Error,R>:\n  (v,r) = p\n  (Store{k,v},mapped(R,r))"
+          },
+          {
+            "name": "mapped",
+            "path": "packages/term_store/main.bend",
+            "line": 142,
+            "end_line": 147,
+            "source": "def mapped(-T: Type, r: Result<V.Error,T>) -> Result<Error,T>:\n  match r:\n    case Fail{e}:\n      Fail{vector_error(e)}\n    case Done{x}:\n      Done{x}"
+          },
+          {
+            "name": "vector_error",
+            "path": "packages/term_store/main.bend",
+            "line": 54,
+            "end_line": 63,
+            "source": "def vector_error(e: V.Error) -> Error:\n  match e:\n    case V.Bounds{}:\n      Bounds{}\n    case V.Empty{}:\n      Bounds{}\n    case V.Limit{}:\n      Limit{}\n    case V.InvalidRange{}:\n      Bounds{}"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "memo_stepped",
+            "path": "packages/term_store/main.bend",
+            "line": 256,
+            "end_line": 258,
+            "source": "# First-order continuations keep computed pair elimination explicit in Bend.\ndef memo_stepped(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,p: Cell<T,E> & Result<Error,Unit>) -> Memo<T,E> & Result<Error,Unit>:\n  (c,r) = p\n  memo_commit(T,E,s,id,c,r)"
+          }
+        ],
+        "laws": [],
+        "datatypes": [
+          {
+            "name": "Id",
+            "path": "packages/term_store/main.bend",
+            "line": 4,
+            "end_line": 5,
+            "source": "type Id is Data:\n  Id{scope: U32, slot: U32}"
+          },
+          {
+            "name": "Error",
+            "path": "packages/term_store/main.bend",
+            "line": 7,
+            "end_line": 13,
+            "source": "type Error is Data:\n  WrongScope{}\n  Bounds{}\n  Limit{}\n  ScopeExhausted{}\n  InvalidTransition{}\n  NotReady{}"
+          },
+          {
+            "name": "Scopes",
+            "path": "packages/term_store/main.bend",
+            "line": 15,
+            "end_line": 16,
+            "source": "type Scopes is Type:\n  Scopes{next: U32, available: Bool}"
+          },
+          {
+            "name": "Store",
+            "path": "packages/term_store/main.bend",
+            "line": 18,
+            "end_line": 19,
+            "source": "type Store<-T: Data> is Type:\n  Store{scope: U32, cells: V.Vec<T>}"
+          },
+          {
+            "name": "Cell",
+            "path": "packages/term_store/main.bend",
+            "line": 21,
+            "end_line": 25,
+            "source": "type Cell<-T: Data,-E: Data> is Data:\n  Pending{}\n  Evaluating{}\n  Ready{value: T}\n  Failed{error: E}"
+          },
+          {
+            "name": "Action",
+            "path": "packages/term_store/main.bend",
+            "line": 27,
+            "end_line": 31,
+            "source": "type Action<-T: Data,-E: Data> is Data:\n  Begin{}\n  Succeed{value: T}\n  Reject{error: E}\n  Cancel{}"
+          },
+          {
+            "name": "Memo",
+            "path": "packages/term_store/main.bend",
+            "line": 34,
+            "end_line": 35,
+            "source": "# Pure public transition kernel. Rejection always returns the original cell.\ntype Memo<-T: Data,-E: Data> is Type:\n  Memo{store: Store<Cell<T,E>>}"
+          }
+        ],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "0xd684886d10b431b9dce6c3b2d1ef1980/main.bend",
+            "alias": "V"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Id",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Error",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Unit",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32.is_eq",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "Bool",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Vec.set",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "packages/term_store/main.bend",
+              "name": "V.Error",
+              "reason": "nonlocal-import"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "provenance": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/term_store/main.bend",
+            "source_sha256": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Id",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Vec.set",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/term_store/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "target_source": "def memo_commit(-T: Data,-E: Data,s: Store<Cell<T,E>>,id: Id,cell: Cell<T,E>,r: Result<Error,Unit>) -> Memo<T,E> & Result<Error,Unit>:\n  match r:\n    case Fail{e}:\n      (Memo{s},Fail{e})\n    case Done{u}:\n      memo_wrap(T,E,Unit,Store.set(Cell<T,E>,s,id,cell))"
+    }
+  ]
+}

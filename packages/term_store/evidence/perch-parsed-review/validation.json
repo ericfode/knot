@@ -1,0 +1,128 @@
+{
+  "published_hash": "0xce7bfa94c40ded8493cdb39d330add0c",
+  "uploaded_file_count": 14,
+  "all_uploaded_files_identical": true,
+  "gate_source_hashes_match": true,
+  "release_receipt_hashes_match": true,
+  "new_typecheck": {
+    "command": "scripts/bend-reference packages/term_store/main.bend --check-only",
+    "exit": 0,
+    "output": "All terms check."
+  },
+  "historical_gates_reused": [
+    "PROOF zero holes",
+    "CPU/JS conformance",
+    "semantic mutations",
+    "scaling",
+    "remote consumer"
+  ],
+  "source_changes": [],
+  "rule_changes": [],
+  "confirmed_package_findings": 0,
+  "false_positive_reported_findings": 0,
+  "unresolved_reported_findings": 0,
+  "probability_summary": [
+    {
+      "target": "packages/term_store/main.bend::Scopes.claim",
+      "max_probability_broken": 0.59,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.new",
+      "max_probability_broken": 0.58,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.alloc",
+      "max_probability_broken": 0.55,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.get",
+      "max_probability_broken": 0.59,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.set",
+      "max_probability_broken": 0.55,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.length",
+      "max_probability_broken": 0.59,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.limit",
+      "max_probability_broken": 0.62,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Store.snapshot",
+      "max_probability_broken": 0.6,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Cell.step",
+      "max_probability_broken": 0.63,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Cell.result",
+      "max_probability_broken": 0.65,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Memo.new",
+      "max_probability_broken": 0.57,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Memo.alloc",
+      "max_probability_broken": 0.55,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Memo.inspect",
+      "max_probability_broken": 0.58,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Memo.apply",
+      "max_probability_broken": 0.57,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::Memo.result",
+      "max_probability_broken": 0.57,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/main.bend::memo_commit",
+      "max_probability_broken": 0.56,
+      "max_rule": "bend-machine-arithmetic"
+    },
+    {
+      "target": "packages/term_store/LAW_REVIEW.md",
+      "max_probability_broken": 0.58,
+      "max_rule": "law-observable-essence"
+    }
+  ],
+  "selected_source_sha256": {
+    "main.bend": "419e0fd4c86003af7a35d08227b2b0f41d487d930c605b1000aba352d67e20c3",
+    "LAW_REVIEW.md": "f2c20801167fd3f986e037e1f834982f62f6ce8a8fde28f96d9ca8539def036f"
+  },
+  "selected_rule_sha256": {
+    ".perch/rules/bend.yaml": "960cc5f4ae5bdea02eb5d2d571ef6e0070302197a8449221c4c252bc1451e766",
+    ".perch/rules/performance.yaml": "464ddbf27c44c9b5225f6ceac5a6fcf219e38fbfc03fed95aaf3a80c058f95db",
+    ".perch/rules/laws.yaml": "01c09cb19b1701c470f69987103ec40db08e8ea2f988d52fdbdde7da72e8dbdb",
+    ".perch/rules/package_term_store.yaml": "2ee4b847cde21a3a5212e740f368e779e79f6bc3f9fe42439a6983b641420c5c"
+  },
+  "shared_workflow_observation": {
+    "status": "confirmed receipt metadata gap; proposal only",
+    "source": "scripts/perch-workflow.mjs",
+    "source_sha256": "25e1009fa968bf00ba019b16cb1810b1b5a065e0a29c8f09bb9ffefa9a0390b8",
+    "mechanism": "Receipt units is populated only from result.units. Named-target output stores name and context at result root, so root usage receipt loses that attribution. This pass preserves the actual named CLI result and preflight context beside the root receipt.",
+    "proposal": "Normalize named Bend results to one unit when result.units is absent, preserving name, span, asked rules, context and parser; add a named-target wrapper regression. No shared files edited."
+  }
+}
