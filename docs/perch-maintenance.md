@@ -24,6 +24,14 @@ the request or verdict. Receipts omit credentials, source text, and raw provider
 errors. They are local operational data, not a public artifact.
 Native `scan` results still live in Perch's own store; read those as well.
 
+Opt-in `lint:rank` runs use `command: style-rank` receipts and
+[perch-style.json](../perch-style.json). Review these as ordinal preferences,
+not passed checks or defect precision. Compare model/rubric/context identities,
+near ties, and human preferences recorded before model review. Retain fresh
+held-out alternatives after rubric changes; do not promote the small style
+pilot into an accuracy claim. The [style guide](perch-style.md) defines the
+desired taste and current evidence limits.
+
 Record a concise entry in `docs/perch-review-log.md` after meaningful rework,
 a discovered missed defect, a false positive, or repeated unhelpful findings.
 Include the source or receipt, root cause, judgment, measured effort if known,

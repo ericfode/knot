@@ -20,6 +20,7 @@ npm run lint -- src/parser.bend     # working-copy file; once this file exists
 npm run lint -- src/parser.bend --rules bend-fuel-completeness
 npm run perch -- issues
 npm run lint:history                # local usage and finding counts
+npm run lint:rank -- --live --cohort='shared task' a.bend::solve b.bend::solve
 npm run lint:verify                 # offline workflow and rule-wiring checks
 ```
 
@@ -37,6 +38,12 @@ rules. A file target checks every applicable parsed `def` or law declaration;
 the current working-copy context. Law-review Markdown packets remain file rules.
 Zero applicable checks fails visibly; a data-only or imports-only Bend file has
 no executable declaration for these rules and must be reported as not applicable.
+
+`lint:rank` is an opt-in ordinal companion for **Maximally big brain** and
+**Delightful to read — high dopamine**. It ranks comparable parsed units with
+the same helper context and preserves distributions and near ties. These are
+advisory preferences, separate from native defect rules. See
+[ranked style review and pilot evidence](perch-style.md).
 
 The context includes exact local callees and referenced values, transitive
 explicit relative imports within the workspace, direct same-file callers,

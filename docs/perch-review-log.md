@@ -193,6 +193,34 @@ run. Its receipt is preserved separately, never added to final coverage.
 Procedure patch: finish adapter edits/offline gates and freeze the installation
 before paid corpus dispatch. No package source or publication changed.
 
+## 2026-09-26 — ordinal style rankings
+
+The user requested separate rankings for conceptual compression and high-dopamine
+reading: dense composition, precise vocabulary, symmetry and satisfying insight.
+[Rubrics](../perch-style.json), [command and pilot](perch-style.md), and
+[raw evidence](perch-calibration/style-2026-09-26.json) define the increment.
+
+Confirmed execution limitation: Perch 0.3.5 can compile a Score question from
+configuration, but custom method checks consume only `noul` answers. The opt-in
+`lint:rank` companion supplies typed ordinal questions directly while reusing
+the pinned Bend parser and bounded working-copy context. It emits independent
+rankings and near-tie markers; style never becomes a defect or acceptance gate.
+Failure, malformed answers and changed model identity produce no partial ranking.
+Receipts include hashes, distributions, model, request coverage and token usage.
+
+Three equivalent-task specimens passed the unchanged compiler/output/scaling
+evaluator, with 19 semantic probes each. All five parsed declarations also
+received the relevant prefix-copy rule; no findings. Two style runs (six
+requests, 12 answers) retained the same order with small score changes. Every
+adjacent pair remains a near tie. Judgment quality and agreement with user taste
+are unresolved; no strong style preference or productivity gain is established.
+Do not retune this rubric just to force a separation in this small cohort.
+
+Twenty-one offline tests and law-rule wiring pass. The maintenance procedure now
+separates style preferences from defect precision and requests pre-recorded human
+preferences plus held-out examples. Total development effort was not measured.
+No package source, accepted law, existing defect rule or repair model changed.
+
 ## 2026-09-26 — compiler frontend seed restrictions
 
 The first lexer draft failed repeatedly on actual Bend restrictions: reserved

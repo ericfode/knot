@@ -60,6 +60,7 @@ File targets check each declaration; `file.bend::name` checks a single unit.
 - [Perch maintenance procedure](docs/perch-maintenance.md)
 - [Perch review log and calibration decisions](docs/perch-review-log.md)
 - [Performance checks and Luna 6 repair experiment](docs/perch-performance-2026-09-26.md)
+- [Ranked style review: conceptual compression and high-dopamine reading](docs/perch-style.md)
 
 ```sh
 npm ci
