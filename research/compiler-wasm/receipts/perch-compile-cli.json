@@ -1,0 +1,2371 @@
+{
+  "path": "src/compile-cli.bend",
+  "name": "src/compile-cli.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 9,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 27,
+  "units": [
+    {
+      "path": "src/compile-cli.bend",
+      "name": "written",
+      "line": 10,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 13,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.6699999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.35,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.print",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "write_pair",
+      "line": 15,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 19,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.21999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.42000000000000004,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.print",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "output_opened",
+      "line": 21,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 25,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.24,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.37,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.write_bytes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.print",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "emitted",
+      "line": 28,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 32,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.24,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.37,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.write_bytes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.At",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.print",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "compile",
+      "line": 34,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 36,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.54,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.21999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.39,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "source_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+          },
+          {
+            "path": "src/wasm.bend",
+            "source_sha256": "e03d155aab051e37e699cad23c313837cc1fdb89bec70d02bff5c391712586a6"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Options",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Sections",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.write_bytes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.section",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.finish",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "location",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "written",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "S.choose",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "Bool.pick",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32.shrn",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32.and",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "checked",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.fragment",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "function_type",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "live_types",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.name",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "S.text",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "body",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "parameters",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.join",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "join",
+            "reason": "context-helper-limit"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "configured",
+      "line": 38,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 45,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.53,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.20999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.35,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "source_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+          },
+          {
+            "path": "src/wasm.bend",
+            "source_sha256": "e03d155aab051e37e699cad23c313837cc1fdb89bec70d02bff5c391712586a6"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Options",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Limits",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Sections",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.At",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "read_result",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.write_bytes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "write_pair",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "groups",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "bytes",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "entry",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "extend_sections",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.concat",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.bytes",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.section",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.finish",
+            "reason": "nonlocal-import"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "budgets",
+      "line": 47,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 52,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.52,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.26,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.35,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Options",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.to_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "arguments",
+      "line": 54,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 60,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.53,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.21999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.33999999999999997,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          },
+          {
+            "path": "src/wasm.bend",
+            "source_sha256": "e03d155aab051e37e699cad23c313837cc1fdb89bec70d02bff5c391712586a6"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Options",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Limits",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.to_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.unsigned",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Sections",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "entries",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "module_bytes",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.At",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "read_result",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.write_bytes",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "write_pair",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/compile-cli.bend",
+      "name": "main",
+      "line": 62,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 9,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 63,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.26,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.36,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/compile-cli.bend",
+            "source_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+          },
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          },
+          {
+            "path": "src/wasm.bend",
+            "source_sha256": "e03d155aab051e37e699cad23c313837cc1fdb89bec70d02bff5c391712586a6"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "IO.args",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Options",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "String.eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.die",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Limits",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "IO.bind",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.to_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.read",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "File.open",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/compile-cli.bend",
+            "name": "output_opened",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "W.unsigned",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "Sections",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "entries",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/wasm.bend",
+            "name": "module_bytes",
+            "reason": "context-helper-limit"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "S.At",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "File.close",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "read_result",
+            "reason": "context-helper-limit"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 3,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}

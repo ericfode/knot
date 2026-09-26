@@ -12,6 +12,7 @@ def error(e: S.Error) -> String:
     case S.Unsupported{phase,code,at}: String.concat(["Unsupported\t",phase,"\t",code,"\t",location(at)])
     case S.Exhausted{phase,at}: String.concat(["Exhausted\t",phase,"\tbudget\t",location(at)])
     case S.Internal{phase,code}: String.concat(["InternalFailure\t",phase,"\t",code])
+    case S.Host{phase,code}: String.concat(["HostFailure\t",phase,"\t",code])
 
 def status(e: S.Error) -> U32:
   match e:
@@ -19,6 +20,7 @@ def status(e: S.Error) -> U32:
     case S.Unsupported{phase,code,at}: 3
     case S.Exhausted{phase,at}: 4
     case S.Internal{phase,code}: 6
+    case S.Host{phase,code}: 5
 
 def concat(parts: List<&1,Result<S.Error,String>>) -> Result<S.Error,String>:
   match parts:

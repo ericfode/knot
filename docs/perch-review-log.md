@@ -310,3 +310,22 @@ call visible. Existing src/AGENTS.md already requires binder order and structura
 fuel; the checker receipts provide concrete examples. No new duplicate rule or
 elapsed-time estimate was added. Seven independent semantic mutants, 49 reference
 fixtures on two backends and checked helper laws remain the acceptance evidence.
+
+## 2026-09-26 — enum compiler review and arithmetic applicability noise
+
+The first source-to-Wasm increment received 344 checks / 104 completed provider
+responses. [Report](../research/compiler-wasm/PERCH_REPORT.md) and
+[raw receipt](../research/compiler-wasm/receipts/perch.json) preserve one
+false-positive: `bend-machine-arithmetic` scored the constructor-only
+`mixed-types.bend::main` at 0.81 broken probability. The complete fixture contains
+no arithmetic or conversion; literal upstream/evaluator/Wasm observations agree.
+Similar below-floor scores on other constructor-only fixtures expose applicability
+noise. No code, oracle or threshold changed. Require a concrete arithmetic path
+before acting on this rule; retain these clean controls for future calibration.
+
+The evidence collector initially assumed usage targets included `::name` and
+that Markdown packets had parsed units. Both assumptions were wrong: the usage
+target is the file, named identity lives in `units`, and the packet has no units.
+Match file hash plus parsed-unit identity for Bend and file hash for Markdown;
+validate the whole aggregation before writing it. The final receipt has complete
+responses and no source/context hash mismatch. No paid checks were repeated.

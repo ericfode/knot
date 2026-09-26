@@ -1,0 +1,67 @@
+{
+  "path": "tests/compiler-wasm/fixtures/high-function-index.bend",
+  "name": "main",
+  "line": 262,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 130,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 263,
+  "asked": [
+    {
+      "rule": "bend-fuel-completeness",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+      "broken": 0.06999999999999995,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-machine-arithmetic",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+      "broken": 0.76,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "files": [
+      {
+        "path": "tests/compiler-wasm/fixtures/high-function-index.bend",
+        "source_sha256": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "tests/compiler-wasm/fixtures/high-function-index.bend",
+        "name": "Flag",
+        "reason": "unresolved-or-builtin"
+      }
+    ],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 2,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

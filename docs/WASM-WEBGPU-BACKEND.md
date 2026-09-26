@@ -4,12 +4,15 @@ Status: design recorded 2026-09-26. The user selected Wasm and adaptive
 continuation tasks, and requires GPU execution. WebGPU/WGSL is the working
 implementation direction for that requirement. The first bounded
 [task/device probe](../research/adaptive-tasks/README.md) passes on Metal. Knot's
-compiler, Wasm host, and source-to-device gate remain unimplemented.
+[first enum compiler and Node Wasm host](../research/compiler-wasm/README.md)
+now execute generated programs. The self-built Wasm compiler and source-to-device
+gate remain unimplemented.
 
 ## Execution boundary
 
-Knot is written in Bend 2. Its self-built compiler runs as a Wasm module.
-Generated CPU code also targets Wasm. GPU computations become separate WGSL
+Knot is written in Bend 2. Its planned self-built compiler will run as a Wasm
+module; the current compiler is built by the pinned seed for native/Bun execution.
+Generated enum programs already target Wasm. Planned GPU computations become separate WGSL
 compute programs submitted through a WebGPU host adapter. Choosing Wasm alone
 does not provide GPU execution.
 
@@ -90,11 +93,12 @@ The two code-generation choices above remain independent of this model choice.
 
 ## Bootstrap and first gates
 
-1. Pin the upstream Bend seed, Wasm feature profile/runner, and host ABI. The
-   proposed starting profile is scalar Wasm32 with linear memory; adding GC,
-   threads, SIMD, or another feature requires an explicit capability decision.
-2. Finish S1 with a small supported Bend program that emits a valid Wasm module,
-   instantiates in the declared host, and agrees with the reference evaluator.
+1. The first enum increment pins Bend 2.0.29, scalar Wasm version 1 and Node
+   22.22.3. It needs no memory or imports. Fields will require an explicit memory
+   and ownership contract; adding GC, threads or SIMD needs a capability decision.
+2. The enum slice emits valid Wasm, instantiates in the declared host and agrees
+   with an independent evaluator. Finish S1 by adding fields, structural recursion
+   and their allocation/drop semantics; the current slice does not establish them.
 3. During S1-S2, test a narrow shared-IR fork/join tree on real WebGPU hardware.
    Include owned constructors, continuations, allocation/drop, and repeated runs;
    add closure captures with S2. Record device and dispatch evidence. A manually
@@ -106,10 +110,10 @@ The two code-generation choices above remain independent of this model choice.
    Require the self-built compiler to emit and run the GPU fixture as a separate
    gate before claiming the combined self-hosting/GPU objective.
 
-Whether the first emitter writes Wasm binary directly or uses a pinned text
-assembler remains an implementation choice. LLVM could also emit Wasm, but is
-not implied by choosing the Wasm target. Any external assembler/backend stays
-visible in bootstrap receipts and the reproducibility contract.
+The first emitter writes Wasm binary directly in Bend, using the published
+checked byte builder. `wasm2wat` only decodes artifacts for inspection; no
+assembler or LLVM backend participates in emission. Future external backends
+must remain visible in bootstrap receipts and the reproducibility contract.
 
 This plan refines [the subset stages](BEND-SUBSET-STAGES.md); it does not expand
 the compiler's own executed feature profile to include GPU offload or arrays.

@@ -103,11 +103,10 @@ Return stable phase/code diagnostics with source offsets where available:
 separate result and exhaustion outcome. A host timeout is exhaustion and cannot
 be relabeled as an invalid program. Stale output files cannot count as emission.
 
-Each stage has a declared finite budget: source characters, parser nesting,
-checker traversal, evaluator transitions and output bytes. Exhaustion is
-inconclusive. Exact defaults and CLI overrides will be frozen in the executable
-contract manifest before this milestone is marked complete. No claim is made
-that the development implementations already satisfy the complete contract.
+The executable [contract manifest](CONTRACT.json) fixes source, parser, checker,
+emitter-depth, evaluator-transition and output-byte budgets. Exhaustion is
+inconclusive. The compiler and evaluator have separate commands and outcomes;
+emission never calls the evaluator.
 
 ## Current checker bounds
 
@@ -123,7 +122,53 @@ and affine-set merging are deliberately simple linear/quadratic algorithms.
 No performance claim or general checker-soundness proof is made.
 
 The checker CLI prints a resolved-term observation and emits no executable.
-Its `Checked` result is not `Built`; evaluation and Wasm emission remain pending.
+Its `Checked` result is not `Built`. The separate compiler/evaluator commands
+below execute the rest of this profile.
+
+## Executable compiler and evaluator
+
+Build the Bend entries with `scripts/bend-reference src/compile-cli.bend -o
+.local/compiler-wasm/compile-cli` and the corresponding `eval-cli.bend` entry.
+Native and Bun-generated JS are tested seed hosts. The compiler implementation
+imports pinned Base and the published ByteOutput package
+`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`; accepted source imports nothing.
+
+`compile-cli source output [characters parser-depth checker-depth emitter-depth
+output-bytes]` writes actual Wasm bytes with Bend's File.write_bytes. Defaults
+are 65,536 / 512 / 512 / 4,096 / 65,536; depth overrides stop at 4,096 and output
+bytes at 1,048,576. It emits all top-level functions, one signature per function,
+compact live parameters, local slots and typed conditional branches. It never
+uses evaluator results to replace function bodies. The published byte builder
+checks lengths before addition. Section sizes and indexes use unsigned LEB128;
+nonnegative enum constants use signed LEB128 with a 6-bit final group.
+
+`eval-cli source function transition-budget [live-ordinals...]` independently
+interprets checked terms with explicit environments and argument/binding frames.
+Its input limits are 65,536 / 512 / 512. At most 1,048,576 transitions can be
+requested; 65,536 is the normal test budget. Each source-machine step costs one
+unit, including argument binding; a terminal value needs no further fuel. An
+erased initializer/argument is skipped before entering its expression. The
+evaluator enforces exact live arity and each parameter's constructor domain.
+
+`scripts/run-wasm.mjs module export [live-ordinals...]` is a Node host adapter.
+It uses WebAssembly.validate, compile and instantiate, rejects imports, checks
+live arity and the profile-wide 0..255 ordinal range, and returns an execution
+record. Supplying each ordinal from its declared enum is the caller's ABI
+precondition. Tests supply domain-valid arguments from literal observations. It contains no Bend
+source-language semantics and performs no code generation. `wasm2wat` is only
+an independent decoder used to inspect generated modules, not an assembler or
+a compilation dependency.
+
+Checking and byte construction finish before the output file is opened. Invalid,
+unsupported and exhausted compilation leaves existing output untouched and prints
+no Built record. File-open/read/write failures report HostFailure; a failed write
+can leave a partial file. A file left after failure cannot count as a new module.
+These commands do not promise atomic replacement or crash durability.
+
+The first runtime represents only nullary enum values. Its evaluator values are
+Data records used as an independent pure model; source quantities are checked
+before execution. This does not establish an owning heap for general affine
+resources, a parallel runtime, or source compilation to the existing GPU probe.
 
 ## Required evidence
 

@@ -1,11 +1,14 @@
 # Bend 2 subset stages for Knot
 
-Status: proposed design, researched 2026-09-26. No Knot compiler exists and no
-full language-stage gate has passed. A bounded handwritten GPU probe now has
+Status: proposed stages, researched 2026-09-26. The first seed-built
+[enum compiler](../research/compiler-wasm/README.md) now parses, checks,
+independently evaluates, and emits real Wasm. No full language-stage gate has
+passed: S1 still needs fields and structural recursion. A bounded handwritten GPU probe has
 [hardware evidence](../research/adaptive-tasks/README.md). Bend 2, direct self-hosting, retained GPU execution,
 the Wasm target, and adaptive continuation tasks are decided. WebGPU/WGSL is the
-working GPU path. The compatibility pin, implementation profile, exact host/device ABI, and runtime
-representations remain open. These choices were recorded on 2026-09-26;
+working GPU path. The first enum profile pins Bend 2.0.29 and Node 22.22.3 in
+[`src/CONTRACT.json`](../src/CONTRACT.json). The broader implementation closure,
+host/device ABI and runtime representations remain open. These choices were recorded on 2026-09-26;
 the staging below remains proposed. See [the backend plan](WASM-WEBGPU-BACKEND.md).
 
 ## Recommendation
@@ -95,8 +98,9 @@ The inspected official repository is `https://github.com/bendlang/bend`, commit
 `574b6d39a235b539eb19a5c532993a0abb3d11ad` (commit date
 `2026-09-26 01:11:21 -0300`, subject “The flake names 2.0.29”). A disposable
 detached checkout was used; `bun bend2/main.ts version` returned `bend 2.0.29`
-under Bun 1.3.14. This is an **observed research reference, not the selected
-compatibility or bootstrap pin**. The previously observed 2.0.16 binary in
+under Bun 1.3.14. It was initially a research reference; the first compiler
+increment subsequently selected this exact revision as its seed and enum-profile
+compatibility pin. The previously observed 2.0.16 binary in
 another project's toolchain was neither adopted nor updated.
 
 Pinned primary sources used below:
@@ -652,26 +656,29 @@ establish reference checker behavior only. The official Lean core
 is useful material for later rule review; no Lean proof was executed or
 transferred to Knot, and source-to-model correspondence is not assumed.
 
-## First implementation increment after accepting the plan
+## First executable increment and next stage
 
-Complete the S0 contract and one seed-built S1 path: **parse, resolve, check, and
-evaluate a no-Base `Flag` program and its negative twins**. The first checkpoint
-now has `src/syntax.bend`, `src/lex.bend`, `src/parse.bend`, an inspection CLI,
-`tests/subsets/s1/` and a literal fixture manifest. `src/SPEC.md` pins the enum
-profile to Bend 2.0.29. Native and Bun agree on all 14 syntax-tree fixtures;
-four boundary laws and four semantic mutants pass their specified gates.
-This is a parser checkpoint, not S1 completion. `src/resolve.bend`,
-`src/check.bend` and `src/eval.bend` remain to implement. Use a single explicit binder representation and
-structured outcomes. Include shadowing, affine overuse, erased live use,
-constructor mismatch, and missing-arm negatives. Run under the selected seed
-and compare with the pinned reference interpreter.
+The no-Base enum path is implemented: **parse, resolve, check, independently
+evaluate, emit Wasm, validate and execute**. `src/catalog.bend`, `src/scope.bend`
+and `src/check.bend` resolve and check one lexical-level representation;
+`src/eval.bend` runs a source machine; `src/wasm.bend` maps it to compact live
+locals and emits binary sections through the published ByteOutput package.
+Neither backend uses the other's output as its oracle.
 
-Keep the front end independent of runtime details, then add a minimal Wasm
-lowering/emission path to complete S1's executable gate. In parallel with the
-design work, qualify the narrow WebGPU runtime path before fixing layouts.
-Do not start by porting `comp.ts`, loading the entire backend runtime, or
-implementing every Base operation. Publish the actual feature/closure receipt
-with the increment and revise this plan from that evidence.
+The [milestone audit](../research/compiler-wasm/README.md) links exact commands,
+hashes, dependencies and retained modules. Native and Bun builds agree byte for
+byte on 25 programs; 90 fixed calls agree with the upstream interpreter,
+independent evaluator and actual Node Wasm execution. Rejection tests include
+affine reuse, erased live use and missing match arms. Eighteen filled laws cover
+specific frontend, checker, source-machine and codec properties; they do not
+constitute a whole-compiler refinement proof.
+
+This completes the bounded enum milestone, not the full S1 profile above.
+Next add owned constructor fields and structural recursion, with explicit
+allocation/drop and continuation layouts that can serve both Wasm and the
+required WebGPU path. Keep source-to-device execution and full self-hosting as
+separate acceptance gates. Preserve the current enum corpus as regression
+evidence while widening the accepted profile.
 
 ## Research receipt and reproducibility
 

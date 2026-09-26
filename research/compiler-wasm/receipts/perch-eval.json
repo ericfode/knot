@@ -1,0 +1,2450 @@
+{
+  "path": "src/eval.bend",
+  "name": "src/eval.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 18,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 72,
+  "units": [
+    {
+      "path": "src/eval.bend",
+      "name": "internal",
+      "line": 19,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 20,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.63,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.37,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "host",
+      "line": 22,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 23,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.61,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.15000000000000002,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.43000000000000005,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "lookup",
+      "line": 25,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 29,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.33999999999999997,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "Entry",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "function_at",
+      "line": 31,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 35,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.36,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "function_named",
+      "line": 37,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 43,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.61,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.38,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "select",
+      "line": 45,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 50,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.54,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.41000000000000003,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "select_value",
+      "line": 52,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 54,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.36,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "enter",
+      "line": 56,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 58,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.55,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.4,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Entry",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Frame",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "enum_tag",
+      "line": 60,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 65,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.19999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.39,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "host_argument",
+      "line": 67,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 71,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.35,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "drop_argument",
+      "line": 73,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 76,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.06999999999999995,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.37,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "step",
+      "line": 80,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 113,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.22999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.15000000000000002,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.43000000000000005,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Entry",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Frame",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "run",
+      "line": 115,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 120,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.19999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.15000000000000002,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.42000000000000004,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Entry",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Frame",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "List.length",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "start",
+      "line": 122,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 124,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5700000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.4,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "invoke",
+      "line": 126,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 129,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.25,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.16000000000000003,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.4,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Function",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "State",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Term",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Entry",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Frame",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "enum_tag",
+            "reason": "context-helper-limit"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "constructor_name",
+      "line": 131,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 135,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.24,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.31999999999999995,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "result_name",
+      "line": 137,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 141,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.15000000000000002,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.6,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.30000000000000004,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "src/eval.bend",
+      "name": "describe",
+      "line": 143,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 18,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+            "location": null
+          },
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 146,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.6,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-pattern-sharing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+          "broken": 0.30000000000000004,
+          "floor": 0.8
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/eval.bend",
+            "source_sha256": "ba318e44c13355cd9731514615b2fa0a68d9c4087bbf3dbc847dea12d62bc7cc"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "ee53d8f943cd7d2fde831769997e12e923b1cf7b46b2e640812ce060d3ec3760"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/eval.bend",
+            "name": "Value",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Book",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Error",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.show",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "C.Enum",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "S.Token",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/eval.bend",
+            "name": "String.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Token",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}

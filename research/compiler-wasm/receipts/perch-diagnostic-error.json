@@ -1,0 +1,86 @@
+{
+  "path": "src/diagnostic.bend",
+  "name": "error",
+  "line": 9,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 6,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 15,
+  "asked": [
+    {
+      "rule": "compiler-checker-trust",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+      "broken": 0.41000000000000003,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "files": [
+      {
+        "path": "src/diagnostic.bend",
+        "source_sha256": "6d7b0b0052fcb1809449b0b6df3f26f2bbdac7ff3e68c7b292727068e4b350f6"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "src/diagnostic.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "String.concat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "S.At",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "U32.show",
+        "reason": "unresolved-or-builtin"
+      }
+    ],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 1,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

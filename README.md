@@ -13,18 +13,19 @@ shaders and bounded task exchange between dispatches. The compiler itself may
 bootstrap and self-host sequentially on CPU.
 
 The first [compiler contract](src/SPEC.md) pins an enum slice to Bend 2.0.29.
-Its Bend lexer, parser, resolver and checker run on native and Bun. The checker
-checkpoint passes 49 reference fixtures, 98 exact resolved-term observations and
-seven semantic mutation tests, with seven new helper/boundary laws beside the
-four frontend laws. `Checked` does not mean a value was evaluated or an artifact
-was built: independent value evaluation and Wasm emission remain outstanding.
-The broader compatibility profile and runtime representation remain proposals.
+Its Bend lexer, parser, resolver, checker, independent evaluator and direct binary
+Wasm emitter run on native and Bun. The [executable milestone](research/compiler-wasm/README.md)
+passes 25 source programs and 90 reference calls with byte-identical modules from
+both builds, executed by Node 22.22.3. It checks affine/erased usage and exhaustive
+matches; fields and recursion remain outside this profile. This is a seed-built
+compiler that emits Wasm programs. Compiling itself and lowering source to the
+GPU remain subsequent milestones.
 
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
 executable: 12 checked Bend laws, owned checkpoints and slots, and 38 actual
 WebGPU runs on an Apple M5 Max. The device code is handwritten WGSL driven by a
-native Node host. Wasm execution, Bend-source lowering, and performance remain
-separate gates.
+native Node host. Connecting compiled Wasm to this device path, Bend-source GPU
+lowering, and performance remain separate gates.
 
 - [Subset stages and GPU acceptance gates](docs/BEND-SUBSET-STAGES.md)
 - [Wasm and WebGPU backend plan](docs/WASM-WEBGPU-BACKEND.md)
@@ -38,6 +39,8 @@ separate gates.
 - [Frontend boundary laws and review](research/compiler-frontend/LAW_REVIEW.md)
 - [Resolver/checker corpus and executable gate](tests/compiler-checker/README.md)
 - [Checker laws, ownership semantics and limits](research/compiler-checker/LAW_REVIEW.md)
+- [Source-to-Wasm commands, artifacts and execution gate](tests/compiler-wasm/README.md)
+- [Compiler milestone audit, proof limits and trust inventory](research/compiler-wasm/README.md)
 
 ## Reference
 

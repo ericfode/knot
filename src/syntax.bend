@@ -8,6 +8,7 @@ type Error is Data:
   Unsupported{phase: String, code: String, at: At}
   Exhausted{phase: String, at: At}
   Internal{phase: String, code: String}
+  Host{phase: String, code: String}
 
 type Token is Data:
   Token{text: String, at: At}
