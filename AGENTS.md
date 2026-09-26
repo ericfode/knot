@@ -56,8 +56,10 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   backend behavior remain deterministic gates. Missing live calibration is
   unavailable evidence, not permission to claim a pass or a reason to abandon
   otherwise verified work.
-- For a bounded repair experiment, use **Luna 6 only**, never Luna 5.6. Retain
-  the original contract and immutable independent tests. Record first-shot
+- The user's later 2026-09-26 instruction authorizes stronger models for fixes,
+  superseding the Luna-6-only restriction. Use **GPT-6 Astra at high reasoning**
+  for confirmed Perch repairs; Luna 5.6 remains excluded. Retain the original
+  contract and immutable independent tests. Record first-shot
   success separately from a single compiler-diagnostic retry; reject remaining
   failures instead of changing tests or silently hand-fixing the model's output.
   See docs/perch-performance-experiment-protocol.md and the experiment report.

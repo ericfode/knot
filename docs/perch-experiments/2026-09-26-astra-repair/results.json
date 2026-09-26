@@ -1,0 +1,432 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-26T22:06:12.397962+00:00",
+  "case": "indexed-linked-list",
+  "first_shot_passed": false,
+  "after_one_diagnostic_retry_passed": true,
+  "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+  "attempts": [
+    {
+      "schema": 1,
+      "case": "indexed-linked-list",
+      "passed": false,
+      "status": "compile-failed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 1,
+          "seconds": 0.045254166005179286
+        }
+      ],
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "compiler": {
+        "version": "2.0.29",
+        "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+        "backend": "JavaScript"
+      },
+      "candidate_sha256": "327a3f31c0635d05b7d5aa0732cfe1e0dc4d9df1c9e094fb7b81d986e9bd6a31",
+      "seconds": 0.04644662491045892,
+      "source": "indexed-linked-list.bend",
+      "attempt": 1,
+      "requested_model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "agent": "/root/repair_astra_indexed",
+      "response_model_id": null,
+      "generation_latency_seconds": null,
+      "token_usage": null,
+      "diagnostics": "Error:\n- message  : a declared constructor (unknown: candidate.Cons)\nLocation:\n5 |     case Nil{}: Nil{}\n6>|     case Cons{x,tail}:\n  |          ^^^^^^^^^^^^\n7 |       U32.mul(x,i) <> walk(tail,U32.add(i,1))\n"
+    },
+    {
+      "schema": 1,
+      "case": "indexed-linked-list",
+      "passed": true,
+      "status": "passed",
+      "checks": [
+        {
+          "name": "check",
+          "exit_code": 0,
+          "seconds": 0.060174958081915975
+        },
+        {
+          "name": "compile",
+          "exit_code": 0,
+          "seconds": 0.06265716697089374
+        },
+        {
+          "name": "instrument",
+          "exit_code": 0,
+          "seconds": 0.034270582953467965
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "seconds": 0.02877491689287126
+        }
+      ],
+      "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+      "compiler": {
+        "version": "2.0.29",
+        "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+        "backend": "JavaScript"
+      },
+      "candidate_sha256": "9fd8a767085df8404db5c1e174a4f9b6bf2f5374ac4b6d5016301e62544292d5",
+      "correctness": {
+        "pass": true,
+        "probes": [
+          {
+            "probe": 0,
+            "n": 0,
+            "pass": true
+          },
+          {
+            "probe": 1,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 2,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 3,
+            "n": 1,
+            "pass": true
+          },
+          {
+            "probe": 4,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 5,
+            "n": 2,
+            "pass": true
+          },
+          {
+            "probe": 6,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 7,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 8,
+            "n": 5,
+            "pass": true
+          },
+          {
+            "probe": 9,
+            "n": 4,
+            "pass": true
+          },
+          {
+            "probe": 10,
+            "n": 3,
+            "pass": true
+          },
+          {
+            "probe": 11,
+            "n": 7,
+            "pass": true
+          },
+          {
+            "probe": 12,
+            "n": 16,
+            "pass": true
+          },
+          {
+            "probe": 13,
+            "n": 31,
+            "pass": true
+          },
+          {
+            "probe": 14,
+            "n": 65,
+            "pass": true
+          },
+          {
+            "probe": 15,
+            "n": 127,
+            "pass": true
+          },
+          {
+            "probe": 16,
+            "n": 255,
+            "pass": true
+          },
+          {
+            "probe": 17,
+            "n": 513,
+            "pass": true
+          },
+          {
+            "probe": 18,
+            "n": 1024,
+            "pass": true
+          }
+        ]
+      },
+      "performance": {
+        "pass": true,
+        "metric": "generated JS function entries + loop iterations + object/array allocations",
+        "rows": [
+          {
+            "n": 32,
+            "functions": 38,
+            "loops": 0,
+            "allocations": 33,
+            "work": 71,
+            "ratio": null,
+            "linear_budget": 2176,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 64,
+            "functions": 70,
+            "loops": 0,
+            "allocations": 65,
+            "work": 135,
+            "ratio": 1.9014084507042253,
+            "linear_budget": 4224,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 128,
+            "functions": 134,
+            "loops": 0,
+            "allocations": 129,
+            "work": 263,
+            "ratio": 1.9481481481481482,
+            "linear_budget": 8320,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 256,
+            "functions": 262,
+            "loops": 0,
+            "allocations": 257,
+            "work": 519,
+            "ratio": 1.973384030418251,
+            "linear_budget": 16512,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 512,
+            "functions": 518,
+            "loops": 0,
+            "allocations": 513,
+            "work": 1031,
+            "ratio": 1.9865125240847785,
+            "linear_budget": 32896,
+            "correct": true,
+            "pass": true
+          },
+          {
+            "n": 1024,
+            "functions": 1030,
+            "loops": 0,
+            "allocations": 1025,
+            "work": 2055,
+            "ratio": 1.9932104752667312,
+            "linear_budget": 65664,
+            "correct": true,
+            "pass": true
+          }
+        ]
+      },
+      "instrumentation_sites": {
+        "functions": 29,
+        "loops": 4,
+        "allocations": 17
+      },
+      "compiled_sha256": "91bae81093aed60d90d60649445d3fe3a63ae8785ef700380bbc78f0d06870b3",
+      "instrumented_sha256": "5f1bff12e5b612aca5b76ad5282fb3d7dd56bb5ba54c4366c2a592097b7d5428",
+      "seconds": 0.18749341717921197,
+      "source": "indexed-linked-list.retry.bend",
+      "attempt": 2,
+      "requested_model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "agent": "/root/repair_astra_indexed",
+      "response_model_id": null,
+      "generation_latency_seconds": null,
+      "token_usage": null,
+      "diagnostics": ""
+    }
+  ],
+  "perch_rechecks": [
+    {
+      "schema": 1,
+      "id": "4475a885-f01f-4679-a2c2-0819504d51ac",
+      "at": "2026-09-26T22:04:33.430Z",
+      "command": "check",
+      "target": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+      "revision": "0e5afd21d0c344bd4be9cd4009166d09659778ba",
+      "source_sha256": "9fd8a767085df8404db5c1e174a4f9b6bf2f5374ac4b6d5016301e62544292d5",
+      "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+      "selected_rules": [
+        "perf-linked-list-indexing"
+      ],
+      "perch_version": "0.3.5",
+      "requested_model": "jev-latest",
+      "resolved_model": "jev-1.13.0",
+      "provider_requests": 2,
+      "provider_responses": 2,
+      "models": [
+        "jev-1.13.0"
+      ],
+      "answers": [
+        {
+          "rule": "perf-linked-list-indexing",
+          "probability_true": 0.89
+        },
+        {
+          "rule": "perf-linked-list-indexing",
+          "probability_true": 0.88
+        }
+      ],
+      "usage": {
+        "input_tokens": 2165,
+        "output_tokens": 50
+      },
+      "elapsed_ms": 473,
+      "upstream_exit": 0,
+      "exit": 0,
+      "status": "completed",
+      "checked": 2,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 2,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "parser_coverage": null,
+      "units": [
+        {
+          "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+          "name": "walk",
+          "line": 3,
+          "end_line": 7,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "broken": 0.10999999999999999,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "source_sha256": "9fd8a767085df8404db5c1e174a4f9b6bf2f5374ac4b6d5016301e62544292d5"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        },
+        {
+          "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+          "name": "solve",
+          "line": 9,
+          "end_line": 10,
+          "checked": 1,
+          "asked": [
+            {
+              "rule": "perf-linked-list-indexing",
+              "broken": 0.12,
+              "floor": 0.6
+            }
+          ],
+          "broken": [],
+          "context": {
+            "basis": "working-tree",
+            "files": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "source_sha256": "9fd8a767085df8404db5c1e174a4f9b6bf2f5374ac4b6d5016301e62544292d5"
+              }
+            ],
+            "unresolved": [
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false,
+            "limits": {
+              "helpers": 16,
+              "files": 12,
+              "bytes": 48000,
+              "callers": 4
+            }
+          }
+        }
+      ],
+      "findings": [],
+      "issue_count": 0,
+      "adjudication": "unreviewed"
+    }
+  ],
+  "limitations": [
+    "One synthetic escalation, not a general model comparison or proof of Perch value.",
+    "JavaScript backend finite semantic and scaling probes; no native/GPU result.",
+    "The agent runner exposes requested model settings but no separate response model ID, token usage, billing or isolated generation latency."
+  ]
+}

@@ -1,4 +1,4 @@
-# Parsed Bend checks and Luna 6 repair pilot
+# Parsed Bend checks and model repair trials
 
 Four advisory performance rules now review parsed declarations: growing prefix
 copying, repeated invariant summaries, sequential linked-list indexing, and
@@ -76,15 +76,44 @@ CLI rejected the model name with its ChatGPT authentication; the app runner
 accepted the requested Luna 6 setting. Two Luna 5.6 generations finished before
 the user's correction; they were excluded, and no further Luna 5.6 work ran.
 
-Use Luna 6 as a bounded patch proposer with a deterministic compiler/test loop.
-Give it the public contract and a confirmed finding, allow one diagnostic retry,
-then escalate remaining failures. Do not let a clean Perch response authorize a
-broken program or weaken the original acceptance gate.
+The initial pilot supported bounded patch proposals with a deterministic
+compiler/test loop and escalation after one diagnostic retry. The user later
+authorized stronger models for fixes; the current default is GPT-6 Astra at
+high reasoning. Give it the public contract and a confirmed finding. A clean
+Perch response cannot authorize a broken program or weaken the acceptance gate.
 
 - [Frozen protocol and correction log](perch-performance-experiment-protocol.md)
 - [Prompts and model outputs](perch-experiments/2026-09-26-fast-repair/manifest.json)
 - [Per-attempt results and diagnostics](perch-experiments/2026-09-26-fast-repair/results.json)
 - [Reproducible evaluator](../tests/perch-performance/README.md)
+
+## Stronger-model escalation
+
+The user's later 2026-09-26 instruction authorized a stronger model for fixes.
+The remaining `indexed-linked-list` case was sent to a fresh `gpt-6-astra`
+context at high reasoning, using the byte-identical original prompt and the
+unchanged independent evaluator. No prior candidate, clean solution, evaluator
+internals or tools were available to the repair agent.
+
+The first Astra candidate also invented `Cons` and failed compilation. One
+retry with the exact compiler diagnostic changed the pattern to `x <> tail`.
+That unchanged output passed compilation, all 19 full-output probes and all six
+measured scaling probes. Work at n=1024 fell from the independently measured
+baseline's **534,024 to 2,055**, about **260× fewer instrumented operations**.
+This is not a measured wall-clock speedup. Two parsed-unit Perch checks reported
+11% and 12% broken probability, below their 60% floor, with no findings.
+
+**Astra escalation: 0/1 first-shot; 1/1 after one diagnostic retry.** The original
+Luna pilot remains 1/3 first-shot and 2/3 after one retry. All three synthetic
+cases now have an accepted candidate across the two phases. This one escalation
+does not establish a general model ranking, native/GPU behavior, or incremental
+benefit from Perch versus unaided repair. No production package source changed.
+
+[Escalation manifest](perch-experiments/2026-09-26-astra-repair/manifest.json),
+[attempts and retained evidence](perch-experiments/2026-09-26-astra-repair/results.json),
+[accepted candidate](perch-experiments/2026-09-26-astra-repair/indexed-linked-list.retry.bend).
+The agent runner accepted the requested model setting but supplied no separate
+response model ID, token counts, billing or isolated generation latency.
 
 ## Final project recheck
 

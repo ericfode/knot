@@ -71,7 +71,10 @@ App heartbeat: `maintain-knot-perch-rules`, active in the Perch-maintenance chat
    including truncation and unresolved references. File-era calibration is
    historical evidence, not interchangeable with declaration-era scores. Keep
    the performance clean/broken/held-out controls and immutable repair evaluator
-   in the review; use Luna 6 only for any bounded repair trial.
+   in the review. The user subsequently authorized stronger repair models;
+   use GPT-6 Astra at high reasoning for confirmed repairs, with the same
+   immutable gates and at most one compiler-diagnostic retry. Luna 5.6 remains
+   excluded. Historical Luna results keep their original model attribution.
 5. Make at most two focused rule/procedure changes in one routine review.
    Prefer deterministic fixes for deterministic mistakes. For repeated
    semantic mistakes, add a narrow rule with a concrete counterexample. Narrow

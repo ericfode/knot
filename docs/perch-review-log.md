@@ -245,3 +245,28 @@ must change the implementation/declared profile, never be relabeled as ownership
 evidence. The finished lexer/parser passes both backend lanes and four
 type-correct semantic mutation tests; Perch answered 282 targeted checks with
 no above-floor findings. Checking and Wasm emission remain outstanding.
+
+## 2026-09-26 — stronger-model repair escalation
+
+The user authorized a smarter model for fixes, superseding the Luna-6-only
+restriction. Root instructions and maintenance now select GPT-6 Astra at high
+reasoning; Luna 5.6 remains excluded. Historical experiment attribution is
+unchanged. The weekly maintenance prompt already reads those instructions and
+needs no separate schedule change.
+
+The remaining indexed-list case used its exact original prompt in a fresh
+context, with no tools, earlier candidate or evaluator access. Astra's first
+attempt also invented `Cons`. Its single compiler-diagnostic retry used the
+valid list pattern and passed the unchanged compiler, 19 output probes and six
+scaling probes. At n=1024, work dropped from 534,024 to 2,055 operations. No parent
+edits were made to either candidate. The accepted source received two parsed-unit
+Perch checks with no findings. [Report](perch-performance-2026-09-26.md#stronger-model-escalation)
+and [raw results](perch-experiments/2026-09-26-astra-repair/results.json).
+
+Judgment: the original performance defect is confirmed by the independent gate,
+and this repair is accepted under that finite JavaScript gate. A stronger model
+plus compiler feedback resolved the case Luna left invalid. The constructor
+mistake still occurred on the first attempt, so model escalation does not replace
+compiler validation. This is one synthetic case; broader productivity, native/GPU
+behavior and model superiority remain unestablished. Generation cost and isolated
+latency were unavailable. No package source, law, test oracle or threshold changed.
