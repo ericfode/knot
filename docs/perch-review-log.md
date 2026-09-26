@@ -146,3 +146,49 @@ whole-file audit receipts are preserved as such rather than relabeled.
 Next maintenance focus: narrow proof-claim integrity against the wrong-phase
 regression; calibrate arithmetic-free versus overflowing functions with parsed
 context; retain the new coverage guards. Wasted elapsed time is unknown.
+
+## 2026-09-26 — parsed-unit performance checks and Luna 6 repair pilot
+
+The user requested performance checks, a fast-model repair experiment, Luna 6
+only, and conversion to appropriate parsed Bend units followed by a full recheck.
+[Report](perch-performance-2026-09-26.md) and
+[fixed protocol](perch-performance-experiment-protocol.md) retain the evidence.
+
+Confirmed tooling defect: upstream custom method checks supplied an empty helper
+graph. Changing only `each: file` to `each: method` would lose the information
+needed for complexity review. The adapter now checks exact parsed declarations
+with working-copy local helpers, caller/law/datatype context and source hashes.
+Named checks remain single-unit; file checks aggregate declarations. Malformed
+helpers and partial provider failure reject the run. Context limits remain
+visible. All 13 shared source rules are method rules; packet rules remain file
+rules. Sixteen offline tests and the law-wiring gate pass.
+
+Four new performance rules remain advisory. Baseline/clean comparisons selected
+floors 70/60/60/80; final parsed-unit calibration classified 20/21 correctly with
+no clean-control findings. The exact-size-growth held-out source scored exactly
+80% and was missed by the strict reporting floor. Retain this miss; do not tune
+the floor again to present perfect accuracy. Repeated reads varied, reinforcing
+the need for deterministic gates and fresh controls.
+
+Luna 6 passed 1/3 first-shot repairs and 2/3 after one compiler-diagnostic retry.
+The rejected candidate invented a list constructor twice. The accepted repairs
+preserved complete outputs and reduced measured compiled work at n=1024 from
+1,051,656 to 2,055 and from 1,051,655 to 3,080. No parent fixes were credited.
+Immutable compilation/output/operation-count gates confirmed all 27 expected
+control outcomes. This is finite synthetic evidence, not a cost/speed benchmark
+or a universal correctness/complexity proof. Use Luna 6 only for future bounded
+repair trials and escalate after one failed diagnostic retry.
+
+The final corpus pass answered 10,680 source questions over 1,068 declarations,
+plus 70 questions on eight real law packets, with no findings. Two files have no
+executable declarations; 213 units had bounded helper context. Every source hash
+still matched at completion. Total run: 147.844 seconds, including the 17 extra
+synthetic packets. Those packets produced 34 broad-rule task mismatches and eight
+intended owner-rule detections. A targeted owner-only rerun classified 16/17;
+OutputBuilder's empty-chunk O(N) claim remains missed. The corpus runner now
+selects intended owner rules for synthetic packets to avoid misleading noise.
+
+One corpus pass was interrupted when final adapter edits arrived during the
+run. Its receipt is preserved separately, never added to final coverage.
+Procedure patch: finish adapter edits/offline gates and freeze the installation
+before paid corpus dispatch. No package source or publication changed.
