@@ -1,0 +1,1179 @@
+{
+  "schema": 1,
+  "model": {
+    "runtime_commit": "62076b4f2d365b5879dafcf7f6dd072a1fe76df7",
+    "repo": "bespokelabs/Bespoke-Nimble-9B",
+    "revision": "bd792f44ec8e265be861bfcdf4e05967ffe0e858",
+    "base": "Qwen/Qwen3.5-9B",
+    "base_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "adapter_sha256": "29ef39b072dee97287947455337879c1e916705c2f727287922a2d81f5e2f20a",
+    "backend": "mlx",
+    "precision": "bfloat16 merged adapter"
+  },
+  "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+  "load_ms": 3812.655,
+  "temperature": 1.0,
+  "advisory": true,
+  "offline": true,
+  "rows": [
+    {
+      "id": "full-rule-1",
+      "phase": "full-rule",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "a3dfbc0ec7613576bc601b3b052d55994648be61788b50cb0054a7691582716c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          677
+        ],
+        "encoding_sha256": "65d7b68dc11ece19c9a54a8e59338d3ef5426651c59c9d9d289dde1de9ba7215",
+        "prepared_sha256": "c58ba7b2c884a0263267d3699aaf31145f8068c0372799acad9c333d5fff6c24"
+      },
+      "status": "inferred",
+      "elapsed_ms": 512.773,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.10341285914182663,
+              "true": 0.8965871334075928
+            },
+            "noul": 0.8965871334075928
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            18.92112922668457,
+            21.080995559692383
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 1,
+          "prefix_tokens": 665,
+          "suffix_tokens": [
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.3307530840393156,
+          "field_evaluation_seconds": 0.1646216658409685,
+          "total_seconds": 0.5123643749393523,
+          "mlx_peak_active_gib": 17.338148344308138,
+          "mlx_active_before_gib": 16.67775822430849,
+          "mlx_peak_above_start_gib": 0.6603901199996471,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "full-rule-2",
+      "phase": "full-rule",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "004e6a2677357ea5dd14fe7f7b91a981ed18a3170082839aab9ed3e3738f07ef",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          666
+        ],
+        "encoding_sha256": "f44be3833b5bd1f3d0c42c127d49bec154f64fc62996237590c80ecaeb6a0b88",
+        "prepared_sha256": "944771850294d01d56256e14149e2ecf4a996a7bfc0fc3d35f79b7b6dafa69ed"
+      },
+      "status": "inferred",
+      "elapsed_ms": 244.2,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.10653490573167801,
+              "true": 0.8934651017189026
+            },
+            "noul": 0.8934651017189026
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            18.87093734741211,
+            20.99757194519043
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 1,
+          "prefix_tokens": 654,
+          "suffix_tokens": [
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.21098691690713167,
+          "field_evaluation_seconds": 0.032731916988268495,
+          "total_seconds": 0.24388629104942083,
+          "mlx_peak_active_gib": 17.328016508370638,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.650258282199502,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "full-rule-3",
+      "phase": "full-rule",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "a7e2dc31fdcd217bb76da4df6341b3d57e356ec3247f4658d955d455c0854517",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          666
+        ],
+        "encoding_sha256": "fb4d645bbe71daee43368b2cf5d7b962f7b639dd88796b83f2bd4fb2fb9bd55e",
+        "prepared_sha256": "cbd568d3a097a5da19f7bc966cd60905b93fc5612a4aa7dee4fc1fd1d990f64e"
+      },
+      "status": "inferred",
+      "elapsed_ms": 243.249,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.2643079161643982,
+              "true": 0.7356920838356018
+            },
+            "noul": 0.7356920838356018
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            19.262283325195312,
+            20.285980224609375
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 1,
+          "prefix_tokens": 654,
+          "suffix_tokens": [
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.20977491606026888,
+          "field_evaluation_seconds": 0.0330614170525223,
+          "total_seconds": 0.24304016586393118,
+          "mlx_peak_active_gib": 17.328016508370638,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.650258282199502,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "full-rule-4",
+      "phase": "full-rule",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "a66a2db8b3c71d67e8a4fa832cfa3b78477b545b57b0ab76a3ee98ca59a15aab",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          623
+        ],
+        "encoding_sha256": "e9c6a72be3a9067072a439acd53ed1a09cc773309c47c82af6108ba88bed4f74",
+        "prepared_sha256": "0d791009e71ce21392226f2fa63f6ce88f41ea0ce0d6e4404bf8d28928516962"
+      },
+      "status": "inferred",
+      "elapsed_ms": 239.934,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.380568265914917,
+              "true": 0.6194316744804382
+            },
+            "noul": 0.6194316744804382
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            19.707069396972656,
+            20.19420623779297
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 1,
+          "prefix_tokens": 611,
+          "suffix_tokens": [
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.2028422080911696,
+          "field_evaluation_seconds": 0.036684917053207755,
+          "total_seconds": 0.23972929106093943,
+          "mlx_peak_active_gib": 17.289564359933138,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.611806133762002,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-1",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "48a7f8ee514d1bb90d36b39d1156f9d9291c43e827aff978bead772b60d5165c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          697,
+          698,
+          697
+        ],
+        "encoding_sha256": "1a1dab0d3049e808c26a25ecbb1b888660919956880e530354397bc0eb1f0b0b",
+        "prepared_sha256": "336b0e026a566cdd5d07351d3b1a6f258553a1c1f8b1ab99c6f5266e8b0dc63c"
+      },
+      "status": "inferred",
+      "elapsed_ms": 822.345,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8968372941017151,
+              "true": 0.10316270589828491
+            },
+            "noul": 0.10316270589828491
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9759656190872192,
+              "true": 0.024034393951296806
+            },
+            "noul": 0.024034393951296806
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.978259801864624,
+              "true": 0.021740248426795006
+            },
+            "noul": 0.021740248426795006
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            21.593578338623047,
+            19.431011199951172
+          ],
+          [
+            22.009777069091797,
+            18.305835723876953
+          ],
+          [
+            21.73822021484375,
+            17.931610107421875
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 684,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.2186265829950571,
+          "field_evaluation_seconds": 0.602521832799539,
+          "total_seconds": 0.8217400421854109,
+          "mlx_peak_active_gib": 17.355039965361357,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.6772817391902208,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-2",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "4512569761f25fe7736e216e394ab6b4f4cf9fe47f63211f9609184d84b42613",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          686,
+          687,
+          686
+        ],
+        "encoding_sha256": "c760d91bfb4ad24c69abab8724c91c864666bbc112e0cf53f44a4d2625eea3ab",
+        "prepared_sha256": "f11a9bf168d988768a4bd423f43485f19ff4fc738477a108d9717163991a1b7f"
+      },
+      "status": "inferred",
+      "elapsed_ms": 274.737,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.15187494456768036,
+              "true": 0.8481250405311584
+            },
+            "noul": 0.8481250405311584
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9659357070922852,
+              "true": 0.03406425938010216
+            },
+            "noul": 0.03406425938010216
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.973357617855072,
+              "true": 0.02664240077137947
+            },
+            "noul": 0.02664240077137947
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            19.516590118408203,
+            21.236560821533203
+          ],
+          [
+            22.04019546508789,
+            18.69534683227539
+          ],
+          [
+            21.884307861328125,
+            18.286060333251953
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 673,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.2148398330900818,
+          "field_evaluation_seconds": 0.058900499949231744,
+          "total_seconds": 0.27424929197877645,
+          "mlx_peak_active_gib": 17.345426876097918,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.6676686499267817,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-3",
+      "phase": "native-narrow",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "c6ba2feb9c25cad957367c4f5117a22948f7624e57617d5be0f2422c6b1214dc",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          686,
+          687,
+          686
+        ],
+        "encoding_sha256": "dde20662cad1fc1c83b6dd33273fd336ff722591a1d3862de5aad89a06478981",
+        "prepared_sha256": "d591a54dbb21174d17ec0545bec488e56c8210826a22122b96a6d158baa39cbc"
+      },
+      "status": "inferred",
+      "elapsed_ms": 275.092,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9270539283752441,
+              "true": 0.07294604927301407
+            },
+            "noul": 0.07294604927301407
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9271738529205322,
+              "true": 0.07282619923353195
+            },
+            "noul": 0.07282619923353195
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9244111776351929,
+              "true": 0.07558878511190414
+            },
+            "noul": 0.07558878511190414
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            21.486759185791016,
+            18.944467544555664
+          ],
+          [
+            21.532886505126953,
+            18.988821029663086
+          ],
+          [
+            21.257625579833984,
+            18.75377655029297
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 673,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.21439454215578735,
+          "field_evaluation_seconds": 0.059643917018547654,
+          "total_seconds": 0.2745670420117676,
+          "mlx_peak_active_gib": 17.345426876097918,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.6676686499267817,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-4",
+      "phase": "native-narrow",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "5117f012e47826b8d89491b09d98ebac2bb29087cca4687fe8d89c51e27c26c2",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          643,
+          644,
+          643
+        ],
+        "encoding_sha256": "16eb6177521f86610d2d4ecf09df1084feaba70937e95b5c2dbfefb7f0cf4150",
+        "prepared_sha256": "dfe3f8ef92bb1c5dafd51cc5392299075e6c2b8e119fc4473b3c821f0e5c3fd3"
+      },
+      "status": "inferred",
+      "elapsed_ms": 263.632,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.4548618793487549,
+              "true": 0.5451381802558899
+            },
+            "noul": 0.5451381802558899
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.963335394859314,
+              "true": 0.03666463494300842
+            },
+            "noul": 0.03666463494300842
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9500673413276672,
+              "true": 0.04993264004588127
+            },
+            "noul": 0.04993264004588127
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            20.241382598876953,
+            20.422428131103516
+          ],
+          [
+            21.82065200805664,
+            18.55206298828125
+          ],
+          [
+            21.4676513671875,
+            18.521793365478516
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 630,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.20335049997083843,
+          "field_evaluation_seconds": 0.05899387504905462,
+          "total_seconds": 0.2631004999857396,
+          "mlx_peak_active_gib": 17.3064253218472,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.6286670956760645,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-5",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "input_sha256": "f433d13e2777d14f1621a5591e7bcfc404dbfd9b9708ee6a81c5f9985551a432",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          632,
+          633,
+          632
+        ],
+        "encoding_sha256": "72aa4600b1edbb8d042d615d0d11957db1da2a5d82777eb8266ce488af4efcb4",
+        "prepared_sha256": "91e4623146be679791e22186b0cccf4e11dd1f53b6f1c4248f27a34f5628fb4a"
+      },
+      "status": "inferred",
+      "elapsed_ms": 261.195,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9389667510986328,
+              "true": 0.06103320047259331
+            },
+            "noul": 0.06103320047259331
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9572268724441528,
+              "true": 0.04277309030294418
+            },
+            "noul": 0.04277309030294418
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9711664915084839,
+              "true": 0.028833549469709396
+            },
+            "noul": 0.028833549469709396
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            21.54387664794922,
+            18.810514450073242
+          ],
+          [
+            21.660606384277344,
+            18.552474975585938
+          ],
+          [
+            21.53215789794922,
+            18.015199661254883
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 619,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.20138820819556713,
+          "field_evaluation_seconds": 0.05879670800641179,
+          "total_seconds": 0.2607200408820063,
+          "mlx_peak_active_gib": 17.296812284737825,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.6190540585666895,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-6",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "input_sha256": "d1e00004fc97794474bd3555c0b82f0c28c34b3ea00f27ab4c78ebb947747a02",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          744,
+          745,
+          744
+        ],
+        "encoding_sha256": "9e2c785eaf4308a961a467f4cffc5ed54e9c5204c1fe7d415073f7988de9e83a",
+        "prepared_sha256": "cd8d8a6c40cbe691c8c61750656c57777dc7a41ff33ac16430aac724b90695c4"
+      },
+      "status": "inferred",
+      "elapsed_ms": 279.435,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8631903529167175,
+              "true": 0.13680963218212128
+            },
+            "noul": 0.13680963218212128
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.10834678262472153,
+              "true": 0.891653299331665
+            },
+            "noul": 0.891653299331665
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.912102460861206,
+              "true": 0.08789754658937454
+            },
+            "noul": 0.08789754658937454
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            21.396141052246094,
+            19.554096221923828
+          ],
+          [
+            19.094419479370117,
+            21.202159881591797
+          ],
+          [
+            21.244421005249023,
+            18.90484046936035
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 731,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.21891612489707768,
+          "field_evaluation_seconds": 0.059350040974095464,
+          "total_seconds": 0.2788890420924872,
+          "mlx_peak_active_gib": 17.39218020811677,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.7144219819456339,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-7",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "input_sha256": "34ecb9b8f024ab154f5e3bb984bae406e4d1697d19ea3b0fd0aea1f699bf23ec",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          657,
+          658,
+          657
+        ],
+        "encoding_sha256": "5283590e4c7cafd7e4e7d9559665e2245816308dff6b4ab049758d07d62f2158",
+        "prepared_sha256": "318c13a4f884ef1fa44cfafaff337b358dac1da701f72ec4ac1c42e77c4552af"
+      },
+      "status": "inferred",
+      "elapsed_ms": 261.624,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9602135419845581,
+              "true": 0.039786506444215775
+            },
+            "noul": 0.039786506444215775
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9725273847579956,
+              "true": 0.027472641319036484
+            },
+            "noul": 0.027472641319036484
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9676163792610168,
+              "true": 0.03238363936543465
+            },
+            "noul": 0.03238363936543465
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            22.050823211669922,
+            18.86719512939453
+          ],
+          [
+            22.085460662841797,
+            18.518753051757812
+          ],
+          [
+            21.960004806518555,
+            18.562822341918945
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 644,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.20379529218189418,
+          "field_evaluation_seconds": 0.05671820789575577,
+          "total_seconds": 0.26106616598553956,
+          "mlx_peak_active_gib": 17.319074857980013,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.641316631808877,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "native-narrow-8",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "input_sha256": "2f844bcdbe987737f62413944217ecc7b53ccfd74d338caa6242d5192e7add45",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          798,
+          799,
+          798
+        ],
+        "encoding_sha256": "882d0f85ca70c0fb752618f944d056ca78682c5985eda2ebf0f17b8efc581e5b",
+        "prepared_sha256": "904ec92f460649040e488969118a2d2a158bd59b3fdd68e7240bcd85e825e41b"
+      },
+      "status": "inferred",
+      "elapsed_ms": 308.598,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.7200750112533569,
+              "true": 0.27992498874664307
+            },
+            "noul": 0.27992498874664307
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.5782221555709839,
+              "true": 0.4217778742313385
+            },
+            "noul": 0.4217778742313385
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.03610724210739136,
+              "true": 0.9638926982879639
+            },
+            "noul": 0.9638926982879639
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            20.90081787109375,
+            19.955984115600586
+          ],
+          [
+            20.479290008544922,
+            20.16381072998047
+          ],
+          [
+            18.351470947265625,
+            21.635957717895508
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 785,
+          "suffix_tokens": [
+            13,
+            14,
+            13
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.24992133397608995,
+          "field_evaluation_seconds": 0.05765124992467463,
+          "total_seconds": 0.3080935839097947,
+          "mlx_peak_active_gib": 17.448653388768435,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.7708951625972986,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          252,
+          252
+        ],
+        "encoding_sha256": "a690da46471ae1915b7e3368dd6c5ce2e8035b5f1c46a9cf70e518f565246871",
+        "prepared_sha256": "8e0923826999dde50b023df629682d02a851bef442d302ce067b8b8ed49e8675"
+      },
+      "status": "inferred",
+      "elapsed_ms": 139.032,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.0012928007636219263,
+              "true": 0.9987071752548218
+            },
+            "noul": 0.9987071752548218
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9844393134117126,
+              "technical": 0.0145915187895298,
+              "other": 0.0009691913146525621
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            16.508926391601562,
+            23.15857696533203
+          ],
+          [
+            22.35788345336914,
+            18.146251678466797,
+            15.434517860412598
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 2,
+          "prefix_tokens": 240,
+          "suffix_tokens": [
+            12,
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.08427212503738701,
+          "field_evaluation_seconds": 0.05396520812064409,
+          "total_seconds": 0.13859587511979043,
+          "mlx_peak_active_gib": 16.97227048687637,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.2945122607052326,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          255,
+          255
+        ],
+        "encoding_sha256": "3518fd17c4a27849c12b4fce0d75af16b23fc0f90584c3f0184a3a2cc3fa9d49",
+        "prepared_sha256": "beb2f42a212b63282f40e5e83ef4a8a7534e70b7e21a2477358ad7ccd50a2330"
+      },
+      "status": "inferred",
+      "elapsed_ms": 139.093,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9016972184181213,
+              "true": 0.09830277413129807
+            },
+            "noul": 0.09830277413129807
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.0011364921228960156,
+              "technical": 0.9951773881912231,
+              "other": 0.0036860639229416847
+            },
+            "choice": "technical"
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            21.635177612304688,
+            19.4189510345459
+          ],
+          [
+            16.241100311279297,
+            23.016075134277344,
+            17.417713165283203
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 2,
+          "prefix_tokens": 243,
+          "suffix_tokens": [
+            12,
+            12
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.0844149999320507,
+          "field_evaluation_seconds": 0.05386704090051353,
+          "total_seconds": 0.13869558298029006,
+          "mlx_peak_active_gib": 16.973872704431415,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 0.2961144782602787,
+          "full_vocabulary_projection": false
+        }
+      }
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          1762,
+          1761,
+          1760
+        ],
+        "encoding_sha256": "164c441f24d3683cdfc4f95081c5dbc78a60a433d6448e1e383bf860942d7654",
+        "prepared_sha256": "ac5977894e8c3db5297cba0cdc4bcf0670c5a23cdc96c7cd88e3b44467cedfe8"
+      },
+      "status": "inferred",
+      "elapsed_ms": 667.835,
+      "result": {
+        "answers": {
+          "maximally_big_brain": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.0030391751788556576,
+              "1": 0.026779744774103165,
+              "2": 0.6140772104263306,
+              "3": 0.28515657782554626,
+              "4": 0.07094725221395493
+            },
+            "score": 2.394192907959223,
+            "legend": {
+              "0": "The solution is an accumulation of unrelated cases or layers; the reader must remember separate tricks with little shared structure.",
+              "1": "The implementation spells out a workable procedure, but recurring operations remain disconnected and its representation contributes little insight.",
+              "2": "A coherent decomposition and consistent primitives organize the problem; the pieces compose with predictable roles.",
+              "3": "A compact representation or composition expresses its task directly with very little conceptual overhead; meaningful primitives absorb the cases that actually exist. A small helper can qualify through one well-chosen operation.",
+              "4": "An unusually economical generative idea makes the whole solution feel inevitable: definitions compose, invariants arise from structure, and the same small vocabulary explains the edge cases."
+            }
+          },
+          "delightful_to_read": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.00590093107894063,
+              "1": 0.047559622675180435,
+              "2": 0.6076767444610596,
+              "3": 0.2789554297924042,
+              "4": 0.05990728735923767
+            },
+            "score": 2.339408550411463,
+            "legend": {
+              "0": "Reading requires repeated reconstruction: notation changes meaning, structure conceals relationships, and each step adds friction without a satisfying pattern.",
+              "1": "The flow is followable but plodding or awkward; repetition and indirection interrupt recognition of the underlying idea.",
+              "2": "The vocabulary and layout are consistent; the reader can maintain a clear mental picture and follow the composition smoothly.",
+              "3": "Precise names, balanced forms, and compact composition create repeated moments of recognition; the code is pleasurable to trace once its vocabulary is learned.",
+              "4": "The structure has an exceptional sense of fit: each line reveals or completes a pattern, dense passages unfold cleanly, and the finished expression is memorable and satisfying to revisit."
+            }
+          },
+          "highly_memetic": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.01109580509364605,
+              "1": 0.09734459221363068,
+              "2": 0.5507556200027466,
+              "3": 0.2807656526565552,
+              "4": 0.06003829836845398
+            },
+            "score": 2.2813059836626053,
+            "legend": {
+              "0": "The form is visually and conceptually shapeless or dissonant; there is no coherent motif or rhythm to catch the reader.",
+              "1": "The procedure is legible but generic or plodding; little in its shape or progression sticks after reading.",
+              "2": "A recognizable motif and some rhythm make the code pleasant and memorable, but it has little immediate punch or urge to be quoted or shared.",
+              "3": "The code has a distinctive, earned hook: its own conceptual vocabulary and rhythmic forms land, stick, and reward insider fluency. Knowing the terms unlocks the ideas; the pattern creates an appetite for more and feels worth quoting, imitating or showing someone.",
+              "4": "Mechanism, vocabulary and form fuse into an unmistakable little culture: the reader feels its rhythm, learns its ideas and words, anticipates its payoffs, and comes away wanting other code to have this expressive character. Its shared grammar almost asks to propagate."
+            }
+          }
+        }
+      },
+      "native": {
+        "logits": [
+          [
+            15.547670364379883,
+            17.723730087280273,
+            20.856204986572266,
+            20.089122772216797,
+            18.698020935058594
+          ],
+          [
+            16.068939208984375,
+            18.155813217163086,
+            20.703472137451172,
+            19.924880981445312,
+            18.386627197265625
+          ],
+          [
+            16.589763641357422,
+            18.76145362854004,
+            20.494487762451172,
+            19.820716857910156,
+            18.278179168701172
+          ]
+        ],
+        "metrics": {
+          "mode": "parallel",
+          "fields": 3,
+          "prefix_tokens": 1745,
+          "suffix_tokens": [
+            17,
+            16,
+            15
+          ],
+          "prefix_prefill_count": 1,
+          "branch_batches": 1,
+          "prefill_seconds": 0.6059859578963369,
+          "field_evaluation_seconds": 0.06075037503615022,
+          "total_seconds": 0.6672176669817418,
+          "mlx_peak_active_gib": 18.138268508017063,
+          "mlx_active_before_gib": 16.677758226171136,
+          "mlx_peak_above_start_gib": 1.4605102818459272,
+          "full_vocabulary_projection": false
+        }
+      }
+    }
+  ],
+  "runtime": {
+    "torch": "2.8.0",
+    "transformers": "5.17.0",
+    "safetensors": "0.8.0"
+  }
+}

@@ -1,0 +1,855 @@
+[
+  {
+    "model": {
+      "runtime_commit": "e8d693620779f1ced5de866b950920a28f900f03",
+      "repo": "caiovicentino1/Eikos-27B-MLX-4bit",
+      "revision": "da10a289fd63cc3c0885558a57f8ac4e5fafde54",
+      "backend": "mlx",
+      "precision": "4-bit quantized weights"
+    },
+    "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+    "threshold": 0.5,
+    "threshold_tuned": false,
+    "narrow": {
+      "correct": 7,
+      "total": 8,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "rows": [
+        {
+          "id": "native-narrow-1",
+          "family": "growing-prefix-copy",
+          "label": "clean",
+          "probability_defect": 0.07585818320512772,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-2",
+          "family": "growing-prefix-copy",
+          "label": "broken",
+          "probability_defect": 0.859663724899292,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-3",
+          "family": "growing-prefix-copy",
+          "label": "heldout-clean",
+          "probability_defect": 0.11279541254043579,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-4",
+          "family": "growing-prefix-copy",
+          "label": "heldout-broken",
+          "probability_defect": 0.4532618522644043,
+          "expected_defect": true,
+          "predicted_defect": false,
+          "correct": false
+        },
+        {
+          "id": "native-narrow-5",
+          "family": "invariant-summary",
+          "label": "clean",
+          "probability_defect": 0.10087861120700836,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-6",
+          "family": "invariant-summary",
+          "label": "broken",
+          "probability_defect": 0.9196425676345825,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-7",
+          "family": "indexed-linked-list",
+          "label": "clean",
+          "probability_defect": 0.05033063888549805,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-8",
+          "family": "indexed-linked-list",
+          "label": "broken",
+          "probability_defect": 0.8872045874595642,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        }
+      ]
+    },
+    "full_rule": {
+      "correct": 4,
+      "total": 4,
+      "rows": [
+        {
+          "id": "full-rule-1",
+          "probability_requirement_holds": 0.9241418242454529,
+          "correct": true
+        },
+        {
+          "id": "full-rule-2",
+          "probability_requirement_holds": 0.1259227693080902,
+          "correct": true
+        },
+        {
+          "id": "full-rule-3",
+          "probability_requirement_holds": 0.7981867790222168,
+          "correct": true
+        },
+        {
+          "id": "full-rule-4",
+          "probability_requirement_holds": 0.1919327974319458,
+          "correct": true
+        }
+      ]
+    },
+    "sanity": [
+      {
+        "id": "sanity-positive",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.9362850189208984,
+              "false": 0.06371500343084335
+            },
+            "noul": 0.9362850189208984
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9187609553337097,
+              "technical": 0.026063239201903343,
+              "other": 0.05517589673399925
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      {
+        "id": "sanity-negative",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.05665243789553642,
+              "false": 0.9433475732803345
+            },
+            "noul": 0.05665243789553642
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.03284890949726105,
+              "technical": 0.9018232226371765,
+              "other": 0.06532786786556244
+            },
+            "choice": "technical"
+          }
+        }
+      }
+    ],
+    "frozen_style": [
+      {
+        "axis": "maximally_big_brain",
+        "mean": 2.1954772919416428,
+        "probabilities": {
+          "0": 0.03331349790096283,
+          "1": 0.131757453083992,
+          "2": 0.4895382523536682,
+          "3": 0.29691997170448303,
+          "4": 0.04847085475921631
+        },
+        "probability_level_at_least_3": 0.34539082646369934,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "delightful_to_read",
+        "mean": 2.135852612555027,
+        "probabilities": {
+          "0": 0.05696867033839226,
+          "1": 0.09998311847448349,
+          "2": 0.5405036211013794,
+          "3": 0.2553158402442932,
+          "4": 0.04722868278622627
+        },
+        "probability_level_at_least_3": 0.3025445230305195,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "highly_memetic",
+        "mean": 1.734697937965393,
+        "probabilities": {
+          "0": 0.07174844294786453,
+          "1": 0.41288378834724426,
+          "2": 0.2837706208229065,
+          "3": 0.17211556434631348,
+          "4": 0.059481553733348846
+        },
+        "probability_level_at_least_3": 0.23159711807966232,
+        "frozen_target": 0.6
+      }
+    ],
+    "timings_ms": {
+      "load": 4687.677,
+      "first_request": 2999.086,
+      "narrow_min": 675.56,
+      "narrow_median": 739.1514999999999,
+      "narrow_max": 923.337
+    },
+    "promoted_to_default": false,
+    "limits": "Eight correlated controls; previously exposed during Laya development. Not fresh qualification, calibration, a current style campaign gate, or a controlled throughput benchmark."
+  },
+  {
+    "model": {
+      "runtime_commit": "62076b4f2d365b5879dafcf7f6dd072a1fe76df7",
+      "repo": "bespokelabs/Bespoke-Nimble-9B",
+      "revision": "bd792f44ec8e265be861bfcdf4e05967ffe0e858",
+      "base": "Qwen/Qwen3.5-9B",
+      "base_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "adapter_sha256": "29ef39b072dee97287947455337879c1e916705c2f727287922a2d81f5e2f20a",
+      "backend": "mlx",
+      "precision": "bfloat16 merged adapter"
+    },
+    "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+    "threshold": 0.5,
+    "threshold_tuned": false,
+    "narrow": {
+      "correct": 8,
+      "total": 8,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "rows": [
+        {
+          "id": "native-narrow-1",
+          "family": "growing-prefix-copy",
+          "label": "clean",
+          "probability_defect": 0.10316270589828491,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-2",
+          "family": "growing-prefix-copy",
+          "label": "broken",
+          "probability_defect": 0.8481250405311584,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-3",
+          "family": "growing-prefix-copy",
+          "label": "heldout-clean",
+          "probability_defect": 0.07294604927301407,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-4",
+          "family": "growing-prefix-copy",
+          "label": "heldout-broken",
+          "probability_defect": 0.5451381802558899,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-5",
+          "family": "invariant-summary",
+          "label": "clean",
+          "probability_defect": 0.04277309030294418,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-6",
+          "family": "invariant-summary",
+          "label": "broken",
+          "probability_defect": 0.891653299331665,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-7",
+          "family": "indexed-linked-list",
+          "label": "clean",
+          "probability_defect": 0.03238363936543465,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-8",
+          "family": "indexed-linked-list",
+          "label": "broken",
+          "probability_defect": 0.9638926982879639,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        }
+      ]
+    },
+    "full_rule": {
+      "correct": 2,
+      "total": 4,
+      "rows": [
+        {
+          "id": "full-rule-1",
+          "probability_requirement_holds": 0.8965871334075928,
+          "correct": true
+        },
+        {
+          "id": "full-rule-2",
+          "probability_requirement_holds": 0.8934651017189026,
+          "correct": false
+        },
+        {
+          "id": "full-rule-3",
+          "probability_requirement_holds": 0.7356920838356018,
+          "correct": true
+        },
+        {
+          "id": "full-rule-4",
+          "probability_requirement_holds": 0.6194316744804382,
+          "correct": false
+        }
+      ]
+    },
+    "sanity": [
+      {
+        "id": "sanity-positive",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.0012928007636219263,
+              "true": 0.9987071752548218
+            },
+            "noul": 0.9987071752548218
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9844393134117126,
+              "technical": 0.0145915187895298,
+              "other": 0.0009691913146525621
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      {
+        "id": "sanity-negative",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9016972184181213,
+              "true": 0.09830277413129807
+            },
+            "noul": 0.09830277413129807
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.0011364921228960156,
+              "technical": 0.9951773881912231,
+              "other": 0.0036860639229416847
+            },
+            "choice": "technical"
+          }
+        }
+      }
+    ],
+    "frozen_style": [
+      {
+        "axis": "maximally_big_brain",
+        "mean": 2.394192907959223,
+        "probabilities": {
+          "0": 0.0030391751788556576,
+          "1": 0.026779744774103165,
+          "2": 0.6140772104263306,
+          "3": 0.28515657782554626,
+          "4": 0.07094725221395493
+        },
+        "probability_level_at_least_3": 0.3561038300395012,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "delightful_to_read",
+        "mean": 2.339408550411463,
+        "probabilities": {
+          "0": 0.00590093107894063,
+          "1": 0.047559622675180435,
+          "2": 0.6076767444610596,
+          "3": 0.2789554297924042,
+          "4": 0.05990728735923767
+        },
+        "probability_level_at_least_3": 0.33886271715164185,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "highly_memetic",
+        "mean": 2.2813059836626053,
+        "probabilities": {
+          "0": 0.01109580509364605,
+          "1": 0.09734459221363068,
+          "2": 0.5507556200027466,
+          "3": 0.2807656526565552,
+          "4": 0.06003829836845398
+        },
+        "probability_level_at_least_3": 0.34080395102500916,
+        "frozen_target": 0.6
+      }
+    ],
+    "timings_ms": {
+      "load": 3812.655,
+      "first_request": 512.773,
+      "narrow_min": 261.195,
+      "narrow_median": 274.9145,
+      "narrow_max": 822.345
+    },
+    "promoted_to_default": false,
+    "limits": "Eight correlated controls; previously exposed during Laya development. Not fresh qualification, calibration, a current style campaign gate, or a controlled throughput benchmark."
+  },
+  {
+    "model": {
+      "runtime_commit": "ee63c1515980491a742f0bd0685c8dc5ca1f00c3",
+      "repo": "denis-pplx/autojev-27b",
+      "revision": "6f5b557e037f5edb25c7dc92dbc6553e5a19c015",
+      "backend": "torch-mps",
+      "precision": "bfloat16; explicit MPS dtype patch"
+    },
+    "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+    "threshold": 0.5,
+    "threshold_tuned": false,
+    "narrow": {
+      "correct": 7,
+      "total": 8,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "rows": [
+        {
+          "id": "native-narrow-1",
+          "family": "growing-prefix-copy",
+          "label": "clean",
+          "probability_defect": 0.08935313671827316,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-2",
+          "family": "growing-prefix-copy",
+          "label": "broken",
+          "probability_defect": 0.5563826560974121,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-3",
+          "family": "growing-prefix-copy",
+          "label": "heldout-clean",
+          "probability_defect": 0.07255741208791733,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-4",
+          "family": "growing-prefix-copy",
+          "label": "heldout-broken",
+          "probability_defect": 0.4436173737049103,
+          "expected_defect": true,
+          "predicted_defect": false,
+          "correct": false
+        },
+        {
+          "id": "native-narrow-5",
+          "family": "invariant-summary",
+          "label": "clean",
+          "probability_defect": 0.08485160022974014,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-6",
+          "family": "invariant-summary",
+          "label": "broken",
+          "probability_defect": 0.8133927583694458,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-7",
+          "family": "indexed-linked-list",
+          "label": "clean",
+          "probability_defect": 0.038142621517181396,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-8",
+          "family": "indexed-linked-list",
+          "label": "broken",
+          "probability_defect": 0.8727167248725891,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        }
+      ]
+    },
+    "full_rule": {
+      "correct": 4,
+      "total": 4,
+      "rows": [
+        {
+          "id": "full-rule-1",
+          "probability_requirement_holds": 0.9676232933998108,
+          "correct": true
+        },
+        {
+          "id": "full-rule-2",
+          "probability_requirement_holds": 0.2878243327140808,
+          "correct": true
+        },
+        {
+          "id": "full-rule-3",
+          "probability_requirement_holds": 0.6761433482170105,
+          "correct": true
+        },
+        {
+          "id": "full-rule-4",
+          "probability_requirement_holds": 0.34913170337677,
+          "correct": true
+        }
+      ]
+    },
+    "sanity": [
+      {
+        "id": "sanity-positive",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.030648991465568542,
+              "true": 0.969351053237915
+            },
+            "noul": 0.969351053237915
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9889820218086243,
+              "technical": 0.004964879713952541,
+              "other": 0.00605310034006834
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      {
+        "id": "sanity-negative",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9740148186683655,
+              "true": 0.025985250249505043
+            },
+            "noul": 0.025985250249505043
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.0025289002805948257,
+              "technical": 0.9938170313835144,
+              "other": 0.0036540511064231396
+            },
+            "choice": "technical"
+          }
+        }
+      }
+    ],
+    "frozen_style": [
+      {
+        "axis": "maximally_big_brain",
+        "mean": 2.547603838145733,
+        "probabilities": {
+          "0": 0.014205739833414555,
+          "1": 0.1221604272723198,
+          "2": 0.3022666573524475,
+          "3": 0.42455869913101196,
+          "4": 0.13680849969387054
+        },
+        "probability_level_at_least_3": 0.5613671988248825,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "delightful_to_read",
+        "mean": 2.1520498394966125,
+        "probabilities": {
+          "0": 0.043113771826028824,
+          "1": 0.17758122086524963,
+          "2": 0.43939658999443054,
+          "3": 0.2639583349227905,
+          "4": 0.07595010846853256
+        },
+        "probability_level_at_least_3": 0.3399084433913231,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "highly_memetic",
+        "mean": 1.4064738377928734,
+        "probabilities": {
+          "0": 0.13839656114578247,
+          "1": 0.4545076787471771,
+          "2": 0.2889423370361328,
+          "3": 0.09853209555149078,
+          "4": 0.01962129957973957
+        },
+        "probability_level_at_least_3": 0.11815339513123035,
+        "frozen_target": 0.6
+      }
+    ],
+    "timings_ms": {
+      "load": 16479.98,
+      "first_request": 4428.421,
+      "narrow_min": 6072.045,
+      "narrow_median": 6342.702499999999,
+      "narrow_max": 8096.134
+    },
+    "promoted_to_default": false,
+    "limits": "Eight correlated controls; previously exposed during Laya development. Not fresh qualification, calibration, a current style campaign gate, or a controlled throughput benchmark."
+  },
+  {
+    "model": {
+      "runtime_commit": "5920c5fe4ca8e0970ed4209ac2c9b8e18bea5109",
+      "repo": "jaredpalmer/kev-9b",
+      "revision": "2629c06a5aeb0feb3b9783bafed17ed8f39ecf5c",
+      "base": "Qwen/Qwen3.5-9B-Base",
+      "base_revision": "68c46c4b3498877f3ef123c856ecfde50c39f404"
+    },
+    "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+    "threshold": 0.5,
+    "threshold_tuned": false,
+    "narrow": {
+      "correct": 6,
+      "total": 8,
+      "false_positives": 0,
+      "false_negatives": 2,
+      "rows": [
+        {
+          "id": "native-narrow-1",
+          "family": "growing-prefix-copy",
+          "label": "clean",
+          "probability_defect": 0.1451,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-2",
+          "family": "growing-prefix-copy",
+          "label": "broken",
+          "probability_defect": 0.2486,
+          "expected_defect": true,
+          "predicted_defect": false,
+          "correct": false
+        },
+        {
+          "id": "native-narrow-3",
+          "family": "growing-prefix-copy",
+          "label": "heldout-clean",
+          "probability_defect": 0.0865,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-4",
+          "family": "growing-prefix-copy",
+          "label": "heldout-broken",
+          "probability_defect": 0.1878,
+          "expected_defect": true,
+          "predicted_defect": false,
+          "correct": false
+        },
+        {
+          "id": "native-narrow-5",
+          "family": "invariant-summary",
+          "label": "clean",
+          "probability_defect": 0.1454,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-6",
+          "family": "invariant-summary",
+          "label": "broken",
+          "probability_defect": 0.7927,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-7",
+          "family": "indexed-linked-list",
+          "label": "clean",
+          "probability_defect": 0.103,
+          "expected_defect": false,
+          "predicted_defect": false,
+          "correct": true
+        },
+        {
+          "id": "native-narrow-8",
+          "family": "indexed-linked-list",
+          "label": "broken",
+          "probability_defect": 0.917,
+          "expected_defect": true,
+          "predicted_defect": true,
+          "correct": true
+        }
+      ]
+    },
+    "full_rule": {
+      "correct": 2,
+      "total": 4,
+      "rows": [
+        {
+          "id": "full-rule-1",
+          "probability_requirement_holds": 0.8534,
+          "correct": true
+        },
+        {
+          "id": "full-rule-2",
+          "probability_requirement_holds": 0.7365,
+          "correct": false
+        },
+        {
+          "id": "full-rule-3",
+          "probability_requirement_holds": 0.8016,
+          "correct": true
+        },
+        {
+          "id": "full-rule-4",
+          "probability_requirement_holds": 0.7347,
+          "correct": false
+        }
+      ]
+    },
+    "sanity": [
+      {
+        "id": "sanity-positive",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "noul": 0.9871
+          },
+          "topic": {
+            "type": "choice",
+            "choice": "billing",
+            "confidence": 0.6391,
+            "probabilities": {
+              "billing": 0.7594,
+              "technical": 0.033,
+              "other": 0.2076
+            }
+          }
+        }
+      },
+      {
+        "id": "sanity-negative",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "noul": 0.1218
+          },
+          "topic": {
+            "type": "choice",
+            "choice": "technical",
+            "confidence": 0.9213,
+            "probabilities": {
+              "billing": 0.0045,
+              "technical": 0.9475,
+              "other": 0.048
+            }
+          }
+        }
+      }
+    ],
+    "frozen_style": [
+      {
+        "axis": "maximally_big_brain",
+        "mean": 2.3356,
+        "probabilities": {
+          "0": 0.0152,
+          "1": 0.1003,
+          "2": 0.4977,
+          "3": 0.3071,
+          "4": 0.0797
+        },
+        "probability_level_at_least_3": 0.3868,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "delightful_to_read",
+        "mean": 2.7531,
+        "probabilities": {
+          "0": 0.0126,
+          "1": 0.0155,
+          "2": 0.3837,
+          "3": 0.3824,
+          "4": 0.2057
+        },
+        "probability_level_at_least_3": 0.5881000000000001,
+        "frozen_target": 0.6
+      },
+      {
+        "axis": "highly_memetic",
+        "mean": 2.1768,
+        "probabilities": {
+          "0": 0.114,
+          "1": 0.2173,
+          "2": 0.2181,
+          "3": 0.2791,
+          "4": 0.1715
+        },
+        "probability_level_at_least_3": 0.4506,
+        "frozen_target": 0.6
+      }
+    ],
+    "timings_ms": {
+      "load": 5227.98,
+      "first_request": 260.951,
+      "narrow_min": 152.746,
+      "narrow_median": 159.5075,
+      "narrow_max": 205.849
+    },
+    "promoted_to_default": false,
+    "limits": "Eight correlated controls; previously exposed during Laya development. Not fresh qualification, calibration, a current style campaign gate, or a controlled throughput benchmark."
+  }
+]

@@ -1,0 +1,13 @@
+diff --git a/src/autojev/model.py b/src/autojev/model.py
+index d9877e6..149067f 100644
+--- a/src/autojev/model.py
++++ b/src/autojev/model.py
+@@ -151,7 +151,7 @@ class DecisionModel(torch.nn.Module):
+             raise ValueError("Answer codes must remain single tokens after the chat prefix.")
+         if saved and (saved["codes"] != self.codes or saved["token_ids"] != self.token_ids):
+             raise ValueError("Checkpoint answer vocabulary differs from its tokenizer.")
+-        dtype = torch.bfloat16 if self.device_name.startswith("cuda") else torch.float32
++        dtype = torch.bfloat16 if self.device_name.startswith(("cuda", "mps")) else torch.float32
+         if checkpoint is None:
+             original = Qwen3_5ForConditionalGeneration.from_pretrained(
+                 self.base_model, revision=self.revision, dtype=dtype, attn_implementation="sdpa",

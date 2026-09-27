@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run pinned Kev-4B locally on frozen native System One requests.
+"""Run pinned Kev-4B or Kev-9B on frozen native System One requests.
 
 Uses the same {id, state, questions, ...metadata} input as laya-review.py.
 Metadata never reaches inference. No server or remote inference is involved.
@@ -25,17 +25,24 @@ PIN = {
 }
 CACHE = ROOT / ".local/kev/hf"
 SNAPSHOT = CACHE / "hub/models--jaredpalmer--kev-4b/snapshots" / PIN["revision"]
+PINS = {"kev-4b": PIN, "kev-9b": {
+    "runtime_commit": PIN["runtime_commit"],
+    "repo": "jaredpalmer/kev-9b",
+    "revision": "2629c06a5aeb0feb3b9783bafed17ed8f39ecf5c",
+    "base": "Qwen/Qwen3.5-9B-Base",
+    "base_revision": "68c46c4b3498877f3ef123c856ecfde50c39f404",
+}}
 
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
 
-def prepare_request(tok, request):
+def prepare_request(tok, request, model="kev-4b"):
     from kev.api import SystemOneRequest, to_record
     from kev.model import encode
     # Construct a new object: expected labels and source paths stay out of it.
-    req = SystemOneRequest(state=request["state"], questions=request["questions"], model="kev-4b")
+    req = SystemOneRequest(state=request["state"], questions=request["questions"], model=model)
     record, meta = to_record(req)
     enc = encode(tok, record, strict=True, max_state=2048, max_branch=4096)
     state_tokens = enc["seg"].count(0)
@@ -53,7 +60,10 @@ def main():
     ap.add_argument("--input", type=Path)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--audit-only", action="store_true")
+    ap.add_argument("--model", choices=PINS, default="kev-4b")
     args = ap.parse_args()
+    pin = PINS[args.model]
+    snapshot = CACHE / ("hub/models--" + pin["repo"].replace("/", "--")) / "snapshots" / pin["revision"]
     revision = subprocess.check_output(["git", "-C", str(RUNTIME), "rev-parse", "HEAD"], text=True).strip()
     if revision != PIN["runtime_commit"]:
         ap.error("Kev source revision differs from the reviewed runtime pin")
@@ -63,7 +73,7 @@ def main():
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     if args.download:
         from huggingface_hub import snapshot_download
-        for repo, rev in [(PIN["repo"], PIN["revision"]), (PIN["base"], PIN["base_revision"])]:
+        for repo, rev in [(pin["repo"], pin["revision"]), (pin["base"], pin["base_revision"])]:
             snapshot_download(repo, revision=rev, cache_dir=CACHE / "hub",
                               allow_patterns=["*.json", "*.safetensors", "*.pt", "*.txt", "*.jinja"])
         return 0
@@ -79,18 +89,18 @@ def main():
     from kev.checkpoint import Checkpoint, LoadOptions
     from kev.model import load_tokenizer
     from kev.api import to_answers
-    ck = Checkpoint(str(SNAPSHOT))
-    if (ck.meta.base, ck.meta.base_revision) != (PIN["base"], PIN["base_revision"]):
+    ck = Checkpoint(str(snapshot))
+    if (ck.meta.base, ck.meta.base_revision) != (pin["base"], pin["base_revision"]):
         ap.error("Checkpoint base differs from the pinned base")
     tok = load_tokenizer(ck.meta.base, revision=ck.meta.base_revision)
-    prepared = [prepare_request(tok, request) for request in requests]
+    prepared = [prepare_request(tok, request, args.model) for request in requests]
     model, load_ms = None, None
     if not args.audit_only:
         started = time.perf_counter()
         tok, model = ck.load("mps", LoadOptions(backend="mlx"))
         load_ms = round(1000 * (time.perf_counter() - started), 3)
-        print(f"Loaded Kev-4B via {model.backend} ({model.dtype}) in {load_ms} ms", file=sys.stderr, flush=True)
-    report = {"schema": 1, "model": PIN, "input_sha256": digest(requests),
+        print(f"Loaded {args.model} via {model.backend} ({model.dtype}) in {load_ms} ms", file=sys.stderr, flush=True)
+    report = {"schema": 1, "model": pin, "input_sha256": digest(requests),
               "runtime": {p: importlib.metadata.version(p) for p in ["kev", "mlx", "mlx-lm", "torch", "transformers", "tokenizers"]},
               "temperature": ck.meta.temperature, "advisory": True, "offline": True,
               "load_ms": load_ms, "cache": "state shared within each request; no reuse across requests",
@@ -109,7 +119,7 @@ def main():
             # MLX's hidden pass calls mx.eval; conversion materializes each probability.
             probabilities = [p.tolist() for p in model.probs(enc)]
             row.update(status="inferred", elapsed_ms=round(1000 * (time.perf_counter() - started), 3),
-                       result={"model": "kev-4b", "answers": to_answers(probabilities, meta)})
+                       result={"model": args.model, "answers": to_answers(probabilities, meta)})
         report["rows"].append(row)
         print(f"{row.get('id', '?')}: {row['status']} {row.get('result', {}).get('answers', {})}", file=sys.stderr, flush=True)
     args.output.parent.mkdir(parents=True, exist_ok=True)

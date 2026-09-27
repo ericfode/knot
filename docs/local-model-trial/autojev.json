@@ -1,0 +1,856 @@
+{
+  "schema": 1,
+  "model": {
+    "runtime_commit": "ee63c1515980491a742f0bd0685c8dc5ca1f00c3",
+    "repo": "denis-pplx/autojev-27b",
+    "revision": "6f5b557e037f5edb25c7dc92dbc6553e5a19c015",
+    "backend": "torch-mps",
+    "precision": "bfloat16; explicit MPS dtype patch"
+  },
+  "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+  "load_ms": 16479.98,
+  "temperature": 2.207568021892729,
+  "advisory": true,
+  "offline": true,
+  "rows": [
+    {
+      "id": "full-rule-1",
+      "phase": "full-rule",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "a3dfbc0ec7613576bc601b3b052d55994648be61788b50cb0054a7691582716c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          506
+        ],
+        "encoding_sha256": "2c5ac587cac790a437a534275dd600a5d19c970c85648d2cdc1b0c13e94020d2"
+      },
+      "status": "inferred",
+      "elapsed_ms": 4428.421,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.03237670660018921,
+              "true": 0.9676232933998108
+            },
+            "noul": 0.9676232933998108
+          }
+        }
+      },
+      "native": [
+        [
+          0.03237670660018921,
+          0.9676232933998108
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-2",
+      "phase": "full-rule",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "004e6a2677357ea5dd14fe7f7b91a981ed18a3170082839aab9ed3e3738f07ef",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          506
+        ],
+        "encoding_sha256": "6a5de8111932d33cde3a298225fa5068d48efa7f1f715de7c1ac884861abdf02"
+      },
+      "status": "inferred",
+      "elapsed_ms": 2705.879,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.712175726890564,
+              "true": 0.2878243327140808
+            },
+            "noul": 0.2878243327140808
+          }
+        }
+      },
+      "native": [
+        [
+          0.712175726890564,
+          0.2878243327140808
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-3",
+      "phase": "full-rule",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "a7e2dc31fdcd217bb76da4df6341b3d57e356ec3247f4658d955d455c0854517",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          496
+        ],
+        "encoding_sha256": "24b9e87295f19d9b7cbc45717e365f64279f187e6ce5679f4ace4880860d5319"
+      },
+      "status": "inferred",
+      "elapsed_ms": 2968.865,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.3238567113876343,
+              "true": 0.6761433482170105
+            },
+            "noul": 0.6761433482170105
+          }
+        }
+      },
+      "native": [
+        [
+          0.3238567113876343,
+          0.6761433482170105
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-4",
+      "phase": "full-rule",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "a66a2db8b3c71d67e8a4fa832cfa3b78477b545b57b0ab76a3ee98ca59a15aab",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          457
+        ],
+        "encoding_sha256": "41f3590ea8d29576e3e326fc333765932ceb9f0a97b9a92a2a116d92ef2fa3da"
+      },
+      "status": "inferred",
+      "elapsed_ms": 2697.313,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.65086829662323,
+              "true": 0.34913170337677
+            },
+            "noul": 0.34913170337677
+          }
+        }
+      },
+      "native": [
+        [
+          0.65086829662323,
+          0.34913170337677
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-1",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "48a7f8ee514d1bb90d36b39d1156f9d9291c43e827aff978bead772b60d5165c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          385,
+          383,
+          381
+        ],
+        "encoding_sha256": "bc9264d2f6e2e0998ca4df9a2e3bce15f535b641a9585faaccd903341a94ddb2"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6523.692,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.910646915435791,
+              "true": 0.08935313671827316
+            },
+            "noul": 0.08935313671827316
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.934704065322876,
+              "true": 0.06529596447944641
+            },
+            "noul": 0.06529596447944641
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9658015966415405,
+              "true": 0.03419836238026619
+            },
+            "noul": 0.03419836238026619
+          }
+        }
+      },
+      "native": [
+        [
+          0.910646915435791,
+          0.08935313671827316
+        ],
+        [
+          0.934704065322876,
+          0.06529596447944641
+        ],
+        [
+          0.9658015966415405,
+          0.03419836238026619
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-2",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "4512569761f25fe7736e216e394ab6b4f4cf9fe47f63211f9609184d84b42613",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          385,
+          383,
+          381
+        ],
+        "encoding_sha256": "0fba6a512a30e0e1b998725e822566e16ca40339e5196257daba4d81d7a7c424"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6344.887,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.4436173737049103,
+              "true": 0.5563826560974121
+            },
+            "noul": 0.5563826560974121
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9380760192871094,
+              "true": 0.061924003064632416
+            },
+            "noul": 0.061924003064632416
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9638813138008118,
+              "true": 0.036118704825639725
+            },
+            "noul": 0.036118704825639725
+          }
+        }
+      },
+      "native": [
+        [
+          0.4436173737049103,
+          0.5563826560974121
+        ],
+        [
+          0.9380760192871094,
+          0.061924003064632416
+        ],
+        [
+          0.9638813138008118,
+          0.036118704825639725
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-3",
+      "phase": "native-narrow",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "c6ba2feb9c25cad957367c4f5117a22948f7624e57617d5be0f2422c6b1214dc",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          375,
+          373,
+          371
+        ],
+        "encoding_sha256": "3ee911b7f44bf6def996a1a141832c627619eaee513e9320c9e9dd10aeda0b90"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6206.919,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9274426102638245,
+              "true": 0.07255741208791733
+            },
+            "noul": 0.07255741208791733
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8788748979568481,
+              "true": 0.12112504988908768
+            },
+            "noul": 0.12112504988908768
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9472396969795227,
+              "true": 0.052760280668735504
+            },
+            "noul": 0.052760280668735504
+          }
+        }
+      },
+      "native": [
+        [
+          0.9274426102638245,
+          0.07255741208791733
+        ],
+        [
+          0.8788748979568481,
+          0.12112504988908768
+        ],
+        [
+          0.9472396969795227,
+          0.052760280668735504
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-4",
+      "phase": "native-narrow",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "5117f012e47826b8d89491b09d98ebac2bb29087cca4687fe8d89c51e27c26c2",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          336,
+          334,
+          332
+        ],
+        "encoding_sha256": "99a1680971e9885d7c1e604884e028f8aa4faf393040fa2304cacf4f34ec58b1"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6340.518,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.5563826560974121,
+              "true": 0.4436173737049103
+            },
+            "noul": 0.4436173737049103
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9443371295928955,
+              "true": 0.055662862956523895
+            },
+            "noul": 0.055662862956523895
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9618573188781738,
+              "true": 0.038142602890729904
+            },
+            "noul": 0.038142602890729904
+          }
+        }
+      },
+      "native": [
+        [
+          0.5563826560974121,
+          0.4436173737049103
+        ],
+        [
+          0.9443371295928955,
+          0.055662862956523895
+        ],
+        [
+          0.9618573188781738,
+          0.038142602890729904
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-5",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "input_sha256": "f433d13e2777d14f1621a5591e7bcfc404dbfd9b9708ee6a81c5f9985551a432",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          334,
+          332,
+          330
+        ],
+        "encoding_sha256": "6d57884a421bc652ab8317a2a658f633b0633176ba8a7f4ca02cb85d71f9322c"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6072.045,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8788748979568481,
+              "true": 0.12112504988908768
+            },
+            "noul": 0.12112504988908768
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9151483774185181,
+              "true": 0.08485160022974014
+            },
+            "noul": 0.08485160022974014
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9638813138008118,
+              "true": 0.036118704825639725
+            },
+            "noul": 0.036118704825639725
+          }
+        }
+      },
+      "native": [
+        [
+          0.8788748979568481,
+          0.12112504988908768
+        ],
+        [
+          0.9151483774185181,
+          0.08485160022974014
+        ],
+        [
+          0.9638813138008118,
+          0.036118704825639725
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-6",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "input_sha256": "d1e00004fc97794474bd3555c0b82f0c28c34b3ea00f27ab4c78ebb947747a02",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          408,
+          406,
+          404
+        ],
+        "encoding_sha256": "1fef1c1e7ee27452de66fdb95ed3d91049ff21a0e073dece1cb74ee2dbff974c"
+      },
+      "status": "inferred",
+      "elapsed_ms": 7360.934,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9235388040542603,
+              "true": 0.07646120339632034
+            },
+            "noul": 0.07646120339632034
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.1866072416305542,
+              "true": 0.8133927583694458
+            },
+            "noul": 0.8133927583694458
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9551122784614563,
+              "true": 0.04488775134086609
+            },
+            "noul": 0.04488775134086609
+          }
+        }
+      },
+      "native": [
+        [
+          0.9235388040542603,
+          0.07646120339632034
+        ],
+        [
+          0.1866072416305542,
+          0.8133927583694458
+        ],
+        [
+          0.9551122784614563,
+          0.04488775134086609
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-7",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "input_sha256": "34ecb9b8f024ab154f5e3bb984bae406e4d1697d19ea3b0fd0aea1f699bf23ec",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          358,
+          356,
+          354
+        ],
+        "encoding_sha256": "ac5fd5bbe2c3d71f1dcd3fd0efff3bf3ada9b3c31e397d4917582f29e026075b"
+      },
+      "status": "inferred",
+      "elapsed_ms": 6304.388,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8662928342819214,
+              "true": 0.13370712101459503
+            },
+            "noul": 0.13370712101459503
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9526211023330688,
+              "true": 0.047378893941640854
+            },
+            "noul": 0.047378893941640854
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9618573188781738,
+              "true": 0.038142621517181396
+            },
+            "noul": 0.038142621517181396
+          }
+        }
+      },
+      "native": [
+        [
+          0.8662928342819214,
+          0.13370712101459503
+        ],
+        [
+          0.9526211023330688,
+          0.047378893941640854
+        ],
+        [
+          0.9618573188781738,
+          0.038142621517181396
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-8",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "input_sha256": "2f844bcdbe987737f62413944217ecc7b53ccfd74d338caa6242d5192e7add45",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          486,
+          484,
+          482
+        ],
+        "encoding_sha256": "8675a2f2f2163f33aa68d37152e3def3dc67504ec2a57b426d9a25cee42fef7e"
+      },
+      "status": "inferred",
+      "elapsed_ms": 8096.134,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.6636229157447815,
+              "true": 0.33637702465057373
+            },
+            "noul": 0.33637702465057373
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9151483774185181,
+              "true": 0.08485160022974014
+            },
+            "noul": 0.08485160022974014
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.12728330492973328,
+              "true": 0.8727167248725891
+            },
+            "noul": 0.8727167248725891
+          }
+        }
+      },
+      "native": [
+        [
+          0.6636229157447815,
+          0.33637702465057373
+        ],
+        [
+          0.9151483774185181,
+          0.08485160022974014
+        ],
+        [
+          0.12728330492973328,
+          0.8727167248725891
+        ]
+      ]
+    },
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          107,
+          118
+        ],
+        "encoding_sha256": "713b5fdc53ad1cd1606ed8d96b4266615f09c5ff168b4fc3a35c7330f878a517"
+      },
+      "status": "inferred",
+      "elapsed_ms": 1688.846,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.030648991465568542,
+              "true": 0.969351053237915
+            },
+            "noul": 0.969351053237915
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9889820218086243,
+              "technical": 0.004964879713952541,
+              "other": 0.00605310034006834
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      "native": [
+        [
+          0.030648991465568542,
+          0.969351053237915
+        ],
+        [
+          0.9889820218086243,
+          0.004964879713952541,
+          0.00605310034006834
+        ]
+      ]
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          110,
+          121
+        ],
+        "encoding_sha256": "615dca74489f1782f4e5d596bbc7cef730b55c4804dc2204eed4bcfe6e64a5e7"
+      },
+      "status": "inferred",
+      "elapsed_ms": 1526.465,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9740148186683655,
+              "true": 0.025985250249505043
+            },
+            "noul": 0.025985250249505043
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.0025289002805948257,
+              "technical": 0.9938170313835144,
+              "other": 0.0036540511064231396
+            },
+            "choice": "technical"
+          }
+        }
+      },
+      "native": [
+        [
+          0.9740148186683655,
+          0.025985250249505043
+        ],
+        [
+          0.0025289002805948257,
+          0.9938170313835144,
+          0.0036540511064231396
+        ]
+      ]
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          511,
+          606,
+          775
+        ],
+        "encoding_sha256": "013236584bf4da91c81775a0d14f99265e3fae743723e6ba6dede1a644c2628d"
+      },
+      "status": "inferred",
+      "elapsed_ms": 10819.938,
+      "result": {
+        "answers": {
+          "maximally_big_brain": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.014205739833414555,
+              "1": 0.1221604272723198,
+              "2": 0.3022666573524475,
+              "3": 0.42455869913101196,
+              "4": 0.13680849969387054
+            },
+            "score": 2.547603838145733,
+            "legend": {
+              "0": "The solution is an accumulation of unrelated cases or layers; the reader must remember separate tricks with little shared structure.",
+              "1": "The implementation spells out a workable procedure, but recurring operations remain disconnected and its representation contributes little insight.",
+              "2": "A coherent decomposition and consistent primitives organize the problem; the pieces compose with predictable roles.",
+              "3": "A compact representation or composition expresses its task directly with very little conceptual overhead; meaningful primitives absorb the cases that actually exist. A small helper can qualify through one well-chosen operation.",
+              "4": "An unusually economical generative idea makes the whole solution feel inevitable: definitions compose, invariants arise from structure, and the same small vocabulary explains the edge cases."
+            }
+          },
+          "delightful_to_read": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.043113771826028824,
+              "1": 0.17758122086524963,
+              "2": 0.43939658999443054,
+              "3": 0.2639583349227905,
+              "4": 0.07595010846853256
+            },
+            "score": 2.1520498394966125,
+            "legend": {
+              "0": "Reading requires repeated reconstruction: notation changes meaning, structure conceals relationships, and each step adds friction without a satisfying pattern.",
+              "1": "The flow is followable but plodding or awkward; repetition and indirection interrupt recognition of the underlying idea.",
+              "2": "The vocabulary and layout are consistent; the reader can maintain a clear mental picture and follow the composition smoothly.",
+              "3": "Precise names, balanced forms, and compact composition create repeated moments of recognition; the code is pleasurable to trace once its vocabulary is learned.",
+              "4": "The structure has an exceptional sense of fit: each line reveals or completes a pattern, dense passages unfold cleanly, and the finished expression is memorable and satisfying to revisit."
+            }
+          },
+          "highly_memetic": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.13839656114578247,
+              "1": 0.4545076787471771,
+              "2": 0.2889423370361328,
+              "3": 0.09853209555149078,
+              "4": 0.01962129957973957
+            },
+            "score": 1.4064738377928734,
+            "legend": {
+              "0": "The form is visually and conceptually shapeless or dissonant; there is no coherent motif or rhythm to catch the reader.",
+              "1": "The procedure is legible but generic or plodding; little in its shape or progression sticks after reading.",
+              "2": "A recognizable motif and some rhythm make the code pleasant and memorable, but it has little immediate punch or urge to be quoted or shared.",
+              "3": "The code has a distinctive, earned hook: its own conceptual vocabulary and rhythmic forms land, stick, and reward insider fluency. Knowing the terms unlocks the ideas; the pattern creates an appetite for more and feels worth quoting, imitating or showing someone.",
+              "4": "Mechanism, vocabulary and form fuse into an unmistakable little culture: the reader feels its rhythm, learns its ideas and words, anticipates its payoffs, and comes away wanting other code to have this expressive character. Its shared grammar almost asks to propagate."
+            }
+          }
+        }
+      },
+      "native": [
+        [
+          0.014205739833414555,
+          0.1221604272723198,
+          0.3022666573524475,
+          0.42455869913101196,
+          0.13680849969387054
+        ],
+        [
+          0.043113771826028824,
+          0.17758122086524963,
+          0.43939658999443054,
+          0.2639583349227905,
+          0.07595010846853256
+        ],
+        [
+          0.13839656114578247,
+          0.4545076787471771,
+          0.2889423370361328,
+          0.09853209555149078,
+          0.01962129957973957
+        ]
+      ]
+    }
+  ],
+  "runtime": {
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "safetensors": "0.8.0"
+  }
+}

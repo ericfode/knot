@@ -28,6 +28,12 @@ of eight correctly and rejected the full style request at its 48-token option
 limit. The receipts preserve the complete inputs and explicit rejection; Julia
 also remains experimental.
 
+The [broader local comparison](local-models-2026-09-26.md) ran Nimble-9B,
+Eikos-27B, AutoJev-27B and Kev-9B on the same frozen requests. Narrow-control
+results were 8/8, 7/8, 7/8 and 6/8 respectively; full-rule results were 2/4,
+4/4, 4/4 and 2/4. Drex lacked public local weights. The report records complete
+probabilities, runtime adaptations and qualification limits; defaults are unchanged.
+
 ## Commands
 
 ```sh

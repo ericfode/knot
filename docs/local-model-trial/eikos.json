@@ -1,0 +1,977 @@
+{
+  "schema": 1,
+  "model": {
+    "runtime_commit": "e8d693620779f1ced5de866b950920a28f900f03",
+    "repo": "caiovicentino1/Eikos-27B-MLX-4bit",
+    "revision": "da10a289fd63cc3c0885558a57f8ac4e5fafde54",
+    "backend": "mlx",
+    "precision": "4-bit quantized weights"
+  },
+  "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+  "load_ms": 4687.677,
+  "temperature": {
+    "b": 0.0,
+    "w": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "features": [
+      "log_ntok",
+      "log_nopts",
+      "noul",
+      "score"
+    ],
+    "t_global": 1.0,
+    "mode": "T1"
+  },
+  "advisory": true,
+  "offline": true,
+  "rows": [
+    {
+      "id": "full-rule-1",
+      "phase": "full-rule",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "a3dfbc0ec7613576bc601b3b052d55994648be61788b50cb0054a7691582716c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          519
+        ],
+        "encoding_sha256": "34ccc2668d1a041b4b8c02c268ad815475f91ae69f4a105e16620a40aa1432ca"
+      },
+      "status": "inferred",
+      "elapsed_ms": 2999.086,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.9241418242454529,
+              "false": 0.07585818320512772
+            },
+            "noul": 0.9241418242454529
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.9241418242454529,
+            "no": 0.07585818320512772
+          },
+          519
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-2",
+      "phase": "full-rule",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "004e6a2677357ea5dd14fe7f7b91a981ed18a3170082839aab9ed3e3738f07ef",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          519
+        ],
+        "encoding_sha256": "6b41e2cf1788485b50a0f5ede5ee0eef873aa1c3643b66a817a7409911067b64"
+      },
+      "status": "inferred",
+      "elapsed_ms": 672.006,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.1259227693080902,
+              "false": 0.8740772008895874
+            },
+            "noul": 0.1259227693080902
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.1259227693080902,
+            "no": 0.8740772008895874
+          },
+          519
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-3",
+      "phase": "full-rule",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "a7e2dc31fdcd217bb76da4df6341b3d57e356ec3247f4658d955d455c0854517",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          509
+        ],
+        "encoding_sha256": "352e57c41876d47855adde8e04a25ba6c8a4b199d4a977ac3e192d81b665bde3"
+      },
+      "status": "inferred",
+      "elapsed_ms": 637.416,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.7981867790222168,
+              "false": 0.2018132507801056
+            },
+            "noul": 0.7981867790222168
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.7981867790222168,
+            "no": 0.2018132507801056
+          },
+          509
+        ]
+      ]
+    },
+    {
+      "id": "full-rule-4",
+      "phase": "full-rule",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "a66a2db8b3c71d67e8a4fa832cfa3b78477b545b57b0ab76a3ee98ca59a15aab",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          470
+        ],
+        "encoding_sha256": "daf809a0e1155a215f0c036416f2a8209040f44c33b0ffd09ff303aa9ef32b6e"
+      },
+      "status": "inferred",
+      "elapsed_ms": 801.503,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.1919327974319458,
+              "false": 0.8080672025680542
+            },
+            "noul": 0.1919327974319458
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.1919327974319458,
+            "no": 0.8080672025680542
+          },
+          470
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-1",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "48a7f8ee514d1bb90d36b39d1156f9d9291c43e827aff978bead772b60d5165c",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          392,
+          390,
+          388
+        ],
+        "encoding_sha256": "dc96d5c8e8d9d03a8d41e933556a1be082015095ee9d58fdbfcffdbad833e1d4"
+      },
+      "status": "inferred",
+      "elapsed_ms": 692.285,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.07585818320512772,
+              "false": 0.9241418242454529
+            },
+            "noul": 0.07585818320512772
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.08509904891252518,
+              "false": 0.9149009585380554
+            },
+            "noul": 0.08509904891252518
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.0446808785200119,
+              "false": 0.9553191661834717
+            },
+            "noul": 0.0446808785200119
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.07585818320512772,
+            "no": 0.9241418242454529
+          },
+          392
+        ],
+        [
+          {
+            "yes": 0.08509904891252518,
+            "no": 0.9149009585380554
+          },
+          390
+        ],
+        [
+          {
+            "yes": 0.0446808785200119,
+            "no": 0.9553191661834717
+          },
+          388
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-2",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "4512569761f25fe7736e216e394ab6b4f4cf9fe47f63211f9609184d84b42613",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          392,
+          390,
+          388
+        ],
+        "encoding_sha256": "9a6b7a4a39f923168951af84e6ba629ecfefbcdaefe5f20a72922bbe29fbdb69"
+      },
+      "status": "inferred",
+      "elapsed_ms": 675.56,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.859663724899292,
+              "false": 0.14033626019954681
+            },
+            "noul": 0.859663724899292
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.09009300172328949,
+              "false": 0.9099069833755493
+            },
+            "noul": 0.09009300172328949
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.047425881028175354,
+              "false": 0.9525741338729858
+            },
+            "noul": 0.047425881028175354
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.859663724899292,
+            "no": 0.14033626019954681
+          },
+          392
+        ],
+        [
+          {
+            "yes": 0.09009300172328949,
+            "no": 0.9099069833755493
+          },
+          390
+        ],
+        [
+          {
+            "yes": 0.047425881028175354,
+            "no": 0.9525741338729858
+          },
+          388
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-3",
+      "phase": "native-narrow",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "c6ba2feb9c25cad957367c4f5117a22948f7624e57617d5be0f2422c6b1214dc",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          382,
+          380,
+          378
+        ],
+        "encoding_sha256": "63d075f9d7dc67a9281dbcf939868f6140d4fe28eeb2fc6f1e553976f179cf3d"
+      },
+      "status": "inferred",
+      "elapsed_ms": 686.364,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.11279541254043579,
+              "false": 0.8872045874595642
+            },
+            "noul": 0.11279541254043579
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.13296425342559814,
+              "false": 0.8670357465744019
+            },
+            "noul": 0.13296425342559814
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.07159119844436646,
+              "false": 0.9284088015556335
+            },
+            "noul": 0.07159119844436646
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.11279541254043579,
+            "no": 0.8872045874595642
+          },
+          382
+        ],
+        [
+          {
+            "yes": 0.13296425342559814,
+            "no": 0.8670357465744019
+          },
+          380
+        ],
+        [
+          {
+            "yes": 0.07159119844436646,
+            "no": 0.9284088015556335
+          },
+          378
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-4",
+      "phase": "native-narrow",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "5117f012e47826b8d89491b09d98ebac2bb29087cca4687fe8d89c51e27c26c2",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          343,
+          341,
+          339
+        ],
+        "encoding_sha256": "566495906815a0ec180972bcf1865d13a7a7eb5df55e0b4e6cf51777f82c26ef"
+      },
+      "status": "inferred",
+      "elapsed_ms": 721.472,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.4532618522644043,
+              "false": 0.5467381477355957
+            },
+            "noul": 0.4532618522644043
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.09534947574138641,
+              "false": 0.9046505093574524
+            },
+            "noul": 0.09534947574138641
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.05665243789553642,
+              "false": 0.9433475732803345
+            },
+            "noul": 0.05665243789553642
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.4532618522644043,
+            "no": 0.5467381477355957
+          },
+          343
+        ],
+        [
+          {
+            "yes": 0.09534947574138641,
+            "no": 0.9046505093574524
+          },
+          341
+        ],
+        [
+          {
+            "yes": 0.05665243789553642,
+            "no": 0.9433475732803345
+          },
+          339
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-5",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "input_sha256": "f433d13e2777d14f1621a5591e7bcfc404dbfd9b9708ee6a81c5f9985551a432",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          341,
+          339,
+          337
+        ],
+        "encoding_sha256": "54062324398311cb3f1a687ea67ab5d5171ef0d3d1f8f38f0bd45e2feead3f03"
+      },
+      "status": "inferred",
+      "elapsed_ms": 756.831,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.11279541254043579,
+              "false": 0.8872045874595642
+            },
+            "noul": 0.11279541254043579
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.10087861120700836,
+              "false": 0.8991213440895081
+            },
+            "noul": 0.10087861120700836
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.053403340280056,
+              "false": 0.9465966820716858
+            },
+            "noul": 0.053403340280056
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.11279541254043579,
+            "no": 0.8872045874595642
+          },
+          341
+        ],
+        [
+          {
+            "yes": 0.10087861120700836,
+            "no": 0.8991213440895081
+          },
+          339
+        ],
+        [
+          {
+            "yes": 0.053403340280056,
+            "no": 0.9465966820716858
+          },
+          337
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-6",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "input_sha256": "d1e00004fc97794474bd3555c0b82f0c28c34b3ea00f27ab4c78ebb947747a02",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          415,
+          413,
+          411
+        ],
+        "encoding_sha256": "323f001b042b1bc682f3b0fe66f240d5b3c839d317b84f598fe11ed841f209cb"
+      },
+      "status": "inferred",
+      "elapsed_ms": 840.404,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.09534947574138641,
+              "false": 0.9046505093574524
+            },
+            "noul": 0.09534947574138641
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.9196425676345825,
+              "false": 0.08035747706890106
+            },
+            "noul": 0.9196425676345825
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.06371500343084335,
+              "false": 0.9362850189208984
+            },
+            "noul": 0.06371500343084335
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.09534947574138641,
+            "no": 0.9046505093574524
+          },
+          415
+        ],
+        [
+          {
+            "yes": 0.9196425676345825,
+            "no": 0.08035747706890106
+          },
+          413
+        ],
+        [
+          {
+            "yes": 0.06371500343084335,
+            "no": 0.9362850189208984
+          },
+          411
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-7",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "input_sha256": "34ecb9b8f024ab154f5e3bb984bae406e4d1697d19ea3b0fd0aea1f699bf23ec",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          365,
+          363,
+          361
+        ],
+        "encoding_sha256": "1330e7aef36367f33f600189b3ffd99268c18b00a23db717b1de5faf7e6e7858"
+      },
+      "status": "inferred",
+      "elapsed_ms": 775.252,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.09009300172328949,
+              "false": 0.9099069833755493
+            },
+            "noul": 0.09009300172328949
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.08035747706890106,
+              "false": 0.9196425676345825
+            },
+            "noul": 0.08035747706890106
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.05033063888549805,
+              "false": 0.949669361114502
+            },
+            "noul": 0.05033063888549805
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.09009300172328949,
+            "no": 0.9099069833755493
+          },
+          365
+        ],
+        [
+          {
+            "yes": 0.08035747706890106,
+            "no": 0.9196425676345825
+          },
+          363
+        ],
+        [
+          {
+            "yes": 0.05033063888549805,
+            "no": 0.949669361114502
+          },
+          361
+        ]
+      ]
+    },
+    {
+      "id": "native-narrow-8",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "input_sha256": "2f844bcdbe987737f62413944217ecc7b53ccfd74d338caa6242d5192e7add45",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          493,
+          491,
+          489
+        ],
+        "encoding_sha256": "02ddda2e036c5819c3060fd6030482097a1ba0531f22586e37e60284aa9b9cd3"
+      },
+      "status": "inferred",
+      "elapsed_ms": 923.337,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.1259227693080902,
+              "false": 0.8740772008895874
+            },
+            "noul": 0.1259227693080902
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.09534947574138641,
+              "false": 0.9046505093574524
+            },
+            "noul": 0.09534947574138641
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.8872045874595642,
+              "false": 0.11279541254043579
+            },
+            "noul": 0.8872045874595642
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.1259227693080902,
+            "no": 0.8740772008895874
+          },
+          493
+        ],
+        [
+          {
+            "yes": 0.09534947574138641,
+            "no": 0.9046505093574524
+          },
+          491
+        ],
+        [
+          {
+            "yes": 0.8872045874595642,
+            "no": 0.11279541254043579
+          },
+          489
+        ]
+      ]
+    },
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          115,
+          134
+        ],
+        "encoding_sha256": "a023c5f573decbf906d6c3603567c78babd499b4e6c254252110ba74c305eacc"
+      },
+      "status": "inferred",
+      "elapsed_ms": 627.608,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.9362850189208984,
+              "false": 0.06371500343084335
+            },
+            "noul": 0.9362850189208984
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.9187609553337097,
+              "technical": 0.026063239201903343,
+              "other": 0.05517589673399925
+            },
+            "choice": "billing"
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.9362850189208984,
+            "no": 0.06371500343084335
+          },
+          115
+        ],
+        [
+          {
+            "billing": 0.9187609553337097,
+            "technical": 0.026063239201903343,
+            "other": 0.05517589673399925
+          },
+          134
+        ]
+      ]
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          118,
+          137
+        ],
+        "encoding_sha256": "d31faa05e643b316cbd6d323e41d7a8924a2536b6fc246f33343a651c9446e36"
+      },
+      "status": "inferred",
+      "elapsed_ms": 424.055,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "true": 0.05665243789553642,
+              "false": 0.9433475732803345
+            },
+            "noul": 0.05665243789553642
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.03284890949726105,
+              "technical": 0.9018232226371765,
+              "other": 0.06532786786556244
+            },
+            "choice": "technical"
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "yes": 0.05665243789553642,
+            "no": 0.9433475732803345
+          },
+          118
+        ],
+        [
+          {
+            "billing": 0.03284890949726105,
+            "technical": 0.9018232226371765,
+            "other": 0.06532786786556244
+          },
+          137
+        ]
+      ]
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": true,
+        "max_tokens": 8192,
+        "full_tokens": [
+          552,
+          647,
+          816
+        ],
+        "encoding_sha256": "ba774935f8187ae3c1db2b4a3d6d5e72e228fcea0c274d8ff1a7408822edae1c"
+      },
+      "status": "inferred",
+      "elapsed_ms": 2772.203,
+      "result": {
+        "answers": {
+          "maximally_big_brain": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.03331349790096283,
+              "1": 0.131757453083992,
+              "2": 0.4895382523536682,
+              "3": 0.29691997170448303,
+              "4": 0.04847085475921631
+            },
+            "score": 2.1954772919416428,
+            "legend": {
+              "0": "The solution is an accumulation of unrelated cases or layers; the reader must remember separate tricks with little shared structure.",
+              "1": "The implementation spells out a workable procedure, but recurring operations remain disconnected and its representation contributes little insight.",
+              "2": "A coherent decomposition and consistent primitives organize the problem; the pieces compose with predictable roles.",
+              "3": "A compact representation or composition expresses its task directly with very little conceptual overhead; meaningful primitives absorb the cases that actually exist. A small helper can qualify through one well-chosen operation.",
+              "4": "An unusually economical generative idea makes the whole solution feel inevitable: definitions compose, invariants arise from structure, and the same small vocabulary explains the edge cases."
+            }
+          },
+          "delightful_to_read": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.05696867033839226,
+              "1": 0.09998311847448349,
+              "2": 0.5405036211013794,
+              "3": 0.2553158402442932,
+              "4": 0.04722868278622627
+            },
+            "score": 2.135852612555027,
+            "legend": {
+              "0": "Reading requires repeated reconstruction: notation changes meaning, structure conceals relationships, and each step adds friction without a satisfying pattern.",
+              "1": "The flow is followable but plodding or awkward; repetition and indirection interrupt recognition of the underlying idea.",
+              "2": "The vocabulary and layout are consistent; the reader can maintain a clear mental picture and follow the composition smoothly.",
+              "3": "Precise names, balanced forms, and compact composition create repeated moments of recognition; the code is pleasurable to trace once its vocabulary is learned.",
+              "4": "The structure has an exceptional sense of fit: each line reveals or completes a pattern, dense passages unfold cleanly, and the finished expression is memorable and satisfying to revisit."
+            }
+          },
+          "highly_memetic": {
+            "type": "score",
+            "probabilities": {
+              "0": 0.07174844294786453,
+              "1": 0.41288378834724426,
+              "2": 0.2837706208229065,
+              "3": 0.17211556434631348,
+              "4": 0.059481553733348846
+            },
+            "score": 1.734697937965393,
+            "legend": {
+              "0": "The form is visually and conceptually shapeless or dissonant; there is no coherent motif or rhythm to catch the reader.",
+              "1": "The procedure is legible but generic or plodding; little in its shape or progression sticks after reading.",
+              "2": "A recognizable motif and some rhythm make the code pleasant and memorable, but it has little immediate punch or urge to be quoted or shared.",
+              "3": "The code has a distinctive, earned hook: its own conceptual vocabulary and rhythmic forms land, stick, and reward insider fluency. Knowing the terms unlocks the ideas; the pattern creates an appetite for more and feels worth quoting, imitating or showing someone.",
+              "4": "Mechanism, vocabulary and form fuse into an unmistakable little culture: the reader feels its rhythm, learns its ideas and words, anticipates its payoffs, and comes away wanting other code to have this expressive character. Its shared grammar almost asks to propagate."
+            }
+          }
+        }
+      },
+      "native": [
+        [
+          {
+            "0": 0.03331349790096283,
+            "1": 0.131757453083992,
+            "2": 0.4895382523536682,
+            "3": 0.29691997170448303,
+            "4": 0.04847085475921631
+          },
+          552
+        ],
+        [
+          {
+            "0": 0.05696867033839226,
+            "1": 0.09998311847448349,
+            "2": 0.5405036211013794,
+            "3": 0.2553158402442932,
+            "4": 0.04722868278622627
+          },
+          647
+        ],
+        [
+          {
+            "0": 0.07174844294786453,
+            "1": 0.41288378834724426,
+            "2": 0.2837706208229065,
+            "3": 0.17211556434631348,
+            "4": 0.059481553733348846
+          },
+          816
+        ]
+      ]
+    }
+  ],
+  "runtime": {
+    "torch": "2.8.0",
+    "transformers": "5.17.0",
+    "safetensors": "0.8.0"
+  }
+}
