@@ -393,3 +393,71 @@ small-helper and context sensitivity. Do not repeatedly score the same source,
 decorate canonical helpers, or equate successful refactoring with memetic
 acceptance. The campaign's rolling inventory invalidates old source/helper
 identities and records unrated new declarations without paid rescans.
+
+## 2026-09-26 — Vec: compression improved while delight became uncertain
+
+[Vec growth](style-campaign/vec-growth-1.md), commit `cd78dba`, made the
+continuation cases explicit with joint matches. Its first candidate passed
+unchanged proof, native/JS, ownership, mutation and native scaling gates.
+The 107 frozen inputs and all 12 actual style request/context identities match.
+Semantic Perch completed 29 checks without findings; all 12 style units remain
+below or uncertain on memetic identity.
+
+The planner's compression target mass rose 0.78 to 0.90 while delight fell
+0.61 to 0.52, crossing into uncertainty. Its shared catch-all hides the names
+of two stopping cases. Push delight also fell, 0.77 to 0.69, while remaining
+above the provisional bar. The author retained the transitions for a concrete
+reading benefit, with these costs explicit. This is evidence of distinct axes
+and a review tradeoff, not evidence that either the reader or judge is wrong.
+
+Do not make flattening a mechanical style rule or infer a psychological effect
+from one model judgment. The next Source search batch must preserve explicit
+terminal-state meaning and evaluate its own reading hypothesis before judgment.
+No rubric or threshold changed, and no repeat inference was used to hunt for
+a preferred result. Broader applicability/calibration questions remain open.
+
+
+## 2026-09-26 — Owning-store seed constraints and reproducible fixtures
+
+The owning-store draft repeated avoidable seed errors: Base already reserves
+Key/Event, computed pair destructuring needs a helper parameter, and a live body
+cannot call a later unfilled definition. The [source workflow](../src/AGENTS.md)
+now records the name and declaration-order constraints explicitly. Check the
+pinned Base namespace before writing a family; order the result helper before
+its caller and pass the continuation rather than introducing a forward call.
+
+The [retained first store harness](../research/owned-store/receipts/attempt-001.json.gz)
+hit Bun's stack while constructing one 3,531-case input literal. Batching fixed
+inputs into 32-case declarations passed both native and Bun without changing
+runtime code or expected observations. A later extra witness brought the corpus
+to 3,532. This was a harness/backend-boundary failure, not a semantic mutant kill.
+
+Parent review also found that the scope style runner required an ignored source
+copy from the current session. It now reconstructs the frozen source closure
+from the preregistered Git commit and checks every hash. The [reproduction](../research/compiler-style/family-1/behavior-receipts/attempt-003.json)
+passes all 28 observations with unchanged candidate, fixture and oracle. Future
+qualification runners must recover their inputs from tracked objects before
+claiming a reproducible gate. No model retry or time estimate is inferred from
+these harness corrections; no rule/rubric threshold changed.
+
+## 2026-09-26 — Source: a clean review missed a false parameter-boundary claim
+
+The [Source search campaign](../packages/source/STYLE_CAMPAIGN.md), commit
+`7bfae7e`, retains the first new law packet and its eight-rule clean review.
+Local review caught its claim that locate rejects a foreign ID: `Source.locate`
+takes a position, not a cursor, so that claim is inapplicable. The corrected
+packet passed one targeted review. No implementation, contract or independent
+assertion changed. Final coverage is 18 checks; total usage including the
+retained first packet is 26 checks, three requests/responses.
+
+Prevention: trace each packet claim to the exact signature and observation
+before submitting it. Reusing a cursor-oriented matrix row for a position-only
+operation creates false confidence even when the model returns no findings.
+This is a concrete review miss, not evidence for lowering a rule threshold.
+Any new automatic rule needs clean/broken/held-out controls before promotion.
+
+Search delight improved 0.57 to 0.65, but compression remains uncertain and
+memetic identity below target. Neighbour decreases and the capped datatype
+context remain visible. Unlike Vec's planner, this flattening preserves named
+terminal states; the two outcomes support separate reading judgments rather
+than a blanket flattening rule.
