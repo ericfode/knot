@@ -54,25 +54,107 @@ export function rankRows(rows, dimensions, nearTieGap) {
   });
 }
 
+const diagnosticRubrics = config => config.diagnostic_dimensions === undefined ? [] : config.diagnostic_dimensions;
+const reviewRubrics = (config, kind, context) => [
+  ...config.dimensions,
+  // Do not manufacture a diagnostic score from a context known to be truncated.
+  ...(context?.truncated ? [] : diagnosticRubrics(config)),
+  config.criticality,
+];
+
+function validateDiagnostics(config) {
+  const diagnostics = diagnosticRubrics(config);
+  if (!Array.isArray(diagnostics) || config.dimensions.length + diagnostics.length > 6) {
+    throw new Error('Invalid diagnostic dimensions');
+  }
+  const ids = [...config.dimensions.map(d => d.id), config.criticality.id];
+  for (const d of diagnostics) {
+    if (!d.id || !d.title || !d.instructions || !Array.isArray(d.levels)
+        || d.levels.length < 2 || d.levels.length > 10 || d.levels.some(x => typeof x !== 'string' || !x.trim())) {
+      throw new Error('Diagnostic dimensions need named, descriptive ordered levels');
+    }
+    if (ids.includes(d.id)) throw new Error('Diagnostic IDs must be distinct from all review rubrics');
+    ids.push(d.id);
+  }
+  const targets = config.criticality.diagnostic_targets ?? [];
+  if (!Array.isArray(targets) || new Set(targets.map(t => t.dimension)).size !== targets.length) {
+    throw new Error('Invalid critical diagnostic targets');
+  }
+  for (const target of targets) validateStyleTarget(target, config, diagnostics);
+}
+
+export function diagnoseStyle(rows, config) {
+  validateDiagnostics(config);
+  return rows.flatMap(row => diagnosticRubrics(config).map(d => {
+    const required = criticalityFor(row, config).status !== 'noncritical'
+      && (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id);
+    const metadata = { target: row.target, dimension: d.id, required, advisory: !required,
+      context_truncated: row.context?.truncated ?? false,
+      unresolved_references: row.context?.unresolved?.length ?? 0 };
+    if (metadata.context_truncated) return { ...metadata, status: 'unavailable', reason: 'context_truncated' };
+    return { ...metadata, status: metadata.unresolved_references ? 'limited_context' : 'rated',
+      ...validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length) };
+  }));
+}
+
+function validateStyleTarget(target, config, dimensions = config.dimensions) {
+  const dimension = dimensions.find(d => d.id === target?.dimension);
+  if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
+      || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
+    throw new Error('Invalid style target');
+  }
+}
+
+function criticalityFor(row, config) {
+  const policy = config.criticality;
+  const answer = validateScore({ ...row.answers?.[policy.id], type: 'score' }, policy.levels.length);
+  const probability = answer.probabilities[1] / (answer.probabilities[0] + answer.probabilities[1]);
+  // Limited context cannot establish that a declaration deserves the lower bar.
+  const status = probability >= policy.minimum_probability ? 'critical'
+    : !row.context?.truncated && probability <= 1 - policy.minimum_probability ? 'noncritical' : 'uncertain';
+  return { target: row.target, status, probability_critical: probability, context_truncated: row.context?.truncated ?? false };
+}
+
 export function assessStyle(rows, config) {
   if (!Array.isArray(config.style_targets) || config.style_targets.length !== config.dimensions.length
       || new Set(config.style_targets.map(t => t.dimension)).size !== config.dimensions.length) throw new Error('Each style dimension needs one target');
-  for (const target of config.style_targets) {
-    const dimension = config.dimensions.find(d => d.id === target?.dimension);
-    if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
-        || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
-      throw new Error('Invalid style target');
-    }
+  for (const target of config.style_targets) validateStyleTarget(target, config);
+  const policy = config.criticality;
+  if (!policy?.id || config.dimensions.some(d => d.id === policy.id) || !policy.title || !policy.instructions
+      || !Array.isArray(policy.levels) || policy.levels.length !== 2 || policy.levels.some(x => typeof x !== 'string' || !x.trim())
+      || !Number.isFinite(policy.minimum_probability) || policy.minimum_probability <= 0.5 || policy.minimum_probability > 1) {
+    throw new Error('Criticality needs a separate binary Score rubric');
   }
-  return rows.flatMap(row => config.style_targets.map(target => {
-    const answer = row.answers[target.dimension];
-    const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
-    const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
-    return { target: row.target, dimension: target.dimension, target_level: target.level,
-      probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
-        : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain',
-      context_truncated: row.context?.truncated ?? false };
-  }));
+  validateStyleTarget(policy.style_target, config);
+  const ordinary = config.style_targets.find(t => t.dimension === policy.style_target.dimension);
+  if (policy.style_target.level <= ordinary.level || policy.style_target.minimum_probability < ordinary.minimum_probability) {
+    throw new Error('Criticality must require a stricter style target');
+  }
+  validateDiagnostics(config);
+  return rows.flatMap(row => {
+    const criticality = criticalityFor(row, config);
+    const strict = ['critical', 'uncertain'].includes(criticality.status);
+    const diagnostics = strict ? policy.diagnostic_targets ?? [] : [];
+    return [...config.style_targets, ...diagnostics].map(base => {
+      // The established Galaxy-brain requirement covers functions, laws and proofs.
+      const target = strict && row.kind !== 'bend_datatype' && base.dimension === policy.style_target.dimension ? policy.style_target : base;
+      const metadata = { target: row.target, dimension: target.dimension, target_level: target.level,
+        minimum_probability: target.minimum_probability, criticality_status: criticality.status,
+        target_basis: target !== base || diagnostics.includes(base) ? 'criticality' : 'default',
+        context_truncated: row.context?.truncated ?? false };
+      if (diagnostics.includes(base) && row.context?.truncated) {
+        return { ...metadata, probability_at_target: null, status: 'unavailable' };
+      }
+      const answer = row.answers[target.dimension];
+      const rubric = [...config.dimensions, ...diagnosticRubrics(config)].find(d => d.id === target.dimension);
+      validateScore({ ...answer, type: 'score' }, rubric.levels.length);
+      const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
+      const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
+      return { ...metadata,
+        probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
+          : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain' };
+    });
+  });
 }
 
 function datatypeContext(file, path, declaration) {
@@ -134,6 +216,7 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
       const context = declaration.syntax_kind === 'bend_datatype' ? datatypeContext(file, path, declaration)
         : await file.review.forUnit(declaration.qualified_name);
       const state = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
+        path, declaration_kind: declaration.syntax_kind,
         source: bendDeclarationSource(file.source, declaration), ...context.seen };
       if (Buffer.byteLength(JSON.stringify(state)) > 60000) throw new Error(`Style context too large: ${identity}`);
       candidates.push({ target: identity, path, kind: declaration.syntax_kind,
@@ -188,12 +271,14 @@ export async function evaluateStyle(candidates, config, {
 } = {}) {
   const key = env.PERCH_API_KEY || env.TYPESAFE_API_KEY;
   if (!key) throw new Error('PERCH_API_KEY is not set');
-  const questions = Object.fromEntries(config.dimensions.map(d => [d.id,
-    { type: 'score', instructions: d.instructions, criteria: d.levels }]));
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error('Concurrency must be 1..16');
+  assessStyle([], config);
   const rows = new Array(candidates.length);
   let cursor = 0, failure = null;
   async function evaluate(candidate) {
+    const rubrics = reviewRubrics(config, candidate.kind, candidate.context);
+    const questions = Object.fromEntries(rubrics.map(d => [d.id,
+      { type: 'score', instructions: d.instructions, criteria: d.levels }]));
     const started = performance.now();
     transport.requests++;
     const response = await fetchImpl(env.PERCH_BASE_URL || 'https://api.typesafe.ai/v1/systemone', {
@@ -204,7 +289,7 @@ export async function evaluateStyle(candidates, config, {
     if (!response.ok) throw new Error(`Style provider HTTP ${response.status}; no ranking produced`);
     const body = await response.json().catch(() => { throw new Error('Invalid style provider JSON'); });
     if (typeof body?.model !== 'string' || !body.model) throw new Error('Missing resolved style model');
-    const answers = Object.fromEntries(config.dimensions.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
+    const answers = Object.fromEntries(rubrics.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
     transport.responses++;
     const { state, ...metadata } = candidate;
     return { ...metadata, model: body.model, elapsed_ms: Math.round(performance.now() - started),
@@ -276,9 +361,9 @@ export async function runStyleRanking(args, {
     const saved = new Map([...(prior.rows ?? []), ...(prior.completed_rows ?? [])].map(r => [r.target, r]));
     for (const candidate of candidates) {
       const row = saved.get(candidate.target);
-      if (!row || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
+      if (!row || row.kind !== candidate.kind || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
           || JSON.stringify(row.context) !== JSON.stringify(candidate.context)) continue;
-      for (const d of config.dimensions) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
+      for (const d of reviewRubrics(config, candidate.kind, candidate.context)) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
       if (typeof row.model !== 'string' || !row.model) throw new Error('Missing resolved model in reused row');
       reused.set(row.target, row);
     }
@@ -298,17 +383,26 @@ export async function runStyleRanking(args, {
   if (failure) rows = [];
   const changed_sources = await changedStyleSources(candidates, root);
   const assessments = failure ? [] : assessStyle(rows, config);
-  const counts = Object.fromEntries(['meets_target', 'below_target', 'uncertain'].map(status => [status, assessments.filter(a => a.status === status).length]));
+  const criticality = failure ? [] : rows.map(row => criticalityFor(row, config));
+  const diagnostics = failure ? [] : diagnoseStyle(rows, config);
+  const statuses = ['meets_target', 'below_target', 'uncertain', 'unavailable'];
+  const counts = Object.fromEntries(statuses.map(status => [status, assessments.filter(a => a.status === status).length]));
   const meets_all = rows.filter(row => assessments.filter(a => a.target === row.target).every(a => a.status === 'meets_target')).length;
-  const by_axis = config.dimensions.map(d => ({ id: d.id, title: d.title,
-    ...Object.fromEntries(['meets_target', 'below_target', 'uncertain'].map(status => [status, assessments.filter(a => a.dimension === d.id && a.status === status).length])) }));
+  const targetedDiagnostics = diagnosticRubrics(config).filter(d => (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id));
+  const by_axis = [...config.dimensions, ...targetedDiagnostics].map(d => ({ id: d.id, title: d.title,
+    required_for: config.dimensions.includes(d) ? 'all' : 'critical_or_uncertain',
+    ...Object.fromEntries(statuses.map(status => [status, assessments.filter(a => a.dimension === d.id && a.status === status).length])) }));
   const report = { schema: 2, command: 'style-rank', at, cohort: cohort || null,
-    mode: all ? 'project' : 'targets', inventory, rubric_sha256: hash(text),
+    mode: all ? 'project' : 'targets', inventory, rubric_sha256: hash(text), rubric_version: config.version,
     parser: BEND_PARSER_PROFILE, status: failure ? 'failed' : inventory?.unranked.length ? 'incomplete' : 'completed', advisory: true,
     coverage: { selected: candidates.length, ranked: rows.length, unranked_files: inventory?.unranked.length ?? 0 },
     reused_from: reuse || null, reused_units: reused.size,
     completed_rows: failure ? [...reused.values(), ...completed_rows] : [],
     style_targets: config.style_targets, style_summary: { ...counts, meets_all, needs_review: rows.length - meets_all, by_axis }, assessments,
+    criticality: { policy: config.criticality, assessments: criticality },
+    diagnostics: { required_for: 'critical_or_uncertain', targets: config.criticality.diagnostic_targets ?? [],
+      dimensions: diagnosticRubrics(config).map(({ id, title, levels }) => ({ id, title, levels })),
+      assessments: diagnostics },
     source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
     typechecked: false, behavioral_equivalence_checked: false,
     requested_model: env.PERCH_MODEL_ID || 'jev-latest', failure,
@@ -326,21 +420,34 @@ export async function runStyleRanking(args, {
   }
   if (args.includes('--json')) stdout(JSON.stringify(report, null, 2));
   else if (!failure) {
-    stdout(`${meets_all}/${rows.length} declarations meet all ${config.dimensions.length} style targets.`);
-    for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain.`);
+    stdout(`${meets_all}/${rows.length} declarations meet all required style targets.`);
+    for (const item of criticality.filter(c => ['critical', 'uncertain'].includes(c.status))) {
+      const required = assessments.filter(a => a.target === item.target && a.target_basis === 'criticality')
+        .map(a => `level ${a.target_level} on ${a.dimension}`).join(', ');
+      stdout(`Criticality ${item.status}: ${item.target} (${Math.round(100 * item.probability_critical)}% critical) requires ${required}.`);
+    }
+    for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain; ${axis.unavailable} unavailable.`);
     for (const assessment of assessments.filter(a => a.status !== 'meets_target')) {
-      stdout(`${assessment.status}: ${assessment.target} / ${assessment.dimension} (${Math.round(100 * assessment.probability_at_target)}% at level ${assessment.target_level}+)${assessment.context_truncated ? ' [limited context]' : ''}`);
+      stdout(`${assessment.status}: ${assessment.target} / ${assessment.dimension} (${assessment.probability_at_target === null ? 'no rating' : `${Math.round(100 * assessment.probability_at_target)}%`} at level ${assessment.target_level}+)${assessment.context_truncated ? ' [limited context]' : ''}`);
     }
     for (const ranking of report.rankings) {
       stdout(`\n${ranking.title}`);
       for (const row of ranking.entries) stdout(`${row.rank}. ${row.target}${row.near_tie_above ? ' (near tie above)' : ''}${row.context_truncated ? ' [limited context]' : ''}`);
+    }
+    for (const diagnostic of report.diagnostics.dimensions) {
+      const conditionalTarget = report.diagnostics.targets.find(t => t.dimension === diagnostic.id);
+      stdout(`\n${diagnostic.title} (${conditionalTarget ? 'required for critical or uncertain declarations' : 'diagnostic; no pass target'})`);
+      for (const row of diagnostics.filter(d => d.dimension === diagnostic.id)) {
+        stdout(`${row.target}: ${row.status === 'unavailable' ? 'unavailable [truncated context]'
+          : `${row.score.toFixed(2)}/${diagnostic.levels.length - 1}${row.status === 'limited_context' ? ' [limited context]' : ''}`}${row.required ? ' [required]' : ' [advisory]'}`);
+      }
     }
     stdout(`\nAdvisory taste ranking; ${rows.length} parsed units; ${rows[0].model}. Receipt: ${relative(root, receipt)}`);
   }
   if (failure) stderr(`Style ranking failed: ${failure}. Receipt: ${relative(root, receipt)}`);
   if (inventory?.unranked.length) stderr(`${inventory.unranked.length} file(s) could not be ranked; see inventory.unranked in the receipt`);
   if (changed_sources.length) stderr(`${changed_sources.length} source/context file(s) changed during review; rankings refer to the recorded snapshot`);
-  return failure || inventory?.unranked.length ? 1 : counts.below_target || counts.uncertain || changed_sources.length ? 3 : 0;
+  return failure || inventory?.unranked.length ? 1 : counts.below_target || counts.uncertain || counts.unavailable || changed_sources.length ? 3 : 0;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
