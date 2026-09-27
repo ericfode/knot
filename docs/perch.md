@@ -18,10 +18,12 @@ npm run lint:rules                  # lists built-in and current custom rules
 npm run lint:doctor                 # checks installation and credentials
 npm run lint -- src/parse.bend      # current parsed declarations
 npm run lint -- src/parse.bend --rules bend-fuel-completeness
+npm run lint:incremental             # committed HEAD, reuse matching answers
 npm run perch -- issues
 npm run lint:history                # local usage and finding counts
 npm run lint:style -- --live src/scope.bend
 npm run lint:style -- --live --all  # explicitly requested project style review
+npm run lint:style -- --live --all --incremental # automatic working-copy reuse
 npm run lint:verify                 # offline workflow and rule-wiring checks
 ```
 
@@ -78,6 +80,50 @@ credits. The user supplied a project key on 2026-09-26; it is stored in ignored
 `.env` with mode 0600. Doctor passed and bounded live control checks completed.
 The original installation and package receipts predate this credential setup.
 
+## Incremental scans
+
+`npm run lint:incremental` is `lint:scan -- --incremental`. The first scan
+establishes local answers; subsequent scans rebuild the current dependency graph
+and reuse answers whose complete prepared request still matches. Unchanged
+callers are reconsidered when supplied helper context changes. Source parsing
+is cached by content and parser identity across commits. A documentation-only
+commit does not require reparsing unchanged source or repeating model requests.
+
+This scans committed source at `HEAD`, with rules from the working copy.
+`npm run lint -- file.bend` checks uncommitted source. Project style review uses
+the working copy and now has its own automatic cache:
+
+```sh
+npm run lint:incremental
+npm run lint:style -- --live --all --incremental
+# Explicitly obtain new answers, then use incremental mode again:
+npm run lint:scan -- --fresh
+npm run lint:style -- --live --all --fresh
+```
+
+Both incremental commands retain their whole selected inventory, findings,
+uncertainty and parser failures. A cache hit is reused evidence, not a new model
+review. Changed questions, source/context, parser profile, configured model or
+endpoint invalidate affected answers. Deleted declarations disappear from the
+current result. Style keys use the actual supplied declaration/context, so an
+unrelated edit in the same file need not invalidate its other declarations;
+whole-file hashes remain provenance and freshness checks.
+
+Caches live under ignored `.perch/` paths. Keep the same semantic `--out` store
+between runs if selecting one. `--fresh` bypasses answer reuse and updates that
+cache; deterministic parser results can still be reused. Both flags reject
+`--since`, which is a narrower changed-path filter and can omit unchanged
+dependents. They also reject each other. For style, use one of `--incremental`,
+`--fresh`, or explicit `--reuse=receipt.json`.
+
+An unchanged incremental run makes no model requests. Its configured model name
+and endpoint match the saved answers, but a moving alias such as `jev-latest`
+cannot be resolved again without contacting the provider. Receipts disclose
+whether models were observed this invocation or only retained from the cache.
+Use `--fresh` to refresh a moving alias. Cache reuse never converts incomplete
+coverage, failed requests, or low/uncertain ratings into a pass. See the
+[incremental verification report](perch-incremental-2026-09-26.md).
+
 ## Coverage limits
 
 Upstream Perch 0.3.5 has no Bend registry entry. Knot installs a local extension
@@ -110,8 +156,10 @@ prefix copies, invariant recomputation, sequential linked-list indexing and
 amortized storage growth. Their calibration and the bounded repair pilot are in
 [the performance report](perch-performance-2026-09-26.md).
 
-When supported source exists, `npm run lint:scan -- --since <base-ref>` scans
-committed code at `HEAD`. It does not scan uncommitted edits; `lint` does.
+When supported source exists, `npm run lint:incremental` scans committed code at
+`HEAD`. It does not scan uncommitted edits; `lint` does. The older
+`lint:scan -- --since <base-ref>` selects changed paths only and is not a complete
+incremental dependency review.
 Root and split rule files are read from the working copy. Both `check` and
 `rules list` currently require a repository with a commit. This workspace
 already had commit `3540128` when setup ran.

@@ -8,7 +8,8 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { BEND_PARSER_PROFILE } from './perch-bend.mjs';
 import { bendDeclarationSource, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
-import { DEFAULT_PERCH_JOBS as DEFAULT_CONCURRENCY, MAX_PERCH_JOBS as MAX_CONCURRENCY } from './perch-throughput.mjs';
+import { DEFAULT_PERCH_JOBS as DEFAULT_CONCURRENCY, MAX_PERCH_JOBS as MAX_CONCURRENCY, mapConcurrent } from './perch-throughput.mjs';
+import { createStyleAnswerCache, styleEndpoint } from './perch-style-cache.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PREFLIGHT_CONCURRENCY = 32;
@@ -63,6 +64,13 @@ const reviewRubrics = (config, kind, context) => [
   ...(context?.truncated ? [] : diagnosticRubrics(config)),
   config.criticality,
 ];
+
+function styleRequest(candidate, config, requestedModel) {
+  const rubrics = reviewRubrics(config, candidate.kind, candidate.context);
+  const questions = Object.fromEntries(rubrics.map(d => [d.id,
+    { type: 'score', instructions: d.instructions, criteria: d.levels }]));
+  return { rubrics, body: JSON.stringify({ model: requestedModel, state: candidate.state, questions }) };
+}
 
 function validateDiagnostics(config) {
   const diagnostics = diagnosticRubrics(config);
@@ -295,16 +303,15 @@ export async function evaluateStyle(candidates, config, {
   assessStyle([], config);
   const rows = new Array(candidates.length);
   let cursor = 0, failure = null, inFlight = 0, model = expectedModel;
+  const endpoint = styleEndpoint(env.PERCH_BASE_URL || undefined), requestedModel = env.PERCH_MODEL_ID || 'jev-latest';
   async function evaluate(candidate) {
-    const rubrics = reviewRubrics(config, candidate.kind, candidate.context);
-    const questions = Object.fromEntries(rubrics.map(d => [d.id,
-      { type: 'score', instructions: d.instructions, criteria: d.levels }]));
+    const { rubrics, body: requestBody } = styleRequest(candidate, config, requestedModel);
     const started = performance.now();
     transport.requests++;
-    const response = await fetchImpl(env.PERCH_BASE_URL || 'https://api.typesafe.ai/v1/systemone', {
+    const response = await fetchImpl(endpoint.url, {
       method: 'POST', signal: AbortSignal.timeout(30000),
       headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ model: env.PERCH_MODEL_ID || 'jev-latest', state: candidate.state, questions }),
+      body: requestBody,
     }).catch(() => { throw new Error('Style provider transport failed; no ranking produced'); });
     if (!response.ok) throw new Error(`Style provider HTTP ${response.status}; no ranking produced`);
     const body = await response.json().catch(() => { throw new Error('Invalid style provider JSON'); });
@@ -342,11 +349,13 @@ export async function runStyleRanking(args, {
   const cohort = args.find(x => x.startsWith('--cohort='))?.slice(9);
   const output = args.find(x => x.startsWith('--output='))?.slice(9);
   const reuse = args.find(x => x.startsWith('--reuse='))?.slice(8);
+  const incremental = args.includes('--incremental'), fresh = args.includes('--fresh');
   const all = args.includes('--all');
   const concurrency = Number(args.find(x => x.startsWith('--jobs='))?.slice(7) ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY);
-  const known = x => ['--live', '--json', '--all'].includes(x) || ['--cohort=', '--output=', '--jobs=', '--reuse='].some(p => x.startsWith(p));
+  const known = x => ['--live', '--json', '--all', '--incremental', '--fresh'].includes(x) || ['--cohort=', '--output=', '--jobs=', '--reuse='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown style option');
   if (!args.includes('--live')) throw new Error('Use --live file.bend::name, file.bend, or --live --all to rank project Bend declarations');
+  if (Number(incremental) + Number(fresh) + Number(reuse !== undefined) > 1) throw new Error('Choose only one of --incremental, --fresh, or --reuse');
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > MAX_CONCURRENCY) throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
   const targets = args.filter(x => !x.startsWith('--'));
   if (all && targets.length) throw new Error('Use --all or explicit targets, not both');
@@ -374,14 +383,27 @@ export async function runStyleRanking(args, {
     try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
   const at = new Date().toISOString(), start = performance.now();
+  const requestedModel = env.PERCH_MODEL_ID || 'jev-latest', endpoint = styleEndpoint(env.PERCH_BASE_URL || undefined);
+  const providerEnv = { ...env, PERCH_MODEL_ID: requestedModel, PERCH_BASE_URL: endpoint.url };
   const transport = { requests: 0, responses: 0, peak_in_flight: 0 };
   const reused = new Map(), completed_rows = new Map();
+  const cache = incremental || fresh ? createStyleAnswerCache(root, {
+    parser: BEND_PARSER_PROFILE, rubric_sha256: hash(text), requested_model: requestedModel, endpoint_sha256: endpoint.sha256,
+    context_contract_sha256: hash(await readFile(new URL('./perch-bend-context.mjs', import.meta.url))),
+  }) : null;
+  const requestHashes = cache ? new Map(candidates.map(candidate => [candidate.target, hash(styleRequest(candidate, config, requestedModel).body)])) : null;
+  if (incremental) {
+    const saved = await mapConcurrent(candidates, PREFLIGHT_CONCURRENCY, candidate => cache.read(candidate, requestHashes.get(candidate.target), answers =>
+      Object.fromEntries(reviewRubrics(config, candidate.kind, candidate.context).map(d =>
+        [d.id, validateScore({ ...answers?.[d.id], type: 'score' }, d.levels.length)]))));
+    for (const row of saved) if (row) reused.set(row.target, row);
+  }
   if (reuse) {
     const bytes = await readFile(resolve(root, reuse));
     const prior = JSON.parse((reuse.endsWith('.gz') ? gunzipSync(bytes) : bytes).toString('utf8'));
     if (prior.command !== 'style-rank' || prior.schema !== 2 || prior.rubric_sha256 !== hash(text)
-        || prior.parser !== BEND_PARSER_PROFILE || prior.requested_model !== (env.PERCH_MODEL_ID || 'jev-latest')) {
-      throw new Error('Style reuse requires the same rubric, parser and requested model');
+        || prior.parser !== BEND_PARSER_PROFILE || prior.requested_model !== requestedModel || prior.endpoint_sha256 !== endpoint.sha256) {
+      throw new Error('Style reuse requires the same rubric, parser, requested model and endpoint identity');
     }
     const saved = new Map([...(prior.rows ?? []), ...(prior.completed_rows ?? [])].map(r => [r.target, r]));
     for (const candidate of candidates) {
@@ -399,7 +421,7 @@ export async function runStyleRanking(args, {
   try {
     const models = new Set([...reused.values()].map(row => row.model));
     if (models.size > 1) throw new Error('Model changed during review; ratings are not comparable');
-    const fresh = pending.length ? await evaluateStyle(pending, config, { env, fetchImpl, transport, concurrency, expectedModel: models.values().next().value,
+    const fresh = pending.length ? await evaluateStyle(pending, config, { env: providerEnv, fetchImpl, transport, concurrency, expectedModel: models.values().next().value,
     onProgress: (done, total) => { if (all && (done % 100 === 0 || done === total)) stderr(`Style review: ${done}/${total} declarations`); },
     onRow: row => completed_rows.set(row.target, row),
     }) : [];
@@ -412,6 +434,13 @@ export async function runStyleRanking(args, {
   const evaluated = performance.now();
   const changed_sources = await changedStyleSources(candidates, root);
   const freshnessChecked = performance.now();
+  const resolvedModels = new Set([...reused.values(), ...completed_rows.values()].map(row => row.model));
+  const cachePersistence = changed_sources.length ? 'source-stale' : resolvedModels.size > 1 ? 'model-drift' : 'eligible';
+  if (cache && cachePersistence === 'eligible') {
+    await mapConcurrent(candidates.filter(candidate => completed_rows.has(candidate.target)), PREFLIGHT_CONCURRENCY,
+      candidate => cache.write(candidate, requestHashes.get(candidate.target), completed_rows.get(candidate.target), at));
+  }
+  const persisted = performance.now();
   const assessments = failure ? [] : assessStyle(rows, config);
   const criticality = failure ? [] : rows.map(row => criticalityFor(row, config));
   const diagnostics = failure ? [] : diagnoseStyle(rows, config);
@@ -436,6 +465,7 @@ export async function runStyleRanking(args, {
     parser: BEND_PARSER_PROFILE, status: failure ? 'failed' : inventory?.unranked.length ? 'incomplete' : 'completed', advisory: true,
     coverage: { selected: candidates.length, ranked: rows.length, unranked_files: inventory?.unranked.length ?? 0 },
     reused_from: reuse || null, reused_units: reused.size,
+    incremental_cache: cache ? { mode: fresh ? 'fresh' : 'incremental', ...cache.stats, persistence: cachePersistence } : null,
     completed_rows: failure ? candidates.flatMap(candidate => {
       const row = reused.get(candidate.target) ?? completed_rows.get(candidate.target);
       return row ? [row] : [];
@@ -447,7 +477,10 @@ export async function runStyleRanking(args, {
       assessments: diagnostics },
     source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
     typechecked: false, behavioral_equivalence_checked: false,
-    requested_model: env.PERCH_MODEL_ID || 'jev-latest', failure,
+    requested_model: requestedModel, endpoint_sha256: endpoint.sha256, failure,
+    model_resolution: { resolved_models: [...resolvedModels], cached_answers: reused.size, current_responses: transport.responses,
+      verification: reused.size ? 'cached-answers-unverified' : transport.responses ? 'provider-response-observed' : 'unavailable',
+      note: 'Cache entries are partitioned by requested model and endpoint. Reused resolved model IDs do not verify the current version of a moving alias. Use --fresh to refresh selected answers.' },
     concurrency, provider_peak_in_flight: transport.peak_in_flight,
     provider_requests: transport.requests, provider_responses: transport.responses,
     targets: candidates.map(({ state, ...metadata }) => metadata),
@@ -458,7 +491,7 @@ export async function runStyleRanking(args, {
   report.timings = {
     preflight_ms: Math.round(start - invoked), reuse_ms: Math.round(prepared - start),
     evaluation_ms: Math.round(evaluated - prepared), freshness_ms: Math.round(freshnessChecked - evaluated),
-    aggregation_ms: Math.round(aggregated - freshnessChecked), total_ms: Math.round(aggregated - invoked),
+    cache_write_ms: Math.round(persisted - freshnessChecked), aggregation_ms: Math.round(aggregated - persisted), total_ms: Math.round(aggregated - invoked),
     scope: 'Invocation through report assembly; excludes serialization, receipt writes and output. elapsed_ms retains its post-preflight scope before rankings.',
   };
   const encoded = JSON.stringify(report, null, 2) + '\n';
@@ -497,6 +530,7 @@ export async function runStyleRanking(args, {
   if (failure) stderr(`Style ranking failed: ${failure}. Receipt: ${relative(root, receipt)}`);
   if (inventory?.unranked.length) stderr(`${inventory.unranked.length} file(s) could not be ranked; see inventory.unranked in the receipt`);
   if (changed_sources.length) stderr(`${changed_sources.length} source/context file(s) changed during review; rankings refer to the recorded snapshot`);
+  if (cache?.stats.write_failures) stderr(`${cache.stats.write_failures} style answer(s) could not be saved to the incremental cache`);
   return failure || inventory?.unranked.length ? 1 : counts.below_target || counts.uncertain || counts.unavailable || changed_sources.length ? 3 : 0;
 }
 

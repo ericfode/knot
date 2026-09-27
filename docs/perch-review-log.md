@@ -506,3 +506,19 @@ requests; style 22.00 s with all 2,345 parsable units rated. The scan recovered
 152 rate-limit responses. The same 16 parser failures still prevent complete
 repository coverage. Full results are retained; model findings are untriaged.
 No implementation, rule, rubric, or concurrency change was needed.
+
+## 2026-09-26 — Incremental review must invalidate dependencies and question names
+
+The [incremental review audit](perch-incremental-2026-09-26.md) found that
+`--since` narrows paths without reconsidering unchanged dependent callers.
+An unnamed question hash also allowed an otherwise identical renamed rule to
+inherit the old name's answer, and deleted file units or failed rereads could
+leave stale results. Focused fixtures reproduced these cases; corrected request
+identities and current-unit retention now reject them. Incremental mode validates
+the full selected graph and reuses only matching requests.
+
+Prevention: test cache invalidation with changed helpers, renamed questions,
+deleted units and failed rereads, not only an unchanged second invocation.
+Count carried applicable answers separately from provider calls. The full
+offline inventory retains the existing 16 parser failures with zero warm
+requests; cache speed is not acceptance evidence or a fresh model judgment.

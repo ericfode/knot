@@ -79,6 +79,56 @@ test('actual Perch CLI retains useful evidence without treating blockers or zero
   }
 });
 
+test('incremental scan receipts distinguish reused coverage from a fresh provider review', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'knot-perch-incremental-receipt-'));
+  const originalFetch = globalThis.fetch;
+  t.after(async () => { globalThis.fetch = originalFetch; await rm(root, { recursive: true, force: true }); });
+  await writeFile(join(root, 'main.bend'), 'import Base\ndef main() -> U32:\n  42\n');
+  await writeFile(join(root, 'perch.yaml'), 'scan_types: []\nrules:\n  - name: fixture-rule\n    where: "**/*.bend"\n    each: method\n    ensure: Return the specified result.\n');
+  const git = args => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
+  git(['init', '-q', '-b', 'main']); git(['add', '.']);
+  git(['-c', 'user.name=Workflow test', '-c', 'user.email=fixture@example.invalid',
+    '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Fixture']);
+  let calls = 0;
+  globalThis.fetch = async (_url, options) => {
+    calls++;
+    const body = JSON.parse(options.body);
+    return new Response(JSON.stringify({ model: 'offline-incremental-fixture', answers:
+      Object.fromEntries(Object.entries(body.questions).map(([name, question]) => {
+        if (question.type === 'choice') {
+          const choice = Object.keys(question.criteria).at(-1);
+          return [name, { choice, confidence: 1, probabilities: { [choice]: 1 } }];
+        }
+        return [name, { noul: 1 }];
+      })) }));
+  };
+  const diagnostics = [];
+  const scan = mode => runPerch(['scan', mode], {
+    root, env: { PERCH_API_KEY: 'offline-fixture', PERCH_MODEL_ID: 'offline-incremental-fixture' },
+    stdout: () => {}, stderr: text => diagnostics.push(text),
+  });
+  assert.equal(await scan('--incremental'), 0, diagnostics.join('\n'));
+  const coldCalls = calls;
+  assert.ok(coldCalls > 0);
+  assert.equal(await scan('--incremental'), 0);
+  assert.equal(calls, coldCalls, 'warm scan checks coverage without repeating provider requests');
+  assert.equal(await scan('--fresh'), 0);
+  assert.ok(calls > coldCalls, 'fresh scan dispatches the current inputs again');
+  const receipts = await Promise.all((await readdir(join(root, '.perch/usage')))
+    .map(async path => JSON.parse(await readFile(join(root, '.perch/usage', path), 'utf8'))));
+  const warm = receipts.find(row => row.scan.mode === 'incremental' && row.provider_requests === 0);
+  const cold = receipts.find(row => row.scan.mode === 'incremental' && row.provider_requests > 0);
+  assert.ok(warm.checked > 0); assert.equal(warm.checked, cold.checked);
+  assert.equal(warm.scan.methods, 1);
+  assert.ok(warm.scan.carried > 0); assert.equal(warm.scan.failed, 0);
+  assert.equal(warm.model_resolution, 'cached-answers-not-revalidated');
+  assert.equal(warm.resolved_model, null, 'no claim that a moving alias was resolved without a request');
+  const fresh = receipts.find(row => row.scan.mode === 'fresh');
+  assert.ok(fresh.provider_requests > 0); assert.equal(fresh.scan.carried, 0);
+  assert.equal(fresh.resolved_model, 'offline-incremental-fixture');
+  assert.equal(fresh.model_resolution, 'provider-responses-this-run');
+});
+
 test('bounded workers refill, preserve order and drain when a task fails', async () => {
   const { mapConcurrent } = await import('../scripts/perch-throughput.mjs');
   let release;

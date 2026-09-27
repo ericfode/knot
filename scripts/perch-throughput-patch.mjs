@@ -127,5 +127,138 @@ export function patchThroughput(source) {
   }
 ` + source.slice(fileEnd);
 
+  // Incremental scans validate the current whole selection. --since remains
+  // an explicitly narrower path filter, never an incremental completeness gate.
+  replace('var switches = /* @__PURE__ */ new Set(["force",',
+    'var switches = /* @__PURE__ */ new Set(["incremental", "fresh", "force",');
+  replace('  since: ["--since REF", "Only what changed since this branch or commit", ["scan"]],',
+    '  since: ["--since REF", "Only what changed since this branch or commit", ["scan"]],\n  incremental: ["--incremental", "Validate current contexts and reuse identical prior answers", ["scan"]],\n  fresh: ["--fresh", "Ask again without reusing answers; retain parser caches and closures", ["scan"]],');
+  replace('function checkFlags(flags, commandName) {', `function checkFlags(flags, commandName) {
+  if ((flags.incremental && flags.fresh) || (flags.since && (flags.incremental || flags.fresh)))
+    throw new UsageError("--incremental, --fresh and --since are mutually exclusive");`);
+  replace('Delete .perch/scan.jsonl to ask about everything again.',
+    'Use --incremental to make this reuse explicit, or --fresh to ask again without deleting the prior cache. Both validate the current selected graph; neither combines with --since. Cached answers retain their recorded resolved model; pin PERCH_MODEL_ID or use --fresh when a moving model alias changes.');
+  replace('The answer would be the same one, and asking for it would move the numbers on an issue you have already looked at.',
+    'Reuse preserves previously recorded evidence; a fresh stochastic answer may differ.');
+  replace('--paths and --since narrow it further, and --since origin/main is what CI wants.',
+    '--paths and --since narrow it further. These explicit path filters do not establish whole-repository coverage.');
+  replace('  unitParallel = UNIT_PARALLEL,\n  min = 0.5,',
+    '  unitParallel = UNIT_PARALLEL,\n  fresh = false,\n  min = 0.5,');
+  replace('        unitParallel: parallel,\n        min,',
+    '        unitParallel: parallel,\n        fresh: Boolean(io.flags.fresh),\n        min,');
+  replace('    paths,\n    parallel,\n    scan_id: scan.id,',
+    '    paths,\n    parallel,\n    mode: fresh ? "fresh" : "incremental",\n    parser_coverage: scan.coverage,\n    scan_id: scan.id,');
+  replace('{ run, parser_coverage: scan.coverage, issues: issues2, usage: meter.toJSON() },',
+    '{ run, parser_coverage: run.parser_coverage, issues: issues2, usage: meter.toJSON() },');
+  replace('  const earlier = latest;', '  const earlier = fresh ? new Map() : latest;');
+  replace('systemOne, inScope, min, debug, earlier: checks };',
+    'systemOne, inScope, min, debug, earlier: fresh ? new Map() : checks };');
+  replace('    checked: 0,\n    visited: [],', '    checked: 0,\n    reviewed_checks: 0,\n    visited: [],');
+  replace('  const read = [], broken = [];', '  const read = [], broken = [], reviewed = new Map();');
+  replace('      const event = before ? { ...before, ...fresh } : fresh;\n      read.push(event);',
+    `      const event = before ? { ...before, ...fresh } : fresh;
+      const answeredNames = new Set(questionsFor([...methodQuestions(kinds), ...rulesForMethod(rules, node)], filters, label)
+        .filter(question => event[question.name] !== undefined).map(question => question.name));
+      for (const name of answeredNames) reviewed.set(name, (reviewed.get(name) ?? 0) + 1);
+      run.reviewed_checks += answeredNames.size;
+      read.push(event);`);
+  replace('    run.carried += units.carried + searches.carried;',
+    `    run.carried += units.carried + searches.carried;
+    for (const result of [...units.results, ...searches.results]) {
+      if (result.error || result.incomplete || typeof result.broken !== "number") continue;
+      reviewed.set(result.rule, (reviewed.get(result.rule) ?? 0) + 1);
+      run.reviewed_checks++;
+    }`);
+  replace('...questionSet().filter((question) => question.each === "method" && !question.kind).map((question) => ({',
+    '...questionSet().filter((question) => question.each === "method" && !question.kind && reviewed.has(question.name)).map((question) => ({');
+  replace('        units: read.length,', '        units: reviewed.get(question.name),');
+  replace('      ...rules.map((rule) => ({\n        name: rule.name,\n        from: RULES_FILE,',
+    '      ...rules.filter(rule => reviewed.has(rule.name)).map((rule) => ({\n        name: rule.name,\n        from: RULES_FILE,');
+  replace('        units: rule.each === "method" && !SEARCHES(rule.kind) ? candidates.filter((candidate) => rulesForMethod([rule], graph.nodes.get(candidate.id)).length).length : selectUnits(rule, { scan, graph, files, tree, inScope }).length,',
+    '        units: reviewed.get(rule.name),');
+
+  // Names and compiled questions are part of the request. The old unnamed
+  // hash list could carry A's answer after an otherwise identical rename to B.
+  replace('var askKey = (steps, asked, client) => sha(JSON.stringify([steps.map((step) => step.state), asked.map((question) => question.hash).sort(), client]));',
+    `var askKey = (steps, asked, client) => sha(JSON.stringify(["knot-request-v2",
+  steps.map(step => [step.state, step.questions ?? null]),
+  asked.map(question => [question.name, question.hash, question.kind, question.type,
+    question.when, question.issue, question.min, question.gate]).sort((a, b) => a[0].localeCompare(b[0])), client]));`);
+  replace('const key = askKey(steps, over, systemOne.cacheKey ?? systemOne.id);',
+    'const key = askKey(steps, over, [systemOne.cacheKey ?? systemOne.id, min]);');
+  replace('    const key = rule.sees === "self" ? askKey([{ state: units.map((unit) => [unit.id, unit.hash ?? null]) }], [rule], systemOne.cacheKey ?? systemOne.id) : null;',
+    `    let key = null;
+    try {
+      const inputs = units.map(unit => {
+        const source = files.get(unit.path) ?? "";
+        const steps = unitSteps({ rules: [rule], unit, source: unit.part ? bodyOf(source, unit) : source,
+          seen: neighbourhood(rule.sees, unit, { graph, files }), budget: systemOne.limits?.state });
+        return [unit.id, askKey(steps, [rule], systemOne.cacheKey ?? systemOne.id)];
+      });
+      key = sha(JSON.stringify(["knot-search-v2", rule.name, rule.kind, min, inputs]));
+    } catch { /* Preserve per-unit incomplete reporting when context preparation fails. */ }`);
+  replace('    if (!units.length) return;\n    let settled = null;',
+    `    if (!units.length) {
+      const unit = { id: "search:" + rule.name, path: RULES_FILE, name: String(rule.where), line: 1 };
+      results.push({ ...checkOf(rule, unit, { broken: rule.kind === "ensure_present" ? 1 : 0,
+        line: 1, text: null, revision: revision2, key }), id });
+      return;
+    }
+    let settled = null;`);
+  replace('const elsewhere = [...earlier.values()].filter((event) => !walked.has(event.method) && graph.nodes.has(event.method));',
+    'const elsewhere = [...latest.values()].filter(event => !walk.visited.has(event.method) && graph.nodes.has(event.method) && !graph.nodes.get(event.method).test && !ignored.some(glob => matches(glob, event.path)));');
+  replace('    const unasked = [...checks.values()].filter((check2) => !said.has(check2.id) && byName.get(check2.rule)?.hash === check2.rule_hash);',
+    `    const liveUnits = new Map(rules.filter(rule => !SEARCHES(rule.kind)).map(rule => [rule.name,
+      new Set(selectUnits(rule, { scan, graph, files, tree,
+        inScope: path => !ignored.some(glob => matches(glob, path)) }).map(unit => unit.id))]));
+    const unasked = [...checks.values()].filter(check => !said.has(check.id)
+      && byName.get(check.rule)?.hash === check.rule_hash
+      && (SEARCHES(byName.get(check.rule)?.kind) ? true : liveUnits.get(check.rule)?.has(check.unit)));`);
+
+  // Parser output is content-addressed, while path IDs, graph resolution and
+  // coverage are rebuilt from the current tree. Cache files are disposable.
+  replace('async function analyzeTree({ root, revision: revision2, out, analyzer,', `import { randomUUID as knotParseNonce } from "node:crypto";
+export function knotCachedAnalyzer(analyzer, out, stats) {
+  const pending = new Map();
+  return { async analyzeSource(source, language) {
+    const key = identity("knot-parse-v1", ANALYSIS_PROFILE, language, sha256(source));
+    if (pending.has(key)) { stats.hits++; return pending.get(key); }
+    const reading = (async () => {
+      const path = join3(out, "analysis", key + ".json");
+      const cached = await readJson(path, null).catch(() => null);
+      if (cached?.schema === 1 && cached.key === key && cached.analysis
+          && ["parsed", "parse-error"].includes(cached.analysis.parser_status)
+          && cached.digest === sha256(JSON.stringify(cached.analysis))) {
+        stats.hits++;
+        return cached.analysis;
+      }
+      stats.misses++;
+      const analysis = await analyzer.analyzeSource(source, language);
+      if (["parsed", "parse-error"].includes(analysis.parser_status)) {
+        const temporary = path + "." + process.pid + "." + knotParseNonce() + ".tmp";
+        try {
+          await mkdir(dirname2(path), { recursive: true });
+          await writeFile(temporary, JSON.stringify({ schema: 1, key, digest: sha256(JSON.stringify(analysis)), analysis }));
+          await rename(temporary, path);
+        } catch { stats.write_failures++; await rm(temporary, { force: true }).catch(() => {}); }
+      }
+      return analysis;
+    })();
+    pending.set(key, reading);
+    return reading;
+  } };
+}
+async function analyzeTree({ root, revision: revision2, out, analyzer,`);
+  replace('  if (existing?.status === "complete") {',
+    '  if (existing?.status === "complete" && !existing.coverage?.transient_parse_failures) {');
+  replace('    return existing;\n  }\n  await store.exclude(root);',
+    '    return { ...existing, coverage: { ...existing.coverage, parser_cache: { hits: 0, misses: 0, write_failures: 0, revision_reused: true } } };\n  }\n  await store.exclude(root);');
+  replace('  const analysis = await analyzeFiles(sources, { analyzer, readSource, progress, debug });',
+    '  const parserCache = { hits: 0, misses: 0, write_failures: 0, revision_reused: false };\n  const analysis = await analyzeFiles(sources, { analyzer: knotCachedAnalyzer(analyzer, out, parserCache), readSource, progress, debug });');
+  replace('coverage: { ...analysis.coverage, excluded: tree.filter((item) => item.type === "blob").length - sources.length },',
+    'coverage: { ...analysis.coverage, parser_cache: parserCache, excluded: tree.filter((item) => item.type === "blob").length - sources.length },');
+  replace('    if (analysis.parser_status !== "parsed") {\n      coverage.parse_failures++;',
+    '    if (analysis.parser_status !== "parsed") {\n      coverage.parse_failures++;\n      if (analysis.parser_status !== "parse-error") coverage.transient_parse_failures = (coverage.transient_parse_failures ?? 0) + 1;');
+
   return source;
 }

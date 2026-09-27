@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rename, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { setImmediate as nextTurn } from 'node:timers/promises';
@@ -609,4 +609,183 @@ test('ties share a rank, near ties remain visible, and existing output is reject
   }), /already exists/);
   assert.equal(calls, 0);
   assert.equal(await readFile(join(root, 'old.json'), 'utf8'), 'old evidence');
+});
+
+async function cachedRun(root, { selection = targets, mode = '--incremental', options = [], env = {}, fetchImpl = async () => response(3, 3) } = {}) {
+  const output = [], errors = [], requests = [];
+  const code = await runStyleRanking(['--live', '--json', mode, ...options, ...selection].filter(Boolean), {
+    root, env: { PERCH_API_KEY: key, ...env }, stdout: value => output.push(value), stderr: value => errors.push(value),
+    fetchImpl: async (...arguments_) => { requests.push(JSON.parse(arguments_[1].body)); return fetchImpl(...arguments_); },
+  });
+  return { code, report: JSON.parse(output[0]), requests, errors };
+}
+
+test('incremental keeps full current coverage with zero warm requests and honest cached-model provenance', async t => {
+  const root = await fixture(t);
+  const first = await cachedRun(root);
+  assert.equal(first.code, 0);
+  assert.equal(first.report.incremental_cache.written, 2);
+  const warm = await cachedRun(root, { fetchImpl: async () => { throw new Error('Unexpected provider call'); } });
+  assert.equal(warm.code, 0);
+  assert.equal(warm.requests.length, 0);
+  assert.equal(warm.report.provider_requests, 0);
+  assert.equal(warm.report.coverage.selected, 2);
+  assert.equal(warm.report.coverage.ranked, 2);
+  assert.equal(warm.report.incremental_cache.hits, 2);
+  assert.deepEqual(warm.report.assessments, first.report.assessments);
+  assert.deepEqual(warm.report.rankings, first.report.rankings);
+  assert.equal(warm.report.model_resolution.verification, 'cached-answers-unverified');
+  assert.match(warm.report.model_resolution.note, /moving alias/);
+  assert.equal(warm.report.rows[0].answer_origin.kind, 'incremental-cache');
+  assert.equal(warm.report.rows[0].answer_origin.provenance.source_sha256, first.report.rows[0].source_sha256);
+  const files = await readdir(join(root, '.perch/cache/style-v1'));
+  assert.equal(files.length, 2);
+  for (const file of files) {
+    const saved = await readFile(join(root, '.perch/cache/style-v1', file), 'utf8');
+    assert.ok(!saved.includes(key) && !saved.includes('def solve') && !saved.includes('def next'));
+  }
+});
+
+test('isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents', async t => {
+  const root = await fixture(t), selection = ['a.bend'];
+  const first = await cachedRun(root, { selection });
+  await writeFile(join(root, 'a.bend'), source.replace('999', '998'));
+  const changed = await cachedRun(root, { selection });
+  assert.equal(changed.requests.length, 1);
+  assert.equal(changed.requests[0].state.name, 'unrelated');
+  assert.equal(changed.report.incremental_cache.hits, 1);
+  const cachedSolve = changed.report.rows.find(row => row.target === 'a.bend::solve');
+  assert.notEqual(cachedSolve.source_sha256, first.report.rows[0].source_sha256, 'report retains current full-file provenance');
+  assert.equal(cachedSolve.answer_origin.provenance.source_sha256, first.report.rows[0].source_sha256, 'original answer provenance stays separate');
+  assert.equal(cachedSolve.state_sha256, first.report.rows[0].state_sha256, 'only identical sent states qualify');
+  await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
+  const helper = await cachedRun(root, { selection });
+  assert.equal(helper.requests.length, 1);
+  assert.equal(helper.requests[0].state.name, 'solve');
+  assert.equal(helper.report.incremental_cache.hits, 1);
+  assert.equal(helper.report.source_freshness.status, 'current');
+});
+
+test('rubric, requested model and effective endpoint changes invalidate incremental answers', async t => {
+  const root = await fixture(t);
+  await cachedRun(root);
+  const revised = structuredClone(config);
+  revised.dimensions[0].instructions += ' Changed rubric.';
+  await writeFile(join(root, 'perch-style.json'), JSON.stringify(revised));
+  assert.equal((await cachedRun(root)).requests.length, 2);
+  await writeFile(join(root, 'perch-style.json'), JSON.stringify(config));
+  assert.equal((await cachedRun(root)).requests.length, 0);
+  assert.equal((await cachedRun(root, { env: { PERCH_MODEL_ID: 'another-requested-model' } })).requests.length, 2);
+  const endpoint = { PERCH_BASE_URL: 'https://EXAMPLE.test:443/review?private=endpoint-secret' };
+  const first = await cachedRun(root, { env: endpoint });
+  assert.equal(first.requests.length, 2);
+  assert.equal((await cachedRun(root, { env: { PERCH_BASE_URL: 'https://example.test/review?private=endpoint-secret#ignored' } })).requests.length, 0);
+  assert.ok(!JSON.stringify(first.report).includes('endpoint-secret'));
+  for (const file of await readdir(join(root, '.perch/cache/style-v1'))) {
+    assert.ok(!(await readFile(join(root, '.perch/cache/style-v1', file), 'utf8')).includes('endpoint-secret'));
+  }
+  const legacy = structuredClone(first.report);
+  delete legacy.endpoint_sha256;
+  await writeFile(join(root, 'legacy.json'), JSON.stringify(legacy));
+  await assert.rejects(cachedRun(root, { mode: '--reuse=legacy.json', env: endpoint }), /endpoint identity/);
+});
+
+test('incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage', async t => {
+  const root = await fixture(t);
+  execFileSync('git', ['init', '-q'], { cwd: root });
+  await writeFile(join(root, '.gitignore'), '.perch/\n');
+  const selection = ['--all'];
+  assert.equal((await cachedRun(root, { selection })).report.coverage.ranked, 4);
+  await rm(join(root, 'b.bend'));
+  await rename(join(root, 'a.bend'), join(root, 'renamed.bend'));
+  const renamed = await cachedRun(root, { selection });
+  assert.equal(renamed.report.coverage.ranked, 3);
+  assert.equal(renamed.requests.length, 2, 'new model-facing paths require new answers');
+  assert.equal(renamed.report.incremental_cache.hits, 1);
+  assert.deepEqual(renamed.report.rows.map(row => row.target), ['helper.bend::next', 'renamed.bend::solve', 'renamed.bend::unrelated']);
+  await writeFile(join(root, 'broken.bend'), 'def broken( -> U32: 0\n');
+  const broken = await cachedRun(root, { selection });
+  assert.equal(broken.code, 1);
+  assert.equal(broken.report.status, 'incomplete');
+  assert.equal(broken.requests.length, 0);
+  assert.equal(broken.report.coverage.ranked, 3);
+  assert.deepEqual(broken.report.inventory.unranked.map(file => file.path), ['broken.bend']);
+});
+
+test('interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses', async t => {
+  const root = await fixture(t);
+  let calls = 0;
+  const interrupted = await cachedRun(root, { options: ['--jobs=1'], fetchImpl: async () => {
+    if (++calls === 2) throw new Error('transport unavailable');
+    return response(3, 3);
+  } });
+  assert.equal(interrupted.code, 1);
+  assert.deepEqual(interrupted.report.rows, []);
+  assert.equal(interrupted.report.incremental_cache.written, 1);
+  const resumed = await cachedRun(root);
+  assert.equal(resumed.code, 0);
+  assert.equal(resumed.requests.length, 1);
+  const directory = join(root, '.perch/cache/style-v1'), files = await readdir(directory);
+  await writeFile(join(directory, files[0]), '{ interrupted JSON');
+  const repaired = await cachedRun(root);
+  assert.equal(repaired.code, 0);
+  assert.equal(repaired.requests.length, 1);
+  assert.equal(repaired.report.incremental_cache.invalid_entries, 1);
+  assert.equal((await cachedRun(root)).requests.length, 0);
+});
+
+test('source-stale and model-drift runs do not seed the persistent cache or claim a clean result', async t => {
+  const root = await fixture(t);
+  const stale = await cachedRun(root, { selection: [targets[0]], fetchImpl: async () => {
+    await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
+    return response(3, 3);
+  } });
+  assert.equal(stale.code, 3);
+  assert.equal(stale.report.incremental_cache.written, 0);
+  assert.equal(stale.report.incremental_cache.persistence, 'source-stale');
+  assert.equal((await cachedRun(root, { selection: [targets[0]] })).requests.length, 1);
+  await writeFile(join(root, 'b.bend'), 'import Base\ndef solve(x: U32) -> U32: U32.add(x,2)\n');
+  const drift = await cachedRun(root, { fetchImpl: async () => response(3, 3, 'moved-alias-model') });
+  assert.equal(drift.code, 1);
+  assert.deepEqual(drift.report.rows, []);
+  assert.equal(drift.report.incremental_cache.written, 0);
+  assert.equal(drift.report.incremental_cache.persistence, 'model-drift');
+  assert.match(drift.report.failure, /Model changed/);
+});
+
+test('fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests', async t => {
+  const root = await fixture(t);
+  const low = await cachedRun(root, { fetchImpl: async () => {
+    const body = await response(2, 3).json();
+    body.answers.delightful_to_read = { type: 'score', score: 2.5, confidence: 0.5,
+      probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
+    return { ok: true, json: async () => body };
+  } });
+  assert.equal(low.code, 3);
+  assert.equal(low.report.style_summary.uncertain, 2);
+  const warm = await cachedRun(root);
+  assert.equal(warm.code, 3);
+  assert.equal(warm.requests.length, 0);
+  assert.deepEqual(warm.report.style_summary, low.report.style_summary);
+  const fresh = await cachedRun(root, { mode: '--fresh' });
+  assert.equal(fresh.code, 0);
+  assert.equal(fresh.requests.length, 2);
+  assert.equal(fresh.report.incremental_cache.written, 2);
+  const refreshed = await cachedRun(root);
+  assert.equal(refreshed.code, 0);
+  assert.equal(refreshed.requests.length, 0);
+  for (const options of [['--fresh'], ['--reuse=old.json'], ['--fresh', '--reuse=old.json']]) {
+    await assert.rejects(cachedRun(root, { options }), /Choose only one/);
+  }
+});
+
+test('concurrent cache publication leaves complete independently validated records', async t => {
+  const root = await fixture(t);
+  const runs = await Promise.all([3, 4].map(level => cachedRun(root, { mode: '--fresh', fetchImpl: async () => response(level, 3) })));
+  assert.ok(runs.every(run => run.code === 0 && run.report.incremental_cache.written === 2));
+  const warm = await cachedRun(root);
+  assert.equal(warm.code, 0);
+  assert.equal(warm.requests.length, 0);
+  assert.ok(warm.report.rows.every(row => [3, 4].includes(row.answers.maximally_big_brain.score)));
+  assert.equal((await readdir(join(root, '.perch/cache/style-v1'))).length, 2, 'no partial temporary records remain');
 });

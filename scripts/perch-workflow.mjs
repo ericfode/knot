@@ -105,11 +105,21 @@ export async function runPerch(args, {
       perch_version: installed.version,
       requested_model: env.PERCH_MODEL_ID || 'jev-latest',
       resolved_model: transport.models.size === 1 ? [...transport.models][0] : null,
+      model_resolution: transport.responses ? 'provider-responses-this-run'
+        : result?.run?.carried ? 'cached-answers-not-revalidated' : 'unavailable',
       provider_requests: transport.requests, provider_responses: transport.responses,
       models: [...transport.models], answers: transport.answers, usage: transport.usage,
       elapsed_ms: Math.round(performance.now() - startTime),
       upstream_exit: upstreamExit, exit: code, status,
-      checked: result?.checked ?? null,
+      checked: result?.checked ?? result?.run?.reviewed_checks ?? result?.run?.checked ?? null,
+      scan: command === 'scan' ? {
+        mode: args.includes('--fresh') ? 'fresh' : args.includes('--incremental') ? 'incremental' : 'default',
+        methods: result?.run?.methods ?? null,
+        calls: result?.run?.calls ?? null,
+        carried: result?.run?.carried ?? null,
+        failed: result?.run?.failed?.length ?? null,
+        incomplete: result?.run?.incomplete?.length ?? null,
+      } : null,
       parser: result?.parser ?? null,
       parser_coverage: result?.parser_coverage ?? null,
       // Parsed units retain attribution and the exact local context identities.
