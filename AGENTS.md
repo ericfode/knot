@@ -77,20 +77,23 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
 - Check three independent style axes on existing code: **Maximally big brain** rewards a small
   expressive algebra or representation that absorbs cases and exposes invariants;
   **Delightful to read — high dopamine** rewards the pleasure of recognizing and
-  tracing that structure; **Highly memetic** rewards a distinctive form and rhythm
-  that gets into the reader's head and creates an appetite for more of this style.
+  tracing that structure; **Highly memetic** rewards an imitable shape of the
+  mechanism that a fluent reader wants to copy into new code and extend.
   Each abstraction should explain more than it adds.
-- Memetic means an appealing hook in the internet sense: you feel the form when you
-  see it, recurring motifs prime and reward recognition, and the code feels worth
-  quoting, imitating or sharing. Its own ideas and vocabulary create insider
-  fluency: knowing the words unlocks the concepts and a shared grammar. Aim for
-  an unmistakable expressive identity whose rhythm the reader wants to inhabit.
-  Memetic appeal is independent of conceptual value: something can be vacuous,
-  nonsensical, decorative, useless or incorrect and still be highly memetic.
-  Do not require a substantive idea to pass that axis. Judge compression,
-  Delight, Anticipation, Payoff and correctness separately; a high memetic score
-  does not compensate for their failures. This follows the user's 2026-09-27
-  clarification and supersedes earlier wording that required a valuable hook.
+- Memetic means the mechanism's copyable shape: a representation, a small family
+  of primitives, an aligned case table, a stated law with its proof, or a
+  recurrence that a reader would carry into new code. Its vocabulary should be
+  exact domain terms, so knowing the words unlocks the concepts. Costume, meaning
+  a sustained borrowed world of names that must be translated back, and
+  ornament, narration, puzzles and suspense devices earn no credit and lower
+  the score when they hide the shape; so does crushed abbreviation. Anticipation
+  comes from the stated contract (types, operation names and compact laws), and
+  Payoff from code that visibly realizes it, most strongly through a checked
+  proof. Judge compression, Delight, Anticipation, Payoff and correctness
+  separately; a high memetic score does not compensate for their failures.
+  Rubric v8 (2026-09-27) follows the user's instruction to make the judge pick
+  what they pick in blind comparisons. It supersedes v6's clause that vacuous or
+  decorative form can be highly memetic; see docs/perch-style.md.
 - Terse names, symbolic structure and learned idioms are welcome when their
   vocabulary is consistent and their relationships can be followed. Comments
   should explain conventions, invariants or surprising decisions. Verbosity,

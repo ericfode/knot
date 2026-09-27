@@ -895,3 +895,49 @@ answers are not reused. [Sweep and preflight](perch-calibration/style-preflight-
 Prevention: before raising any context cap, sweep it with `--preflight` at the
 maximum task size, not only the default cohort. The state cap is a hard
 failure, not truncation.
+
+## 2026-09-27 — Rubric v8: make the judge pick what the user picks
+
+The user blind-rated 34 behavior-identical renderings: 4 lineups and 21 duels,
+giving 59 preference pairs. They then asked for the rules to be updated "so
+that jev picks the same stuff".
+
+Under v6 the production style path agreed with 52% of those pairs and 9 of 21
+duels. It scored the rejected ornamental and mythic renderings highest on
+memetic identity, and riddle or narrated renderings highest on Anticipation
+and Payoff. Test–retest noise was at most 0.007.
+
+Method:
+
+- A task split: bitpath and fuel for development; pipeline and slots held out.
+- Selection and acceptance rules registered before any candidate was scored.
+- Three drafted candidates, each critiqued.
+- A development run for each candidate, then one held-out run of the finalist.
+
+The pre-registered tie break chose `contract`. It passed every held-out
+threshold: 7.5 of 9 duels and 84% of pairs, with 12 of 12 development duels.
+Overall it agrees with 19.5 of 21 duels and 91% of pairs. It is adopted as
+v8.
+
+Memetic identity becomes the imitable shape of the mechanism; costume,
+ornament, narration and crushed abbreviation earn nothing. Anticipation and
+Payoff are grounded in the stated contract and in code, or a checked proof,
+that realizes it. Composition questions carry per-axis wording through the new
+`style_role.composition_axis_instructions`. No target, threshold or level
+count changed. This supersedes v6's clause that vacuous or decorative form
+can be highly memetic.
+
+Spend: 1,223 requests. [Evidence and limits](perch-calibration/style-v8-2026-09-27/README.md).
+
+Remaining misses:
+
+- One surprising human preference, baroque over literate on slots.
+- One tie on prose volume.
+
+The 34 renderings are now seen and cannot serve as held-out controls again.
+v8 has not been measured on real repository code. An unmerged branch's
+separate "version 7" rubric needs reconciling against these anchors.
+
+Prevention: calibrate a rubric against recorded human preferences before
+optimizing code against it. v6's memetic target would have steered a paydown
+campaign toward the styles the user rejected.

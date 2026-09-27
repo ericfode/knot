@@ -1,0 +1,71 @@
+renderings scored: 34; human preference pairs: 59
+task/variant                    brain  delig  memet  antic  payof | overall comp p3 M/A/P
+bitpath/algebra                  0.61   0.73   0.77   0.65   0.67 |    0.68 0.69/0.40/0.63
+bitpath/algebra-longnames        0.58   0.71   0.65   0.56   0.61 |    0.62 0.45/0.20/0.48
+bitpath/algebra-nolaws           0.60   0.72   0.55   0.49   0.50 |    0.57 0.28/0.13/0.21
+bitpath/algebra-riddle           0.67   0.76   0.82   0.94   0.86 |    0.81 0.91/0.94/0.98
+bitpath/baroque                  0.49   0.68   0.96   0.69   0.70 |    0.70 0.98/0.53/0.67
+bitpath/deadpan                  0.54   0.71   0.40   0.46   0.45 |    0.51 0.10/0.02/0.07
+bitpath/golf                     0.57   0.63   0.45   0.36   0.41 |    0.48 0.21/0.08/0.19
+bitpath/literate                 0.64   0.74   0.85   0.85   0.84 |    0.78 0.90/0.82/0.96
+bitpath/mythic                   0.58   0.74   0.94   0.78   0.72 |    0.75 0.98/0.70/0.74
+fuel/algebra                     0.60   0.66   0.72   0.67   0.63 |    0.66 0.68/0.53/0.58
+fuel/algebra-dense               0.63   0.67   0.67   0.55   0.42 |    0.59 0.56/0.38/0.29
+fuel/algebra-mythic              0.58   0.68   0.89   0.76   0.60 |    0.70 0.95/0.73/0.55
+fuel/algebra-noproof             0.59   0.66   0.73   0.68   0.60 |    0.65 0.73/0.55/0.46
+fuel/baroque                     0.34   0.51   0.94   0.65   0.59 |    0.61 0.97/0.49/0.52
+fuel/deadpan                     0.50   0.53   0.56   0.47   0.43 |    0.50 0.33/0.11/0.12
+fuel/golf                        0.59   0.61   0.61   0.53   0.35 |    0.54 0.48/0.33/0.15
+fuel/literate                    0.58   0.70   0.76   0.94   0.83 |    0.76 0.82/0.95/0.98
+fuel/mythic                      0.55   0.68   0.90   0.74   0.62 |    0.70 0.95/0.67/0.60
+pipeline/algebra                 0.63   0.73   0.66   0.58   0.63 |    0.65 0.50/0.29/0.60
+pipeline/baroque                 0.41   0.61   0.93   0.61   0.61 |    0.64 0.96/0.35/0.52
+pipeline/deadpan                 0.46   0.66   0.34   0.43   0.42 |    0.46 0.07/0.01/0.08
+pipeline/golf                    0.44   0.44   0.35   0.27   0.36 |    0.37 0.14/0.05/0.16
+pipeline/literate                0.62   0.78   0.71   0.90   0.79 |    0.76 0.68/0.90/0.94
+pipeline/literate-lite           0.57   0.75   0.72   0.88   0.78 |    0.74 0.71/0.86/0.93
+pipeline/literate-nopuzzle       0.58   0.75   0.62   0.67   0.69 |    0.66 0.42/0.44/0.71
+pipeline/mythic                  0.49   0.67   0.88   0.73   0.64 |    0.68 0.94/0.64/0.61
+slots/algebra                    0.60   0.69   0.69   0.67   0.68 |    0.67 0.57/0.50/0.68
+slots/algebra-nolaws             0.59   0.67   0.60   0.56   0.60 |    0.61 0.40/0.28/0.47
+slots/algebra-words              0.60   0.69   0.72   0.62   0.66 |    0.66 0.61/0.38/0.60
+slots/baroque                    0.44   0.64   0.93   0.69   0.67 |    0.67 0.96/0.59/0.64
+slots/deadpan                    0.51   0.64   0.44   0.47   0.46 |    0.50 0.12/0.05/0.15
+slots/golf                       0.49   0.53   0.47   0.40   0.39 |    0.46 0.24/0.16/0.20
+slots/literate                   0.59   0.74   0.74   0.87   0.76 |    0.74 0.80/0.89/0.85
+slots/mythic                     0.41   0.70   0.91   0.77   0.71 |    0.70 0.96/0.71/0.70
+
+[dev] overall=17.5/34 (51%)  decl_brain=21.0/34 (62%)  decl_delight=20.5/34 (60%)  comp_memetic=12/34 (35%)  comp_antic=17/34 (50%)  comp_payoff=22/34 (65%)  decl_memetic=12.5/34 (37%)
+[dev] duels only, overall: 5.5/12 (46%)
+   MISS d1   bitpath   wanted deadpan            > mythic             judge diff -0.236
+   MISS d2   bitpath   wanted algebra            > baroque            judge diff -0.019
+   MISS d9   bitpath   wanted deadpan            > mythic             judge diff -0.236
+   MISS e2   fuel      wanted algebra            > algebra-mythic     judge diff -0.047
+   MISS e6   fuel      wanted algebra            > algebra-noproof    judge diff +0.003
+   MISS e9   bitpath   wanted algebra            > algebra-riddle     judge diff -0.127
+   MISS e12  fuel      wanted algebra            > algebra-mythic     judge diff -0.047
+
+[held-out] overall=13.0/25 (52%)  decl_brain=16.0/25 (64%)  decl_delight=16.5/25 (66%)  comp_memetic=11.5/25 (46%)  comp_antic=13/25 (52%)  comp_payoff=14/25 (56%)  decl_memetic=12.0/25 (48%)
+[held-out] duels only, overall: 3.5/9 (39%)
+   MISS d5   pipeline  wanted algebra            > mythic             judge diff -0.035
+   MISS d8   slots     wanted baroque            > literate           judge diff -0.066
+   MISS e3   pipeline  wanted algebra            > literate           judge diff -0.114
+   MISS e7   pipeline  wanted literate-nopuzzle  > literate           judge diff -0.099
+   MISS e8   slots     wanted algebra            > algebra-words      judge diff +0.009
+   MISS e11  pipeline  wanted literate-lite      > literate           judge diff -0.023
+
+[all] overall=30.5/59 (52%)  decl_brain=37.0/59 (63%)  decl_delight=37.0/59 (63%)  comp_memetic=23.5/59 (40%)  comp_antic=30/59 (51%)  comp_payoff=36/59 (61%)  decl_memetic=24.5/59 (42%)
+[all] duels only, overall: 9.0/21 (43%)
+   MISS d1   bitpath   wanted deadpan            > mythic             judge diff -0.236
+   MISS d2   bitpath   wanted algebra            > baroque            judge diff -0.019
+   MISS d5   pipeline  wanted algebra            > mythic             judge diff -0.035
+   MISS d8   slots     wanted baroque            > literate           judge diff -0.066
+   MISS d9   bitpath   wanted deadpan            > mythic             judge diff -0.236
+   MISS e2   fuel      wanted algebra            > algebra-mythic     judge diff -0.047
+   MISS e3   pipeline  wanted algebra            > literate           judge diff -0.114
+   MISS e6   fuel      wanted algebra            > algebra-noproof    judge diff +0.003
+   MISS e7   pipeline  wanted literate-nopuzzle  > literate           judge diff -0.099
+   MISS e8   slots     wanted algebra            > algebra-words      judge diff +0.009
+   MISS e9   bitpath   wanted algebra            > algebra-riddle     judge diff -0.127
+   MISS e11  pipeline  wanted literate-lite      > literate           judge diff -0.023
+   MISS e12  fuel      wanted algebra            > algebra-mythic     judge diff -0.047

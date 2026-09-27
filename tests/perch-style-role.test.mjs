@@ -116,6 +116,9 @@ test('missing task keeps potential advisory but always requires whole-compositio
 
 test('composition questions keep the generic form unless per-axis composition wording is configured', async t => {
   const plain = await fixture(t), p = provider();
+  const bare = structuredClone(config);
+  delete bare.style_role.composition_axis_instructions;
+  await writeFile(join(plain, 'perch-style.json'), JSON.stringify(bare));
   await run(plain, p);
   const generic = p.requests.find(request => Array.isArray(request.state.files));
   for (const id of scaled) {

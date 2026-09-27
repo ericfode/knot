@@ -5,7 +5,41 @@ The target is a distinctive code aesthetic: **Maximally big brain**,
 parsed declaration is assessed against all three; an alternative implementation
 is not required. Rankings are a secondary view of those independent ratings.
 
-Version 6 separates **memetic appeal from conceptual value**. A vacuous,
+Version 8 is **calibrated against the user's blind taste anchors**. In two
+blind rounds the user rated behavior-identical renderings. The winning style
+was an "algebra register": one core idea, laws stated in notation, a checked
+proof beside the code, and terse exact names. Invented vocabulary, riddles and
+puzzles, narration, ornament and cryptic density all lost. v6 agreed with only
+52% of those preferences, and it scored the rejected ornamental and mythic
+styles highest on memetic identity.
+
+The user asked for the rules to be updated "so that jev picks the same
+stuff", and v8 does this in three ways:
+
+- **Memetic** is now the imitable shape of the mechanism, what a fluent reader
+  would copy into new code. Costume (a sustained borrowed world of names that
+  must be translated back), ornament and narration earn nothing.
+- **Anticipation** comes from the stated contract: types, operation names and
+  compact laws.
+- **Payoff** is code that visibly realizes that contract, most strongly
+  through a checked proof.
+
+Composition questions now carry per-axis wording
+(`style_role.composition_axis_instructions`).
+
+Targets, thresholds, roles and potential are unchanged. Three candidates were
+drafted from two development tasks only. The one chosen by a pre-registered
+rule then passed a held-out check on two unseen tasks:
+
+- 7.5 of 9 duels, against 3.5 for v6;
+- 84% of preference pairs, against 52%.
+
+Across everything it agrees with 91% of the user's preferences. Evidence and
+limits are in [style-v8-2026-09-27](perch-calibration/style-v8-2026-09-27/README.md).
+It supersedes v6's clause that vacuous or decorative form can be highly
+memetic.
+
+Version 6 separated **memetic appeal from conceptual value**. A vacuous,
 nonsensical, decorative or incorrect expression can be highly memetic. Its
 conceptual compression, other reading qualities and correctness are independent
 judgments; a high memetic score cannot compensate for a failure on those axes.
@@ -31,16 +65,18 @@ receipts retain their original rubric identity and meaning.
 | --- | --- |
 | Maximally big brain | A small expressive algebra or representation absorbs cases and exposes invariants. Each abstraction explains more than it adds. |
 | Delightful to read — high dopamine | Exact names, rhythmic layout, symmetry and dense composition create repeated satisfying moments where the structure clicks. |
-| Highly memetic | A distinctive vocabulary, form or felt rhythm gets into your head and makes you want to quote, repeat, imitate or remix it. Conceptual value is not required. |
+| Highly memetic | The mechanism has a shape you would copy into new code and extend: a representation, a small family of primitives with stated laws, an aligned case table, a law checked by its proof, or a recurrence. |
 
-Memetic is used in the internet sense. Mere recall or ease of teaching is not the
-whole goal. The form should land: motifs repeat with variation, an expression
-has a satisfying turn, and words or visual shape establish a recognizable
-identity. Knowing the vocabulary can unlock a shared grammar even when its
-content is vacuous. Meaning, utility and truth are not prerequisites for that
-pull. Repetition or decoration can contribute to it; neither automatically
-earns a high score. Judge the actual form rather than source self-praise. This
-describes expressive appeal, not a measured psychological or social effect.
+Memetic identity, since v8, is the pull to imitate the mechanism itself. A
+recognizable shape that reuse would keep counts. Surface that reuse would strip
+away does not count, and it lowers the score when it hides the shape. Such
+surface includes costume names from a borrowed world, incantatory or ornamental
+comments, banners, narration, puzzles and teasers. Crushed abbreviation that
+hides the shape also lowers it. A figurative word read directly as the name of
+one type or operation, or a coined term for a new concept, is vocabulary, not
+costume. Judge the actual form rather than source self-praise. This describes
+the user's calibrated preference, not a measured psychological or social
+effect.
 
 Terse notation, learned idioms and dense composition are welcome. Simple helpers
 can qualify through one fitting operation or resonant expression; adding layers
