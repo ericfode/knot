@@ -22,6 +22,12 @@ MLX. It classified six of eight defect controls correctly and accepted the full
 frozen style rubrics, but missed both growing-prefix defects. It remains an
 opt-in experimental runner; it is not qualified as the default reviewer.
 
+The [Julia-1 MLX trial](julia-local-2026-09-26.md) is available through
+`npm run review:julia`. On those same narrow defect controls it classified four
+of eight correctly and rejected the full style request at its 48-token option
+limit. The receipts preserve the complete inputs and explicit rejection; Julia
+also remains experimental.
+
 ## Commands
 
 ```sh

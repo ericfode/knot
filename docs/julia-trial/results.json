@@ -1,0 +1,1006 @@
+{
+  "schema": 1,
+  "model": {
+    "runtime_commit": "afbef9ee5d08646efd9baf4ab6d7ad75b0b23b93",
+    "repo": "SupersonicLabs/Julia-1",
+    "revision": "a85b127321d580d65176c89ced8273f305745d85"
+  },
+  "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+  "runtime": {
+    "julia-mlx": "0.2.0",
+    "mlx": "0.32.2",
+    "numpy": "2.5.3",
+    "tokenizers": "0.23.2",
+    "safetensors": "0.8.0"
+  },
+  "backend": "mlx",
+  "dtype": "float32",
+  "embedding": "mapped",
+  "encoding_cache": 0,
+  "token_cache": 0,
+  "load_ms": 390.592,
+  "advisory": true,
+  "offline": true,
+  "rows": [
+    {
+      "id": "full-rule-1",
+      "phase": "full-rule",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "a3dfbc0ec7613576bc601b3b052d55994648be61788b50cb0054a7691582716c",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix": {
+            "state_tokens": 304,
+            "instruction_tokens": 164,
+            "option_tokens": [
+              5,
+              4
+            ],
+            "full_sequence_tokens": 483,
+            "complete": true,
+            "encoding_sha256": "591d475acdb4cb20fc33e706909bc6cf2f5d9510e45880f0c1982687aa08ef50"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 1907.941,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.0007888253014253615,
+              "true": 0.9992111746985746
+            },
+            "noul": 0.9992111746985746
+          }
+        }
+      }
+    },
+    {
+      "id": "full-rule-2",
+      "phase": "full-rule",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "004e6a2677357ea5dd14fe7f7b91a981ed18a3170082839aab9ed3e3738f07ef",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix": {
+            "state_tokens": 305,
+            "instruction_tokens": 164,
+            "option_tokens": [
+              5,
+              4
+            ],
+            "full_sequence_tokens": 484,
+            "complete": true,
+            "encoding_sha256": "09ed6cac35cd8e56ba51669bc188264b80043529271348f2f7bdb88757ef17b1"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 14.869,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.02218054922665385,
+              "true": 0.9778194507733462
+            },
+            "noul": 0.9778194507733462
+          }
+        }
+      }
+    },
+    {
+      "id": "full-rule-3",
+      "phase": "full-rule",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "a7e2dc31fdcd217bb76da4df6341b3d57e356ec3247f4658d955d455c0854517",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix": {
+            "state_tokens": 289,
+            "instruction_tokens": 164,
+            "option_tokens": [
+              5,
+              4
+            ],
+            "full_sequence_tokens": 468,
+            "complete": true,
+            "encoding_sha256": "95fc674ee7cd381d062d657520a712c39a41712177d48f6311586de78a8323cc"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 339.22,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.012223503923135216,
+              "true": 0.9877764960768648
+            },
+            "noul": 0.9877764960768648
+          }
+        }
+      }
+    },
+    {
+      "id": "full-rule-4",
+      "phase": "full-rule",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "a66a2db8b3c71d67e8a4fa832cfa3b78477b545b57b0ab76a3ee98ca59a15aab",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix": {
+            "state_tokens": 247,
+            "instruction_tokens": 164,
+            "option_tokens": [
+              5,
+              4
+            ],
+            "full_sequence_tokens": 426,
+            "complete": true,
+            "encoding_sha256": "ead80e6488ddb9744720c6fbcecd1b4a464c8a49e3d1b61a414abf2b4a556e33"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 7.678,
+      "result": {
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8936911595920041,
+              "true": 0.10630884040799585
+            },
+            "noul": 0.10630884040799585
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-1",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "48a7f8ee514d1bb90d36b39d1156f9d9291c43e827aff978bead772b60d5165c",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 304,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 357,
+            "complete": true,
+            "encoding_sha256": "211222759f6e0d3681ceded09d2e7bfca0520767f3f7042a5012423f369b0178"
+          },
+          "invariant_work": {
+            "state_tokens": 304,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 353,
+            "complete": true,
+            "encoding_sha256": "2b70a981409c53ed202d008e70e27390d01d7a5dea1cfb6cd6274c6017699335"
+          },
+          "linked_index": {
+            "state_tokens": 304,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 351,
+            "complete": true,
+            "encoding_sha256": "de694ef267d797b20c002b648e719b84e226118efcb9dc1c7aa917ba0ad4c3d5"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 104.64,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.3067360902630209,
+              "true": 0.693263909736979
+            },
+            "noul": 0.693263909736979
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9925382004956443,
+              "true": 0.007461799504355575
+            },
+            "noul": 0.007461799504355575
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9950277425692338,
+              "true": 0.00497225743076625
+            },
+            "noul": 0.00497225743076625
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-2",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "4512569761f25fe7736e216e394ab6b4f4cf9fe47f63211f9609184d84b42613",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 305,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 358,
+            "complete": true,
+            "encoding_sha256": "ba8e193451a27957f19675be35754381d356104573e9d1936f9d7fa90ce6a4bf"
+          },
+          "invariant_work": {
+            "state_tokens": 305,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 354,
+            "complete": true,
+            "encoding_sha256": "c8eb00ba526b1d7ac2e7a1077fd2fe94e097210b5ec64c8039724ddcb5f7778a"
+          },
+          "linked_index": {
+            "state_tokens": 305,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 352,
+            "complete": true,
+            "encoding_sha256": "a9fa99c5b32f5769dfcabc744beeb1b7f6de49ed6dedfa207c32046627cd9691"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 16.179,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9482240595455332,
+              "true": 0.05177594045446689
+            },
+            "noul": 0.05177594045446689
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9534503967201682,
+              "true": 0.04654960327983185
+            },
+            "noul": 0.04654960327983185
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9428055639096805,
+              "true": 0.057194436090319586
+            },
+            "noul": 0.057194436090319586
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-3",
+      "phase": "native-narrow",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "c6ba2feb9c25cad957367c4f5117a22948f7624e57617d5be0f2422c6b1214dc",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 289,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 342,
+            "complete": true,
+            "encoding_sha256": "5f8f5761b25b305deb233e0242339763dd62f30eeed72f819fa45e34614ecfa8"
+          },
+          "invariant_work": {
+            "state_tokens": 289,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 338,
+            "complete": true,
+            "encoding_sha256": "f28da51fe165e596aee8faf6d4bb9177df668a125eb20fe7c0e3ba793fdf8d27"
+          },
+          "linked_index": {
+            "state_tokens": 289,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 336,
+            "complete": true,
+            "encoding_sha256": "1d4851343ca729c4e1a80609122b9e5d4ef74604c812ee4aeba12c173854960f"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 128.486,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9994127418400257,
+              "true": 0.0005872581599743363
+            },
+            "noul": 0.0005872581599743363
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9998655966368676,
+              "true": 0.00013440336313253045
+            },
+            "noul": 0.00013440336313253045
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9964776052226231,
+              "true": 0.003522394777376977
+            },
+            "noul": 0.003522394777376977
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-4",
+      "phase": "native-narrow",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "5117f012e47826b8d89491b09d98ebac2bb29087cca4687fe8d89c51e27c26c2",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 247,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 300,
+            "complete": true,
+            "encoding_sha256": "7979f141714dd39e382fee95218c7028bad7ac07bc47a389b2c458f756d6a846"
+          },
+          "invariant_work": {
+            "state_tokens": 247,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 296,
+            "complete": true,
+            "encoding_sha256": "f0ba25a43a0d2d0cfdd19564f52798f52fbaa59876f4c513320660547aba4d67"
+          },
+          "linked_index": {
+            "state_tokens": 247,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 294,
+            "complete": true,
+            "encoding_sha256": "66991df3cec9574ce4bcd06acfa6f75029bc428a3350893328dd16e3baf210ef"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 15.499,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.2691855274781934,
+              "true": 0.7308144725218066
+            },
+            "noul": 0.7308144725218066
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8504577051019138,
+              "true": 0.1495422948980862
+            },
+            "noul": 0.1495422948980862
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.33390790394839354,
+              "true": 0.6660920960516065
+            },
+            "noul": 0.6660920960516065
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-5",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "input_sha256": "f433d13e2777d14f1621a5591e7bcfc404dbfd9b9708ee6a81c5f9985551a432",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 249,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 302,
+            "complete": true,
+            "encoding_sha256": "4191711acf936054ee076d1af11bb8860227a546ed032843a9f9226f25c70491"
+          },
+          "invariant_work": {
+            "state_tokens": 249,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 298,
+            "complete": true,
+            "encoding_sha256": "e081ba7382d6e0aa554bd8a358d1a96ba62fa6edfc094396d3eb2c5e5c38cffa"
+          },
+          "linked_index": {
+            "state_tokens": 249,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 296,
+            "complete": true,
+            "encoding_sha256": "8bec4562cc7bb35cac37d43ed3029c896c7f863c1330da84555cd7d196518a7b"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 12.602,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9617473052236388,
+              "true": 0.038252694776361056
+            },
+            "noul": 0.038252694776361056
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9354868009338587,
+              "true": 0.06451319906614121
+            },
+            "noul": 0.06451319906614121
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9038323177147701,
+              "true": 0.09616768228522982
+            },
+            "noul": 0.09616768228522982
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-6",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "input_sha256": "d1e00004fc97794474bd3555c0b82f0c28c34b3ea00f27ab4c78ebb947747a02",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 334,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 387,
+            "complete": true,
+            "encoding_sha256": "c5f6608dc0fab0f21e3dc76b088f67d1c188267b4b7193e74434794ecbee4e84"
+          },
+          "invariant_work": {
+            "state_tokens": 334,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 383,
+            "complete": true,
+            "encoding_sha256": "172a6db0e902654aaf1ae024ece76a2baf0202ba09491085113f04edb926cec8"
+          },
+          "linked_index": {
+            "state_tokens": 334,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 381,
+            "complete": true,
+            "encoding_sha256": "83e65bbaca385f54f14699ad8421a462a96fbbbb1501114d47b1cf3d143603a4"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 16.921,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.013649668984304397,
+              "true": 0.9863503310156957
+            },
+            "noul": 0.9863503310156957
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.8774545493911435,
+              "true": 0.12254545060885648
+            },
+            "noul": 0.12254545060885648
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.012278389405629392,
+              "true": 0.9877216105943706
+            },
+            "noul": 0.9877216105943706
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-7",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "input_sha256": "34ecb9b8f024ab154f5e3bb984bae406e4d1697d19ea3b0fd0aea1f699bf23ec",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 273,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 326,
+            "complete": true,
+            "encoding_sha256": "6ff889e5fad90d32917d8aaa34b01340f65592a0f567427c165837c13c6f429a"
+          },
+          "invariant_work": {
+            "state_tokens": 273,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 322,
+            "complete": true,
+            "encoding_sha256": "194890fcf5953ae15d7de5267f6508b98e75da39433fa421cd1effdd2a0e7cb4"
+          },
+          "linked_index": {
+            "state_tokens": 273,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 320,
+            "complete": true,
+            "encoding_sha256": "077cfc2c86285694242bb579ffc0c607767d348f421e6160dff38a78b05ee778"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 10.423,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9288011988888255,
+              "true": 0.0711988011111744
+            },
+            "noul": 0.0711988011111744
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9981521964180281,
+              "true": 0.0018478035819719844
+            },
+            "noul": 0.0018478035819719844
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9837820258909176,
+              "true": 0.016217974109082402
+            },
+            "noul": 0.016217974109082402
+          }
+        }
+      }
+    },
+    {
+      "id": "native-narrow-8",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "input_sha256": "2f844bcdbe987737f62413944217ecc7b53ccfd74d338caa6242d5192e7add45",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 421,
+            "instruction_tokens": 45,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 474,
+            "complete": true,
+            "encoding_sha256": "bb1196d8bfdc9ebd76a79d9f9290d72a630c58b82c912108300c71a9bd5fe830"
+          },
+          "invariant_work": {
+            "state_tokens": 421,
+            "instruction_tokens": 41,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 470,
+            "complete": true,
+            "encoding_sha256": "dc5e57ff20570d681b359405c0524d7172aa6c1ba112f800f293c73a4477e3c8"
+          },
+          "linked_index": {
+            "state_tokens": 421,
+            "instruction_tokens": 39,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 468,
+            "complete": true,
+            "encoding_sha256": "f3c4e7edb5df1a1ce84fd02a720a7acad71ee45bfb57f4992af33bb81107d6a5"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 18.797,
+      "result": {
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9122270842605253,
+              "true": 0.08777291573947466
+            },
+            "noul": 0.08777291573947466
+          },
+          "invariant_work": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.7643421474413172,
+              "true": 0.23565785255868277
+            },
+            "noul": 0.23565785255868277
+          },
+          "linked_index": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.9554617027700557,
+              "true": 0.044538297229944346
+            },
+            "noul": 0.044538297229944346
+          }
+        }
+      }
+    },
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "cancel": {
+            "state_tokens": 17,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 39,
+            "complete": true,
+            "encoding_sha256": "cf27d241bfe5d694ac64e550f23272c425450544a5c8985c44f0674edbb659a4"
+          },
+          "topic": {
+            "state_tokens": 17,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              5,
+              4,
+              2
+            ],
+            "full_sequence_tokens": 45,
+            "complete": true,
+            "encoding_sha256": "25a39cab8798dee6d6ee88b240cc84ab60f55cd5545581f82413d7ba31cd3312"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 4.957,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.4923606797651809,
+              "true": 0.5076393202348192
+            },
+            "noul": 0.5076393202348192
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 0.99999895110941,
+              "technical": 7.064199177097153e-07,
+              "other": 3.4247067239795675e-07
+            },
+            "choice": "billing",
+            "max_probability": 0.99999895110941
+          }
+        }
+      }
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "cancel": {
+            "state_tokens": 21,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              1,
+              1
+            ],
+            "full_sequence_tokens": 43,
+            "complete": true,
+            "encoding_sha256": "bd99ba03c30d4881aa071bf78df18a72845fbfeea519062de2b9d4962075c50a"
+          },
+          "topic": {
+            "state_tokens": 21,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              5,
+              4,
+              2
+            ],
+            "full_sequence_tokens": 49,
+            "complete": true,
+            "encoding_sha256": "bd16e7b2142f14c4a63ea8c8e83d5bb21b443082e29ef43778bdcccadd80089c"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 4.507,
+      "result": {
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "probabilities": {
+              "false": 0.5662763812435033,
+              "true": 0.4337236187564968
+            },
+            "noul": 0.4337236187564968
+          },
+          "topic": {
+            "type": "choice",
+            "probabilities": {
+              "billing": 7.536704243124075e-09,
+              "technical": 0.9999998670021618,
+              "other": 1.254611338426064e-07
+            },
+            "choice": "technical",
+            "max_probability": 0.9999998670021618
+          }
+        }
+      }
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": false,
+        "reasons": [
+          "highly_memetic: option exceeds 48-token model contract"
+        ],
+        "max_length": 2048,
+        "head_length": 512,
+        "questions": {
+          "maximally_big_brain": {
+            "state_tokens": 199,
+            "instruction_tokens": 126,
+            "option_tokens": [
+              22,
+              20,
+              17,
+              36,
+              30
+            ],
+            "full_sequence_tokens": 459,
+            "complete": true,
+            "encoding_sha256": "b71c3c87384944b578f8d63444a7ea0c42b80a6b2866dc6613a51b0e0afed7d7"
+          },
+          "delightful_to_read": {
+            "state_tokens": 199,
+            "instruction_tokens": 216,
+            "option_tokens": [
+              24,
+              23,
+              21,
+              27,
+              33
+            ],
+            "full_sequence_tokens": 552,
+            "complete": true,
+            "encoding_sha256": "69e71fb79c9bfda501755b954c5c280159d9cd33a2a26cc57201a2b03dbba78a"
+          },
+          "highly_memetic": {
+            "state_tokens": 199,
+            "instruction_tokens": 332,
+            "option_tokens": [
+              26,
+              20,
+              27,
+              49,
+              49
+            ],
+            "full_sequence_tokens": 711,
+            "complete": false,
+            "reason": "option exceeds 48-token model contract"
+          }
+        }
+      },
+      "status": "unsupported-input"
+    }
+  ],
+  "note": "Completed inference is not a lint pass. Unsupported requests have no partial answers. Native typed probabilities are preserved without display rounding.",
+  "memory_bytes": {
+    "active_bytes": 183967900,
+    "cache_bytes": 4295514464,
+    "peak_bytes": 1186866482
+  }
+}
