@@ -1,0 +1,544 @@
+[
+  {
+    "name": "discard_push",
+    "property": "growth_values",
+    "intended_law": "growth_order",
+    "intended_observation": "growth_values",
+    "replacement": {
+      "old": "Array.set(Maybe<&2,T>,a,n,Some{value})",
+      "new": "Array.set(Maybe<&2,T>,a,n,None{})"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/discard_push/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.0638255828525871
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/discard_push/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/discard_push/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.09048079187050462
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/discard_push/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.015360750025138259
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/discard_push/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Fail{main.Bounds{}}\n- observed : Done{x}\nContext:\n- T : Data\n- x : T\nLocation: LAWS.singleton_get\n4 | def Laws.empty_contents(T): {==}\n5>| def Laws.singleton_get(T,x): {==}\n  |                              ^^^^\n6 | def Laws.growth_order(T,a,b,c,d,e): {==}\n",
+      "seconds": 0.062131958082318306
+    },
+    "first_rejecting_law": "LAWS.singleton_get",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "e201f0e1d4a47be67d338ee04507edff5ddfaa9e7c46e0faba0a49bc11fe31d6"
+  },
+  {
+    "name": "drop_growth",
+    "property": "growth_values",
+    "intended_law": "growth_order",
+    "intended_observation": "growth_values",
+    "replacement": {
+      "old": "slots = copy_slots(T,U32.to_nat(n),0,a,fresh)",
+      "new": "slots = fresh"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/drop_growth/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06593445898033679
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/drop_growth/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/drop_growth/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.09062012494541705
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/drop_growth/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.015495707979425788
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/drop_growth/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : [e]\n- observed : [a, b, c, d, e]\nContext:\n- T : Data\n- a : T\n- b : T\n- c : T\n- d : T\n- e : T\nLocation: LAWS.growth_order\n5 | def Laws.singleton_get(T,x): {==}\n6>| def Laws.growth_order(T,a,b,c,d,e): {==}\n  |                                     ^^^^\n7 | def Laws.reserve_preserves(T,a,b,c): {==}\n",
+      "seconds": 0.0867732500191778
+    },
+    "first_rejecting_law": "LAWS.growth_order",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "466545d852c673a45c0009663463ab66d14cd7732dc5920d3c5e79192bab675d"
+  },
+  {
+    "name": "overwrite_growth",
+    "property": "growth_values",
+    "intended_law": "growth_order",
+    "intended_observation": "growth_values",
+    "replacement": {
+      "old": "Array.set(Maybe<&2,T>,fresh,i,x)",
+      "new": "Array.set(Maybe<&2,T>,fresh,0,x)"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/overwrite_growth/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.0628120000474155
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/overwrite_growth/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/overwrite_growth/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08774124993942678
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/overwrite_growth/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.014986082911491394
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/overwrite_growth/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : [d, e]\n- observed : [a, b, c, d, e]\nContext:\n- T : Data\n- a : T\n- b : T\n- c : T\n- d : T\n- e : T\nLocation: LAWS.growth_order\n5 | def Laws.singleton_get(T,x): {==}\n6>| def Laws.growth_order(T,a,b,c,d,e): {==}\n  |                                     ^^^^\n7 | def Laws.reserve_preserves(T,a,b,c): {==}\n",
+      "seconds": 0.09765591705217957
+    },
+    "first_rejecting_law": "LAWS.growth_order",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "5954cd941bb86c0eeba33fe8080cd4f99071ff0d64f86552b45dd763474b2f9f"
+  },
+  {
+    "name": "wrapped_get",
+    "property": "logical_bounds",
+    "intended_law": "max_index",
+    "intended_observation": "logical_bounds",
+    "replacement": {
+      "old": "get_if(T,n,c,d,m,a,index,U32.is_lt(index,n))",
+      "new": "get_if(T,n,c,d,m,a,index,True{})"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/wrapped_get/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06284929206594825
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/wrapped_get/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/wrapped_get/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08777770795859396
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/wrapped_get/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.014941874891519547
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/wrapped_get/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Done{a}\n- observed : Fail{main.Bounds{}}\nContext:\n- T : Data\n- a : T\nLocation: LAWS.max_index\n12 | def Laws.logical_bounds(T,a,b,c,x): {==}\n13>| def Laws.max_index(T,a): {==}\n   |                          ^^^^\n14 | def Laws.zero_limit(T,x): {==}\n",
+      "seconds": 0.12425750005058944
+    },
+    "first_rejecting_law": "LAWS.max_index",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "e18292ffd1fdc8917f04052f23aeab79d154175e7ca5121449f135a656141b3f"
+  },
+  {
+    "name": "pop_stale_length",
+    "property": "push_pop",
+    "intended_law": "push_pop_growth",
+    "intended_observation": "push_pop",
+    "replacement": {
+      "old": "observed(T,last,c,d,m,Array.swap",
+      "new": "observed(T,n,c,d,m,Array.swap"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/pop_stale_length/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06293058302253485
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/pop_stale_length/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/pop_stale_length/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08849004120565951
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/pop_stale_length/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.015578166116029024
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/pop_stale_length/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : 3\n- observed : 2\nContext:\n- T : Data\n- a : T\n- b : T\n- x : T\nLocation: LAWS.pop_length\n25 | def Laws.push_success(T,a,b,x): {==}\n26>| def Laws.pop_length(T,a,b,x): {==}\n   |                               ^^^^\n27 | def Laws.maximum_plan(): {==}\n",
+      "seconds": 0.1431915001012385
+    },
+    "first_rejecting_law": "LAWS.pop_length",
+    "supporting_edits": [
+      "pop_if n binder changed from affine to reusable U32 so stale-length mutant is type-correct"
+    ],
+    "classification": "semantic kill",
+    "mutant_sha256": "c133edc51a8e79c4b26aaf8107640803694a5256b58638171438b13f1b409f04"
+  },
+  {
+    "name": "reverse_slice",
+    "property": "ranges",
+    "intended_law": "slice_order",
+    "intended_observation": "ranges",
+    "replacement": {
+      "old": "Con{v,acc}",
+      "new": "List.append(&1,T,acc,Con{v,Nil{}})"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/reverse_slice/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06365720904432237
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reverse_slice/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reverse_slice/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08886508294381201
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reverse_slice/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.015064999926835299
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/reverse_slice/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : [e, d, c, b, a]\n- observed : [a, b, c, d, e]\nContext:\n- T : Data\n- a : T\n- b : T\n- c : T\n- d : T\n- e : T\nLocation: LAWS.growth_order\n5 | def Laws.singleton_get(T,x): {==}\n6>| def Laws.growth_order(T,a,b,c,d,e): {==}\n  |                                     ^^^^\n7 | def Laws.reserve_preserves(T,a,b,c): {==}\n",
+      "seconds": 0.09683608403429389
+    },
+    "first_rejecting_law": "LAWS.growth_order",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "6aa5f3c186561469d13a96e677c4b7ffacfbfdce0f6e77a4f413d78202f194d7"
+  },
+  {
+    "name": "ignore_limit",
+    "property": "limits",
+    "intended_law": "zero_limit",
+    "intended_observation": "limits",
+    "replacement": {
+      "old": "U32.min(limit, Vec.maximum())",
+      "new": "Vec.maximum()"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/ignore_limit/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.0635720829013735
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/ignore_limit/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/ignore_limit/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08903866703622043
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/ignore_limit/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.01545166689902544
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/ignore_limit/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : ([x], Done{Unit{}})\n- observed : ([], Fail{main.Limit{}})\nContext:\n- T : Data\n- x : T\nLocation: LAWS.zero_limit\n13 | def Laws.max_index(T,a): {==}\n14>| def Laws.zero_limit(T,x): {==}\n   |                           ^^^^\n15 | def Laws.empty_pop(T): {==}\n",
+      "seconds": 0.11821566591970623
+    },
+    "first_rejecting_law": "LAWS.zero_limit",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "27062456a29c45df80d28939b016c9c5aac9564c57f53d5896bd73a510407522"
+  },
+  {
+    "name": "reject_exact_limit",
+    "property": "limits",
+    "intended_law": "exact_limit_reserve",
+    "intended_observation": "limits",
+    "replacement": {
+      "old": "minimum,U32.is_le(minimum,m))",
+      "new": "minimum,U32.is_lt(minimum,m))"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/reject_exact_limit/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06311758304946125
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reject_exact_limit/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reject_exact_limit/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08888262510299683
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/reject_exact_limit/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.014821582939475775
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/reject_exact_limit/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : Fail{main.Limit{}}\n- observed : Done{Unit{}}\nLocation: LAWS.exact_limit_reserve\n27 | def Laws.maximum_plan(): {==}\n28>| def Laws.exact_limit_reserve(): {==}\n   |                                 ^^^^\n29 | \n",
+      "seconds": 0.16082262503914535
+    },
+    "first_rejecting_law": "LAWS.exact_limit_reserve",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "e690473d60d0e2576661dba3a0b4e7d07f87e3ddb983a70accc7a2621eae3399"
+  },
+  {
+    "name": "failed_swap_changes_first",
+    "property": "logical_bounds",
+    "intended_law": "logical_bounds",
+    "intended_observation": "logical_bounds",
+    "replacement": {
+      "old": "(Buffer{n,c,d,m,a}, Fail{Bounds{}})\n    case True{}:\n      observed(T,n,c,d,m,Array.swap",
+      "new": "(Buffer{n,c,d,m,Array.set(Maybe<&2,T>,a,0,Some{value})}, Fail{Bounds{}})\n    case True{}:\n      observed(T,n,c,d,m,Array.swap"
+    },
+    "typecheck": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/failed_swap_changes_first/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "seconds": 0.06312641687691212
+    },
+    "runtime": {
+      "build": {
+        "command": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/failed_swap_changes_first/mutation_probe.bend",
+          "-o",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/failed_swap_changes_first/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "seconds": 0.08928900002501905
+      },
+      "run": {
+        "command": [
+          "bun",
+          "/Users/ericfode/src/knot/packages/vec/tests/generated/failed_swap_changes_first/probe.js"
+        ],
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": "",
+        "seconds": 0.01529812510125339
+      }
+    },
+    "proof_rejection": {
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/vec/tests/generated/failed_swap_changes_first/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : ([x, b, c], Fail{main.Bounds{}})\n- observed : ([a, b, c], Fail{main.Bounds{}})\nContext:\n- T : Data\n- a : T\n- b : T\n- c : T\n- x : T\nLocation: LAWS.logical_bounds\n11 | def Laws.slice_order(T,a,b,c,d,e): {==}\n12>| def Laws.logical_bounds(T,a,b,c,x): {==}\n   |                                     ^^^^\n13 | def Laws.max_index(T,a): {==}\n",
+      "seconds": 0.13283258397132158
+    },
+    "first_rejecting_law": "LAWS.logical_bounds",
+    "supporting_edits": [],
+    "classification": "semantic kill",
+    "mutant_sha256": "420c35af18d92d9d5d2b478c504028a923b82380baf241b7b920a4f18c452b00"
+  }
+]

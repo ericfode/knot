@@ -1,5 +1,11 @@
 # Vec bounded law review packet
 
+Current working revision: unreleased `vec-growth-1`. Growth planning and the
+push continuation use joint matches. Contract, laws, proof bodies, oracle and
+assertions are unchanged; current gate evidence is under
+`campaigns/vec-growth-1/gates/`. Published identities and release-time receipts
+remain historical evidence for `0xd684886d10b431b9dce6c3b2d1ef1980`.
+
 Scope: the entire small stable public Vec API. No private Buffer construction is
 supported. Implementation uses Array<Maybe<Data>>, stores len/cap/depth/limit,
 checks logical bounds before access, doubles on growth and copies the live prefix.
@@ -134,7 +140,7 @@ are recorded in PERCH_REPORT.md; model scores do not replace the proofs or tests
 
 ## Reviewed source identities
 
-- main.bend: `baddf475d1fffb58749a6ab780dade30a10c8cf12b810320bc1903c5cdb28bb0`
+- main.bend (unreleased): `3e4d79031d5a1aede6b1d08c9859b4549d99f6628b3538ef399600280873e70a`
 - model.bend: `4fb68671f7cb104d229d153c67e6f87eefebcc79e12db0f038647897bf32b7a9`
 - LAWS.bend: `bf5cc273eeebb8a63f498afd5c27744a00d4e5988c881742ebf599a3f20a2edd`
 - PROOF.bend: `09a438b139bf4f6f1a638547a8b51a69b1497c9397ba835a809cebc4cae0b871`
@@ -142,4 +148,5 @@ are recorded in PERCH_REPORT.md; model scores do not replace the proofs or tests
 - conformance.bend: `eb2d7eebaa79a868cce1549507788cec28f2bf15d5325bd8b4735278bde4cc91`
 - witnesses.bend: `e432b1b510973857f635361f12251942a603c60363417813ab5993b9bbdde70a`
 
-Receipts: receipts/gates.json, mutations.json, scaling.json, closure.json.
+Current receipts: campaigns/vec-growth-1/gates/{gates,mutations,scaling}.json.
+Historical release receipts: receipts/{gates,mutations,scaling,closure}.json.

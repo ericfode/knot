@@ -1,0 +1,135 @@
+{
+  "path": "packages/vec/main.bend",
+  "name": "plan_step",
+  "line": 89,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 35,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 95,
+  "asked": [
+    {
+      "rule": "bend-fuel-completeness",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+      "broken": 0.26,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-machine-arithmetic",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+      "broken": 0.56,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+      "broken": 0.08999999999999997,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-ordered-f32",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect F32 folds and reductions whose contract requires deterministic results or equality with a serial reference. Independent calculations may run in parallel, but their values enter the stateful fold in the specified order. Completion order, regrouping, tree reduction, fused arithmetic, or changed rounding must not be substituted under an exact-equality contract. An explicitly approximate contract with an error budget is allowed. F32 arithmetic is not associative real arithmetic. Do not flag an integer reduction or parallel work that preserves the fold order. If no such contract appears, this rule holds.",
+      "broken": 0.06000000000000005,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-effect-boundary",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+      "broken": 0.09999999999999998,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-device-stack",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect large-input traversals visibly called from a Bend 2 GPU bang in this file, or explicitly documented as device-reachable. A traversal does not retain one non-tail continuation per list element or nest append chains proportional to an unbounded input without an explicit practical bound or stack-safe representation. Termination fuel by itself does not establish a safe machine-stack bound. Tail-recursive loops and balanced bounded-depth trees are allowed. Name the retained continuation and the input controlling depth. Do not infer unseen GPU reachability or flag recursion alone. If no such traversal is visible, this rule holds.",
+      "broken": 0.08999999999999997,
+      "floor": 0.8
+    },
+    {
+      "rule": "perf-growing-prefix-copy",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+      "broken": 0.07999999999999996,
+      "floor": 0.7
+    },
+    {
+      "rule": "perf-loop-invariant-work",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+      "broken": 0.09999999999999998,
+      "floor": 0.6
+    },
+    {
+      "rule": "perf-linked-list-indexing",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+      "broken": 0.08999999999999997,
+      "floor": 0.6
+    },
+    {
+      "rule": "perf-amortized-growth",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds.",
+      "broken": 0.26,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "files": [
+      {
+        "path": "packages/vec/main.bend",
+        "source_sha256": "3e4d79031d5a1aede6b1d08c9859b4549d99f6628b3538ef399600280873e70a"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "packages/vec/main.bend",
+        "name": "Nat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "packages/vec/main.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "packages/vec/main.bend",
+        "name": "Bool",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "packages/vec/main.bend",
+        "name": "U32.add",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "packages/vec/main.bend",
+        "name": "U32.is_le",
+        "reason": "unresolved-or-builtin"
+      }
+    ],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 10,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

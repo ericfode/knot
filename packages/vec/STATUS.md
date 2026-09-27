@@ -1,4 +1,13 @@
-# Vec status — complete, 2026-09-26
+# Vec status — unreleased style revision, 2026-09-26
+
+Working source includes accepted `vec-growth-1`: joint matches in growth
+planning and the push continuation. First-shot proof, native/JS, ownership, nine
+mutant and scaling gates passed. Semantic review completed 29 checks without
+findings. Style remains needs-review: 0/12 units meet all three bars. See
+[STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md) for tradeoffs, hashes and current receipts.
+No publication or dependency identity changed.
+
+## Historical release
 
 Published and verified: `0xd684886d10b431b9dce6c3b2d1ef1980`.
 
@@ -37,10 +46,14 @@ Limits: Data elements only; Vec is affine. Allocation policy errors are explicit
 actual host OOM remains a runtime failure. No GPU execution or all-state universal
 refinement proof claimed. Internal Buffer construction is outside the public API.
 
-Reproduce local gates: `python3 packages/vec/scripts/gate.py`.
-Repeat only the repaired negatives: `python3 packages/vec/scripts/gate.py ownership`.
-Inspect exact upload closure: `bun packages/vec/scripts/closure.ts`.
+Current campaign gates are recorded under `campaigns/vec-growth-1/gates/`;
+the campaign runner redirects receipts to preserve the historical release.
+The ordinary gate `python3 packages/vec/scripts/gate.py` overwrites receipt paths;
+use a fresh output directory for future evidence.
+The historical ownership-only runner checks the old source hashes; use the
+campaign gate for the revised source. Recorded upload closure: receipts/closure.json.
 Remote consumer source: tests/remote_consumer.bend. Run with a new BEND_LIB cache
 through scripts/bend-reference for an independent fetch. RELEASE.json records
 closure, compiler, outcomes and receipt identities; receipts/ holds raw results.
-There is no remaining publication blocker.
+The historical publication is complete. The working revision remains
+unreleased; this style batch does not authorize another publication.

@@ -87,12 +87,16 @@ def Vec.set(-T: Data, v: Vec<T>, index: U32, value: T) -> Vec<T> & Result<Error,
 
 # This plan is bounded by 24 doublings; caller checks minimum <= maximum.
 def plan_step(fuel: Nat, +cap: U32, depth: Nat, +minimum: U32, enough: Bool) -> U32 & Nat:
-  match fuel enough:
-    case 1n+p False{}:
-      +next = U32.add(cap,cap)
-      plan_step(p,next,1n+depth,minimum,U32.is_le(minimum,next))
-    case _ _:
+  match fuel:
+    case 0n:
       (cap,depth)
+    case 1n+p:
+      match enough:
+        case True{}:
+          (cap,depth)
+        case False{}:
+          +next = U32.add(cap,cap)
+          plan_step(p,next,1n+depth,minimum,U32.is_le(minimum,next))
 
 def unpack(-A: Type, -B: Type, -R: Type, pair: A & B, f: A -> B -> R) -> R:
   (a,b) = pair
@@ -136,11 +140,13 @@ def Vec.reserve(-T: Data, v: Vec<T>, +minimum: U32) -> Vec<T> & Result<Error,Uni
       reserve_limit(T,n,c,d,m,a,minimum,U32.is_le(minimum,m))
 
 def push_ready(-T: Data, v: Vec<T>, value: T, r: Result<Error,Unit>) -> Vec<T> & Result<Error,Unit>:
-  match v r:
-    case Buffer{n,c,d,m,a} Fail{e}:
-      (Buffer{n,c,d,m,a},Fail{e})
-    case Buffer{+n,c,d,m,a} Done{u}:
-      (Buffer{U32.add(n,1),c,d,m,Array.set(Maybe<&2,T>,a,n,Some{value})},Done{Unit{}})
+  match v:
+    case Buffer{+n,c,d,m,a}:
+      match r:
+        case Fail{e}:
+          (Buffer{n,c,d,m,a},Fail{e})
+        case Done{u}:
+          (Buffer{U32.add(n,1),c,d,m,Array.set(Maybe<&2,T>,a,n,Some{value})},Done{Unit{}})
 
 def push_reserved(-T: Data, value: T, pair: Vec<T> & Result<Error,Unit>) -> Vec<T> & Result<Error,Unit>:
   (v,r) = pair
