@@ -1,0 +1,26 @@
+[
+  {
+    "id": 7,
+    "name": "braided self-intersection",
+    "algorithm": "Represent an inscription as an ordered list of strands, each strand containing a cyclic list of glyphs and a pointer to one position. On every round, choose the strand with the lowest pointer depth, splice its next three glyphs into a new strand, and redirect both pointers to the splice midpoint. If two pointers address the same position, fuse their strands by alternating glyphs until one strand remains; otherwise rotate each affected strand by its pointer distance. Repeat for 11 rounds, recording the strand graph after each round. Render crossings as nested braces only when an edge is traversed twice in opposite directions.",
+    "glyph_inventory": "⟟ ⟒ ⟐ ⟡ ⊙ ⊘ ⊚ ⌁ ⌇ ⌘ ⌬ ⟀ ⧉ ⧖ ⫯ ᚫ ᛉ 𐓂 𓂀",
+    "example": "⟟⟒⟐⌁⊙  ⌘╲  ⟡⊘  ╱⌬\n   ⧉⟟⟒╲╱⫯  ⌇\n⊚──╳──⊙──╳──⊚\n   ⌬╱╲⧖  ⟀\n⟒⟐⟡ { ⟟⌁⊘ } ⟒⟐⟡\n      ↺        ↻\n⌘⌘  ⧉  ⌘⌘   ⊙⋈⊙\n  ᚫ╲  ᛉ  ╱ᚫ\n⟟──⟒──⟐──⟡──⟟\n      ⧖⧖\n  ⊚╲╱⊚  ⊘╲╱⊘\n⌬⌇⌘⧉⟀  ⌬⌇⌘⧉⟀\n      ⫯\n⟟⟒⟐⌁⊙  ⌘╲╱⌘  ⟟⟒⟐⌁⊙",
+    "intended_pressure": "Test whether recursive self-intersection and pointer fusion produce interpretations that remain relationally stable without a central hierarchy."
+  },
+  {
+    "id": 8,
+    "name": "dimensional shedding",
+    "algorithm": "Start with a rectangular lattice of glyph cells whose coordinates are integer tuples of dimension three. Label each cell with a phase bit and connect cells sharing one coordinate face. For each of  nine rounds, collapse the axis with the fewest active edges, project its glyphs into the remaining axes, and duplicate every phase-changing cell along the next unused axis. After dimension reaches one, re-inflate dimensions in reverse order using the recorded collapse masks. Replace a projected glyph by the XOR of its incident phase bits, using the inventory order as the bit order. Emit each intermediate lattice as a slice sequence.",
+    "glyph_inventory": "◌ ◍ ◉ ◇ ◆ ▱ ▰ ⌗ ⌙ ⌖ ⍉ ⍟ ⌁ ⌂ ⌭ ⊞ ⊟ ⊠ ⊡ 𐩐",
+    "example": "◌◍◉   ⌗⌙⌖   ◇◆◇\n▱▰▱   ⍉⍟⍉   ⌂⌭⌂\n⊞⊟⊠   ⊡𐩐⊡   ◌◉◌\n\n     ╲  ⍉  ╱\n◍───◆───◍───◇\n     ╱  ⍟  ╲\n\n⌗⌙⌖  →  ⌗⌖  →  ⌖\n⊞⊟⊠  →  ⊞⊠  →  ⊠\n◌◍◉  →  ◌◉  →  ◉\n\n       ⌂\n      ╱ ╲\n     ⌭  ⍉\n      ╲ ╱\n       ⍟\n\n◇◆◇  ⌗⌙⌖  ▱▰▱\n  ⊡  ⊞  ◌  ⊟  ⊠\n      ↕\n  ◌◉◌  ⍉⍟⍉  ⌂⌭⌂\n\n⌖╳⌖   ⊠╳⊠   ◉╳◉\n     ⌁⌁⌁\n◌◍◉   ◇◆◇   ⊞⊟⊠",
+    "intended_pressure": "Test whether meaning shifts when the same inscription survives repeated collapse and re-expansion across changing dimensional structure."
+  },
+  {
+    "id": 9,
+    "name": "phase-alias braid",
+    "algorithm": "Maintain a ring of 16 glyph slots and a separate alias table mapping each slot to a phase angle modulo 12. At each step, advance every slot by its phase angle, then pair slots whose angles differ by six; paired slots exchange glyphs and inherit the lower slot index as an alias. Whenever three or more aliases coincide, rotate the ring by the coincidence count and invert the phase angles of the rotated slots. Run 13 steps, preserving all prior alias maps. Render a slot once per distinct alias path, with repeated paths joined by a dotted arc and phase reversals marked by a mirrored glyph.",
+    "glyph_inventory": "⟢ ⟣ ⟤ ⟥ ⟰ ⟱ ⟳ ⟲ ◈ ◇ ◊ ⌁ ⌇ ⌰ ⌁ ⦿ ⦾ 𐕣 𐕤",
+    "example": "⟢⟣⟤⟥  ⟳  ⟰⟱  ◈◊\n⌁⌇⌰⌁  ⟲  ⦿⦾  𐕣𐕤\n\n⟢·⦿·⟢    ⟣·◈·⟣\n   ╲      ╱\n    ⟳──⟲\n   ╱      ╲\n⟤·◊·⟤    ⟥·⦾·⟥\n\n⟰  ⟱  ⟰  ⟱  ⟰  ⟱\n  ◇╲  ◇╱  ◇╲  ◇╱\n⌁──◈──⌁──◊──⌁──◈\n  ⌇╱  ⌇╲  ⌇╱  ⌇╲\n⦿  ⦾  ⦿  ⦾  ⦿  ⦾\n\n𐕣⟲𐕣   𐕤⟳𐕤   ◈⟲◈\n      ⋯⋯⋯\n⟢⟣⟤⟥╲╱⟰⟱◈◊╲╱⌁⌇⌰⌁\n        ⦿⦾\n   ⟳  ⟲  ⟳  ⟲  ⟳\n⟢⟣⟤⟥  ⦿  ◈  ⌁  𐕣",
+    "intended_pressure": "Test whether phase-dependent aliasing makes identity feel path-bound, with recurrence and reversal carrying more weight than glyph shape."
+  }
+]
