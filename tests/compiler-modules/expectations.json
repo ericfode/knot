@@ -27,10 +27,18 @@
   },
   "bundle": {
     "provenance": {
+      "0x4454ff15e96d17231b8b4ebd9030ac38": "synthetic two-file fixture package (mark.bend, board.bend imports ./mark.bend); frozen here, never published; directory named by the seed publish formula",
       "0xc409b77d3230ca33374caf6b0993f0cb": "packages/releases.json output_builder; byte-identical copy of the seed store entry ~/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb",
       "names/knot-fixture-bytes@0.0.0.1": "local-only name for the named-package fixture; never published"
     },
     "packages": {
+      "0x4454ff15e96d17231b8b4ebd9030ac38": {
+        "content_hash": "0x4454ff15e96d17231b8b4ebd9030ac38",
+        "files": {
+          "board.bend": "4218a8e683287abae2f27055dc6f36a2e904416da437016d7fcd5e9820ccdaf4",
+          "mark.bend": "8bf2fa5d5e7c036d565404819df72e4be0c6c62bd66166c8aee4b8b901776c64"
+        }
+      },
       "0xc409b77d3230ca33374caf6b0993f0cb": {
         "content_hash": "0xc409b77d3230ca33374caf6b0993f0cb",
         "files": {
@@ -90,6 +98,7 @@
     "fixtures/hash-absent-package.bend": "10a6aa0d5c943e40196e64ce13504476f4fe3e3dcc40b9e5092d503fb5413cf9",
     "fixtures/hash-bytes.bend": "922c888d4bff972e7ac9034b74c86279d5b61cf9521e982471a4f93965bf71b2",
     "fixtures/hash-internal-import.bend": "b352db60a18c477829914baa7a1e969d40b92cbec554d6604cf113e3854f7b7a",
+    "fixtures/hash-local-package.bend": "16b8c5945e5f97fc144a7be00b04f031c5b2c888fb8f1c71f5a773601e71fecc",
     "fixtures/hash-uppercase.bend": "b05271d225c1b26573ca6ed8809a63688fbda301d860e4dbaf1f82d5f386653a",
     "fixtures/import-after-declaration.bend": "951d0a49f4586ab0b6cad9c2ee95f97a10ebd044b405e759ce8e1b7e45cbc2f5",
     "fixtures/import-comments.bend": "0becdd8f1b269dc76cf27e7f1ea1db5887d3efcd36d78c40b7b5bc5d8504d69f",
@@ -112,7 +121,6 @@
     "fixtures/lib/twin/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "fixtures/lib/with-base.bend": "4987865b7faa63ffeb8ec568886d1e52c3b87787c1ea60de3c3789d782214bcc",
     "fixtures/lib/with-main.bend": "5bd8895fc75bc725144e76d56ab93b402f0b493d58030e682f2b963b97b0cc14",
-    "fixtures/local-hash-lookalike.bend": "a2ea0f8af8106c6fd77301bbfb2cec6a65ee4506e2fd7766b0dd0a9cbbc2bcb3",
     "fixtures/lowercase-alias.bend": "3815c3b09b3b08d4def5fbb39a3574630edfd31f99d706227a1c29f6a932f632",
     "fixtures/missing-module.bend": "db3078a380b19e7bd4742df971b782afbe0aced7baf62dbbeeacf1d087b86cc0",
     "fixtures/module-main.bend": "6130c5d1c018d5cc22cd16acbc9792a143053ef16cbe96e15d30c2abe51c01f2",
@@ -1334,6 +1342,40 @@
       ]
     },
     {
+      "file": "fixtures/hash-local-package.bend",
+      "feature": "hash-package",
+      "kind": "positive",
+      "summary": "Enum-only package 0x4454ff15e96d17231b8b4ebd9030ac38 resolved by hash from the frozen bundle; its ./mark.bend import and the entry import agree.",
+      "modules": [
+        "0x4454ff15e96d17231b8b4ebd9030ac38/board.bend",
+        "0x4454ff15e96d17231b8b4ebd9030ac38/mark.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/hash-local-package.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/hash-local-package.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
       "file": "fixtures/hash-bytes.bend",
       "feature": "hash-package",
       "kind": "positive",
@@ -1519,36 +1561,6 @@
           "exit": 1,
           "stdout": "",
           "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '0xC409B77D3230CA33374CAF6B0993F0CB/bytes.bend'\nLocation:\n1>| import 0xC409B77D3230CA33374CAF6B0993F0CB/bytes.bend as B\n  |        ^\n2 | \n"
-        }
-      ]
-    },
-    {
-      "file": "fixtures/local-hash-lookalike.bend",
-      "feature": "hash-package",
-      "kind": "negative",
-      "summary": "A ./0x... path is not a hash import, and a local segment may not look like one.",
-      "modules": [],
-      "result": {
-        "type": "Light",
-        "constructors": [
-          "Dark",
-          "Lit"
-        ]
-      },
-      "knot": {
-        "obligation": "reject",
-        "outcome": "Invalid",
-        "exit": 2
-      },
-      "calls": [
-        {
-          "export": "main",
-          "arguments": [],
-          "run": "fixtures/local-hash-lookalike.bend",
-          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/local-hash-lookalike.bend",
-          "exit": 1,
-          "stdout": "",
-          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : './0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend'\nLocation:\n1>| import ./0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend as B\n  |        ^\n2 | \n"
         }
       ]
     },

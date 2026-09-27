@@ -20,7 +20,7 @@ python3 tests/compiler-modules/regen.py --write  # re-record; review the diff be
 | `fixtures/*.bend` | 40 entry programs, one feature or edge each. Each declares its own nullary result enum and a `main` the seed runs. |
 | `fixtures/lib/` | Helper modules the entries import. They are not entries; the cycle helpers fail when run alone. |
 | `calls/*.bend` | Committed seed wrappers for the 8 calls with arguments. The seed runs only `main`. |
-| `bundle/lib/` | The frozen package store (`BEND_LIB`): ByteOutput `0xc409b77d3230ca33374caf6b0993f0cb` and one local `names/` entry. |
+| `bundle/lib/` | The frozen package store (`BEND_LIB`): ByteOutput `0xc409b77d3230ca33374caf6b0993f0cb`, the synthetic `0x4454ff15e96d17231b8b4ebd9030ac38`, and one local `names/` entry. |
 | `bundle/hub/` | The offline hub stub (`BEND_HUB`). It holds only its README. |
 | `expectations.json` | The frozen oracle for every fixture and call. |
 | `regen.py` | The deterministic re-run and diff. |
@@ -58,6 +58,11 @@ bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/<file>
   (`packages/releases.json`, `output_builder`), which `src/wasm.bend` itself
   imports. It is a byte-identical copy of the seed's store entry. All 12 files,
   including `LICENSE`, are needed for the hash to reproduce.
+- **Synthetic package.** `0x4454ff15e96d17231b8b4ebd9030ac38` has two files and
+  is never published. `mark.bend` declares an enum, and `board.bend` imports it
+  through `./mark.bend`. Every ByteOutput fixture needs later-rung features, so
+  this package is the in-rung proof that hash resolution works: a loader that
+  refused every `0x` import would fail `hash-local-package`.
 - **Hub stub.** On a store miss the seed would fetch from the hub. The stub
   makes that miss fail on a missing `manifest`, with no network request and no
   write into the store.
@@ -77,8 +82,8 @@ bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/<file>
   copy at another path is a different module. A diamond loads its shared
   module once.
 - **Relative paths.** Paths are relative to the importing file, with or without
-  `./`. Segments are plain names. `./0x…` is rejected, uppercase hex is not a
-  hash, and a hash package's own `./` imports stay inside the package.
+  `./`. Segments are plain names, uppercase hex is not a hash, and a hash
+  package's own `./` imports stay inside the package.
 - **Base is book-global.** Once any file imports Base, every later file sees
   Base names (`base-transitive`). The same bare spelling declared later is a
   duplicate, so load order decides (`base-after-module` accepts;
@@ -102,18 +107,18 @@ a Knot-specific expectation.
 | Import-line syntax | (every positive) | import-comments | import-without-alias, import-non-bend, import-after-declaration |
 | Cycles and missing files | (diamond: shared, not cyclic) | — | import-cycle, self-import, missing-module |
 | `import Base` | base-bool, base-bool-pick†, base-list†, base-maybe† | base-transitive, base-after-module | base-with-alias, base-name-after-base, entry-shadows-base, no-base-loaded |
-| Hash packages | hash-bytes† | hash-internal-import†, named-package* | hash-uppercase, local-hash-lookalike, hash-absent-package |
+| Hash packages | hash-local-package, hash-bytes† | hash-internal-import†, named-package* | hash-uppercase, hash-absent-package |
 | Foreign definitions | — | foreign-definition* | — |
 
-The suite has 10 positive, 11 edge and 19 negative fixtures. They make 48 seed
-calls: 29 accepted and 19 rejected.
+The suite has 11 positive, 11 edge and 18 negative fixtures. They make 48 seed
+calls: 30 accepted and 18 rejected.
 
 ## Knot obligations (`knot` in each fixture)
 
 - **`match-seed` with empty `requires`.** Knot must load, check and run every
   call, and return the recorded constructor. An argument is an ordinal of its
   declared enum, given in `arguments` with the canonical type name. After this
-  increment these 14 fixtures (20 calls) are the binding core. It includes the Base-only
+  increment these 15 fixtures (21 calls) are the binding core. It includes the Base-only
   fixtures `base-bool`, `base-transitive` and `base-after-module`, whose
   reachable Base slice is the nullary `Bool` and its monomorphic functions (D2).
 - **`match-seed` with `requires`.** Five fixtures reach later-rung features.
@@ -125,7 +130,7 @@ calls: 29 accepted and 19 rejected.
   - `generics`: rung 6, covering erased types and quantity arguments.
   - `literals`: rung 5, covering numbers, strings and list literals.
   - `recursion`: rung 1.
-- **`reject`.** For all 19 negatives Knot must report `Invalid` (exit 2) and
+- **`reject`.** For all 18 negatives Knot must report `Invalid` (exit 2) and
   emit no artifact or value. Codes are the implementer's to choose and must be
   stable. Every negative is within this rung, so `Unsupported` is wrong here.
   A module absent from the frozen bundle (`hash-absent-package`) is a
@@ -147,7 +152,9 @@ calls: 29 accepted and 19 rejected.
    contact a hub or read `~/.bend`.
 2. **Calls.** For every call, invoke `export` directly with the argument
    ordinals. Compare the result tag with `tag` for the evaluator and the Wasm
-   lanes. The files in `calls/` exist only for the seed.
+   lanes. The files in `calls/` exist only for the seed. Every recorded export
+   is declared in the entry file. The suite does not constrain how Knot names
+   or exports imported functions in Wasm.
 3. **Negatives and Knot-specific cases.** Assert the exit status and outcome
    class. For `knot_expected`, also assert the exact diagnostic prefix. A
    rejected compilation must leave any existing output file untouched, as in
