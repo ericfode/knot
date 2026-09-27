@@ -479,3 +479,23 @@ trie was rejected after adversarial ordering exposed a sibling-chain regression.
 Prevention: retain adverse prefix/order families and structural invariant
 controls before accepting a pleasing representation. This is an unpublished
 implementation improvement, not completion of the broader style pilot.
+
+## 2026-09-26 — Whole-repository throughput and provider saturation
+
+The [throughput report](perch-throughput-2026-09-26.md) confirms repeated Git
+discovery, serial declaration checks, batch barriers and repeated context
+parsing as avoidable local costs. Exact full-repository request/result controls
+retain 1,941 semantic declarations and 2,337 style units. Sixteen workers
+completed live semantic/style trials in 39.43/19.78 s versus 70.57/39.19 s.
+The original 16 parser failures remain visible; no acceptance rule was relaxed.
+
+The 32/128 semantic and 32/64 style trials overloaded the provider. Retain
+their failed coverage as saturation evidence, not speedup claims. Prevention:
+bound nested requests as well as top-level workers, choose defaults from
+completed coverage, and preserve failed trials when tuning. The shipped default
+is 16; eight reduces pressure when sharing provider capacity. All 46 tooling
+tests and the law-rule wiring gate pass against merged v3 policy.
+
+A final live check at merged revision `698d88a` received HTTP 402 on its first
+request. No further paid checks were attempted. Earlier complete measurements
+remain frozen evidence; the merged revision has no complete new live receipt.

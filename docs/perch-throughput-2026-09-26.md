@@ -125,3 +125,22 @@ native CLI still has process-global command state.
 
 The [earlier latency diagnosis](perch-latency-2026-09-26.md) describes the old
 implementation and remains historical evidence.
+
+## Main integration
+
+The implementation and current main were merged at `698d88a`; all 46 tooling
+tests and law-rule wiring passed after integration. The primary checkout's
+nine existing modified files and staged `research/adaptive-tasks/task.bend`
+entry were preserved byte-for-byte during the fast-forward. No remote push
+was performed.
+
+A live whole-scan verification of that merged revision was rejected with
+**HTTP 402 on the first request**. Paid checks stopped immediately. This does
+not replace the earlier completed frozen-source trials or establish complete
+live coverage of the merged source. The retained
+[integration receipt](perch-calibration/throughput-integration-2026-09-26.json)
+separately records offline plumbing verification and the rejected live attempt.
+The merged-tree offline scan completed 2,030 fixed-answer requests across 1,986
+declarations with zero failed requests; style rated all 2,345 parsable units.
+Both retain the same 16 unparseable files. These fixed answers establish
+execution/coverage only, not review findings or style quality.

@@ -48,6 +48,13 @@ reported separately from defect findings. The output retains distributions,
 context limits and secondary ranks. Run it on materially changed Bend code beside
 the relevant semantic checks. See [style targets, commands and evidence](perch-style.md).
 
+Scan, check and style default to 16 workers. Use `--parallel N` for semantic
+commands, `--jobs=N` for style, or `PERCH_JOBS` for either (explicit flags win).
+The range is 1–256, but larger values overloaded the provider in measured
+whole-repository trials. Bounded workers, command-local source/rule snapshots
+and batched Git reads preserve review inputs. See the
+[throughput measurements and limits](perch-throughput-2026-09-26.md).
+
 The context includes exact local callees and referenced values, transitive
 explicit relative imports within the workspace, direct same-file callers,
 datatypes, and corresponding law statements. It does not discover arbitrary
