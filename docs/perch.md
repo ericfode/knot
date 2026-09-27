@@ -10,6 +10,12 @@ Use the npm scripts below to retain local check history. `npm exec -- perch`
 still runs the native CLI directly, but bypasses this project's usage receipts.
 No global package or shell configuration was changed.
 
+An opt-in [Laya local trial](laya-local-2026-09-26.md) now runs native System One
+questions offline through `npm run review:laya`. The pinned English checkpoint
+failed the Bend performance controls, and the unchanged style rubric exceeds its
+option-description limit. It is experimental evidence tooling, not an accepted
+replacement for these reviews. The normal Perch endpoint remains unchanged.
+
 ## Commands
 
 ```sh

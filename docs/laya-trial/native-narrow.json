@@ -1,0 +1,732 @@
+{
+  "model": {
+    "repo": "convaiinnovations/laya",
+    "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851"
+  },
+  "questions": {
+    "prefix_copy": {
+      "type": "noul",
+      "instructions": "Does the target function repeatedly pass a growing accumulator as the FIRST argument of List.append or String.append? These helpers copy their first argument. Prepending with <> and reversing once is not this defect."
+    },
+    "invariant_work": {
+      "type": "noul",
+      "instructions": "Does the target function recompute a full-list sum or length over the SAME UNCHANGING list on every recursive step? Computing the summary once before the loop is not this defect."
+    },
+    "linked_index": {
+      "type": "noul",
+      "instructions": "Does the target function traverse a linked list by repeatedly calling List.get from the same list head with increasing indices? Recursing directly on the remaining tail is not this defect."
+    }
+  },
+  "rows": [
+    {
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "state": {
+        "name": "collect",
+        "source": "def collect(xs: List<&2,U32>, acc: List<&2,U32>) -> List<&2,U32>:\n  match xs:\n    case Nil{}: List.reverse(&2,U32,acc)\n    case h <> t:\n      collect(t,U32.add(U32.mul(h,3),1) <> acc)",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 9,
+            "end_line": 10,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  collect(xs,Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.reverse",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        367,
+        362,
+        360
+      ],
+      "elapsed_ms": 711.6066669113934,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.8888,
+            "confidence": 0.8888,
+            "answer_confidence": 0.8888,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.6972,
+            "confidence": 0.6972,
+            "answer_confidence": 0.6972,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.9049,
+            "confidence": 0.9049,
+            "answer_confidence": 0.9049,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1089,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "state": {
+        "name": "collect",
+        "source": "def collect(xs: List<&2,U32>, acc: List<&2,U32>) -> List<&2,U32>:\n  match xs:\n    case Nil{}: acc\n    case h <> t:\n      collect(t,List.append(&2,U32,acc,[U32.add(U32.mul(h,3),1)]))",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 9,
+            "end_line": 10,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  collect(xs,Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.append",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        368,
+        363,
+        361
+      ],
+      "elapsed_ms": 91.49245917797089,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.8999,
+            "confidence": 0.8999,
+            "answer_confidence": 0.8999,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.8333,
+            "confidence": 0.8333,
+            "answer_confidence": 0.8333,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.9019,
+            "confidence": 0.9019,
+            "answer_confidence": 0.9019,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1092,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "state": {
+        "name": "solve",
+        "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  List.concat(&2,U32,chunks(xs))",
+        "calls": [
+          {
+            "name": "chunks",
+            "line": 3,
+            "end_line": 6,
+            "source": "def chunks(xs: List<&2,U32>) -> List<&2,List<&2,U32>>:\n  match xs:\n    case Nil{}: Nil{}\n    case h <> t: [U32.add(U32.mul(h,3),1)] <> chunks(t)"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.concat",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        360,
+        355,
+        353
+      ],
+      "elapsed_ms": 85.17341688275337,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.8646,
+            "confidence": 0.8646,
+            "answer_confidence": 0.8646,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.9105,
+            "confidence": 0.9105,
+            "answer_confidence": 0.9105,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.9899,
+            "confidence": 0.9899,
+            "answer_confidence": 0.9899,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1068,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "state": {
+        "name": "assemble",
+        "source": "def assemble(parts: List<&2,List<&2,U32>>, result: List<&2,U32>) -> List<&2,U32>:\n  match parts:\n    case Nil{}: result\n    case h <> t: assemble(t,List.append(&2,U32,result,h))",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 13,
+            "end_line": 14,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  assemble(chunks(xs),Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.append",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        320,
+        315,
+        313
+      ],
+      "elapsed_ms": 117.57358396425843,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.6591,
+            "confidence": 0.6591,
+            "answer_confidence": 0.6591,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.8261,
+            "confidence": 0.8261,
+            "answer_confidence": 0.8261,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.8749,
+            "confidence": 0.8749,
+            "answer_confidence": 0.8749,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 948,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "state": {
+        "name": "annotate",
+        "source": "def annotate(xs: List<&2,U32>, +sum: U32) -> List<&2,U32>:\n  match xs:\n    case Nil{}: Nil{}\n    case h <> t:\n      U32.add(h,sum) <> annotate(t,sum)",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 14,
+            "end_line": 15,
+            "source": "def solve(+xs: List<&2,U32>) -> List<&2,U32>:\n  annotate(xs,total(xs))"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        312,
+        307,
+        305
+      ],
+      "elapsed_ms": 69.93762496858835,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.667,
+            "confidence": 0.667,
+            "answer_confidence": 0.667,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.8146,
+            "confidence": 0.8146,
+            "answer_confidence": 0.8146,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.7454,
+            "confidence": 0.7454,
+            "answer_confidence": 0.7454,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 924,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "state": {
+        "name": "annotate",
+        "source": "def annotate(xs: List<&2,U32>, +whole: List<&2,U32>) -> List<&2,U32>:\n  match xs:\n    case Nil{}: Nil{}\n    case h <> t:\n      U32.add(h,total(whole)) <> annotate(t,whole)",
+        "calls": [
+          {
+            "name": "total",
+            "line": 3,
+            "end_line": 6,
+            "source": "def total(xs: List<&2,U32>) -> U32:\n  match xs:\n    case Nil{}: 0\n    case h <> t: U32.add(h,total(t))"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 14,
+            "end_line": 15,
+            "source": "def solve(+xs: List<&2,U32>) -> List<&2,U32>:\n  annotate(xs,xs)"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        389,
+        384,
+        382
+      ],
+      "elapsed_ms": 88.61379092559218,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.4713,
+            "confidence": 0.5287,
+            "answer_confidence": 0.5287,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.7704,
+            "confidence": 0.7704,
+            "answer_confidence": 0.7704,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.7729,
+            "confidence": 0.7729,
+            "answer_confidence": 0.7729,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1155,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "state": {
+        "name": "walk",
+        "source": "def walk(xs: List<&2,U32>, +i: U32) -> List<&2,U32>:\n  match xs:\n    case Nil{}: Nil{}\n    case h <> t:\n      U32.mul(h,i) <> walk(t,U32.add(i,1))",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 9,
+            "end_line": 10,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  walk(xs,1)"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        335,
+        330,
+        328
+      ],
+      "elapsed_ms": 76.47708314470947,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.7047,
+            "confidence": 0.7047,
+            "answer_confidence": 0.7047,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.7343,
+            "confidence": 0.7343,
+            "answer_confidence": 0.7343,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.9291,
+            "confidence": 0.9291,
+            "answer_confidence": 0.9291,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 993,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "state": {
+        "name": "walk",
+        "source": "def walk(+xs: List<&2,U32>, n: Nat, +i: Nat) -> List<&2,U32>:\n  match n:\n    case 0n: Nil{}\n    case 1n+p:\n      U32.mul(value(List.get(&2,U32,xs,i)),U32.from_nat(1n+i)) <> walk(xs,p,1n+i)",
+        "calls": [
+          {
+            "name": "value",
+            "line": 3,
+            "end_line": 6,
+            "source": "def value(x: Maybe<&2,U32>) -> U32:\n  match x:\n    case None{}: 0\n    case Some{v}: v"
+          }
+        ],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 14,
+            "end_line": 15,
+            "source": "def solve(+xs: List<&2,U32>) -> List<&2,U32>:\n  walk(xs,List.length(&2,U32,xs),0n)"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "Nat",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.get",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.from_nat",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": [
+        473,
+        468,
+        466
+      ],
+      "elapsed_ms": 106.96374997496605,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix_copy": {
+            "type": "noul",
+            "noul": 0.638,
+            "confidence": 0.638,
+            "answer_confidence": 0.638,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "invariant_work": {
+            "type": "noul",
+            "noul": 0.8272,
+            "confidence": 0.8272,
+            "answer_confidence": 0.8272,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "linked_index": {
+            "type": "noul",
+            "noul": 0.9414,
+            "confidence": 0.9414,
+            "answer_confidence": 0.9414,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1407,
+          "output_tokens": 0
+        }
+      }
+    }
+  ]
+}

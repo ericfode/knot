@@ -1,0 +1,736 @@
+{
+  "schema": 1,
+  "model": {
+    "repo": "convaiinnovations/laya",
+    "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+    "laya_version": "0.3.20"
+  },
+  "input_sha256": "1eaeb8f3db138a4d2435049d41dfe918cbfaf0d1dc59a3f81dfa80138b448857",
+  "runtime": {
+    "laya": "0.3.20",
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "tokenizers": "0.23.2",
+    "numpy": "2.5.3"
+  },
+  "advisory": true,
+  "offline": true,
+  "load_ms": null,
+  "rows": [
+    {
+      "id": "full-rule-1",
+      "phase": "full-rule",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "a3dfbc0ec7613576bc601b3b052d55994648be61788b50cb0054a7691582716c",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 201,
+        "max_len": 2048,
+        "questions": {
+          "prefix": {
+            "state_tokens": 298,
+            "instruction_tokens": 170,
+            "option_tokens": [
+              7,
+              6
+            ],
+            "sequence_tokens": 487,
+            "head_budget": 201,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "f3393f1e764dc8368742f14cce4c395bc88817a522fa8bbfce8d67b1c6350f9a"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "full-rule-2",
+      "phase": "full-rule",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "004e6a2677357ea5dd14fe7f7b91a981ed18a3170082839aab9ed3e3738f07ef",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 201,
+        "max_len": 2048,
+        "questions": {
+          "prefix": {
+            "state_tokens": 299,
+            "instruction_tokens": 170,
+            "option_tokens": [
+              7,
+              6
+            ],
+            "sequence_tokens": 488,
+            "head_budget": 201,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "b79d9c50c3936ab4aeab968b97e1f7e9eb02a094014b96c3f5a39b0b25b92f90"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "full-rule-3",
+      "phase": "full-rule",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "a7e2dc31fdcd217bb76da4df6341b3d57e356ec3247f4658d955d455c0854517",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 201,
+        "max_len": 2048,
+        "questions": {
+          "prefix": {
+            "state_tokens": 291,
+            "instruction_tokens": 170,
+            "option_tokens": [
+              7,
+              6
+            ],
+            "sequence_tokens": 480,
+            "head_budget": 201,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "48b771e7b7baebfd30375537b3cd79d7c6e554b30f57382acb0b7deef9c2f4af"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "full-rule-4",
+      "phase": "full-rule",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "a66a2db8b3c71d67e8a4fa832cfa3b78477b545b57b0ab76a3ee98ca59a15aab",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 201,
+        "max_len": 2048,
+        "questions": {
+          "prefix": {
+            "state_tokens": 251,
+            "instruction_tokens": 170,
+            "option_tokens": [
+              7,
+              6
+            ],
+            "sequence_tokens": 440,
+            "head_budget": 201,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "30392461146a7cbfb71350b540696f26a6ebcf6d95fc967c07a643da29f70275"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-1",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "input_sha256": "48a7f8ee514d1bb90d36b39d1156f9d9291c43e827aff978bead772b60d5165c",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 298,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 367,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "cbabdd1e99694a8296d0dce07df4e7215a8b9436283d6c66c79d0dfcf35e08b6"
+          },
+          "invariant_work": {
+            "state_tokens": 298,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 362,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "353ea5164955cba4c2b8b256a5aa775ee03c010ccd4b1ab1afaa0389bc3116ec"
+          },
+          "linked_index": {
+            "state_tokens": 298,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 360,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "9a5ecf5d048ec4681fdd93ff3889fb3c4cd23bf2d09e3e54cfcd907392af6311"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-2",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "input_sha256": "4512569761f25fe7736e216e394ab6b4f4cf9fe47f63211f9609184d84b42613",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 299,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 368,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "96f7d7529554ba489fe96bc61c975c8bf704faf8ca5d9fff310320c432a61f7c"
+          },
+          "invariant_work": {
+            "state_tokens": 299,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 363,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "8437b4796be01aa466c734c947cc886bd9268cf518cae8b36248db13aced8c18"
+          },
+          "linked_index": {
+            "state_tokens": 299,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 361,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "922c8ca2f7a9786c3a71bd51fac1c4ce8e873bfd764a719dd4f355003ce29e7a"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-3",
+      "phase": "native-narrow",
+      "label": "heldout-clean",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "input_sha256": "c6ba2feb9c25cad957367c4f5117a22948f7624e57617d5be0f2422c6b1214dc",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 291,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 360,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "c055e1a4db00d0c524772117dad561da1ee7810726f30f57d23c3b1b8524c694"
+          },
+          "invariant_work": {
+            "state_tokens": 291,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 355,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "6c090213dfbe79da266032106205ec6a0a42fd807d5e9e7c68953547f5b785d5"
+          },
+          "linked_index": {
+            "state_tokens": 291,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 353,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "0083bf84de98ce9214e817fe57b50a4114dd4a3fe30700897a7917922b1310b5"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-4",
+      "phase": "native-narrow",
+      "label": "heldout-broken",
+      "family": "growing-prefix-copy",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "input_sha256": "5117f012e47826b8d89491b09d98ebac2bb29087cca4687fe8d89c51e27c26c2",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 251,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 320,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "f9f164dca68b0cb6297dca2ec55fd8962b562611e5ec75e644af85decf149f5a"
+          },
+          "invariant_work": {
+            "state_tokens": 251,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 315,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "d698c26f225ba6d786fa38e7c83a329b1a02d5e33cbdfe9fcc686bb00decc3a0"
+          },
+          "linked_index": {
+            "state_tokens": 251,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 313,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "78eb0fa06c15d0544b5ab6adbd156576901935a858afcb5d4d27999e932c8b07"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-5",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "input_sha256": "f433d13e2777d14f1621a5591e7bcfc404dbfd9b9708ee6a81c5f9985551a432",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 243,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 312,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "d0b814f968345b2391591e21a63494dfca1653bf52cc2895c8df546df87c1aeb"
+          },
+          "invariant_work": {
+            "state_tokens": 243,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 307,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "e467bd978c8d3f2305c268b6ef2ae2e8fce0249a2678463fc6ffbf1b8dddf747"
+          },
+          "linked_index": {
+            "state_tokens": 243,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 305,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "0db791db0dd9be9a25854deeb5a6341f6ea847604b7415338c4b729a067a4b42"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-6",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "invariant-summary",
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "input_sha256": "d1e00004fc97794474bd3555c0b82f0c28c34b3ea00f27ab4c78ebb947747a02",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 320,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 389,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "d462f212fbebb3913ceb836381e4237f5858204b2ba04b805ca7b9b3f039f2a3"
+          },
+          "invariant_work": {
+            "state_tokens": 320,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 384,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "6bc42297017709bd6e03cb41b5dcfe50fc3e4c8e49d07e4e4c2e16f024dc0e7d"
+          },
+          "linked_index": {
+            "state_tokens": 320,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 382,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "d15e5f181e31b2b8e8e6cda90a2660e09f908d8840554922d957201074a3c057"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-7",
+      "phase": "native-narrow",
+      "label": "clean",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "input_sha256": "34ecb9b8f024ab154f5e3bb984bae406e4d1697d19ea3b0fd0aea1f699bf23ec",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 266,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 335,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "6156819df242003b415c93f09f527795e936291ea249bcc1c156d34f9f2a3ca3"
+          },
+          "invariant_work": {
+            "state_tokens": 266,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 330,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "4546135348a0715399b760fb0186119082c35cd39e52f2339e102899a956c355"
+          },
+          "linked_index": {
+            "state_tokens": 266,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 328,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "5a887bbabd28d613bb55d2ce9842eb1a70f151fb9e4498b9b4e1481c8fe82abb"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "native-narrow-8",
+      "phase": "native-narrow",
+      "label": "broken",
+      "family": "indexed-linked-list",
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "input_sha256": "2f844bcdbe987737f62413944217ecc7b53ccfd74d338caa6242d5192e7add45",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 81,
+        "max_len": 2048,
+        "questions": {
+          "prefix_copy": {
+            "state_tokens": 404,
+            "instruction_tokens": 47,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 473,
+            "head_budget": 81,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "7d4c3f9cdd1e590e47aa380cdffc48b2489d4206c60c5e72c3050f7aa2ed56e1"
+          },
+          "invariant_work": {
+            "state_tokens": 404,
+            "instruction_tokens": 42,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 468,
+            "head_budget": 76,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "613ac6baefbbc99faccd0200f565d4668f870f81c715b9148adf0ec7cedfdd3c"
+          },
+          "linked_index": {
+            "state_tokens": 404,
+            "instruction_tokens": 40,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 466,
+            "head_budget": 74,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "46b8f0cfbba7962badf8e96a13aefe700c527e8aa016f35f549b34a70a63c16d"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 49,
+        "max_len": 2048,
+        "questions": {
+          "cancel": {
+            "state_tokens": 18,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 54,
+            "head_budget": 48,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "85a09a95252040d62b801167d8a3a2c1276a3a7a64cb82466b72d465275503b0"
+          },
+          "topic": {
+            "state_tokens": 18,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              10,
+              6,
+              4
+            ],
+            "sequence_tokens": 55,
+            "head_budget": 49,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "02c52e1e1aed5e51205832f7102617d1edd081b6711399d3ee605fce7c5b49b6"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 49,
+        "max_len": 2048,
+        "questions": {
+          "cancel": {
+            "state_tokens": 21,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 57,
+            "head_budget": 48,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "86572c24aba2d512e2cbf52e0a85df8818b5cc923f9cf23ba740210681f2a73a"
+          },
+          "topic": {
+            "state_tokens": 21,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              10,
+              6,
+              4
+            ],
+            "sequence_tokens": 58,
+            "head_budget": 49,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "8105178d8a4f1e8b1f3cf7049f6db1880b6bf51eed85e38ea1aa1e8c95cdd3c3"
+          }
+        }
+      },
+      "status": "audited"
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": false,
+        "reasons": [
+          "highly_memetic: option description exceeds Laya's fixed 48-token cap"
+        ],
+        "head_budget": 569,
+        "max_len": 2048,
+        "questions": {
+          "maximally_big_brain": {
+            "state_tokens": 200,
+            "instruction_tokens": 135,
+            "option_tokens": [
+              25,
+              24,
+              21,
+              41,
+              34
+            ],
+            "sequence_tokens": 489,
+            "head_budget": 301,
+            "complete": true,
+            "default_encoding_complete": false,
+            "sequence_sha256": "02f669d8c0481b8c07f6f4f2a09942f42a79674a691165f6f1a5a50aa23d883f"
+          },
+          "delightful_to_read": {
+            "state_tokens": 200,
+            "instruction_tokens": 223,
+            "option_tokens": [
+              27,
+              26,
+              24,
+              32,
+              37
+            ],
+            "sequence_tokens": 578,
+            "head_budget": 390,
+            "complete": true,
+            "default_encoding_complete": false,
+            "sequence_sha256": "63a52f769c0c32479d6e8cbd084d0efad40c57e8b0df4033188f8678bbfb95c9"
+          },
+          "highly_memetic": {
+            "state_tokens": 200,
+            "instruction_tokens": 352,
+            "option_tokens": [
+              30,
+              25,
+              30,
+              56,
+              55
+            ],
+            "sequence_tokens": 757,
+            "head_budget": 569,
+            "complete": false,
+            "default_encoding_complete": false,
+            "sequence_sha256": "67c4404c42b8dace53bb4b01eb0b189df72d5d51233fc368bcb825192a669f16"
+          }
+        }
+      },
+      "status": "unsupported-input"
+    }
+  ],
+  "note": "Successful inference is not a lint pass. Expected labels remain outside model input. Budget overrides preserve complete wording; extended inputs are outside the checkpoint's default 512-token setting."
+}

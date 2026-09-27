@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "model": {
+    "repo": "convaiinnovations/laya",
+    "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+    "laya_version": "0.3.20"
+  },
+  "input_sha256": "3d0105ee9c7eef52008faa1fe5bf3e1d7c76715f69708e6681232aff353ec95c",
+  "runtime": {
+    "laya": "0.3.20",
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "tokenizers": "0.23.2",
+    "numpy": "2.5.3"
+  },
+  "advisory": true,
+  "offline": true,
+  "load_ms": 359.74,
+  "rows": [
+    {
+      "id": "sanity-positive",
+      "label": "cancel=true,topic=billing",
+      "input_sha256": "bf0a894332d63654a875185e2543258ef1b1f383297989fc8362ec299a11993b",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 49,
+        "max_len": 2048,
+        "questions": {
+          "cancel": {
+            "state_tokens": 18,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 54,
+            "head_budget": 48,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "85a09a95252040d62b801167d8a3a2c1276a3a7a64cb82466b72d465275503b0"
+          },
+          "topic": {
+            "state_tokens": 18,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              10,
+              6,
+              4
+            ],
+            "sequence_tokens": 55,
+            "head_budget": 49,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "02c52e1e1aed5e51205832f7102617d1edd081b6711399d3ee605fce7c5b49b6"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 299.002,
+      "device": "mps",
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "noul": 0.7946,
+            "confidence": 0.7946,
+            "answer_confidence": 0.7946,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "topic": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.9674,
+              "technical": 0.0166,
+              "other": 0.016
+            },
+            "confidence": 0.8488,
+            "answer_confidence": 0.9674,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 109,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "sanity-negative",
+      "label": "cancel=false,topic=technical",
+      "input_sha256": "34d35e36aec1b44fa68ee66891024b2cb07842f75bfd236ab0a9679351934420",
+      "audit": {
+        "complete": true,
+        "reasons": [],
+        "head_budget": 49,
+        "max_len": 2048,
+        "questions": {
+          "cancel": {
+            "state_tokens": 21,
+            "instruction_tokens": 14,
+            "option_tokens": [
+              9,
+              7
+            ],
+            "sequence_tokens": 57,
+            "head_budget": 48,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "86572c24aba2d512e2cbf52e0a85df8818b5cc923f9cf23ba740210681f2a73a"
+          },
+          "topic": {
+            "state_tokens": 21,
+            "instruction_tokens": 10,
+            "option_tokens": [
+              10,
+              6,
+              4
+            ],
+            "sequence_tokens": 58,
+            "head_budget": 49,
+            "complete": true,
+            "default_encoding_complete": true,
+            "sequence_sha256": "8105178d8a4f1e8b1f3cf7049f6db1880b6bf51eed85e38ea1aa1e8c95cdd3c3"
+          }
+        }
+      },
+      "status": "inferred",
+      "elapsed_ms": 47.958,
+      "device": "mps",
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "cancel": {
+            "type": "noul",
+            "noul": 0.2224,
+            "confidence": 0.7776,
+            "answer_confidence": 0.7776,
+            "action": {
+              "act_probability": 1.0
+            }
+          },
+          "topic": {
+            "type": "choice",
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0.0247,
+              "technical": 0.9424,
+              "other": 0.0329
+            },
+            "confidence": 0.7636,
+            "answer_confidence": 0.9424,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 115,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "id": "unchanged-style-rubrics",
+      "target": "tests/perch-style/a.bend::solve",
+      "input_sha256": "51efea102cadec9827dcf2267f8cadb0a4138e7ca4656712c9ba7078e2189a04",
+      "audit": {
+        "complete": false,
+        "reasons": [
+          "highly_memetic: option description exceeds Laya's fixed 48-token cap"
+        ],
+        "head_budget": 569,
+        "max_len": 2048,
+        "questions": {
+          "maximally_big_brain": {
+            "state_tokens": 200,
+            "instruction_tokens": 135,
+            "option_tokens": [
+              25,
+              24,
+              21,
+              41,
+              34
+            ],
+            "sequence_tokens": 489,
+            "head_budget": 301,
+            "complete": true,
+            "default_encoding_complete": false,
+            "sequence_sha256": "02f669d8c0481b8c07f6f4f2a09942f42a79674a691165f6f1a5a50aa23d883f"
+          },
+          "delightful_to_read": {
+            "state_tokens": 200,
+            "instruction_tokens": 223,
+            "option_tokens": [
+              27,
+              26,
+              24,
+              32,
+              37
+            ],
+            "sequence_tokens": 578,
+            "head_budget": 390,
+            "complete": true,
+            "default_encoding_complete": false,
+            "sequence_sha256": "63a52f769c0c32479d6e8cbd084d0efad40c57e8b0df4033188f8678bbfb95c9"
+          },
+          "highly_memetic": {
+            "state_tokens": 200,
+            "instruction_tokens": 352,
+            "option_tokens": [
+              30,
+              25,
+              30,
+              56,
+              55
+            ],
+            "sequence_tokens": 757,
+            "head_budget": 569,
+            "complete": false,
+            "default_encoding_complete": false,
+            "sequence_sha256": "67c4404c42b8dace53bb4b01eb0b189df72d5d51233fc368bcb825192a669f16"
+          }
+        }
+      },
+      "status": "unsupported-input"
+    }
+  ],
+  "note": "Successful inference is not a lint pass. Expected labels remain outside model input. Budget overrides preserve complete wording; extended inputs are outside the checkpoint's default 512-token setting."
+}
