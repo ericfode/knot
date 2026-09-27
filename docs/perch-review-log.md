@@ -1,5 +1,27 @@
 # Perch review log
 
+## 2026-09-27 — first human anchor: nothing in the corpus is over-styled, and it is a little boring
+
+The user tagged 18 of 28 sampled declarations "fine but generic", none
+"want more", none "over-styled", then said none of it was remotely too much,
+the edge is much further out, and all of it was a little boring to read.
+[Export](perch-calibration/style-v7-2026-09-27/human-anchors.json).
+
+Judgment: **human-adjudicated calibration finding.** The negative controls the
+rubric work assumed (decoration, symbols, renaming, extra layers) are far inside
+the user's tolerance, so no existing declaration can serve as an over-styled
+control. The model's Delight passes, level 3 on nearly every declaration in
+every figure review, disagree with the user's "boring"; the memetic axis
+failing broadly agrees with him. No threshold, sheet or manifest changed.
+
+Change: a [ladder](style-campaign/ladder/README.md) of five compiled treatments
+of the time-slicing figure, from tightened layout to deliberately past the
+edge, added to the anchor page for the user to tag. Model review of the rungs
+is deferred until his verdicts are recorded, so the comparison is not primed.
+Prevention: collect the human's edge before designing negative controls, and
+treat a broadly passing axis with the same suspicion as a broadly failing one.
+Measured avoidable rework: unknown.
+
 ## 2026-09-27 — first version 7 figure reviews: figures move Payoff, not level-3 identity
 
 Four figure reviews ran once each under rubric version 7 with the pattern sheet

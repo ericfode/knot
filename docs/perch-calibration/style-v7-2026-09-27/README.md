@@ -76,12 +76,25 @@ two figures that have them: 7 of 20 ratings meet in owned-time-slicing, 14 of
 ## Human anchors
 
 The user records taste anchors in a private page,
-<https://claude.ai/artifact/PFwdEppca7TSeUCpPCx1YY>: 28 real declarations, each
-tagged want-more, generic or over-styled with a reason, plus three free-text
-prompts. Answers live in that artifact's database (collections `anchors`,
-`notes`, `custom`) and are read back with the Artifact data tool, never
-retyped. Record them here as a dated JSON export before the next rubric or
-sheet change; until then this section is the only pointer.
+<https://claude.ai/artifact/PFwdEppca7TSeUCpPCx1YY>. Answers live in that
+artifact's database (collections `anchors`, `notes`, `custom`) and are read
+back with the Artifact data tool, never retyped.
+
+First reading, 2026-09-27, exported to [human-anchors.json](human-anchors.json):
+18 of 28 sampled declarations tagged **fine but generic**, none want-more, none
+over-styled, no reasons. In chat: none of it was remotely too much, the edge is
+much further out, and all of it was a little boring to read. Two consequences:
+
+- The negative controls assumed so far (decoration, symbols, renaming, extra
+  layers) sit far inside the user's tolerance. "Over-styled" has no instance in
+  the corpus and must be constructed.
+- The model's Delight passes (level 3 on nearly every declaration in every
+  figure) disagree with the user's reading. The memetic axis failing broadly
+  agrees with it.
+
+[The ladder](../../style-campaign/ladder/README.md) supplies five compiled
+treatments of the time-slicing figure, each further out, for the user to tag.
+Model review of the rungs waits until those verdicts are recorded.
 
 ## Pre-registered expectations
 
