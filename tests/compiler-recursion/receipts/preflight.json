@@ -1,0 +1,2798 @@
+{
+  "schema": 1,
+  "command": "style-preflight",
+  "mode": "targets",
+  "provider_requests": 0,
+  "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+  "rubric_version": 8,
+  "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+  "task": {
+    "origin": "task-file",
+    "path": "tests/compiler-recursion/SPEC.md",
+    "sha256": "f5f1a0b64c2be4b0fe046e36c2ae6658a9a5f4a96ff2b8ee819770e4a9f1061f",
+    "bytes": 3455,
+    "available": true,
+    "reason": null
+  },
+  "summary": {
+    "units": 174,
+    "files": 25,
+    "unranked_files": 0,
+    "empty_files": 0,
+    "truncated_units": 9,
+    "truncated_by_limit": {
+      "caller-or-byte-limit": 1,
+      "context-file-limit": 3,
+      "context-helper-limit": 5
+    },
+    "supporting_role_impossible": 9,
+    "role_gap_units_by_reason": {
+      "context-file-limit": 3,
+      "context-helper-limit": 5,
+      "truncated-context": 9
+    },
+    "max_state_bytes": 34130,
+    "composition_available": false,
+    "composition_reasons": [
+      "composition_byte_limit"
+    ]
+  },
+  "structural_blockers": 10,
+  "inventory": null,
+  "composition": {
+    "required": "always",
+    "available": false,
+    "reasons": [
+      "composition_byte_limit"
+    ],
+    "selected_files": [
+      "src/check.bend",
+      "src/patterns.bend",
+      "src/recursion-LAWS.bend",
+      "src/recursion-PROOF.bend",
+      "src/scope.bend",
+      "tests/compiler-fields/bounds.bend",
+      "tests/compiler-recursion/fixtures/add.bend",
+      "tests/compiler-recursion/fixtures/after-let.bend",
+      "tests/compiler-recursion/fixtures/computed.bend",
+      "tests/compiler-recursion/fixtures/deep-input.bend",
+      "tests/compiler-recursion/fixtures/deep.bend",
+      "tests/compiler-recursion/fixtures/direct.bend",
+      "tests/compiler-recursion/fixtures/even.bend",
+      "tests/compiler-recursion/fixtures/first-parameter.bend",
+      "tests/compiler-recursion/fixtures/length.bend",
+      "tests/compiler-recursion/fixtures/mirror.bend",
+      "tests/compiler-recursion/fixtures/mutual.bend",
+      "tests/compiler-recursion/fixtures/ordered-calls.bend",
+      "tests/compiler-recursion/fixtures/other-parameter.bend",
+      "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+      "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+      "tests/compiler-recursion/fixtures/same-parameter.bend",
+      "tests/compiler-recursion/fixtures/second-descent.bend",
+      "tests/compiler-recursion/fixtures/shadow-field.bend",
+      "tests/compiler-recursion/fixtures/shadow-let.bend"
+    ],
+    "context_files": 30,
+    "source_bytes": 76328,
+    "byte_limit": 48000,
+    "unresolved_by_reason": {},
+    "unresolved": []
+  },
+  "file_groups": null,
+  "units": [
+    {
+      "target": "src/scope.bend::Scope",
+      "kind": "bend_datatype",
+      "line": 5,
+      "state_bytes": 5473,
+      "truncated": true,
+      "limit_reasons": [
+        "context-file-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/scope.bend",
+          "name": "C.Binding",
+          "reason": "context-file-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/scope.bend::contains",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 6148,
+      "truncated": true,
+      "limit_reasons": [],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::descendants",
+      "kind": "bend_definition",
+      "line": 14,
+      "state_bytes": 6888,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::descends",
+      "kind": "bend_definition",
+      "line": 18,
+      "state_bytes": 6743,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::sequential",
+      "kind": "bend_definition",
+      "line": 25,
+      "state_bytes": 10361,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::alternatives",
+      "kind": "bend_definition",
+      "line": 32,
+      "state_bytes": 6709,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::remove",
+      "kind": "bend_definition",
+      "line": 37,
+      "state_bytes": 6635,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::find",
+      "kind": "bend_definition",
+      "line": 43,
+      "state_bytes": 10114,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::lookup",
+      "kind": "bend_definition",
+      "line": 51,
+      "state_bytes": 10780,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::occurrence",
+      "kind": "bend_definition",
+      "line": 55,
+      "state_bytes": 10784,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::reference",
+      "kind": "bend_definition",
+      "line": 63,
+      "state_bytes": 10785,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::live_scope",
+      "kind": "bend_definition",
+      "line": 68,
+      "state_bytes": 6514,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::extend",
+      "kind": "bend_definition",
+      "line": 72,
+      "state_bytes": 6504,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::set_known",
+      "kind": "bend_definition",
+      "line": 77,
+      "state_bytes": 8764,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::refine",
+      "kind": "bend_definition",
+      "line": 85,
+      "state_bytes": 8786,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::after",
+      "kind": "bend_definition",
+      "line": 89,
+      "state_bytes": 6682,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::levels",
+      "kind": "bend_definition",
+      "line": 95,
+      "state_bytes": 6735,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::find_level",
+      "kind": "bend_definition",
+      "line": 100,
+      "state_bytes": 9647,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::replace",
+      "kind": "bend_definition",
+      "line": 108,
+      "state_bytes": 8503,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::remove_fields",
+      "kind": "bend_definition",
+      "line": 111,
+      "state_bytes": 8230,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::branch",
+      "kind": "bend_definition",
+      "line": 116,
+      "state_bytes": 9221,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::parameters",
+      "kind": "bend_definition",
+      "line": 120,
+      "state_bytes": 6963,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::matchable",
+      "kind": "bend_definition",
+      "line": 126,
+      "state_bytes": 11001,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/scope.bend::scrutinee",
+      "kind": "bend_definition",
+      "line": 134,
+      "state_bytes": 12568,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::Fields",
+      "kind": "bend_datatype",
+      "line": 7,
+      "state_bytes": 6790,
+      "truncated": true,
+      "limit_reasons": [
+        "context-file-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/patterns.bend",
+          "name": "E.Scope",
+          "reason": "context-file-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "C.Binding",
+          "reason": "context-file-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "C.Term",
+          "reason": "context-file-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/patterns.bend::quantity",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 7488,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::add",
+      "kind": "bend_definition",
+      "line": 14,
+      "state_bytes": 11481,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::binder",
+      "kind": "bend_definition",
+      "line": 21,
+      "state_bytes": 11525,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::prepend",
+      "kind": "bend_definition",
+      "line": 29,
+      "state_bytes": 7745,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::fields",
+      "kind": "bend_definition",
+      "line": 33,
+      "state_bytes": 17897,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::value",
+      "kind": "bend_definition",
+      "line": 47,
+      "state_bytes": 7069,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::finish",
+      "kind": "bend_definition",
+      "line": 52,
+      "state_bytes": 11577,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::open_fields",
+      "kind": "bend_definition",
+      "line": 60,
+      "state_bytes": 22480,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/patterns.bend::branch",
+      "kind": "bend_definition",
+      "line": 65,
+      "state_bytes": 24116,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::Mode",
+      "kind": "bend_datatype",
+      "line": 8,
+      "state_bytes": 9913,
+      "truncated": true,
+      "limit_reasons": [
+        "context-file-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/check.bend",
+          "name": "C.Term",
+          "reason": "context-file-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "C.Parameter",
+          "reason": "context-file-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "S.Token",
+          "reason": "context-file-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "S.Node",
+          "reason": "context-file-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/check.bend::expected",
+      "kind": "bend_definition",
+      "line": 15,
+      "state_bytes": 15709,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::enum_at",
+      "kind": "bend_definition",
+      "line": 21,
+      "state_bytes": 11060,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::annotation_id",
+      "kind": "bend_definition",
+      "line": 27,
+      "state_bytes": 6846,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::annotation",
+      "kind": "bend_definition",
+      "line": 31,
+      "state_bytes": 17073,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::constant",
+      "kind": "bend_definition",
+      "line": 37,
+      "state_bytes": 11134,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::constructor_result",
+      "kind": "bend_definition",
+      "line": 43,
+      "state_bytes": 12257,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::constructor",
+      "kind": "bend_definition",
+      "line": 51,
+      "state_bytes": 18522,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::variable",
+      "kind": "bend_definition",
+      "line": 58,
+      "state_bytes": 16880,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::bound",
+      "kind": "bend_definition",
+      "line": 64,
+      "state_bytes": 8769,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::callable",
+      "kind": "bend_definition",
+      "line": 70,
+      "state_bytes": 16769,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::call_result",
+      "kind": "bend_definition",
+      "line": 76,
+      "state_bytes": 12230,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::prepend_argument",
+      "kind": "bend_definition",
+      "line": 83,
+      "state_bytes": 17109,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::let_result",
+      "kind": "bend_definition",
+      "line": 89,
+      "state_bytes": 17234,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::pattern_arity",
+      "kind": "bend_definition",
+      "line": 95,
+      "state_bytes": 11086,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::pattern",
+      "kind": "bend_definition",
+      "line": 98,
+      "state_bytes": 21331,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::pattern_id",
+      "kind": "bend_definition",
+      "line": 108,
+      "state_bytes": 11790,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::complete_arms",
+      "kind": "bend_definition",
+      "line": 114,
+      "state_bytes": 10836,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::patterns",
+      "kind": "bend_definition",
+      "line": 119,
+      "state_bytes": 19476,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::prepend_arm",
+      "kind": "bend_definition",
+      "line": 128,
+      "state_bytes": 16649,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::case_result",
+      "kind": "bend_definition",
+      "line": 134,
+      "state_bytes": 13094,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::call_body",
+      "kind": "bend_definition",
+      "line": 141,
+      "state_bytes": 18589,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::binding_body",
+      "kind": "bend_definition",
+      "line": 147,
+      "state_bytes": 18560,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::match_body",
+      "kind": "bend_definition",
+      "line": 153,
+      "state_bytes": 27173,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::arm_body",
+      "kind": "bend_definition",
+      "line": 161,
+      "state_bytes": 12372,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::arm_scope",
+      "kind": "bend_definition",
+      "line": 165,
+      "state_bytes": 12849,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::rebuilt",
+      "kind": "bend_definition",
+      "line": 169,
+      "state_bytes": 14343,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::run",
+      "kind": "bend_definition",
+      "line": 174,
+      "state_bytes": 33949,
+      "truncated": true,
+      "limit_reasons": [
+        "context-helper-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/catalog.bend",
+          "name": "definition_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constant",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constructor_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "S.text",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "bound",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "call_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/core.bend",
+          "name": "S.at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.TypeRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_type",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "annotation_id",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "enum_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.quantity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.extend",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.sequential",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "matchable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "patterns",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "case_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "pattern_arity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "C.unsupported",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "open_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.alternatives",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "P.value",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/core.bend",
+          "name": "Constructor",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "S.text",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "occurrence",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "C.Constructor",
+          "reason": "context-helper-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/check.bend::checked_function",
+      "kind": "bend_definition",
+      "line": 230,
+      "state_bytes": 7420,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::function_body",
+      "kind": "bend_definition",
+      "line": 234,
+      "state_bytes": 33816,
+      "truncated": true,
+      "limit_reasons": [
+        "context-helper-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/core.bend",
+          "name": "Constructor",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "find",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.reference",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_next",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_tag",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "type_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "definition_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constant",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constructor_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "S.text",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "bound",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "call_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/core.bend",
+          "name": "S.at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.TypeRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_type",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "annotation_id",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "enum_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.quantity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.extend",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.sequential",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "matchable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "patterns",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "case_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "pattern_arity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "C.unsupported",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "open_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.alternatives",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "P.value",
+          "reason": "context-helper-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/check.bend::functions",
+      "kind": "bend_definition",
+      "line": 239,
+      "state_bytes": 33563,
+      "truncated": true,
+      "limit_reasons": [
+        "context-helper-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/check.bend",
+          "name": "rebuilt",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "levels",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "find",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.reference",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_next",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_tag",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "type_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "definition_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constant",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constructor_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "S.text",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "bound",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "call_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/core.bend",
+          "name": "S.at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.TypeRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_type",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "annotation_id",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "enum_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.quantity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.extend",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.sequential",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "matchable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "patterns",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "case_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "pattern_arity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "C.unsupported",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "open_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.alternatives",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove_fields",
+          "reason": "context-helper-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/check.bend::enum_constructors",
+      "kind": "bend_definition",
+      "line": 253,
+      "state_bytes": 9986,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::enum_profile",
+      "kind": "bend_definition",
+      "line": 260,
+      "state_bytes": 10384,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/check.bend::resolved",
+      "kind": "bend_definition",
+      "line": 266,
+      "state_bytes": 33027,
+      "truncated": true,
+      "limit_reasons": [
+        "context-helper-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/check.bend",
+          "name": "prepend_arm",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.find_level",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "rebuilt",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "levels",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "find",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.reference",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_next",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "constructor_tag",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "type_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "definition_fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constant",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constructor_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "S.text",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "bound",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "call_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/core.bend",
+          "name": "S.at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.TypeRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_type",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "annotation_id",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "enum_at",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.quantity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.extend",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.sequential",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.remove",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "matchable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "patterns",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "case_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "pattern_arity",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "C.unsupported",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "E.find_level",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/patterns.bend",
+          "name": "open_fields",
+          "reason": "context-helper-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/check.bend::check",
+      "kind": "bend_definition",
+      "line": 271,
+      "state_bytes": 34130,
+      "truncated": true,
+      "limit_reasons": [
+        "context-helper-limit"
+      ],
+      "diagnostics_available": false,
+      "supporting_role_possible": false,
+      "role_context_gaps": [
+        {
+          "path": "src/check.bend",
+          "name": "variable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "expected",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.ConstructorRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_constructor",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.field_signature",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "constructor",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.FunctionRef",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "G.find_function",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "callable",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "call_body",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "annotation",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.live_scope",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "binding_body",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "let_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.scrutinee",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "match_body",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "prepend_argument",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "pattern",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "arm_body",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "P.Fields",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "P.branch",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "arm_scope",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "prepend_arm",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "E.find_level",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/check.bend",
+          "name": "rebuilt",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "levels",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "field_kind",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/scope.bend",
+          "name": "find",
+          "reason": "context-helper-limit"
+        }
+      ]
+    },
+    {
+      "target": "src/recursion-LAWS.bend::root_fields_are_smaller",
+      "kind": "bend_law",
+      "line": 10,
+      "state_bytes": 7643,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::descendant_fields_are_smaller",
+      "kind": "bend_law",
+      "line": 15,
+      "state_bytes": 7546,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::unrelated_fields_stay_unmarked",
+      "kind": "bend_law",
+      "line": 19,
+      "state_bytes": 7431,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::marked_reference_descends",
+      "kind": "bend_law",
+      "line": 23,
+      "state_bytes": 7421,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::root_reference_does_not_descend",
+      "kind": "bend_law",
+      "line": 29,
+      "state_bytes": 7434,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::rebuilt_argument_does_not_descend",
+      "kind": "bend_law",
+      "line": 35,
+      "state_bytes": 7527,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::computed_argument_does_not_descend",
+      "kind": "bend_law",
+      "line": 44,
+      "state_bytes": 7492,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::empty_call_does_not_descend",
+      "kind": "bend_law",
+      "line": 52,
+      "state_bytes": 7353,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::later_argument_cannot_establish_descent",
+      "kind": "bend_law",
+      "line": 56,
+      "state_bytes": 7360,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::local_binding_preserves_descent",
+      "kind": "bend_law",
+      "line": 61,
+      "state_bytes": 7512,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::opening_root_records_descent",
+      "kind": "bend_law",
+      "line": 73,
+      "state_bytes": 11787,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::opening_descendant_records_descent",
+      "kind": "bend_law",
+      "line": 81,
+      "state_bytes": 11799,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::descending_self_call_is_checked",
+      "kind": "bend_law",
+      "line": 89,
+      "state_bytes": 12469,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::nondecreasing_self_call_is_unsupported",
+      "kind": "bend_law",
+      "line": 97,
+      "state_bytes": 12549,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::earlier_call_needs_no_descent",
+      "kind": "bend_law",
+      "line": 106,
+      "state_bytes": 12400,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-LAWS.bend::recursive_evaluation_exhaustion",
+      "kind": "bend_law",
+      "line": 115,
+      "state_bytes": 21028,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.root_fields_are_smaller",
+      "kind": "bend_law_fill",
+      "line": 7,
+      "state_bytes": 4437,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.descendant_fields_are_smaller",
+      "kind": "bend_law_fill",
+      "line": 8,
+      "state_bytes": 4344,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.unrelated_fields_stay_unmarked",
+      "kind": "bend_law_fill",
+      "line": 9,
+      "state_bytes": 4320,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.marked_reference_descends",
+      "kind": "bend_law_fill",
+      "line": 10,
+      "state_bytes": 4375,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.root_reference_does_not_descend",
+      "kind": "bend_law_fill",
+      "line": 11,
+      "state_bytes": 4400,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.rebuilt_argument_does_not_descend",
+      "kind": "bend_law_fill",
+      "line": 12,
+      "state_bytes": 4516,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.computed_argument_does_not_descend",
+      "kind": "bend_law_fill",
+      "line": 13,
+      "state_bytes": 4478,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.empty_call_does_not_descend",
+      "kind": "bend_law_fill",
+      "line": 14,
+      "state_bytes": 4300,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.later_argument_cannot_establish_descent",
+      "kind": "bend_law_fill",
+      "line": 15,
+      "state_bytes": 4419,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.local_binding_preserves_descent",
+      "kind": "bend_law_fill",
+      "line": 16,
+      "state_bytes": 4662,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.opening_root_records_descent",
+      "kind": "bend_law_fill",
+      "line": 17,
+      "state_bytes": 4651,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.opening_descendant_records_descent",
+      "kind": "bend_law_fill",
+      "line": 18,
+      "state_bytes": 4675,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.descending_self_call_is_checked",
+      "kind": "bend_law_fill",
+      "line": 19,
+      "state_bytes": 4627,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.nondecreasing_self_call_is_unsupported",
+      "kind": "bend_law_fill",
+      "line": 20,
+      "state_bytes": 4645,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.earlier_call_needs_no_descent",
+      "kind": "bend_law_fill",
+      "line": 21,
+      "state_bytes": 4626,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "src/recursion-PROOF.bend::L.recursive_evaluation_exhaustion",
+      "kind": "bend_law_fill",
+      "line": 24,
+      "state_bytes": 4602,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-fields/bounds.bend::show",
+      "kind": "bend_definition",
+      "line": 9,
+      "state_bytes": 9314,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-fields/bounds.bend::add",
+      "kind": "bend_definition",
+      "line": 15,
+      "state_bytes": 11635,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-fields/bounds.bend::text",
+      "kind": "bend_definition",
+      "line": 19,
+      "state_bytes": 6760,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-fields/bounds.bend::main",
+      "kind": "bend_definition",
+      "line": 24,
+      "state_bytes": 20082,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/add.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4254,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/add.bend::Results",
+      "kind": "bend_datatype",
+      "line": 4,
+      "state_bytes": 4330,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/add.bend::add",
+      "kind": "bend_definition",
+      "line": 6,
+      "state_bytes": 4536,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/add.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4534,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/after-let.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4251,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/after-let.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4252,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/after-let.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4250,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/computed.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4347,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/computed.bend::g",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4194,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/computed.bend::f",
+      "kind": "bend_definition",
+      "line": 6,
+      "state_bytes": 4347,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/computed.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4346,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep-input.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4727,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep-input.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4062,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep-input.bend::input",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4536,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep-input.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4534,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4706,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4188,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep.bend::input",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4521,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/deep.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4705,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/direct.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4202,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/direct.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4203,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/direct.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4203,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/even.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4454,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/even.bend::Flag",
+      "kind": "bend_datatype",
+      "line": 4,
+      "state_bytes": 4454,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/even.bend::Results",
+      "kind": "bend_datatype",
+      "line": 7,
+      "state_bytes": 4482,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/even.bend::even",
+      "kind": "bend_definition",
+      "line": 9,
+      "state_bytes": 4743,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/even.bend::main",
+      "kind": "bend_definition",
+      "line": 16,
+      "state_bytes": 4742,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/first-parameter.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4248,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/first-parameter.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4249,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/first-parameter.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4249,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4563,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::Flag",
+      "kind": "bend_datatype",
+      "line": 4,
+      "state_bytes": 4341,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::Chain",
+      "kind": "bend_datatype",
+      "line": 7,
+      "state_bytes": 4563,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::Results",
+      "kind": "bend_datatype",
+      "line": 10,
+      "state_bytes": 4542,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::length",
+      "kind": "bend_definition",
+      "line": 12,
+      "state_bytes": 4767,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/length.bend::main",
+      "kind": "bend_definition",
+      "line": 16,
+      "state_bytes": 4767,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mirror.bend::Flag",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4025,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mirror.bend::Tree",
+      "kind": "bend_datatype",
+      "line": 4,
+      "state_bytes": 4458,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mirror.bend::mirror",
+      "kind": "bend_definition",
+      "line": 7,
+      "state_bytes": 4459,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mirror.bend::main",
+      "kind": "bend_definition",
+      "line": 11,
+      "state_bytes": 4458,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mutual.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4339,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mutual.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4527,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mutual.bend::g",
+      "kind": "bend_definition",
+      "line": 6,
+      "state_bytes": 4322,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/mutual.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4338,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/ordered-calls.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4303,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/ordered-calls.bend::g",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4153,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/ordered-calls.bend::f",
+      "kind": "bend_definition",
+      "line": 6,
+      "state_bytes": 4303,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/ordered-calls.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4304,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/other-parameter.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4248,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/other-parameter.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4249,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/other-parameter.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4249,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4241,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4242,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4242,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-parent.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4220,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-parent.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4221,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/rebuilt-parent.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4221,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/same-parameter.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4161,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/same-parameter.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4162,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/same-parameter.bend::main",
+      "kind": "bend_definition",
+      "line": 6,
+      "state_bytes": 4162,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/second-descent.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4246,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/second-descent.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4247,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/second-descent.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4247,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-field.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4220,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-field.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4221,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-field.bend::main",
+      "kind": "bend_definition",
+      "line": 8,
+      "state_bytes": 4221,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-let.bend::Peano",
+      "kind": "bend_datatype",
+      "line": 1,
+      "state_bytes": 4244,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-let.bend::f",
+      "kind": "bend_definition",
+      "line": 4,
+      "state_bytes": 4245,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    },
+    {
+      "target": "tests/compiler-recursion/fixtures/shadow-let.bend::main",
+      "kind": "bend_definition",
+      "line": 10,
+      "state_bytes": 4243,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
+    }
+  ],
+  "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+}
