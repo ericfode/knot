@@ -77,3 +77,56 @@ python3 build.py summaries.json /tmp/page.html /tmp/mapping.json
 - **Shared structure.** Several renderings implement delete as writing an
   empty value, and some rebuild through a similar collapse step. Their
   surfaces are far apart, but their structures are not fully independent.
+
+## Round 1 answers (2026-09-27)
+
+[`round1-responses.json`](round1-responses.json) exports the raw database
+documents and decodes them with `mapping.json`. It covers four lineups and
+nine duels between opposite styles. The final free-text answers were not
+given.
+
+**Lineups.** A dash means the card was not rated.
+
+| Task | deadpan | algebra | mythic | baroque | golf | literate |
+|---|---|---|---|---|---|---|
+| bitpath | meh | **more, best** | meh | much, worst | much | much |
+| fuel | meh | **more** | meh | much | much | meh |
+| pipeline | meh | — | — | much, worst | much | **more** |
+| slots | meh | **more** | meh | much | much | much |
+
+**Duels.** The winner and the strength of the preference:
+
+| Duel | Task | Result |
+|---|---|---|
+| d1 | bitpath | deadpan over mythic (slight) |
+| d2 | bitpath | algebra ≫ baroque |
+| d3 | fuel | mythic ≫ baroque |
+| d4 | fuel | literate ≫ golf |
+| d5 | pipeline | algebra ≫ mythic |
+| d6 | pipeline | literate ≫ deadpan |
+| d7 | slots | algebra ≫ golf |
+| d8 | slots | baroque ≫ literate |
+| d9 | bitpath | deadpan ≫ mythic (repeat of d1 with sides swapped; same direction, stronger) |
+
+Readings. These are interpretations of one person's round, not a calibrated
+model:
+
+- Algebra won every duel it was in and was the "more" pick wherever rated. A
+  single idea that absorbs the cases, with its laws stated, is the anchor.
+- Invented vocabulary and rhythm (mythic) did not pull: it lost to deadpan
+  twice. It beat only the deliberately ornamental baroque. This directly
+  informs the v6 memetic axis, whose Contagious and Generative levels reward
+  exactly that kind of hook.
+- Compression pushed into obscurity (golf) and ornament (baroque) were
+  rejected wherever they faced anything else. Baroque's one win was over the
+  slots literate rendering.
+- Narration is context-dependent. The pipeline literate rendering poses a
+  puzzle and resolves it at the end; it won "more" and beat deadpan strongly.
+  Literate renderings without that shape were "too much", and slots literate
+  lost even to baroque. This bears on the Anticipation and Payoff axes: a
+  setup that pays off may be valued, while prose volume is not.
+
+Round 2 replaces the duels with single-factor ablations of the preferred
+renderings. It asks which part of algebra carries the preference, and whether
+the pipeline's puzzle setup and payoff, rather than prose volume, is what
+makes that literate rendering work.
