@@ -38,9 +38,14 @@ that work concrete. They propose exemplar development, imitation and transfer
 before codifying a style, with owned unfinished computation as the leading
 identity hypothesis.
 
-The next increment is a bounded comparison of actual expressive forms and a
-complete transfer contract. Establish concrete reading preferences before model
-ratings; preserve independent semantic gates and the current three style
+The [hill-climbing plan](../research/compiler-style/MEMETIC-HILLCLIMB.md) now
+specifies that comparison: competing directions, focused variants, reconstruction,
+transfer and owner-led propagation. Its proposed first epoch has at most nine
+substantive candidates across three rounds; it is not active and does not enlarge
+the existing pilot's attempt budget. The next increment prepares the frozen
+first-family packet, comparison cards and complete transfer contract, and
+reconciles the existing pilot evidence with its owner. Establish concrete reading
+preferences before model ratings; preserve independent semantic gates and the three style
 targets. The existing scoped pilot remains unresolved and the wider campaign
 queue stays held. A research note or evocative phrase does not resolve the
 foundation. Do not automatically resume field-layout/emitter implementation

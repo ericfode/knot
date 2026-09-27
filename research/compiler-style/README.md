@@ -22,3 +22,9 @@ exemplars, imitation and variation before codifying it. The
 [first reading specimen](MEMETIC-PRIMER.md) explores owned unfinished work using
 existing task, law and slot source. Both are design proposals; neither claims a
 new style pass or measured human preference.
+
+[The memetic hill-climbing plan](MEMETIC-HILLCLIMB.md) turns that research into
+a bounded search over expressive families: three initial directions, focused
+mutations, reconstruction and transfer, then owner-led propagation. Its
+[planning state](hillclimb/state.json) starts with zero candidates and distinguishes
+the proposed successor protocol from the unresolved existing pilot.
