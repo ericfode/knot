@@ -596,3 +596,21 @@ component's final disposition. Reserve `packages/symbols/` for that owner,
 retain its frozen contracts and rubric identity, and do not dispatch overlapping
 work. The broader coordinator queue stays on hold. The current hash comparison
 and authorization snapshot are in the receipt; no iterative success is claimed.
+
+## 2026-09-27 — Symbols balanced identity: policy transition and adverse-input review
+
+The [owner handoff](style-campaign/symbols-identity-v3-2026-09-27.json) verifies
+commit `a5345e8`, the selected source and all 23 current v3 source/context
+identities. The coordinator recomputed the saved style assessments without new
+provider requests. Owner proof, backend, mutation and performance receipts were
+inspected, not rerun. Original independent Bend inputs remain unchanged.
+
+After 24 candidates, the balanced prefix trie gives `Trie.get` a current memetic
+pass and Anticipation/Payoff masses of 0.64/0.79. Galaxy-brain mass remains zero;
+complete v3 coverage is 0/23. Its earlier v2 three-axis pass remains historical.
+The owner accepted common-prefix runtime ratios of 0.244–0.568 alongside a
+1.54–1.61x cost for 2,048 sorted single-character names. The earlier unbalanced
+trie was rejected after adversarial ordering exposed a sibling-chain regression.
+Prevention: retain adverse prefix/order families and structural invariant
+controls before accepting a pleasing representation. This is an unpublished
+implementation improvement, not completion of the broader style pilot.
