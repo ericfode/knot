@@ -5,6 +5,12 @@ The target is a distinctive code aesthetic: **Maximally big brain**,
 parsed declaration is assessed against all three; an alternative implementation
 is not required. Rankings are a secondary view of those independent ratings.
 
+The [research draft on ideas generally](memetic-ideas-research-2026-09-26.md)
+compares existing memetic, stickiness, diffusion and shared-practice frameworks.
+Its proposed levels distinguish catchy, sticky, generative and cultural effects.
+This draft awaits calibration; it does not replace the version-2 rubric or
+change the meaning of existing receipts.
+
 | Axis | Desired experience |
 | --- | --- |
 | Maximally big brain | A small expressive algebra or representation absorbs cases and exposes invariants. Each abstraction explains more than it adds. |
