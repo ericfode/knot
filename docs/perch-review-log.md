@@ -565,3 +565,30 @@ that policy, collect human preferences on fresh whole-family and helper
 examples; do not tune against these two submissions. All targets and rubrics
 remain unchanged. [Protocol, sources, per-declaration distributions and
 dispositions](../research/life-blueberry/README.md) preserve the experiment.
+
+## 2026-09-26 Pacific — ten-round Life continuation
+
+The same two authors received their own feedback and up to ten revisions under
+unchanged rules and independent assertions. The exposed arm first met all style
+targets in round 6 (4/4 declarations); the unexposed arm exhausted ten rounds
+with 4/5 meeting every target. Both selected sources pass behavior and source
+semantic checks; the final law packet completes eight checks without findings.
+[The full history](../research/life-blueberry/iteration/README.md) retains every
+snapshot, failed compiler attempt, hypothesis, distribution and disposition.
+
+This does not establish a causal inducer effect or a confirmed judge defect.
+The exposed selection's narrowest target mass is 0.61; the unexposed selection's
+remaining memetic judgment is 0.56. Its unchanged row.duplex source received 0.59
+in round 7: reconstructed request states differ only in the caller's line/end
+line positions. That small movement did not change the uncertain category.
+Do not attribute it to improved reading or to line positions rather than model
+variation. Fresh human judgments and context/reuse calibration would be more
+informative than more unchanged requests. No rubric or threshold was adjusted.
+
+An HTTP 402 interrupted round 9 before any provider response. The frozen round
+runner then parsed absent JSON and recorded `substring not found`, obscuring
+the billing cause in its summary. Retained stderr identified the failure; calls
+stopped until the user replenished credits. The recovery kept the same source
+and deterministic receipt and wrote new review receipts. Future harnesses should
+classify non-success exits and provider failures before parsing JSON, preserving
+the original diagnostic and partial usage. The frozen runner was not modified.
