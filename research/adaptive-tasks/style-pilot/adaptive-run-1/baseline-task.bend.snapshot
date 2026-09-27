@@ -51,8 +51,12 @@ def step(t: Task) -> Run:
 # Delivered is absorbing. Zero fuel preserves the whole residual state.
 def run(fuel: Nat, state: Run) -> Run:
   match fuel state:
-    case 1n+n Checkpoint{task}: run(n,step(task))
-    case _ _: state
+    case 0n _:
+      state
+    case 1n+n Checkpoint{task}:
+      run(n,step(task))
+    case 1n+n Delivered{dest,payload}:
+      Delivered{dest,payload}
 
 def slices(count: Nat, +quantum: Nat, state: Run) -> Run:
   match count:

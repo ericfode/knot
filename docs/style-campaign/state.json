@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "started_local_date": "2026-09-26",
-  "status": "running",
-  "coordinator_thread_id": "01a0deae-38e5-7120-ad10-77ee5b1e7f0a",
+  "status": "on_hold_after_scoped_pilot",
+  "coordinator_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
   "objective": "Bring every applicable Bend declaration to all three style targets while preserving deterministic acceptance and explicit historical exceptions.",
   "plan": "docs/STYLE-CAMPAIGN.md",
   "baseline": "docs/perch-calibration/style-project-2026-09-26.json.gz",
@@ -13,7 +13,38 @@
     "id": "improve-knot-three-axis-style",
     "kind": "heartbeat",
     "status": "ACTIVE",
-    "interval_minutes": 15
+    "interval_minutes": 15,
+    "prompt_update": {
+      "status": "update_acknowledged_by_app",
+      "recorded_at": "2026-09-27T02:15:30.747272+00:00",
+      "saved_prompt_changed": true,
+      "target_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
+      "receipt": "docs/perch-calibration/takeover-2026-09-27/automation-transfer.json",
+      "prior_blocked_state": {
+        "recorded_at": "2026-09-27T01:58:32.450487+00:00",
+        "status": "blocked_by_session_approval_policy",
+        "tool": "mcp__codex_app__automation_update",
+        "result": "MCP tool call requires approval, but approval policy is never",
+        "requested_change": "Preserve schedule and notification intent; apply GPT-6 Astra max and local scoped-pilot-first user override.",
+        "saved_prompt_changed": false,
+        "current_authority": [
+          "AGENTS.md",
+          "docs/STYLE-CAMPAIGN.md",
+          "docs/style-campaign/scoped-pilot.md",
+          "docs/style-campaign/state.json"
+        ],
+        "next_action": "When app updates are permitted, update the existing automation; do not duplicate it or dispatch the broader queue.",
+        "prior_attempts": [
+          {
+            "recorded_at": "2026-09-27T01:53:41.165857+00:00",
+            "status": "blocked_by_session_approval_policy",
+            "result": "MCP tool call requires approval, but approval policy is never"
+          }
+        ],
+        "last_trigger": "User access-policy change"
+      }
+    },
+    "target_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9"
   },
   "limits": {
     "active_package_or_research_batches": 2,
@@ -368,6 +399,39 @@
       },
       "coordinator_verification": "docs/style-campaign/source-search-1-verification.json",
       "latest_observation": "Terminal states now ignore fuel explicitly. Fixed gates passed; search delight crosses the provisional target, compression remains uncertain and all five memetic results below. Initial packet review missed a false foreign-ID claim; original and corrected evidence retained."
+    },
+    {
+      "id": "adaptive-run-feasibility-1",
+      "wave": "scoped feasibility pilot",
+      "execution": "takeover_worktree",
+      "owner_title": "StyleGuide",
+      "owner_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
+      "original_owner_thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
+      "paths": [
+        "research/adaptive-tasks/task.bend",
+        "research/adaptive-tasks/style-pilot/adaptive-run-1/"
+      ],
+      "status": "rejected",
+      "focus": "One fueled continuation case; complementary full-owned-state identity.",
+      "report": "research/adaptive-tasks/style-pilot/adaptive-run-1/README.md",
+      "disposition": "research/adaptive-tasks/style-pilot/adaptive-run-1/disposition.json",
+      "model": "gpt-6-astra",
+      "reasoning": "max",
+      "candidate_attempts": 1,
+      "compiler_diagnostic_retries": 0,
+      "first_shot_deterministic_success": true,
+      "all_style_targets_met": false,
+      "pilot_success": false,
+      "commits": [],
+      "provider_requests": 5,
+      "provider_responses": 3,
+      "style_after": {
+        "maximally_big_brain": 0.82,
+        "delightful_to_read": 0.81,
+        "highly_memetic": 0.52
+      },
+      "latest_observation": "Perch access recovered. Exact first successful style response is 0.82/0.81/0.52; memetic remains uncertain. Four source and eight law checks completed. Retain the frozen experiment, reject all-three success, hold wider queue.",
+      "outcome": "rejected_all_three_feasibility"
     }
   ],
   "queued_components": [
@@ -411,21 +475,30 @@
       "all_style_targets_met": false
     }
   ],
-  "rejected_candidates": [],
+  "rejected_candidates": [
+    {
+      "batch": "adaptive-run-feasibility-1",
+      "status": "rejected_all_three_feasibility",
+      "reason": "Memetic target mass 0.52 is uncertain, below 0.60 acceptance threshold; all-three pilot criterion is unmet.",
+      "candidate_retained_as_experiment": true,
+      "commit": null,
+      "report": "research/adaptive-tasks/style-pilot/adaptive-run-1/README.md"
+    }
+  ],
   "calibration_questions": [
     "Does the memetic judge penalize tiny exact helpers or canonical proofs irrespective of their role in the shared grammar?",
     "Can a substantive representation or composition improvement move all three axes without decorative naming or extra layers?",
     "Vec planner delight declined after grouping continuation cases, while Source search delight improved after preserving named terminal states. Which case grammars produce a real reading benefit, and how does helper context affect neighbour ratings?"
   ],
   "completion": null,
-  "updated_at": "2026-09-27T01:13:47.427488+00:00",
+  "updated_at": "2026-09-27T02:15:30.747272+00:00",
   "inventory_snapshot": {
-    "at": "2026-09-27T01:10:13.447Z",
-    "discovered_files": 286,
-    "parsed_units": 2231,
-    "matches": 1190,
-    "stale": 697,
-    "unrated": 344,
+    "at": "2026-09-27T02:08:22.423Z",
+    "discovered_files": 295,
+    "parsed_units": 2337,
+    "matches": 1164,
+    "stale": 723,
+    "unrated": 450,
     "unranked_files": 16,
     "empty_files": 1,
     "no_longer_parsed_targets": 0,
@@ -456,26 +529,322 @@
         "docs/style-campaign/source-search-1-verification.json",
         "docs/style-campaign/compiler-family-1-verification.json"
       ]
+    },
+    "local_pilot_evidence_review": {
+      "at": "2026-09-27T01:52:00.688936+00:00",
+      "receipt": "research/adaptive-tasks/style-pilot/adaptive-run-1/disposition.json",
+      "provider_requests": 0,
+      "frozen_files_verified": 19,
+      "candidate_and_driver_receipts_current": true
+    },
+    "takeover": {
+      "at": "2026-09-27T02:15:30.747272+00:00",
+      "tooling": "28 offline tests and eight-law wiring pass",
+      "live_requests": 4,
+      "live_responses": 4,
+      "pilot_style_new_requests": 0,
+      "candidate_and_frozen_identities_verified": true,
+      "deterministic_pilot_gates_rerun": false,
+      "report": "docs/perch-calibration/takeover-2026-09-27/configuration.json"
     }
   },
-  "progress_report": "docs/style-campaign/growth-search-bindings.md",
+  "progress_report": "docs/style-campaign/scoped-pilot.md",
   "remaining_style_debt": [
     "int-map-paths-1: all four reviewed memetic axes remain below target",
     "output-builder-grammar-1: all 17 memetic axes below or uncertain; other per-axis deficits retained in owner report",
     "vec-growth-1: all 12 memetic axes below or uncertain; planner delight now uncertain; other per-axis deficits retained in owner report",
     "source-search-1: all five memetic targets below; search compression uncertain and neighbouring declines retained",
-    "compiler-family-1: all three family memetic targets below; 18 observer units have additional below/uncertain targets recorded separately"
+    "compiler-family-1: all three family memetic targets below; 18 observer units have additional below/uncertain targets recorded separately",
+    "adaptive-run-feasibility-1: compression 0.82 and delight 0.81 meet target; memetic 0.52 uncertain; rejected as all-three demonstration."
   ],
   "last_heartbeat": {
-    "scheduled_at": "2026-09-27T00:53:08.538Z",
-    "recorded_at": "2026-09-27T01:13:47.427488+00:00",
-    "new_batches_dispatched": 1,
+    "scheduled_at": "2026-09-27T01:16:17.067Z",
+    "recorded_at": "2026-09-27T01:21:13.371766+00:00",
+    "new_batches_dispatched": 0,
     "active_package_or_research_batches": 0,
-    "compiler_batch": "accepted with style debt in 9680908; owner continues separate runtime checkpoint",
+    "compiler_batch": "prior scope family accepted; independent owner runtime work continues",
     "inventory_provider_requests": 0,
-    "new_accepted_results": 3,
-    "notification": "Vec, Source and scope first candidates accepted with fixed gates; report terminal-state code example, mixed style outcomes and the law-packet review miss.",
-    "next_ready_component": "packages/symbols",
-    "next_dispatch": "next heartbeat; this wake already dispatched Source"
-  }
+    "new_accepted_results": 0,
+    "notification": "User requested max-reasoning scoped pilot in a new worktree chat. App creation is blocked because approval is required while policy is never; no new chat exists.",
+    "next_action": "Local pilot evidence and blockers are recorded in scoped_pilot; broader queue remains on hold.",
+    "superseded_by_user_followup": true
+  },
+  "repair_model": {
+    "id": "gpt-6-astra",
+    "reasoning": "max",
+    "basis": "User requested max effort for the campaign and one scoped feasibility pilot; latest instruction authorizes doing it here after blocked chat creation. Supersedes earlier high setting."
+  },
+  "dispatch_policy": {
+    "mode": "scoped_feasibility_pilot_first",
+    "resume_broader_queue_after": "Pilot meets all three unchanged targets and independent gates, followed by coordinator review; unavailable evidence keeps the queue on hold.",
+    "preserve_queue": true,
+    "new_package_batches_on_hold": true,
+    "reason": "Frozen one-candidate feasibility experiment is reviewed and rejected against all-three criterion; no unchanged score retries or wider dispatch."
+  },
+  "scoped_pilot": {
+    "id": "adaptive-run-feasibility-1",
+    "status": "rejected_all_three_feasibility",
+    "plan": "docs/style-campaign/scoped-pilot.md",
+    "owner": "Takeover coordinator for the user-authorized one-declaration experiment; Compiler Planning retains subtree ownership",
+    "original_owner_thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
+    "target": "research/adaptive-tasks/task.bend::run",
+    "maximum_changed_declarations": 1,
+    "model": "gpt-6-astra",
+    "reasoning": "max",
+    "required_environment": "current coordinator checkout, per latest user instruction",
+    "requested_title": "Prove a scoped three-axis Bend style improvement",
+    "project_id": "719c1584-6f65-4e87-9a62-7bd922e198ee",
+    "thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
+    "worktree": "/Users/ericfode/.codex/worktrees/7e98/knot",
+    "dispatched": true,
+    "baseline_source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+    "baseline_target_mass": {
+      "maximally_big_brain": 0.84,
+      "delightful_to_read": 0.83,
+      "highly_memetic": 0.57
+    },
+    "baseline_context_truncated": false,
+    "success_requires": "Every changed/introduced declaration meets all three unchanged targets with sufficient current context and fixed independent gates passing.",
+    "creation_attempt": {
+      "tool": "mcp__codex_app__create_thread",
+      "environment": {
+        "type": "worktree"
+      },
+      "result": "MCP tool call requires approval, but approval policy is never",
+      "retry_condition": "Session permits app chat/worktree creation; do not bypass approval block.",
+      "recorded_at": "2026-09-27T01:21:13.371766+00:00",
+      "active_blocker": false,
+      "superseded_by": "User explicitly authorized current checkout; no new chat or worktree required."
+    },
+    "preparation_checkpoint": {
+      "status": "uncommitted_sandbox_block",
+      "owned_paths": [
+        "AGENTS.md",
+        "docs/STYLE-CAMPAIGN.md",
+        "docs/style-campaign/state.json",
+        "docs/style-campaign/inventory.json.gz",
+        "docs/style-campaign/scoped-pilot.md"
+      ],
+      "failed_action": "git add with explicit owned paths",
+      "error": "Unable to create .git/index.lock: Operation not permitted",
+      "retry_condition": "Git metadata writes permitted in this session; preserve other chats edits.",
+      "historical": true,
+      "superseded_by": "scoped_pilot.checkpoint"
+    },
+    "execution": "takeover_worktree",
+    "coordinator_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
+    "checkout": "/Users/ericfode/.codex/worktrees/7e98/knot",
+    "started_at": "2026-09-27T01:32:17.296111+00:00",
+    "latest_user_authorization": "Take over for Configure Perch for Knot; check Perch is working and configured correctly",
+    "report": "research/adaptive-tasks/style-pilot/adaptive-run-1/README.md",
+    "disposition": "research/adaptive-tasks/style-pilot/adaptive-run-1/disposition.json",
+    "source_verification": "research/adaptive-tasks/style-pilot/adaptive-run-1/source-verification.json",
+    "candidate_source_sha256": "03d0139685cd66110a70101b6d74f5f903ab6cdc545f5735ed243314003ffb81",
+    "candidate_attempts": 1,
+    "compiler_diagnostic_retries": 0,
+    "first_shot_deterministic_success": true,
+    "changed_declarations": [
+      "run"
+    ],
+    "introduced_declarations": [],
+    "all_style_targets_met": false,
+    "pilot_success": false,
+    "accepted": false,
+    "deterministic_gates": {
+      "status": "passed",
+      "proofs": 12,
+      "quantity_negatives": 2,
+      "independent_fixture_records": 10,
+      "native_and_js_observations": 11,
+      "semantic_mutants": 5,
+      "full_state_and_step_count_comparisons": 42
+    },
+    "style": {
+      "status": "completed_attention",
+      "provider_requests": 3,
+      "provider_responses": 1,
+      "ranked_units": 1,
+      "after": {
+        "maximally_big_brain": {
+          "probability_at_target": 0.82,
+          "status": "meets_target",
+          "distribution": {
+            "score": 2.95,
+            "confidence": 0.71,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.02,
+              "2": 0.15,
+              "3": 0.67,
+              "4": 0.15
+            }
+          }
+        },
+        "delightful_to_read": {
+          "probability_at_target": 0.81,
+          "status": "meets_target",
+          "distribution": {
+            "score": 2.82,
+            "confidence": 0.69,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.06,
+              "2": 0.12,
+              "3": 0.72,
+              "4": 0.09
+            }
+          }
+        },
+        "highly_memetic": {
+          "probability_at_target": 0.52,
+          "status": "uncertain",
+          "distribution": {
+            "score": 2.45,
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.1,
+              "2": 0.37,
+              "3": 0.48,
+              "4": 0.04
+            }
+          }
+        }
+      },
+      "all_targets_met": false,
+      "context_truncated": false,
+      "unresolved_context": [
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "Nat",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "Run",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "Task",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "U32",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "Payload",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "Frame",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "U32.add",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "research/adaptive-tasks/task.bend",
+          "name": "U32.mul",
+          "reason": "unresolved-or-builtin"
+        }
+      ],
+      "attempts": [
+        {
+          "receipt": "style-provider-failure.json",
+          "requests": 1,
+          "responses": 0
+        },
+        {
+          "receipt": "candidate-style-access-2.json",
+          "requests": 1,
+          "responses": 0,
+          "trigger": "User-reported access-policy change"
+        },
+        {
+          "receipt": "candidate-style-access-3.json",
+          "requests": 1,
+          "responses": 1,
+          "trigger": "New unrestricted environment in original chat; completed in flight before takeover"
+        }
+      ],
+      "receipt": "candidate-style-access-3.json",
+      "resolved_model": "jev-1.13.0"
+    },
+    "semantic_review": {
+      "status": "completed_no_threshold_findings",
+      "provider_requests": 2,
+      "provider_responses": 2,
+      "completed_checks": 12,
+      "source_checks": 4,
+      "law_checks": 8,
+      "findings": 0,
+      "resolved_model": "jev-1.13.0",
+      "receipts": [
+        "semantic-source.json",
+        "semantic-laws.json"
+      ],
+      "limitation": "Model rules remain advisory; a separate known-broken proof-claim control is still missed."
+    },
+    "review_handoff": "research/adaptive-tasks/style-pilot/adaptive-run-1/review-handoff.json",
+    "next_action": "Preserve the one-candidate experiment and fixed rubric. Broader queue remains on hold; a different pilot requires a separately recorded instruction/hypothesis outside this completed attempt.",
+    "checkpoint": {
+      "status": "prepared_in_takeover_worktree",
+      "commit": null,
+      "branch": "codex/perch-takeover",
+      "worktree": "/Users/ericfode/.codex/worktrees/7e98/knot",
+      "owned_paths": [
+        "AGENTS.md",
+        "docs/STYLE-CAMPAIGN.md",
+        "docs/perch-review-log.md",
+        "docs/style-campaign/state.json",
+        "docs/style-campaign/inventory.json.gz",
+        "docs/style-campaign/scoped-pilot.md",
+        "research/adaptive-tasks/task.bend",
+        "research/adaptive-tasks/style-pilot/adaptive-run-1/",
+        "docs/perch.md",
+        "docs/perch-calibration/takeover-2026-09-27/"
+      ],
+      "original_checkout_preserved": true
+    },
+    "access": "research/adaptive-tasks/style-pilot/adaptive-run-1/takeover-verification.json"
+  },
+  "last_user_followup": {
+    "at": "2026-09-27T02:15:30.747272+00:00",
+    "instructions": [
+      "Take over for Configure Perch for Knot",
+      "check to make sure perch is working",
+      "make sure its configured correctly"
+    ],
+    "result": "Perch configuration and live calls verified; known proof-claim miss retained; pilot reviewed without duplicate request",
+    "broader_queue_on_hold": true
+  },
+  "takeover": {
+    "at": "2026-09-27T02:15:30.747272+00:00",
+    "from_thread_id": "01a0deae-38e5-7120-ad10-77ee5b1e7f0a",
+    "to_thread_id": "01a0e097-e952-7d52-8c3b-c0ced4d509a9",
+    "checkout": "/Users/ericfode/.codex/worktrees/7e98/knot",
+    "branch": "codex/perch-takeover",
+    "original_chat_stood_down": true,
+    "original_checkout_preserved": true,
+    "copied_paths_manifest": "research/adaptive-tasks/style-pilot/adaptive-run-1/takeover-transfer.json",
+    "perch_configuration_report": "docs/perch-calibration/takeover-2026-09-27/README.md"
+  },
+  "user_followup_history": [
+    {
+      "at": "2026-09-27T01:58:32.450487+00:00",
+      "instruction": "I changed the access policy",
+      "batch": "adaptive-run-feasibility-1",
+      "result": "deterministic_verified_style_unavailable",
+      "new_batches": 0,
+      "broader_queue_on_hold": true,
+      "git_checkpoint": "uncommitted_partial_staging_sandbox_block"
+    }
+  ]
 }

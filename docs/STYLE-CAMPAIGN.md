@@ -1,8 +1,10 @@
 # Knot style campaign
 
 Started 2026-09-26 at the user's request: bring the whole project up to the
-three style targets. This is an implementation campaign, coordinated by
-**Configure Perch for Knot**, with continued work through a dedicated heartbeat.
+three style targets. Coordination transferred from **Configure Perch for Knot**
+to **StyleGuide** on 2026-09-26, in the existing
+`/Users/ericfode/.codex/worktrees/7e98/knot` worktree. The existing heartbeat
+now targets that chat; no duplicate automation was created.
 The [state file](style-campaign/state.json) records assignments and evidence.
 The completed package-publication campaign remains a separate workflow.
 
@@ -38,6 +40,19 @@ judgment; it does not establish equivalence or measured psychological effects.
 
 ## Work order and ownership
 
+The user's later 2026-09-26 instruction temporarily takes priority over the wave
+queue: use GPT-6 Astra at **max** reasoning for a small feasibility pilot. After
+new-chat creation was blocked, the user explicitly authorized the current
+checkout. The [scoped pilot](style-campaign/scoped-pilot.md)
+must demonstrate all three targets on its complete changed scope before wider
+dispatch resumes. Keep queued components and prior results; do not call a
+memetic deficit pilot success. The state file records the current execution
+mode and the earlier access blockers. The frozen candidate now has a current
+review: compression 0.82, delight 0.81, and memetic identity 0.52 (uncertain).
+It is rejected as an all-three feasibility demonstration. Preserve it as an
+experiment; the wider queue stays on hold. Do not repeat its unchanged review
+or generate a second candidate under the same preregistration.
+
 | Wave | Scope | Owner and first increment |
 | --- | --- | --- |
 | 1 | IntMap | Existing IntMap chat: path/branch vocabulary and the mirrored get/set/remove family. Test a concrete simplification of branch pruning before touching the public API. |
@@ -67,7 +82,7 @@ or restart the paused publication automation. Retain existing release evidence.
    judging the candidate. Label the author's taste hypothesis separately from
    a preference actually expressed by the user.
 2. Freeze the baseline source, contract and independent test hashes. Use GPT-6
-   Astra at high reasoning for repairs; exclude Luna 5.6. Make one substantive
+   Astra at max reasoning for campaign repairs; exclude Luna 5.6. Make one substantive
    candidate. Preserve its first result. A compiler-rejected generation gets
    at most one diagnostic retry; record it separately and reject remaining
    failures. Do not silently hand-fix a failed model experiment or alter tests.
