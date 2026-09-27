@@ -171,3 +171,45 @@ records counts, timings, hashes and coverage, with complete compressed
 and [style results](perch-calibration/throughput-credits-restored-2026-09-26-style.json.gz).
 Implementation and configuration are unchanged; the previous 46-test and
 law-wiring verification remains the applicable deterministic evidence.
+
+## Why fresh whole-repository reviews still take seconds
+
+The optimization preserved the per-declaration review design. A fresh style
+pass still sends 2,345 HTTP requests. Their measured mean round trip was
+139 ms: `2345 × 0.139 / 16 = 20.4 seconds` even with fully occupied workers.
+The actual provider phase was 20.54 s, with 15.88 requests in flight on average.
+Preflight used 1.32 s; all remaining work used roughly 0.15 s. Style is now
+dominated by request volume and round-trip latency.
+
+Semantic review additionally encountered rate limiting. Its 2,082 successful
+requests carried a median 35 questions each; it received 152 HTTP 429 replies.
+Seventy-six requested a one-second retry delay and seventy-six requested two
+seconds. The current semaphore retains a permit throughout retry sleep, so
+those delays occupy **228 worker-seconds**. Dividing by 16 gives 14.25 seconds
+of worker capacity; this is not an independently measured additive wall-time
+cost. Actual HTTP concurrency averaged **8.27**, while pre-request work took
+3.52 s. The provider phase slowed to roughly 50 successful requests/second
+after the initial burst. Purchasing credits cleared billing rejection without
+removing this observed throttling.
+
+These timings deliberately forced fresh answers. A separate offline probe
+reused the saved results and rejected every attempted provider call:
+
+| Same-source repeat | Wall time | Actual or attempted network requests |
+| --- | ---: | ---: |
+| Semantic scan with its existing store | 6.90 s | 0 |
+| Style with explicit matching `--reuse` | 1.43 s | 0 |
+
+All 1,986 semantic declarations and 2,345 style units retained their prior
+results. Existing findings and the 16 parser failures remain. This probe does
+not measure the cost of reviewing changed code; the semantic run also rebuilt
+analysis for the newer documentation-only revision. Normal scan reuse is
+automatic within its store; style reuse must be requested explicitly.
+
+The remaining optimization work is reducing fresh request count, avoiding
+repeated context/rubric transmission, and making admission aware of provider
+rate limits. Multi-declaration batching would change review inputs and needs
+equivalence/calibration evidence. Simply releasing sleeping permits could
+increase the rejected-request storm. None of those changes is claimed here.
+The [latency breakdown and offline cache probe](perch-calibration/remaining-latency-2026-09-26.json)
+retain the measured timelines, calculations and their limits.
