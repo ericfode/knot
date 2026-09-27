@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-27T01:58:32.450487+00:00",
+  "trigger": "User: I changed the access policy",
+  "git_staging": {
+    "status": "single_file_succeeded_full_checkpoint_denied",
+    "first_attempt": {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "research/adaptive-tasks/task.bend"
+      ],
+      "exit": 0,
+      "status": "working"
+    },
+    "checkpoint_attempt": {
+      "recorded_at": "2026-09-27T02:00:24.523362+00:00",
+      "command": "git add -- <explicit owned pilot and campaign paths>",
+      "exit": 128,
+      "error": "Unable to create '/Users/ericfode/src/knot/.git/index.lock': Operation not permitted"
+    },
+    "current_state": "Only task.bend staged; candidate and evidence remain uncommitted."
+  },
+  "style": {
+    "receipt": "candidate-style-access-2.json",
+    "sha256": "1bbfd08c79fd2c94388b194f432736f08d5c720b888a12cda590f567ad768b52",
+    "provider_requests": 1,
+    "provider_responses": 0,
+    "failure": "Style provider transport failed; no ranking produced",
+    "source_current": true
+  },
+  "provider_dns": {
+    "host": "api.typesafe.ai",
+    "status": "failed",
+    "code": "ENOTFOUND",
+    "syscall": "getaddrinfo",
+    "credentials_sent": false,
+    "inference_requests": 0
+  },
+  "review_handoff": {
+    "tool": "mcp__codex_app__send_message_to_thread",
+    "target_thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
+    "result": "MCP tool call requires approval, but approval policy is never",
+    "delivered": false
+  },
+  "automation_update": {
+    "tool": "mcp__codex_app__automation_update",
+    "id": "improve-knot-three-axis-style",
+    "result": "MCP tool call requires approval, but approval policy is never",
+    "saved_prompt_changed": false
+  },
+  "retry_policy": "No further provider or app retries in this increment without another access change; deterministic receipts remain current."
+}
