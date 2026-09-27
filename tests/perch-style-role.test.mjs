@@ -114,6 +114,28 @@ test('missing task keeps potential advisory but always requires whole-compositio
   assert.equal('answers' in familyRequests[0].state, false);
 });
 
+test('composition questions keep the generic form unless per-axis composition wording is configured', async t => {
+  const plain = await fixture(t), p = provider();
+  await run(plain, p);
+  const generic = p.requests.find(request => Array.isArray(request.state.files));
+  for (const id of scaled) {
+    const title = [...config.dimensions, ...config.diagnostic_dimensions].find(d => d.id === id).title;
+    assert.equal(generic.questions[id].instructions,
+      `${config.style_role.composition_instructions} Apply the ${title} levels below to the entire mechanism as a leading expression.`);
+  }
+  const worded = await fixture(t), q = provider();
+  const custom = structuredClone(config);
+  custom.style_role.composition_axis_instructions = { anticipation: 'Stated laws announce what the mechanism will do.' };
+  await writeFile(join(worded, 'perch-style.json'), JSON.stringify(custom));
+  await run(worded, q);
+  const questions = q.requests.find(request => Array.isArray(request.state.files)).questions;
+  assert.match(questions.anticipation.instructions, / Stated laws announce what the mechanism will do\. Apply the /);
+  assert.equal(questions.payoff.instructions, generic.questions.payoff.instructions);
+  const invalid = structuredClone(config);
+  invalid.style_role.composition_axis_instructions = { maximally_big_brain: 'not a scaled axis' };
+  assert.throws(() => style.assessStyle([], invalid), /Composition axis instructions/);
+});
+
 test('all-support declaration success cannot bypass a weak whole composition', async t => {
   const root = await fixture(t), p = provider({ family: 2 });
   const { report, code } = await run(root, p);

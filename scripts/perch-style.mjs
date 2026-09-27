@@ -221,6 +221,12 @@ function validateStyleRole(config) {
         || targets.some(t => !scaled.includes(t.dimension))) throw new Error('Role targets must cover memetic identity, anticipation and payoff');
     for (const target of targets) validateStyleTarget(target, config, dimensions);
   }
+  // Optional per-axis wording for whole-mechanism questions; absent keeps the generic form.
+  const axisText = policy.composition_axis_instructions;
+  if (axisText !== undefined && (!axisText || typeof axisText !== 'object' || Array.isArray(axisText)
+      || Object.entries(axisText).some(([id, text]) => !scaled.includes(id) || typeof text !== 'string' || !text.trim()))) {
+    throw new Error('Composition axis instructions must be nonempty text for memetic identity, anticipation or payoff');
+  }
   for (const support of policy.supporting_targets) {
     const leading = [...config.style_targets, ...config.criticality.diagnostic_targets].find(t => t.dimension === support.dimension);
     const composition = policy.composition_targets.find(t => t.dimension === support.dimension);
@@ -762,7 +768,8 @@ export async function runStyleRanking(args, {
             ? 'Rate the COMPLETE collaborating mechanism in the supplied source group, using the contract. '
               + 'Apply the ordered conceptual-compression levels to the composition, not to isolated helpers or an average of their scores. '
               + 'Trace what the actual mechanism explains; no missing implementation or claimed brilliance earns credit.'
-            : `${config.style_role.composition_instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
+            : [config.style_role.composition_instructions, config.style_role.composition_axis_instructions?.[target.dimension],
+              `Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.`].filter(Boolean).join(' ') };
         });
         const composed = await reviewAuxiliary('composition', composition.candidate, rubrics);
         const assessments = compositionTargets.map(target => {
