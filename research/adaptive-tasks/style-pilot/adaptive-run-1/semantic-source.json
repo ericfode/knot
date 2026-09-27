@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "id": "f95177f2-25f2-44b6-adc1-b69699fc6cab",
+  "at": "2026-09-27T02:05:20.759Z",
+  "command": "check",
+  "target": "research/adaptive-tasks/task.bend",
+  "revision": "74785162b33e8a7daa7eaece25dc32ea1bfcc5d4",
+  "source_sha256": "03d0139685cd66110a70101b6d74f5f903ab6cdc545f5735ed243314003ffb81",
+  "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+  "selected_rules": [
+    "bend-fuel-completeness",
+    "bend-borrow-lifetime",
+    "bend-machine-arithmetic",
+    "perf-loop-invariant-work"
+  ],
+  "perch_version": "0.3.5",
+  "requested_model": "jev-latest",
+  "resolved_model": "jev-1.13.0",
+  "provider_requests": 1,
+  "provider_responses": 1,
+  "models": [
+    "jev-1.13.0"
+  ],
+  "answers": [
+    {
+      "rule": "bend-fuel-completeness",
+      "probability_true": 0.6
+    },
+    {
+      "rule": "bend-machine-arithmetic",
+      "probability_true": 0.52
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "probability_true": 0.86
+    },
+    {
+      "rule": "perf-loop-invariant-work",
+      "probability_true": 0.87
+    }
+  ],
+  "usage": {
+    "input_tokens": 3273,
+    "output_tokens": 90
+  },
+  "elapsed_ms": 255,
+  "upstream_exit": 0,
+  "exit": 0,
+  "status": "completed",
+  "checked": 4,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 12,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "parser_coverage": null,
+  "units": [
+    {
+      "path": "research/adaptive-tasks/task.bend",
+      "name": "run",
+      "line": 52,
+      "end_line": 55,
+      "checked": 4,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "broken": 0.4,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "broken": 0.48,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "broken": 0.13,
+          "floor": 0.6
+        }
+      ],
+      "broken": [],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "source_sha256": "03d0139685cd66110a70101b6d74f5f903ab6cdc545f5735ed243314003ffb81"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "Run",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "Task",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "Payload",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "Frame",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "research/adaptive-tasks/task.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      }
+    }
+  ],
+  "findings": [],
+  "issue_count": null,
+  "adjudication": "unreviewed"
+}

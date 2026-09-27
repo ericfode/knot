@@ -119,3 +119,12 @@ hypothesis, before/after evidence, fixed independent gates, all three style
 ratings and an explicit disposition. Low scores alone do not justify churn.
 Historical failures remain evidence. The campaign heartbeat continues the
 queue; it does not restart the completed package-publication campaign.
+
+The user's later 2026-09-26 instruction selects **GPT-6 Astra at max reasoning**
+for the campaign, starting with one scoped feasibility pilot. After new-chat
+creation was blocked, the user explicitly authorized doing the pilot here in
+the current checkout. This supersedes the earlier high-reasoning setting and
+worktree requirement. Follow `docs/style-campaign/scoped-pilot.md` and the current
+dispatch state. A partial style improvement does not satisfy this pilot: every changed
+or introduced declaration must meet all three unchanged targets, with independent
+gates intact. Keep the remaining component queue while the pilot is unresolved.

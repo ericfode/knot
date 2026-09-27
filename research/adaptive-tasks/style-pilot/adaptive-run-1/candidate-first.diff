@@ -1,0 +1,17 @@
+--- before/task.bend
++++ candidate/task.bend
+@@ -51,12 +51,8 @@
+ # Delivered is absorbing. Zero fuel preserves the whole residual state.
+ def run(fuel: Nat, state: Run) -> Run:
+   match fuel state:
+-    case 0n _:
+-      state
+-    case 1n+n Checkpoint{task}:
+-      run(n,step(task))
+-    case 1n+n Delivered{dest,payload}:
+-      Delivered{dest,payload}
++    case 1n+n Checkpoint{task}: run(n,step(task))
++    case _ _: state
+ 
+ def slices(count: Nat, +quantum: Nat, state: Run) -> Run:
+   match count:

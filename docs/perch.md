@@ -28,6 +28,20 @@ of eight correctly and rejected the full style request at its 48-token option
 limit. The receipts preserve the complete inputs and explicit rejection; Julia
 also remains experimental.
 
+Each Git worktree needs its own `npm ci` and an ignored `.env` (mode 0600),
+unless the key is already exported. Git does not copy those local files into a
+new worktree. Reuse the existing project credential privately; do not put it in
+commands, reports, or tracked files. `lint:doctor` checks local setup, not live
+provider access. Confirm access with one relevant `lint` check and its nonzero
+provider-response receipt. Root `rules: []` is deliberate: the custom rules
+live in `.perch/rules/`.
+
+The [takeover verification](perch-calibration/takeover-2026-09-27/README.md)
+restored this worktree's dependencies and credential, passed all 28 offline
+tests, verified 27 custom rules, and completed live semantic and style review.
+It also reproduced a known proof-claim false negative. Working configuration
+does not establish reliable detection by every advisory rule.
+
 ## Commands
 
 ```sh

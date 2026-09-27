@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "batch": "adaptive-run-feasibility-1",
+  "at": "2026-09-27T01:32:17.296111+00:00",
+  "base_commit": "bb99ec579da4ee7b65804d9d33c70a4765b1398f",
+  "location": "current shared checkout, explicitly requested by user after new-chat creation was blocked",
+  "author": "Vantage in coordinator chat",
+  "requested_model": "gpt-6-astra",
+  "requested_reasoning": "max",
+  "target": "research/adaptive-tasks/task.bend::run",
+  "changed_declaration_budget": 1,
+  "candidate_budget": 1,
+  "compiler_diagnostic_retry_budget": 1,
+  "baseline_source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+  "reading_problem": "The run matcher separately spells zero-fuel identity and reconstructed delivery, although only a fueled Checkpoint makes progress. The common unchanged-owner result is not represented directly.",
+  "author_reading_hypothesis": "One fueled-Checkpoint recurrence followed by an identity fallback may expose run as repeated step with a fixed point. Returning the existing owner directly avoids a reconstructed Delivered wrapper and makes residual preservation literal. The risk is hiding the named absorbing-delivery case; retain that tradeoff and reject the pilot unless all three fixed targets and independent gates pass.",
+  "human_preference": "User requested the three axes and a scoped feasibility demonstration; this candidate form is an author hypothesis, not a recorded user taste judgment.",
+  "immutable_contract": "At most fuel task steps, zero fuel preserves every field, Delivered is absorbing, task/frame/payload affinity and order retained; no semantic or API changes.",
+  "frozen_files": {
+    "slot.bend": "f8350b71240146dc6061543d32b36ca40f0f420953e074b12f76b90389314cf2",
+    "oracle.bend": "bd065f518ef381c777dae17e1cc2f9250b87e9db66d8b74f1b98ecd011926096",
+    "fixtures.bend": "2f9b69eb971020e36ca2800d6327345819884b0c04497ce95f69cf9ebda01dac",
+    "LAWS.bend": "0c27192115eeb532b975fa642cd9d25e6e2187ca97431a838acfa20ec61bfc87",
+    "PROOF.bend": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125",
+    "conformance.bend": "7f4e05b5f5c3317099bdaf9a4b45e20761c8b93e7d8f73667aa20fe978846713",
+    "SPEC.md": "98cd7ea02914efed1ac56bba6590c849e6a2177bd8d763c32a30b8321f6b3ef3",
+    "LAW_REVIEW.md": "696f199afe006ce33635be8ab392d455571b1ebb55624f44126ad73240c1b634",
+    "check.py": "b4bb232c66b99b25a17d40f8c99cdbab7cf1cb84e5502e8169b96d1933e03e02",
+    "gpu/tasks.wgsl": "1e86fc742f88c9044ab341a461ab6c74a0598b0de35780eddfd93f6c0056e3e7",
+    "gpu/check.mjs": "65291bcf2a290cab6c4148305ad79f3741e6c868cb03bf6c620a5f0febb499d9",
+    "gpu/adapter.mjs": "962680b02b087801827548f857af260af7fd0b6a5e114e5b1be42879e3d28a38",
+    "gpu/package.json": "14aac67eceef1e374fbb13dd31cecb8b4a07e53569d5a262d535fbfb082bbe8c",
+    "gpu/package-lock.json": "0ac2fa59aca64615977ddb6e3ecd68a84b9c75452dfb690f8e136257d43272f9",
+    "tests/affine-valid.bend": "04a1bf62271666e51ad9655d6ddf4aa075ec2b2e8bd1ecca1f7de223aa049a2d",
+    "tests/affine-task-reuse.bend": "ccc2c547528b7737b1428915d0f8c1652137be3e1c36227111939f857ab821fc",
+    "tests/affine-slot-reuse.bend": "b87625ca64ef34a911c5fa1db4c4243851a21dd1b3d6f10cbee69a1b58e20604",
+    "receipts/checks.json": "539a56aa03f0b1891ec4b11131db3c7fccb966ef45e6dd8487053ea523367ef0",
+    "receipts/gpu.json": "c9f979d35aae00e2fe1bc00a67fc5cc48608fb9f8706157156687fdae86d46eb"
+  },
+  "tooling": {
+    "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
+    "perch-style.json": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3",
+    "scripts/perch-style.mjs": "699ffdcc7c13b0650dc8007efce5fe059a11cb6aec76c48e578bd57232257d4b",
+    "scripts/perch-bend-context.mjs": "489aa84dfae270971b7d69cbde1a8224a73bb5e7e01084c487fc7bf912766641"
+  },
+  "reference": {
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "verified_against": "raw.githubusercontent.com/bendlang/bend at this commit",
+    "files": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "acceptance": [
+    "Unchanged complete 12-law proof",
+    "Valid affine control and two exact quantity negatives",
+    "Independent Bend fixtures and conformance, native and JS",
+    "Five type-valid semantic mutations, same laws and observations; one zero-budget locator may be re-anchored preserving the exact violation",
+    "Compare generated runner/cost and bounded input scaling without changing assertion bodies",
+    "Targeted semantic Perch and one actual parsed run declaration rated on all three unchanged axes; sufficient current context required"
+  ],
+  "device_boundary": "Device shader, device runner and independent Bend fixture/oracle closure are frozen and do not depend on task.run. Verify matching historical device hashes/output; no new device claim or rerun required unless that dependency boundary changes.",
+  "historical_receipts": "immutable; new outcomes written only under this pilot",
+  "state": "preregistered before candidate source edit"
+}
