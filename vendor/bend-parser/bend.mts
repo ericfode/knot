@@ -2287,7 +2287,8 @@ export function parse_def(p: Parse, u: Bool): void {
     if (tele.some((cell) => cell[3].$ !== "Qnt")) {
       parse_fail(p, "a name");
     }
-    if (tele.length < law.x) {
+    // Knot: an imported law placeholder has unknown (infinite) template arity.
+    if (Number.isFinite(law.x) && tele.length < law.x) {
       parse_fail(p, "a name for each ~ clause of the law (" + String(law.x) + ")");
     }
     def = law;
@@ -2302,7 +2303,7 @@ export function parse_def(p: Parse, u: Bool): void {
   def.u ||= un;
   parse_eat(p, ":");
   if (parse_at_word(p, "import")) {
-    if (def.x > 0) {
+    if (def.x > 0 && Number.isFinite(def.x)) {
       parse_fail(p, "a body (a template is not foreign)");
     }
     def.i = [];

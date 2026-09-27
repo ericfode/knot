@@ -48,6 +48,7 @@ npm run lint:history                # local usage and finding counts
 npm run lint:style -- --live --task=src/SPEC.md src/scope.bend
 npm run lint:style -- --live --all  # explicitly requested project style review
 npm run lint:style -- --live --all --incremental # automatic working-copy reuse
+npm run lint:style -- --preflight --all # offline structural blockers; no provider
 npm run lint:verify                 # offline workflow and rule-wiring checks
 ```
 

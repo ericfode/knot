@@ -705,3 +705,50 @@ composition context changes. A separate candidate-generation mistake placed
 local bindings before a later parameter match; the single compiler retry moved
 them beneath that match. Future proofs should preserve the pinned language's
 match-before-binding order. Measured avoidable rework: not recorded.
+
+## 2026-09-27 — Style scoring-tool repairs and offline structural preflight
+
+The user asked to start repairing the scoring tool after a read-only survey
+found no qualifying composition: 0 of 23, best 0.42/0.12/0.36 against 0.60.
+Three changes, all offline:
+
+- **Parser gap fixed.** The template-law parser gap in the entry above is
+  confirmed and repaired. Imported law-fill placeholders now have unknown
+  arity, like imported templates. `int_map/locality/PROOF.bend` parses (8 law
+  fills); in a full-analysis comparison, no other file changed (1 of 301). All
+  16 negative fixtures and specimens still fail. The base `lint:verify` was
+  already red on this file: 83 of 84 tests, with the existing corpus test
+  catching the gap. `observer.patch` hunks from the change onward come from a
+  fresh diff and apply to pinned upstream with no offsets. Profile:
+  `…-observer-v2+law-template-arity`.
+- **Structural preflight added.** `lint:style --preflight` measures structural
+  blockers without a provider, from the same candidate states and groups as a
+  live run. Repository baseline: 362 truncated units, which are unpassable.
+  1,801 units cannot take the supporting role; as a disjoint partition, 1,221
+  of these are blocked only by local datatype or constructor names. 194 of 284
+  single-file groups are composable. Project mode, like a live `--all` run,
+  needs explicit groups.
+- **Composition request mismatch fixed.** Composition requests omitted each
+  axis's rubric instructions, which the v6 composition policy invokes. Its
+  effect on scores is unmeasured. A paired paid comparison on one fixed group
+  is the next calibration step; no score movement is claimed.
+
+The profile bump and the composition-request change invalidate reuse of all
+earlier style answers. That cost is accepted and recorded in the evidence.
+
+An adversarial review ran 3 lenses and 19 agents. It confirmed 13 low or medium
+documentation and parity issues, which are corrected in this increment, and
+found no behavioral defect in the parser change.
+
+A port of the unmerged owner-worktree repairs (`3263f72`, `55f1d50`, `573c56e`)
+was first blocked as a shared-work change. The user then asked for it to be
+merged, and it follows as separate cherry-picks.
+
+[Evidence and baseline](perch-calibration/style-preflight-2026-09-27/README.md).
+`npm run lint:verify`: 93 tests pass, plus law-rule wiring. No rubric, target,
+threshold or scope changed.
+
+Prevention: run `--preflight` before paid style reviews and after context or
+parser changes. The driver trial and the locality proof each paid for a review
+whose composition or parse could have been predicted offline. Measured
+avoidable rework: unknown.

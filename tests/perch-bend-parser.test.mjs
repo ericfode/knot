@@ -130,6 +130,34 @@ def total(n: M.Number) -> U32:
   assert.ok(result.references.some((entry) => entry.name === 'L.proof' && entry.kind === 'call'));
 });
 
+test('imported template-law fills pass ~ arguments recursively; local law arity stays checked', async () => {
+  // Shape of packages/int_map/locality/PROOF.bend: the compiler accepts it, and the
+  // observer previously rejected the recursive ~ call as "Expected a term; observed '~'".
+  const imported = await analyze(`import Base
+import ./LAWS.bend as G
+
+def G.walk(join,V,path):
+  match path:
+    case Nil{}: {==}
+    case Con{_,+tail}: G.walk(~join,V,tail)
+`);
+  assert.deepEqual(imported.declarations.map((entry) => entry.name), ['G.walk']);
+  assert.ok(imported.references.some((entry) => entry.name === 'G.walk' && entry.kind === 'call'));
+  assert.ok(imported.diagnostics.some((entry) => entry.message.includes('template clauses require dependency context')));
+  const local = await analyzeBendSource(`import Base
+
+law walk:
+  for ~join: U32 -> U32
+  for +n: U32
+  {join(n) == join(n) : U32}
+
+def walk():
+  {==}
+`);
+  assert.equal(local.parser_status, 'parse-error');
+  assert.match(local.parser_message, /a name for each ~ clause of the law \(1\)/);
+});
+
 test('dependency-context failure differs from malformed local syntax', async () => {
   const external = await analyzeBendSource('import Base\nimport ./missing.bend as M\ndef t() -> Type: +M.Box<U32>\n');
   assert.equal(external.parser_status, 'unsupported');

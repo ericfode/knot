@@ -232,7 +232,7 @@
    const law = tld?.$ === "Def" && tld.v === null && tld.b !== true && !tld.i ? tld : undefined;
    const k   = law ? q : parse_fresh(p, nm);
    const un  = parse_take(p, "?") || u;
-@@ -2396,6 +2282,7 @@
+@@ -2396,25 +2282,28 @@
    const tele = parse_tele(p, ")", tk);
    parse_skip(p);
    let def: Def;
@@ -240,7 +240,10 @@
    if (law) {
      if (tele.some((cell) => cell[3].$ !== "Qnt")) {
        parse_fail(p, "a name");
-@@ -2404,12 +2291,13 @@
+     }
+-    if (tele.length < law.x) {
++    // Knot: an imported law placeholder has unknown (infinite) template arity.
++    if (Number.isFinite(law.x) && tele.length < law.x) {
        parse_fail(p, "a name for each ~ clause of the law (" + String(law.x) + ")");
      }
      def = law;
@@ -255,17 +258,22 @@
    }
    def.u ||= un;
    parse_eat(p, ":");
-@@ -2432,18 +2320,24 @@
+   if (parse_at_word(p, "import")) {
+-    if (def.x > 0) {
++    if (def.x > 0 && Number.isFinite(def.x)) {
+       parse_fail(p, "a body (a template is not foreign)");
+     }
+     def.i = [];
+@@ -2432,18 +2321,24 @@
      }
    } else {
      const vars = tele.map((cell): PVar => ({ $: "PVar", k: cell[1], i: cell[2], q: Lone(), s: cell[4] }));
 -    def.v = term_higher(term_lower(term_higher(body_flatten(parse_body(p), vars, () => p.frs++))));
--  }
 +    const body = parse_body(p);
 +    p.observer?.declaration?.(law ? "law_fill" : "definition", nm, p.declBeg ?? 0,
 +      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]));
 +    def.v = term_higher(term_lower(term_higher(body_flatten(body, vars, () => p.frs++))));
-+  }
+   }
 +  if (def.i) p.observer?.declaration?.("foreign_definition", nm, p.declBeg ?? 0,
 +    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]));
    book.order.push(k);
@@ -284,7 +292,7 @@
      p.frs = 0;
      parse_close(p, 0);
      if (parse_take(p, "@")) {
-@@ -2487,6 +2381,8 @@
+@@ -2487,6 +2382,8 @@
          cs.push(ctr);
          book.ctrs[c] = ctr;
        }
@@ -293,7 +301,7 @@
        book.order.push(k);
        continue;
      }
-@@ -2529,6 +2425,8 @@
+@@ -2529,6 +2426,8 @@
        const T = cls.reduceRight((T, [all, q, c, i, A, s]) =>
          all ? All(q, c, i, A, T, s) : App(App(Ref("Exists", s), A, s), Lam(c, i, T, s), s), parse_block(p));
        const n = cls.findIndex((c) => !c[0]);

@@ -25,11 +25,16 @@ Changes to the upstream module:
   still use upstream checks.
 - Record an unavailable-context error for `+Imported.Type<...>` when its quantity
   arity cannot be determined. Do not invent a datatype signature.
+- Give an imported law-fill placeholder unknown (`Infinity`) template arity, as
+  imported templates already have. A recursive `~` call inside the fill parses;
+  the fill head's clause count and a foreign body's template check are skipped
+  only for such placeholders, whose arity the pinned compiler validates. Local
+  laws keep the upstream checks.
 
 The adapter is `../../scripts/perch-bend.mjs`. Its asynchronous
 `analyzeBendSource(source)` returns Perch's `SourceAnalysis` fields, with null
 file/declaration metrics and additional `parser_metadata`. The profile is
-`bend-2.0.29-574b6d3-observer-v2`. Metrics are unsupported, not estimated.
+`bend-2.0.29-574b6d3-observer-v2+law-template-arity`. Metrics are unsupported, not estimated.
 `datatype_declarations` additionally retains parsed datatype ranges for review
 context; datatypes are not counted as function/law checks.
 

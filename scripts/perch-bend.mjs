@@ -2,7 +2,7 @@
 import { book_nil, parse_book, Qnt } from '../vendor/bend-parser/bend.mts';
 import baseSource from '../vendor/bend-parser/base-source.mjs';
 
-export const BEND_PARSER_PROFILE = 'bend-2.0.29-574b6d3-observer-v2';
+export const BEND_PARSER_PROFILE = 'bend-2.0.29-574b6d3-observer-v2+law-template-arity';
 const ANALYSIS_PROFILE = 'language-pack-1.20-v3';
 const NAMED = /^([a-z][a-z0-9-]{0,63})@((?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*)){3})$/;
 const NAME = /^[A-Za-z_]\w*(\.[A-Za-z_]\w*)*$/;
@@ -146,7 +146,9 @@ export async function analyzeBendSource(source) {
         const dot = name.indexOf('.');
         if (dot < 0 || !(name.slice(0, dot) in aliases)) return undefined;
         unsupported(`Imported law fill ${name}: the body uses the real parser, but law existence, parameter count, and template clauses require dependency context.`, location(beg, end));
-        return { $: 'Def', n: 0, x: 0, T: Qnt(), v: null, m: '' };
+        // Template arity is unknown without the import, exactly like externalTemplate:
+        // recursive ~ arguments in the fill body parse; the compiler validates arity.
+        return { $: 'Def', n: 0, x: Infinity, T: Qnt(), v: null, m: '' };
       },
       call(term) {
         const ref = lexicalReference(term, source);

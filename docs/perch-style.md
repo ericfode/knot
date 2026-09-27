@@ -59,7 +59,28 @@ npm run lint:style -- --live src/scope.bend::Scope
 
 # Inventory project declarations; qualify bounded mechanisms separately.
 npm run lint:style -- --live --all --output=.local/style-project.json
+
+# Offline structural preflight: no credentials, .env, cache or provider request.
+npm run lint:style -- --preflight --task=src/SPEC.md src/driver.bend
+npm run lint:style -- --preflight --all --output=.local/style-preflight.json
 ```
+
+### Structural preflight
+
+`--preflight` prepares the same declaration states, contexts and composition
+groups as a live run, without building request bodies, then reports what can
+never pass whatever the ratings. A
+truncated context withholds Anticipation and Payoff, so that unit cannot pass.
+A context with unresolved non-builtin references, or a truncated one, keeps the
+declaration at the leading targets, because it cannot establish the supporting
+exemption. An unavailable required composition prevents qualification. With `--all` it
+lists unranked files and, like a live project run, reports the composition as
+unavailable (`explicit_selected_group_required`); each file is also reported as
+a single-file group to help plan explicit groups. It makes zero
+provider requests, writes no usage receipt and exits 3 when a structural
+blocker exists. Run it before paying for a review, and after any context,
+parser or scope change, to measure what the change unblocks. Its counts are
+structure, not taste.
 
 `lint:rank` remains an alias. `--task=SPEC.md` supplies a fixed task contract;
 `--cohort='purpose or contract'` is an inline alternative. Without either, ordinary
@@ -261,7 +282,12 @@ composition requirement unavailable. Source hashes and actual scope remain in
 the receipt; this is not a claim to have reviewed an unseen whole project.
 
 The composition judge receives the fixed task, when available, and source group
-without previous scores or the potential verdict. Each required distribution
+without previous scores or the potential verdict. Each memetic, Anticipation and
+Payoff question carries the composition instructions followed by that axis's own
+rubric instructions and levels, applied to the whole mechanism at the leading
+standard. Earlier composition requests sent the generic paragraph and level
+labels without each axis's rubric instructions, including the first v6
+receipts; their answers are not reused across this request change. Each required distribution
 must independently reach 60%. Helpers retain their ordinary conceptual-compression bar; a good helper
 need not independently be profound. Source ratings, task relevance and composition
 quality remain distinct in reporting and receipt reuse.

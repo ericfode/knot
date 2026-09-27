@@ -229,15 +229,20 @@ function validateStyleRole(config) {
   }
 }
 
+/** Context gaps that forbid the supporting exemption; shared by scoring and preflight. */
+export function roleContextLimits(context) {
+  const unknown = (context?.unresolved ?? []).filter(ref =>
+    ref.reason !== 'unresolved-or-builtin' || !knownBuiltins().has(ref.name));
+  return { limited: !context || !!context.truncated || unknown.length > 0, unknown };
+}
+
 export function assessStyleRole(row, config) {
   validateStyleRole(config);
   if (!config.style_role) return null;
   const policy = config.style_role;
   const answer = validateScore({ ...row.answers?.[policy.id], type: 'score' }, policy.levels.length);
   const probability = probabilityAt(answer, 1);
-  const unknown = (row.context?.unresolved ?? []).filter(ref =>
-    ref.reason !== 'unresolved-or-builtin' || !knownBuiltins().has(ref.name));
-  const limited = !row.context || !!row.context.truncated || unknown.length > 0;
+  const { limited, unknown } = roleContextLimits(row.context);
   return { target: row.target, status: probability >= policy.minimum_probability ? 'leading'
     : !limited && probability <= 1 - policy.minimum_probability ? 'supporting' : 'uncertain',
     probability_leading: probability, context_limited: limited, unresolved_role_context: unknown,
@@ -453,6 +458,127 @@ export async function changedStyleSources(candidates, root = ROOT) {
   return changed;
 }
 
+const tally = items => Object.fromEntries([...items.reduce((counts, item) =>
+  counts.set(item, (counts.get(item) ?? 0) + 1), new Map())].sort(([a], [b]) => a.localeCompare(b)));
+
+function compositionPreflight(prepared) {
+  const { context } = prepared.candidate;
+  return { available: prepared.available, reasons: prepared.reasons, selected_files: context.selected_files,
+    context_files: context.files.length, source_bytes: context.source_bytes, byte_limit: context.limits.bytes,
+    unresolved_by_reason: tally(context.unresolved.map(ref => ref.reason)), unresolved: context.unresolved };
+}
+
+/**
+ * Offline structural preflight. It prepares the same candidate states, contexts
+ * and composition groups as a live run (request bodies are not built), then
+ * reports what can never pass regardless of any rating:
+ * truncated contexts (Anticipation/Payoff unavailable), context gaps that
+ * forbid the supporting role, unavailable compositions and unranked files.
+ * No credentials, environment file, cache or provider are touched.
+ */
+export async function runStylePreflight(args, { root = ROOT, stdout = text => console.log(text) } = {}) {
+  const known = x => ['--preflight', '--json', '--all'].includes(x) || ['--cohort=', '--task=', '--output='].some(p => x.startsWith(p));
+  if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown preflight option; --preflight never contacts a provider');
+  const all = args.includes('--all'), targets = args.filter(x => !x.startsWith('--'));
+  if (all === targets.length > 0) throw new Error('Use --preflight with either --all or explicit targets');
+  // Same option rules as a live run: one value each; only --task= and --output= must be nonempty.
+  const single = (prefix, allowEmpty = false) => {
+    const values = args.filter(x => x.startsWith(prefix)).map(x => x.slice(prefix.length));
+    if (values.length > 1) throw new Error(`Supply at most one ${prefix.slice(0, -1)}`);
+    if (!allowEmpty && values.includes('')) throw new Error(`Supply a nonempty ${prefix.slice(0, -1)}`);
+    return values[0];
+  };
+  const cohort = single('--cohort=', true), taskPath = single('--task='), output = single('--output=');
+  const outputPath = output ? resolve(root, output) : null;
+  if (outputPath && await lstat(outputPath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; })) {
+    throw new Error('Preflight output already exists; choose a new path');
+  }
+  const text = await readFile(resolve(root, 'perch-style.json'), 'utf8');
+  const config = JSON.parse(text);
+  assessStyle([], config);
+  // Same effective cohort as a live run, so state sizes and hashes match.
+  const taskText = taskPath !== undefined ? await readFile(resolve(root, taskPath), 'utf8') : cohort;
+  const taskAvailable = !!taskText?.trim() && (!config.potential_profundity || Buffer.byteLength(taskText) <= config.potential_profundity.max_task_bytes);
+  const task = { origin: taskPath !== undefined ? 'task-file' : cohort !== undefined ? 'explicit-cohort' : 'missing',
+    path: taskPath ?? null, sha256: taskText === undefined ? null : hash(taskText), bytes: Buffer.byteLength(taskText ?? ''),
+    available: taskAvailable, reason: !taskText?.trim() ? 'missing_task_context' : !taskAvailable ? 'task_byte_limit' : null };
+  const effectiveCohort = taskAvailable ? taskText : config.potential_profundity ? undefined : cohort;
+  const snapshot = await createBendSourceSnapshot(root);
+  const { candidates, inventory } = all ? await prepareStyleInventory(effectiveCohort, config, root, snapshot)
+    : { candidates: await prepareStyleTargets(targets, effectiveCohort, config, root, snapshot), inventory: null };
+  if (!candidates.length) throw new Error('No rankable parsed declarations');
+
+  const units = candidates.map(candidate => {
+    const { limited, unknown } = roleContextLimits(candidate.context);
+    const notes = candidate.context?.unresolved ?? [];
+    return { target: candidate.target, kind: candidate.kind, line: candidate.line,
+      state_bytes: Buffer.byteLength(JSON.stringify(candidate.state)),
+      truncated: !!candidate.context?.truncated,
+      // Caller (or datatype-consumer) and byte limits truncate without an unresolved note.
+      limit_reasons: [...new Set(notes.filter(ref => ref.reason.endsWith('-limit')).map(ref => ref.reason))],
+      diagnostics_available: !candidate.context?.truncated,
+      supporting_role_possible: !limited,
+      role_context_gaps: unknown.map(({ path, name, reason }) => ({ path, name, reason })) };
+  });
+  const byFile = new Map();
+  for (const candidate of candidates) {
+    const path = candidate.path ?? candidate.target.split('::')[0];
+    if (!byFile.has(path)) byFile.set(path, []);
+    byFile.get(path).push(candidate);
+  }
+  const compositionTask = taskAvailable ? taskText : null;
+  // A role policy requires composition whatever the ratings; otherwise only high potential does.
+  const compositionRequired = config.style_role ? 'always' : config.potential_profundity ? 'if_high_potential' : null;
+  // Project mode has no declared group, exactly as in a live run; each file is
+  // additionally reported as its own candidate group.
+  const composition = !compositionRequired ? null
+    : all ? { required: compositionRequired, available: false, reasons: ['explicit_selected_group_required'] }
+    : { required: compositionRequired, ...compositionPreflight(await prepareStyleComposition(candidates, compositionTask, config, root, snapshot)) };
+  const fileGroups = config.potential_profundity && all ? await mapConcurrent([...byFile], PREFLIGHT_CONCURRENCY, async ([path, group]) =>
+    ({ path, units: group.length, ...compositionPreflight(await prepareStyleComposition(group, compositionTask, config, root, snapshot)) })) : null;
+
+  const truncated = units.filter(unit => unit.truncated);
+  const roleLimited = units.filter(unit => !unit.supporting_role_possible);
+  const summary = {
+    units: units.length, files: byFile.size,
+    unranked_files: inventory?.unranked.length ?? 0, empty_files: inventory?.empty_files.length ?? 0,
+    truncated_units: truncated.length,
+    truncated_by_limit: tally(truncated.flatMap(unit => unit.limit_reasons.length ? unit.limit_reasons : ['caller-or-byte-limit'])),
+    supporting_role_impossible: roleLimited.length,
+    role_gap_units_by_reason: tally(roleLimited.flatMap(unit => [...new Set([
+      ...(unit.truncated ? ['truncated-context'] : []), ...unit.role_context_gaps.map(gap => gap.reason)])])),
+    max_state_bytes: Math.max(0, ...units.map(unit => unit.state_bytes)),
+    ...(composition ? { composition_available: composition.available, composition_reasons: composition.reasons } : {}),
+    ...(fileGroups ? { single_file_groups_available: fileGroups.filter(group => group.available).length,
+      single_file_groups_by_reason: tally(fileGroups.flatMap(group => group.reasons)) } : {}),
+  };
+  const blockers = summary.truncated_units + summary.unranked_files
+    + (composition?.required === 'always' && !composition.available ? 1 : 0);
+  const report = { schema: 1, command: 'style-preflight', mode: all ? 'project' : 'targets',
+    provider_requests: 0, rubric_sha256: hash(text), rubric_version: config.version, parser: BEND_PARSER_PROFILE,
+    task, summary, structural_blockers: blockers, inventory, composition, file_groups: fileGroups, units,
+    note: 'Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups.' };
+  const encoded = JSON.stringify(report, null, 2) + '\n';
+  if (outputPath) {
+    await mkdir(dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, outputPath.endsWith('.gz') ? gzipSync(encoded) : encoded, { flag: 'wx' });
+  }
+  if (args.includes('--json')) stdout(encoded.slice(0, -1));
+  else {
+    stdout(`Style preflight (offline, 0 provider requests): ${summary.units} declarations in ${summary.files} files; parser ${BEND_PARSER_PROFILE}.`);
+    stdout(`Task: ${task.available ? `${task.origin} (${task.bytes} bytes)` : `unavailable (${task.reason})`}.`);
+    if (inventory) stdout(`Unranked files: ${summary.unranked_files}; files without declarations: ${summary.empty_files}.`);
+    stdout(`Truncated contexts (Anticipation/Payoff unavailable, cannot pass): ${summary.truncated_units} ${JSON.stringify(summary.truncated_by_limit)}.`);
+    stdout(`Supporting role impossible (incomplete role context): ${summary.supporting_role_impossible} ${JSON.stringify(summary.role_gap_units_by_reason)}.`);
+    if (composition) stdout(`Composition (required ${composition.required}): ${composition.available ? 'available' : `unavailable [${composition.reasons.join(', ')}]`}${
+      composition.source_bytes === undefined ? '' : `; ${composition.source_bytes}/${composition.byte_limit} bytes; unresolved ${JSON.stringify(composition.unresolved_by_reason)}`}.`);
+    if (fileGroups) stdout(`Single-file composition groups available: ${summary.single_file_groups_available}/${fileGroups.length} ${JSON.stringify(summary.single_file_groups_by_reason)}.`);
+    for (const unit of truncated) stdout(`truncated: ${unit.target} ${unit.limit_reasons.join(',') || 'caller-or-byte-limit'}`);
+    for (const file of inventory?.unranked ?? []) stdout(`unranked: ${file.path} (${file.reason})`);
+  }
+  return blockers ? 3 : 0;
+}
+
 export async function evaluateStyle(candidates, config, {
   env = process.env, fetchImpl = globalThis.fetch, transport = { requests: 0, responses: 0 },
   concurrency = DEFAULT_CONCURRENCY, expectedModel = null, onProgress = () => {}, onRow = () => {},
@@ -507,6 +633,11 @@ export async function runStyleRanking(args, {
   root = ROOT, env = process.env, fetchImpl = globalThis.fetch, loadEnv = false,
   stdout = text => console.log(text), stderr = text => console.error(text),
 } = {}) {
+  // Structural preflight is offline: dispatch before any environment or provider setup.
+  if (args.includes('--preflight')) {
+    if (args.includes('--live')) throw new Error('Choose --preflight (offline) or --live (provider review), not both');
+    return runStylePreflight(args, { root, stdout });
+  }
   const invoked = performance.now();
   const cohort = args.find(x => x.startsWith('--cohort='))?.slice(9);
   const taskPath = args.find(x => x.startsWith('--task='))?.slice(7);
@@ -517,7 +648,7 @@ export async function runStyleRanking(args, {
   const concurrency = Number(args.find(x => x.startsWith('--jobs='))?.slice(7) ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY);
   const known = x => ['--live', '--json', '--all', '--incremental', '--fresh'].includes(x) || ['--cohort=', '--task=', '--output=', '--jobs=', '--reuse='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown style option');
-  if (!args.includes('--live')) throw new Error('Use --live file.bend::name, file.bend, or --live --all to rank project Bend declarations');
+  if (!args.includes('--live')) throw new Error('Use --live file.bend::name, file.bend, or --live --all to rank project Bend declarations (or --preflight for the offline structural check)');
   if (Number(incremental) + Number(fresh) + Number(reuse !== undefined) > 1) throw new Error('Choose only one of --incremental, --fresh, or --reuse');
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > MAX_CONCURRENCY) throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
   const targets = args.filter(x => !x.startsWith('--'));
@@ -641,7 +772,9 @@ export async function runStyleRanking(args, {
             ? 'Rate the COMPLETE collaborating mechanism in the supplied source group, using the contract. '
               + 'Apply the ordered conceptual-compression levels to the composition, not to isolated helpers or an average of their scores. '
               + 'Trace what the actual mechanism explains; no missing implementation or claimed brilliance earns credit.'
-            : `${config.style_role.composition_instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
+            // The composition policy judges each axis "under its own rubric": send that
+            // rubric's instructions, not only its level labels, framed for the whole mechanism.
+            : `${config.style_role.composition_instructions} ${rubric.title} rubric, applied to the whole mechanism at the leading standard: ${rubric.instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
         });
         const composed = await reviewAuxiliary('composition', composition.candidate, rubrics);
         const assessments = compositionTargets.map(target => {
