@@ -1,0 +1,23 @@
+def intern_commit(ids: Map<&2,Maybe<&2,U32>>, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (names,pushed) = pair
+  match pushed:
+    case Fail{error}:
+      (InternTable{names,ids},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{names,Map.set(&2,Maybe<&2,U32>,ids,name,Some{id})},Done{id})
+
+def intern_slot(names: V.Vec<String>, +name: String,
+  pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  (ids,found) = pair
+  match found:
+    case Some{id}:
+      (InternTable{names,ids},Done{id})
+    case None{}:
+      (before,+id) = V.Vec.length(String,names)
+      intern_commit(ids,name,id,V.Vec.push(String,before,name))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{names,ids}:
+      intern_slot(names,name,Map.get(Maybe<&2,U32>,None{},ids,name))

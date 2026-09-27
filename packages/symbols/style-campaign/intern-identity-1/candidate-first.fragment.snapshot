@@ -1,0 +1,15 @@
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{names,ids0}:
+      (ids,found) = Map.get(Maybe<&2,U32>,None{},ids0,name)
+      match found:
+        case Some{id}:
+          (InternTable{names,ids},Done{id})
+        case None{}:
+          (before,+id) = V.Vec.length(String,names)
+          (after,pushed) = V.Vec.push(String,before,name)
+          match pushed:
+            case Fail{error}:
+              (InternTable{after,ids},Fail{Exhausted{}})
+            case Done{unit}:
+              (InternTable{after,Map.set(&2,Maybe<&2,U32>,ids,name,Some{id})},Done{id})
