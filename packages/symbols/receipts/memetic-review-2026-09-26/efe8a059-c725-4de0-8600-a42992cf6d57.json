@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "id": "efe8a059-c725-4de0-8600-a42992cf6d57",
+  "at": "2026-09-27T02:08:57.578Z",
+  "command": "check",
+  "target": "packages/symbols/main.bend",
+  "revision": "74785162b33e8a7daa7eaece25dc32ea1bfcc5d4",
+  "source_sha256": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b",
+  "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+  "selected_rules": [
+    "bend-machine-arithmetic",
+    "bend-borrow-lifetime",
+    "perf-loop-invariant-work",
+    "perf-amortized-growth"
+  ],
+  "perch_version": "0.3.5",
+  "requested_model": "jev-latest",
+  "resolved_model": "jev-1.13.0",
+  "provider_requests": 1,
+  "provider_responses": 1,
+  "models": [
+    "jev-1.13.0"
+  ],
+  "answers": [
+    {
+      "rule": "bend-machine-arithmetic",
+      "probability_true": 0.44
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "probability_true": 0.87
+    },
+    {
+      "rule": "perf-loop-invariant-work",
+      "probability_true": 0.89
+    },
+    {
+      "rule": "perf-amortized-growth",
+      "probability_true": 0.72
+    }
+  ],
+  "usage": {
+    "input_tokens": 2460,
+    "output_tokens": 90
+  },
+  "elapsed_ms": 241,
+  "upstream_exit": 0,
+  "exit": 0,
+  "status": "completed",
+  "checked": 4,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 13,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "parser_coverage": null,
+  "units": [
+    {
+      "path": "packages/symbols/main.bend",
+      "name": "inserted",
+      "line": 40,
+      "end_line": 47,
+      "checked": 4,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        },
+        {
+          "rule": "perf-amortized-growth",
+          "broken": 0.28,
+          "floor": 0.8
+        }
+      ],
+      "broken": [],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/symbols/main.bend",
+            "source_sha256": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "String",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "V.Error",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "Table",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/symbols/main.bend",
+            "name": "Map.set",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      }
+    }
+  ],
+  "findings": [],
+  "issue_count": null,
+  "adjudication": "unreviewed"
+}
