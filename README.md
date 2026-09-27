@@ -70,6 +70,8 @@ That observation does not select the compatibility or bootstrap pin.
 
 ## Development tooling
 
+- [Compiler benchmark framework and hill-climbing workflow](bench/README.md): `npm run bench -- --suite=core`.
+
 Perch 0.3.5 is installed as pinned local development tooling, with a local adapter
 for Bend 2's actual parser. `npm ci` installs the adapter automatically. Bend
 source rules review parsed declarations with explicit local helper context.

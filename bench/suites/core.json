@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "name": "core",
+  "description": "Existing enum, match, call, erasure, local and ordinal-boundary fixtures; literal oracles from the Wasm gate.",
+  "runtime": { "warmup": 100000, "iterations": 1000000 },
+  "cases": [
+    { "name": "flag-flip", "program": "tests/subsets/s1/flag.bend", "entry": "flip", "args": [0], "repeat": 7 },
+    { "name": "nested-match", "program": "tests/subsets/s1/nested-match.bend", "entry": "both", "args": [1, 0], "repeat": 7 },
+    { "name": "data-reuse", "program": "tests/subsets/s1/data-reuse.bend", "entry": "reuse", "args": [1], "repeat": 7 },
+    { "name": "color-cycle", "program": "tests/compiler-wasm/fixtures/three-colors.bend", "entry": "cycle", "args": [2], "repeat": 7 },
+    { "name": "mixed-types", "program": "tests/compiler-wasm/fixtures/mixed-types.bend", "entry": "choose", "args": [1, 0], "repeat": 7 },
+    { "name": "branch-locals", "program": "tests/compiler-wasm/fixtures/branch-locals.bend", "entry": "f", "args": [0, 1], "repeat": 7 },
+    { "name": "erased-cost", "program": "tests/compiler-wasm/fixtures/erased-cost.bend", "entry": "main", "args": [], "repeat": 7 },
+    { "name": "high-tags", "program": "tests/compiler-wasm/fixtures/high-tags.bend", "entry": "identity", "args": [255], "repeat": 7 },
+    { "name": "high-function-index", "program": "tests/compiler-wasm/fixtures/high-function-index.bend", "entry": "main", "args": [], "repeat": 7 }
+  ]
+}

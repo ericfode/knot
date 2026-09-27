@@ -6,6 +6,10 @@
     "node": ">=22.18"
   },
   "scripts": {
+    "bench": "node bench/run.mjs",
+    "bench:compare": "node bench/compare.mjs",
+    "bench:baseline": "node bench/run.mjs --baseline",
+    "bench:verify": "node --test bench/tests/*.test.mjs && node bench/tests/smoke.mjs",
     "perch": "node scripts/perch-workflow.mjs",
     "lint": "node scripts/perch-workflow.mjs check",
     "lint:scan": "node scripts/perch-workflow.mjs scan",

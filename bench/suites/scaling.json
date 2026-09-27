@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "name": "scaling",
+  "description": "Deterministic enum widths, long match tables and acyclic call depths within today's enum profile. Independent evaluator oracles plus generator formulas.",
+  "runtime": { "warmup": 100000, "iterations": 1000000 },
+  "cases": [
+    { "name": "enum-16", "program": ".local/bench/generated/enum-16.bend", "entry": "identity", "args": [15], "repeat": 7 },
+    { "name": "enum-64", "program": ".local/bench/generated/enum-64.bend", "entry": "identity", "args": [63], "repeat": 7 },
+    { "name": "enum-128", "program": ".local/bench/generated/enum-128.bend", "entry": "identity", "args": [127], "repeat": 7 },
+    { "name": "match-16", "program": ".local/bench/generated/match-16.bend", "entry": "rotate", "args": [14], "repeat": 7 },
+    { "name": "match-64", "program": ".local/bench/generated/match-64.bend", "entry": "rotate", "args": [62], "repeat": 7 },
+    { "name": "match-128", "program": ".local/bench/generated/match-128.bend", "entry": "rotate", "args": [126], "repeat": 7 },
+    { "name": "calls-16", "program": ".local/bench/generated/calls-16.bend", "entry": "step16", "args": [1], "repeat": 7 },
+    { "name": "calls-64", "program": ".local/bench/generated/calls-64.bend", "entry": "step64", "args": [1], "repeat": 7 },
+    { "name": "calls-128", "program": ".local/bench/generated/calls-128.bend", "entry": "step128", "args": [1], "repeat": 7 }
+  ]
+}
