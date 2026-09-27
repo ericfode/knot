@@ -78,6 +78,7 @@ File targets check each declaration; `file.bend::name` checks a single unit.
 - [Perch maintenance procedure](docs/perch-maintenance.md)
 - [Perch review log and calibration decisions](docs/perch-review-log.md)
 - [Performance checks and model repair experiments](docs/perch-performance-2026-09-26.md)
+- [Perch whole-repository throughput and measured defaults](docs/perch-throughput-2026-09-26.md)
 - [Ranked style review: conceptual compression and high-dopamine reading](docs/perch-style.md)
 - [Owner-chat Perch pass, changes and code excerpts](docs/perch-thread-pass-2026-09-26.md)
 

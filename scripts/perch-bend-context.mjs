@@ -12,6 +12,39 @@ const within = (root, path) => {
   return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
 };
 
+/** Explicit files only; each real source is read and parsed once for this command. */
+export async function createBendSourceSnapshot(root) {
+  const realRoot = await realpath(root), paths = new Map(), sources = new Map();
+  let parseCalls = 0;
+  const outside = () => Object.assign(new Error('Bend source is outside this workspace'), {
+    code: 'BEND_OUTSIDE_WORKSPACE', bend_snapshot_io: true,
+  });
+  return {
+    root: realRoot,
+    get stats() { return { requested_paths: paths.size, parse_calls: parseCalls }; },
+    async load(path) {
+      const absolute = resolve(realRoot, path);
+      if (!within(realRoot, absolute)) throw outside();
+      if (!paths.has(absolute)) paths.set(absolute, (async () => {
+        let actual;
+        try { actual = await realpath(absolute); }
+        catch (error) { throw Object.assign(error, { bend_snapshot_io: true }); }
+        if (!within(realRoot, actual)) throw outside();
+        if (!sources.has(actual)) sources.set(actual, (async () => {
+          let source;
+          try { source = await readFile(actual, 'utf8'); }
+          catch (error) { throw Object.assign(error, { bend_snapshot_io: true }); }
+          parseCalls++;
+          const analysis = await analyzeBendSource(source);
+          return Object.freeze({ source, analysis, source_sha256: hash(source) });
+        })());
+        return sources.get(actual);
+      })());
+      return paths.get(absolute);
+    },
+  };
+}
+
 export function bendDeclarationSource(source, declaration, location = declaration.location) {
   const body = Buffer.from(source).subarray(location.start.byte, location.end.byte).toString('utf8');
   // Keep the declaration's immediately adjacent contract comment, without
@@ -24,17 +57,29 @@ export function bendDeclarationSource(source, declaration, location = declaratio
 }
 
 /** One immutable working-tree source snapshot per file-check invocation. */
-export async function createBendReview({ root, path, source, analysis, limits = {} }) {
+export async function createBendReview({ root, path, source, analysis, limits = {}, snapshot = null }) {
   const bounds = { helpers: 16, files: 12, bytes: 48_000, callers: 4, ...limits };
   const realRoot = await realpath(root);
+  if (snapshot && snapshot.root !== realRoot) throw new Error('Bend source snapshot belongs to another workspace');
   const files = new Map();
   const loads = new Map();
   const contexts = new Map();
-  const makeFile = (filePath, text, parsed) => ({
-    path: filePath, source: text, analysis: parsed, source_sha256: hash(text),
-    declarations: new Map(parsed.declarations.map(decl => [decl.qualified_name, decl])),
-    imports: parsed.references.filter(ref => ref.kind === 'import'),
-  });
+  const makeFile = (filePath, text, parsed) => {
+    const references = new Map(), callers = new Map();
+    for (const reference of parsed.references) {
+      if (reference.kind === 'import') continue;
+      if (!references.has(reference.source)) references.set(reference.source, []);
+      references.get(reference.source).push(reference);
+      if (!callers.has(reference.name)) callers.set(reference.name, new Set());
+      callers.get(reference.name).add(reference.source);
+    }
+    return {
+      path: filePath, source: text, analysis: parsed, source_sha256: hash(text),
+      declarations: new Map(parsed.declarations.map(decl => [decl.qualified_name, decl])),
+      imports: parsed.references.filter(ref => ref.kind === 'import'),
+      references, callers, lines: text.split('\n'), declarationSources: new Map(),
+    };
+  };
   const primary = makeFile(path, source, analysis);
   files.set(path, primary);
 
@@ -45,6 +90,19 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     const filePath = relative(resolve(root), absolute).split(sep).join('/');
     if (files.has(filePath)) return { file: files.get(filePath) };
     if (!loads.has(filePath)) loads.set(filePath, (async () => {
+      if (snapshot) {
+        let loaded;
+        try { loaded = await snapshot.load(filePath); }
+        catch (error) {
+          if (!error.bend_snapshot_io) throw error;
+          return { reason: error.code === 'BEND_OUTSIDE_WORKSPACE' ? 'outside-workspace'
+            : `unavailable-local-import:${error.code ?? 'read-error'}` };
+        }
+        if (loaded.analysis.parser_status !== 'parsed') throw new Error(`Bend context ${filePath} does not parse: ${loaded.analysis.parser_message ?? loaded.analysis.parser_status}`);
+        const file = makeFile(filePath, loaded.source, loaded.analysis);
+        files.set(filePath, file);
+        return { file };
+      }
       let actual, text;
       try {
         actual = await realpath(absolute);
@@ -77,11 +135,14 @@ export async function createBendReview({ root, path, source, analysis, limits = 
   }
 
   function entry(file, declaration, location) {
+    const span = location ?? declaration.location;
+    const key = `${span.start.byte}:${span.end.byte}`;
+    if (!file.declarationSources.has(key)) file.declarationSources.set(key, bendDeclarationSource(file.source, declaration, location));
     return {
       name: declaration.qualified_name ?? declaration.name, path: file.path,
       line: location?.start.line ?? declaration.line,
       end_line: location?.end.line ?? declaration.end_line,
-      source: bendDeclarationSource(file.source, declaration, location),
+      source: file.declarationSources.get(key),
     };
   }
 
@@ -129,7 +190,7 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     }
     while (pending.length) {
       const current = pending.shift();
-      const references = current.file.analysis.references.filter(ref => ref.source === current.declaration.id && ref.kind !== 'import');
+      const references = current.file.references.get(current.declaration.id) ?? [];
       for (const reference of references) {
         const target = await resolveReference(current.file, reference.name, admitted);
         if (!target.declaration) { note(current.file, reference.name, target.reason, target.truncated); continue; }
@@ -138,7 +199,7 @@ export async function createBendReview({ root, path, source, analysis, limits = 
         if (calls.length >= bounds.helpers) { note(current.file, reference.name, 'context-helper-limit', true); continue; }
         visited.add(id);
         if (add(calls, entry(target.file, target.declaration))) {
-          calleeNodes.push({ node: node(target.file, target.declaration), lines: target.file.source.split('\n'), calls: [] });
+          calleeNodes.push({ node: node(target.file, target.declaration), lines: target.file.lines, calls: [] });
           pending.push(target);
           if (target.declaration.law_location) add(laws, entry(target.file, target.declaration, target.declaration.law_location));
         }
@@ -146,10 +207,10 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     }
     // Only direct callers already present in the target file; no repository
     // discovery and no unrelated file/name fallback.
-    const callers = new Set(primary.analysis.references.filter(ref => ref.kind !== 'import' && ref.name === name && ref.source !== declaration.id).map(ref => ref.source));
-    for (const caller of primary.analysis.declarations.filter(decl => callers.has(decl.id))) {
+    const callers = primary.callers.get(name) ?? new Set();
+    for (const caller of primary.analysis.declarations.filter(decl => decl.id !== declaration.id && callers.has(decl.id))) {
       if (calledBy.length >= bounds.callers) { truncated = true; break; }
-      if (add(calledBy, entry(primary, caller))) callerNodes.push({ node: node(primary, caller), lines: source.split('\n'), site: null });
+      if (add(calledBy, entry(primary, caller))) callerNodes.push({ node: node(primary, caller), lines: primary.lines, site: null });
     }
     for (const filePath of [...used]) {
       const file = files.get(filePath);

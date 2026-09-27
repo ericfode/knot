@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Offline counterfactual: memoize rules for one immutable check invocation.
+// After the throughput fix, both variants should already load rules only once.
 // Instrument a disposable copy of the pinned bundle, never the installed CLI.
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
@@ -67,7 +68,7 @@ try {
         Object.fromEntries(Object.keys(body.questions).map(key => [key, { noul: 1 }])) }));
     };
     const start = performance.now();
-    const exit = await main(['check', target, '--rules', rules, '--json'], {
+    const exit = await main(['check', target, '--rules', rules, '--parallel', '1', '--json'], {
       env: { PERCH_API_KEY: 'offline-rule-loading-probe' },
       stdout: text => { result = JSON.parse(text); }, stderr: () => { diagnostics++; },
     });

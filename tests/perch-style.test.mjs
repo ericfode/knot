@@ -1,20 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { assessStyle, prepareStyleTargets, rankRows, runStyleRanking, validateScore } from '../scripts/perch-style.mjs';
+import { setImmediate as nextTurn } from 'node:timers/promises';
+import { assessStyle, changedStyleSources, prepareStyleInventory, prepareStyleTargets, rankRows, runStyleRanking, validateScore } from '../scripts/perch-style.mjs';
+import { createBendSourceSnapshot } from '../scripts/perch-bend-context.mjs';
+import { DEFAULT_PERCH_JOBS } from '../scripts/perch-throughput.mjs';
 
 const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
 const targets = ['a.bend::solve', 'b.bend::solve'];
 const args = ['--live', '--json', '--cohort=Add one to an unsigned word', ...targets];
 const key = 'offline-secret-must-not-be-recorded';
 const source = 'import Base\nimport ./helper.bend as H\ndef solve(x: U32) -> U32: H.next(x)\ndef unrelated() -> U32: 999\n';
-const score = level => ({ type: 'score', score: level, confidence: 1,
-  probabilities: Object.fromEntries(config.dimensions[0].levels.map((_, i) => [i, i === level ? 1 : 0])) });
-const response = (brain = 3, delight = 2, model = 'offline-style-fixture', memetic = 3) => ({ ok: true, json: async () => ({
-  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight), highly_memetic: score(memetic) },
+const score = (level, dimension = config.dimensions[0]) => ({ type: 'score', score: level, confidence: 1,
+  probabilities: Object.fromEntries(dimension.levels.map((_, i) => [i, i === level ? 1 : 0])) });
+const criticalityScore = probability => ({ type: 'score', score: probability, confidence: Math.max(probability, 1 - probability),
+  probabilities: { 0: 1 - probability, 1: probability } });
+const response = (brain = 3, delight = 2, model = 'offline-style-fixture', memetic = 3, criticality = 0,
+  diagnostics = { anticipation: 3, payoff: 3 }) => ({ ok: true, json: async () => ({
+  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight, config.dimensions[1]),
+    highly_memetic: score(memetic, config.dimensions[2]), criticality: criticalityScore(criticality),
+    ...Object.fromEntries(config.diagnostic_dimensions.map(d => [d.id, score(diagnostics[d.id], d)])) },
   usage: { input_tokens: 100, output_tokens: 10 },
 }) });
 
@@ -51,32 +59,48 @@ test('rank preflight uses exact parsed units and working-copy helpers; all input
   assert.equal(calls, 0);
 });
 
-test('one request per unit carries three ordinal questions; receipts assess each axis without source or secrets', async t => {
+test('one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars', async t => {
   const root = await fixture(t), requests = [], output = [];
   const code = await runStyleRanking(args, { root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x),
     fetchImpl: async (_url, request) => {
       requests.push(JSON.parse(request.body));
       assert.equal(request.headers.authorization, `Bearer ${key}`);
-      return requests.length === 1 ? response(4, 1) : response(2, 4);
+      return requests.length === 1 ? response(5, 1, 'offline-style-fixture', 3, 1) : response(2, 4);
     },
   });
   assert.equal(code, 3, 'completed review with unmet style targets needs attention');
   assert.equal(requests.length, 2);
   for (const request of requests) {
-    assert.equal(Object.keys(request.questions).length, 3);
-    assert.ok(Object.values(request.questions).every(q => q.type === 'score' && q.criteria.length === 5));
+    assert.equal(Object.keys(request.questions).length, 6);
+    for (const dimension of [...config.dimensions, ...config.diagnostic_dimensions, config.criticality]) {
+      assert.equal(request.questions[dimension.id].type, 'score');
+      assert.deepEqual(request.questions[dimension.id].criteria, dimension.levels);
+    }
   }
   const report = JSON.parse(output[0]);
   assert.equal(report.status, 'completed');
   assert.equal(report.provider_requests, 2);
   assert.equal(report.provider_responses, 2);
   assert.equal(report.rankings[0].entries[0].target, targets[0]);
+  assert.equal(report.rankings[0].entries[0].score, 5);
+  assert.equal(report.rankings[0].entries[0].probabilities[5], 1);
   assert.equal(report.rankings[1].entries[0].target, targets[1]);
   assert.equal(report.typechecked, false);
   assert.equal(report.behavioral_equivalence_checked, false);
-  assert.equal(report.assessments.length, 6);
+  assert.equal(report.assessments.length, 8);
+  const brain = report.assessments.find(a => a.target === targets[0] && a.dimension === 'maximally_big_brain');
+  assert.equal(brain.target_level, 5);
+  assert.equal(brain.target_basis, 'criticality');
+  assert.equal(brain.probability_at_target, 1);
+  assert.equal(brain.status, 'meets_target');
+  assert.deepEqual(report.criticality.assessments.map(c => c.status), ['critical', 'noncritical']);
+  assert.deepEqual(report.criticality.policy, config.criticality);
   assert.equal(report.style_summary.meets_all, 0);
   assert.equal(report.style_summary.needs_review, 2);
+  assert.equal(report.rubric_version, 3);
+  assert.equal(report.diagnostics.required_for, 'critical_or_uncertain');
+  assert.deepEqual(report.diagnostics.targets, config.criticality.diagnostic_targets);
+  assert.equal(report.diagnostics.assessments.length, 4);
   const receipts = await readdir(join(root, '.perch/usage'));
   assert.equal(receipts.length, 1);
   const saved = await readFile(join(root, '.perch/usage', receipts[0]), 'utf8');
@@ -84,10 +108,99 @@ test('one request per unit carries three ordinal questions; receipts assess each
   assert.ok(!saved.includes(key) && !saved.includes('def solve') && !saved.includes('def next'));
 });
 
+test('diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output', async t => {
+  const root = await fixture(t), output = [];
+  const code = await runStyleRanking(['--live', '--json', ...targets], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x),
+    fetchImpl: async (_url, request) => response(3, 3, 'offline-style-fixture', 3, 0,
+      JSON.parse(request.body).state.path === 'a.bend' ? { anticipation: 0, payoff: 4 } : { anticipation: 4, payoff: 0 }),
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 0);
+  assert.equal(report.style_summary.meets_all, 2);
+  assert.equal(report.assessments.length, 6);
+  assert.equal(report.rankings.length, 3);
+  assert.deepEqual(report.diagnostics.assessments.map(a => a.score), [0, 4, 4, 0]);
+  assert.ok(report.diagnostics.assessments.every(a => a.status === 'limited_context' && a.unresolved_references > 0));
+  assert.ok(report.diagnostics.assessments.every(a => a.advisory && !a.required));
+  assert.ok(report.diagnostics.assessments.every(a => !('target_level' in a) && !('probability_at_target' in a)));
+  assert.equal(report.rows[0].answers.anticipation.probabilities[0], 1);
+  const lines = [];
+  assert.equal(await runStyleRanking(['--live', targets[0]], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => lines.push(x),
+    fetchImpl: async () => response(3, 3, 'offline-style-fixture', 3, 0, { anticipation: 0, payoff: 4 }),
+  }), 0);
+  assert.match(lines.join('\n'), /Anticipation \(required for critical or uncertain declarations\)/);
+  assert.match(lines.join('\n'), /0\.00\/4 \[limited context\]/);
+  assert.match(lines.join('\n'), /Payoff \(required for critical or uncertain declarations\)/);
+});
+
+test('truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score', async t => {
+  const root = await fixture(t), output = [];
+  await writeFile(join(root, 'many.bend'), 'import Base\ndef target(x: U32) -> U32: U32.add(x,1)\n'
+    + Array.from({ length: 5 }, (_, i) => `def caller${i}(x: U32) -> U32: target(x)\n`).join(''));
+  const code = await runStyleRanking(['--live', '--json', 'many.bend::target'], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), fetchImpl: async (_url, request) => {
+      const input = JSON.parse(request.body);
+      assert.equal(input.state.context_notes.truncated, true);
+      assert.equal('anticipation' in input.questions, false);
+      assert.equal('payoff' in input.questions, false);
+      assert.equal(Object.keys(input.questions).length, 4);
+      return response(5, 3);
+    },
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 3, 'truncated context cannot waive mandatory anticipation and payoff');
+  assert.equal(report.assessments[0].target_level, 5, 'the existing criticality safeguard still applies');
+  assert.equal(report.diagnostics.assessments.length, 2);
+  assert.equal(report.style_summary.unavailable, 2);
+  assert.equal(report.style_summary.meets_all, 0);
+  assert.ok(report.diagnostics.assessments.every(a => a.status === 'unavailable' && a.reason === 'context_truncated' && !('score' in a)));
+  assert.equal('anticipation' in report.rows[0].answers, false);
+});
+
+test('critical and uncertain declarations need both anticipation and payoff with their own target probability', async t => {
+  const root = await fixture(t), output = [];
+  const code = await runStyleRanking(['--live', '--json', targets[0]], {
+    root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x),
+    fetchImpl: async () => response(5, 4, 'offline-style-fixture', 4, 0.5, { anticipation: 2, payoff: 4 }),
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 3);
+  assert.equal(report.style_summary.meets_all, 0);
+  assert.equal(report.assessments.find(a => a.dimension === 'anticipation').status, 'below_target');
+  assert.ok(report.diagnostics.assessments.every(a => a.required && !a.advisory));
+  for (const criticality of [0.5, 0.6, 1]) {
+    for (const dimension of config.diagnostic_dimensions) {
+      for (const [mass, status] of [[0.4, 'below_target'], [0.5, 'uncertain'], [0.6, 'meets_target']]) {
+        const answers = (await response(5, 3, 'offline-style-fixture', 3, criticality).json()).answers;
+        answers[dimension.id] = { score: 2 + mass, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 1 - mass, 3: mass, 4: 0 } };
+        const assessments = assessStyle([{ target: 'f', kind: 'bend_definition', context: { truncated: false }, answers }], config);
+        const diagnostic = assessments.find(a => a.dimension === dimension.id);
+        assert.equal(diagnostic.target_level, 3);
+        assert.equal(diagnostic.target_basis, 'criticality');
+        assert.equal(diagnostic.status, status);
+      }
+    }
+  }
+});
+
+test('invalid diagnostic configurations are rejected before any provider request', async t => {
+  const root = await fixture(t);
+  for (const diagnostic_dimensions of [null, {}, [{ ...config.diagnostic_dimensions[0], id: 'highly_memetic' }],
+    [{ ...config.diagnostic_dimensions[0], id: 'criticality' }],
+    [config.diagnostic_dimensions[0], config.diagnostic_dimensions[0]],
+    [{ ...config.diagnostic_dimensions[0], levels: ['only one'] }]]) {
+    await assert.rejects(prepareStyleTargets(targets, null, { ...config, diagnostic_dimensions }, root), /[Dd]iagnostic/);
+  }
+  await assert.rejects(prepareStyleTargets(targets, null, { ...config, style_targets: [...config.style_targets,
+    { dimension: 'anticipation', level: 3, minimum_probability: 0.6 }] }, root), /Each style dimension/);
+});
+
 test('partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking', async t => {
   const root = await fixture(t), output = [], errors = [];
   let calls = 0;
-  const code = await runStyleRanking([...args, 'a.bend::unrelated'], {
+  const code = await runStyleRanking([...args, '--jobs=1', 'a.bend::unrelated'], {
     root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), stderr: x => errors.push(x),
     fetchImpl: async () => {
       if (++calls === 2) throw new Error(`unsafe request details ${key}`);
@@ -119,9 +232,64 @@ test('a single existing declaration is assessed without a cohort or alternative;
   assert.equal(code, 0);
   assert.equal(report.provider_requests, 1);
   assert.equal(report.style_summary.meets_all, 1);
-  const uncertain = { ...score(3), score: 2.5, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
-  const assessment = assessStyle([{ target: 'x', answers: { maximally_big_brain: score(4), delightful_to_read: uncertain, highly_memetic: score(1) } }], config);
+  const uncertain = { ...score(3, config.dimensions[1]), score: 2.5, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
+  const assessment = assessStyle([{ target: 'x', kind: 'bend_definition', answers: { maximally_big_brain: score(4),
+    delightful_to_read: uncertain, highly_memetic: score(1, config.dimensions[2]), criticality: criticalityScore(0) } }], config);
   assert.deepEqual(assessment.map(a => a.status), ['meets_target', 'uncertain', 'below_target']);
+});
+
+test('all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar', async t => {
+  const root = await fixture(t);
+  const law = 'law equal:\n  for +n: U32\n  {n == n : U32}\n';
+  await writeFile(join(root, 'laws.bend'), `import Base\n${law}`);
+  await writeFile(join(root, 'proof.bend'), 'import Base\nimport ./laws.bend as L\ndef L.equal(n): {==}\n');
+  await writeFile(join(root, 'combined.bend'), `import Base\n${law}def equal(n): {==}\n`);
+  await writeFile(join(root, 'types.bend'), 'import Base\ntype Flag is Data: Off{} On{}\n');
+  for (const brain of [4, 5]) {
+    const output = [];
+    const code = await runStyleRanking(['--live', '--json', targets[0], 'laws.bend', 'proof.bend', 'combined.bend', 'types.bend'], {
+      root, env: { PERCH_API_KEY: key }, stdout: x => output.push(x), fetchImpl: async (_url, request) => {
+        const input = JSON.parse(request.body);
+        assert.equal('criticality' in input.questions, true);
+        assert.ok(input.state.path.endsWith('.bend'));
+        return response(brain, 3, 'offline-style-fixture', 3, 1);
+      },
+    });
+    const report = JSON.parse(output[0]);
+    assert.equal(code, brain === 5 ? 0 : 3);
+    assert.deepEqual(report.rows.map(r => r.kind), ['bend_definition', 'bend_law', 'bend_law_fill', 'bend_law_definition', 'bend_datatype']);
+    assert.deepEqual(report.assessments.filter(a => a.dimension === 'maximally_big_brain').map(a => a.target_level), [5, 5, 5, 5, 3]);
+    assert.equal(report.style_summary.meets_all, brain === 5 ? 5 : 1);
+    assert.equal(report.rankings.length, 3, 'criticality is not a fourth aesthetic ranking');
+    assert.equal(report.criticality.assessments.at(-1).status, 'critical');
+    assert.equal(report.assessments.filter(a => a.dimension === 'anticipation').length, 5);
+    assert.equal(report.assessments.filter(a => a.dimension === 'payoff').length, 5);
+  }
+});
+
+test('uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass', async () => {
+  const base = (await response(4, 3, 'offline-style-fixture', 3).json()).answers;
+  const assess = (probability, brain, truncated = false) => assessStyle([{ target: 'a::f', kind: 'bend_definition',
+    context: { truncated }, answers: { ...base, maximally_big_brain: brain, criticality: criticalityScore(probability) },
+  }], config)[0];
+  for (const probability of [0, 0.4]) {
+    assert.equal(assess(probability, score(3)).target_level, 3);
+    assert.equal(assess(probability, score(3)).status, 'meets_target');
+  }
+  for (const probability of [0.5, 0.6, 1]) {
+    assert.equal(assess(probability, score(4)).target_level, 5);
+    assert.equal(assess(probability, score(4)).status, 'below_target');
+    assert.equal(assess(probability, score(5)).status, 'meets_target');
+  }
+  assert.equal(assess(0.5, score(4)).criticality_status, 'uncertain');
+  assert.equal(assess(0.6, score(4)).criticality_status, 'critical');
+  assert.equal(assess(0, score(4), true).target_level, 5);
+  for (const [mass, status] of [[0.4, 'below_target'], [0.5, 'uncertain'], [0.6, 'meets_target']]) {
+    const brain = { ...score(5), score: 4 + mass, probabilities: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 1 - mass, 5: mass } };
+    assert.equal(assess(1, brain).status, status);
+  }
+  assert.throws(() => assessStyle([], { ...config, criticality: undefined }), /Criticality needs/);
+  assert.throws(() => assessStyle([], { ...config, criticality: { ...config.criticality, style_target: config.style_targets[0] } }), /stricter/);
 });
 
 test('whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs', async t => {
@@ -141,6 +309,7 @@ test('whole-project mode covers tracked and new Bend files, reports invalid and 
   assert.equal(code, 1, 'an unreadable file must not masquerade as full coverage');
   assert.equal(report.status, 'incomplete');
   assert.equal(report.coverage.ranked, 5);
+  assert.deepEqual(report.rows.map(row => row.target), ['a.bend::solve', 'a.bend::unrelated', 'b.bend::solve', 'helper.bend::next', 'types.bend::Flag']);
   assert.equal(report.provider_requests, 5);
   const datatype = report.rows.find(r => r.target === 'types.bend::Flag');
   assert.equal(datatype.kind, 'bend_datatype');
@@ -149,6 +318,46 @@ test('whole-project mode covers tracked and new Bend files, reports invalid and 
   assert.deepEqual(report.inventory.empty_files, ['empty.bend']);
   assert.ok(!report.inventory.discovered_files.includes('ignored.bend'));
   assert.equal(report.rankings.length, 3);
+  await assert.rejects(prepareStyleInventory(null, { ...config, max_units: 2 }, root), /limited to 2/);
+});
+
+test('command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation', async t => {
+  const root = await fixture(t);
+  await writeFile(join(root, 'b.bend'), source);
+  await symlink('helper.bend', join(root, 'helper-alias.bend'));
+  await writeFile(join(root, 'c.bend'), source.replace('./helper.bend', './helper-alias.bend'));
+  const selection = [...targets, 'c.bend::solve'];
+  const snapshot = await createBendSourceSnapshot(root);
+  const units = await prepareStyleTargets(selection, null, config, root, snapshot);
+  assert.equal(snapshot.stats.parse_calls, 4, 'three targets and one real helper are each parsed once');
+  assert.deepEqual(units[2].context.files.map(file => file.path), ['c.bend', 'helper-alias.bend']);
+  assert.deepEqual(units, await prepareStyleTargets(selection, null, config, root), 'snapshot sharing retains exact request state and context identities');
+  await prepareStyleTargets(['helper.bend::next'], null, config, root, snapshot);
+  assert.equal(snapshot.stats.parse_calls, 4, 'a helper later selected as a target keeps the same snapshot');
+  await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
+  const unchanged = await prepareStyleTargets(selection, null, config, root, snapshot);
+  assert.deepEqual(unchanged, units, 'a command snapshot does not silently refresh part of its context');
+  assert.deepEqual(await changedStyleSources(units, root), ['helper.bend', 'helper-alias.bend']);
+  const refreshed = await prepareStyleTargets(selection, null, config, root);
+  assert.notEqual(refreshed[0].state_sha256, units[0].state_sha256);
+  assert.match(refreshed[0].state.calls[0].source, /add\(x,2\)/);
+});
+
+test('snapshot loads remain inside the workspace and do not discover unrelated sources', async t => {
+  const root = await fixture(t), outside = await mkdtemp(join(tmpdir(), 'knot-perch-outside-'));
+  t.after(() => rm(outside, { recursive: true, force: true }));
+  await writeFile(join(outside, 'external.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,9)\n');
+  await symlink(join(outside, 'external.bend'), join(root, 'external.bend'));
+  await writeFile(join(root, 'a.bend'), source.replace('./helper.bend', './external.bend'));
+  await writeFile(join(root, 'unrelated.bend'), 'def broken( -> U32: 0\n');
+  const snapshot = await createBendSourceSnapshot(root);
+  const [unit] = await prepareStyleTargets([targets[0]], null, config, root, snapshot);
+  assert.equal(snapshot.stats.parse_calls, 1);
+  assert.deepEqual(unit.context.files.map(file => file.path), ['a.bend']);
+  assert.ok(unit.context.unresolved.some(reference => reference.name === 'H.next' && reference.reason === 'outside-workspace'));
+  await assert.rejects(snapshot.load('../escape.bend'), /outside this workspace/);
+  await assert.rejects(prepareStyleTargets(['external.bend::next'], null, config, root, snapshot), /inside this workspace/);
+  assert.equal(snapshot.stats.parse_calls, 1);
 });
 
 test('explicit reuse avoids paid repeats and invalidates when helper context changes', async t => {
@@ -162,11 +371,23 @@ test('explicit reuse avoids paid repeats and invalidates when helper context cha
   assert.equal(await run(['--reuse=first.json.gz'], second), 0);
   assert.equal(JSON.parse(second[0]).provider_requests, 0);
   assert.equal(JSON.parse(second[0]).reused_units, 1);
+  const damaged = JSON.parse(first[0]);
+  delete damaged.rows[0].answers.criticality;
+  await writeFile(join(root, 'missing-criticality.json'), JSON.stringify(damaged));
+  await assert.rejects(run(['--reuse=missing-criticality.json'], []), /Invalid Score answer/);
+  const missingDiagnostic = JSON.parse(first[0]);
+  delete missingDiagnostic.rows[0].answers.anticipation;
+  await writeFile(join(root, 'missing-diagnostic.json'), JSON.stringify(missingDiagnostic));
+  await assert.rejects(run(['--reuse=missing-diagnostic.json'], []), /Invalid Score answer/);
   await writeFile(join(root, 'helper.bend'), 'import Base\ndef next(x: U32) -> U32: U32.add(x,2)\n');
   const third = [];
   assert.equal(await run(['--reuse=first.json.gz'], third), 0);
   assert.equal(JSON.parse(third[0]).provider_requests, 1);
   assert.equal(JSON.parse(third[0]).reused_units, 0);
+  const revised = structuredClone(config);
+  revised.diagnostic_dimensions[0].instructions += ' Revised context.';
+  await writeFile(join(root, 'perch-style.json'), JSON.stringify(revised));
+  await assert.rejects(run(['--reuse=first.json.gz'], []), /same rubric/);
 });
 
 test('concurrent responses preserve target attribution and changes during review are disclosed', async t => {
@@ -195,15 +416,26 @@ test('missing credentials, unauthorized responses, malformed scores and model dr
   const root = await fixture(t);
   const invalid = response();
   invalid.json = async () => ({ model: 'offline', answers: { maximally_big_brain: score(4) } });
-  for (const mode of ['missing-key', 'unauthorized', 'invalid-answer', 'model-drift']) {
+  for (const mode of ['missing-key', 'unauthorized', 'invalid-answer', 'missing-criticality', 'missing-diagnostic', 'invalid-diagnostic', 'model-drift']) {
     let calls = 0;
     const output = [];
-    const code = await runStyleRanking(args, {
+    const code = await runStyleRanking([...args, '--jobs=1'], {
       root, env: mode === 'missing-key' ? {} : { PERCH_API_KEY: key }, stdout: x => output.push(x), stderr: () => {},
       fetchImpl: async () => {
         calls++;
         if (mode === 'unauthorized') return { ok: false, status: 401 };
         if (mode === 'invalid-answer') return invalid;
+        if (mode === 'missing-criticality') {
+          const body = await response(5, 3).json();
+          delete body.answers.criticality;
+          return { ok: true, json: async () => body };
+        }
+        if (mode === 'missing-diagnostic' || mode === 'invalid-diagnostic') {
+          const body = await response(5, 3).json();
+          if (mode === 'missing-diagnostic') delete body.answers.payoff;
+          else body.answers.payoff.score = 99;
+          return { ok: true, json: async () => body };
+        }
         return response(3, 2, `offline-${calls}`);
       },
     });
@@ -213,8 +445,155 @@ test('missing credentials, unauthorized responses, malformed scores and model dr
     assert.deepEqual(report.rankings, [], mode);
     assert.equal(calls, mode === 'missing-key' ? 0 : mode === 'model-drift' ? 2 : 1, mode);
   }
-  assert.throws(() => validateScore({ ...score(4), score: 1 }, 5), /Inconsistent/);
-  assert.throws(() => validateScore({ ...score(4), probabilities: { 4: 1 } }, 5), /Incomplete/);
+  assert.throws(() => validateScore({ ...score(4), score: 1 }, config.dimensions[0].levels.length), /Inconsistent/);
+  assert.throws(() => validateScore({ ...score(4), probabilities: { 4: 1 } }, config.dimensions[0].levels.length), /Incomplete/);
+});
+
+test('default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results', { timeout: 10000 }, async t => {
+  const root = await fixture(t), count = DEFAULT_PERCH_JOBS + 8;
+  await writeFile(join(root, 'many.bend'), 'import Base\n' + Array.from({ length: count }, (_, i) => `def item${i}() -> U32: ${i}\n`).join(''));
+  const selection = ['--live', '--json', 'many.bend'];
+  const serialOutput = [], serialInputs = [], parallelOutput = [], parallelInputs = [], waiting = [];
+  const resultFor = request => {
+    const n = Number(request.state.name.slice(4));
+    return response(n % 6, (n + 1) % 5, 'offline-style-fixture', (n + 2) % 5, (n % 3) / 2,
+      { anticipation: (n + 3) % 5, payoff: (n + 4) % 5 });
+  };
+  const serialCode = await runStyleRanking([...selection, '--jobs=1'], {
+    root, env: { PERCH_API_KEY: key }, stdout: value => serialOutput.push(value),
+    fetchImpl: async (_url, request) => {
+      const input = JSON.parse(request.body);
+      serialInputs.push(input);
+      return resultFor(input);
+    },
+  });
+  let ready, active = 0, peak = 0;
+  const initialBatch = new Promise(resolve => { ready = resolve; });
+  const parallel = runStyleRanking(selection, {
+    root, env: { PERCH_API_KEY: key }, stdout: value => parallelOutput.push(value),
+    fetchImpl: async (_url, request) => {
+      const input = JSON.parse(request.body);
+      parallelInputs.push(input);
+      peak = Math.max(peak, ++active);
+      if (parallelInputs.length <= DEFAULT_PERCH_JOBS) {
+        await new Promise(resolve => {
+          waiting.push(resolve);
+          if (waiting.length === DEFAULT_PERCH_JOBS) ready();
+        });
+      }
+      active--;
+      return resultFor(input);
+    },
+  });
+  await initialBatch;
+  assert.equal(parallelInputs.length, DEFAULT_PERCH_JOBS, 'default dispatch fills a bounded batch before any answer');
+  assert.equal(active, DEFAULT_PERCH_JOBS);
+  for (const release of waiting.reverse()) release();
+  assert.equal(await parallel, serialCode);
+  assert.equal(peak, DEFAULT_PERCH_JOBS);
+  assert.deepEqual(parallelInputs, serialInputs, 'every source state, rubric and model stays identical');
+  const serial = JSON.parse(serialOutput[0]), concurrent = JSON.parse(parallelOutput[0]);
+  assert.equal(concurrent.concurrency, DEFAULT_PERCH_JOBS);
+  assert.equal(concurrent.provider_peak_in_flight, DEFAULT_PERCH_JOBS);
+  assert.equal(serial.provider_peak_in_flight, 1);
+  for (const field of ['targets', 'rankings', 'assessments', 'style_summary', 'criticality', 'diagnostics', 'coverage', 'source_freshness', 'status', 'parser', 'rubric_sha256']) {
+    assert.deepEqual(concurrent[field], serial[field], field);
+  }
+  const withoutTime = rows => rows.map(({ elapsed_ms, ...row }) => row);
+  assert.deepEqual(withoutTime(concurrent.rows), withoutTime(serial.rows), 'rows retain selection order after out-of-order responses');
+  const legacyMeetsAll = concurrent.rows.filter(row => concurrent.assessments.filter(a => a.target === row.target).every(a => a.status === 'meets_target')).length;
+  assert.equal(concurrent.style_summary.meets_all, legacyMeetsAll);
+  for (const [phase, elapsed] of Object.entries(concurrent.timings)) {
+    if (phase.endsWith('_ms')) assert.ok(Number.isInteger(elapsed) && elapsed >= 0, phase);
+  }
+  assert.ok(concurrent.timings.total_ms >= concurrent.timings.preflight_ms);
+  assert.ok(concurrent.timings.total_ms >= concurrent.elapsed_ms, 'new total includes previously omitted preflight');
+});
+
+test('concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse', { timeout: 10000 }, async t => {
+  const root = await fixture(t), output = [], errors = [], pending = [];
+  await writeFile(join(root, 'many.bend'), 'import Base\n' + Array.from({ length: 6 }, (_, i) => `def item${i}() -> U32: ${i}\n`).join(''));
+  let ready, settled = false;
+  const started = new Promise(resolve => { ready = resolve; });
+  const run = runStyleRanking(['--live', '--json', '--jobs=3', '--output=failed.json', 'many.bend'], {
+    root, env: { PERCH_API_KEY: key }, stdout: value => output.push(value), stderr: value => errors.push(value),
+    fetchImpl: async () => new Promise((resolve, reject) => {
+      pending.push({ resolve, reject });
+      if (pending.length === 3) ready();
+    }),
+  }).then(code => { settled = true; return code; });
+  await started;
+  pending[1].reject(new Error(`unsafe provider request ${key}`));
+  await nextTurn();
+  assert.equal(pending.length, 3);
+  assert.equal(settled, false, 'failed run must wait for already-dispatched work');
+  pending[2].resolve(response(3, 3));
+  await nextTurn();
+  assert.equal(pending.length, 3, 'successful drain must not start the next request');
+  assert.equal(settled, false);
+  pending[0].resolve(response(3, 3));
+  assert.equal(await run, 1);
+  const report = JSON.parse(output[0]);
+  assert.equal(report.status, 'failed');
+  assert.equal(report.provider_requests, 3);
+  assert.equal(report.provider_responses, 2);
+  assert.equal(report.provider_peak_in_flight, 3);
+  assert.equal(report.coverage.ranked, 0);
+  assert.deepEqual(report.rows, []);
+  assert.deepEqual(report.rankings, []);
+  assert.deepEqual(report.assessments, []);
+  assert.deepEqual(report.completed_rows.map(row => row.target), ['many.bend::item0', 'many.bend::item2']);
+  assert.ok(!JSON.stringify([report, errors]).includes(key));
+  const resumedOutput = [];
+  assert.equal(await runStyleRanking(['--live', '--json', '--jobs=3', '--reuse=failed.json', 'many.bend'], {
+    root, env: { PERCH_API_KEY: key }, stdout: value => resumedOutput.push(value), fetchImpl: async () => response(3, 3),
+  }), 0);
+  const resumed = JSON.parse(resumedOutput[0]);
+  assert.equal(resumed.reused_units, 2);
+  assert.equal(resumed.provider_requests, 4);
+  assert.equal(resumed.coverage.ranked, 6);
+});
+
+test('jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests', async t => {
+  const root = await fixture(t);
+  let calls = 0;
+  const run = async (options, env) => {
+    const output = [];
+    const code = await runStyleRanking([...args, ...options], { root, env: { PERCH_API_KEY: key, ...env },
+      stdout: value => output.push(value), fetchImpl: async () => { calls++; return response(3, 3); },
+    });
+    assert.equal(code, 0);
+    return JSON.parse(output[0]);
+  };
+  assert.equal((await run([], { PERCH_JOBS: '2' })).concurrency, 2);
+  assert.equal((await run(['--jobs=1'], { PERCH_JOBS: '2' })).concurrency, 1);
+  assert.equal((await run(['--jobs=256'])).concurrency, 256);
+  calls = 0;
+  for (const value of ['0', '257', '-1', '1.5', 'NaN', '']) {
+    await assert.rejects(run([`--jobs=${value}`]), /Concurrency must be 1\.\.256/);
+  }
+  await assert.rejects(run([], { PERCH_JOBS: 'invalid' }), /Concurrency must be 1\.\.256/);
+  assert.equal(calls, 0);
+});
+
+test('a changed provider model stops queued work and cannot be mixed with explicitly reused answers', async t => {
+  const root = await fixture(t), initialOutput = [];
+  assert.equal(await runStyleRanking(['--live', '--json', '--output=first.json', targets[0]], {
+    root, env: { PERCH_API_KEY: key }, stdout: value => initialOutput.push(value), fetchImpl: async () => response(3, 3),
+  }), 0);
+  const output = [];
+  let calls = 0;
+  const code = await runStyleRanking(['--live', '--json', '--jobs=1', '--reuse=first.json', ...targets, 'a.bend::unrelated'], {
+    root, env: { PERCH_API_KEY: key }, stdout: value => output.push(value), stderr: () => {},
+    fetchImpl: async () => { calls++; return response(3, 3, 'different-model'); },
+  });
+  const report = JSON.parse(output[0]);
+  assert.equal(code, 1);
+  assert.equal(calls, 1, 'stop as soon as a response conflicts with the reused model');
+  assert.match(report.failure, /Model changed/);
+  assert.equal(report.reused_units, 1);
+  assert.deepEqual(report.rows, []);
+  assert.deepEqual(report.rankings, []);
 });
 
 test('ties share a rank, near ties remain visible, and existing output is rejected before requests', async t => {

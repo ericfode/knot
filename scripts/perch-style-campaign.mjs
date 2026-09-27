@@ -32,6 +32,7 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
     const matches = old && compatible && old.source_sha256 === unit.source_sha256
       && old.state_sha256 === unit.state_sha256 && JSON.stringify(old.context) === JSON.stringify(unit.context);
     const matchedAxes = matches ? assessStyle([old], config) : [];
+    const meetsRequired = matchedAxes.length >= config.dimensions.length && matchedAxes.every(a => a.status === 'meets_target');
     return {
       target: unit.target, kind: unit.kind, line: unit.line,
       source_sha256: unit.source_sha256, state_sha256: unit.state_sha256,
@@ -39,8 +40,9 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
       baseline_axes: axes.get(unit.target) ?? null,
       baseline_context_truncated: old?.context?.truncated ?? null,
       current_context_truncated: unit.context?.truncated ?? false,
-      matches_all_three_baseline_targets: matchedAxes.length === config.dimensions.length
-        && matchedAxes.every(a => a.status === 'meets_target'),
+      matches_all_required_baseline_targets: meetsRequired,
+      // Keep the legacy field conservative for older inventory consumers.
+      matches_all_three_baseline_targets: meetsRequired,
     };
   });
   const active = new Set(candidates.map(unit => unit.target));
@@ -50,6 +52,7 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
     return { component, declarations: selected.length,
       ...Object.fromEntries(['matches', 'stale', 'unrated'].map(status => [status, selected.filter(u => u.baseline_status === status).length])),
       truncated_context: selected.filter(u => u.current_context_truncated).length,
+      matches_all_required_baseline_targets: selected.filter(u => u.matches_all_required_baseline_targets).length,
       matches_all_three_baseline_targets: selected.filter(u => u.matches_all_three_baseline_targets).length };
   });
   return { compatible_rubric_and_parser: compatible,
@@ -59,6 +62,7 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
       ...Object.fromEntries(['matches', 'stale', 'unrated'].map(status => [status, units.filter(u => u.baseline_status === status).length])),
       unranked_files: inventory.unranked.length, empty_files: inventory.empty_files.length,
       no_longer_parsed_targets: notCurrentlyParsed.length,
+      matches_all_required_baseline_targets: units.filter(u => u.matches_all_required_baseline_targets).length,
       matches_all_three_baseline_targets: units.filter(u => u.matches_all_three_baseline_targets).length },
     components, inventory, no_longer_parsed_targets: notCurrentlyParsed, units };
 }

@@ -462,23 +462,20 @@ context remain visible. Unlike Vec's planner, this flattening preserves named
 terminal states; the two outcomes support separate reading judgments rather
 than a blanket flattening rule.
 
-## 2026-09-26 — Perch latency: repeated Git discovery and serial requests
+## 2026-09-27 — Symbols balanced identity: policy transition and adverse-input review
 
-At `876c2ff`, the [latency investigation](perch-latency-2026-09-26.md) measured
-a 62-declaration file check at 9.300 s: 6.427 s in provider round trips and
-2.872 s outside them. A disposable offline probe confirmed 63 full Git tree
-listings/rule loads. Loading rules once reduced alternating control runs from
-2.813/2.819 s to 0.131/0.127 s with identical request and result hashes.
-This is confirmed workflow overhead, not a model-reported code defect.
+The [owner handoff](style-campaign/symbols-identity-v3-2026-09-27.json) verifies
+commit `a5345e8`, the selected source and all 23 current v3 source/context
+identities. The coordinator recomputed the saved style assessments without new
+provider requests. Owner proof, backend, mutation and performance receipts were
+inspected, not rerun. Original independent Bend inputs remain unchanged.
 
-Existing style concurrency reduced the same 64-input live review from 7.168 s
-to 1.090 s with `--jobs=8`. All fresh requests resolved to `jev-1.13.0` and
-returned HTTP 200. Fixed offline answers only measured plumbing. Production
-review behavior and accepted questions remain unchanged; no repair model ran.
-
-Prevention: pass a command-local rule snapshot through file checks, then add
-bounded dispatch after complete preflight. Use explicit style jobs and changed
-declaration targets now. Keep complete context, attribution, failure semantics
-and deterministic gates. Retained request timings separate observed latency
-from provider inference, which was not independently measured. Historical
-receipts show no failed-attempt/retry gap in 3,218 live semantic requests.
+After 24 candidates, the balanced prefix trie gives `Trie.get` a current memetic
+pass and Anticipation/Payoff masses of 0.64/0.79. Galaxy-brain mass remains zero;
+complete v3 coverage is 0/23. Its earlier v2 three-axis pass remains historical.
+The owner accepted common-prefix runtime ratios of 0.244–0.568 alongside a
+1.54–1.61x cost for 2,048 sorted single-character names. The earlier unbalanced
+trie was rejected after adversarial ordering exposed a sibling-chain regression.
+Prevention: retain adverse prefix/order families and structural invariant
+controls before accepting a pleasing representation. This is an unpublished
+implementation improvement, not completion of the broader style pilot.

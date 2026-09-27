@@ -54,9 +54,9 @@ def L.claim(n): {==}
       const response = { model: 'offline-working-copy-only', answers: Object.fromEntries(Object.keys(body.questions).map(key => [key, { noul: body.state.name === 'unrelated' ? 0 : 1 }])) };
       return { ok: true, json: async () => response, clone: () => ({ json: async () => response }) };
     };
-    const run = async target => {
+    const run = async (target, extra = []) => {
       const output = [], errors = [];
-      const code = await runPerch(['check', target, '--rules', 'fixture-method'], { root,
+      const code = await runPerch(['check', target, '--rules', 'fixture-method', ...extra], { root,
         env: { PERCH_API_KEY: 'offline-fixture' }, stdout: text => output.push(text), stderr: text => errors.push(text) });
       return { code, errors: errors.join('\n'), result: output.length ? JSON.parse(output.join('\n')) : null };
     };
@@ -123,7 +123,7 @@ def L.claim(n): {==}
       const response = { model: 'offline-first-unit-only', answers: { 'fixture-method': { noul: 1 } } };
       return { ok: true, json: async () => response, clone: () => ({ json: async () => response }) };
     };
-    const partial = await run('src/main.bend');
+    const partial = await run('src/main.bend', ['--parallel', '1']);
     assert.equal(partial.code, 1);
     assert.equal(partial.result, null, 'an aggregate provider failure must not return the completed first unit as success');
     assert.equal(attempts, 2);
@@ -234,4 +234,67 @@ test('real CLI parses Bend-only scans, imports and method targets; syntax failur
     globalThis.fetch = realFetch;
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test('parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'knot-perch-parallel-'));
+  const originalFetch = globalThis.fetch;
+  t.after(async () => { globalThis.fetch = originalFetch; await rm(root, { recursive: true, force: true }); });
+  await mkdir(join(root, 'src'));
+  await writeFile(join(root, 'src/main.bend'), 'import Base\n' + Array.from({ length: 80 }, (_, i) => `def f${i}() -> U32: ${i}\n`).join(''));
+  const rule = text => `rules:\n  - name: fixture\n    where: '**/*.bend'\n    each: method\n    ensure: ${text}\n`;
+  await writeFile(join(root, 'perch.yaml'), rule('first snapshot'));
+  const git = args => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
+  git(['init', '-q', '-b', 'main']); git(['add', '.']);
+  git(['-c', 'user.name=Perch concurrency fixture', '-c', 'user.email=test@example.invalid', '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'fixture']);
+  const run = async jobs => {
+    const output = [], errors = [];
+    const code = await runPerch(['check', 'src/main.bend', '--parallel', String(jobs), '--rules', 'fixture'], {
+      root, env: { PERCH_API_KEY: 'offline-fixture' }, stdout: text => output.push(text), stderr: text => errors.push(text),
+    });
+    return { code, result: output.length ? JSON.parse(output.join('\n')) : null, errors };
+  };
+  let requests = [], active = 0, peak = 0;
+  globalThis.fetch = async (_url, init) => {
+    const body = JSON.parse(init.body); requests.push(body); peak = Math.max(peak, ++active);
+    await new Promise(resolve => setTimeout(resolve, body.state.name === 'f1' ? 15 : 1));
+    active--;
+    const answer = { model: 'offline-parallel', answers: { fixture: { noul: body.state.name === 'f7' ? 0 : 1 } } };
+    return { ok: true, json: async () => answer, clone: () => ({ json: async () => answer }) };
+  };
+  const serial = await run(1), originalRequests = requests;
+  requests = []; peak = 0;
+  const parallel = await run(8);
+  assert.equal(serial.code, 3); assert.equal(parallel.code, 3);
+  assert.equal(parallel.result.checked, 80, 'file size must not consume the 64-request allowance of a single declaration');
+  assert.deepEqual(parallel.result, serial.result, 'scheduling must not change the full result');
+  assert.deepEqual(requests.sort((a,b) => a.state.name.localeCompare(b.state.name)), originalRequests.sort((a,b) => a.state.name.localeCompare(b.state.name)));
+  assert.equal(peak, 8); assert.equal(active, 0);
+  assert.deepEqual(parallel.result.broken.map(x => x.name), ['f7']);
+  let edited = false;
+  globalThis.fetch = async (_url, init) => {
+    const body = JSON.parse(init.body);
+    assert.match(JSON.stringify(body.questions.fixture), /first snapshot/);
+    if (!edited) { edited = true; await writeFile(join(root, 'perch.yaml'), rule('next command snapshot')); }
+    const answer = { model: 'offline-snapshot', answers: { fixture: { noul: 1 } } };
+    return { ok: true, json: async () => answer, clone: () => ({ json: async () => answer }) };
+  };
+  assert.equal((await run(8)).code, 0, 'every unit uses the command snapshot');
+  let attempts = 0, finished = 0;
+  globalThis.fetch = async (_url, init) => {
+    const body = JSON.parse(init.body);
+    assert.match(JSON.stringify(body.questions.fixture), /next command snapshot/);
+    attempts++;
+    if (body.state.name === 'f1') return { ok: false, status: 401, text: async () => 'fixture denial' };
+    await new Promise(resolve => setTimeout(resolve, 10)); finished++;
+    const answer = { model: 'offline-drain', answers: { fixture: { noul: 1 } } };
+    return { ok: true, json: async () => answer, clone: () => ({ json: async () => answer }) };
+  };
+  const failed = await run(4);
+  assert.equal(failed.code, 1); assert.equal(failed.result, null);
+  assert.ok(attempts <= 5, `failure must stop new dispatch (${attempts})`);
+  assert.equal(finished, attempts - 1, 'already-issued work is drained before the wrapper releases its meter');
+  const before = attempts;
+  assert.equal((await run(257)).code, 1);
+  assert.equal(attempts, before, 'invalid concurrency fails before a paid request');
 });

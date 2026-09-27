@@ -6,10 +6,12 @@ import { lstat, mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
-import { analyzeBendSource, BEND_PARSER_PROFILE } from './perch-bend.mjs';
-import { bendDeclarationSource, createBendReview } from './perch-bend-context.mjs';
+import { BEND_PARSER_PROFILE } from './perch-bend.mjs';
+import { bendDeclarationSource, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
+import { DEFAULT_PERCH_JOBS as DEFAULT_CONCURRENCY, MAX_PERCH_JOBS as MAX_CONCURRENCY } from './perch-throughput.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PREFLIGHT_CONCURRENCY = 32;
 const hash = value => createHash('sha256').update(value).digest('hex');
 const DEFAULT_SCOPE = 'Existing project code. Rate each declaration against its own purpose and supplied contract. No alternative implementation is required. Judge the quality of its representation and reading experience, not the difficulty of an unrelated task.';
 const inside = (root, path) => {
@@ -54,25 +56,107 @@ export function rankRows(rows, dimensions, nearTieGap) {
   });
 }
 
+const diagnosticRubrics = config => config.diagnostic_dimensions === undefined ? [] : config.diagnostic_dimensions;
+const reviewRubrics = (config, kind, context) => [
+  ...config.dimensions,
+  // Do not manufacture a diagnostic score from a context known to be truncated.
+  ...(context?.truncated ? [] : diagnosticRubrics(config)),
+  config.criticality,
+];
+
+function validateDiagnostics(config) {
+  const diagnostics = diagnosticRubrics(config);
+  if (!Array.isArray(diagnostics) || config.dimensions.length + diagnostics.length > 6) {
+    throw new Error('Invalid diagnostic dimensions');
+  }
+  const ids = [...config.dimensions.map(d => d.id), config.criticality.id];
+  for (const d of diagnostics) {
+    if (!d.id || !d.title || !d.instructions || !Array.isArray(d.levels)
+        || d.levels.length < 2 || d.levels.length > 10 || d.levels.some(x => typeof x !== 'string' || !x.trim())) {
+      throw new Error('Diagnostic dimensions need named, descriptive ordered levels');
+    }
+    if (ids.includes(d.id)) throw new Error('Diagnostic IDs must be distinct from all review rubrics');
+    ids.push(d.id);
+  }
+  const targets = config.criticality.diagnostic_targets ?? [];
+  if (!Array.isArray(targets) || new Set(targets.map(t => t.dimension)).size !== targets.length) {
+    throw new Error('Invalid critical diagnostic targets');
+  }
+  for (const target of targets) validateStyleTarget(target, config, diagnostics);
+}
+
+export function diagnoseStyle(rows, config) {
+  validateDiagnostics(config);
+  return rows.flatMap(row => diagnosticRubrics(config).map(d => {
+    const required = criticalityFor(row, config).status !== 'noncritical'
+      && (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id);
+    const metadata = { target: row.target, dimension: d.id, required, advisory: !required,
+      context_truncated: row.context?.truncated ?? false,
+      unresolved_references: row.context?.unresolved?.length ?? 0 };
+    if (metadata.context_truncated) return { ...metadata, status: 'unavailable', reason: 'context_truncated' };
+    return { ...metadata, status: metadata.unresolved_references ? 'limited_context' : 'rated',
+      ...validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length) };
+  }));
+}
+
+function validateStyleTarget(target, config, dimensions = config.dimensions) {
+  const dimension = dimensions.find(d => d.id === target?.dimension);
+  if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
+      || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
+    throw new Error('Invalid style target');
+  }
+}
+
+function criticalityFor(row, config) {
+  const policy = config.criticality;
+  const answer = validateScore({ ...row.answers?.[policy.id], type: 'score' }, policy.levels.length);
+  const probability = answer.probabilities[1] / (answer.probabilities[0] + answer.probabilities[1]);
+  // Limited context cannot establish that a declaration deserves the lower bar.
+  const status = probability >= policy.minimum_probability ? 'critical'
+    : !row.context?.truncated && probability <= 1 - policy.minimum_probability ? 'noncritical' : 'uncertain';
+  return { target: row.target, status, probability_critical: probability, context_truncated: row.context?.truncated ?? false };
+}
+
 export function assessStyle(rows, config) {
   if (!Array.isArray(config.style_targets) || config.style_targets.length !== config.dimensions.length
       || new Set(config.style_targets.map(t => t.dimension)).size !== config.dimensions.length) throw new Error('Each style dimension needs one target');
-  for (const target of config.style_targets) {
-    const dimension = config.dimensions.find(d => d.id === target?.dimension);
-    if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
-        || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
-      throw new Error('Invalid style target');
-    }
+  for (const target of config.style_targets) validateStyleTarget(target, config);
+  const policy = config.criticality;
+  if (!policy?.id || config.dimensions.some(d => d.id === policy.id) || !policy.title || !policy.instructions
+      || !Array.isArray(policy.levels) || policy.levels.length !== 2 || policy.levels.some(x => typeof x !== 'string' || !x.trim())
+      || !Number.isFinite(policy.minimum_probability) || policy.minimum_probability <= 0.5 || policy.minimum_probability > 1) {
+    throw new Error('Criticality needs a separate binary Score rubric');
   }
-  return rows.flatMap(row => config.style_targets.map(target => {
-    const answer = row.answers[target.dimension];
-    const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
-    const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
-    return { target: row.target, dimension: target.dimension, target_level: target.level,
-      probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
-        : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain',
-      context_truncated: row.context?.truncated ?? false };
-  }));
+  validateStyleTarget(policy.style_target, config);
+  const ordinary = config.style_targets.find(t => t.dimension === policy.style_target.dimension);
+  if (policy.style_target.level <= ordinary.level || policy.style_target.minimum_probability < ordinary.minimum_probability) {
+    throw new Error('Criticality must require a stricter style target');
+  }
+  validateDiagnostics(config);
+  return rows.flatMap(row => {
+    const criticality = criticalityFor(row, config);
+    const strict = ['critical', 'uncertain'].includes(criticality.status);
+    const diagnostics = strict ? policy.diagnostic_targets ?? [] : [];
+    return [...config.style_targets, ...diagnostics].map(base => {
+      // The established Galaxy-brain requirement covers functions, laws and proofs.
+      const target = strict && row.kind !== 'bend_datatype' && base.dimension === policy.style_target.dimension ? policy.style_target : base;
+      const metadata = { target: row.target, dimension: target.dimension, target_level: target.level,
+        minimum_probability: target.minimum_probability, criticality_status: criticality.status,
+        target_basis: target !== base || diagnostics.includes(base) ? 'criticality' : 'default',
+        context_truncated: row.context?.truncated ?? false };
+      if (diagnostics.includes(base) && row.context?.truncated) {
+        return { ...metadata, probability_at_target: null, status: 'unavailable' };
+      }
+      const answer = row.answers[target.dimension];
+      const rubric = [...config.dimensions, ...diagnosticRubrics(config)].find(d => d.id === target.dimension);
+      validateScore({ ...answer, type: 'score' }, rubric.levels.length);
+      const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
+      const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
+      return { ...metadata,
+        probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
+          : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain' };
+    });
+  });
 }
 
 function datatypeContext(file, path, declaration) {
@@ -89,13 +173,13 @@ function datatypeContext(file, path, declaration) {
   });
   const called_by = entries(consumers.slice(0, limits.callers)), datatypes = entries(types);
   const unresolved = [{ path, name: declaration.name, reason: 'datatype-context-is-same-file-only; imported and transitive dependencies are not resolved' }];
-  const provenance = { basis: 'working-tree', files: [{ path, source_sha256: hash(file.source) }], unresolved, truncated, limits };
+  const provenance = { basis: 'working-tree', files: [{ path, source_sha256: file.source_sha256 }], unresolved, truncated, limits };
   return { seen: { calls: [], called_by, laws: [], datatypes,
     imports: file.analysis.references.filter(r => r.kind === 'import').map(({ module, alias }) => ({ module, alias })),
     context_notes: { basis: provenance.basis, unresolved, truncated } }, provenance };
 }
 
-export async function prepareStyleTargets(targets, cohort, config, root = ROOT) {
+export async function prepareStyleTargets(targets, cohort, config, root = ROOT, snapshot = null) {
   if (!Number.isInteger(config.max_units) || config.max_units < 1 || config.max_units > 10000
       || !Number.isFinite(config.near_tie_gap) || config.near_tie_gap < 0
       || !Array.isArray(config.dimensions) || config.dimensions.length < 1 || config.dimensions.length > 6) throw new Error('Invalid style configuration');
@@ -107,7 +191,9 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
     }
   }
   assessStyle([], config);
+  snapshot ??= await createBendSourceSnapshot(root);
   const realRoot = await realpath(root), files = new Map(), selected = new Set(), candidates = [];
+  if (snapshot.root !== realRoot) throw new Error('Bend source snapshot belongs to another workspace');
   for (const target of targets) {
     const [input, name, extra] = target.split('::');
     if (!input.endsWith('.bend') || extra !== undefined || name === '') throw new Error(`Expected file.bend or file.bend::name: ${target}`);
@@ -115,11 +201,10 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
     if (!inside(realRoot, absolute)) throw new Error('Style targets must be inside this workspace');
     const path = relative(realRoot, absolute).split(sep).join('/');
     if (!files.has(path)) {
-      const source = await readFile(absolute, 'utf8');
-      const analysis = await analyzeBendSource(source);
+      const { source, analysis, source_sha256 } = await snapshot.load(path);
       if (analysis.parser_status !== 'parsed') throw new Error(`Bend target does not parse: ${path}`);
-      const review = await createBendReview({ root: realRoot, path, source, analysis });
-      files.set(path, { source, analysis, review });
+      const review = await createBendReview({ root: realRoot, path, source, analysis, snapshot });
+      files.set(path, { source, source_sha256, analysis, review });
     }
     const file = files.get(path);
     const declarations = [...file.analysis.declarations, ...file.analysis.datatype_declarations.map(d => ({
@@ -134,11 +219,13 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
       const context = declaration.syntax_kind === 'bend_datatype' ? datatypeContext(file, path, declaration)
         : await file.review.forUnit(declaration.qualified_name);
       const state = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
+        path, declaration_kind: declaration.syntax_kind,
         source: bendDeclarationSource(file.source, declaration), ...context.seen };
-      if (Buffer.byteLength(JSON.stringify(state)) > 60000) throw new Error(`Style context too large: ${identity}`);
+      const encodedState = JSON.stringify(state);
+      if (Buffer.byteLength(encodedState) > 60000) throw new Error(`Style context too large: ${identity}`);
       candidates.push({ target: identity, path, kind: declaration.syntax_kind,
         line: declaration.line, end_line: declaration.end_line,
-        source_sha256: hash(file.source), state_sha256: hash(JSON.stringify(state)),
+        source_sha256: file.source_sha256, state_sha256: hash(encodedState),
         context: context.provenance, state });
     }
   }
@@ -146,18 +233,34 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
   return candidates;
 }
 
-export async function prepareStyleInventory(cohort, config, root = ROOT) {
+export async function prepareStyleInventory(cohort, config, root = ROOT, snapshot = null) {
   const paths = [...new Set(execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard', '--', '*.bend'],
     { cwd: root, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 }).split('\0').filter(Boolean))].sort();
   if (!paths.length) throw new Error('No project Bend files found');
-  const candidates = [], unranked = [], empty_files = [];
-  for (const path of paths) {
-    try { candidates.push(...await prepareStyleTargets([path], cohort, config, root)); }
-    catch (error) {
-      if (error.message.startsWith('No applicable parsed declaration:')) empty_files.push(path);
-      else unranked.push({ path, reason: error.message });
+  snapshot ??= await createBendSourceSnapshot(root);
+  const prepared = new Array(paths.length);
+  let cursor = 0, selected = 0, overLimit = false;
+  async function worker() {
+    while (!overLimit && cursor < paths.length) {
+      const index = cursor++, path = paths[index];
+      try {
+        const units = await prepareStyleTargets([path], cohort, config, root, snapshot);
+        prepared[index] = { units };
+        selected += units.length;
+        overLimit ||= selected > config.max_units;
+      } catch (error) { prepared[index] = { reason: error.message }; }
     }
-    if (candidates.length > config.max_units) throw new Error(`Style run limited to ${config.max_units} units; raise max_units for this inventory`);
+  }
+  // Overlap independent file reads, then assemble in discovery order. Every
+  // parser/context preflight still finishes before the first provider request.
+  await Promise.all(Array.from({ length: Math.min(PREFLIGHT_CONCURRENCY, paths.length) }, worker));
+  if (overLimit) throw new Error(`Style run limited to ${config.max_units} units; raise max_units for this inventory`);
+  const candidates = [], unranked = [], empty_files = [];
+  for (const [index, result] of prepared.entries()) {
+    const path = paths[index];
+    if (result.units) candidates.push(...result.units);
+    else if (result.reason.startsWith('No applicable parsed declaration:')) empty_files.push(path);
+    else unranked.push({ path, reason: result.reason });
   }
   return { candidates, inventory: { discovered_files: paths, empty_files, unranked } };
 }
@@ -184,16 +287,18 @@ export async function changedStyleSources(candidates, root = ROOT) {
 
 export async function evaluateStyle(candidates, config, {
   env = process.env, fetchImpl = globalThis.fetch, transport = { requests: 0, responses: 0 },
-  concurrency = 1, onProgress = () => {}, onRow = () => {},
+  concurrency = DEFAULT_CONCURRENCY, expectedModel = null, onProgress = () => {}, onRow = () => {},
 } = {}) {
   const key = env.PERCH_API_KEY || env.TYPESAFE_API_KEY;
   if (!key) throw new Error('PERCH_API_KEY is not set');
-  const questions = Object.fromEntries(config.dimensions.map(d => [d.id,
-    { type: 'score', instructions: d.instructions, criteria: d.levels }]));
-  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error('Concurrency must be 1..16');
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > MAX_CONCURRENCY) throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
+  assessStyle([], config);
   const rows = new Array(candidates.length);
-  let cursor = 0, failure = null;
+  let cursor = 0, failure = null, inFlight = 0, model = expectedModel;
   async function evaluate(candidate) {
+    const rubrics = reviewRubrics(config, candidate.kind, candidate.context);
+    const questions = Object.fromEntries(rubrics.map(d => [d.id,
+      { type: 'score', instructions: d.instructions, criteria: d.levels }]));
     const started = performance.now();
     transport.requests++;
     const response = await fetchImpl(env.PERCH_BASE_URL || 'https://api.typesafe.ai/v1/systemone', {
@@ -204,7 +309,7 @@ export async function evaluateStyle(candidates, config, {
     if (!response.ok) throw new Error(`Style provider HTTP ${response.status}; no ranking produced`);
     const body = await response.json().catch(() => { throw new Error('Invalid style provider JSON'); });
     if (typeof body?.model !== 'string' || !body.model) throw new Error('Missing resolved style model');
-    const answers = Object.fromEntries(config.dimensions.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
+    const answers = Object.fromEntries(rubrics.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
     transport.responses++;
     const { state, ...metadata } = candidate;
     return { ...metadata, model: body.model, elapsed_ms: Math.round(performance.now() - started),
@@ -213,16 +318,19 @@ export async function evaluateStyle(candidates, config, {
   async function worker() {
     while (!failure && cursor < candidates.length) {
       const index = cursor++;
+      transport.peak_in_flight = Math.max(transport.peak_in_flight ?? 0, ++inFlight);
       try {
         rows[index] = await evaluate(candidates[index]);
         onRow(rows[index]);
+        if (model && rows[index].model !== model) throw new Error('Model changed during comparison; rankings are not comparable');
+        model ??= rows[index].model;
         onProgress(transport.responses, candidates.length);
       } catch (error) { failure ??= error; }
+      finally { inFlight--; }
     }
   }
   await Promise.all(Array.from({ length: Math.min(concurrency, candidates.length) }, worker));
   if (failure) throw failure;
-  if (new Set(rows.map(r => r.model)).size !== 1) throw new Error('Model changed during comparison; rankings are not comparable');
   return rows;
 }
 
@@ -230,15 +338,16 @@ export async function runStyleRanking(args, {
   root = ROOT, env = process.env, fetchImpl = globalThis.fetch, loadEnv = false,
   stdout = text => console.log(text), stderr = text => console.error(text),
 } = {}) {
+  const invoked = performance.now();
   const cohort = args.find(x => x.startsWith('--cohort='))?.slice(9);
   const output = args.find(x => x.startsWith('--output='))?.slice(9);
   const reuse = args.find(x => x.startsWith('--reuse='))?.slice(8);
   const all = args.includes('--all');
-  const concurrency = Number(args.find(x => x.startsWith('--jobs='))?.slice(7) ?? (all ? 8 : 1));
+  const concurrency = Number(args.find(x => x.startsWith('--jobs='))?.slice(7) ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY);
   const known = x => ['--live', '--json', '--all'].includes(x) || ['--cohort=', '--output=', '--jobs=', '--reuse='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown style option');
   if (!args.includes('--live')) throw new Error('Use --live file.bend::name, file.bend, or --live --all to rank project Bend declarations');
-  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error('Concurrency must be 1..16');
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > MAX_CONCURRENCY) throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
   const targets = args.filter(x => !x.startsWith('--'));
   if (all && targets.length) throw new Error('Use --all or explicit targets, not both');
   if (args.some(x => x === '--output=') || args.filter(x => x.startsWith('--output=')).length > 1
@@ -255,8 +364,9 @@ export async function runStyleRanking(args, {
   }
   const text = await readFile(resolve(root, 'perch-style.json'), 'utf8');
   const config = JSON.parse(text);
-  const { candidates, inventory } = all ? await prepareStyleInventory(cohort, config, root)
-    : { candidates: await prepareStyleTargets(targets, cohort, config, root), inventory: null };
+  const sourceSnapshot = await createBendSourceSnapshot(root);
+  const { candidates, inventory } = all ? await prepareStyleInventory(cohort, config, root, sourceSnapshot)
+    : { candidates: await prepareStyleTargets(targets, cohort, config, root, sourceSnapshot), inventory: null };
   if (!candidates.length) throw new Error('No rankable parsed declarations');
   const preflightChanged = await changedStyleSources(candidates, root);
   if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
@@ -264,8 +374,8 @@ export async function runStyleRanking(args, {
     try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
   const at = new Date().toISOString(), start = performance.now();
-  const transport = { requests: 0, responses: 0 };
-  const reused = new Map(), completed_rows = [];
+  const transport = { requests: 0, responses: 0, peak_in_flight: 0 };
+  const reused = new Map(), completed_rows = new Map();
   if (reuse) {
     const bytes = await readFile(resolve(root, reuse));
     const prior = JSON.parse((reuse.endsWith('.gz') ? gunzipSync(bytes) : bytes).toString('utf8'));
@@ -276,19 +386,22 @@ export async function runStyleRanking(args, {
     const saved = new Map([...(prior.rows ?? []), ...(prior.completed_rows ?? [])].map(r => [r.target, r]));
     for (const candidate of candidates) {
       const row = saved.get(candidate.target);
-      if (!row || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
+      if (!row || row.kind !== candidate.kind || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
           || JSON.stringify(row.context) !== JSON.stringify(candidate.context)) continue;
-      for (const d of config.dimensions) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
+      for (const d of reviewRubrics(config, candidate.kind, candidate.context)) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
       if (typeof row.model !== 'string' || !row.model) throw new Error('Missing resolved model in reused row');
       reused.set(row.target, row);
     }
   }
   const pending = candidates.filter(c => !reused.has(c.target));
+  const prepared = performance.now();
   let rows = [], failure = null;
   try {
-    const fresh = pending.length ? await evaluateStyle(pending, config, { env, fetchImpl, transport, concurrency,
+    const models = new Set([...reused.values()].map(row => row.model));
+    if (models.size > 1) throw new Error('Model changed during review; ratings are not comparable');
+    const fresh = pending.length ? await evaluateStyle(pending, config, { env, fetchImpl, transport, concurrency, expectedModel: models.values().next().value,
     onProgress: (done, total) => { if (all && (done % 100 === 0 || done === total)) stderr(`Style review: ${done}/${total} declarations`); },
-    onRow: row => completed_rows.push(row),
+    onRow: row => completed_rows.set(row.target, row),
     }) : [];
     const byTarget = new Map([...reused, ...fresh.map(row => [row.target, row])]);
     rows = candidates.map(c => byTarget.get(c.target));
@@ -296,51 +409,95 @@ export async function runStyleRanking(args, {
   }
   catch (error) { failure = error.message; }
   if (failure) rows = [];
+  const evaluated = performance.now();
   const changed_sources = await changedStyleSources(candidates, root);
+  const freshnessChecked = performance.now();
   const assessments = failure ? [] : assessStyle(rows, config);
-  const counts = Object.fromEntries(['meets_target', 'below_target', 'uncertain'].map(status => [status, assessments.filter(a => a.status === status).length]));
-  const meets_all = rows.filter(row => assessments.filter(a => a.target === row.target).every(a => a.status === 'meets_target')).length;
-  const by_axis = config.dimensions.map(d => ({ id: d.id, title: d.title,
-    ...Object.fromEntries(['meets_target', 'below_target', 'uncertain'].map(status => [status, assessments.filter(a => a.dimension === d.id && a.status === status).length])) }));
+  const criticality = failure ? [] : rows.map(row => criticalityFor(row, config));
+  const diagnostics = failure ? [] : diagnoseStyle(rows, config);
+  const counts = { meets_target: 0, below_target: 0, uncertain: 0, unavailable: 0 };
+  const targetedDiagnostics = diagnosticRubrics(config).filter(d => (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id));
+  const by_axis = [...config.dimensions, ...targetedDiagnostics].map(d => ({ id: d.id, title: d.title,
+    required_for: config.dimensions.includes(d) ? 'all' : 'critical_or_uncertain', ...counts }));
+  const axes = new Map(by_axis.map(axis => [axis.id, axis])), needsReview = new Set(), requiredByTarget = new Map();
+  for (const assessment of assessments) {
+    counts[assessment.status]++;
+    axes.get(assessment.dimension)[assessment.status]++;
+    if (assessment.status !== 'meets_target') needsReview.add(assessment.target);
+    if (assessment.target_basis === 'criticality') {
+      if (!requiredByTarget.has(assessment.target)) requiredByTarget.set(assessment.target, []);
+      requiredByTarget.get(assessment.target).push(assessment);
+    }
+  }
+  const meets_all = rows.length - needsReview.size;
   const report = { schema: 2, command: 'style-rank', at, cohort: cohort || null,
-    mode: all ? 'project' : 'targets', inventory, rubric_sha256: hash(text),
+    mode: all ? 'project' : 'targets', inventory, rubric_sha256: hash(text), rubric_version: config.version,
+    preflight_snapshot: sourceSnapshot.stats,
     parser: BEND_PARSER_PROFILE, status: failure ? 'failed' : inventory?.unranked.length ? 'incomplete' : 'completed', advisory: true,
     coverage: { selected: candidates.length, ranked: rows.length, unranked_files: inventory?.unranked.length ?? 0 },
     reused_from: reuse || null, reused_units: reused.size,
-    completed_rows: failure ? [...reused.values(), ...completed_rows] : [],
+    completed_rows: failure ? candidates.flatMap(candidate => {
+      const row = reused.get(candidate.target) ?? completed_rows.get(candidate.target);
+      return row ? [row] : [];
+    }) : [],
     style_targets: config.style_targets, style_summary: { ...counts, meets_all, needs_review: rows.length - meets_all, by_axis }, assessments,
+    criticality: { policy: config.criticality, assessments: criticality },
+    diagnostics: { required_for: 'critical_or_uncertain', targets: config.criticality.diagnostic_targets ?? [],
+      dimensions: diagnosticRubrics(config).map(({ id, title, levels }) => ({ id, title, levels })),
+      assessments: diagnostics },
     source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
     typechecked: false, behavioral_equivalence_checked: false,
     requested_model: env.PERCH_MODEL_ID || 'jev-latest', failure,
+    concurrency, provider_peak_in_flight: transport.peak_in_flight,
     provider_requests: transport.requests, provider_responses: transport.responses,
     targets: candidates.map(({ state, ...metadata }) => metadata),
     elapsed_ms: Math.round(performance.now() - start), rows,
     note: 'Each parsed declaration is rated against its own task, then sorted on each rubric. Alternatives and a shared contract are not required. Rank is advisory taste, not correctness or task difficulty. Confidence describes distribution concentration; near ties are not statistical significance. Rankings describe the recorded source snapshot.',
     rankings: failure ? [] : rankRows(rows, config.dimensions, config.near_tie_gap) };
+  const aggregated = performance.now();
+  report.timings = {
+    preflight_ms: Math.round(start - invoked), reuse_ms: Math.round(prepared - start),
+    evaluation_ms: Math.round(evaluated - prepared), freshness_ms: Math.round(freshnessChecked - evaluated),
+    aggregation_ms: Math.round(aggregated - freshnessChecked), total_ms: Math.round(aggregated - invoked),
+    scope: 'Invocation through report assembly; excludes serialization, receipt writes and output. elapsed_ms retains its post-preflight scope before rankings.',
+  };
+  const encoded = JSON.stringify(report, null, 2) + '\n';
   const receipt = resolve(root, '.perch/usage', `${at.replaceAll(':', '-')}-${randomUUID()}.json`);
   await mkdir(dirname(receipt), { recursive: true, mode: 0o700 });
-  await writeFile(receipt, JSON.stringify(report, null, 2) + '\n', { mode: 0o600, flag: 'wx' });
+  await writeFile(receipt, encoded, { mode: 0o600, flag: 'wx' });
   if (outputPath) {
-    const encoded = JSON.stringify(report, null, 2) + '\n';
     await writeFile(outputPath, outputPath.endsWith('.gz') ? gzipSync(encoded) : encoded, { mode: 0o600, flag: 'wx' });
   }
-  if (args.includes('--json')) stdout(JSON.stringify(report, null, 2));
+  if (args.includes('--json')) stdout(encoded.slice(0, -1));
   else if (!failure) {
-    stdout(`${meets_all}/${rows.length} declarations meet all ${config.dimensions.length} style targets.`);
-    for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain.`);
+    stdout(`${meets_all}/${rows.length} declarations meet all required style targets.`);
+    for (const item of criticality.filter(c => ['critical', 'uncertain'].includes(c.status))) {
+      const required = (requiredByTarget.get(item.target) ?? [])
+        .map(a => `level ${a.target_level} on ${a.dimension}`).join(', ');
+      stdout(`Criticality ${item.status}: ${item.target} (${Math.round(100 * item.probability_critical)}% critical) requires ${required}.`);
+    }
+    for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain; ${axis.unavailable} unavailable.`);
     for (const assessment of assessments.filter(a => a.status !== 'meets_target')) {
-      stdout(`${assessment.status}: ${assessment.target} / ${assessment.dimension} (${Math.round(100 * assessment.probability_at_target)}% at level ${assessment.target_level}+)${assessment.context_truncated ? ' [limited context]' : ''}`);
+      stdout(`${assessment.status}: ${assessment.target} / ${assessment.dimension} (${assessment.probability_at_target === null ? 'no rating' : `${Math.round(100 * assessment.probability_at_target)}%`} at level ${assessment.target_level}+)${assessment.context_truncated ? ' [limited context]' : ''}`);
     }
     for (const ranking of report.rankings) {
       stdout(`\n${ranking.title}`);
       for (const row of ranking.entries) stdout(`${row.rank}. ${row.target}${row.near_tie_above ? ' (near tie above)' : ''}${row.context_truncated ? ' [limited context]' : ''}`);
+    }
+    for (const diagnostic of report.diagnostics.dimensions) {
+      const conditionalTarget = report.diagnostics.targets.find(t => t.dimension === diagnostic.id);
+      stdout(`\n${diagnostic.title} (${conditionalTarget ? 'required for critical or uncertain declarations' : 'diagnostic; no pass target'})`);
+      for (const row of diagnostics.filter(d => d.dimension === diagnostic.id)) {
+        stdout(`${row.target}: ${row.status === 'unavailable' ? 'unavailable [truncated context]'
+          : `${row.score.toFixed(2)}/${diagnostic.levels.length - 1}${row.status === 'limited_context' ? ' [limited context]' : ''}`}${row.required ? ' [required]' : ' [advisory]'}`);
+      }
     }
     stdout(`\nAdvisory taste ranking; ${rows.length} parsed units; ${rows[0].model}. Receipt: ${relative(root, receipt)}`);
   }
   if (failure) stderr(`Style ranking failed: ${failure}. Receipt: ${relative(root, receipt)}`);
   if (inventory?.unranked.length) stderr(`${inventory.unranked.length} file(s) could not be ranked; see inventory.unranked in the receipt`);
   if (changed_sources.length) stderr(`${changed_sources.length} source/context file(s) changed during review; rankings refer to the recorded snapshot`);
-  return failure || inventory?.unranked.length ? 1 : counts.below_target || counts.uncertain || changed_sources.length ? 3 : 0;
+  return failure || inventory?.unranked.length ? 1 : counts.below_target || counts.uncertain || counts.unavailable || changed_sources.length ? 3 : 0;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

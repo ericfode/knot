@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { runPerch } from './perch-workflow.mjs';
 import { runStyleRanking } from './perch-style.mjs';
+import { DEFAULT_PERCH_JOBS } from './perch-throughput.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -106,7 +107,7 @@ async function measure({ kind, mode, selected = target, jobs = 1, delayMs = 0 })
   try {
     if (kind === 'check') {
       globalThis.fetch = fetchImpl;
-      exit = await runPerch(['check', selected, '--rules', rules.join(',')], { root, env, stdout, stderr });
+      exit = await runPerch(['check', selected, '--rules', rules.join(','), '--parallel', String(jobs)], { root, env, stdout, stderr });
     } else {
       exit = await runStyleRanking(['--live', '--json', selected, `--jobs=${jobs}`], { root, env, fetchImpl, stdout, stderr });
     }
@@ -117,7 +118,7 @@ async function measure({ kind, mode, selected = target, jobs = 1, delayMs = 0 })
     occupied += Math.max(0, request.end_ms - Math.max(until, request.start_ms));
     until = Math.max(until, request.end_ms);
   }
-  const row = { kind, mode, target: selected, jobs: kind === 'style' ? jobs : null, injected_delay_ms: delayMs,
+  const row = { kind, mode, target: selected, jobs, injected_delay_ms: delayMs,
     exit, wall_ms: round(wall), checked: result?.checked ?? null,
     units: kind === 'style' ? result?.coverage?.ranked : result?.units?.length ?? (result?.context ? 1 : 0),
     peak_inflight: peak, round_trip_ms: summary(requests.map(r => r.round_trip_ms)),
@@ -138,7 +139,10 @@ const local = await measure({ kind: 'check', mode: 'offline' });
 const delayed = await measure({ kind: 'check', mode: 'offline', delayMs: 25 });
 assert.equal(local.units, delayed.units);
 assert.equal(local.requests.length, delayed.requests.length);
-assert.equal(delayed.peak_inflight, 1, 'Revisit the serial-dispatch diagnosis if the implementation changes');
+assert.equal(delayed.peak_inflight, 1, 'Explicit serial control');
+const concurrentCheck = await measure({ kind: 'check', mode: 'offline', jobs: DEFAULT_PERCH_JOBS, delayMs: 25 });
+assert.deepEqual(delayed.requests.map(r => r.state_sha256).sort(), concurrentCheck.requests.map(r => r.state_sha256).sort(), 'Check concurrency preserves review states');
+assert.equal(concurrentCheck.peak_inflight, Math.min(DEFAULT_PERCH_JOBS, delayed.requests.length));
 const serial = await measure({ kind: 'style', mode: 'offline', jobs: 1, delayMs: 25 });
 const parallel = await measure({ kind: 'style', mode: 'offline', jobs: 8, delayMs: 25 });
 assert.deepEqual(serial.requests.map(r => r.state_sha256).sort(), parallel.requests.map(r => r.state_sha256).sort(), 'Compare identical review states');
@@ -146,6 +150,7 @@ assert.equal(serial.peak_inflight, 1);
 assert.equal(parallel.peak_inflight, Math.min(8, serial.requests.length));
 if (live) {
   await measure({ kind: 'check', mode: 'live' });
+  await measure({ kind: 'check', mode: 'live', jobs: DEFAULT_PERCH_JOBS });
   await measure({ kind: 'style', mode: 'live', jobs: 1 });
-  await measure({ kind: 'style', mode: 'live', jobs: 8 });
+  await measure({ kind: 'style', mode: 'live', jobs: DEFAULT_PERCH_JOBS });
 }

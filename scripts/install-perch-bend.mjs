@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFile, writeFile, rename, readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { patchThroughput } from './perch-throughput-patch.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const bundle = join(root, 'node_modules/@lakeday/perch/dist/cli.mjs');
@@ -123,7 +124,8 @@ export function patchPerch(source, profile) {
   patched = replaceOnce(patched,
     'resolve3(file, value2.name) ?? unique.get(value2.name.split(/::|\\./).at(-1)) ?? null',
     'resolve3(file, value2.name) ?? (file.language === "bend" ? null : unique.get(value2.name.split(/::|\\./).at(-1))) ?? null');
-  return `${marker}\nimport { analyzeBendSource as knotAnalyzeBendSource } from "../../../../scripts/perch-bend.mjs";\nimport { createBendReview as knotCreateBendReview, bendDeclarationSource as knotBendDeclarationSource } from "../../../../scripts/perch-bend-context.mjs";\n${patched}\nexport { createSourceAnalyzer as knotCreateSourceAnalyzer, resolveModule as knotResolveModule, buildGraph as knotBuildGraph };\n`;
+  patched = patchThroughput(patched);
+  return `${marker}\nimport { DEFAULT_PERCH_JOBS as knotDefaultJobs, perchConcurrency as knotConcurrency, mapConcurrent as knotMapConcurrent, runWorkers as knotRunWorkers, memoizeTextCount as knotMemoizeTextCount, drainAll as knotDrainAll, limitConcurrent as knotLimitConcurrent, failureCohorts as knotFailureCohorts } from "../../../../scripts/perch-throughput.mjs";\nimport { analyzeBendSource as knotAnalyzeBendSource } from "../../../../scripts/perch-bend.mjs";\nimport { createBendReview as knotCreateBendReview, bendDeclarationSource as knotBendDeclarationSource } from "../../../../scripts/perch-bend-context.mjs";\n${patched}\nexport { createSourceAnalyzer as knotCreateSourceAnalyzer, resolveModule as knotResolveModule, buildGraph as knotBuildGraph, createLineReader as knotCreateLineReader, openStore as knotOpenStore };\n`;
 }
 
 export async function install() {
@@ -135,6 +137,7 @@ export async function install() {
   const parserFiles = (await readdir(join(root, 'vendor/bend-parser'))).sort();
   const inputs = [await readFile(fileURLToPath(import.meta.url)), await readFile(join(root, 'scripts/perch-bend.mjs')),
     await readFile(join(root, 'scripts/perch-bend-context.mjs')),
+    await readFile(join(root, 'scripts/perch-throughput.mjs')), await readFile(join(root, 'scripts/perch-throughput-patch.mjs')),
     ...await Promise.all(parserFiles.map(name => readFile(join(root, 'vendor/bend-parser', name))))];
   const profile = `language-pack-1.20-v3+knot-bend-${sha(Buffer.concat(inputs)).slice(0, 16)}`;
   const patched = patchPerch(original, profile);
