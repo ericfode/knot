@@ -705,3 +705,36 @@ composition context changes. A separate candidate-generation mistake placed
 local bindings before a later parameter match; the single compiler retry moved
 them beneath that match. Future proofs should preserve the pinned language's
 match-before-binding order. Measured avoidable rework: not recorded.
+
+## 2026-09-27 — Declaration contribution versus complete-mechanism hook
+
+The IntMap owner's proposal prompted a [frozen advisory comparison](perch-calibration/declaration-obligations-2026-09-27/README.md)
+at `af3b202`, production rubric v6, requested/resolved Jev 1.13.0. The draft
+requires declaration Memetic/Anticipation/Payoff level 2 inside a preselected
+complete reader unit, whose expressive axes retain level 3. Compression,
+Delight, every 0.60 threshold and the independent memetic criterion remain.
+Raw leading/supporting role distributions are retained, not relabelled.
+
+Eight bounded file-group checks produced 58 distinct responses and 62 policy
+rows. Exposed proof pairs meet all numerical declaration targets on 4/8 under
+the fresh v6 packet and 8/8 under the draft; API/internal rows move 0/12 to 5/12.
+Much of that gain follows arithmetically from the different obligation. No
+complete unit meets all targets. The historical proof receipt remains 3/8;
+its separately labelled target-only sensitivity is 4/8, not a retroactive pass.
+
+Judgment: **unresolved calibration**, no confirmed source defect or adjudicated
+model false positive. The reserved clear control still has uncertain Memetic-2
+mass on its ordinary step (.43) and public wrapper (.49). The obscured control
+fails Compression/Delight even where its form receives memetic credit. The
+historical `set_get`/`remove_get` role mismatch does not reproduce in the fresh
+fuller packet. Uncertain roles and the canonical template-fill observer gap
+remain visible. Measured avoidable rework: unknown.
+
+Retain v6 as the production default and keep this draft advisory. Prevention:
+name and freeze the whole reader unit before assigning declaration obligations;
+do not infer an independent hook from algorithmic centrality or visibility.
+Before promotion, define ordinary-contribution anchors and validate on new
+independently labelled controls. Both fresh implementations passed native and
+JavaScript observations, the two existing IntMap proof entry points still check,
+and exact artifact verification confirms 194 accepted IntMap/config files
+unchanged. No package rewrite or broader campaign restart follows this study.

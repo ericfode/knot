@@ -1,0 +1,157 @@
+{
+  "status": "passed",
+  "literal_observations_per_backend": 7,
+  "cases": [
+    {
+      "input": "Nil{}",
+      "expected_u32": 0
+    },
+    {
+      "input": "[1]",
+      "expected_u32": 1
+    },
+    {
+      "input": "[1,2]",
+      "expected_u32": 33
+    },
+    {
+      "input": "[1,2,3]",
+      "expected_u32": 1026
+    },
+    {
+      "input": "[4294967295,1]",
+      "expected_u32": 4294967266
+    },
+    {
+      "input": "[0,1,0]",
+      "expected_u32": 31
+    },
+    {
+      "input": "[5,5]",
+      "expected_u32": 160
+    }
+  ],
+  "rows": [
+    {
+      "specimen": "a",
+      "source_sha256": "95dfcc71f92ca65a8d7e075977b2f8a0378b6dc220e2a7e97dc7dd5c54bbe311",
+      "commands": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a.bend",
+            "-o",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a"
+          ],
+          "exit": 0,
+          "stdout": "0\n1\n33\n1026\n4294967266\n31\n160\n",
+          "stderr": "",
+          "is_observation": true
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a.bend",
+            "-o",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/a.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n1\n33\n1026\n4294967266\n31\n160\n",
+          "stderr": "",
+          "is_observation": true
+        }
+      ]
+    },
+    {
+      "specimen": "b",
+      "source_sha256": "f3a90b56d3ce80db6702ec9d229330346888eb32f14a533c0097a3c31d3644bd",
+      "commands": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b.bend",
+            "-o",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b"
+          ],
+          "exit": 0,
+          "stdout": "0\n1\n33\n1026\n4294967266\n31\n160\n",
+          "stderr": "",
+          "is_observation": true
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b.bend",
+            "-o",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "bend 2.0.31 is available: run bend update\n",
+          "is_observation": false
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/.codex/worktrees/perch-potential-profundity/knot/.local/perch-declaration-obligations/b.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n1\n33\n1026\n4294967266\n31\n160\n",
+          "stderr": "",
+          "is_observation": true
+        }
+      ]
+    }
+  ],
+  "scope": "Finite independent literal observations; no universal equivalence proof."
+}
