@@ -34,33 +34,31 @@ requests and no credentials.
      run.
    - Project mode reports the same unavailable composition
      (`explicit_selected_group_required`) as a live `--all` run.
-3. **Composition questions carry each axis's rubric.** The v6 composition
-   policy says Anticipation and Payoff are judged "under their own rubrics",
-   but requests replaced each axis's instructions with the generic paragraph
-   and sent only the level labels. Each memetic, Anticipation and Payoff
-   composition question now sends the composition paragraph, then that axis's
-   rubric instructions and levels, framed as a whole-mechanism leading
-   judgment.
-   - The Galaxy question and all declaration questions are unchanged.
-   - The effect on scores is **unmeasured**. No composition has ever met its
-     level-3 targets (0 of 23; best memetic 0.42, Anticipation 0.12, Payoff
-     0.36), while declaration Anticipation reaches 0.88.
-   - A paired paid comparison on one fixed group, old request versus new, is
-     needed before attributing any change to this repair.
+3. **Composition request: reverted to the calibrated form.** `1def9b9` briefly
+   added each axis's own rubric instructions to the composition memetic,
+   Anticipation and Payoff questions. It treated v6's phrase "under their own
+   rubrics" as evidence of an omission. History shows otherwise: the
+   generic-paragraph form was introduced deliberately in `3dc7774` (v5), and
+   the v5 controls ran under it. The per-axis form is therefore a new,
+   uncalibrated request contract, and it is reverted here.
+   - It remains candidate **C1** for a paired comparison against the current
+     form **C0**. No composition has met its level-3 targets: 0 of 27, best
+     memetic .42, Anticipation .13 and Payoff .45, including the four
+     reader-unit judgments in `7c13f9a`. Declaration Anticipation reaches .88.
+   - Any composition answers produced under C1 between the two commits are
+     not production evidence.
 
 **Reuse cost.** The parser-profile bump changes the reuse identity, so every
 earlier style receipt fails `--reuse` and every automatic cache entry misses.
-This holds even for declarations whose analysis output did not change. The
-composition request change also invalidates any earlier composition answer,
-including v6 receipts such as `edit-locality-1/style-composition.json`. A
-paired comparison therefore pays for fresh answers on both sides. Declaration
+This holds even for declarations whose analysis output did not change.
+Declaration
 reuse could be preserved only by deliberately not bumping the profile for
 unchanged analysis output; that decision was not taken here.
 
 **Tests.** `npm run lint:verify` at base `af3b202` ran 84 tests with 83 passing.
 The existing corpus parse test already failed on `locality/PROOF.bend`, the gap
-repaired here. It now runs 93 tests, all passing: +1 parser, +7 preflight and
-+1 composition-request test. Law-rule wiring also passes.
+repaired here. It now runs 92 tests, all passing: +1 parser and +7 preflight.
+Law-rule wiring also passes.
 
 ## Structural baseline (`project-preflight.json.gz`)
 

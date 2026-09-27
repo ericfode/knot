@@ -283,11 +283,11 @@ the receipt; this is not a claim to have reviewed an unseen whole project.
 
 The composition judge receives the fixed task, when available, and source group
 without previous scores or the potential verdict. Each memetic, Anticipation and
-Payoff question carries the composition instructions followed by that axis's own
-rubric instructions and levels, applied to the whole mechanism at the leading
-standard. Earlier composition requests sent the generic paragraph and level
-labels without each axis's rubric instructions, including the first v6
-receipts; their answers are not reused across this request change. Each required distribution
+Payoff question sends the composition instructions with that axis's level labels,
+not its declaration instructions. This is the deliberate v5 request form under
+which the v5 controls ran. Sending each axis's own instructions is an
+uncalibrated candidate for a paired comparison, not the production contract.
+Each required distribution
 must independently reach 60%. Helpers retain their ordinary conceptual-compression bar; a good helper
 need not independently be profound. Source ratings, task relevance and composition
 quality remain distinct in reporting and receipt reuse.

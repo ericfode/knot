@@ -114,19 +114,6 @@ test('missing task keeps potential advisory but always requires whole-compositio
   assert.equal('answers' in familyRequests[0].state, false);
 });
 
-test('composition questions carry each axis rubric, not only its level labels', async t => {
-  const root = await fixture(t), p = provider();
-  await run(root, p);
-  const composition = p.requests.find(request => Array.isArray(request.state.files));
-  for (const id of scaled) {
-    const rubric = [...config.dimensions, ...config.diagnostic_dimensions].find(d => d.id === id);
-    const question = composition.questions[id];
-    assert.ok(question.instructions.startsWith(config.style_role.composition_instructions));
-    assert.ok(question.instructions.includes(rubric.instructions), `${id} composition question omits its rubric`);
-    assert.deepEqual(question.criteria, rubric.levels);
-  }
-});
-
 test('all-support declaration success cannot bypass a weak whole composition', async t => {
   const root = await fixture(t), p = provider({ family: 2 });
   const { report, code } = await run(root, p);

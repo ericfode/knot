@@ -772,9 +772,7 @@ export async function runStyleRanking(args, {
             ? 'Rate the COMPLETE collaborating mechanism in the supplied source group, using the contract. '
               + 'Apply the ordered conceptual-compression levels to the composition, not to isolated helpers or an average of their scores. '
               + 'Trace what the actual mechanism explains; no missing implementation or claimed brilliance earns credit.'
-            // The composition policy judges each axis "under its own rubric": send that
-            // rubric's instructions, not only its level labels, framed for the whole mechanism.
-            : `${config.style_role.composition_instructions} ${rubric.title} rubric, applied to the whole mechanism at the leading standard: ${rubric.instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
+            : `${config.style_role.composition_instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
         });
         const composed = await reviewAuxiliary('composition', composition.candidate, rubrics);
         const assessments = compositionTargets.map(target => {

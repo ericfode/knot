@@ -761,27 +761,35 @@ Three changes, all offline:
   of these are blocked only by local datatype or constructor names. 194 of 284
   single-file groups are composable. Project mode, like a live `--all` run,
   needs explicit groups.
-- **Composition request mismatch fixed.** Composition requests omitted each
-  axis's rubric instructions, which the v6 composition policy invokes. Its
-  effect on scores is unmeasured. A paired paid comparison on one fixed group
-  is the next calibration step; no score movement is claimed.
+- **Composition request change landed and reverted.** `1def9b9` added each
+  axis's own rubric instructions to composition questions, on the reading that
+  v6's "under their own rubrics" meant they had been omitted. The design
+  panel's history check found that the generic form was introduced
+  deliberately in `3dc7774` (v5) and that the v5 controls ran under it. The
+  per-axis form is therefore an uncalibrated contract, and the follow-up
+  commit restores the v5 form. It remains candidate C1 against the current C0
+  for a paired comparison. No score movement is claimed.
 
-The profile bump and the composition-request change invalidate reuse of all
-earlier style answers. That cost is accepted and recorded in the evidence.
+The parser-profile bump invalidates reuse of all earlier style answers. That
+cost is accepted and recorded in the evidence.
 
 An adversarial review ran 3 lenses and 19 agents. It confirmed 13 low or medium
 documentation and parity issues, which are corrected in this increment, and
 found no behavioral defect in the parser change.
 
 A port of the unmerged owner-worktree repairs (`3263f72`, `55f1d50`, `573c56e`)
-was first blocked as a shared-work change. The user then asked for it to be
-merged, and it follows as separate cherry-picks.
+was blocked twice as a shared-work change, including after the user asked for
+it to be merged. It awaits the user running the cherry-picks or granting
+permission. It was not reapplied by hand.
 
 [Evidence and baseline](perch-calibration/style-preflight-2026-09-27/README.md).
-`npm run lint:verify`: 93 tests pass, plus law-rule wiring. No rubric, target,
+`npm run lint:verify`: 92 tests pass, plus law-rule wiring. No rubric, target,
 threshold or scope changed.
 
 Prevention: run `--preflight` before paid style reviews and after context or
 parser changes. The driver trial and the locality proof each paid for a review
-whose composition or parse could have been predicted offline. Measured
-avoidable rework: unknown.
+whose composition or parse could have been predicted offline. Before changing
+what a judge receives, check the file history for the request form's origin
+and calibration, not only the rubric's wording. A misread omission briefly
+shipped an uncalibrated composition contract under an unchanged rubric
+identity. Measured avoidable rework: unknown.
