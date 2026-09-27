@@ -6,6 +6,11 @@ question is whether its form makes the reader feel able to hold and continue
 unfinished work. This selects the starting point; no new candidate has been
 generated and the existing pilot has not passed.
 
+Handoff update: the candidate is now preserved as an
+[unaccepted research snapshot](../../adaptive-tasks/style-pilot/adaptive-run-1/handoff.json).
+The accepted baseline is restored in `task.bend`. The frozen packet below records
+the original selection-time state; its untracked/staged labels are historical.
+
 ## Why this family
 
 | Candidate starting point | Useful material | Decision |
@@ -23,8 +28,8 @@ identity, a complete small contract and an available transfer exercise.
 ## Read this packet in order
 
 The [frozen packet](start-packet.json) pins committed baseline
-`897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4`, the staged runner candidate, nineteen
-committed contract/gate/evidence inputs and four seed files. The staged file can
+`897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4`, the then-staged runner candidate, nineteen
+committed contract/gate/evidence inputs and four seed files. The candidate can
 be reconstructed exactly by replacing the one retained `run` block in the
 committed baseline. It remains the existing coordinator's candidate.
 
@@ -53,7 +58,7 @@ def run(fuel: Nat, state: Run) -> Run:
       Delivered{dest,payload}
 ```
 
-The existing staged candidate singles out the advancing case:
+The preserved candidate singles out the advancing case:
 
 ```bend
 def run(fuel: Nat, state: Run) -> Run:
@@ -97,7 +102,7 @@ Two observed details matter for the next gate:
   Delivered reconstruction with identity. `check-pilot.py` pins the exact existing
   candidate hash. These are appropriate records for that particular trial, not
   reusable acceptance gates for arbitrary successors. The packet records their
-  paths and hashes as owner-local, currently untracked artifacts.
+  paths and hashes as then-untracked owner artifacts, now retained in the pilot checkpoint.
 
 The next implementation step is therefore a **separately recorded general
 comparison gate**, prepared before any new style candidate. Preserve the old

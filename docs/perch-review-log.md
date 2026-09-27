@@ -462,6 +462,60 @@ context remain visible. Unlike Vec's planner, this flattening preserves named
 terminal states; the two outcomes support separate reading judgments rather
 than a blanket flattening rule.
 
+## 2026-09-26 — Scoped run pilot: deterministic evidence, no style response
+
+The [one-declaration pilot](../research/adaptive-tasks/style-pilot/adaptive-run-1/README.md)
+expresses a fueled Checkpoint as the sole progressing case and preserves the
+complete owner in its complement. Its first candidate passes twelve unchanged
+laws, both intended quantity negatives, native/JS observations, five semantic
+mutants and 42 full-state/step-count comparisons. Emitted JavaScript removes a
+terminal wrapper reconstruction; that does not establish a style target.
+
+The [live review](../research/adaptive-tasks/style-pilot/adaptive-run-1/style-provider-failure.json)
+made one request with zero responses after a transport failure. All three
+after-ratings and semantic source/law review remain unavailable. The compiler
+owner later reported a working provider in its session, but the bounded review
+handoff was blocked by the app's approval policy and was not delivered. Do not
+infer a missing key or a global outage. Keep the exact candidate and rubric
+frozen; resume targeted review only with changed access, without score chasing.
+The current CPU gate reconstructs its frozen inputs from tracked Git objects
+and snapshots; it does not require an earlier session's ignored source copy.
+
+After the user changed access, one single-file Git stage succeeded, but staging
+the full checkpoint failed at `.git/index.lock` with `Operation not permitted`.
+One resumed style request
+on the identical source/context/rubric still failed with zero responses; provider
+DNS reports `ENOTFOUND`. The app handoff and heartbeat update still return
+`approval policy is never`. [Both attempts and the access diagnostic](../research/adaptive-tasks/style-pilot/adaptive-run-1/access-2.json)
+remain recorded. No unavailable result became a pass and no candidate changed.
+
+Clean-main handoff update: the later complete `candidate-style-access-3.json`
+receipt gives target mass 0.82 conceptual, 0.81 delight and 0.52 memetic
+(uncertain), under its frozen historical rubric. The current rubric differs.
+The [handoff record](../research/adaptive-tasks/style-pilot/adaptive-run-1/handoff.json)
+reconciles the stale unavailable summary, preserves all prior failures, and keeps
+the exact candidate as an unaccepted snapshot. The executable runner returns to
+the byte-identical accepted baseline. No new paid review or compiler/device run
+was made for this checkpoint; semantic candidate review remains unrecorded.
+
+## 2026-09-26 — Flat-store: aliased observations and arithmetic review noise
+
+The compiler owner's [law review](../research/flat-store/LAW_REVIEW.md) records
+an aliased Buffer in the first reinitialization comparison. The historical
+receipt is retained and disqualified for that claim. Frozen typed-array copies
+and a type-correct write-on-reinit mutant now distinguish an unexpected memory
+write. This defect was found by direct review before Perch, not by Perch.
+Prevention: snapshot bytes independently before the operation, then require a
+mutant that writes on the rejected path to fail the preserved observation.
+
+The owner's [Perch report](../research/flat-store/PERCH_REPORT.md) also retains
+below-floor arithmetic probabilities of 0.73 for the constant-string
+`probes.bend::layout_error` renderer and 0.69 for a locator-law fill. No arithmetic
+defect is demonstrated and no code or threshold changed. These are bounded
+calibration observations; any future rule revision still needs clean, broken
+and held-out controls. The 106-declaration style review has zero all-three
+passes and twenty capped helper contexts; it does not satisfy the separate pilot.
+
 ## 2026-09-27 — Symbols balanced identity: policy transition and adverse-input review
 
 The [owner handoff](style-campaign/symbols-identity-v3-2026-09-27.json) verifies

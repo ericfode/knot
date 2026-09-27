@@ -4,10 +4,12 @@ An author-written reading specimen, 2026-09-26. This tests the leading hypothesi
 in [the theory proposal](MEMETIC-THEORY.md). It is not a finished style, a user
 preference, a new implementation or a three-axis pass. The Bend excerpts are
 copied from existing source; explanatory equations are labeled separately.
-The runner is another owner's staged candidate, preserved here as a quotation.
+The runner was another owner's staged candidate, preserved here as a quotation.
+It is now retained in the [unaccepted pilot snapshot](../adaptive-tasks/style-pilot/adaptive-run-1/candidate-first.bend.snapshot);
+the clean-main handoff restores the accepted baseline in the executable file.
 The [evidence snapshot](memetic-theory-evidence-2026-09-26.json) pins all six code
 excerpts, their source hashes and whether they match committed HEAD. This
-documentation increment does not commit that owner's source change.
+original documentation increment did not commit that owner's source change.
 
 ## Work survives the end of its time slice
 

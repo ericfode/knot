@@ -38,6 +38,17 @@ judgment; it does not establish equivalence or measured psychological effects.
 
 ## Work order and ownership
 
+The user's later 2026-09-26 instruction temporarily takes priority over the wave
+queue: use GPT-6 Astra at **max** reasoning for a small feasibility pilot. After
+new-chat creation was blocked, the user explicitly authorized the current
+checkout. The [scoped pilot](style-campaign/scoped-pilot.md)
+must demonstrate all three targets on its complete changed scope before wider
+dispatch resumes. Keep queued components and prior results; do not call a
+memetic deficit pilot success. The state file records the current execution
+mode, historical evidence and the current unaccepted disposition. The clean-main
+handoff preserves the candidate as a snapshot and restores the accepted runner;
+the completed historical review remains uncertain on the memetic axis.
+
 | Wave | Scope | Owner and first increment |
 | --- | --- | --- |
 | 1 | IntMap | Existing IntMap chat: path/branch vocabulary and the mirrored get/set/remove family. Test a concrete simplification of branch pruning before touching the public API. |
@@ -67,7 +78,7 @@ or restart the paused publication automation. Retain existing release evidence.
    judging the candidate. Label the author's taste hypothesis separately from
    a preference actually expressed by the user.
 2. Freeze the baseline source, contract and independent test hashes. Use GPT-6
-   Astra at high reasoning for repairs; exclude Luna 5.6. Make one substantive
+   Astra at max reasoning for campaign repairs; exclude Luna 5.6. Make one substantive
    candidate. Preserve its first result. A compiler-rejected generation gets
    at most one diagnostic retry; record it separately and reject remaining
    failures. Do not silently hand-fix a failed model experiment or alter tests.
