@@ -1,0 +1,64 @@
+import Base
+type R is Data:
+  O{v:U32}
+  E{s:U32,p:U32}
+def P(b:Bool,x:R,y:R)->R:Bool.pick(R,b,x,y)
+def w(x:List<&2,U32>,+z:U32,+i:U32,+j:U32,+l:U32,+v:U32,+e:U32,+a:U32)->R:
+  match x: case Nil{}:O{a} case +c<>r:
+    +D=Bool.to_u32((c - 48 < 10:U32))
+    +K=Bool.to_u32(U32.is_eq(c,44))
+    P(U32.is_eq((z + D + K:U32),1),E{1,i},P(U32.is_eq((K*(z + e*4):U32),2),E{2,(j*2:U32)},P(U32.is_eq((K*z:U32),3)&&(v > 1000||v < l:U32),E{3,j},w(r,z,(i + 1:U32),(j + K:U32),(l + K*(v + 1 - l):U32),(v*(1 - K)*(1 + 9*D) + D*(c - 48):U32),(e*(1 - K) + D:U32),(a + K*v:U32)))))
+def t(a:R,b:R)->R:match a: case O{v}:b case E{s,p}:E{s,p}
+def f(x:List<&2,U32>)->R:
+  +y=List.append(&2,U32,x,[44])
+  t(w(y,1,0,0,0,0,0,0),t(w(y,2,0,0,0,0,0,0),w(y,3,0,0,0,0,0,0)))
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: R) -> U32:
+  match r:
+    case O{v}:
+      (v * 4 : U32)
+    case E{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(f(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

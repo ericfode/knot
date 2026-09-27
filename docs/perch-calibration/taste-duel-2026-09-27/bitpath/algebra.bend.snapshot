@@ -1,0 +1,126 @@
+import Base
+
+# A depth-d trie is 2^d slots; a key, read low bit first, names one.
+# One bit-indexed pair, pick and place, is the entire structure:
+#
+#   law  pick(b, place(b, x, y))  = x       retract
+#   law  pick(¬b, place(b, x, y)) = y       frame
+#   law  place(b, Hole, Hole)     = Hole    collapse: no fork of two holes
+#
+# zoom and graft iterate the pair d times, so by induction on d
+#   law  zoom(k, graft(k, x, t))  = x       lens
+# and the API is three one-liners. Deletion is grafting a hole.
+
+type Trie is Data:
+  Hole{}
+  Slot{v: U32}
+  Fork{l: Trie, r: Trie}
+
+def pick(b: Bool, t: Trie) -> Trie:
+  match b t:
+    case False{} Fork{l, r}: l
+    case True{}  Fork{l, r}: r
+    case _       _:          Hole{}
+
+def place(b: Bool, x: Trie, y: Trie) -> Trie:
+  match b x y:
+    case _       Hole{} Hole{}: Hole{}
+    case False{} x      y:      Fork{x, y}
+    case True{}  x      y:      Fork{y, x}
+
+def bit(+k: U32) -> Bool: Bool.not(U32.is_even(k))
+
+def zoom(d: Nat, +k: U32, t: Trie) -> Trie:
+  match d:
+    case 0n:   t
+    case 1n+d: zoom(d, U32.shr(k), pick(bit(k), t))
+
+def graft(d: Nat, +k: U32, x: Trie, +t: Trie) -> Trie:
+  match d:
+    case 0n:   x
+    case 1n+d:
+      +b = bit(k)
+      place(b, graft(d, U32.shr(k), x, pick(b, t)), pick(Bool.not(b), t))
+
+def slot(t: Trie) -> +Maybe<U32>:
+  match t:
+    case Slot{v}: Some{v}
+    case _:       None{}
+
+def get(t: Trie, k: U32) -> +Maybe<U32>: slot(zoom(8n, k, t))
+def put(t: Trie, k: U32, v: U32) -> Trie:  graft(8n, k, Slot{v}, t)
+def del(t: Trie, k: U32) -> Trie:          graft(8n, k, Hole{}, t)
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> Trie: Hole{}
+def H.get(t: Trie, k: U32) -> +Maybe<U32>: get(t, k)
+def H.put(t: Trie, k: U32, v: U32) -> Trie: put(t, k, v)
+def H.del(t: Trie, k: U32) -> Trie: del(t, k)
+def H.forks(t: Trie) -> U32:
+  match t:
+    case Fork{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

@@ -1,0 +1,98 @@
+import Base
+
+# Task state record.
+type TaskStateRecord is Data:
+  TaskStateRecord{remaining_units_value: U32, accumulated_total_value: U32}
+
+# Task execution outcome.
+type TaskExecutionOutcome is Data:
+  TaskExecutionOutcomeCompleted{final_accumulated_total_value: U32}
+  TaskExecutionOutcomeNotCompleted{not_completed_task_state_record: TaskStateRecord}
+
+# Gets the remaining units value.
+def get_remaining_units_value(task_state_record: TaskStateRecord) -> U32:
+  match task_state_record:
+    case TaskStateRecord{remaining_units_value, accumulated_total_value}:
+      remaining_units_value
+
+# Gets the accumulated total value.
+def get_accumulated_total_value(task_state_record: TaskStateRecord) -> U32:
+  match task_state_record:
+    case TaskStateRecord{remaining_units_value, accumulated_total_value}:
+      accumulated_total_value
+
+# Checks if the task is complete.
+def check_if_task_is_complete(task_state_record: TaskStateRecord) -> Bool:
+  remaining_units_value = get_remaining_units_value(task_state_record)
+  is_task_complete = U32.is_eq(remaining_units_value, 0)
+  is_task_complete
+
+# Performs the single task step.
+def perform_single_task_step(+task_state_record: TaskStateRecord) -> TaskStateRecord:
+  +current_remaining_units_value = get_remaining_units_value(task_state_record)
+  current_accumulated_total_value = get_accumulated_total_value(task_state_record)
+  multiplied_accumulated_total_value = U32.mul(current_accumulated_total_value, 3)
+  remaining_units_modulo_value = U32.mod(current_remaining_units_value, 7)
+  next_accumulated_total_value = U32.add(multiplied_accumulated_total_value, remaining_units_modulo_value)
+  next_remaining_units_value = U32.sub(current_remaining_units_value, 1)
+  next_task_state_record = {TaskStateRecord{next_remaining_units_value, next_accumulated_total_value} : TaskStateRecord}
+  next_task_state_record
+
+# Runs the task with the fuel amount and the completion check result.
+def run_task_with_fuel_amount_and_completion_check_result(
+  fuel_amount: Nat, is_task_complete: Bool, +task_state_record: TaskStateRecord
+) -> TaskExecutionOutcome:
+  match fuel_amount is_task_complete:
+    case _ True{}:
+      final_accumulated_total_value = get_accumulated_total_value(task_state_record)
+      completed_outcome = {TaskExecutionOutcomeCompleted{final_accumulated_total_value} : TaskExecutionOutcome}
+      completed_outcome
+    case 0n False{}:
+      not_completed_outcome = {TaskExecutionOutcomeNotCompleted{task_state_record} : TaskExecutionOutcome}
+      not_completed_outcome
+    case 1n+remaining_fuel_amount False{}:
+      +next_task_state_record = perform_single_task_step(task_state_record)
+      next_is_task_complete = check_if_task_is_complete(next_task_state_record)
+      next_outcome = run_task_with_fuel_amount_and_completion_check_result(
+        remaining_fuel_amount, next_is_task_complete, next_task_state_record)
+      next_outcome
+
+# Runs the task execution outcome with the fuel amount.
+def run_task_execution_outcome_with_fuel_amount(
+  fuel_amount: Nat, task_execution_outcome: TaskExecutionOutcome
+) -> TaskExecutionOutcome:
+  match task_execution_outcome:
+    case TaskExecutionOutcomeCompleted{final_accumulated_total_value}:
+      completed_outcome = {TaskExecutionOutcomeCompleted{final_accumulated_total_value} : TaskExecutionOutcome}
+      completed_outcome
+    case TaskExecutionOutcomeNotCompleted{+not_completed_task_state_record}:
+      is_task_complete = check_if_task_is_complete(not_completed_task_state_record)
+      result_outcome = run_task_with_fuel_amount_and_completion_check_result(
+        fuel_amount, is_task_complete, not_completed_task_state_record)
+      result_outcome
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> TaskExecutionOutcome:
+  TaskExecutionOutcomeNotCompleted{TaskStateRecord{(n % 40 : U32), n}}
+
+def h_run(f: Nat, x: TaskExecutionOutcome) -> TaskExecutionOutcome:
+  run_task_execution_outcome_with_fuel_amount(f, x)
+
+def h_code(x: TaskExecutionOutcome) -> U32:
+  match x:
+    case TaskExecutionOutcomeCompleted{v}: (v * 2 + 1 : U32)
+    case TaskExecutionOutcomeNotCompleted{TaskStateRecord{r, v}}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

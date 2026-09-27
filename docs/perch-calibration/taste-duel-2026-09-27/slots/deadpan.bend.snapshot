@@ -1,0 +1,112 @@
+import Base
+
+type SlotContent is Data:
+  SlotContentEmpty{}
+  SlotContentFilled{slot_content_value: U32}
+
+type PutValueResult is Type:
+  PutValueResultPlaced{slot_store: List<SlotContent>, placed_slot_index: U32}
+  PutValueResultRefused{slot_store: List<SlotContent>, refused_value: U32}
+
+type TakeValueResult is Type:
+  TakeValueResultTaken{slot_store: List<SlotContent>, taken_value: U32}
+  TakeValueResultMissing{slot_store: List<SlotContent>}
+
+# Create empty slot store.
+def create_empty_slot_store() -> List<SlotContent>:
+  empty_slot_store: List<SlotContent> = [SlotContentEmpty{}, SlotContentEmpty{}, SlotContentEmpty{}, SlotContentEmpty{}]
+  empty_slot_store
+
+def add_slot_content_to_front_of_put_value_result(slot_content: SlotContent, put_value_result: PutValueResult) -> PutValueResult:
+  match put_value_result:
+    case PutValueResultPlaced{slot_store, placed_slot_index}:
+      updated_slot_store: List<SlotContent> = slot_content <> slot_store
+      PutValueResultPlaced{updated_slot_store, placed_slot_index}
+    case PutValueResultRefused{slot_store, refused_value}:
+      updated_slot_store: List<SlotContent> = slot_content <> slot_store
+      PutValueResultRefused{updated_slot_store, refused_value}
+
+# Put value into slot store starting at slot index.
+def put_value_into_slot_store_starting_at_slot_index(slot_store: List<SlotContent>, value_to_put: U32, current_slot_index: U32) -> PutValueResult:
+  match slot_store:
+    case []:
+      PutValueResultRefused{[], value_to_put}
+    case SlotContentEmpty{} <> remaining_slot_store:
+      new_slot_content: SlotContent = SlotContentFilled{value_to_put}
+      updated_slot_store: List<SlotContent> = new_slot_content <> remaining_slot_store
+      PutValueResultPlaced{updated_slot_store, current_slot_index}
+    case current_slot_content <> remaining_slot_store:
+      next_slot_index: U32 = (current_slot_index + 1 : U32)
+      put_value_result: PutValueResult = put_value_into_slot_store_starting_at_slot_index(remaining_slot_store, value_to_put, next_slot_index)
+      add_slot_content_to_front_of_put_value_result(current_slot_content, put_value_result)
+
+# Put value into slot store.
+def put_value_into_slot_store(slot_store: List<SlotContent>, value_to_put: U32) -> PutValueResult:
+  starting_slot_index: U32 = 0
+  put_value_result: PutValueResult = put_value_into_slot_store_starting_at_slot_index(slot_store, value_to_put, starting_slot_index)
+  put_value_result
+
+def add_slot_content_to_front_of_take_value_result(slot_content: SlotContent, take_value_result: TakeValueResult) -> TakeValueResult:
+  match take_value_result:
+    case TakeValueResultTaken{slot_store, taken_value}:
+      updated_slot_store: List<SlotContent> = slot_content <> slot_store
+      TakeValueResultTaken{updated_slot_store, taken_value}
+    case TakeValueResultMissing{slot_store}:
+      updated_slot_store: List<SlotContent> = slot_content <> slot_store
+      TakeValueResultMissing{updated_slot_store}
+
+# Take value from slot store.
+def take_value_from_slot_store(slot_store: List<SlotContent>, slot_index_to_take: U32) -> TakeValueResult:
+  match slot_store slot_index_to_take:
+    case [] _:
+      TakeValueResultMissing{[]}
+    case SlotContentFilled{slot_content_value} <> remaining_slot_store 0:
+      updated_slot_store: List<SlotContent> = SlotContentEmpty{} <> remaining_slot_store
+      TakeValueResultTaken{updated_slot_store, slot_content_value}
+    case current_slot_content <> remaining_slot_store 0:
+      updated_slot_store: List<SlotContent> = current_slot_content <> remaining_slot_store
+      TakeValueResultMissing{updated_slot_store}
+    case current_slot_content <> remaining_slot_store remaining_slot_index_to_take:
+      next_slot_index_to_take: U32 = (remaining_slot_index_to_take - 1 : U32)
+      take_value_result: TakeValueResult = take_value_from_slot_store(remaining_slot_store, next_slot_index_to_take)
+      add_slot_content_to_front_of_take_value_result(current_slot_content, take_value_result)
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: PutValueResult, k: List<SlotContent> -> List<U32>) -> List<U32>:
+  match r:
+    case PutValueResultPlaced{s, i}: (i + 1 : U32) <> k(s)
+    case PutValueResultRefused{s, v}: (100 + v % 50 : U32) <> k(s)
+
+def harness_on_take(r: TakeValueResult, k: List<SlotContent> -> List<U32>) -> List<U32>:
+  match r:
+    case TakeValueResultTaken{s, v}: (200 + v % 50 : U32) <> k(s)
+    case TakeValueResultMissing{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: List<SlotContent>, k: List<SlotContent> -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(put_value_into_slot_store(s, v), k)
+    case HarnessTake{i}: harness_on_take(take_value_from_slot_store(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: List<SlotContent>) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), create_empty_slot_store())

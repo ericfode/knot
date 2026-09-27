@@ -1,0 +1,98 @@
+import Base
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║   ⚜   THE MAGNIFICENT ENGINE OF DEFERRED OBLIGATION   ⚜          ║
+# ║   Wherein LABOUR is advanced against a finite TREASURY, and      ║
+# ║   whatsoever remains unfinished is RETURNED WITH FULL HONOURS.   ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+# ┌─── ❦ I. The Sovereign Ledger ❦ ──────────────────────────────────┐
+type SovereignLedgerOfLabour is Data:
+  InscribedLedger{the_outstanding_tribute: U32, the_amassed_treasure: U32}
+
+# ┌─── ❦ II. The Twin Destinies Which Await Every Ledger ❦ ──────────┐
+type DestinyOfTheLedger is Data:
+  GloriousConsummation{the_final_treasure: U32}
+  SolemnDeferment{the_ledger_returned_with_honour: SovereignLedgerOfLabour}
+
+# ┌─── ❦ III. Of Consecration ❦ ─────────────────────────────────────┐
+# │  The numeral departs precisely as it arrived — yet CONSECRATED.
+def consecrate(the_numeral: U32) -> U32:
+  the_numeral
+
+# ┌─── ❦ IV. The Rite of Triplication ❦ ─────────────────────────────┐
+def the_rite_of_triplication(the_treasure: U32) -> U32:
+  consecrate((the_treasure * 3 : U32))
+
+# ┌─── ❦ V. The Exaction of the Septenary Tithe ❦ ───────────────────┐
+def the_exaction_of_the_septenary_tithe(the_tribute: U32) -> U32:
+  consecrate((the_tribute % 7 : U32))
+
+# ┌─── ❦ VI. The Oracle of the Void ❦ ───────────────────────────────┐
+# │  Herein the Oracle gazes into the Void and names what it sees.
+def the_oracle_of_the_void(the_tribute: U32) -> Bool:
+  U32.is_zero(consecrate(the_tribute))
+
+# ┌─── ❦ VII. The Pronouncement of Destiny ❦ ────────────────────────┐
+def the_pronouncement_of_destiny(+the_tribute: U32, +the_treasure: U32) -> DestinyOfTheLedger:
+  Bool.pick(DestinyOfTheLedger, the_oracle_of_the_void(the_tribute),
+    GloriousConsummation{the_treasure},
+    SolemnDeferment{InscribedLedger{the_tribute, the_treasure}})
+
+# ┌─── ❦ VIII. The Innermost Sanctum of Advancement ❦ ───────────────┐
+def the_innermost_sanctum(+the_tribute: U32, the_treasure: U32) -> DestinyOfTheLedger:
+  the_pronouncement_of_destiny(consecrate((the_tribute - 1 : U32)),
+    (the_rite_of_triplication(the_treasure) + the_exaction_of_the_septenary_tithe(the_tribute) : U32))
+
+# ┌─── ❦ IX. The Ceremony of Advancement ❦ ──────────────────────────┐
+# │  (which, in its wisdom, summons the Sanctum)
+def the_ceremony_of_advancement(the_destiny: DestinyOfTheLedger) -> DestinyOfTheLedger:
+  match the_destiny:
+    case GloriousConsummation{the_final_treasure}:
+      GloriousConsummation{the_final_treasure}
+    case SolemnDeferment{InscribedLedger{the_tribute, the_treasure}}:
+      the_innermost_sanctum(the_tribute, the_treasure)
+
+# ┌─── ❦ X. The Invocation ❦ ────────────────────────────────────────┐
+# │  (which, in ITS wisdom, summons the Ceremony)
+def the_invocation(the_destiny: DestinyOfTheLedger) -> DestinyOfTheLedger:
+  the_ceremony_of_advancement(the_destiny)
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║   ⚜   XI. THE GRAND ORCHESTRATOR OF METERED LABOUR   ⚜           ║
+# ║   Be it PROCLAIMED throughout the Realm: a Treasury spent in     ║
+# ║   two instalments begets the SELFSAME Destiny as one spent       ║
+# ║   entire. No proof is offered. None is asked of Sovereigns.      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+def the_grand_orchestration(the_treasury_of_fuel: Nat, the_destiny: DestinyOfTheLedger) -> DestinyOfTheLedger:
+  match the_treasury_of_fuel:
+    case 0n:
+      the_destiny
+    case 1n+the_diminished_treasury:
+      the_grand_orchestration(the_diminished_treasury, the_invocation(the_destiny))
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> DestinyOfTheLedger:
+  the_pronouncement_of_destiny((n % 40 : U32), n)
+
+def h_run(f: Nat, x: DestinyOfTheLedger) -> DestinyOfTheLedger:
+  the_grand_orchestration(f, x)
+
+def h_code(x: DestinyOfTheLedger) -> U32:
+  match x:
+    case GloriousConsummation{v}: (v * 2 + 1 : U32)
+    case SolemnDeferment{InscribedLedger{r, v}}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

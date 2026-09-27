@@ -1,0 +1,151 @@
+import Base
+
+type MapNode is Data:
+  EmptyMapNode{}
+  ValueMapNode{stored_value: U32}
+  BranchMapNode{left_child_node: MapNode, right_child_node: MapNode}
+
+def convert_key_to_list_of_bits(number_of_bits: Nat, +key_value: U32) -> List<&2, Bool>:
+  match number_of_bits:
+    case 0n:
+      Nil{}
+    case 1n+remaining_number_of_bits:
+      lowest_bit_value : U32 = U32.and(key_value, 1)
+      lowest_bit_is_set : Bool = U32.is_eq(lowest_bit_value, 1)
+      shifted_key_value : U32 = U32.shr(key_value)
+      Con{lowest_bit_is_set, convert_key_to_list_of_bits(remaining_number_of_bits, shifted_key_value)}
+
+def find_value_for_key_bits(key_bits: List<&2, Bool>, map_node: MapNode) -> Maybe<&2, U32>:
+  match key_bits map_node:
+    case Nil{} ValueMapNode{stored_value}:
+      Some{stored_value}
+    case Con{False{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      find_value_for_key_bits(remaining_key_bits, left_child_node)
+    case Con{True{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      find_value_for_key_bits(remaining_key_bits, right_child_node)
+    case other_key_bits other_map_node:
+      None{}
+
+def insert_value_for_key_bits(key_bits: List<&2, Bool>, map_node: MapNode, new_value: U32) -> MapNode:
+  match key_bits map_node:
+    case Nil{} existing_map_node:
+      ValueMapNode{new_value}
+    case Con{False{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      new_left_child_node : MapNode = insert_value_for_key_bits(remaining_key_bits, left_child_node, new_value)
+      BranchMapNode{new_left_child_node, right_child_node}
+    case Con{True{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      new_right_child_node : MapNode = insert_value_for_key_bits(remaining_key_bits, right_child_node, new_value)
+      BranchMapNode{left_child_node, new_right_child_node}
+    case Con{False{}, remaining_key_bits} existing_map_node:
+      BranchMapNode{insert_value_for_key_bits(remaining_key_bits, EmptyMapNode{}, new_value), EmptyMapNode{}}
+    case Con{True{}, remaining_key_bits} existing_map_node:
+      BranchMapNode{EmptyMapNode{}, insert_value_for_key_bits(remaining_key_bits, EmptyMapNode{}, new_value)}
+
+def make_branch_node_or_empty_node(left_child_node: MapNode, right_child_node: MapNode) -> MapNode:
+  match left_child_node right_child_node:
+    case EmptyMapNode{} EmptyMapNode{}:
+      EmptyMapNode{}
+    case other_left_child_node other_right_child_node:
+      BranchMapNode{other_left_child_node, other_right_child_node}
+
+def remove_value_for_key_bits(key_bits: List<&2, Bool>, map_node: MapNode) -> MapNode:
+  match key_bits map_node:
+    case Nil{} existing_map_node:
+      EmptyMapNode{}
+    case Con{False{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      new_left_child_node : MapNode = remove_value_for_key_bits(remaining_key_bits, left_child_node)
+      make_branch_node_or_empty_node(new_left_child_node, right_child_node)
+    case Con{True{}, remaining_key_bits} BranchMapNode{left_child_node, right_child_node}:
+      new_right_child_node : MapNode = remove_value_for_key_bits(remaining_key_bits, right_child_node)
+      make_branch_node_or_empty_node(left_child_node, new_right_child_node)
+    case other_key_bits other_map_node:
+      other_map_node
+
+def find_value_for_key_in_map(map: MapNode, key: U32) -> Maybe<&2, U32>:
+  key_bits : List<&2, Bool> = convert_key_to_list_of_bits(8n, key)
+  found_value : Maybe<&2, U32> = find_value_for_key_bits(key_bits, map)
+  found_value
+
+def insert_value_for_key_in_map(map: MapNode, key: U32, value: U32) -> MapNode:
+  key_bits : List<&2, Bool> = convert_key_to_list_of_bits(8n, key)
+  new_map : MapNode = insert_value_for_key_bits(key_bits, map, value)
+  new_map
+
+def remove_value_for_key_in_map(map: MapNode, key: U32) -> MapNode:
+  key_bits : List<&2, Bool> = convert_key_to_list_of_bits(8n, key)
+  new_map : MapNode = remove_value_for_key_bits(key_bits, map)
+  new_map
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> MapNode: EmptyMapNode{}
+def H.get(t: MapNode, k: U32) -> +Maybe<U32>: find_value_for_key_in_map(t, k)
+def H.put(t: MapNode, k: U32, v: U32) -> MapNode: insert_value_for_key_in_map(t, k, v)
+def H.del(t: MapNode, k: U32) -> MapNode: remove_value_for_key_in_map(t, k)
+def H.forks(t: MapNode) -> U32:
+  match t:
+    case BranchMapNode{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

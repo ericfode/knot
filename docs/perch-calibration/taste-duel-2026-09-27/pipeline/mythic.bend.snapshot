@@ -1,0 +1,120 @@
+import Base
+
+# thread in, tally out.
+#   I.   comb    what is not bead nor knot, is burr.
+#   II.  weave   what is called, must answer.
+#   III. climb   what climbs, must not fall.
+# the first gate that snags, speaks. the others keep silent.
+type Fiber is Data:
+  Bead{worth: U32}              # a bead is worth what it weighs
+  Knot{}                        # a knot is tied between beads
+  Burr{}                        # a burr is neither, and snags the comb
+type Fate is Data:
+  Tally{worth: U32}             # the thread holds, and is counted
+  Snag{gate: U32, at: U32}      # the thread snags, and is named
+type Turn is Data:
+  Call{}                        # the weaver calls for a bead
+  Reply{}                       # the thread replies with a knot, or with silence
+
+# what the hand feels, it names. what is named, is spun.
+def feel(+c: U32) -> Fiber:
+  Bool.pick(Fiber, (c - 48 < 10 : U32), Bead{(c - 48 : U32)}, Bool.pick(Fiber, U32.is_eq(c, 44), Knot{}, Burr{}))
+def spin(thread: List<&2, U32>) -> List<&2, Fiber>:
+  match thread:
+    case Nil{}:                    Nil{}
+    case c <> rest:                feel(c) <> spin(rest)
+
+# what touches, is one.
+def fuse(fibers: List<&2, Fiber>, +w: U32, held: Bool) -> List<&2, Fiber>:
+  match fibers held:
+    case Nil{}           False{}:  Nil{}
+    case Nil{}           True{}:   [Bead{w}]
+    case Bead{d} <> rest _:        fuse(rest, (w * 10 + d : U32), True{})
+    case Knot{}  <> rest False{}:  Knot{} <> fuse(rest, 0, False{})
+    case Knot{}  <> rest True{}:   Bead{w} <> Knot{} <> fuse(rest, 0, False{})
+    case Burr{}  <> rest h:        fuse(rest, w, h)
+
+# I.   what is not bead nor knot, is burr.
+def comb(fibers: List<&2, Fiber>, +at: U32) -> Fate:
+  match fibers:
+    case Nil{}:                    Tally{0}
+    case Burr{}  <> rest:          Snag{1, at}
+    case fiber   <> rest:          comb(rest, (at + 1 : U32))
+
+# II.  what is called, must answer.
+def weave(fibers: List<&2, Fiber>, turn: Turn, +at: U32) -> Fate:
+  match fibers turn:
+    case Nil{}           Reply{}:  Tally{0}
+    case Bead{w} <> rest Call{}:   weave(rest, Reply{}, (at + 1 : U32))
+    case Knot{}  <> rest Reply{}:  weave(rest, Call{}, (at + 1 : U32))
+    case silence         unheard:  Snag{2, at}
+
+# III. what climbs, must not fall.
+def climb(fibers: List<&2, Fiber>, +floor: U32, +at: U32, +tally: U32) -> Fate:
+  match fibers:
+    case Nil{}:                    Tally{tally}
+    case Bead{+w} <> rest:         Bool.pick(Fate, (floor <= w : U32) && (w <= 1000 : U32),
+                                     climb(rest, (w + 1 : U32), (at + 1 : U32), (tally + w : U32)), Snag{3, at})
+    case knot    <> rest:          climb(rest, floor, at, tally)
+
+# a snag is a snag is a snag.
+def heed(fate: Fate, next: Fate) -> Fate:
+  match fate:
+    case Tally{w}:                 next
+    case Snag{g, at}:              Snag{g, at}
+def rite(thread: List<&2, U32>) -> Fate:
+  +fibers = spin(thread)
+  +beads  = fuse(fibers, 0, False{})
+  heed(comb(fibers, 0),
+  heed(weave(beads, Call{}, 0),
+       climb(beads, 0, 0, 0)))
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: Fate) -> U32:
+  match r:
+    case Tally{v}:
+      (v * 4 : U32)
+    case Snag{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(rite(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

@@ -1,0 +1,121 @@
+import Base
+
+# ╔════════════════════════════════════════════════════════════════════════════════════════╗
+# ║  ⚜  THE MOST SERENE PIPELINE OF THE THREE TRIBUNALS  ⚜                                 ║
+# ║  Wherein the Humble Character is Ennobled, the Token Arraigned, the Magnitude Weighed. ║
+# ╚════════════════════════════════════════════════════════════════════════════════════════╝
+# ═══ ✠ Of the Proclamations, the Consecrated Ordinal, and the Noble Estates ✠ ═══
+type Grand_Proclamation is Data:
+  Proclamation_Of_Triumph{the_exalted_sum: U32}
+  Proclamation_Of_Grievance{the_aggrieved_tribunal: U32, the_locus_of_the_offence: U32}
+type Consecrated_Ordinal is Data:
+  Consecrated_Ordinal{the_humble_integer: U32}    # an integer, but Anointed
+type Noble_Token is Data:
+  Token_Of_Magnitude{the_magnitude: U32}
+  Token_Of_Separation{}
+
+# ─── ❦ The Rite of Unveiling, wherein the Ordinal lays aside its Vestments ❦ ───
+def unveil_the_ordinal(the_ordinal: Consecrated_Ordinal) -> U32:
+  match the_ordinal:
+    case Consecrated_Ordinal{the_humble_integer}: the_humble_integer    # (briefly, and with Regret)
+# ─── ❦ The Rite of Advancement, wherein the Ordinal proceeds by One, Solemnly ❦ ───
+def advance_the_ordinal_with_solemnity(the_ordinal: Consecrated_Ordinal) -> Consecrated_Ordinal:
+  Consecrated_Ordinal{(unveil_the_ordinal(the_ordinal) + 1 : U32)}
+
+# ╔═══ ⚖ THE THIRD TRIBUNAL · Of Ascendancy and Moderation ⚖ ══════════════════════════════╗
+# ╚═══ Each Magnitude shall Exceed its Predecessor, yet never the Thousand. So be it. ═════╝
+def the_third_tribunal_of_ascendancy(the_tokens: List<&2, Noble_Token>, +the_ordinal: Consecrated_Ordinal, +the_least_admissible_magnitude: U32, +the_accumulated_treasury: U32) -> Grand_Proclamation:
+  match the_tokens:
+    case Nil{}: Proclamation_Of_Triumph{the_accumulated_treasury}    # Rejoice! Let the Bells be Rung!
+    case Token_Of_Separation{} <> the_remainder: the_third_tribunal_of_ascendancy(the_remainder, the_ordinal, the_least_admissible_magnitude, the_accumulated_treasury)
+    case Token_Of_Magnitude{+the_magnitude} <> the_remainder:
+      Bool.pick(Grand_Proclamation, (the_least_admissible_magnitude <= the_magnitude : U32) && (the_magnitude <= 1000 : U32),
+        the_third_tribunal_of_ascendancy(the_remainder, advance_the_ordinal_with_solemnity(the_ordinal), (the_magnitude + 1 : U32), (the_accumulated_treasury + the_magnitude : U32)),
+        Proclamation_Of_Grievance{3, unveil_the_ordinal(the_ordinal)})
+
+# ╔═══ ⚖ THE SECOND TRIBUNAL · Of Grammatical Decorum ⚖ ═══════════════════════════════════╗
+# ╚═══ Magnitude and Separation shall Alternate, as in a Stately Minuet. As is Proper. ════╝
+def the_second_tribunal_of_grammatical_decorum(the_tokens: List<&2, Noble_Token>, +the_ordinal: Consecrated_Ordinal,
+    the_court_awaiteth_a_magnitude: Bool, the_verdict_of_the_higher_court: Grand_Proclamation) -> Grand_Proclamation:
+  match the_tokens the_court_awaiteth_a_magnitude:
+    case Nil{} False{}: the_verdict_of_the_higher_court
+    case Token_Of_Magnitude{the_magnitude} <> the_remainder True{}:
+      the_second_tribunal_of_grammatical_decorum(the_remainder, advance_the_ordinal_with_solemnity(the_ordinal), False{}, the_verdict_of_the_higher_court)
+    case Token_Of_Separation{} <> the_remainder False{}:
+      the_second_tribunal_of_grammatical_decorum(the_remainder, advance_the_ordinal_with_solemnity(the_ordinal), True{}, the_verdict_of_the_higher_court)
+    case the_affront the_disappointed_expectation: Proclamation_Of_Grievance{2, unveil_the_ordinal(the_ordinal)}
+
+# ╔═══ ⚖ THE FIRST TRIBUNAL · Of Lexical Propriety ⚖ ══════════════════════════════════════╗
+# ╚═══ Numerals are Gathered into Magnitudes; every Glyph of Ill Repute, Cast Out. ════════╝
+def the_first_tribunal_of_lexical_propriety(the_characters: List<&2, U32>, +the_ordinal: Consecrated_Ordinal,
+    +the_magnitude_in_progress: U32, +a_magnitude_is_in_progress: Bool, +the_tokens_in_reverse: List<&2, Noble_Token>) -> Grand_Proclamation:
+  match the_characters:
+    case Nil{}:
+      +the_tokens = List.reverse(&2, Noble_Token, Bool.pick(List<&2, Noble_Token>, a_magnitude_is_in_progress, Token_Of_Magnitude{the_magnitude_in_progress} <> the_tokens_in_reverse, the_tokens_in_reverse))
+      the_second_tribunal_of_grammatical_decorum(the_tokens, Consecrated_Ordinal{0}, True{}, the_third_tribunal_of_ascendancy(the_tokens, Consecrated_Ordinal{0}, 0, 0))
+    case +the_character <> the_remainder:
+      +it_is_a_numeral = (the_character - 48 < 10 : U32)
+      +it_is_a_comma = U32.is_eq(the_character, 44)
+      +the_tokens_so_ennobled = Bool.pick(List<&2, Noble_Token>, it_is_a_comma && a_magnitude_is_in_progress, Token_Of_Magnitude{the_magnitude_in_progress} <> the_tokens_in_reverse, the_tokens_in_reverse)
+      Bool.pick(Grand_Proclamation, it_is_a_numeral || it_is_a_comma,
+        the_first_tribunal_of_lexical_propriety(the_remainder, advance_the_ordinal_with_solemnity(the_ordinal),
+          Bool.pick(U32, it_is_a_numeral, (the_magnitude_in_progress * 10 + the_character - 48 : U32), 0), it_is_a_numeral,
+          Bool.pick(List<&2, Noble_Token>, it_is_a_comma, Token_Of_Separation{} <> the_tokens_so_ennobled, the_tokens_so_ennobled)),
+        Proclamation_Of_Grievance{1, unveil_the_ordinal(the_ordinal)})
+
+# ─── ❦ The Ceremony Proper, without which Nothing whatsoever is Official ❦ ───
+def with_all_due_ceremony(the_proclamation: Grand_Proclamation) -> Grand_Proclamation:
+  the_proclamation    # returned unaltered, yet immeasurably more official
+# ─── ❦ The Grand Procession, whereby the Tribunals are Convened in State ❦ ───
+def the_grand_procession(the_characters: List<&2, U32>) -> Grand_Proclamation:
+  with_all_due_ceremony(the_first_tribunal_of_lexical_propriety(the_characters, Consecrated_Ordinal{0}, 0, False{}, Nil{}))
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: Grand_Proclamation) -> U32:
+  match r:
+    case Proclamation_Of_Triumph{v}:
+      (v * 4 : U32)
+    case Proclamation_Of_Grievance{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(the_grand_procession(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

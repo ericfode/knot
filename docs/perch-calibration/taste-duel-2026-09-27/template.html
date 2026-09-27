@@ -1,0 +1,367 @@
+<title>Knot Taste Duel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --paper: #eceef1;
+    --sheet: #ffffff;
+    --ink: #12151b;
+    --muted: #5a6270;
+    --rule: #cfd4dc;
+    --accent: #2743ff;
+    --accent-ink: #ffffff;
+    --more: #0f8a4a;
+    --meh: #7b8290;
+    --much: #c2186b;
+    --code-bg: #f6f7f9;
+    --kw: #2743ff;
+    --ctor: #a2410f;
+    --com: #6d7582;
+    --num: #0f7a70;
+    --focus: #ff9f1c;
+    --shadow: 0 1px 0 rgba(18, 21, 27, .06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0f1216; --sheet: #171b21; --ink: #e7eaf0; --muted: #9aa3b2; --rule: #2a313b;
+      --accent: #7c8cff; --accent-ink: #0b0d12; --more: #35c47a; --meh: #8a93a3; --much: #ff5fa8;
+      --code-bg: #12161b; --kw: #8f9dff; --ctor: #f0a15f; --com: #7f8898; --num: #55d0c4;
+      --shadow: 0 1px 0 rgba(0, 0, 0, .4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0f1216; --sheet: #171b21; --ink: #e7eaf0; --muted: #9aa3b2; --rule: #2a313b;
+    --accent: #7c8cff; --accent-ink: #0b0d12; --more: #35c47a; --meh: #8a93a3; --much: #ff5fa8;
+    --code-bg: #12161b; --kw: #8f9dff; --ctor: #f0a15f; --com: #7f8898; --num: #55d0c4;
+    --shadow: 0 1px 0 rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font: 16px/1.55 "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding-inline: 16px; padding-block: 0 64px;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; }
+  header.top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding-block: 12px; border-bottom: 1px solid var(--rule);
+  }
+  .brand { font: 800 20px/1 "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -.01em; }
+  .brand span { color: var(--accent); }
+  .steps { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .steps button {
+    font: 600 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em;
+    border: 1px solid var(--rule); background: var(--sheet); color: var(--muted);
+    padding: 7px 9px; border-radius: 6px; cursor: pointer;
+  }
+  .steps button[aria-current="step"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .steps button.done { color: var(--more); border-color: var(--more); }
+  .save { font: 12px/1 "JetBrains Mono", monospace; color: var(--muted); min-width: 9ch; }
+  h1, h2 { font-family: "Bricolage Grotesque", system-ui, sans-serif; text-wrap: balance; letter-spacing: -.015em; }
+  h1 { font-size: clamp(30px, 5vw, 52px); line-height: 1.02; font-weight: 800; margin: 36px 0 12px; max-width: 18ch; }
+  h2 { font-size: clamp(22px, 3vw, 30px); line-height: 1.1; font-weight: 800; margin: 28px 0 6px; }
+  .lede { max-width: 62ch; color: var(--muted); margin: 0 0 18px; }
+  .contract {
+    max-width: 78ch; font-size: 15px; background: var(--sheet); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 10px 14px; margin: 0 0 18px;
+  }
+  .contract b { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); align-items: start; }
+  .card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0; }
+  .card.best { border-color: var(--more); box-shadow: 0 0 0 2px var(--more); }
+  .card.worst { border-color: var(--much); box-shadow: 0 0 0 2px var(--much); }
+  .card-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .letter { font: 800 22px/1 "Bricolage Grotesque", sans-serif; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 7px; background: var(--ink); color: var(--paper); }
+  .lines { font: 12px/1 "JetBrains Mono", monospace; color: var(--muted); }
+  .picks { margin-left: auto; display: flex; gap: 6px; }
+  pre.code {
+    margin: 0; padding: 12px 14px; overflow: auto; max-height: 560px; background: var(--code-bg);
+    font: 12.5px/1.5 "JetBrains Mono", ui-monospace, Menlo, monospace; tab-size: 2; white-space: pre;
+  }
+  .tok-kw { color: var(--kw); font-weight: 600; }
+  .tok-ctor { color: var(--ctor); }
+  .tok-com { color: var(--com); font-style: italic; }
+  .tok-num { color: var(--num); }
+  .react { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--rule); }
+  .react button, .chip, .pick, .scale button, .nav button, .reveal-btn {
+    font: 700 13px/1.2 "Atkinson Hyperlegible", sans-serif; cursor: pointer; color: var(--ink);
+    background: transparent; border: 0;
+  }
+  .react button { padding: 11px 6px; border-right: 1px solid var(--rule); }
+  .react button:last-child { border-right: 0; }
+  .react button[aria-pressed="true"][data-v="more"] { background: var(--more); color: #fff; }
+  .react button[aria-pressed="true"][data-v="meh"] { background: var(--meh); color: #fff; }
+  .react button[aria-pressed="true"][data-v="much"] { background: var(--much); color: #fff; }
+  .pick { border: 1px solid var(--rule); border-radius: 999px; padding: 5px 10px; font-size: 12px; }
+  .pick[data-k="best"][aria-pressed="true"] { background: var(--more); border-color: var(--more); color: #fff; }
+  .pick[data-k="worst"][aria-pressed="true"] { background: var(--much); border-color: var(--much); color: #fff; }
+  .note { width: 100%; border: 0; border-top: 1px solid var(--rule); background: transparent; color: var(--ink); font: 14px/1.4 "Atkinson Hyperlegible", sans-serif; padding: 9px 12px; border-radius: 0 0 10px 10px; }
+  .note::placeholder { color: var(--muted); }
+  .duel { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 880px) { .duel { grid-template-columns: 1fr; } }
+  .panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; margin-top: 16px; }
+  .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .scale button { border: 1px solid var(--rule); border-radius: 8px; padding: 12px 6px; background: var(--sheet); }
+  .scale button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .chip { border: 1px solid var(--rule); border-radius: 999px; padding: 6px 11px; font-size: 13px; background: var(--sheet); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .panel .note { border: 1px solid var(--rule); border-radius: 8px; margin-top: 12px; }
+  .nav { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; }
+  .nav button { border-radius: 8px; padding: 12px 18px; border: 1px solid var(--rule); background: var(--sheet); }
+  .nav button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .nav .hint { color: var(--muted); font-size: 14px; }
+  textarea.long { width: 100%; min-height: 96px; border: 1px solid var(--rule); border-radius: 8px; padding: 12px; background: var(--sheet); color: var(--ink); font: 16px/1.5 "Atkinson Hyperlegible", sans-serif; }
+  label.q { display: block; font-weight: 700; margin: 18px 0 6px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; color: var(--muted); margin: 0 0 16px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .banner { border: 1px solid var(--much); color: var(--much); border-radius: 8px; padding: 10px 14px; margin-top: 16px; }
+  table.reveal { border-collapse: collapse; width: 100%; font-size: 14px; }
+  table.reveal th, table.reveal td { text-align: left; border-bottom: 1px solid var(--rule); padding: 8px 10px; vertical-align: top; }
+  .tablewrap { overflow-x: auto; }
+  .reveal-btn { border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; padding: 10px 14px; background: var(--sheet); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) { .card, .scale button, .react button { transition: box-shadow .15s, background-color .15s, color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">knot<span>·</span>taste duel</div>
+    <nav class="steps" id="steps" aria-label="Sections"></nav>
+    <div class="save" id="save" aria-live="polite">not saved</div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const el = (tag, attrs = {}, ...kids) => {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') node.className = v;
+    else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+    else if (v !== undefined && v !== null) node.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid !== null && kid !== undefined) node.append(kid.nodeType ? kid : document.createTextNode(kid));
+  return node;
+};
+
+// ---- state and persistence --------------------------------------------------
+const state = { docs: {}, step: 0 };
+let db = null, writeBlocked = false;
+const saveLabel = text => { $('#save').textContent = text; };
+const queues = new Map();
+function persist(id, body) {
+  state.docs[id] = { ...(state.docs[id] || {}), ...body };
+  try { localStorage.setItem('knot-taste-duel', JSON.stringify(state.docs)); } catch {}
+  if (!db || writeBlocked) { saveLabel(db ? 'read-only' : 'local only'); return; }
+  const q = queues.get(id) || { pending: null, running: false, timer: null };
+  queues.set(id, q);
+  q.pending = { ...state.docs[id], updatedAt: new Date().toISOString() };
+  clearTimeout(q.timer);
+  q.timer = setTimeout(() => flush(id), 350);
+  saveLabel('saving…');
+}
+async function flush(id) {
+  const q = queues.get(id);
+  if (!q || q.running || !q.pending) return;
+  q.running = true;
+  const body = q.pending; q.pending = null;
+  try { await db.doc('responses/' + id).set(body); saveLabel('saved'); }
+  catch (e) {
+    if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { writeBlocked = true; saveLabel('read-only'); }
+    else if (e && e.code === 'unavailable') { await new Promise(r => setTimeout(r, 400 + Math.random() * 600)); q.pending ??= body; }
+    else saveLabel('save failed');
+  }
+  q.running = false;
+  if (q.pending) flush(id);
+}
+
+// ---- Bend highlighting (display only) ---------------------------------------
+const KW = new Set(['def','match','case','import','as','type','is','law','for','if','else','return','with','bend','fold','when','open','let','use']);
+function highlight(src) {
+  const out = document.createDocumentFragment();
+  const re = /(#[^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+[a-zA-Z_0-9]*\b)|([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)|([\s\S])/g;
+  let m;
+  while ((m = re.exec(src))) {
+    const [t, com, str, num, word] = m;
+    let cls = null;
+    if (com) cls = 'tok-com';
+    else if (str) cls = 'tok-num';
+    else if (num) cls = 'tok-num';
+    else if (word) cls = KW.has(word) ? 'tok-kw' : /(^|\.)[A-Z]/.test(word) ? 'tok-ctor' : null;
+    out.append(cls ? el('span', { class: cls }, t) : document.createTextNode(t));
+  }
+  return out;
+}
+const codeBlock = v => el('pre', { class: 'code', tabindex: '0', 'aria-label': 'Code sample' }, highlight(v.code));
+
+// ---- steps -------------------------------------------------------------------
+const steps = [
+  { key: 'intro', label: 'start' },
+  ...DATA.tasks.map((t, i) => ({ key: 'lineup-' + t.id, label: 'L' + (i + 1), task: t })),
+  ...DATA.duels.map((d, i) => ({ key: 'duel-' + d.id, label: 'D' + (i + 1), duel: d })),
+  { key: 'final', label: 'end' },
+];
+const isDone = s => {
+  const d = state.docs[s.key];
+  if (s.task) return !!(d && d.best && d.worst && s.task.order.every(id => d.reactions && d.reactions[id]));
+  if (s.duel) return !!(d && typeof d.score === 'number');
+  if (s.key === 'final') return !!(d && (d.want_more || d.cringe));
+  return true;
+};
+function renderSteps() {
+  const nav = $('#steps'); nav.replaceChildren();
+  steps.forEach((s, i) => nav.append(el('button', {
+    type: 'button', class: isDone(s) && i ? 'done' : '', 'aria-current': i === state.step ? 'step' : null,
+    'aria-label': s.label, onclick: () => go(i),
+  }, s.label)));
+}
+function go(i) { state.step = Math.max(0, Math.min(steps.length - 1, i)); render(); window.scrollTo(0, 0); }
+const byId = id => DATA.variants[id];
+
+function nav(hint) {
+  return el('div', { class: 'nav' },
+    el('button', { type: 'button', onclick: () => go(state.step - 1), disabled: state.step === 0 ? '' : null }, '← Back'),
+    el('span', { class: 'hint' }, hint || ''),
+    el('button', { type: 'button', class: 'primary', onclick: () => go(state.step + 1) }, state.step === steps.length - 1 ? 'Done' : 'Next →'));
+}
+
+function renderIntro(main) {
+  main.append(
+    el('h1', {}, 'Same behavior. Six opposite voices.'),
+    el('p', { class: 'lede' }, 'Each round shows one small Knot task written six ways: plain to baroque, compressed to narrated, cryptic to ritual. Every version type-checks with the pinned Bend compiler and returns identical results on 64 probe runs, so the only difference is how it reads.'),
+    el('p', { class: 'lede' }, `React fast. Gut calls are the point: mark each card “want more”, “meh” or “too much”, then pick the one you would copy and the one you would reject in review. After ${DATA.tasks.length} lineups come ${DATA.duels.length} head-to-head duels between opposites. Nothing is labelled until the end.`),
+    el('div', { class: 'legend' },
+      el('span', {}, el('i', { style: 'background:var(--more)' }), 'want more of this'),
+      el('span', {}, el('i', { style: 'background:var(--meh)' }), 'meh / no pull'),
+      el('span', {}, el('i', { style: 'background:var(--much)' }), 'too much / repels')),
+    el('p', { class: 'lede' }, 'Everything saves as you tap, and this page picks up where you left off.'),
+    nav(`${DATA.tasks.length} lineups · ${DATA.duels.length} duels · about 12 minutes`));
+}
+
+function renderLineup(main, s) {
+  const t = s.task, id = s.key, d = state.docs[id] || {};
+  main.append(el('h2', {}, `Lineup ${DATA.tasks.indexOf(t) + 1} of ${DATA.tasks.length}: ${t.title}`),
+    el('p', { class: 'contract' }, el('b', {}, 'All six compute'), t.contract));
+  const grid = el('div', { class: 'grid' });
+  t.order.forEach((vid, i) => {
+    const v = byId(vid), letter = 'ABCDEF'[i];
+    const reaction = d.reactions?.[vid];
+    const card = el('article', { class: 'card' + (d.best === vid ? ' best' : '') + (d.worst === vid ? ' worst' : ''), 'aria-label': 'Version ' + letter });
+    const pick = (k, text) => el('button', { type: 'button', class: 'pick', 'data-k': k, 'aria-pressed': String(d[k] === vid),
+      onclick: () => { const cur = state.docs[id] || {}; const next = { [k]: cur[k] === vid ? null : vid };
+        if (next[k] && cur[k === 'best' ? 'worst' : 'best'] === vid) next[k === 'best' ? 'worst' : 'best'] = null;
+        persist(id, { type: 'lineup', task: t.id, order: t.order, ...next }); render(); } }, text);
+    card.append(
+      el('div', { class: 'card-head' }, el('div', { class: 'letter', 'aria-hidden': 'true' }, letter),
+        el('span', { class: 'lines' }, `${v.lines} lines`),
+        el('div', { class: 'picks' }, pick('best', 'Best'), pick('worst', 'Worst'))),
+      codeBlock(v),
+      el('div', { class: 'react', role: 'group', 'aria-label': 'Reaction to ' + letter },
+        ...[['more', '🔥 want more'], ['meh', 'meh'], ['much', 'too much']].map(([k, label]) =>
+          el('button', { type: 'button', 'data-v': k, 'aria-pressed': String(reaction === k),
+            onclick: () => { const cur = state.docs[id] || {}; persist(id, { type: 'lineup', task: t.id, order: t.order,
+              reactions: { ...(cur.reactions || {}), [vid]: reaction === k ? null : k } }); render(); } }, label))),
+      el('input', { class: 'note', id: `note-${id}-${vid}`, type: 'text', maxlength: '240', placeholder: 'Why? (optional, a few words)',
+        value: d.notes?.[vid] || '', oninput: e => { const cur = state.docs[id] || {};
+          persist(id, { type: 'lineup', task: t.id, order: t.order, notes: { ...(cur.notes || {}), [vid]: e.target.value } }); } }));
+    grid.append(card);
+  });
+  const missing = t.order.filter(v => !(d.reactions && d.reactions[v])).length;
+  main.append(grid, nav(missing || !d.best || !d.worst ? `${missing} card(s) without a reaction${!d.best || !d.worst ? ' · pick a best and a worst' : ''}` : 'complete'));
+}
+
+const WHY = ['rhythm', 'names', 'density', 'clarity', 'one big idea', 'surprise', 'story', 'too clever', 'too plain', 'too decorated', 'hard to follow', 'I want to write like this'];
+function renderDuel(main, s) {
+  const du = s.duel, id = s.key, d = state.docs[id] || {};
+  const task = DATA.tasks.find(t => t.id === du.task);
+  const L = byId(du.left), R = byId(du.right);
+  main.append(el('h2', {}, `Duel ${DATA.duels.indexOf(du) + 1} of ${DATA.duels.length}: ${task.title}`),
+    el('p', { class: 'contract' }, el('b', {}, 'Both compute'), task.contract));
+  const side = (v, name) => el('article', { class: 'card', 'aria-label': name }, el('div', { class: 'card-head' },
+    el('div', { class: 'letter', 'aria-hidden': 'true' }, name[0]), el('span', { class: 'lines' }, `${name} · ${v.lines} lines`)), codeBlock(v));
+  main.append(el('div', { class: 'duel' }, side(L, 'Left'), side(R, 'Right')));
+  const base = { type: 'duel', task: du.task, left: du.left, right: du.right, repeat_of: du.repeat_of || null };
+  const scale = el('div', { class: 'scale', role: 'group', 'aria-label': 'Which do you want more of?' },
+    ...[[-2, '◀◀ strongly left'], [-1, '◀ left'], [0, 'no preference'], [1, 'right ▶'], [2, 'strongly right ▶▶']].map(([v, label]) =>
+      el('button', { type: 'button', 'aria-pressed': String(d.score === v), onclick: () => { persist(id, { ...base, score: v }); render(); } }, label)));
+  const chips = el('div', { class: 'chips', role: 'group', 'aria-label': 'Why' }, ...WHY.map(w => el('button', {
+    type: 'button', class: 'chip', 'aria-pressed': String(!!d.why?.includes(w)),
+    onclick: () => { const cur = new Set((state.docs[id] || {}).why || []); cur.has(w) ? cur.delete(w) : cur.add(w);
+      persist(id, { ...base, why: [...cur] }); render(); } }, w)));
+  main.append(el('div', { class: 'panel' }, el('div', { style: 'font-weight:700;margin-bottom:10px' }, 'Which one do you want more of in Knot?'),
+    scale, chips, el('input', { class: 'note', id: `note-${id}`, type: 'text', maxlength: '300', placeholder: 'Anything else? (optional)',
+      value: d.note || '', oninput: e => persist(id, { ...base, note: e.target.value }) })));
+  main.append(nav(typeof d.score === 'number' ? 'saved' : 'pick a side, or “no preference”'));
+}
+
+function renderFinal(main) {
+  const id = 'final', d = state.docs[id] || {};
+  const field = (key, q, ph) => [el('label', { class: 'q', for: 'final-' + key }, q),
+    el('textarea', { class: 'long', id: 'final-' + key, placeholder: ph, oninput: e => persist(id, { type: 'final', [key]: e.target.value }) }, d[key] || '')];
+  const done = steps.filter(isDone).length;
+  main.append(el('h2', {}, 'Last two questions'),
+    ...field('want_more', 'In one sentence: what do you want Knot code to feel like?', 'e.g. “like the one where…”'),
+    ...field('cringe', 'What made you wince, even in versions you liked?', 'optional'),
+    el('p', { class: 'lede', style: 'margin-top:18px' }, `${done} of ${steps.length} sections complete.`));
+  const reveal = el('div', { class: 'panel' });
+  const btn = el('button', { type: 'button', class: 'reveal-btn', onclick: () => {
+    btn.hidden = true;
+    const rows = DATA.tasks.flatMap(t => t.order.map((vid, i) => {
+      const r = state.docs['lineup-' + t.id] || {};
+      return el('tr', {}, el('td', {}, t.title), el('td', {}, 'ABCDEF'[i]), el('td', {}, DATA.reveal[vid] || '?'),
+        el('td', {}, r.reactions?.[vid] || '—'), el('td', {}, r.best === vid ? 'best' : r.worst === vid ? 'worst' : ''));
+    }));
+    reveal.append(el('div', { class: 'tablewrap' }, el('table', { class: 'reveal' },
+      el('thead', {}, el('tr', {}, ...['Task', 'Card', 'Style', 'Your reaction', 'Pick'].map(h => el('th', {}, h)))),
+      el('tbody', {}, rows))));
+  } }, 'Reveal which style each card was');
+  reveal.append(el('p', { class: 'lede', style: 'margin-top:0' }, 'Reveal only after you are done: your answers are already saved, and knowing the styles would bias any later round.'), btn);
+  main.append(reveal, nav('thank you'));
+}
+
+function render() {
+  const main = $('#main'); main.replaceChildren();
+  const s = steps[state.step];
+  if (s.key === 'intro') renderIntro(main);
+  else if (s.task) renderLineup(main, s);
+  else if (s.duel) renderDuel(main, s);
+  else renderFinal(main);
+  if (!db) main.append(el('p', { class: 'banner' }, 'Answers are being kept in this browser only until the page connects to its store.'));
+  renderSteps();
+  try { localStorage.setItem('knot-taste-duel-step', String(state.step)); } catch {}
+}
+
+// Boot: render immediately from any local draft, then light up the store.
+try { Object.assign(state.docs, JSON.parse(localStorage.getItem('knot-taste-duel') || '{}')); } catch {}
+try { state.step = Math.min(steps.length - 1, Number(localStorage.getItem('knot-taste-duel-step') || 0) || 0); } catch {}
+render();
+(async () => {
+  db = window.claude?.use ? await window.claude.use('db') : null;
+  if (!db) { saveLabel('local only'); render(); return; }
+  try {
+    const snap = await db.collection('responses').get();
+    for (const doc of snap.docs) {
+      const remote = doc.data();
+      const local = state.docs[doc.id];
+      if (!local || (remote.updatedAt || '') >= (local.updatedAt || '')) state.docs[doc.id] = remote;
+    }
+    // Push any answers made before the store connected.
+    for (const [id, body] of Object.entries(state.docs)) {
+      if (!snap.docs.some(doc => doc.id === id)) persist(id, body);
+    }
+    saveLabel('connected');
+  } catch (e) { saveLabel('offline'); }
+  render();
+})();
+</script>

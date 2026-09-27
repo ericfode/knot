@@ -1,0 +1,93 @@
+import Base
+
+# Give work its fuel
+# ==================
+#
+# Some jobs are too long to finish in one sitting. Together we will build a
+# small machine that works on a job while its fuel lasts, then hands back
+# whatever is left. By the end you will see why pausing costs nothing.
+#
+# Pop quiz before we start: a job with no steps left is given zero fuel.
+# Is it finished, or still owed? Hold on to your guess; the answer is at
+# the very bottom, and it falls out of one small decision along the way.
+#
+# First, the job itself: a countdown with a running total.
+type Task is Data:
+  Task{remaining: U32, total: U32}
+
+# One step spends one unit of `remaining`: triple the total, then add the
+# remaining count modulo 7. Try it by hand on Task{3, 5}:
+#     {3, 5}  ->  {2, 18}  ->  {1, 56}  ->  {0, 169}
+def step(task: Task) -> Task:
+  match task:
+    case Task{+remaining, total}:
+      Task{(remaining - 1 : U32), (total * 3 + remaining % 7 : U32)}
+
+# A run ends in one of two ways: Finished with its total, or Owed, which
+# means "here is your job back, exactly where it stopped".
+type Outcome is Data:
+  Finished{total: U32}
+  Owed{task: Task}
+
+# Every Outcome enters through one door. Bend's `match` may only look at
+# a parameter or a field, never at a value we have just computed, so the
+# yes-or-no answer gets its own small function to land in.
+def settle_as(finished: Bool, remaining: U32, total: U32) -> Outcome:
+  match finished:
+    case True{}:  Finished{total}
+    case False{}: Owed{Task{remaining, total}}
+
+# Because every Owed task walks through this door, an Owed task always has
+# at least one step left. Remember that; we will need it in a moment.
+def settle(task: Task) -> Outcome:
+  match task:
+    case Task{+remaining, total}:
+      settle_as(U32.is_zero(remaining), remaining, total)
+
+# And now the crucial move. `run` looks at the fuel and the outcome
+# together, and it can only ever be in one of three situations:
+#   - the job is Finished: it stays put, however much fuel we offer;
+#   - there is no fuel left: we hand the job back exactly as it stands;
+#   - otherwise one unit buys one step, and we go back through the door.
+# Here the promise pays off: an Owed task always has a step to spend on,
+# so `remaining - 1` can never wrap around below zero.
+def run(fuel: Nat, outcome: Outcome) -> Outcome:
+  match fuel outcome:
+    case _ Finished{total}:  Finished{total}
+    case 0n Owed{task}:      Owed{task}
+    case 1n+left Owed{task}: run(left, settle(step(task)))
+
+# Watch it work, with job = settle(Task{3, 5}):
+#     run(2, job)            Owed{Task{1, 56}}     the job, handed back
+#     run(1, run(2, job))    Finished{169}
+#     run(3, job)            Finished{169}         the same place, at once
+# So run(b, run(a, job)) == run(a + b, job): the pause cost nothing.
+#
+# Quiz answer: finished. `settle` checks `remaining` before anyone asks
+# about fuel, so such a job is Finished before `run` ever sees it.
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> Outcome:
+  settle(Task{(n % 40 : U32), n})
+
+def h_run(f: Nat, x: Outcome) -> Outcome:
+  run(f, x)
+
+def h_code(x: Outcome) -> U32:
+  match x:
+    case Finished{v}: (v * 2 + 1 : U32)
+    case Owed{Task{r, v}}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

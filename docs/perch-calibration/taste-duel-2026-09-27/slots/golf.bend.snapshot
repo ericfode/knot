@@ -1,0 +1,50 @@
+import Base
+
+def L()->Type:List<(U32&U32)>
+def P()->Type:Either<(L()&U32),(L()&U32)>
+def T()->Type:Either<(L()&U32),L()>
+def e()->L():[(0,0),(0,0),(0,0),(0,0)]
+def f(c:U32&U32,r:P())->P():match r:case Inl{(s,i)}:Inl{(c<>s,(i+1:U32))} case Inr{(s,v)}:Inr{(c<>s,v)}
+def p(s:L(),v:U32)->P():match s:case []:Inr{([],v)} case (0,_)<>r:Inl{((1,v)<>r,0)} case c<>r:f(c,p(r,v))
+def g(c:U32&U32,r:T())->T():match r:case Inl{(s,v)}:Inl{(c<>s,v)} case Inr{s}:Inr{c<>s}
+def t(s:L(),i:U32)->T():match s i:case [] _:Inr{[]} case (1,v)<>r 0:Inl{((0,0)<>r,v)} case c<>r 0:Inr{c<>r} case c<>r j:g(c,t(r,(j-1:U32)))
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: P(), k: L() -> List<U32>) -> List<U32>:
+  match r:
+    case Inl{(s, i)}: (i + 1 : U32) <> k(s)
+    case Inr{(s, v)}: (100 + v % 50 : U32) <> k(s)
+
+def harness_on_take(r: T(), k: L() -> List<U32>) -> List<U32>:
+  match r:
+    case Inl{(s, v)}: (200 + v % 50 : U32) <> k(s)
+    case Inr{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: L(), k: L() -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(p(s, v), k)
+    case HarnessTake{i}: harness_on_take(t(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: L()) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), e())

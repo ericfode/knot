@@ -1,0 +1,153 @@
+import Base
+
+# ╔═══════════════════════════════════════════════════════════════════════╗
+# ║  ⚜ ⚜ ⚜   THE MOST SERENE OCTAVIAN REGISTRY OF SOVEREIGN VALUES   ⚜ ⚜ ⚜  ║
+# ║     wherein Eight Noble Bits, in strict Order of Precedence,          ║
+# ║     do Adjudicate every Petition brought humbly before the Throne     ║
+# ║                ~ Ratified Anno Compilatoris MMXXVI ~                  ║
+# ╚═══════════════════════════════════════════════════════════════════════╝
+
+type Realm is Data:                                   # ❦ THE CONSTITUTION ❦
+  VacantThrone{}                                      #   ∅  wherein no Sovereign reigneth
+  EnthronedSovereign{regalia: U32}                    #   ♛  a Value, duly Crowned
+  BifurcatedDominion{sinister: Realm, dexter: Realm}  #   ⚔  a Realm, Partitioned in Twain
+type Petition is Data:                                # ✉ a Key, Sealed in Crimson Wax
+  SealedPetition{sigil: U32}
+
+# ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✠ BOOK THE FIRST ✠ Of Heralds & Ceremony ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+def Ceremony.affix_the_royal_seal(sigil: U32) -> Petition: SealedPetition{sigil}
+def Ceremony.solemnize(realm: Realm) -> Realm: realm   # ✠ it returneth the Realm Unaltered, as Tradition Demandeth
+def Herald.proclaim_sinister_allegiance(petition: Petition) -> Bool:
+  match petition:
+    case SealedPetition{sigil}: U32.is_even(sigil)    # ⚑ the Lowest Bit speaketh First
+def Herald.elevate_to_the_next_rank(petition: Petition) -> Petition:
+  match petition:
+    case SealedPetition{sigil}: Ceremony.affix_the_royal_seal(U32.shr(sigil))
+
+# ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✠ BOOK THE SECOND ✠ Of the Provinces ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+def Cartographer.survey_the_sinister_province(realm: Realm) -> Realm:
+  match realm:
+    case BifurcatedDominion{sinister, dexter}: Ceremony.solemnize(sinister)
+    case _:                                    VacantThrone{}
+def Cartographer.survey_the_dexter_province(realm: Realm) -> Realm:
+  match realm:
+    case BifurcatedDominion{sinister, dexter}: Ceremony.solemnize(dexter)
+    case _:                                    VacantThrone{}
+def Cartographer.consult_the_atlas(sinister_allegiance: Bool, +realm: Realm) -> Realm:
+  Bool.pick(Realm, sinister_allegiance,
+    Cartographer.survey_the_sinister_province(realm), Cartographer.survey_the_dexter_province(realm))
+def Parliament.convene(sinister: Realm, dexter: Realm) -> Realm:   # ⚖ an Empty Parliament Dissolveth
+  match sinister dexter:
+    case VacantThrone{} VacantThrone{}: VacantThrone{}
+    case s d:                           BifurcatedDominion{s, d}
+def Treasury.appraise_the_regalia(realm: Realm) -> +Maybe<U32>:
+  match realm:
+    case EnthronedSovereign{regalia}: Some{regalia}
+    case _:                           None{}
+
+# ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✠ BOOK THE THIRD ✠ Of the Three Solemn Descents ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+def Chancery.the_solemn_descent_of_inquiry(rank: Nat, +petition: Petition, realm: Realm) -> +Maybe<U32>:
+  match rank:
+    case 0n: Treasury.appraise_the_regalia(Ceremony.solemnize(realm))
+    case 1n+rank: Chancery.the_solemn_descent_of_inquiry(rank, Herald.elevate_to_the_next_rank(petition),
+      Cartographer.consult_the_atlas(Herald.proclaim_sinister_allegiance(petition), realm))
+def Chancery.the_solemn_descent_of_coronation(rank: Nat, +petition: Petition, regalia: U32, +realm: Realm) -> Realm:
+  match rank:
+    case 0n: EnthronedSovereign{regalia}
+    case 1n+rank:
+      +allegiance = Herald.proclaim_sinister_allegiance(petition)
+      +heir = Chancery.the_solemn_descent_of_coronation(rank, Herald.elevate_to_the_next_rank(petition), regalia,
+        Cartographer.consult_the_atlas(allegiance, realm))
+      Bool.pick(Realm, allegiance, BifurcatedDominion{heir, Cartographer.survey_the_dexter_province(realm)},
+        BifurcatedDominion{Cartographer.survey_the_sinister_province(realm), heir})
+def Chancery.the_solemn_descent_of_deposition(rank: Nat, +petition: Petition, +realm: Realm) -> Realm:
+  match rank:
+    case 0n: VacantThrone{}
+    case 1n+rank:
+      +allegiance = Herald.proclaim_sinister_allegiance(petition)
+      +remnant = Chancery.the_solemn_descent_of_deposition(rank, Herald.elevate_to_the_next_rank(petition),
+        Cartographer.consult_the_atlas(allegiance, realm))
+      Bool.pick(Realm, allegiance, Parliament.convene(remnant, Cartographer.survey_the_dexter_province(realm)),
+        Parliament.convene(Cartographer.survey_the_sinister_province(realm), remnant))
+
+# ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✠ BOOK THE FOURTH ✠ Of the Royal Audience ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+def Throne.grant_audience_for_inquiry(realm: Realm, sigil: U32) -> +Maybe<U32>:     # 🜲 Hear Ye
+  Chancery.the_solemn_descent_of_inquiry(8n, Ceremony.affix_the_royal_seal(sigil), Ceremony.solemnize(realm))
+def Throne.crown_a_sovereign(realm: Realm, sigil: U32, regalia: U32) -> Realm:     # ♛ Long May It Reign
+  Chancery.the_solemn_descent_of_coronation(8n, Ceremony.affix_the_royal_seal(sigil), regalia, Ceremony.solemnize(realm))
+def Throne.depose_a_sovereign(realm: Realm, sigil: U32) -> Realm:                  # ⚰ Sic Transit Gloria
+  Chancery.the_solemn_descent_of_deposition(8n, Ceremony.affix_the_royal_seal(sigil), Ceremony.solemnize(realm))
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> Realm: VacantThrone{}
+def H.get(t: Realm, k: U32) -> +Maybe<U32>: Throne.grant_audience_for_inquiry(t, k)
+def H.put(t: Realm, k: U32, v: U32) -> Realm: Throne.crown_a_sovereign(t, k, v)
+def H.del(t: Realm, k: U32) -> Realm: Throne.depose_a_sovereign(t, k)
+def H.forks(t: Realm) -> U32:
+  match t:
+    case BifurcatedDominion{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

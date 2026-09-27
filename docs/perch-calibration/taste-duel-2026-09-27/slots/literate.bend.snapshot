@@ -1,0 +1,108 @@
+import Base
+
+# ═══ The Coat Check ═══
+#
+# Tonight you are working a coat check: a wall of four hooks, numbered 0 to 3.
+# Each hook is bare or holds exactly one coat. (Our coats are U32 values, but
+# every one of them has an owner, and owners want their coats back.)
+type Hook is Data:
+  Bare{}
+  Holding{coat: U32}
+
+# A guest hands you a coat. Usually it goes on a hook, and the guest gets that
+# hook's number as a ticket. But keep one question in the back of your mind:
+# what if every hook is already taken? We will get there. It is the whole point.
+type CheckIn is Type:
+  Hung{wall: List<Hook>, ticket: U32}
+  HandedBack{wall: List<Hook>, coat: U32}
+
+# Later the guest comes back with a ticket. Either a coat comes off that hook,
+# or there is no coat to give: the hook is bare, or the number isn't ours.
+type CheckOut is Type:
+  Returned{wall: List<Hook>, coat: U32}
+  NoCoat{wall: List<Hook>}
+
+# The evening starts with a bare wall.
+def bare_wall() -> List<Hook>: [Bare{}, Bare{}, Bare{}, Bare{}]
+
+# One house rule before we begin: the wall is lent to us, never copied, and we
+# must give it back whole. So as we walk along it, each hook we pass goes onto
+# `passed` (newest on top, like a stack of plates), and when we are done
+# `rehang` puts every one of them back up in its old place.
+def rehang(passed: List<Hook>, rest: List<Hook>) -> List<Hook>:
+  match passed:
+    case []: rest
+    case hook <> older: rehang(older, hook <> rest)
+
+# Checking a coat in. We walk from hook 0 upward, counting as we go.
+def hang(wall: List<Hook>, coat: U32, passed: List<Hook>, number: U32) -> CheckIn:
+  match wall:
+    # A bare hook! We are walking upward, so it must be the lowest free one.
+    case Bare{} <> rest: Hung{rehang(passed, Holding{coat} <> rest), number}
+    # Taken. Step past it, and keep it safe on the stack.
+    case hook <> rest: hang(rest, coat, hook <> passed, (number + 1 : U32))
+    # And here is the question we set aside. We ran out of wall: all four
+    # hooks are full. We don't drop the coat, and we don't hang it over
+    # someone else's. We hand the very same coat back to its owner, with
+    # the wall exactly as we found it. Refusal returns the offer.
+    case []: HandedBack{rehang(passed, []), coat}
+
+def check_in(wall: List<Hook>, coat: U32) -> CheckIn: hang(wall, coat, [], 0)
+
+# Checking out is the mirror image, with one twist: instead of counting up to
+# a free hook, we count the ticket down, and the hook is wherever it hits 0.
+def fetch(wall: List<Hook>, ticket: U32, passed: List<Hook>) -> CheckOut:
+  match wall ticket:
+    # This is the hook, and a coat hangs on it. Hand it over; leave it bare.
+    case Holding{coat} <> rest 0: Returned{rehang(passed, Bare{} <> rest), coat}
+    # This is the hook, but it is bare. Nothing to give, so nothing changes.
+    case hook <> rest 0: NoCoat{rehang(passed, hook <> rest)}
+    # Not there yet. Step past it and count down.
+    case hook <> rest n: fetch(rest, (n - 1 : U32), hook <> passed)
+    # We walked off the end of the wall: ticket 4 or higher names no hook.
+    case [] _: NoCoat{rehang(passed, [])}
+
+def check_out(wall: List<Hook>, ticket: U32) -> CheckOut: fetch(wall, ticket, [])
+
+# And that is the whole coat check. Four hooks, one walk, one promise kept:
+# whatever a guest hands us, we either hang it up or hand it back.
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: CheckIn, k: List<Hook> -> List<U32>) -> List<U32>:
+  match r:
+    case Hung{s, i}: (i + 1 : U32) <> k(s)
+    case HandedBack{s, v}: (100 + v % 50 : U32) <> k(s)
+
+def harness_on_take(r: CheckOut, k: List<Hook> -> List<U32>) -> List<U32>:
+  match r:
+    case Returned{s, v}: (200 + v % 50 : U32) <> k(s)
+    case NoCoat{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: List<Hook>, k: List<Hook> -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(check_in(s, v), k)
+    case HarnessTake{i}: harness_on_take(check_out(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: List<Hook>) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), bare_wall())

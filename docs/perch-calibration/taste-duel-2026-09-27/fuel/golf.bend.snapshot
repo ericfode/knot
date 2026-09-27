@@ -1,0 +1,30 @@
+import Base
+type O is Data: P{v:U32} W{r:U32,v:U32}
+def o(+r:U32,+v:U32)->O:Bool.pick(O,(r<1:U32),P{v},W{r,v})
+def g(f:Nat,x:O)->O:match f x:case 1n+f W{+r,v}:g(f,o((r-1:U32),(v*3+ r% 7:U32))) case _ x:x
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> O:
+  o((n % 40 : U32), n)
+
+def h_run(f: Nat, x: O) -> O:
+  g(f, x)
+
+def h_code(x: O) -> U32:
+  match x:
+    case P{v}: (v * 2 + 1 : U32)
+    case W{r, v}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

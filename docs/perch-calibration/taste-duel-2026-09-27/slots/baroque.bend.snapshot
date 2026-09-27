@@ -1,0 +1,116 @@
+import Base
+
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  ⚜  THE SOVEREIGN QUADRIPARTITE REPOSITORY OF CUSTODIAL CHAMBERS  ⚜  ║
+# ║    being an Exquisitely Principled Apparatus of Tenancy & Return     ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+# ┌─── § I ── THE ONTOLOGY OF TENANCY ───────────────────────────────────┐
+type Tenancy is Data:
+  Vacancy{}                        # ◇ a chamber awaiting its destiny
+  Occupancy{sacred_payload: U32}   # ◆ a chamber fulfilling its purpose
+type SovereignRepository is Type:
+  SovereignRepository{threshold: Tenancy, second: Tenancy, third: Tenancy, ultimate: Tenancy}
+
+# ┌─── § II ── THE PETITION, IN ALL ITS ESTATES ─────────────────────────┐
+type Petition is Data:
+  Bestowal{offering: U32}          # ❦ an offering, humbly presented
+  Reclamation{countdown: U32}      # ❦ a claim upon the n-th chamber
+  Enshrinement{ordinal: U32}       # ✓ the offering hath been received
+  Relinquishment{payload: U32}     # ✓ the chamber hath yielded its guest
+  Disappointment{}                 # ✗ the chamber was found wanting
+type ProcessionalState is Type:
+  ProcessionalState{repository: SovereignRepository, petition: Petition}
+type SolemnVerdict is Type:
+  VerdictOfEnshrinement{repository: SovereignRepository, ordinal: U32}
+  VerdictOfRepudiation{repository: SovereignRepository, offering: U32}
+  VerdictOfRelinquishment{repository: SovereignRepository, payload: U32}
+  VerdictOfDisappointment{repository: SovereignRepository}
+
+# ┌─── § III ── THE RITE AT THE THRESHOLD ───────────────────────────────┐
+# ✧ The threshold chamber is examined, then solemnly revolved to the rear. ✧
+def officiate_at_the_threshold(state: ProcessionalState, +ordinal: U32) -> ProcessionalState:
+  match state:
+    case ProcessionalState{SovereignRepository{Vacancy{}, b, c, d}, Bestowal{offering}}:
+      ProcessionalState{SovereignRepository{b, c, d, Occupancy{offering}}, Enshrinement{ordinal}}
+    case ProcessionalState{SovereignRepository{Occupancy{payload}, b, c, d}, Reclamation{0}}:
+      ProcessionalState{SovereignRepository{b, c, d, Vacancy{}}, Relinquishment{payload}}
+    case ProcessionalState{SovereignRepository{a, b, c, d}, Reclamation{0}}:
+      ProcessionalState{SovereignRepository{b, c, d, a}, Disappointment{}}
+    case ProcessionalState{SovereignRepository{a, b, c, d}, Reclamation{countdown}}:
+      ProcessionalState{SovereignRepository{b, c, d, a}, Reclamation{(countdown - 1 : U32)}}
+    case ProcessionalState{SovereignRepository{a, b, c, d}, petition}:
+      ProcessionalState{SovereignRepository{b, c, d, a}, petition}
+
+# ┌─── § IV ── THE GRAND PROCESSION ─────────────────────────────────────┐
+# Behold: all four turns are taken, settled or not, restoring the Repository. ✧
+def conduct_the_grand_procession(turns: Nat, state: ProcessionalState, +ordinal: U32) -> ProcessionalState:
+  match turns:
+    case 0n: state
+    case 1n+remaining:
+      conduct_the_grand_procession(remaining, officiate_at_the_threshold(state, ordinal), (ordinal + 1 : U32))
+
+# ┌─── § V ── THE PRONOUNCEMENT ─────────────────────────────────────────┐
+# ✧ An offering unreceived is Repudiated: returned, with the most profound regret. ✧
+def pronounce_the_solemn_verdict(state: ProcessionalState) -> SolemnVerdict:
+  match state:
+    case ProcessionalState{repository, Enshrinement{ordinal}}:   VerdictOfEnshrinement{repository, ordinal}
+    case ProcessionalState{repository, Bestowal{offering}}:      VerdictOfRepudiation{repository, offering}
+    case ProcessionalState{repository, Relinquishment{payload}}: VerdictOfRelinquishment{repository, payload}
+    case ProcessionalState{repository, _}:                       VerdictOfDisappointment{repository}
+
+# ┌─── § VI ── THE PUBLIC LITURGY ───────────────────────────────────────┐
+def the_canonical_number_of_chambers() -> Nat: 4n                   # ⚜ a sacred constant
+def consecrate_the_offering(offering: U32) -> U32: offering        # ✧ purity, assured
+def inaugurate_the_repository() -> SovereignRepository:
+  SovereignRepository{Vacancy{}, Vacancy{}, Vacancy{}, Vacancy{}}
+def bestow_upon_the_repository(repository: SovereignRepository, offering: U32) -> SolemnVerdict:
+  pronounce_the_solemn_verdict(conduct_the_grand_procession(the_canonical_number_of_chambers(),
+    ProcessionalState{repository, Bestowal{consecrate_the_offering(offering)}}, 0))
+def petition_for_reclamation(repository: SovereignRepository, ordinal: U32) -> SolemnVerdict:
+  pronounce_the_solemn_verdict(conduct_the_grand_procession(the_canonical_number_of_chambers(),
+    ProcessionalState{repository, Reclamation{ordinal}}, 0))
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: SolemnVerdict, k: SovereignRepository -> List<U32>) -> List<U32>:
+  match r:
+    case VerdictOfEnshrinement{s, i}: (i + 1 : U32) <> k(s)
+    case VerdictOfRepudiation{s, v}: (100 + v % 50 : U32) <> k(s)
+    case VerdictOfRelinquishment{s, v}: (200 + v % 50 : U32) <> k(s)
+    case VerdictOfDisappointment{s}: 999 <> k(s)
+
+def harness_on_take(r: SolemnVerdict, k: SovereignRepository -> List<U32>) -> List<U32>:
+  match r:
+    case VerdictOfEnshrinement{s, i}: (i + 1 : U32) <> k(s)
+    case VerdictOfRepudiation{s, v}: (100 + v % 50 : U32) <> k(s)
+    case VerdictOfRelinquishment{s, v}: (200 + v % 50 : U32) <> k(s)
+    case VerdictOfDisappointment{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: SovereignRepository, k: SovereignRepository -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(bestow_upon_the_repository(s, v), k)
+    case HarnessTake{i}: harness_on_take(petition_for_reclamation(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: SovereignRepository) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), inaugurate_the_repository())

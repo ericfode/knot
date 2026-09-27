@@ -1,0 +1,88 @@
+import Base
+
+#   ⁘  THE FOUR WATCHES  ⁘      dawn · noon · dusk · dark
+#
+#   lay in a hollow   →  Kept          ask of a hallow  →  Gave
+#   lay in no hollow  →  Home          ask of a hollow  →  Hush
+#
+#   hollow, hallow: one vowel between empty and full.
+#   what finds no hollow goes Home, whole, to the hand that laid it.
+
+type Niche is Data:
+  Hollow{}
+  Hallow{gift: U32}
+
+type Shrine is Type:
+  Shrine{dawn: Niche, noon: Niche, dusk: Niche, dark: Niche}
+
+type Lay is Type:
+  Kept{shrine: Shrine, watch: U32}
+  Home{shrine: Shrine, gift: U32}
+
+type Ask is Type:
+  Gave{shrine: Shrine, gift: U32}
+  Hush{shrine: Shrine}
+
+# ⁘ vigil ⁘  dawn, noon, dusk, dark: four hollows wait.
+def vigil() -> Shrine:
+  Shrine{Hollow{}, Hollow{}, Hollow{}, Hollow{}}
+
+# ⁘ lay ⁘  dawn, noon, dusk, dark: the first hollow keeps the gift.
+def lay(shrine: Shrine, gift: U32) -> Lay:
+  match shrine:
+    case Shrine{Hollow{}, noon, dusk, dark}: Kept{Shrine{Hallow{gift}, noon, dusk, dark}, 0}
+    case Shrine{dawn, Hollow{}, dusk, dark}: Kept{Shrine{dawn, Hallow{gift}, dusk, dark}, 1}
+    case Shrine{dawn, noon, Hollow{}, dark}: Kept{Shrine{dawn, noon, Hallow{gift}, dark}, 2}
+    case Shrine{dawn, noon, dusk, Hollow{}}: Kept{Shrine{dawn, noon, dusk, Hallow{gift}}, 3}
+    case shrine:                             Home{shrine, gift}
+
+# ⁘ ask ⁘  dawn, noon, dusk, dark: the named hallow gives the gift back.
+def ask(shrine: Shrine, watch: U32) -> Ask:
+  match shrine watch:
+    case Shrine{Hallow{gift}, noon, dusk, dark} 0: Gave{Shrine{Hollow{}, noon, dusk, dark}, gift}
+    case Shrine{dawn, Hallow{gift}, dusk, dark} 1: Gave{Shrine{dawn, Hollow{}, dusk, dark}, gift}
+    case Shrine{dawn, noon, Hallow{gift}, dark} 2: Gave{Shrine{dawn, noon, Hollow{}, dark}, gift}
+    case Shrine{dawn, noon, dusk, Hallow{gift}} 3: Gave{Shrine{dawn, noon, dusk, Hollow{}}, gift}
+    case shrine _:                                 Hush{shrine}
+
+# ⁘ ⁘ ⁘  lay and ask, Kept and Home, Gave and Hush  ⁘ ⁘ ⁘
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: Lay, k: Shrine -> List<U32>) -> List<U32>:
+  match r:
+    case Kept{s, i}: (i + 1 : U32) <> k(s)
+    case Home{s, v}: (100 + v % 50 : U32) <> k(s)
+
+def harness_on_take(r: Ask, k: Shrine -> List<U32>) -> List<U32>:
+  match r:
+    case Gave{s, v}: (200 + v % 50 : U32) <> k(s)
+    case Hush{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: Shrine, k: Shrine -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(lay(s, v), k)
+    case HarnessTake{i}: harness_on_take(ask(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: Shrine) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), vigil())

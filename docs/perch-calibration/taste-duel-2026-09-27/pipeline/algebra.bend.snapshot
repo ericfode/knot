@@ -1,0 +1,115 @@
+import Base
+
+# A verdict: Ok carries a running sum, Err a complaint (stage, place).
+type Verdict is Data:
+  Ok{sum: U32}
+  Err{stage: U32, place: U32}
+
+# law: (Verdict, meet, Ok{0}) is a commutative monoid.
+#        Ok a  ⋄ Ok b  = Ok (a + b)       success adds
+#        Err e ⋄ Ok b  = Err e            failure absorbs
+#        Err e ⋄ Err f = Err (min e f)    the least complaint wins: stage, then place
+# "The first error of the first failing stage" is a minimum; it needs no control flow.
+def meet(a: Verdict, b: Verdict) -> Verdict:
+  match a b:
+    case Ok{x}       Ok{y}:       Ok{(x + y : U32)}
+    case Ok{x}       e:           e
+    case e           Ok{y}:       e
+    case Err{+s, +p} Err{+t, +q}: Bool.pick(Verdict, (s < t : U32) || U32.is_eq(s, t) && (p < q : U32), Err{s, p}, Err{t, q})
+
+# A judgment either pays x or complains at (s, p).
+def claim(ok: Bool, x: U32, s: U32, p: U32) -> Verdict:
+  Bool.pick(Verdict, ok, Ok{x}, Err{s, p})
+
+# law: digits fuse, so  number (comma number)*  holds iff no comma-separated field
+#      is empty; the first empty field j sits at token 2j. Strict increase is
+#      lo <= v  with lo := v + 1.
+def field(+j: U32, lo: U32, +v: U32, ne: Bool) -> Verdict:
+  meet(claim(ne, 0, 2, (2 * j : U32)), claim((lo <= v : U32) && (v <= 1000 : U32), v, 3, j))
+
+type Glyph is Data:
+  D{digit: U32}
+  C{}
+  X{}
+
+def glyph(+c: U32) -> Glyph:
+  Bool.pick(Glyph, (c - 48 < 10 : U32), D{(c - 48 : U32)}, Bool.pick(Glyph, U32.is_eq(c, 44), C{}, X{}))
+
+# The state: place i, field j, floor lo, open value v, field non-empty ne.
+type S is Data:
+  S{i: U32, j: U32, lo: U32, v: U32, ne: Bool}
+
+# A Mealy machine in two tables: what each glyph says, and where it leaves the state.
+def say(g: Glyph, st: S) -> Verdict:
+  match g st:
+    case D{d} S{i, j, lo, v, ne}:  Ok{0}
+    case C{}  S{i, j, lo, v, ne}:  field(j, lo, v, ne)
+    case X{}  S{i, j, lo, v, ne}:  Err{1, i}
+
+def eat(g: Glyph, st: S) -> S:
+  match g st:
+    case D{d} S{i, j, lo, v, ne}:  S{(i + 1 : U32), j, lo, (v * 10 + d : U32), True{}}
+    case C{}  S{i, j, lo, v, ne}:  S{(i + 1 : U32), (j + 1 : U32), (v + 1 : U32), 0, False{}}
+    case X{}  S{i, j, lo, v, ne}:  S{(i + 1 : U32), j, lo, v, ne}
+
+# law: walk(c <> cs, st) = say(g, st) ⋄ walk(cs, eat(g, st))  where g = glyph(c);
+#      and the end of input is a comma.
+def walk(cs: List<&2, U32>, +st: S) -> Verdict:
+  match cs:
+    case Nil{}:     say(C{}, st)
+    case c <> rest:
+      +g = glyph(c)
+      meet(say(g, st), walk(rest, eat(g, st)))
+
+def pipeline(cs: List<&2, U32>) -> Verdict:
+  walk(cs, S{0, 0, 0, 0, False{}})
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: Verdict) -> U32:
+  match r:
+    case Ok{v}:
+      (v * 4 : U32)
+    case Err{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(pipeline(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

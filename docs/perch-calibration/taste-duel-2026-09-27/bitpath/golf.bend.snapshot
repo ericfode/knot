@@ -1,0 +1,100 @@
+import Base
+type T is Data:
+  E{}
+  V{v:U32}
+  B{l:T,r:T}
+def o(b:Bool,t:T)->T:
+  match b t:
+    case _ E{}:B{E{},E{}}
+    case _ B{E{},E{}}:E{}
+    case False{} B{l,r}:B{r,l}
+    case _ t:t
+def m(k:U32,t:T)->T:o(U32.is_even(k),t)
+def h(k:U32)->U32:U32.shr(k)
+def g(n:Nat,+k:U32,t:T)->+Maybe<U32>:
+  match n t:
+    case 0n V{v}:Some{v}
+    case 1n+n B{l,_}:g(n,h(k),m(k,l))
+    case _ _:None{}
+def a(n:Nat,+k:U32,x:T,t:T)->T:
+  match n t:
+    case 0n _:m(k,x)
+    case 1n+n B{l,r}:B{m(k,a(n,h(k),x,m(k,l))),r}
+    case _ t:t
+def q(t:T,+k:U32)->+Maybe<U32>:g(8n,h(k),m(k,t))
+def s(t:T,+k:U32,v:U32)->T:m(k,a(8n,h(k),V{v},m(k,t)))
+def d(t:T,+k:U32)->T:m(k,a(8n,h(k),E{},m(k,t)))
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> T: E{}
+def H.get(t: T, k: U32) -> +Maybe<U32>: q(t, k)
+def H.put(t: T, k: U32, v: U32) -> T: s(t, k, v)
+def H.del(t: T, k: U32) -> T: d(t, k)
+def H.forks(t: T) -> U32:
+  match t:
+    case B{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

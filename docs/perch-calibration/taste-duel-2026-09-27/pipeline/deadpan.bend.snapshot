@@ -1,0 +1,121 @@
+import Base
+
+type Token is Data:
+  NumberToken{number_value: U32}
+  CommaToken{}
+type LexingResult is Data:
+  LexingSuccess{list_of_tokens: List<&2, Token>}
+  LexingFailure{character_position: U32}
+type PipelineResult is Data:
+  PipelineSuccess{result_value: U32}
+  PipelineFailure{error_stage: U32, error_position: U32}
+
+def lex_list_of_characters(list_of_characters: List<&2, U32>, +current_character_position: U32, +current_number_value: U32, +is_inside_number: Bool, +reversed_list_of_tokens: List<&2, Token>) -> LexingResult:
+  match list_of_characters:
+    case Nil{}:
+      final_reversed_list_of_tokens = Bool.pick(List<&2, Token>, is_inside_number, NumberToken{current_number_value} <> reversed_list_of_tokens, reversed_list_of_tokens)
+      final_list_of_tokens = List.reverse(&2, Token, final_reversed_list_of_tokens)
+      LexingSuccess{final_list_of_tokens}
+    case +character_code <> remaining_list_of_characters:
+      +is_digit_character = Bool.and(U32.is_ge(character_code, 48), U32.is_le(character_code, 57))
+      +is_comma_character = U32.is_eq(character_code, 44)
+      is_valid_character = Bool.or(is_digit_character, is_comma_character)
+      next_number_value = Bool.pick(U32, is_digit_character, (current_number_value * 10 + character_code - 48 : U32), 0)
+      +list_of_tokens_with_number = Bool.pick(List<&2, Token>, Bool.and(is_comma_character, is_inside_number), NumberToken{current_number_value} <> reversed_list_of_tokens, reversed_list_of_tokens)
+      list_of_tokens_with_comma = Bool.pick(List<&2, Token>, is_comma_character, CommaToken{} <> list_of_tokens_with_number, list_of_tokens_with_number)
+      next_lexing_result = lex_list_of_characters(remaining_list_of_characters, (current_character_position + 1 : U32), next_number_value, is_digit_character, list_of_tokens_with_comma)
+      Bool.pick(LexingResult, is_valid_character, next_lexing_result, LexingFailure{current_character_position})
+
+def parse_list_of_tokens(list_of_tokens: List<&2, Token>, +current_token_index: U32, is_expecting_number_token: Bool) -> PipelineResult:
+  match list_of_tokens is_expecting_number_token:
+    case Nil{} False{}:
+      PipelineSuccess{0}
+    case NumberToken{number_value} <> remaining_list_of_tokens True{}:
+      parse_list_of_tokens(remaining_list_of_tokens, (current_token_index + 1 : U32), False{})
+    case CommaToken{} <> remaining_list_of_tokens False{}:
+      parse_list_of_tokens(remaining_list_of_tokens, (current_token_index + 1 : U32), True{})
+    case other_list_of_tokens other_is_expecting_number_token:
+      PipelineFailure{2, current_token_index}
+
+def check_list_of_tokens(list_of_tokens: List<&2, Token>, +current_number_index: U32, +is_first_number: Bool, +previous_number_value: U32, +current_sum_value: U32) -> PipelineResult:
+  match list_of_tokens:
+    case Nil{}:
+      PipelineSuccess{current_sum_value}
+    case CommaToken{} <> remaining_list_of_tokens:
+      check_list_of_tokens(remaining_list_of_tokens, current_number_index, is_first_number, previous_number_value, current_sum_value)
+    case NumberToken{+number_value} <> remaining_list_of_tokens:
+      is_number_value_too_large = U32.is_gt(number_value, 1000)
+      is_number_value_not_increasing = Bool.and(Bool.not(is_first_number), U32.is_le(number_value, previous_number_value))
+      is_number_value_invalid = Bool.or(is_number_value_too_large, is_number_value_not_increasing)
+      next_checking_result = check_list_of_tokens(remaining_list_of_tokens, (current_number_index + 1 : U32), False{}, number_value, (current_sum_value + number_value : U32))
+      Bool.pick(PipelineResult, is_number_value_invalid, PipelineFailure{3, current_number_index}, next_checking_result)
+
+def handle_parsing_result(parsing_result: PipelineResult, list_of_tokens: List<&2, Token>) -> PipelineResult:
+  match parsing_result:
+    case PipelineFailure{error_stage, error_position}:
+      PipelineFailure{error_stage, error_position}
+    case PipelineSuccess{result_value}:
+      check_list_of_tokens(list_of_tokens, 0, True{}, 0, 0)
+
+def handle_lexing_result(lexing_result: LexingResult) -> PipelineResult:
+  match lexing_result:
+    case LexingFailure{character_position}:
+      PipelineFailure{1, character_position}
+    case LexingSuccess{+list_of_tokens}:
+      parsing_result = parse_list_of_tokens(list_of_tokens, 0, True{})
+      handle_parsing_result(parsing_result, list_of_tokens)
+
+def run_pipeline(list_of_characters: List<&2, U32>) -> PipelineResult:
+  lexing_result = lex_list_of_characters(list_of_characters, 0, 0, False{}, Nil{})
+  pipeline_result = handle_lexing_result(lexing_result)
+  pipeline_result
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: PipelineResult) -> U32:
+  match r:
+    case PipelineSuccess{v}:
+      (v * 4 : U32)
+    case PipelineFailure{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(run_pipeline(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

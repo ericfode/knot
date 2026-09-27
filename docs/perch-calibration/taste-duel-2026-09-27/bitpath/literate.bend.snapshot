@@ -1,0 +1,146 @@
+import Base
+
+# ══ A map from bytes to numbers, told as a walk through a maze ═════════
+#
+# Picture every key as a list of directions. A key below 256 has eight
+# bits, and we read them from the lowest one up. Each bit is one turn:
+# 0 means left, 1 means right. After exactly eight turns you are standing
+# in the one room that belongs to that key. That is the whole idea. The
+# rest of this file is only learning how to walk, and it comes in two
+# parts: first we learn to look, and then we learn to change things.
+#
+# The maze is built from three kinds of room:
+type ByteMap is Data:
+  Nothing{}                              # an empty room; nothing lies past it
+  Stored{value: U32}                     # the room at the end of a walk
+  Branch{left: ByteMap, right: ByteMap}  # a fork in the road
+
+# Before the first step, a promise we will keep until the very last line:
+# no Branch ever has Nothing on both sides. An empty map is just Nothing,
+# never a hollow tangle of forks that lead nowhere. Hold on to that.
+#
+# At every fork we ask the key two small questions. Which way now? And
+# which directions are still left once we have made this turn?
+def goes_left(+key: U32) -> Bool: U32.is_eq((key % 2 : U32), 0)
+def rest_of(key: U32) -> U32: (key / 2 : U32)
+# ── Part one: looking ─────────────────────────────────────────────────
+# The easy walk. Count eight steps down, turning wherever the key says.
+# If a value is waiting at the end, that is our answer. If the road runs
+# out early, the key was never stored at all.
+def lookup_walk(steps: Nat, +key: U32, map: ByteMap) -> +Maybe<U32>:
+  match steps map:
+    case 0n Stored{value}: Some{value}
+    case 1n+steps Branch{left, right}:
+      lookup_walk(steps, rest_of(key), Bool.pick(ByteMap, goes_left(key), left, right))
+    case _ _: None{}
+# Notice that looking never builds anything. The next walk will have to.
+# ── Part two: changing ────────────────────────────────────────────────
+# Changing the maze is harder, because every fork we pass through must
+# be rebuilt on our way back out. So this time we carry something with
+# us: a value to set down in the last room. And now, the crucial move.
+# Removing a key is exactly the same walk. We simply carry Nothing.
+#
+# Remember the promise? This is where it bites. Setting Nothing down can
+# hollow out a fork, so every fork we rebuild passes one small gate:
+def tidy(left: ByteMap, right: ByteMap) -> ByteMap:
+  match left right:
+    case Nothing{} Nothing{}: Nothing{}  # a fork to nowhere is no fork
+    case l r: Branch{l, r}
+# One last detail. A road that nobody has built yet is simply a fork
+# with two empty sides, so before we step onto it, we open it up.
+def open_up(map: ByteMap) -> ByteMap:
+  match map:
+    case Nothing{}: Branch{Nothing{}, Nothing{}}
+    case room: room
+# And now, at last, we can walk.
+def walk(steps: Nat, +key: U32, carried: ByteMap, map: ByteMap) -> ByteMap:
+  match steps map:
+    case 0n _: carried                   # the last room: set down the load
+    case 1n+steps Branch{+left, +right}:
+      # First, face the way the key points;
+      ahead = Bool.pick(ByteMap, goes_left(key), left, right)
+      # then walk on into it, and change whatever lies there;
+      +changed = walk(steps, rest_of(key), carried, open_up(ahead))
+      # and finally, on the way back out, rebuild this fork through the gate.
+      Bool.pick(ByteMap, goes_left(key), tidy(changed, right), tidy(left, changed))
+    case _ room: room                    # never reached: open_up hands us forks
+# ── Epilogue: three front doors, and every walk is eight steps long ───
+def lookup(map: ByteMap, key: U32) -> +Maybe<U32>: lookup_walk(8n, key, map)
+def insert(map: ByteMap, key: U32, value: U32) -> ByteMap: walk(8n, key, Stored{value}, open_up(map))
+def remove(map: ByteMap, key: U32) -> ByteMap: walk(8n, key, Nothing{}, open_up(map))
+# Look closely: remove really is insert, carrying Nothing. And the promise
+# held to the very last line, because tidy guarded every fork we rebuilt.
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> ByteMap: Nothing{}
+def H.get(t: ByteMap, k: U32) -> +Maybe<U32>: lookup(t, k)
+def H.put(t: ByteMap, k: U32, v: U32) -> ByteMap: insert(t, k, v)
+def H.del(t: ByteMap, k: U32) -> ByteMap: remove(t, k)
+def H.forks(t: ByteMap) -> U32:
+  match t:
+    case Branch{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

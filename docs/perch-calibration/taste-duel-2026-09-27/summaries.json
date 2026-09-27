@@ -1,0 +1,6 @@
+{
+ "bitpath": {"title": "Walk a bit path", "contract": "A persistent map from 8-bit keys to U32 values, stored as a binary trie that the key's bits walk low bit first to depth 8. Lookup answers None or Some(value), insert overwrites, and remove collapses any fork left with two empty sides."},
+ "fuel": {"title": "Give work its fuel", "contract": "A countdown task run on a fuel budget: each step sets total := total·3 + remaining mod 7, then remaining := remaining − 1. At remaining 0 the task is Done(total); if fuel runs out first, the unfinished task comes back as Owed(task), so running with a + b fuel equals running a, then b."},
+ "pipeline": {"title": "Stop at the first error", "contract": "Read a list of character codes through three stages, where the earliest failure wins: lex (digits and commas only), parse (number, comma, number …) and check (each number at most 1000 and strictly increasing). Success returns the sum; failure returns the stage and a position."},
+ "slots": {"title": "Refusal returns the offer", "contract": "A four-slot store that is passed in and handed back, never copied. put fills the lowest empty slot and returns its index, or, when every slot is full, refuses and hands the offered value back untouched. take empties a slot and returns its value, or reports it missing."}
+}

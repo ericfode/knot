@@ -1,0 +1,145 @@
+import Base
+
+# ⟡ THE LOOM ⟡   Clotho spins · Lachesis measures · Atropos cuts
+#   a thread is eight crossings, low first:   over is 0 · under is 1
+#   slack in, slack out;   two slacks cinch to slack.
+
+type Loom is Data:
+  Slack{}
+  Bead{bead: U32}
+  Warp{over: Loom, under: Loom}
+
+type Cross is Data:
+  Over{}
+  Under{}
+
+# ─── the thread, told as crossings ────────────────────────────
+def cross(+thread: U32) -> Cross:
+  Bool.pick(Cross, U32.is_even(thread), Over{}, Under{})
+
+def weave(n: Nat, +thread: U32) -> +List<Cross>:
+  match n:
+    case 0n:   Nil{}
+    case 1n+n: cross(thread) <> weave(n, U32.shr(thread))
+
+# ─── the loom, felt by hand ───────────────────────────────────
+def over(loom: Loom) -> Loom:
+  match loom:
+    case Warp{o, u}: o
+    case _:          Slack{}
+
+def under(loom: Loom) -> Loom:
+  match loom:
+    case Warp{o, u}: u
+    case _:          Slack{}
+
+def bead(loom: Loom) -> +Maybe<U32>:
+  match loom:
+    case Bead{b}: Some{b}
+    case _:       None{}
+
+def cinch(o: Loom, u: Loom) -> Loom:
+  match o u:
+    case Slack{} Slack{}: Slack{}
+    case o       u:       Warp{o, u}
+
+# ─── the three sisters ────────────────────────────────────────
+# Lachesis measures:   over, under,   and read the bead.
+def lachesis(w: +List<Cross>, +loom: Loom) -> +Maybe<U32>:
+  match w:
+    case Nil{}:           bead(loom)
+    case Con{Over{},  w}: lachesis(w, over(loom))
+    case Con{Under{}, w}: lachesis(w, under(loom))
+
+# Clotho spins:        over, under,   and lay the bead.
+def clotho(w: +List<Cross>, b: U32, +loom: Loom) -> Loom:
+  match w:
+    case Nil{}:           Bead{b}
+    case Con{Over{},  w}: Warp{clotho(w, b, over(loom)), under(loom)}
+    case Con{Under{}, w}: Warp{over(loom), clotho(w, b, under(loom))}
+
+# Atropos cuts:        over, under,   and let it slack.
+def atropos(w: +List<Cross>, +loom: Loom) -> Loom:
+  match w:
+    case Nil{}:           Slack{}
+    case Con{Over{},  w}: cinch(atropos(w, over(loom)), under(loom))
+    case Con{Under{}, w}: cinch(over(loom), atropos(w, under(loom)))
+
+# ─── at the loom ──────────────────────────────────────────────
+def measure(loom: Loom, thread: U32) -> +Maybe<U32>: lachesis(weave(8n, thread), loom)
+def spin(loom: Loom, thread: U32, b: U32) -> Loom:    clotho(weave(8n, thread), b, loom)
+def cut(loom: Loom, thread: U32) -> Loom:             atropos(weave(8n, thread), loom)
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> Loom: Slack{}
+def H.get(t: Loom, k: U32) -> +Maybe<U32>: measure(t, k)
+def H.put(t: Loom, k: U32, v: U32) -> Loom: spin(t, k, v)
+def H.del(t: Loom, k: U32) -> Loom: cut(t, k)
+def H.forks(t: Loom) -> U32:
+  match t:
+    case Warp{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]
