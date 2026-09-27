@@ -28,3 +28,8 @@ a bounded search over expressive families: three initial directions, focused
 mutations, reconstruction and transfer, then owner-led propagation. Its
 [planning state](hillclimb/state.json) starts with zero candidates and distinguishes
 the proposed successor protocol from the unresolved existing pilot.
+
+[Start with owned time slicing](hillclimb/START-HERE.md) selects the first family,
+pins its before/current source and gate inputs, and supplies the complete
+[budget-list transfer contract](hillclimb/TRANSFER.md). The packet is prepared;
+a general successor gate and new candidates have not yet been produced.

@@ -1,0 +1,182 @@
+{
+  "schema": "knot.memetic-start-packet.v1",
+  "status": "prepared_no_new_candidates",
+  "selection": "Owned time-slicing and residual continuation state",
+  "base_commit": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4",
+  "source": {
+    "path": "research/adaptive-tasks/task.bend",
+    "baseline_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+    "current_candidate_sha256": "03d0139685cd66110a70101b6d74f5f903ab6cdc545f5735ed243314003ffb81",
+    "baseline_run": "def run(fuel: Nat, state: Run) -> Run:\n  match fuel state:\n    case 0n _:\n      state\n    case 1n+n Checkpoint{task}:\n      run(n,step(task))\n    case 1n+n Delivered{dest,payload}:\n      Delivered{dest,payload}\n\n",
+    "candidate_run": "def run(fuel: Nat, state: Run) -> Run:\n  match fuel state:\n    case 1n+n Checkpoint{task}: run(n,step(task))\n    case _ _: state\n\n",
+    "reconstruction": "Replace the exact baseline_run string once in path at base_commit with candidate_run.",
+    "reconstruction_verified": true,
+    "candidate_owner": "Existing scoped-pilot coordinator; no source ownership transfer or integration"
+  },
+  "reading_context": [
+    "Payload",
+    "Frame",
+    "Task",
+    "Run",
+    "step_parts",
+    "step",
+    "run",
+    "slices"
+  ],
+  "frozen_contract_laws": [
+    "zero_fuel",
+    "delivered_absorbs",
+    "fuel_add"
+  ],
+  "frozen_inputs": [
+    {
+      "path": "research/adaptive-tasks/slot.bend",
+      "sha256": "f8350b71240146dc6061543d32b36ca40f0f420953e074b12f76b90389314cf2",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/oracle.bend",
+      "sha256": "bd065f518ef381c777dae17e1cc2f9250b87e9db66d8b74f1b98ecd011926096",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/fixtures.bend",
+      "sha256": "2f9b69eb971020e36ca2800d6327345819884b0c04497ce95f69cf9ebda01dac",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/LAWS.bend",
+      "sha256": "0c27192115eeb532b975fa642cd9d25e6e2187ca97431a838acfa20ec61bfc87",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/PROOF.bend",
+      "sha256": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/conformance.bend",
+      "sha256": "7f4e05b5f5c3317099bdaf9a4b45e20761c8b93e7d8f73667aa20fe978846713",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/SPEC.md",
+      "sha256": "98cd7ea02914efed1ac56bba6590c849e6a2177bd8d763c32a30b8321f6b3ef3",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/LAW_REVIEW.md",
+      "sha256": "696f199afe006ce33635be8ab392d455571b1ebb55624f44126ad73240c1b634",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/check.py",
+      "sha256": "b4bb232c66b99b25a17d40f8c99cdbab7cf1cb84e5502e8169b96d1933e03e02",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/gpu/tasks.wgsl",
+      "sha256": "1e86fc742f88c9044ab341a461ab6c74a0598b0de35780eddfd93f6c0056e3e7",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/gpu/check.mjs",
+      "sha256": "65291bcf2a290cab6c4148305ad79f3741e6c868cb03bf6c620a5f0febb499d9",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/gpu/adapter.mjs",
+      "sha256": "962680b02b087801827548f857af260af7fd0b6a5e114e5b1be42879e3d28a38",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/gpu/package.json",
+      "sha256": "14aac67eceef1e374fbb13dd31cecb8b4a07e53569d5a262d535fbfb082bbe8c",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/gpu/package-lock.json",
+      "sha256": "0ac2fa59aca64615977ddb6e3ecd68a84b9c75452dfb690f8e136257d43272f9",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/tests/affine-valid.bend",
+      "sha256": "04a1bf62271666e51ad9655d6ddf4aa075ec2b2e8bd1ecca1f7de223aa049a2d",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/tests/affine-task-reuse.bend",
+      "sha256": "ccc2c547528b7737b1428915d0f8c1652137be3e1c36227111939f857ab821fc",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/tests/affine-slot-reuse.bend",
+      "sha256": "b87625ca64ef34a911c5fa1db4c4243851a21dd1b3d6f10cbee69a1b58e20604",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/receipts/checks.json",
+      "sha256": "539a56aa03f0b1891ec4b11131db3c7fccb966ef45e6dd8487053ea523367ef0",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    },
+    {
+      "path": "research/adaptive-tasks/receipts/gpu.json",
+      "sha256": "c9f979d35aae00e2fe1bc00a67fc5cc48608fb9f8706157156687fdae86d46eb",
+      "git_revision": "897cd0e2bb7cab481b992423dbb9a30c6b0fdbc4"
+    }
+  ],
+  "reference": {
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "files": [
+      {
+        "path": "bend2/main.ts",
+        "sha256": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+      },
+      {
+        "path": "bend2/bend.ts",
+        "sha256": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e"
+      },
+      {
+        "path": "bend2/comp.ts",
+        "sha256": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+      },
+      {
+        "path": "bend2/base.bend",
+        "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+      }
+    ]
+  },
+  "rubric": {
+    "path": "perch-style.json",
+    "sha256": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3"
+  },
+  "owner_local_artifacts": [
+    {
+      "path": "research/adaptive-tasks/style-pilot/adaptive-run-1/check-pilot.py",
+      "sha256": "2be5453f805000176bf3d0660e5e647a5c8307fc70cbbbcf1fd28f6896912a43",
+      "git_tracked": false,
+      "role": "Owner-local evidence/tool; availability is not a portable checkpoint."
+    },
+    {
+      "path": "research/adaptive-tasks/style-pilot/adaptive-run-1/check-cost.mjs",
+      "sha256": "3248f5101eb08b97fefe11fe5f6074c54111ef27048a1f6903fba11ca1288655",
+      "git_tracked": false,
+      "role": "Owner-local evidence/tool; availability is not a portable checkpoint."
+    },
+    {
+      "path": "research/adaptive-tasks/style-pilot/adaptive-run-1/candidate-style-access-3.json",
+      "sha256": "019f7f06188f6a3e9be9a297d7a03be7e5ec19da872c16fc08b82d78ba6de3ce",
+      "git_tracked": false,
+      "role": "Owner-local evidence/tool; availability is not a portable checkpoint."
+    }
+  ],
+  "gate_readiness": {
+    "existing_pilot": "Reported deterministic pass and retained 52 percent memetic uncertainty; no gate rerun here.",
+    "full_state": "Required; task.observe alone omits remaining ticks and frames.",
+    "general_successor_gate": "Not prepared: existing cost harness asserts one exact emitted delta and must not be reused as an unrestricted style gate.",
+    "transfer_gate": "Contract only; independent Bend observations and mutants must be frozen before candidate generation."
+  },
+  "new_provider_requests": 0,
+  "new_candidate_generations": 0,
+  "new_compiler_or_device_runs": 0
+}
