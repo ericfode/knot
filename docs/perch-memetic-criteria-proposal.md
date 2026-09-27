@@ -1,8 +1,11 @@
-# Proposed changes to Perch's memetic criteria
+# Proposed changes to Perch's memetic and delight criteria
 
 Status: suggestions for review, not an installed rubric. Prepared from the
 [research on ideas generally](memetic-ideas-research-2026-09-26.md) and the
 memetic instructions at `da6b811`. No new model or human calibration was run.
+The user endorsed the suggested additions and asked whether expectation and
+payoff should have separate scales. The extension below proposes two diagnostic
+ratings within Delight; it does not change live targets or their enforcement.
 
 ## Recommendation
 
@@ -106,6 +109,98 @@ The same feature may support more than one axis, but the claims differ:
 - Big brain: what separate cases or concepts does the representation absorb?
 - Delight: what makes following its structure rewarding?
 - Memetic: what expressive idea would someone want to carry and reproduce?
+
+## Separate Anticipation and Payoff scales
+
+Recommend two distinct 0-4 ratings within Delight: **Anticipation** for how well
+the expression establishes an inviting expectation, and **Payoff** for how
+satisfyingly the expression fulfills, varies or reframes that expectation.
+These describe the quality of two parts of the reading experience, not amounts
+of predictability, tension or surprise. Their scores can differ; statistical
+independence is not assumed.
+
+Huron's theory distinguishes several responses associated with expectation,
+including imagination, tension, prediction, reaction and appraisal. It offers
+a useful reason to examine what happens before and after an event separately.
+[Sweet Anticipation](https://mitpress.mit.edu/9780262582780/sweet-anticipation/).
+Cheung and colleagues found an interaction between uncertainty and surprise in
+listeners' pleasure ratings for Western pop chord progressions. Both an
+unexpected event in a predictable context and an expected event in an uncertain
+context could be pleasurable. These musical results motivate testing an
+interaction; they do not establish a formula for reading pleasure in code.
+[Primary study](https://www.marcus-pearce.com/assets/papers/CheungEtAl2019.pdf).
+Van de Cruys and Wagemans also propose a theoretical account in which visual
+art creates and resolves prediction errors, sometimes through a new organizing
+pattern. That supplies an adjacent hypothesis for nonsequential material,
+rather than experimental validation of our scales.
+[Visual-art account](https://journals.sagepub.com/doi/10.1068/i0466aap).
+
+### Candidate Anticipation instructions
+
+Judge how well the shown expression orients a technically fluent reader toward
+an inviting next relationship. Names, symmetry, type structure, recurring forms
+and a meaningful unresolved question can all establish expectations. Reward
+cues that make the reader ready to recognize the next move while leaving useful
+room for discovery. Judge against the natural reading path and learned local
+conventions. Do not reward maximum predictability, prolonged suspense,
+misleading names, delayed explanation or extra lines. An expectation can be
+established almost instantly, including by the purpose or conventions already
+shown in the context. Identify uncertainty where necessary context is absent.
+
+### Candidate Payoff instructions
+
+Judge how satisfyingly the actual expression resolves, fulfills or reframes an
+expectation available in the supplied material. Reward earned recognition: a
+relationship clicks, parallel pieces fit, or a compact turn makes the structure
+feel inevitable. Confirmation and surprise can both qualify; surprise is not
+required. Judge the force and fit of the resolution, not the complexity of the
+problem, time spent confused, length of the buildup or code's claim about itself.
+One exact expression can provide a strong immediate payoff. A satisfying
+presentation does not establish correctness or conceptual originality.
+
+| Level | Anticipation | Payoff |
+| --- | --- | --- |
+| 0 | **Disoriented:** visible cues conflict or fail to establish an intelligible direction. | **Unresolved:** the expression leaves the relationship obscure or breaks the expectation without a coherent resolution. |
+| 1 | **Passive:** the reader can proceed, but the form supplies little preparation or desire to anticipate what follows. | **Flat:** the procedure ends or produces its result with little felt completion or recognition. |
+| 2 | **Guided:** consistent cues establish a useful expectation and make continuation natural. | **Fitting:** the expression supplies a clear, proportionate resolution that connects to its setup. |
+| 3 | **Inviting:** the pattern actively prepares the reader for a meaningful next move; its open possibilities invite engagement. | **Earned:** completion or variation produces a satisfying click, clearly supported by the setup and actual relationships. |
+| 4 | **Compelling:** economical cues make the reader participate in the pattern, anticipating its possibilities with a strong sense of direction and invitation. | **Resonant:** the resolution gives the whole expression an exceptional sense of fit, rewarding recognition and remaining satisfying on rereading. |
+
+The word expectation refers to the reader's model, not a prediction of what the
+program will output on a test. Payoff describes expressive satisfaction, not
+passing a semantic gate. These are proposed taste anchors; model probability
+does not measure a reader's neurochemistry or demonstrate a dopamine response.
+
+### Keep the pair informative
+
+| Reading profile | Diagnostic interpretation |
+| --- | --- |
+| High anticipation, low payoff | The form promises a relationship that its continuation does not make satisfying. |
+| Low anticipation, high payoff | A valuable or beautiful resolution arrives with weak preparation; an immediate reveal may still suit the task. |
+| High on both | Preparation and resolution reinforce one another. |
+| Low on both | This particular route to delight is weak; inspect fluency, rhythm and other sources of pleasure separately. |
+
+Keep the overall Delight judgment during calibration. Do not average these two
+numbers into Delight or impose two new pass requirements on every declaration.
+Doing so would assume that they exhaust reading pleasure and would encourage
+unnecessary buildup in tiny helpers. Existing target and criticality policies
+continue to govern the live rubric. The proposal is to collect independent
+distributions for diagnosis, with the source of the expectation and the point
+of resolution recorded in manual review.
+
+No numeric rating should be fabricated when the relevant context is missing.
+Record an unavailable/limited-context judgment separately from a low score.
+Adding diagnostic distributions, their optional applicability status and
+explanatory notes needs an explicit runner/report change: adding ordinary
+dimensions to today's configuration would also invoke its per-axis target
+policy. That implementation is outside this proposal.
+
+Calibrate using human preferences recorded before model review. Include a
+clear setup with a flat resolution, a weak setup with a satisfying immediate
+reveal, earned confirmation, earned surprise, and unnecessary delay. Preserve
+equivalent behavior when comparing code variants. Check whether the separate
+ratings explain preferences beyond the existing Delight score on held-out
+examples before changing acceptance policy.
 
 ## Evidence and rollout
 
