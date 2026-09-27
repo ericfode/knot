@@ -1,0 +1,139 @@
+# source-search-1 bounded law review
+
+Scope: search/line-location family in this one unreleased working-source change.
+Supported public operations here are Source.locate and Source.offset. Other
+families retain the frozen package LAW_REVIEW.md; helpers including search are
+private by API convention. Only search changed. Vec stays pinned to
+0xd684886d10b431b9dce6c3b2d1ef1980. Units are Unicode scalars; only LF adds starts.
+Source keeps its exact text, file ID, length and line count after each operation.
+Caller IDs identify one caller session/revision, not globally unique identities.
+
+## Contract and inhabited witnesses
+
+Search receives affine Vec line starts plus Searching{lo,hi}, Found{line}, or
+BadIndex. Found and BadIndex preserve the same store and result for all fuel.
+Zero-fuel Searching fails as BadIndex, never partial success. With positive fuel,
+interval width one completes; otherwise a checked midpoint read halves the
+interval. lo is inclusive, hi exclusive; answer is greatest start <= position.
+Public locate supplies 25 fuel and valid intervals. Scalar limit 16,777,215
+bounds U32 addition and line count. Malformed internal intervals are not a public
+construction API; checked failed Vec access is still probed explicitly.
+
+| Operation | Success, failure and state evidence |
+| --- | --- |
+| Source.locate | newline_location, cr_is_content, crlf_location, trailing_line concrete normalization laws; finite conformance compares every position including EOF to independent sequential prefix scan; invalid position, U32 maximum and foreign ID rejected; retained text/file/length/line count checked |
+| Source.offset | canonical_location and newline_roundtrip concrete laws; finite line/column grid and locate/offset round trips against enumeration of positions in independent model; invalid line/column and noncanonical next-line alias rejected; same retained-state observations |
+| search helper | frozen supplemental native/JS probes below independently require exact state plus Vec.to_list = [0,9]; terminal states at zero/positive fuel, exhausted pending work, singleton interval, two-step completion and checked bad index |
+
+Corpus: empty string, "x", "ab", LF, "a\n\nb", CRLF, "x\ry",
+"a😀\nβ", and NUL+é+LF+LF. Empty Source has one start [0], EOF is
+valid; empty/singleton intervals reached by legal public inputs are tested.
+For "a\nb", locate(2) = Location{1,0}, offset(Location{1,0}) = 2,
+and Location{0,2} is rejected as noncanonical. For "a\n", EOF has
+Location{1,0}. CR does not advance line. Consecutive LF gives distinct starts,
+so duplicate keys are absent by construction. No store update occurs during
+lookup; growth/capacity is construction's unchanged contract, exercised by full
+conformance, bounded-exhaustion checks and large scaling workloads. Search does
+not allocate or enlarge the store. Its affine return preserves ownership.
+
+## Exact candidate and independent frozen probe
+
+```bend
+def search(fuel: Nat, +pos: U32, pair: V.Vec<U32> & Search) -> V.Vec<U32> & Search:
+  match fuel pair:
+    case _ Tuple{lines,Found{line}}: (lines,Found{line})
+    case _ Tuple{lines,BadIndex{}}: (lines,BadIndex{})
+    case 0n Tuple{lines,Searching{lo,hi}}: (lines,BadIndex{})
+    case 1n+f Tuple{lines,Searching{+lo,+hi}}:
+      search(f,pos,search_step(lines,lo,hi,pos,U32.is_le((hi - lo : U32),1)))
+```
+
+This supplemental runtime assertion was frozen and passed on baseline before
+candidate generation. It compares to literal expected states and literal [0,9],
+not an alias of search. It is finite evidence, not a universal theorem.
+
+```bend
+import Base
+import ../../main.bend as S
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+def state_equal(a: S.Search, b: S.Search) -> Bool:
+  match a b:
+    case S.Found{x} S.Found{y}: U32.is_eq(x,y)
+    case S.BadIndex{} S.BadIndex{}: True{}
+    case S.Searching{a,b} S.Searching{c,d}: Bool.and(U32.is_eq(a,c),U32.is_eq(b,d))
+    case _ _: False{}
+
+def content(xs: List<U32>) -> Bool:
+  match xs:
+    case Con{a,Con{b,Nil{}}}: Bool.and(U32.is_eq(a,0),U32.is_eq(b,9))
+    case _: False{}
+
+def preserved(ok: Bool, pair: V.Vec<U32> & List<U32>) -> Bool:
+  (v,xs) = pair
+  Bool.and(ok,content(xs))
+
+def observed(expected: S.Search, pair: V.Vec<U32> & S.Search) -> Bool:
+  (v,actual) = pair
+  preserved(state_equal(expected,actual),V.Vec.to_list(U32,v))
+
+def ready(fuel: Nat, input: S.Search, expected: S.Search, pair: V.Vec<U32> & Result<V.Error,Unit>) -> Bool:
+  (v,r) = pair
+  observed(expected,S.search(fuel,7,(v,input)))
+
+def first(fuel: Nat, input: S.Search, expected: S.Search, pair: V.Vec<U32> & Result<V.Error,Unit>) -> Bool:
+  (v,r) = pair
+  ready(fuel,input,expected,V.Vec.push(U32,v,9))
+
+def probe(fuel: Nat, input: S.Search, expected: S.Search) -> Bool:
+  first(fuel,input,expected,V.Vec.push(U32,V.Vec.new(U32),0))
+
+def main() -> U32:
+  Bool.to_u32(Bool.and(probe(0n,S.Found{1},S.Found{1}),Bool.and(probe(3n,S.Found{1},S.Found{1}),Bool.and(probe(0n,S.BadIndex{},S.BadIndex{}),Bool.and(probe(3n,S.BadIndex{},S.BadIndex{}),Bool.and(probe(0n,S.Searching{0,2},S.BadIndex{}),Bool.and(probe(1n,S.Searching{0,2},S.BadIndex{}),Bool.and(probe(1n,S.Searching{0,1},S.Found{0}),Bool.and(probe(2n,S.Searching{0,2},S.Found{0}),probe(3n,S.Searching{0,4},S.BadIndex{}))))))))))
+```
+
+The public model imports only Base and types. locate_go walks the String prefix,
+advancing a line counter on LF and otherwise the column; offset_go enumerates
+positions comparing independent locations. It uses neither Source/Vec nor the
+binary-search arithmetic. Repeated public observations return the same complete
+Source, and round trips observe the original position, not merely success.
+
+## Executed gates, mutations and proof limits
+
+Bend 2.0.29 / 574b6d39a235b539eb19a5c532993a0abb3d11ad accepted first candidate
+without a diagnostic retry. Full frozen PROOF checks, native/JS conformance,
+native malformed scalars, and supplemental native/JS probe all pass. JS malformed
+Char construction fails before Source; no package malformed-Char JS claim.
+
+Full unchanged mutation harness executed all eleven mutants: baseline assertion
+returns 1, each mutant type-checks, mutant assertion returns 0. In this family,
+wrong_line_boundary changes binary-search < to <= and O.locate("a\nb",2)
+rejects the incorrect line; cr_newline is rejected by O.locate("a\rb",2);
+noncanonical_column is rejected by O.offset("a\nb",Location{0,2}). Each
+attacks real observations, including the defining line assignment. Other package
+mutants were also rerun without altering locators/assertions. None survived; no
+syntax/type failure counts. Exact mutant hashes and outcomes are retained in
+evidence/candidate/mutations.json. This does not claim exhaustive mutation coverage
+or a newly executed terminal-state mutant.
+
+No new theorem was added. Existing 32 zero-hole laws include five universal
+conditional cursor/span/foreign-ID laws, five ID-parametric fixed-shape laws,
+one auxiliary helper law and 21 concrete normalizations. Line-location evidence
+is concrete normalization plus runtime tests, not an all-string refinement proof.
+Base arithmetic/arrays/native lowering and pinned Vec remain trusted. Source
+introduces no unsafe axiom/foreign dependency. No GPU or host-OOM recovery claim.
+
+Baseline and candidate scaling through 131072 scalars checks every get/locate,
+including EOF. All results equal 1. Timings are observations, not proof. The first
+largest JS median was 26% slower; eight interleaved pairs measured 123.34 ms vs
+123.61 ms (ratio 1.00224). Both measurements remain in evidence. Five-unit style
+review is advisory and does not pass all three targets; it proves no semantics.
+
+## Source identities
+
+Candidate main SHA-256: 38f60094c1411632e50573b6aa18e92783d589340bd75b9ee6ea452074e66a17.
+Baseline main SHA-256: 83029b603921ea8a978c3f9a424fb256e0737d8041836c2749f8bd1b5e0be12c.
+Frozen supplemental SHA-256: 482b038a7a53642f1eb469bb7a7dcdd3e1e540fefdd8cf3a26faf3d4433d93d6.
+Full frozen contract/assertion hashes are in preregistration.json; candidate gate,
+mutation and scaling receipts repeat the source identities. Historical published
+release and remote-consumer receipts remain evidence of the old source only.

@@ -1,0 +1,120 @@
+[
+  {
+    "target": "packages/source/main.bend::search",
+    "command": [
+      "npm",
+      "run",
+      "lint",
+      "--",
+      "packages/source/main.bend::search",
+      "--rules",
+      "bend-fuel-completeness,bend-machine-arithmetic,bend-borrow-lifetime,bend-ordered-f32,bend-effect-boundary,bend-device-stack,perf-growing-prefix-copy,perf-loop-invariant-work,perf-linked-list-indexing,perf-amortized-growth",
+      "--json"
+    ],
+    "exit": 0,
+    "wrapper_receipt": ".perch/usage/2026-09-27T01-01-09.430Z-1ec5cc1c-26a3-414a-ab2a-b3076aec2bdf.json",
+    "receipt": "semantic-search.json",
+    "checked": 10,
+    "model": "jev-1.13.0",
+    "findings": [],
+    "context": {
+      "basis": "working-tree",
+      "files": [
+        {
+          "path": "packages/source/main.bend",
+          "source_sha256": "38f60094c1411632e50573b6aa18e92783d589340bd75b9ee6ea452074e66a17"
+        }
+      ],
+      "unresolved": [
+        {
+          "path": "packages/source/main.bend",
+          "name": "Nat",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "U32",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "Search",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "U32.is_le",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "Bool",
+          "reason": "unresolved-or-builtin"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "V.Vec.get",
+          "reason": "nonlocal-import"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "V.Error",
+          "reason": "nonlocal-import"
+        },
+        {
+          "path": "packages/source/main.bend",
+          "name": "U32.is_lt",
+          "reason": "unresolved-or-builtin"
+        }
+      ],
+      "truncated": false,
+      "limits": {
+        "helpers": 16,
+        "files": 12,
+        "bytes": 48000,
+        "callers": 4
+      }
+    }
+  },
+  {
+    "target": "packages/source/campaigns/source-search-1/LAW_REVIEW.md",
+    "command": [
+      "npm",
+      "run",
+      "lint",
+      "--",
+      "packages/source/campaigns/source-search-1/LAW_REVIEW.md",
+      "--rules",
+      "law-domain-inhabited,law-observable-essence,law-public-contract-coverage,law-independent-model,law-state-composition,law-boundaries-and-exhaustion,law-mutation-sensitivity,law-proof-claim-integrity",
+      "--json"
+    ],
+    "exit": 0,
+    "wrapper_receipt": ".perch/usage/2026-09-27T01-01-10.038Z-be16ae4d-2a86-4b4f-b9db-9c3301c393f0.json",
+    "receipt": "semantic-laws.json",
+    "checked": 8,
+    "model": "jev-1.13.0",
+    "findings": [],
+    "context": null
+  },
+  {
+    "target": "packages/source/campaigns/source-search-1/LAW_REVIEW.md",
+    "command": [
+      "npm",
+      "run",
+      "lint",
+      "--",
+      "packages/source/campaigns/source-search-1/LAW_REVIEW.md",
+      "--rules",
+      "law-domain-inhabited,law-observable-essence,law-public-contract-coverage,law-independent-model,law-state-composition,law-boundaries-and-exhaustion,law-mutation-sensitivity,law-proof-claim-integrity",
+      "--json"
+    ],
+    "exit": 0,
+    "wrapper_receipt": ".perch/usage/2026-09-27T01-02-36.853Z-eb99263c-a2d0-4ee5-a0f1-0b928eb46419.json",
+    "receipt": "semantic-laws-corrected.json",
+    "checked": 8,
+    "model": "jev-1.13.0",
+    "findings": [],
+    "context": null,
+    "reason": "Corrected packet-only overclaim: Source.locate takes a position, not a cursor, and has no foreign-ID rejection. Original reviewed packet and receipt retained. No Bend or assertion change."
+  }
+]

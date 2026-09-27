@@ -1,0 +1,118 @@
+{
+  "sources": {
+    "LAWS.bend": "bbd74050a1a1fc5ae7af9f8fce892023de197f8e37dcfdf87ef000af718f0950",
+    "PROOF.bend": "06e8c1044639d44fbfc6eeea3618b8dc8a4f75c25a2409918c97c86deda782af",
+    "benchmark.bend": "d28dbdb645e5e132917653cf8434f59a37c4b0438944af28a430fbb1771793b8",
+    "conformance.bend": "93ede95e703f52c7efe436a98681d6003068b10819e423a1c3a3c0012f9e0c69",
+    "example.bend": "d1e38d7f3f98a1db77eca3df5640fd1b67ad5b0a815162b2e1d6d12313a70800",
+    "main.bend": "83029b603921ea8a978c3f9a424fb256e0737d8041836c2749f8bd1b5e0be12c",
+    "model.bend": "2ba69937a36ee689bec25bcc2f99a83bdcf8373eb88e30813800388d7a8495ea",
+    "observations.bend": "c0d4d88f9e6324db3ec5698280d5ffa807b5b78304d02127fb6b75627ce39cb0",
+    "proof_observations.bend": "495a5d4767a750b176387d568489a556e23af935e8a05960c12839ce2ce4fc1f",
+    "release.bend": "e5cd3a2902d6f871978777683442df9fe03f76221f37058a1b56212b7e469adb",
+    "types.bend": "43e2cd88043f6f1b7c183e017931bc68dabae516b35a4eab9e319187442a9141"
+  },
+  "workload": "Build 2N alternating x/LF scalars, verify get+locate at every position including EOF. Timings include process startup, exclude compilation.",
+  "rows": [
+    {
+      "pairs": 1024,
+      "codepoints": 2048,
+      "line_count": 1025,
+      "indexed_queries": 2049,
+      "binary_search_comparison_upper_bound": 11,
+      "native": {
+        "seconds": [
+          0.1730372088495642,
+          0.0029144580475986004,
+          0.002730125095695257
+        ],
+        "median": 0.0029144580475986004,
+        "verified": true
+      },
+      "js": {
+        "seconds": [
+          0.019821833120658994,
+          0.020163082983344793,
+          0.020349917002022266
+        ],
+        "median": 0.020163082983344793,
+        "verified": true
+      }
+    },
+    {
+      "pairs": 4096,
+      "codepoints": 8192,
+      "line_count": 4097,
+      "indexed_queries": 8193,
+      "binary_search_comparison_upper_bound": 13,
+      "native": {
+        "seconds": [
+          0.17437995807267725,
+          0.0031892911065369844,
+          0.0033407919108867645
+        ],
+        "median": 0.0033407919108867645,
+        "verified": true
+      },
+      "js": {
+        "seconds": [
+          0.02673679101280868,
+          0.02870591590180993,
+          0.027982000028714538
+        ],
+        "median": 0.027982000028714538,
+        "verified": true
+      }
+    },
+    {
+      "pairs": 16384,
+      "codepoints": 32768,
+      "line_count": 16385,
+      "indexed_queries": 32769,
+      "binary_search_comparison_upper_bound": 15,
+      "native": {
+        "seconds": [
+          0.17730312491767108,
+          0.00609733397141099,
+          0.005773124983534217
+        ],
+        "median": 0.00609733397141099,
+        "verified": true
+      },
+      "js": {
+        "seconds": [
+          0.045822458108887076,
+          0.046451541827991605,
+          0.04414150002412498
+        ],
+        "median": 0.045822458108887076,
+        "verified": true
+      }
+    },
+    {
+      "pairs": 65536,
+      "codepoints": 131072,
+      "line_count": 65537,
+      "indexed_queries": 131073,
+      "binary_search_comparison_upper_bound": 17,
+      "native": {
+        "seconds": [
+          0.1882327909115702,
+          0.016605333890765905,
+          0.016038708155974746
+        ],
+        "median": 0.016605333890765905,
+        "verified": true
+      },
+      "js": {
+        "seconds": [
+          0.12343616620637476,
+          0.12302262498997152,
+          0.12030941597186029
+        ],
+        "median": 0.12302262498997152,
+        "verified": true
+      }
+    }
+  ]
+}

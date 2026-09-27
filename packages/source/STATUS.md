@@ -1,4 +1,12 @@
-# Source status — complete, 2026-09-26
+# Source status — working revision unreleased, 2026-09-26
+
+Working revision `source-search-1` groups fuel-independent terminal search states.
+The first candidate passed frozen proof, native/JS, eleven-mutant and scaling
+gates; targeted semantic review emitted no findings. It remains below the full
+three-axis style target. See [STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md) for disposition
+and current-source evidence. This working revision has **not been published**.
+
+## Historical release — complete
 
 Published and remotely verified: `0x88d5b48c03f82f217d3a2aa0656744f4`.
 

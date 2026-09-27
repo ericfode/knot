@@ -1,0 +1,7 @@
+def search(fuel: Nat, +pos: U32, pair: V.Vec<U32> & Search) -> V.Vec<U32> & Search:
+  match fuel pair:
+    case _ Tuple{lines,Found{line}}: (lines,Found{line})
+    case _ Tuple{lines,BadIndex{}}: (lines,BadIndex{})
+    case 0n Tuple{lines,Searching{lo,hi}}: (lines,BadIndex{})
+    case 1n+f Tuple{lines,Searching{+lo,+hi}}:
+      search(f,pos,search_step(lines,lo,hi,pos,U32.is_le((hi - lo : U32),1)))

@@ -1,0 +1,17 @@
+--- baseline-131072.js
++++ candidate-131072.js
+@@ -600,11 +600,11 @@
+       if (_fuel_0 === 0) {
+         const _lines_0 = _pair_0["fst"];
+         const _t_0 = _pair_0["snd"];
+-        if (_t_0.$ === "../main.Searching") {
+-          return {$: "Tuple", "fst": _lines_0, "snd": {$: "../main.BadIndex"}};
+-        } else if (_t_0.$ === "../main.Found") {
++        if (_t_0.$ === "../main.Found") {
+           const _line_0 = _t_0["line"];
+           return {$: "Tuple", "fst": _lines_0, "snd": {$: "../main.Found", "line": _line_0}};
++        } else if (_t_0.$ === "../main.BadIndex") {
++          return {$: "Tuple", "fst": _lines_0, "snd": {$: "../main.BadIndex"}};
+         } else {
+           return {$: "Tuple", "fst": _lines_0, "snd": {$: "../main.BadIndex"}};
+         }
