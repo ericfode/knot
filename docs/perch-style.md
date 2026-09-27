@@ -104,9 +104,12 @@ Four figure manifests are prepared and validate offline with complete context:
 and `compiler-pipeline` (6, previously unavailable as a composition). Offline
 coverage is `tests/perch-style-figure.test.mjs`. Live version 6 evidence and
 recorded author expectations live in
-[the version 7 calibration record](perch-calibration/style-v7-2026-09-27/README.md);
-no human preference has been recorded for figures yet, so version 7 is a
-measurement change with pending calibration, not a demonstrated pass. The
+[the version 7 calibration record](perch-calibration/style-v7-2026-09-27/README.md).
+The first live runs qualified no figure: IntMap's lead now meets all three
+expressive targets and its composition payoff meets, while composition memetic
+identity stays below target everywhere. No human preference has been recorded
+for figures yet, so version 7 is a measurement change with open calibration
+questions, not a demonstrated pass. The
 related [declaration-obligations comparison](perch-calibration/declaration-obligations-2026-09-27/README.md)
 reached the same conclusion from the IntMap side: name and freeze the whole
 reader unit before assigning declaration obligations. Figure manifests are that

@@ -37,9 +37,10 @@ One pass is one shape from the sheet applied to one owner's figure:
 
 Prepared figures: `owned-time-slicing`, `int-map-paths`, `symbols-trie` and
 `compiler-pipeline`. All four validate offline with complete context; the
-compiler pipeline composition was unavailable under version 5. Live version 7
-results are recorded under `docs/perch-calibration/style-v7-2026-09-27/` when
-credentials are available in the checkout being used. Human anchors recorded
+compiler pipeline composition was unavailable under version 5. The first live
+version 7 results are recorded under `docs/perch-calibration/style-v7-2026-09-27/`:
+no figure qualifies yet, IntMap's lead meets its expressive targets, and
+composition memetic identity remains the open axis. Human anchors recorded
 before model review remain the prerequisite for any threshold discussion.
 
 The passing criterion for the repository is: every mechanism-scope figure

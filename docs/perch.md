@@ -118,6 +118,14 @@ those historical runs. Do not infer missing identities from a newer source tree.
 
 For live checks, privately populate `.env` from `.env.example`, or export
 `PERCH_API_KEY` / `TYPESAFE_API_KEY`. Perch loads `.env` from the Git root.
+**Worktrees need no copy.** A linked worktree (the app's `.claude/worktrees/*`,
+Codex's `.codex/worktrees/*`) has no `.env` of its own; `npm run lint`,
+`lint:style` and the other npm wrappers resolve the main checkout's `.env`
+through `git rev-parse --git-common-dir` and load it before contacting the
+provider. A worktree-local `.env` takes precedence when present. The style
+receipt does not record the credential path; the CLI prints one stderr line
+when the shared file is used. Never copy the populated file into a worktree or
+a tracked path.
 Keys are available from [TypeSafe](https://console.typesafe.ai).
 Checks send selected source to the configured TypeSafe endpoint and use API
 credits. The user supplied a project key on 2026-09-26; it is stored in ignored

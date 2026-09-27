@@ -43,6 +43,9 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   A missing key, provider error, incomplete request, or zero coverage is not a
   clean result. Record the blocker once and continue deterministic work; do not
   keep retrying the same unavailable credential in one increment.
+  Linked worktrees have no `.env`; the npm wrappers load the main checkout's
+  `.env` automatically (see docs/perch.md). Never copy credentials into a
+  worktree or a tracked file.
 - Read findings before changing code. Prove or test a suspected defect. Label
   findings confirmed, false-positive, duplicate, or unresolved with evidence.
   Never weaken an accepted law or change correct code to satisfy a model.

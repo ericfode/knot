@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadProjectEnv } from './project-env.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const hash = text => createHash('sha256').update(text).digest('hex');
@@ -34,6 +35,12 @@ export async function runPerch(args, {
   stdout = text => process.stdout.write(`${text}\n`),
   stderr = text => process.stderr.write(`${text}\n`),
 } = {}) {
+  // Upstream Perch reads .env from the Git root of the current checkout; a linked
+  // worktree has none, so load the main checkout's file into the real process env.
+  if (env === process.env) {
+    const found = loadProjectEnv(root);
+    if (found?.source === 'shared-checkout') stderr(`Credentials: this worktree has no .env; using the main checkout's ${found.path}`);
+  }
   const { main } = await import('../node_modules/@lakeday/perch/dist/cli.mjs');
   const command = args[0];
   const recorded = ['check', 'scan'].includes(command) && !args.includes('--help');

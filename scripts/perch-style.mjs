@@ -3,6 +3,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { lstat, mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
+import { loadProjectEnv } from './project-env.mjs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
@@ -21,6 +22,8 @@ const inside = (root, path) => {
   const rel = relative(root, path);
   return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
 };
+export { loadProjectEnv, resolveEnvFile } from './project-env.mjs';
+
 const FIGURE_TARGET = /^[^:]+\.bend::[^:]+$/;
 const KNOWN_KINDS = ['bend_definition', 'bend_law', 'bend_law_fill', 'bend_law_definition', 'bend_datatype'];
 
@@ -774,7 +777,8 @@ export async function runStyleRanking(args, {
   const preflightChanged = await changedStyleSources(candidates, root);
   if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
   if (loadEnv) {
-    try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+    const found = loadProjectEnv(root);
+    if (found?.source === 'shared-checkout') stderr(`Credentials: this worktree has no .env; using the main checkout's ${found.path}`);
   }
   const at = new Date().toISOString(), start = performance.now();
   const requestedModel = env.PERCH_MODEL_ID || 'jev-latest', endpoint = styleEndpoint(env.PERCH_BASE_URL || undefined);

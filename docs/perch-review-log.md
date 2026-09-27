@@ -1,5 +1,33 @@
 # Perch review log
 
+## 2026-09-27 — first version 7 figure reviews: figures move Payoff, not level-3 identity
+
+Four figure reviews ran once each under rubric version 7 with the pattern sheet
+attached, jev-1.13.0, 66 requests, frozen sheet and manifests, fresh source.
+[Record and receipts](perch-calibration/style-v7-2026-09-27/README.md).
+Expectations were pre-registered; nothing was rerun or tuned afterwards.
+
+Observed: IntMap's lead `edit_path` went from .09/.08/.03 to .70/.63/.61 and
+meets all three expressive targets; IntMap composition payoff .11 to .72
+(meets) and anticipation .04 to .44. Owned-time-slicing composition
+anticipation .33 against the .04 to .06 of every version 5 composition. No
+figure qualifies: composition memetic identity is .12 to .26 everywhere, three
+of five declared leads miss level 3 on memetic identity, Symbols' leads moved
+down relative to their version 3 record, and the compiler pipeline is below
+target on all three composition axes, now measurably rather than unavailable.
+
+Judgment: **calibration finding, unresolved; no source defect and no model
+false positive adjudicated.** Two policy questions surfaced: the model classes
+the figure's datatype as leading in three of four figures and then fails it at
+level 3, and mid-probability roles fall to level 3 by design. Both are recorded
+as open questions; neither the sheet, a manifest nor a threshold was changed to
+fit results. Human taste anchors remain absent and precede any bar discussion.
+
+Tooling: the style and lint wrappers now resolve the main checkout's `.env`
+from a linked worktree (`scripts/project-env.mjs`), tested offline; 95 of 96
+verify tests pass with main's inherited parser case still failing. Measured
+avoidable rework: unknown.
+
 ## 2026-09-27 — style rules judged identity without a repertoire; version 7 fixes the unit and the context
 
 Survey of every style receipt and campaign report. The gate had never returned
