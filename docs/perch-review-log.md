@@ -618,3 +618,61 @@ deleted units and failed rereads, not only an unchanged second invocation.
 Count carried applicable answers separately from provider calls. The full
 offline inventory retains the existing 16 parser failures with zero warm
 requests; cache speed is not acceptance evidence or a fresh model judgment.
+
+## 2026-09-27 — Established memetic prose and a corrected control label
+
+The user requested external examples before applying Perch to system
+documentation. The [frozen prose probe](perch-calibration/memetic-prose-2026-09-27/README.md)
+uses the unchanged v5 questions at base `3dc7774`, rubric SHA-256
+`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`, and requested/resolved
+Jev 1.13.0. Ten requests returned 50 complete distributions; the
+[results](perch-calibration/memetic-prose-2026-09-27/results.json) and
+[prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
+
+All four selected originals meet the memetic target and exceed their plain
+rewrites by 32–79 percentage points. None meets the entire five-axis conjunction.
+An invented chiasmus intended to lack an explained mechanism receives 78%
+memetic target mass. The initial false-positive label was too strong: the user
+asked why, and the negative expectation was only the assistant's hypothesis.
+The passage may invite a meaningful interpretation; positive aphorisms likewise
+rely on inference. The user then explicitly judged it vacuous and memetic, and
+stated that something can be memetic without being valuable. Judgment:
+**human-adjudicated memetic; assistant negative label rejected**. No numerical
+level was assigned by the user. Preserve the original expected label and actual
+response; the historical result is not a false positive under the clarified
+objective. Cross-domain applicability to prose
+also remains unresolved. This is not a demonstrated Bend-code defect, and
+social reuse is not a correctness or aesthetic-accuracy label. Measured avoidable
+rework: unknown; this was a requested calibration experiment.
+
+Preserve this run's rubric and thresholds. The user clarification requires a
+successor to separate memetic appeal from conceptual value. Prevention: fix the
+review unit and independently adjudicate labels; do not use semantic emptiness
+as a negative memetic label. Do not rewrite docs solely to satisfy a code-oriented
+five-axis conjunction. Verification: exact production questions/request hashes,
+50 validated distributions and 51 passing focused offline style tests. No
+compiler contracts or package-owned code changed.
+
+## 2026-09-27 — Separate memetic appeal from conceptual value (v6)
+
+The user's explicit judgment that the vacuous prose control is memetic resolves
+the intended criterion: substance is not a prerequisite for memetic appeal.
+Updated only the memetic instructions/levels and the shared composition wording
+that could reintroduce that prerequisite. Kept every other rubric and threshold.
+Root guidance and the style guide now state the independence explicitly.
+
+The [frozen comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
+reuses two exactly matching v5 responses and obtains six fresh Jev 1.13.0
+responses across v5/v6. Human-positive wordplay is 78% → 99% memetic, with v6
+compression still 30%; Go's proverb is 93% → 93%. Fresh Colorless-green-ideas
+prose is 76.8% → 100%, and a plain reporting sentence is 0% → 0%. All match the
+prerecorded expectations; fresh labels remain assistant hypotheses. Single
+observations and one exposed human label do not establish an accuracy gain.
+
+Judgment: prior negative-label error confirmed by user; no confirmed model
+false positive. Prevention: record human taste before subsequent review, keep
+memetic and value labels separate, and never use vacuity alone as a negative
+memetic control. Historical inputs, labels and scores remain unchanged.
+Validation: 40 complete distributions; exact request checks; unchanged other
+axes/targets; 84 offline tests and law wiring pass. No Bend code changed. A live
+Bend-composition calibration remains outside this prose experiment's evidence.
