@@ -1,0 +1,88 @@
+{
+  "at": "2026-09-27T02:45:27.315023+00:00",
+  "preregistration_commit": "c115ba6",
+  "preregistration_sha256": "5ff55910efe9d3626ef1e93dbe19888eb9151cbebdf02b3b4de8daa624f211a4",
+  "delegates": [
+    {
+      "agent": "/root/life_arm_a",
+      "arm": "arm-a",
+      "requested_model": "gpt-6-astra",
+      "reasoning_effort": "max",
+      "fork_turns": "none",
+      "exposure": "none"
+    },
+    {
+      "agent": "/root/life_arm_b",
+      "arm": "arm-b",
+      "requested_model": "gpt-6-astra",
+      "reasoning_effort": "max",
+      "fork_turns": "none",
+      "exposure": "read all 260 lines of assigned inducer before implementation"
+    }
+  ],
+  "common_packet": {
+    "path": "research/life-blueberry/AUTHOR.md",
+    "sha256": "ea7083e3bacd7c70f57d8a3ec8eebfddb346205185e3e4157d90c2419a9fbd33"
+  },
+  "common_clarification": "Keep experimental-condition descriptions in AUTHOR-NOTES.md, outside life.bend. Do not alter an already accepted source merely for this clarification.",
+  "startup": {
+    "perch_version": "0.3.5",
+    "node_version": "v22.22.3",
+    "doctor_exit": 0,
+    "offline_tests": {
+      "command": "npm run lint:verify",
+      "exit": 0,
+      "passed": 28,
+      "law_rules": 8
+    },
+    "native_list_serialization_smoke": "passed"
+  },
+  "controls": [
+    {
+      "name": "identity",
+      "typechecked": true,
+      "semantic_rejection": true,
+      "mismatch_count": 1455,
+      "witness": {
+        "id": "exhaustive-1x1-1-1",
+        "pass": false,
+        "milliseconds": 0.03754200000000196,
+        "expected": [
+          0
+        ],
+        "actual": [
+          1
+        ],
+        "input_preserved": true
+      },
+      "receipt": "research/life-blueberry/receipts/control-identity.json"
+    },
+    {
+      "name": "extinction",
+      "typechecked": true,
+      "semantic_rejection": true,
+      "mismatch_count": 1025,
+      "witness": {
+        "id": "exhaustive-1x5-7-1",
+        "pass": false,
+        "milliseconds": 0.0015420000000005984,
+        "expected": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "actual": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "input_preserved": true
+      },
+      "receipt": "research/life-blueberry/receipts/control-extinction.json"
+    }
+  ]
+}

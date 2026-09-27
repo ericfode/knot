@@ -608,3 +608,21 @@ check exercises a level-5 answer and its contribution to target probability.
 and the eight-law wiring gate. These checks establish wiring, not taste
 calibration. No live style ratings were requested. Human calibration of the new
 level remains pending; earlier receipts keep their original rubric identity.
+
+## 2026-09-26 Pacific — paired Life inducer experiment
+
+Two fresh Astra/max authors received the same frozen Life contract and current
+rubric; one read the selected decoded inducer. Both pass independent behavior
+gates. Jev 1.13.0 rates all three axes above target on 6/13 unexposed declarations
+and 5/7 exposed declarations. Neither implementation passes the all-declaration
+policy. Both public step definitions have memetic target mass 0.88; helper
+ratings account for most of the fraction difference. Local context was not
+truncated; builtin/unresolved references remain explicit.
+
+This is a calibration question about the unit of judgment, not a confirmed
+judge defect or evidence that exposure caused an improvement. Conventional
+adapters coexist with a distinctive interacting mechanism. Before changing
+that policy, collect human preferences on fresh whole-family and helper
+examples; do not tune against these two submissions. All targets and rubrics
+remain unchanged. [Protocol, sources, per-declaration distributions and
+dispositions](../research/life-blueberry/README.md) preserve the experiment.
