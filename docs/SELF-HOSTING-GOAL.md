@@ -28,6 +28,25 @@ Invalid, Unsupported, Exhausted and host/internal failure separately. Use the
 deterministic law-quality and targeted Perch gates; commit verified increments
 with explicit paths and a post-commit status check.
 
+## Immediate priority: memetic foundation
+
+Later on 2026-09-26, the user explicitly put the memetic issue before further
+compiler implementation because it will shape the design. NLP here means
+neuro-linguistic programming. The [research and recommended approach](../research/compiler-style/MEMETIC-THEORY.md)
+and [first reading specimen](../research/compiler-style/MEMETIC-PRIMER.md) make
+that work concrete. They propose exemplar development, imitation and transfer
+before codifying a style, with owned unfinished computation as the leading
+identity hypothesis.
+
+The next increment is a bounded comparison of actual expressive forms and a
+complete transfer contract. Establish concrete reading preferences before model
+ratings; preserve independent semantic gates and the current three style
+targets. The existing scoped pilot remains unresolved and the wider campaign
+queue stays held. A research note or evocative phrase does not resolve the
+foundation. Do not automatically resume field-layout/emitter implementation
+because this documentation has been committed. All six milestones above remain
+required; this instruction changes their immediate sequencing, not the goal.
+
 ## Current increment
 
 The structural term [checkpoint](../research/compiler-fields/README.md) adds
@@ -60,9 +79,10 @@ encoding, not generic object reclamation or device execution. A discovered
 aliased-buffer assertion is repaired and distinguished by a reinit-write mutant;
 the original receipt remains qualified as historical evidence.
 
-Next: compact mixed-width field layout, live-field projection, an independently
-qualified twelve-byte locator transport and GPU storage transitions. Arena-ID allocation
-and restore require a lifetime contract; suspended roots, shared Data and partial
+After the memetic foundation: compact mixed-width field layout, live-field
+projection, an independently qualified twelve-byte locator transport and GPU
+storage transitions. Arena-ID allocation and restore require a lifetime contract;
+suspended roots, shared Data and partial
 joins still need separate reclamation probes. Integrate storage into field
 lowering and add sound structural descent. Recursion and real Wasm tree execution
 remain required before milestone 1 is complete.

@@ -5,6 +5,11 @@ source and retained receipts, not a new style pass or an implementation result.
 Compiler Planning owns this document. The existing scoped pilot and its owner,
 fixed rubric, independent gates and wider-queue hold remain in force.
 
+Subsequent user steering puts the memetic foundation before compiler
+implementation. The [theory research](MEMETIC-THEORY.md) extends this reflection
+with attraction, participation and transmission, and supersedes its final
+sequencing recommendation. The local law-driven grammar remains a candidate.
+
 We have been improving individual pieces faster than we have been developing an
 expressive identity. That produces competent, sometimes elegant declarations
 which do not teach a reader how to anticipate the rest of Knot. My recent flat
@@ -71,8 +76,11 @@ work. The complement preserves the entire affine owner. The short form earns
 its meaning from the `Run` datatype and the absorbing-delivery and zero-fuel
 contracts. Fewer cases alone would not establish an improvement; the catchall
 also makes those two stopping reasons less explicit. That tradeoff needs review.
-The coordinator records passing deterministic evidence and unavailable live
-after-ratings. I have inspected that record, not rerun its gates here.
+The coordinator recorded passing deterministic evidence. Subsequently completed
+[after-rating evidence](memetic-theory-evidence-2026-09-26.json)
+matches the current source: 82% conceptual, 81% delight and 52% memetic, uncertain.
+This corrects the earlier unavailable-rating status; the pilot remains unresolved.
+I have inspected those records, not rerun their gates here.
 
 The existing [fuel law](../adaptive-tasks/LAWS.bend) states:
 
@@ -169,9 +177,10 @@ sugar only for a repeated, demonstrated obstruction with a precise desugaring an
 ownership law. Changing Bend to rescue one attractive sketch would create a new
 compiler obligation before establishing the aesthetic benefit.
 
-The immediate work remains small: finish the existing pilot honestly, preserve
-its acceptance conditions, and use the next required compiler/runtime design to
-develop one convincing family. Its best few expressions should become a concrete
-style reference alongside the conventions that make them work. We will have a
-stronger case for a Knot identity when a second, previously unwritten operation
-inherits the form with less explanation and no extra semantic exceptions.
+The original next-step proposal was to preserve the existing pilot's acceptance
+conditions and develop one convincing family through the next compiler/runtime
+design. The user subsequently directed us to address the memetic foundation
+first. Follow the [new research and exemplar sequence](MEMETIC-THEORY.md) before
+resuming that implementation work. A second, previously unwritten operation
+inheriting the form with less explanation and no extra semantic exceptions
+remains one important test.

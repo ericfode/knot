@@ -6,9 +6,19 @@ immutable first candidate passes independent native/Bun observations and all
 compiler regressions. Three-axis style targets remain unmet. Exact before/after
 source, contracts, generation history and review receipts remain under family-1.
 
-The full self-hosting/Wasm/GPU goal continues independently of this bounded batch.
+The full self-hosting/Wasm/GPU goal remains active. The user's later instruction
+puts the memetic foundation before further compiler implementation; all of the
+goal's milestones remain required.
 
 [Getting out of the memetic valley](MEMETIC-DIRECTION.md) records a source-backed
 design reflection: develop a shared grammar from ownership and continuation laws,
 then test its transfer to a real operation. It proposes a later bounded experiment
 and a separate context-calibration check; the existing pilot remains unresolved.
+
+[A form people want to inhabit](MEMETIC-THEORY.md) develops the subsequent
+research into neuro-linguistic programming, cultural transmission, internet
+memes and speculative creative practice. It recommends learning a style through
+exemplars, imitation and variation before codifying it. The
+[first reading specimen](MEMETIC-PRIMER.md) explores owned unfinished work using
+existing task, law and slot source. Both are design proposals; neither claims a
+new style pass or measured human preference.
