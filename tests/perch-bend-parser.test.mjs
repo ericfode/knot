@@ -181,13 +181,22 @@ def foreign() -> IO(Unit):
   assert.equal(effects, 0);
 });
 
-test('every current nonignored package and research Bend source parses with bounded, exact source ranges', async () => {
+test('package and research sources have exact ranges; the frozen failed experiment remains rejected', async () => {
   const paths = execFileSync('rg', ['--files', 'packages', 'research', '-g', '*.bend'], { cwd: root, encoding: 'utf8' }).trim().split('\n');
   assert.ok(paths.length >= 90, `expected meaningful corpus coverage, got ${paths.length}`);
   let declarationCount = 0;
   for (const path of paths) {
     const source = fs.readFileSync(root + path, 'utf8');
     const result = await analyzeBendSource(source);
+    if (path === 'research/life-blueberry/iteration/arm-b/round-03/life.bend') {
+      // Preserve the failed research submission as evidence, not accepted source.
+      assert.equal(createHash('sha256').update(source).digest('hex'),
+        '969eeed12f4215334a467d4b8a52227668e3079e12263d8c692cf987eafd4dba');
+      assert.equal(result.parser_status, 'parse-error');
+      assert.match(result.parser_message, /Expected 4 patterns \(one per scrutinee\)/);
+      assert.deepEqual(result.declarations, []);
+      continue;
+    }
     assert.equal(result.parser_status, 'parsed', `${path}: ${result.parser_message}`);
     assert.equal(new Set(result.declarations.map((entry) => entry.id)).size, result.declarations.length, path);
     for (const decl of result.declarations) {
