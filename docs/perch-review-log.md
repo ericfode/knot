@@ -1,5 +1,21 @@
 # Perch review log
 
+## 2026-09-26 Pacific — task potential and conditional Galaxy brain
+
+The user identified a mismatch between task opportunity and a universal demand
+for Galaxy brain, then explicitly preferred under-constraining that ambition.
+Perch v4 rates potential profundity from the fixed task before source review.
+Only confidently high potential adds one Galaxy requirement for the selected
+composition; helpers keep ordinary compression targets. Missing or uncertain
+relevance stays advisory. Criticality still governs Anticipation and Payoff.
+
+Four pre-recorded task controls separate as expected; the two high controls are
+near the 60% threshold (61% and 60%). The bounded Life hypothesis probe has 0%
+at the levels that trigger Galaxy brain. This is a small assistant-defined
+calibration, not human taste validation. Forty-eight focused offline tests pass.
+[Exact requests, distributions and limits](perch-calibration/style-v4-2026-09-27/README.md)
+remain available. Prior v3 ratings retain their original meaning.
+
 ## 2026-09-26 — establish usage and maintenance
 
 Scope: current working copy; original nine Bend/compiler rules, eight shared

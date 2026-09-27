@@ -45,7 +45,7 @@ npm run lint -- src/parse.bend --rules bend-fuel-completeness
 npm run lint:incremental             # committed HEAD, reuse matching answers
 npm run perch -- issues
 npm run lint:history                # local usage and finding counts
-npm run lint:style -- --live src/scope.bend
+npm run lint:style -- --live --task=src/SPEC.md src/scope.bend
 npm run lint:style -- --live --all  # explicitly requested project style review
 npm run lint:style -- --live --all --incremental # automatic working-copy reuse
 npm run lint:verify                 # offline workflow and rule-wiring checks
@@ -69,7 +69,10 @@ no executable declaration for these rules and must be reported as not applicable
 `lint:style` (`lint:rank` is an alias) assesses existing parsed definitions, laws
 and datatypes against **Maximally big brain**, **Delightful to read — high dopamine**,
 and **Highly memetic**. No alternative implementation is required. Each unit must
-meet all three targets for a style pass; below-target and uncertain ratings are
+meet all three declaration targets. Supply a fixed task with `--task=SPEC.md`
+or an explicit `--cohort`: the separate potential-profundity judgment decides
+whether the combined mechanism also requires Galaxy brain. Missing or uncertain
+task relevance leaves Galaxy brain advisory and does not block ordinary targets. Below-target and uncertain ratings are
 reported separately from defect findings. The output retains distributions,
 context limits and secondary ranks. Run it on materially changed Bend code beside
 the relevant semantic checks. See [style targets, commands and evidence](perch-style.md).

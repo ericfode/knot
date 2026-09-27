@@ -3,7 +3,11 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { compareStyleBaseline } from '../scripts/perch-style-campaign.mjs';
 
-const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url)));
+const currentConfig = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url)));
+const config = structuredClone(currentConfig);
+config.version = 3;
+config.criticality.style_target = config.potential_profundity.style_target;
+delete config.potential_profundity;
 const identity = { rubric_sha256: 'rubric', parser: 'parser' };
 const specimen = target => ({ target, path: target.split('::')[0], kind: 'bend_definition', line: 1,
   source_sha256: 'source', state_sha256: 'state', context: { truncated: false, files: [] },
@@ -47,7 +51,7 @@ test('failed or empty baselines cannot make a campaign look covered', () => {
   }
 });
 
-test('a matching critical baseline still needs Galaxy brain under the current policy', () => {
+test('a matching critical baseline still needs Galaxy brain under the historical v3 policy', () => {
   const unit = specimen('src/a.bend::a');
   unit.answers.criticality = { probabilities: { 0: 0, 1: 1 }, score: 1, confidence: 1 };
   assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_three_baseline_targets, 0);
@@ -61,4 +65,15 @@ test('a matching critical baseline still needs Galaxy brain under the current po
   assert.throws(() => compareStyleBaseline([unit], inventory, baseline([unit]), config, identity), /Invalid Score answer/);
   unit.context.truncated = true;
   assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_required_baseline_targets, 0);
+});
+
+test('v4 matching declaration ratings do not establish task or composition qualification', () => {
+  const unit = specimen('src/a.bend::a');
+  unit.answers.criticality = { probabilities: { 0: 0, 1: 1 }, score: 1, confidence: 1 };
+  const result = compareStyleBaseline([unit], inventory, baseline([unit]), currentConfig, identity);
+  assert.equal(result.units[0].baseline_status, 'matches');
+  assert.equal(result.units[0].matches_declaration_baseline_targets, true);
+  assert.equal(result.units[0].run_requirements_status, 'requires_task_and_composition_review');
+  assert.equal(result.summary.matches_all_required_baseline_targets, 0);
+  assert.equal(result.summary.matches_all_three_baseline_targets, 0);
 });

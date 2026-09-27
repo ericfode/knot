@@ -32,7 +32,10 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
     const matches = old && compatible && old.source_sha256 === unit.source_sha256
       && old.state_sha256 === unit.state_sha256 && JSON.stringify(old.context) === JSON.stringify(unit.context);
     const matchedAxes = matches ? assessStyle([old], config) : [];
-    const meetsRequired = matchedAxes.length >= config.dimensions.length && matchedAxes.every(a => a.status === 'meets_target');
+    const meetsDeclaration = matchedAxes.length >= config.dimensions.length && matchedAxes.every(a => a.status === 'meets_target');
+    // A per-declaration inventory cannot establish the separate v4 task and
+    // composition requirement. Keep this historical view conservative.
+    const meetsRequired = meetsDeclaration && !config.potential_profundity;
     return {
       target: unit.target, kind: unit.kind, line: unit.line,
       source_sha256: unit.source_sha256, state_sha256: unit.state_sha256,
@@ -40,6 +43,8 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
       baseline_axes: axes.get(unit.target) ?? null,
       baseline_context_truncated: old?.context?.truncated ?? null,
       current_context_truncated: unit.context?.truncated ?? false,
+      matches_declaration_baseline_targets: meetsDeclaration,
+      run_requirements_status: config.potential_profundity ? 'requires_task_and_composition_review' : 'declaration_targets_only',
       matches_all_required_baseline_targets: meetsRequired,
       // Keep the legacy field conservative for older inventory consumers.
       matches_all_three_baseline_targets: meetsRequired,

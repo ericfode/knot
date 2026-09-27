@@ -10,6 +10,10 @@ import { createBendSourceSnapshot } from '../scripts/perch-bend-context.mjs';
 import { DEFAULT_PERCH_JOBS } from '../scripts/perch-throughput.mjs';
 
 const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
+// These tests preserve the v3 receipt/assessment contract. V4 has its own suite.
+config.version = 3;
+config.criticality.style_target ??= config.potential_profundity?.style_target;
+delete config.potential_profundity;
 const targets = ['a.bend::solve', 'b.bend::solve'];
 const args = ['--live', '--json', '--cohort=Add one to an unsigned word', ...targets];
 const key = 'offline-secret-must-not-be-recorded';

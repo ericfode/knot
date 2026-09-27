@@ -1,0 +1,116 @@
+{
+  "schema": "perch-potential-task-controls-v1",
+  "recorded_at": "2026-09-27T05:39:45.406201+00:00",
+  "expectation_origin": "assistant",
+  "human_panel": false,
+  "expectation_context": "Assistant operationalization of the requested routine-versus-cross-representation contrast; not an independent human preference record or ground truth.",
+  "live_calls_before_recording": 0,
+  "policy": {
+    "path": "perch-style.json",
+    "version": 4,
+    "sha256": "3d346605e3c302a630772350898f68116845def41aa5cc34276d6c084a692be5",
+    "dimension": "potential_profundity",
+    "dimension_sha256": "e2ec491315cecd0a96a010c3020dd6392a76c549877dc282960c66907b67ee75",
+    "dimension_hash_encoding": "UTF-8 compact JSON with sorted keys and ensure_ascii=false"
+  },
+  "classification": {
+    "relevant": "sum(P(level) for level >= 3) >= 0.60",
+    "not_relevant": "sum(P(level) for level < 3) >= 0.60",
+    "uncertain": "Neither side reaches 0.60, or task evidence is missing/incomplete",
+    "open": "No expected class: descriptive probe excluded from calibration success"
+  },
+  "evaluation_order": [
+    "D01",
+    "D02",
+    "development interpretation",
+    "H01",
+    "H02",
+    "held-out interpretation",
+    "P01"
+  ],
+  "freeze_rule": "Keep task bytes and expectations fixed after this record. Do not alter held-out inputs after development interpretation. Preserve mismatches and uncertainty; no unchanged rerolls. A future rubric revision is a new evaluation, not replacement of this record.",
+  "success_criterion": {
+    "development": "Both expected absolute classes; retain separate distributions and high/low ordering.",
+    "held_out": "Both expected absolute classes on the unchanged held-out set; ordering alone does not establish separation.",
+    "probe": "No pass/fail expectation. Report the full distribution and resulting relevance classification."
+  },
+  "controls": [
+    {
+      "id": "D01",
+      "stage": "development",
+      "task": "tests/perch-potential/D01.task.md",
+      "task_sha256": "4dbdfbe9b3148e4521458ff7ff5f8af44ea85fcfc0996487dd076ecf8921f8d6",
+      "task_bytes": 1196,
+      "expected_class": "not_relevant",
+      "expected_concentration_levels": [
+        0,
+        1
+      ],
+      "opportunity_reason": "The contract fixes a positional representation, alphabet and exact inverse. Correctness needs place-value preservation and lexical rejection; no further models or open relationships must be reconciled.",
+      "limits": "Round-trip laws alone are not a deep-reframing obligation. Added generic bases, encodings or clever machinery would exceed this task.",
+      "included_in_calibration_success": true
+    },
+    {
+      "id": "D02",
+      "stage": "development",
+      "task": "tests/perch-potential/D02.task.md",
+      "task_sha256": "fbce39f7099c79c8f0950020eb8715df2624c7682f1bb71b005171796a1752c3",
+      "task_bytes": 1556,
+      "expected_class": "relevant",
+      "expected_concentration_levels": [
+        3,
+        4
+      ],
+      "opportunity_reason": "One family of path contributions must support existence, minimum cost and exact length counts while remaining consistent with regular-language filtering, cycles and boundary-summary substitution. A common account of path identity, composition and interpretation has direct consequences in several required observables.",
+      "limits": "The expectation rests on compatibility and replacement laws, not graph size, algorithmic difficulty or the request for an explanation. It does not require an original mathematical discovery.",
+      "included_in_calibration_success": true
+    },
+    {
+      "id": "H01",
+      "stage": "held_out",
+      "task": "tests/perch-potential/H01.task.md",
+      "task_sha256": "7c7f0ac82c38eead99cb1aeef85c37bba5f459c4b57db4dfe005512fe55e6ec6",
+      "task_bytes": 1252,
+      "expected_class": "not_relevant",
+      "expected_concentration_levels": [
+        0,
+        1
+      ],
+      "opportunity_reason": "Validation is a fixed conjunction of row-local predicates with prescribed error ordering and one explicit conditional check. A tidy representation can organize the rules, but no cross-record inference or alternate model must agree.",
+      "limits": "The number of clauses, shipping context and risk of rejection errors do not supply conceptual opportunity beyond exact validation.",
+      "included_in_calibration_success": true
+    },
+    {
+      "id": "H02",
+      "stage": "held_out",
+      "task": "tests/perch-potential/H02.task.md",
+      "task_sha256": "156fc32f13412ca7e2b75124a6cdb3ffcea7c78e8692729bdc997cdc6ca4750e",
+      "task_bytes": 1521,
+      "expected_class": "relevant",
+      "expected_concentration_levels": [
+        3,
+        4
+      ],
+      "opportunity_reason": "Snapshot multiplicities, signed changes and occurrence-level explanations must agree for compositional queries, including simultaneous join updates and equivalent reassociation. Shared structure between static results, changes and provenance can explain required interaction terms, replacement and caching conditions.",
+      "limits": "The expectation rests on these consistency obligations, not the volume of data or a general claim that database systems are difficult. Efficient implementation or a particular formalism is not presumed.",
+      "included_in_calibration_success": true
+    },
+    {
+      "id": "P01",
+      "stage": "hypothesis_probe",
+      "task": "tests/perch-potential/P01.task.md",
+      "task_sha256": "21a1bf36a4a8968331ab6247e2a9ce9919f8f424122324cb90942726f3571ef4",
+      "task_bytes": 2015,
+      "expected_class": "open",
+      "expected_concentration_levels": null,
+      "opportunity_reason": "The local neighborhood rule, synchronous boundaries and repeated evolution offer structure; the narrow full-board stepping contract may or may not warrant a deeper reframing. Measure that relevance from the contract before seeing source.",
+      "limits": "The user suspects limited opportunity, but this is not a guaranteed-low control. Do not infer the answer from domain fame, broad computational properties, earlier candidate outcomes or desired style thresholds.",
+      "included_in_calibration_success": false,
+      "source_contract": {
+        "path": "/Users/ericfode/.codex/worktrees/2a20/knot/research/life-blueberry/CONTRACT.md",
+        "sha256": "9dce3e7d7912a602591e8430bc982b7852a1fedb912c50c094bad584965567bd",
+        "transcription": "Retains public-interface, domain, behavior, language and deterministic acceptance scope; excludes obsolete author protocol and style thresholds. Added non-goals clarify the bounded operation without requiring a lower classification."
+      }
+    }
+  ]
+}

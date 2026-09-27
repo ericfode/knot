@@ -89,6 +89,14 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   vocabulary is consistent and their relationships can be followed. Comments
   should explain conventions, invariants or surprising decisions. Verbosity,
   beginner familiarity, minimum line count and cleverness alone are not goals.
+- Judge **potential profundity** from the fixed task/contract before inspecting
+  an implementation. It determines whether a Galaxy-brain composition is a
+  relevant expectation; importance, difficulty and code size are not proxies.
+  Supply `--task=SPEC.md` or an explicit contract through `--cohort`. Missing or
+  uncertain task evidence stays explicit and leaves Galaxy brain advisory; it
+  does not block the ordinary conceptual-compression standard. Where
+  it is high, require Galaxy brain of the combined mechanism; helpers need not
+  each invent an independent breakthrough. Preserve the original task and gates.
 - Run `npm run lint:style -- --live file.bend` on materially changed Bend code;
   `file.bend::name` selects one actual parsed definition, law or datatype. A single
   existing implementation is sufficient. Do not skip style review because no

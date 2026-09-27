@@ -5,7 +5,10 @@ The target is a distinctive code aesthetic: **Maximally big brain**,
 parsed declaration is assessed against all three; an alternative implementation
 is not required. Rankings are a secondary view of those independent ratings.
 
-Version 3 adopts the [research-informed refinements](perch-memetic-criteria-proposal.md)
+Version 4 adds source-blind **potential profundity**, making Galaxy brain a
+conditional requirement of the combined mechanism instead of every helper.
+Missing or uncertain relevance leaves it advisory, as requested by the user.
+Version 3 introduced the [research-informed refinements](perch-memetic-criteria-proposal.md)
 to memetic identity and separates **Anticipation** and **Payoff** into their own
 0–4 scales. They are required for every declaration with at least marginal
 contract importance, including uncertain classifications and critical datatypes.
@@ -47,8 +50,9 @@ npm run lint:style -- --live src/scope.bend::Scope
 npm run lint:style -- --live --all --output=.local/style-project.json
 ```
 
-`lint:rank` remains an alias. `--cohort='optional purpose or contract'` adds context
-when useful; omitting it rates each declaration relative to its own purpose.
+`lint:rank` remains an alias. `--task=SPEC.md` supplies a fixed task contract;
+`--cohort='purpose or contract'` is an inline alternative. Without either, ordinary
+declaration targets still apply and Galaxy relevance remains explicitly advisory.
 `--json` prints the structured report. An output path ending in `.gz` saves the
 same JSON losslessly compressed; `--reuse` accepts either form. `--jobs=N` sets
 provider concurrency from 1 to 256. Both project mode and explicit targets
@@ -133,8 +137,9 @@ separate reading-experience scales. Big brain runs from 0 to 5; the other four
 run from 0 to 4. Functions, laws, proofs and datatypes receive these five typed
 Score questions plus a binary `criticality` Score in the same request. Known
 truncation withholds the two reading-experience questions, leaving four questions
-and explicit unavailable ratings. Criticality selects requirements; it is not
-another taste axis. Each declaration receives its own distributions, independent
+and explicit unavailable ratings. Criticality selects the Anticipation/Payoff requirements; it is not
+another taste axis. Version 4 separately rates potential profundity from the
+explicit task, before the provider receives any implementation. Each declaration receives its own distributions, independent
 of other candidates or their order.
 
 The memetic ladder is **Unformed → Ordinary → Recognizable → Contagious →
@@ -166,12 +171,58 @@ The new level is a user-requested taste criterion; human calibration remains
 pending. Earlier receipts retain their original rubric identity and cannot be
 reused as ratings under the expanded scale.
 
-The default target is **level 3 or higher** on all three primary axes. A
-critical or uncertain function, law or proof must instead reach **Galaxy brain,
-level 5**, on big brain. Critical or uncertain declarations of **every kind**
-must also reach **Anticipation 3 (Inviting)** and **Payoff 3 (Earned)**. Datatypes
-retain the ordinary big-brain target. Anticipation and Payoff remain visible
-but advisory for declarations confidently classified as noncritical.
+The declaration target remains **level 3 or higher** on all three primary axes.
+Critical or uncertain declarations of every kind must also reach **Anticipation
+3 (Inviting)** and **Payoff 3 (Earned)**. Criticality no longer forces an
+individual helper, function, law or proof to invent a Galaxy-brain reframing.
+Anticipation and Payoff remain visible but advisory for confidently noncritical
+declarations.
+
+### Potential profundity and composition
+
+Supply a fixed task/contract with `--task=path/to/SPEC.md`, or an explicit
+`--cohort` description. The task file takes precedence for the potential judgment.
+The generic default scope is not evidence of low potential. The provider rates
+only the task text and the potential rubric first: no implementation, source
+path, current score, earlier failure, or inducer is in this request.
+
+| Potential level | Meaning |
+| --- | --- |
+| 0 | Routine obligation; clear direct execution captures its content |
+| 1 | Local structure; fitting representation absorbs local cases |
+| 2 | Generative structure within the task, without an established deep reframing opportunity |
+| 3 | Substantial opportunity for a surprising principle and non-obvious connections |
+| 4 | A foundational opportunity joining distinct models or domains |
+
+This is a relevance axis, not a score to maximize. Importance, task size,
+implementation difficulty and a domain's reputation for depth are insufficient.
+Judge the original obligations; adding machinery or inflating the task does not
+justify a higher target. A small problem can still offer deep structure.
+
+Probability mass at levels 3–4 of at least 60% makes Galaxy brain relevant.
+Mass of at least 60% at levels 0–2 keeps the ordinary declaration targets.
+Between those bounds, or without adequate task evidence, relevance remains
+unresolved and Galaxy brain is advisory. It does not prevent an ordinary style
+pass or become a claim that Galaxy brain was achieved. This intentionally
+permissive default follows the user's preference to under-constrain the ambition.
+
+When relevant, an additional **Galaxy-brain level 5** requirement applies to the
+combined mechanism in the explicit selected source group. It is a separate
+composition judgment, with complete selected files and known collaborator files
+within a 48 KB bound. It is not an average or maximum of helper ratings. Missing
+imports, unknown required context, parse failures or the size cap leave the
+composition requirement unavailable. Source hashes and actual scope remain in
+the receipt; this is not a claim to have reviewed an unseen whole project.
+
+The composition judge receives the fixed task and source group without previous
+scores or the potential verdict. Its Galaxy probability must independently reach
+60%. Helpers retain their ordinary conceptual-compression bar; a good helper
+need not independently be profound. Source ratings, task relevance and composition
+quality remain distinct in reporting and receipt reuse.
+
+Version 3 tied Galaxy brain to declaration criticality. Its original ratings and
+receipts remain historical evidence under that policy. Version 4 does not
+reinterpret them or change any deterministic correctness requirement.
 
 Criticality includes a defining or supporting material role in a contract, core
 algorithm, invariant, trust boundary, valid state representation or proof
@@ -183,12 +234,12 @@ code is still critical.
 Criticality of at least 60% is `critical`; at most 40% is `noncritical` only when
 context is not truncated. Intermediate or context-limited judgments are
 `uncertain`. Both critical and uncertain declarations receive the applicable
-stricter requirements above. A missing or malformed classification fails review
+Anticipation and Payoff requirements above. A missing or malformed classification fails review
 rather than granting the default bar. Uncertain criticality can satisfy the style
 gate by meeting every stricter requirement when sufficient context is available.
 
-For big brain, sum normalized probability mass on **level 5 alone** when the
-stricter requirement applies; otherwise use levels 3–5. Delight and memetic
+For declaration big brain, sum normalized mass at levels 3–5. The additional
+composition requirement, when relevant, uses **level 5 alone**. Delight and memetic
 identity, Anticipation and Payoff use levels 3–4. Each required distribution is
 judged separately:
 
@@ -210,7 +261,9 @@ records its effective `target_level`, `minimum_probability` and `target_basis`.
 limits and whether each is required or advisory. `style_summary.by_axis` counts
 only applicable requirements. Rankings remain a secondary view of the three
 primary axes. Reuse validates every requested answer; policy and wording changes
-invalidate old receipts through the rubric hash.
+invalidate old receipts through the rubric hash. Version 4 also retains
+`potential_profundity`, `composition` and the run-level `qualification`. A
+declaration-only `style_summary.meets_all` cannot establish run qualification.
 
 The 60% policy is an explicit provisional review threshold, not a calibrated
 probability of agreement with the user. Full distributions remain available;
@@ -221,7 +274,9 @@ that the command enforces its selected threshold.
 A high rank alone cannot satisfy the quality bar. Even the first-ranked item can
 be below target.
 
-Exit 0 means complete, current coverage and all selected units meeting every bar.
+Exit 0 means complete, current coverage, all selected units meeting their bars,
+and all mandatory composition requirements met. Advisory or unassessed Galaxy
+brain is reported separately and does not prevent an ordinary style pass.
 Exit 3 means style attention is needed: a below-target, uncertain or unavailable
 required rating, or stale source.
 Exit 1 means the run failed or coverage is incomplete. These checks guide review;
@@ -240,8 +295,8 @@ applicable checks and report their coverage separately.
 
 The complete project pass and a live example are recorded in
 [the three-axis report](perch-style-project-2026-09-26.md).
-That report predates version 3. The current policy's focused verification and
-live context-limit check are recorded in
+That report predates version 3. Historical version-3 focused verification and
+live context-limit checks are recorded in
 [the version-3 integration evidence](perch-calibration/style-v3-2026-09-27/README.md).
 
 The user has started an [implementation campaign](STYLE-CAMPAIGN.md) to improve
@@ -249,9 +304,11 @@ the whole inventory. Its owner queue, continuation policy and receipt-aware
 baseline inventory live in `docs/style-campaign/`. The campaign preserves
 independent acceptance and records unresolved taste judgments explicitly.
 Its inventory's `matches_all_required_baseline_targets` field includes the
-conditional requirements. The legacy `matches_all_three_baseline_targets` field
-is retained as a conservative alias: it cannot report a pass when a required
-Anticipation or Payoff rating fails. Older rubric identities are incompatible
+conditional requirements for historical v3 receipts. Under v4 this per-unit
+inventory exposes declaration-baseline matches separately and conservatively
+requires a current task/composition review; individual rows cannot establish
+run-level qualification. The legacy `matches_all_three_baseline_targets` field
+remains a conservative alias. Older rubric identities are incompatible
 with the current baseline comparison.
 
 ## Historical two-axis comparison pilot
