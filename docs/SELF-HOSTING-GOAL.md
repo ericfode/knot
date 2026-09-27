@@ -5,7 +5,7 @@ Approved 2026-09-26. The active goal starts at executable enum checkpoint
 
 | Milestone | Required evidence | State |
 | --- | --- | --- |
-| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: structural checking and independent tree evaluation |
+| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: structural checking/evaluation and seed CPU owning-store qualification |
 | Compiler-shaped programs | Generic datatypes, dependent computation, quantities, closures/captures, local modules; generic AST walker and fueled evaluator | Pending |
 | Language/library closure | Conversion, laws/proofs/rewrites, closed templates, required pure Base execution; Knot checks the whole pinned unmodified Base with privileged capabilities inventoried | Pending |
 | Compiler components | Actual compiler components and exact transitive dependencies execute as Wasm through a narrow byte host | Pending |
@@ -34,19 +34,34 @@ The structural term [checkpoint](../research/compiler-fields/README.md) adds
 constructor arguments, flat patterns, effective quantities and reconstruction
 of matched parents. The ordered match frontier is distinct from lexical IDs.
 The independent evaluator executes live fields and skips erased fields. Its
-persistent values are a semantic model; owned heap storage is still pending.
+persistent values are a semantic model. A separate owning-store component now
+qualifies transfer/rejection and generation lifetime on the seed's CPU backends.
 The emitter retains the enum capability boundary after complete body checking.
 
 The support chat committed the [runtime support plan](RUNTIME-SUPPORT-PLAN.md)
 in `bc99d21`: seven bounded probes for live-field projection, owning storage,
 reusable Data lifetime, fresh handles, captures/joins, frontier ownership and
-reclamation. They are proposed and unrun. The package implementation campaign
-remains paused; no allocator or lifetime strategy is selected. Follow-up
+reclamation. The [owning-store checkpoint](../research/owned-store/README.md) now
+qualifies R2 transitions and part of R4 freshness on native/Bun: 14 filled laws,
+3,532 independent traces per backend, generation-boundary and quantity checks,
+and six semantic mutants. This is not a device store or a proof of general heap
+refinement. The package implementation campaign remains paused; no general Data
+allocator or lifetime strategy is selected. Follow-up
 `f4413c1` aligns the contracts with parent reconstruction, match identity and
 compact live-field slots.
 
-Next: a bounded owning storage model, transfer/drop and stale-handle rejection,
-followed by Wasm layout/lowering and sound structural descent. Qualify live-slot
-mapping and lifetime rules against GPU storage constraints in parallel with that
-runtime work. Owned storage, recursion and real Wasm tree execution remain
-required before milestone 1 is complete.
+Next: checked flat Wasm/GPU record layout, live-field projection, handle-word
+encoding and actual execution of the storage transitions. Arena-ID allocation
+and restore require a lifetime contract; suspended roots, shared Data and partial
+joins still need separate reclamation probes. Integrate storage into field
+lowering and add sound structural descent. Recursion and real Wasm tree execution
+remain required before milestone 1 is complete.
+
+The compiler implementation now shares binding refinement/replacement through
+a closed template ([bounded style checkpoint](../research/compiler-style/STYLE_CAMPAIGN.md)).
+Its unchanged regression corpus passes; the accepted source language remains
+the documented profile and the emitter remains enum-only. The new store uses
+generic Type payloads, affine Arrays, reusable Data locators/lists and disposer
+functions. Its trust inventory loads pinned Base and records IO.print as the
+conformance host capability. Neither change closes the implementation-language,
+whole-Base, Wasm bootstrap or generated-GPU requirements.

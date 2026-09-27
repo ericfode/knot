@@ -16,3 +16,8 @@ its own helper. Use `syntax.choose` with thunks for lazy conditionals and
 `syntax.bind` for computed results. Annotate local constructor values explicitly.
 Keep structural fuel first in recursive dispatchers. These rules were recovered
 from actual seed diagnostics while implementing the first lexer.
+
+Base reserves datatype and constructor names too (including `Event` and `Key`).
+Check new names against the pinned Base before writing a family. A live body
+cannot call a later unfilled definition: order helpers before callers, or pass
+an explicit continuation when a result must be destructured before recursion.

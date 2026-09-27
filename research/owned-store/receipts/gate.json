@@ -1,0 +1,514 @@
+{
+  "date": "2026-09-27T00:55:02.276819+00:00",
+  "status": "pass",
+  "commands": [
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/research/owned-store/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07031833380460739
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.1996629589702934
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/program"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 1.828493291977793
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/program"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "elapsed_seconds": 0.21634370903484523,
+      "stdout_sha256": "eec8718d8f7b754326eb9b080399a435c3df9a84f139f386d3599433c15e5787",
+      "stdout_file": "native.txt.gz",
+      "artifact_sha256": "d341728efaf4fa97a00e52a1cdbb0de94583dbba2d0353c6e9cd186b539d07f6"
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/research/owned-store/bounds.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/bounds"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.4339809170924127
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/bounds"
+      ],
+      "exit": 0,
+      "stdout": "[take:7]/41;1;4294967295;[0];[free:4294967295]\n[take:7]/41;1;4294967295;[];[retired]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.1820559159386903
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.38239987497217953
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/program.js"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "elapsed_seconds": 0.09377475013025105,
+      "stdout_sha256": "eec8718d8f7b754326eb9b080399a435c3df9a84f139f386d3599433c15e5787",
+      "stdout_file": "bun.txt.gz",
+      "artifact_sha256": "a130f583bc5476fade188d2b76d34c0ea6113206683c4de75ee2e7f0c57d9128"
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/research/owned-store/bounds.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/bounds.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.08407024992629886
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/bounds.js"
+      ],
+      "exit": 0,
+      "stdout": "[take:7]/41;1;4294967295;[0];[free:4294967295]\n[take:7]/41;1;4294967295;[];[retired]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.01538704102858901
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/copied-locator.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.06389541598036885
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/store-transfer.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.06431875005364418
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/payload-transfer.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.0642332078423351
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/duplicate-store.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : store\n- observed : store (consumed more than once)\nLocation: use\n3 | \n4>| def use(store: S.Store<O.Payload>) -> S.Store<O.Payload> & S.Store<O.Payload>:\n  |         ^^^^^\n5 |   (store,store)\n",
+      "elapsed_seconds": 0.06407166598364711
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/baseline/duplicate-payload.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : value\n- observed : value (consumed more than once)\nLocation: use\n3 | \n4>| def use(value: O.Payload) -> O.Payload & O.Payload:\n  |         ^^^^^\n5 |   (value,value)\n",
+      "elapsed_seconds": 0.06392804207280278
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/reuse-generation/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07357958285138011
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/reuse-generation/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/reuse-generation/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.09491129103116691
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/reuse-generation/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:vacant:-]/41;1;1;[0];[free:0]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:arena:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:0, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:0, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,0, fail:stale:-, fail:occupied:11]/41;1;1;[];[live:0:9]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:0]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,0, take:9]/41;1;1;[0];[free:0]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.017512541031464934
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/accept-padding/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07306354097090662
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/accept-padding/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/accept-padding/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.09867420792579651
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/accept-padding/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:arena:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[alloc:41,3,0]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.01791325001977384
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/replace-occupied-owner/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07068941602483392
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/replace-occupied-owner/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/replace-occupied-owner/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.09406608412973583
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/replace-occupied-owner/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:7]/41;1;1;[];[live:0:9]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:arena:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.016545499907806516
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/forget-arena/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07181941601447761
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/forget-arena/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/forget-arena/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.0947205419652164
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/forget-arena/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:bounds:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.017943874932825565
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/ceiling-stays-reusable/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07349599990993738
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/ceiling-stays-reusable/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/ceiling-stays-reusable/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.09659500000998378
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/ceiling-stays-reusable/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, alloc:41,0,1]/41;1;0;[];[live:1:9]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:arena:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, alloc:41,0,2]/41;1;1;[];[live:2:11]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.017323209205642343
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/reverse-free-order/entry.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.07306479103863239
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/owned-store/reverse-free-order/entry.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/owned-store/reverse-free-order/program.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.09385895798914135
+    },
+    {
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/owned-store/reverse-free-order/program.js"
+      ],
+      "exit": 0,
+      "stdout": "0|[fail:full:7]/41;0;1;[];[]|[fail:full:7]/41;0;1;[];[]\n1|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]|[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]\n2|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]|[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]\n3|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]|[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]\n4|[fail:arena:-]/41;1;1;[0];[free:0]|[fail:arena:-]/41;1;1;[0];[free:0]\n5|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]|[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]\n6|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]|[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]\n7|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[2, 0];[free:1, live:0:9, free:0]|[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]\n8|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]|[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]\n9|[fail:vacant:-]/41;1;1;[0];[free:0]|[fail:vacant:-]/41;1;1;[0];[free:0]\n10|new:limit|new:limit\n11|new:limit|new:limit\n12|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]|[fail:bounds:7, fail:bounds:-]/41;1;1;[0];[free:0]\n13|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]|[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]\n14|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]|[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]\n",
+      "stderr": "",
+      "elapsed_seconds": 0.017371500143781304
+    }
+  ],
+  "mutants": [
+    {
+      "name": "reuse-generation",
+      "store_sha256": "c3e326546070abaf8964eac427b716cc7c34a04c303d531296fc69fcd1110bfb",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 2,
+          "case": "take-twice",
+          "actual": "[alloc:41,0,0, take:7, fail:vacant:-]/41;1;1;[0];[free:0]",
+          "model": "[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]",
+          "literal": "[alloc:41,0,0, take:7, fail:stale:-]/41;1;1;[0];[free:1]"
+        },
+        {
+          "index": 6,
+          "case": "unrelated-owner",
+          "actual": "[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:0, live:0:9]",
+          "model": "[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]",
+          "literal": "[alloc:41,0,0, alloc:41,1,0, drop:7]/41;2;1;[0];[free:1, live:0:9]"
+        },
+        {
+          "index": 7,
+          "case": "free-order",
+          "actual": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:0, live:0:9, free:0]",
+          "model": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]",
+          "literal": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]"
+        },
+        {
+          "index": 8,
+          "case": "retirement-cycle",
+          "actual": "[alloc:41,0,0, take:7, alloc:41,0,0, fail:stale:-, fail:occupied:11]/41;1;1;[];[live:0:9]",
+          "model": "[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]",
+          "literal": "[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]"
+        },
+        {
+          "index": 13,
+          "case": "u32-arena",
+          "actual": "[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:0]",
+          "model": "[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]",
+          "literal": "[alloc:4294967295,0,0, take:7]/4294967295;1;4294967295;[0];[free:1]"
+        },
+        {
+          "index": 14,
+          "case": "stale-after-reuse",
+          "actual": "[alloc:41,0,0, take:7, alloc:41,0,0, take:9]/41;1;1;[0];[free:0]",
+          "model": "[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]",
+          "literal": "[alloc:41,0,0, take:7, alloc:41,0,1, fail:stale:-]/41;1;1;[];[live:1:9]"
+        }
+      ]
+    },
+    {
+      "name": "accept-padding",
+      "store_sha256": "3038b9efeb7a987d51af41bf54a534ebae0d933825c9ed3001d69d0cf2b5c47c",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 5,
+          "case": "padding-is-not-a-slot",
+          "actual": "[alloc:41,3,0]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]",
+          "model": "[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]",
+          "literal": "[fail:bounds:9]/41;3;1;[0, 1, 2];[free:0, free:0, free:0]"
+        }
+      ]
+    },
+    {
+      "name": "replace-occupied-owner",
+      "store_sha256": "b6375004645ebc64d3047036b91f27eb224bc946e76f97ffa3db404f918d026c",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 1,
+          "case": "occupied",
+          "actual": "[alloc:41,0,0, fail:occupied:7]/41;1;1;[];[live:0:9]",
+          "model": "[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]",
+          "literal": "[alloc:41,0,0, fail:occupied:9]/41;1;1;[];[live:0:7]"
+        }
+      ]
+    },
+    {
+      "name": "forget-arena",
+      "store_sha256": "490ed7c2bbb9e49326a2c38b834911a981e63c231474ea8a7f7dbe9d24220b30",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 4,
+          "case": "wrong-arena-precedes-bounds",
+          "actual": "[fail:bounds:-]/41;1;1;[0];[free:0]",
+          "model": "[fail:arena:-]/41;1;1;[0];[free:0]",
+          "literal": "[fail:arena:-]/41;1;1;[0];[free:0]"
+        }
+      ]
+    },
+    {
+      "name": "ceiling-stays-reusable",
+      "store_sha256": "61185c78f9c4088c663f08d4e775dd6e8d44ab6945bf7dbb4a9d6930b94cfcee",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 3,
+          "case": "retired-full",
+          "actual": "[alloc:41,0,0, drop:7, alloc:41,0,1]/41;1;0;[];[live:1:9]",
+          "model": "[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]",
+          "literal": "[alloc:41,0,0, drop:7, fail:full:9]/41;1;0;[];[retired]"
+        },
+        {
+          "index": 8,
+          "case": "retirement-cycle",
+          "actual": "[alloc:41,0,0, take:7, alloc:41,0,1, take:9, alloc:41,0,2]/41;1;1;[];[live:2:11]",
+          "model": "[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]",
+          "literal": "[alloc:41,0,0, take:7, alloc:41,0,1, take:9, fail:retired:11]/41;1;1;[];[retired]"
+        }
+      ]
+    },
+    {
+      "name": "reverse-free-order",
+      "store_sha256": "d3020118594186817d92746c419d7c1abb5f09b21a011f382229bdb22f174ec9",
+      "status": "semantic-kill",
+      "failures": [
+        {
+          "index": 7,
+          "case": "free-order",
+          "actual": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[2, 0];[free:1, live:0:9, free:0]",
+          "model": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]",
+          "literal": "[alloc:41,0,0, alloc:41,1,0, take:7]/41;3;1;[0, 2];[free:1, live:0:9, free:0]"
+        }
+      ]
+    }
+  ],
+  "input_sha256": "c6d2dd1a150d9835a5572e07a54635dfef5b8209c9d304e0e0218695e49af688",
+  "case_count": 3532,
+  "literal_witnesses": 15,
+  "sources": {
+    "research/owned-store/conformance.bend": "7519593529c2690b0ac65eb8a26c11ef3655ad7a0c87877b2e17e08e59878288",
+    "research/owned-store/PROOF.bend": "ac0effe0eef99f90316b737b74c9884b003d2b46d810e8fc68a7ecb33bad2b2a",
+    "research/owned-store/observe.bend": "d3fc11af358d653d281d34388fe625bb3a6af0362fc6950dc6625d1251aa4910",
+    "research/owned-store/LAWS.bend": "9859e42fce02b73eba69e035ecc957bf69f31167b846f891d7a60c7ffb4496f8",
+    "research/owned-store/protocol.bend": "fac9b00af588e61dd34ca257a860b41ae51b7d8e904c669de40a43127dc4d989",
+    "research/owned-store/bounds.bend": "0f665d9b9d822ba6e9d45ff60eb4518e5b04c965ebc934ab00e36f5fa8b0238e",
+    "research/owned-store/model.bend": "84714c47995b76d9902e09e600b77ebb66d157bfcb864dee813b546fe8a980f1",
+    "research/owned-store/store.bend": "80f6addb26deb38d46a4abacc91e9df59f734437e4c34598919b0c4f4ca15af5"
+  },
+  "harness_sha256": "cb78b83fdeae6e91e305ea9c5274a36bb429bc85261833b557c8cec42fe7d5d3",
+  "entry_sha256": "d54dc0c9e3b0f9e8b0f30a19dae11dc8fdbb19794cc639aae4cf83afa581b386"
+}
