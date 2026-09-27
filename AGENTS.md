@@ -143,13 +143,17 @@ ratings and an explicit disposition. Low scores alone do not justify churn.
 Historical failures remain evidence. The campaign heartbeat continues the
 queue; it does not restart the completed package-publication campaign.
 
-The user's later 2026-09-26 instruction selects **GPT-6 Astra at max reasoning**
-for the campaign, starting with one scoped feasibility pilot. After new-chat
-creation was blocked, the user explicitly authorized doing the pilot here in
-the current checkout. This supersedes the earlier high-reasoning setting and
-worktree requirement. Follow `docs/style-campaign/scoped-pilot.md` and the current
-dispatch state. A partial style improvement does not satisfy this pilot: every changed
-or introduced declaration must meet the current role-scaled targets and required
-composition checks, with independent gates intact. Earlier campaign receipts
-retain their original rubric meaning. Keep the remaining component queue while
-the pilot is unresolved.
+Use **GPT-6 Astra at max reasoning** for the campaign. The user's 2026-09-27
+instruction replaces the whole-repository objective and pilot-first prerequisite
+with independent trials on central laws, compiler integration and one standard
+library. Follow `docs/style-campaign/bounded-sections.md` and the current dispatch
+state. Preserve the earlier adaptive-task candidates and their unaccepted
+dispositions; they no longer block these trials. Keep the broader queue parked.
+
+Review every changed declaration and its bounded family against the current
+role-scaled targets, preserving independent gates. Keep a concrete reading
+improvement only with deterministic acceptance; record below-target or uncertain
+style results explicitly. Such a revision is not an automatic style pass.
+Conclude each trial separately without repeated score-seeking rewrites or an
+all-repository completion requirement. Earlier receipts retain their original
+rubric meaning, and this scope change does not lower the rubric's targets.

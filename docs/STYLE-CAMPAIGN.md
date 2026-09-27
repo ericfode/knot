@@ -1,15 +1,17 @@
 # Knot style campaign
 
-Started 2026-09-26 at the user's request: bring the whole project up to the
-three style targets. This is an implementation campaign, coordinated by
-**Configure Perch for Knot**, with continued work through a dedicated heartbeat.
+Started 2026-09-26 at the user's request. On 2026-09-27 the user replaced the
+whole-project style objective with independent trials on small central sections:
+laws, compiler integration and one standard library. The current
+[bounded plan](style-campaign/bounded-sections.md) defines their scope and owners.
 The [state file](style-campaign/state.json) records assignments and evidence.
 The completed package-publication campaign remains a separate workflow.
 
 ## Target and baseline
 
-Every declaration should earn conceptual compression, high-dopamine readability,
-and a highly memetic identity. The form should have ideas, vocabulary and rhythm
+Selected families should earn conceptual compression, high-dopamine readability,
+and a highly memetic identity, with role-appropriate supporting helpers.
+The form should have ideas, vocabulary and rhythm
 that reward recognition and make the reader want more of this particular style.
 Use the user's [three-axis objective](../AGENTS.md) and the
 [rubrics](../perch-style.json). Novelty alone, ornamental jargon, self-praise,
@@ -38,16 +40,22 @@ judgment; it does not establish equivalence or measured psychological effects.
 
 ## Work order and ownership
 
-The user's later 2026-09-26 instruction temporarily takes priority over the wave
-queue: use GPT-6 Astra at **max** reasoning for a small feasibility pilot. After
-new-chat creation was blocked, the user explicitly authorized the current
-checkout. The [scoped pilot](style-campaign/scoped-pilot.md)
-must demonstrate all three targets on its complete changed scope before wider
-dispatch resumes. Keep queued components and prior results; do not call a
-memetic deficit pilot success. The state file records the current execution
-mode, historical evidence and the current unaccepted disposition. The clean-main
-handoff preserves the candidate as a snapshot and restores the accepted runner;
-the completed historical review remains uncertain on the memetic axis.
+The user's 2026-09-27 instruction supersedes the pilot-first prerequisite.
+Use GPT-6 Astra at **max** reasoning for three independent bounded trials:
+
+| Trial | Scope | Owner |
+| --- | --- | --- |
+| `central-laws-1` | Five checker boundary laws: affine sequencing, erased occurrences and fresh constructor refinement, with matching proofs. | Review plans for Perch, isolated worktree; Compiler Planning retains compiler ownership. |
+| `compiler-pipeline-1` | `src/driver.bend` text-to-checked-book pipeline and directly necessary helpers. | Compiler Planning. |
+| `int-map-paths-2` | IntMap's mirrored lookup/insert/remove path family and necessary projections. | Existing IntMap chat. |
+
+See the [bounded plan](style-campaign/bounded-sections.md) for exact declarations,
+fixed observations and independent closeout. The adaptive-task
+[scoped pilot](style-campaign/scoped-pilot.md) and its candidates remain historical
+evidence with their actual unaccepted dispositions. They do not block this work.
+
+The former wave queue below is parked for later user selection. Completing the
+three current trials does not authorize automatic expansion to the whole repo.
 
 | Wave | Scope | Owner and first increment |
 | --- | --- | --- |
@@ -58,7 +66,7 @@ the completed historical review remains uncertain on the memetic axis.
 | 3 | Remaining compiler and runtime research | Compiler owner and runtime coordinator respectively; preserve their active semantic milestones and demonstrated backend boundaries. |
 | 4 | Laws, proofs, models, tests, examples and retained experiments | Owning component reviews the remaining inventory. Canonical proof terms and intentional failure specimens stay visible; changing historical evidence to win a score is forbidden. |
 
-All four waves are in scope. A tiny helper's low score is not permission to add
+These former waves are not the current completion criterion. A tiny helper's low score is not permission to add
 ceremony. An intentional negative fixture remains a negative fixture. Historical
 repair candidates and receipts are immutable evidence; record a disagreement or
 an applicable descendant improvement instead of rewriting the record. Such a
@@ -93,6 +101,10 @@ or restart the paused publication automation. Retain existing release evidence.
    identities, full distributions and context limits. Rate each declaration;
    family-level praise cannot excuse an unrated member. Never retry a provider
    failure repeatedly or rerun unchanged candidates to hunt a nicer score.
+   Judge the complete selected family with fixed task evidence. Identify any
+   expanded whole-file context separately; outside-scope attention does not
+   turn a bounded trial into a repository migration. Helpers use the current
+   supporting-role targets. Missing coverage or unavailable evidence is explicit.
 5. Review the actual diff. Keep an improvement only with concrete reading
    benefits and deterministic acceptance. Record remaining low/uncertain axes
    without calling them passes. Reject additional indirection, lost symmetry,
@@ -125,20 +137,22 @@ Do not lower bars, replace the baseline or promote the judge merely to shrink
 the backlog. Feed demonstrated noise into `docs/perch-review-log.md` under the
 existing maintenance procedure.
 
-The heartbeat checks every 15 minutes. It reads compact owner progress and
-retained evidence, advances ready work, and starts at most two package/research
-style batches concurrently; the compiler owner can integrate style at its own
-safe checkpoint. Each wake dispatches at most one new bounded batch. It does
-not duplicate active work, repeatedly request unchanged scores, or flood chats
-with unchanged status. Notify on an accepted improvement with a code example,
+The existing heartbeat may reconcile owner progress and retained evidence for
+these three trials. The current scope overrides its historical broader queue:
+do not launch another family, restart the old pilot, or repeat unchanged scores.
+At most two package/research batches and the compiler owner's bounded increment
+run concurrently. Notify on an accepted improvement with a code example,
 a material rejected approach or calibration finding, completion, or a blocker
-requiring user judgment.
+requiring user judgment. This document does not change the saved schedule.
 
-At a wave boundary, consolidate matching receipts and inspect new/changed units.
-Run a paid full inventory only when it provides new coverage. Completion requires
-an up-to-date inventory, evidence for every applicable declaration, all three
-targets met, and all deterministic gates green. Review dispositions and
-historical/unparseable specimens are reported separately; no silently excluded
-files, averaged-away failures or subjective waivers count as automatic success.
-If progress eventually requires human taste examples, retain the unresolved
-queue and ask with actual code alternatives. Until then, continue useful work.
+Close each trial with its exact diff, deterministic gate results, current
+per-declaration and family style evidence, and a keep/reject/no-change disposition.
+A retained improvement with unmet style targets is explicitly a partial style
+result. Missing live review remains unavailable evidence. Full automatic style
+success still requires every selected target and required composition check to
+pass; no averaged-away failures or subjective waivers count as a pass.
+
+This wave is complete when each of its three trials has a reviewable disposition
+and any retained source is verified and committed. A rejected candidate need not
+hold the other two open. Do not run a paid repository inventory or resume the
+parked queue to close this wave.
