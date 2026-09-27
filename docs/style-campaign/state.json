@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "started_local_date": "2026-09-26",
-  "status": "running",
+  "status": "bounded_trials_running",
   "coordinator_thread_id": "01a0deae-38e5-7120-ad10-77ee5b1e7f0a",
-  "objective": "Bring every applicable Bend declaration to all three style targets while preserving deterministic acceptance and explicit historical exceptions.",
+  "objective": "Run three independent bounded reading experiments on central checker laws, compiler integration and IntMap while preserving fixed contracts and deterministic gates; record honest style outcomes without a whole-repository prerequisite.",
   "plan": "docs/STYLE-CAMPAIGN.md",
   "baseline": "docs/perch-calibration/style-project-2026-09-26.json.gz",
   "inventory": "docs/style-campaign/inventory.json.gz",
@@ -579,10 +579,20 @@
     "basis": "User requested max effort for the campaign and one scoped feasibility pilot; latest instruction authorizes doing it here after blocked chat creation. Supersedes earlier high setting."
   },
   "dispatch_policy": {
-    "mode": "scoped_feasibility_pilot_first",
-    "resume_broader_queue_after": "Pilot meets all three unchanged targets and independent gates, followed by coordinator review; unavailable evidence keeps the queue on hold.",
+    "mode": "bounded_sections",
     "preserve_queue": true,
-    "new_package_batches_on_hold": true
+    "broader_queue_status": "parked_pending_user_selection",
+    "new_package_batches_on_hold": true,
+    "allowed_trial_ids": [
+      "central-laws-1",
+      "compiler-pipeline-1",
+      "int-map-paths-2"
+    ],
+    "prior_pilot_is_prerequisite": false,
+    "correctness_gates_unchanged": true,
+    "style_failures_remain_visible": true,
+    "closeout": "Independent keep/reject/no-change disposition per trial; verified explicit-path commits for retained source. An unmet style target is not a pass and does not block another trial.",
+    "source": "User instruction on 2026-09-27; docs/style-campaign/bounded-sections.md; main policy commit 4a1c245."
   },
   "scoped_pilot": {
     "id": "adaptive-run-feasibility-1",
@@ -805,7 +815,9 @@
       "full_checkpoint_staging_exit": 128,
       "error": "Unable to create '/Users/ericfode/src/knot/.git/index.lock': Operation not permitted",
       "retry_condition": "Git metadata writes, provider DNS and app approvals must be available in this session; do not repeat unchanged failures."
-    }
+    },
+    "is_dispatch_prerequisite": false,
+    "dispatch_superseded_by": "docs/style-campaign/bounded-sections.md"
   },
   "last_user_followup": {
     "at": "2026-09-27T01:58:32.450487+00:00",
@@ -831,5 +843,73 @@
     "new_model_reviews": 0,
     "broader_queue_on_hold": true,
     "commit": "668e44719f759e877491fc65ea2aa78e03c8e5e2"
+  },
+  "bounded_sections": {
+    "status": "running",
+    "recorded_at": "2026-09-27T17:09:04.627247+00:00",
+    "plan": "docs/style-campaign/bounded-sections.md",
+    "policy_commit": "4a1c245",
+    "author_model": {
+      "id": "gpt-6-astra",
+      "reasoning": "max"
+    },
+    "candidate_budget_per_trial": 1,
+    "compiler_diagnostic_retry_budget_per_trial": 1,
+    "trials": [
+      {
+        "id": "central-laws-1",
+        "status": "in_progress",
+        "owner_thread_id": "01a0e16c-05d0-7543-a087-e84c21ebb01d",
+        "owner": "Review plans for Perch",
+        "checkout": "/Users/ericfode/.codex/worktrees/7b60/knot",
+        "scope": [
+          "src/check-LAWS.bend",
+          "src/check-PROOF.bend"
+        ],
+        "declarations": [
+          "empty_sequence_preserves_uses",
+          "repeated_affine_level",
+          "live_erased_occurrence",
+          "erased_occurrence_preserves_identity",
+          "refined_constructor_is_fresh"
+        ],
+        "evidence_directory": "src/style-campaign/central-laws-1",
+        "integration": "Narrow source/evidence increment only; preserve divergent experiment history in its worktree."
+      },
+      {
+        "id": "compiler-pipeline-1",
+        "status": "in_progress",
+        "owner_thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
+        "owner": "Compiler Planning",
+        "checkout": "/Users/ericfode/src/knot",
+        "scope": [
+          "src/driver.bend"
+        ],
+        "declarations": [
+          "checked",
+          "parsed",
+          "source",
+          "directly necessary helpers"
+        ],
+        "evidence_directory": "src/style-campaign/compiler-pipeline-1"
+      },
+      {
+        "id": "int-map-paths-2",
+        "status": "in_progress",
+        "owner_thread_id": "01a0deee-b662-7730-98de-0679e0f47959",
+        "owner": "Build and publish Bend integer maps",
+        "checkout": "/Users/ericfode/src/knot",
+        "scope": [
+          "packages/int_map/main.bend"
+        ],
+        "declarations": [
+          "get_path",
+          "set_path",
+          "remove_path",
+          "necessary supporting projections and branch constructor"
+        ],
+        "evidence_directory": "packages/int_map/campaigns/int-map-paths-2"
+      }
+    ]
   }
 }
