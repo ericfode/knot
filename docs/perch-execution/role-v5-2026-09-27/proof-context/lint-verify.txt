@@ -1,0 +1,582 @@
+
+> lint:verify
+> node --test tests/perch-workflow.test.mjs tests/perch-incremental.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs tests/perch-style.test.mjs tests/perch-potential.test.mjs tests/perch-style-role.test.mjs tests/perch-style-campaign.test.mjs && node scripts/check-law-rule-wiring.mjs
+
+TAP version 13
+# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-242a2b8f26068922).
+# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-242a2b8f26068922).
+# Subtest: pinned installation is repeatable and refuses unknown bundle contents
+ok 1 - pinned installation is repeatable and refuses unknown bundle contents
+  ---
+  duration_ms: 260.403667
+  type: 'test'
+  ...
+# Subtest: file checks run real method rules per working-copy declaration with relevant helper and law context
+ok 2 - file checks run real method rules per working-copy declaration with relevant helper and law context
+  ---
+  duration_ms: 667.015375
+  type: 'test'
+  ...
+# Subtest: working-copy helper traversal is bounded and reports context limits
+ok 3 - working-copy helper traversal is bounded and reports context limits
+  ---
+  duration_ms: 10.677333
+  type: 'test'
+  ...
+# Subtest: datatype context resolves supplied local types without turning them into callees
+ok 4 - datatype context resolves supplied local types without turning them into callees
+  ---
+  duration_ms: 11.547625
+  type: 'test'
+  ...
+# Subtest: explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles
+ok 5 - explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles
+  ---
+  duration_ms: 55.728291
+  type: 'test'
+  ...
+# Subtest: missing imports and missing datatype declarations remain explicit; malformed imported types reject
+ok 6 - missing imports and missing datatype declarations remain explicit; malformed imported types reject
+  ---
+  duration_ms: 36.113083
+  type: 'test'
+  ...
+# Subtest: parsed generic datatype context preserves AST spans and existing function graph references
+ok 7 - parsed generic datatype context preserves AST spans and existing function graph references
+  ---
+  duration_ms: 19.298084
+  type: 'test'
+  ...
+# Subtest: datatype dependency file, helper and byte caps stay fail closed
+ok 8 - datatype dependency file, helper and byte caps stay fail closed
+  ---
+  duration_ms: 70.922584
+  type: 'test'
+  ...
+# Subtest: direct datatype style context retains one-file cap and composition checks explicit type dependencies
+ok 9 - direct datatype style context retains one-file cap and composition checks explicit type dependencies
+  ---
+  duration_ms: 69.024875
+  type: 'test'
+  ...
+# Subtest: real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request
+ok 10 - real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request
+  ---
+  duration_ms: 766.163834
+  type: 'test'
+  ...
+# Subtest: scan parser coverage follows configured selection while retaining required imports and caller context
+ok 11 - scan parser coverage follows configured selection while retaining required imports and caller context
+  ---
+  duration_ms: 773.768209
+  type: 'test'
+  ...
+# Subtest: parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures
+ok 12 - parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures
+  ---
+  duration_ms: 470.227125
+  type: 'test'
+  ...
+# Subtest: built-in proof requests include the selected working-copy law once and change identity with it
+ok 13 - built-in proof requests include the selected working-copy law once and change identity with it
+  ---
+  duration_ms: 236.855166
+  type: 'test'
+  ...
+# Subtest: paired-law omission and missing imports remain explicit without changing selection budgets
+ok 14 - paired-law omission and missing imports remain explicit without changing selection budgets
+  ---
+  duration_ms: 67.441542
+  type: 'test'
+  ...
+# Subtest: paired laws stay inside every built-in token budget, chunk and retry preparation
+ok 15 - paired laws stay inside every built-in token budget, chunk and retry preparation
+  ---
+  duration_ms: 38.074125
+  type: 'test'
+  ...
+# Subtest: actual pinned parser, provenance, and Base source are available without the toolchain
+ok 16 - actual pinned parser, provenance, and Base source are available without the toolchain
+  ---
+  duration_ms: 3.646125
+  type: 'test'
+  ...
+# Subtest: multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls
+ok 17 - multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls
+  ---
+  duration_ms: 32.218458
+  type: 'test'
+  ...
+# Subtest: static call/value distinction includes zero-argument calls and excludes bound dynamic calls
+ok 18 - static call/value distinction includes zero-argument calls and excludes bound dynamic calls
+  ---
+  duration_ms: 24.737833
+  type: 'test'
+  ...
+# Subtest: law and local fill have one target, separate law range, and no intervening declaration leakage
+ok 19 - law and local fill have one target, separate law range, and no intervening declaration leakage
+  ---
+  duration_ms: 35.604041
+  type: 'test'
+  ...
+# Subtest: UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia
+ok 20 - UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia
+  ---
+  duration_ms: 14.041166
+  type: 'test'
+  ...
+# Subtest: imported laws, constructor patterns, template calls parse with honest dependency diagnostics
+ok 21 - imported laws, constructor patterns, template calls parse with honest dependency diagnostics
+  ---
+  duration_ms: 13.690875
+  type: 'test'
+  ...
+# Subtest: dependency-context failure differs from malformed local syntax
+ok 22 - dependency-context failure differs from malformed local syntax
+  ---
+  duration_ms: 21.843292
+  type: 'test'
+  ...
+# Subtest: malformed Bend is rejected with no successful partial declaration list
+ok 23 - malformed Bend is rejected with no successful partial declaration list
+  ---
+  duration_ms: 41.018292
+  type: 'test'
+  ...
+# Subtest: analysis does not load imports, foreign code, network, or caches
+ok 24 - analysis does not load imports, foreign code, network, or caches
+  ---
+  duration_ms: 8.353125
+  type: 'test'
+  ...
+# Subtest: every current nonignored package and research Bend source parses with bounded, exact source ranges
+ok 25 - every current nonignored package and research Bend source parses with bounded, exact source ranges
+  ---
+  duration_ms: 968.856208
+  type: 'test'
+  ...
+# Subtest: incremental scans reuse exact answers and parser blobs across commits, including dependent contexts
+ok 26 - incremental scans reuse exact answers and parser blobs across commits, including dependent contexts
+  ---
+  duration_ms: 1209.833125
+  type: 'test'
+  ...
+# Subtest: renamed method rules cannot carry an answer under the old question name
+ok 27 - renamed method rules cannot carry an answer under the old question name
+  ---
+  duration_ms: 408.781833
+  type: 'test'
+  ...
+# Subtest: renamed and deleted files, and failed dependent rereads, do not retain stale successful units
+ok 28 - renamed and deleted files, and failed dependent rereads, do not retain stale successful units
+  ---
+  duration_ms: 912.945208
+  type: 'test'
+  ...
+# Subtest: search reuse includes actual helper context, rule kind, threshold and an empty selection
+ok 29 - search reuse includes actual helper context, rule kind, threshold and an empty selection
+  ---
+  duration_ms: 839.270708
+  type: 'test'
+  ...
+# Subtest: parser cache corruption is a miss; transient failures never become persistent cache entries
+ok 30 - parser cache corruption is a miss; transient failures never become persistent cache entries
+  ---
+  duration_ms: 341.751
+  type: 'test'
+  ...
+# Subtest: task request is source-blind and exact production request precedes all source judgments
+ok 31 - task request is source-blind and exact production request precedes all source judgments
+  ---
+  duration_ms: 84.073917
+  type: 'test'
+  ...
+# Subtest: high potential requires one complete composition Galaxy score, never individual helper novelty
+ok 32 - high potential requires one complete composition Galaxy score, never individual helper novelty
+  ---
+  duration_ms: 29.710666
+  type: 'test'
+  ...
+# Subtest: low potential retains baseline standards and makes no composition provider call
+ok 33 - low potential retains baseline standards and makes no composition provider call
+  ---
+  duration_ms: 46.744708
+  type: 'test'
+  ...
+# Subtest: missing and uncertain potential stay explicitly advisory without blocking baseline success
+ok 34 - missing and uncertain potential stay explicitly advisory without blocking baseline success
+  ---
+  duration_ms: 31.969958
+  type: 'test'
+  ...
+# Subtest: composition failure cannot borrow passing declaration scores; raw family distribution remains visible
+ok 35 - composition failure cannot borrow passing declaration scores; raw family distribution remains visible
+  ---
+  duration_ms: 17.664708
+  type: 'test'
+  ...
+# Subtest: full selected files and known collaborator files determine composition scope and identity
+ok 36 - full selected files and known collaborator files determine composition scope and identity
+  ---
+  duration_ms: 68.11575
+  type: 'test'
+  ...
+# Subtest: unknown references or bounded full-source overflow withhold composition qualification
+ok 37 - unknown references or bounded full-source overflow withhold composition qualification
+  ---
+  duration_ms: 34.685209
+  type: 'test'
+  ...
+# Subtest: task precedence, task byte limit and default generic cohort never establish low potential
+ok 38 - task precedence, task byte limit and default generic cohort never establish low potential
+  ---
+  duration_ms: 29.580042
+  type: 'test'
+  ...
+# Subtest: warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity
+ok 39 - warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity
+  ---
+  duration_ms: 54.067834
+  type: 'test'
+  ...
+# Subtest: explicit v4 receipt reuse preserves both extra judgments and validates changed task input
+ok 40 - explicit v4 receipt reuse preserves both extra judgments and validates changed task input
+  ---
+  duration_ms: 36.293
+  type: 'test'
+  ...
+# Subtest: task or collaborator edits during review prevent qualification and cache publication
+ok 41 - task or collaborator edits during review prevent qualification and cache publication
+  ---
+  duration_ms: 14.769917
+  type: 'test'
+  ...
+# Subtest: provider failure and model mismatch stop further phases and retain request identity
+ok 42 - provider failure and model mismatch stop further phases and retain request identity
+  ---
+  duration_ms: 21.165209
+  type: 'test'
+  ...
+# Subtest: project inventory never substitutes an implicit whole-project composition claim
+ok 43 - project inventory never substitutes an implicit whole-project composition claim
+  ---
+  duration_ms: 47.341584
+  type: 'test'
+  ...
+# Subtest: configuration and score validation preserve criticality independence and exact uncertainty
+ok 44 - configuration and score validation preserve criticality independence and exact uncertainty
+  ---
+  duration_ms: 0.338875
+  type: 'test'
+  ...
+# Subtest: all source rules select actual Bend declarations; packet rules keep file scope
+ok 45 - all source rules select actual Bend declarations; packet rules keep file scope
+  ---
+  duration_ms: 321.003208
+  type: 'test'
+  ...
+# Subtest: campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass
+ok 46 - campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass
+  ---
+  duration_ms: 0.858625
+  type: 'test'
+  ...
+# Subtest: only matching source, context, parser and rubric can carry a baseline target result
+ok 47 - only matching source, context, parser and rubric can carry a baseline target result
+  ---
+  duration_ms: 0.806917
+  type: 'test'
+  ...
+# Subtest: failed or empty baselines cannot make a campaign look covered
+ok 48 - failed or empty baselines cannot make a campaign look covered
+  ---
+  duration_ms: 0.218542
+  type: 'test'
+  ...
+# Subtest: a matching critical baseline still needs Galaxy brain under the historical v3 policy
+ok 49 - a matching critical baseline still needs Galaxy brain under the historical v3 policy
+  ---
+  duration_ms: 1.128792
+  type: 'test'
+  ...
+# Subtest: v4 matching declaration ratings do not establish task or composition qualification
+ok 50 - v4 matching declaration ratings do not establish task or composition qualification
+  ---
+  duration_ms: 0.262334
+  type: 'test'
+  ...
+# Subtest: v5 inventory retains role-adjusted declaration targets without inventing a composition pass
+ok 51 - v5 inventory retains role-adjusted declaration targets without inventing a composition pass
+  ---
+  duration_ms: 0.320291
+  type: 'test'
+  ...
+# Subtest: supporting roles scale only three axes, independently of criticality
+ok 52 - supporting roles scale only three axes, independently of criticality
+  ---
+  duration_ms: 1.399375
+  type: 'test'
+  ...
+# Subtest: leading and uncertain roles keep level3; truncation cannot establish a supporting exemption
+ok 53 - leading and uncertain roles keep level3; truncation cannot establish a supporting exemption
+  ---
+  duration_ms: 31.610417
+  type: 'test'
+  ...
+# Subtest: a helper named helper can be leading; public names do not override the classifier
+ok 54 - a helper named helper can be leading; public names do not override the classifier
+  ---
+  duration_ms: 0.143125
+  type: 'test'
+  ...
+# Subtest: missing task keeps potential advisory but always requires whole-composition three-axis evidence
+ok 55 - missing task keeps potential advisory but always requires whole-composition three-axis evidence
+  ---
+  duration_ms: 49.106083
+  type: 'test'
+  ...
+# Subtest: all-support declaration success cannot bypass a weak whole composition
+ok 56 - all-support declaration success cannot bypass a weak whole composition
+  ---
+  duration_ms: 27.949833
+  type: 'test'
+  ...
+# Subtest: low potential still grades composition; high potential adds only the Galaxy question
+ok 57 - low potential still grades composition; high potential adds only the Galaxy question
+  ---
+  duration_ms: 63.651375
+  type: 'test'
+  ...
+# Subtest: whole-project inventory remains explicit attention without a bounded composition group
+ok 58 - whole-project inventory remains explicit attention without a bounded composition group
+  ---
+  duration_ms: 59.512125
+  type: 'test'
+  ...
+# Subtest: role and composition judgments reuse exact requests; contribution policy changes invalidate cache
+ok 59 - role and composition judgments reuse exact requests; contribution policy changes invalidate cache
+  ---
+  duration_ms: 54.184292
+  type: 'test'
+  ...
+# Subtest: rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls
+ok 60 - rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls
+  ---
+  duration_ms: 213.201417
+  type: 'test'
+  ...
+# Subtest: one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars
+ok 61 - one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars
+  ---
+  duration_ms: 49.861333
+  type: 'test'
+  ...
+# Subtest: diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output
+ok 62 - diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output
+  ---
+  duration_ms: 58.916583
+  type: 'test'
+  ...
+# Subtest: truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score
+ok 63 - truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score
+  ---
+  duration_ms: 18.873167
+  type: 'test'
+  ...
+# Subtest: critical and uncertain declarations need both anticipation and payoff with their own target probability
+ok 64 - critical and uncertain declarations need both anticipation and payoff with their own target probability
+  ---
+  duration_ms: 24.540792
+  type: 'test'
+  ...
+# Subtest: invalid diagnostic configurations are rejected before any provider request
+ok 65 - invalid diagnostic configurations are rejected before any provider request
+  ---
+  duration_ms: 2.801291
+  type: 'test'
+  ...
+# Subtest: partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking
+ok 66 - partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking
+  ---
+  duration_ms: 32.858458
+  type: 'test'
+  ...
+# Subtest: a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar
+ok 67 - a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar
+  ---
+  duration_ms: 23.238959
+  type: 'test'
+  ...
+# Subtest: all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar
+ok 68 - all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar
+  ---
+  duration_ms: 112.747334
+  type: 'test'
+  ...
+# Subtest: uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass
+ok 69 - uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass
+  ---
+  duration_ms: 0.641041
+  type: 'test'
+  ...
+# Subtest: whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs
+ok 70 - whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs
+  ---
+  duration_ms: 137.936667
+  type: 'test'
+  ...
+# Subtest: command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation
+ok 71 - command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation
+  ---
+  duration_ms: 89.474584
+  type: 'test'
+  ...
+# Subtest: snapshot loads remain inside the workspace and do not discover unrelated sources
+ok 72 - snapshot loads remain inside the workspace and do not discover unrelated sources
+  ---
+  duration_ms: 11.042125
+  type: 'test'
+  ...
+# Subtest: explicit reuse avoids paid repeats and invalidates when helper context changes
+ok 73 - explicit reuse avoids paid repeats and invalidates when helper context changes
+  ---
+  duration_ms: 103.272209
+  type: 'test'
+  ...
+# Subtest: concurrent responses preserve target attribution and changes during review are disclosed
+ok 74 - concurrent responses preserve target attribution and changes during review are disclosed
+  ---
+  duration_ms: 47.029958
+  type: 'test'
+  ...
+# Subtest: missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings
+ok 75 - missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings
+  ---
+  duration_ms: 177.704916
+  type: 'test'
+  ...
+# Subtest: default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results
+ok 76 - default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results
+  ---
+  duration_ms: 29.800834
+  type: 'test'
+  ...
+# Subtest: concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse
+ok 77 - concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse
+  ---
+  duration_ms: 23.322916
+  type: 'test'
+  ...
+# Subtest: jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests
+ok 78 - jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests
+  ---
+  duration_ms: 69.232167
+  type: 'test'
+  ...
+# Subtest: a changed provider model stops queued work and cannot be mixed with explicitly reused answers
+ok 79 - a changed provider model stops queued work and cannot be mixed with explicitly reused answers
+  ---
+  duration_ms: 39.294333
+  type: 'test'
+  ...
+# Subtest: ties share a rank, near ties remain visible, and existing output is rejected before requests
+ok 80 - ties share a rank, near ties remain visible, and existing output is rejected before requests
+  ---
+  duration_ms: 2.190625
+  type: 'test'
+  ...
+# Subtest: incremental keeps full current coverage with zero warm requests and honest cached-model provenance
+ok 81 - incremental keeps full current coverage with zero warm requests and honest cached-model provenance
+  ---
+  duration_ms: 50.7555
+  type: 'test'
+  ...
+# Subtest: isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents
+ok 82 - isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents
+  ---
+  duration_ms: 50.059125
+  type: 'test'
+  ...
+# Subtest: rubric, requested model and effective endpoint changes invalidate incremental answers
+ok 83 - rubric, requested model and effective endpoint changes invalidate incremental answers
+  ---
+  duration_ms: 152.909792
+  type: 'test'
+  ...
+# Subtest: incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage
+ok 84 - incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage
+  ---
+  duration_ms: 118.602625
+  type: 'test'
+  ...
+# Subtest: interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses
+ok 85 - interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses
+  ---
+  duration_ms: 95.461125
+  type: 'test'
+  ...
+# Subtest: source-stale and model-drift runs do not seed the persistent cache or claim a clean result
+ok 86 - source-stale and model-drift runs do not seed the persistent cache or claim a clean result
+  ---
+  duration_ms: 56.802083
+  type: 'test'
+  ...
+# Subtest: fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests
+ok 87 - fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests
+  ---
+  duration_ms: 89.388167
+  type: 'test'
+  ...
+# Subtest: concurrent cache publication leaves complete independently validated records
+ok 88 - concurrent cache publication leaves complete independently validated records
+  ---
+  duration_ms: 59.993458
+  type: 'test'
+  ...
+# Subtest: actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes
+ok 89 - actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes
+  ---
+  duration_ms: 793.248625
+  type: 'test'
+  ...
+# Subtest: incremental scan receipts distinguish reused coverage from a fresh provider review
+ok 90 - incremental scan receipts distinguish reused coverage from a fresh provider review
+  ---
+  duration_ms: 457.243584
+  type: 'test'
+  ...
+# Subtest: bounded workers refill, preserve order and drain when a task fails
+ok 91 - bounded workers refill, preserve order and drain when a task fails
+  ---
+  duration_ms: 5.363292
+  type: 'test'
+  ...
+# Subtest: token memoization is exact under mutation, Unicode and bounded eviction
+ok 92 - token memoization is exact under mutation, Unicode and bounded eviction
+  ---
+  duration_ms: 0.258584
+  type: 'test'
+  ...
+# Subtest: provider semaphore bounds nested fan-out and drains arbitrary rejections
+ok 93 - provider semaphore bounds nested fan-out and drains arbitrary rejections
+  ---
+  duration_ms: 4.87625
+  type: 'test'
+  ...
+# Subtest: scan checkpoint accounts only for serialized rows when workers finish during append
+ok 94 - scan checkpoint accounts only for serialized rows when workers finish during append
+  ---
+  duration_ms: 5.416541
+  type: 'test'
+  ...
+1..94
+# tests 94
+# suites 0
+# pass 94
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3935.1125
+PASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present.
+No provider contacted. This verifies wiring, not model accuracy or law completeness.

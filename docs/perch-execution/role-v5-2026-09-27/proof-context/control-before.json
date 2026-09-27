@@ -1,0 +1,600 @@
+{
+  "mode": "offline stub fetch; no provider requests",
+  "bundle_sha256": "9cae96b7fb9dc2f508389d523db3c2948bd6803e52af54fcd6654cf8507914ef",
+  "runs": [
+    {
+      "target": "ordinary.bend::identity",
+      "code": 3,
+      "requests": [
+        {
+          "model": "jev-latest",
+          "state": {
+            "path": "ordinary.bend",
+            "name": "identity",
+            "line": 2,
+            "source": "def identity(x: U32) -> U32: x",
+            "calls": [],
+            "called_by": [],
+            "laws": [],
+            "datatypes": [],
+            "imports": [
+              {
+                "module": "Base",
+                "alias": null
+              }
+            ],
+            "context_notes": {
+              "basis": "working-tree",
+              "profile": "working-tree-datatypes-v1",
+              "unresolved": [
+                {
+                  "path": "ordinary.bend",
+                  "name": "U32",
+                  "reason": "unresolved-or-builtin"
+                }
+              ],
+              "truncated": false
+            }
+          },
+          "questions": {
+            "fixture-contract": {
+              "type": "noul",
+              "instructions": "Is `rule` true of the code below?",
+              "criteria": {
+                "true": "Returns its input.",
+                "false": "Not so: Returns its input."
+              }
+            }
+          }
+        },
+        {
+          "model": "jev-latest",
+          "state": {
+            "method": {
+              "path": "ordinary.bend",
+              "name": "identity",
+              "leading_comment": null,
+              "metrics": null,
+              "source": "L0002| def identity(x: U32) -> U32: x"
+            },
+            "imports": [
+              "* from Base"
+            ],
+            "module_scope": null,
+            "calls": [],
+            "called_by": [],
+            "call_graph": [],
+            "reading": {
+              "start_byte": 0,
+              "end_byte": 30,
+              "partial": false
+            }
+          },
+          "questions": {
+            "has_bug": {
+              "type": "noul",
+              "instructions": "Does `method` contain a concrete behavioral defect that a caller can reach?",
+              "criteria": {
+                "true": "For some input a caller can pass, the method returns a wrong result, leaves wrong state, throws when it should not, or fails to throw when it should\n",
+                "false": "The method behaves correctly for every input its callers can pass; style, performance, and hypothetical misuse do not count\n"
+              }
+            },
+            "kind": {
+              "type": "choice",
+              "instructions": "If `method` has a defect, which kind is it?",
+              "criteria": {
+                "boundary": "An off-by-one, a wrong comparison, or a mishandled edge of a range",
+                "missing_null_handling": "A null, undefined, empty, or absent value is not handled",
+                "wrong_return": "The wrong value, or a value of the wrong shape, is returned for some input",
+                "swallowed_error": "An error is caught, ignored, or turned into a misleading result",
+                "state_mutation": "Shared or input state is mutated when it should not be, or left stale when it should change",
+                "ordering": "Operations run in the wrong order, or rely on an order that is not guaranteed",
+                "resource_leak": "A handle, lock, timer, process, or connection is not released on some path",
+                "inverted_condition": "A condition, sign, or boolean is the wrong way round"
+              }
+            },
+            "severity": {
+              "type": "score",
+              "instructions": "If something is wrong with `method`, how much would a caller feel it?",
+              "criteria": [
+                "No caller would notice",
+                "A wrong result in a rare case, or one the caller can see and recover from",
+                "A wrong result or wrong state in ordinary use",
+                "Data lost, corrupted, or exposed, or a check that should stop someone bypassed"
+              ]
+            },
+            "refactor": {
+              "type": "choice",
+              "instructions": "Judging from `method`, its `metrics` (risk_score and maintainability_index run 0-100, cyclomatic_complexity and max_nesting are counts), and how its callers use it, what does it most need?\n",
+              "criteria": {
+                "split": "Does too many things; split it into smaller methods with one job each",
+                "flatten": "Nested too deeply; flatten with early returns or extracted helpers",
+                "simplify_conditions": "Conditions are hard to follow; simplify or name them",
+                "deduplicate": "Repeats logic that exists elsewhere in the shown code; reuse it",
+                "rename": "The name or parameters misdescribe what it does; rename them",
+                "remove_dead_code": "Contains unreachable or unused code; remove it",
+                "none": "No refactor needed"
+              }
+            },
+            "does_what_it_claims": {
+              "type": "noul",
+              "instructions": "Does `method` do what its name, its parameters and its `leading_comment` say it does?",
+              "criteria": {
+                "true": "It behaves the way its name and its comment say it does",
+                "false": "It does something different from, less than, or more than its name and comment say, so one of the two is wrong"
+              }
+            },
+            "documented": {
+              "type": "noul",
+              "instructions": "Could a caller learn what `method` promises from its `leading_comment`, or from the code itself where it is small enough to read?",
+              "criteria": {
+                "true": "Its contract, its edge cases and its side effects are all there to be read",
+                "false": "A caller could not learn what it promises without reading it through. A comment that says something untrue is misaligned rather than this: this is what is missing."
+              }
+            },
+            "exposed": {
+              "type": "noul",
+              "instructions": "Does a value chosen by someone outside this program reach `method`, or does `method` act outside the program on such a value?",
+              "criteria": {
+                "true": "Something a person or another system chose reaches it, such as a request, an argument, a message, a row, or a file whose name or contents they control; or it runs, queries, writes or sends using such a value.",
+                "false": "Everything it works on was decided by this program, and anything it touches outside is named by this program."
+              }
+            },
+            "injection": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised.\n",
+              "criteria": {
+                "true": "Yes: a value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "path_traversal": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach.\n",
+              "criteria": {
+                "true": "Yes: a name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "unsafe_deserialization": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? Data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+              "criteria": {
+                "true": "Yes: data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "secret_exposure": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go.\n",
+              "criteria": {
+                "true": "Yes: a password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "missing_authorization": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? An action that should check who is asking, or what they may touch, does not check, or checks after it has already acted.\n",
+              "criteria": {
+                "true": "Yes: an action that should check who is asking, or what they may touch, does not check, or checks after it has already acted\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "weak_crypto": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Security rests on predictable randomness, a home-made scheme, a broken algorithm, or a comparison that leaks timing",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "unvalidated_destination": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? An address, host, or redirect target from outside decides where a request or a user is sent.\n",
+              "criteria": {
+                "true": "Yes: an address, host, or redirect target from outside decides where a request or a user is sent\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "resource_exhaustion": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? Input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+              "criteria": {
+                "true": "Yes: input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "unsafe_reflection": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+              "criteria": {
+                "true": "Yes: a name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "disabled_safeguard": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A check that exists is turned off or weakened: certificate verification skipped, a permission widened, a warning suppressed, a sandbox opened",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "buffer_overflow": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "An index, length or offset reaches past the end of a string, array, buffer or typed array. Where the language does not fault on that, the read returns undefined or the write lands somewhere nothing reads, which is harder to notice rather than safer.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "use_after_free": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Something already closed, aborted, destroyed or released is used again, or released twice. A stream written after it ended, a handle read after close, a controller used after abort, a connection used after it went back to the pool.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "uninitialized_use": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A value is read before anything has written it, so what comes back is undefined where a value was meant to be. A field never set, a binding read before its declaration runs, or a result used before the work that produces it has finished.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "integer_overflow": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Arithmetic can wrap, truncate, or change sign, and the result is then used as a size, an index, a length, or a permission",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "race_condition": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Two paths can reach the same state at once without holding anything, or a check and the act it guards are separated in a way another path can exploit",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "type_confusion": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A value is treated as a type, shape, or variant it may not be: an unchecked cast, a union read through the wrong member, a parsed object trusted to have a shape",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "fixture-contract": {
+              "type": "noul",
+              "instructions": "Is `rule` true of the code below?",
+              "criteria": {
+                "true": "Returns its input.",
+                "false": "Not so: Returns its input."
+              }
+            },
+            "where": {
+              "type": "choice",
+              "instructions": "Which line of `method` is the defect on? If there is no defect, pick the line most likely to hide one.",
+              "criteria": {
+                "L0002": null
+              }
+            },
+            "follow": {
+              "type": "choice",
+              "instructions": "Which related method most likely holds or reveals a defect connected to `method`, and is worth examining next?",
+              "criteria": {
+                "none": "No related method is worth following"
+              }
+            }
+          }
+        }
+      ],
+      "stderr": []
+    },
+    {
+      "target": "ordinary.js::identity",
+      "code": 3,
+      "requests": [
+        {
+          "model": "jev-latest",
+          "state": {
+            "path": "ordinary.js",
+            "name": "identity",
+            "line": 1,
+            "source": "export function identity(x) { return x; }"
+          },
+          "questions": {
+            "fixture-contract": {
+              "type": "noul",
+              "instructions": "Is `rule` true of the code below?",
+              "criteria": {
+                "true": "Returns its input.",
+                "false": "Not so: Returns its input."
+              }
+            }
+          }
+        },
+        {
+          "model": "jev-latest",
+          "state": {
+            "method": {
+              "path": "ordinary.js",
+              "name": "identity",
+              "leading_comment": null,
+              "metrics": {
+                "distinct_operators": 5,
+                "distinct_operands": 2,
+                "total_operators": 5,
+                "total_operands": 3,
+                "vocabulary": 7,
+                "length": 8,
+                "calculated_length": 13.60964047443681,
+                "volume": 22.458839376460833,
+                "difficulty": 3.75,
+                "effort": 84.22064766172812,
+                "time_seconds": 4.678924870096007,
+                "bugs": 0.007486279792153611,
+                "complexity_status": "supported",
+                "complexity_adapter": "core-tree-sitter-v1",
+                "cyclomatic_complexity": 1,
+                "control_branch_count": 0,
+                "logical_branch_count": 0,
+                "max_nesting": 0,
+                "structure_hotspots": [],
+                "sloc": 1,
+                "comment_lines": 0,
+                "opaque_bytes": 0,
+                "maintainability_index": 90.403065,
+                "halstead_risk_score": 34.257291,
+                "complexity_score": 100,
+                "risk_score": 6.238008,
+                "risk_components": {
+                  "maintainability_risk": 9.596935,
+                  "halstead_risk": 34.257291,
+                  "complexity_risk": 0
+                }
+              },
+              "source": "L0001| export function identity(x) { return x; }"
+            },
+            "imports": [],
+            "module_scope": null,
+            "calls": [],
+            "called_by": [],
+            "call_graph": [],
+            "reading": {
+              "start_byte": 0,
+              "end_byte": 41,
+              "partial": false
+            }
+          },
+          "questions": {
+            "has_bug": {
+              "type": "noul",
+              "instructions": "Does `method` contain a concrete behavioral defect that a caller can reach?",
+              "criteria": {
+                "true": "For some input a caller can pass, the method returns a wrong result, leaves wrong state, throws when it should not, or fails to throw when it should\n",
+                "false": "The method behaves correctly for every input its callers can pass; style, performance, and hypothetical misuse do not count\n"
+              }
+            },
+            "kind": {
+              "type": "choice",
+              "instructions": "If `method` has a defect, which kind is it?",
+              "criteria": {
+                "boundary": "An off-by-one, a wrong comparison, or a mishandled edge of a range",
+                "missing_null_handling": "A null, undefined, empty, or absent value is not handled",
+                "wrong_return": "The wrong value, or a value of the wrong shape, is returned for some input",
+                "swallowed_error": "An error is caught, ignored, or turned into a misleading result",
+                "state_mutation": "Shared or input state is mutated when it should not be, or left stale when it should change",
+                "ordering": "Operations run in the wrong order, or rely on an order that is not guaranteed",
+                "resource_leak": "A handle, lock, timer, process, or connection is not released on some path",
+                "inverted_condition": "A condition, sign, or boolean is the wrong way round"
+              }
+            },
+            "severity": {
+              "type": "score",
+              "instructions": "If something is wrong with `method`, how much would a caller feel it?",
+              "criteria": [
+                "No caller would notice",
+                "A wrong result in a rare case, or one the caller can see and recover from",
+                "A wrong result or wrong state in ordinary use",
+                "Data lost, corrupted, or exposed, or a check that should stop someone bypassed"
+              ]
+            },
+            "refactor": {
+              "type": "choice",
+              "instructions": "Judging from `method`, its `metrics` (risk_score and maintainability_index run 0-100, cyclomatic_complexity and max_nesting are counts), and how its callers use it, what does it most need?\n",
+              "criteria": {
+                "split": "Does too many things; split it into smaller methods with one job each",
+                "flatten": "Nested too deeply; flatten with early returns or extracted helpers",
+                "simplify_conditions": "Conditions are hard to follow; simplify or name them",
+                "deduplicate": "Repeats logic that exists elsewhere in the shown code; reuse it",
+                "rename": "The name or parameters misdescribe what it does; rename them",
+                "remove_dead_code": "Contains unreachable or unused code; remove it",
+                "none": "No refactor needed"
+              }
+            },
+            "does_what_it_claims": {
+              "type": "noul",
+              "instructions": "Does `method` do what its name, its parameters and its `leading_comment` say it does?",
+              "criteria": {
+                "true": "It behaves the way its name and its comment say it does",
+                "false": "It does something different from, less than, or more than its name and comment say, so one of the two is wrong"
+              }
+            },
+            "documented": {
+              "type": "noul",
+              "instructions": "Could a caller learn what `method` promises from its `leading_comment`, or from the code itself where it is small enough to read?",
+              "criteria": {
+                "true": "Its contract, its edge cases and its side effects are all there to be read",
+                "false": "A caller could not learn what it promises without reading it through. A comment that says something untrue is misaligned rather than this: this is what is missing."
+              }
+            },
+            "exposed": {
+              "type": "noul",
+              "instructions": "Does a value chosen by someone outside this program reach `method`, or does `method` act outside the program on such a value?",
+              "criteria": {
+                "true": "Something a person or another system chose reaches it, such as a request, an argument, a message, a row, or a file whose name or contents they control; or it runs, queries, writes or sends using such a value.",
+                "false": "Everything it works on was decided by this program, and anything it touches outside is named by this program."
+              }
+            },
+            "injection": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised.\n",
+              "criteria": {
+                "true": "Yes: a value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "path_traversal": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach.\n",
+              "criteria": {
+                "true": "Yes: a name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "unsafe_deserialization": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? Data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+              "criteria": {
+                "true": "Yes: data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "secret_exposure": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go.\n",
+              "criteria": {
+                "true": "Yes: a password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "missing_authorization": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? An action that should check who is asking, or what they may touch, does not check, or checks after it has already acted.\n",
+              "criteria": {
+                "true": "Yes: an action that should check who is asking, or what they may touch, does not check, or checks after it has already acted\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "weak_crypto": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Security rests on predictable randomness, a home-made scheme, a broken algorithm, or a comparison that leaks timing",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "unvalidated_destination": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? An address, host, or redirect target from outside decides where a request or a user is sent.\n",
+              "criteria": {
+                "true": "Yes: an address, host, or redirect target from outside decides where a request or a user is sent\n",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "resource_exhaustion": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? Input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+              "criteria": {
+                "true": "Yes: input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "unsafe_reflection": {
+              "type": "noul",
+              "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+              "criteria": {
+                "true": "Yes: a name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+                "false": "No, or nothing from outside reaches this method"
+              }
+            },
+            "disabled_safeguard": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A check that exists is turned off or weakened: certificate verification skipped, a permission widened, a warning suppressed, a sandbox opened",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "buffer_overflow": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "An index, length or offset reaches past the end of a string, array, buffer or typed array. Where the language does not fault on that, the read returns undefined or the write lands somewhere nothing reads, which is harder to notice rather than safer.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "use_after_free": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Something already closed, aborted, destroyed or released is used again, or released twice. A stream written after it ended, a handle read after close, a controller used after abort, a connection used after it went back to the pool.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "uninitialized_use": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A value is read before anything has written it, so what comes back is undefined where a value was meant to be. A field never set, a binding read before its declaration runs, or a result used before the work that produces it has finished.",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "integer_overflow": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Arithmetic can wrap, truncate, or change sign, and the result is then used as a size, an index, a length, or a permission",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "race_condition": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "Two paths can reach the same state at once without holding anything, or a check and the act it guards are separated in a way another path can exploit",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "type_confusion": {
+              "type": "noul",
+              "instructions": "Is this true of `method`?",
+              "criteria": {
+                "true": "A value is treated as a type, shape, or variant it may not be: an unchecked cast, a union read through the wrong member, a parsed object trusted to have a shape",
+                "false": "Nothing in `method` does this."
+              }
+            },
+            "fixture-contract": {
+              "type": "noul",
+              "instructions": "Is `rule` true of the code below?",
+              "criteria": {
+                "true": "Returns its input.",
+                "false": "Not so: Returns its input."
+              }
+            },
+            "where": {
+              "type": "choice",
+              "instructions": "Which line of `method` is the defect on? If there is no defect, pick the line most likely to hide one.",
+              "criteria": {
+                "L0001": null
+              }
+            },
+            "follow": {
+              "type": "choice",
+              "instructions": "Which related method most likely holds or reveals a defect connected to `method`, and is worth examining next?",
+              "criteria": {
+                "none": "No related method is worth following"
+              }
+            }
+          }
+        }
+      ],
+      "stderr": []
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "schema": "knot-proof-context-reproduction-v1",
+  "created_at": "2026-09-27T08:00:05.644Z",
+  "mode": "offline installed CLI with fully replaced fetch; no provider requests",
+  "target": ".local/perch-execution-current/candidate-3-review/PROOF.bend::L.put_empty",
+  "argv": [
+    "check",
+    ".local/perch-execution-current/candidate-3-review/PROOF.bend::L.put_empty",
+    "--parallel",
+    "1",
+    "--json"
+  ],
+  "stub_cli_exit": 3,
+  "stub_answers_are_review_evidence": false,
+  "initial_harness_attempt": "An earlier capture incorrectly asserted stub CLI exit 0; actual exit 3 stopped before writing evidence. This receipt accepts completed exit 0 or 3 and tests actual outbound context instead.",
+  "live_provider_requests": 0,
+  "request_count": 2,
+  "custom_requests": 1,
+  "builtin_requests": 1,
+  "inputs_sha256": {
+    "perch.yaml": "dfd4b029de6593015fd37245557ee4e5e80a3ec18e2bf5e7d67c26931ab32633",
+    "scripts/perch-bend.mjs": "38a7308db837a5181e174edba4f0d433efcbabd6b35944f7060a1e0779d60557",
+    "scripts/perch-bend-context.mjs": "7bcd6f75f65411cccdff49fb06a35a625b1ac9fd75e3a5c46ef96f584adf24d3",
+    "scripts/install-perch-bend.mjs": "99c922dc575427df7cba6a84183eaec06dad7d8c2ba0ac75517dbab1cbd08444",
+    "scripts/perch-throughput-patch.mjs": "720f4ea20bf7ff64e751493819b71e4a51e773daeb64da6fdf19ee9cf7046118",
+    "node_modules/@lakeday/perch/dist/cli.mjs": "9cae96b7fb9dc2f508389d523db3c2948bd6803e52af54fcd6654cf8507914ef",
+    ".local/perch-execution-current/candidate-3-review/PROOF.bend": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125",
+    ".local/perch-execution-current/candidate-3-review/LAWS.bend": "668a42b6914c879d65b02d3d474826251364a5331d2fddd2221244678c36490a"
+  },
+  "inputs_unchanged": true,
+  "selected_laws": [
+    {
+      "name": "put_empty",
+      "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+      "line": 5,
+      "end_line": 8,
+      "source": "law put_empty:\n  for -A: Type\n  for -x: A\n  {S.put(A,S.Vacant{},x) == S.Inserted{S.Occupied{x}} : S.Put<A>}"
+    }
+  ],
+  "provenance": {
+    "basis": "working-tree",
+    "profile": "working-tree-datatypes-v1",
+    "files": [
+      {
+        "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+        "source_sha256": "668a42b6914c879d65b02d3d474826251364a5331d2fddd2221244678c36490a"
+      },
+      {
+        "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+        "source_sha256": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125"
+      }
+    ],
+    "unresolved": [],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "builtin_prepared_keys": [
+    "node",
+    "methods",
+    "imports",
+    "callees",
+    "callers"
+  ],
+  "requests": [
+    {
+      "index": 0,
+      "kind": "custom",
+      "state_sha256": "128d6e6cb9f38cb544d8aafe41d86075ccb730e5ac44212897ee1efea92aeb9e",
+      "request_sha256": "26255ecfcd45416cb1de0fb502c94c1996331527de70209b131222970b3c228e",
+      "state_keys": [
+        "path",
+        "name",
+        "line",
+        "source",
+        "calls",
+        "called_by",
+        "laws",
+        "datatypes",
+        "imports",
+        "context_notes"
+      ],
+      "questions": [
+        "bend-fuel-completeness",
+        "bend-machine-arithmetic",
+        "bend-borrow-lifetime",
+        "bend-ordered-f32",
+        "bend-effect-boundary",
+        "bend-device-stack",
+        "perf-growing-prefix-copy",
+        "perf-loop-invariant-work",
+        "perf-linked-list-indexing",
+        "perf-amortized-growth"
+      ],
+      "law_source_occurrences": 1,
+      "state": {
+        "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+        "name": "L.put_empty",
+        "line": 5,
+        "source": "def L.put_empty(A,x): {==}",
+        "calls": [],
+        "called_by": [],
+        "laws": [
+          {
+            "name": "put_empty",
+            "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+            "line": 5,
+            "end_line": 8,
+            "source": "law put_empty:\n  for -A: Type\n  for -x: A\n  {S.put(A,S.Vacant{},x) == S.Inserted{S.Occupied{x}} : S.Put<A>}"
+          }
+        ],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "./task.bend",
+            "alias": "T"
+          },
+          {
+            "module": "./LAWS.bend",
+            "alias": "L"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "unresolved": [],
+          "truncated": false
+        }
+      }
+    },
+    {
+      "index": 1,
+      "kind": "builtin",
+      "state_sha256": "2f930f8b996487044e8d727e0fe3aa233272af4a3a07c6482e6f5a65db304469",
+      "request_sha256": "22b04b1f10a9038167ae51d09637393f7f361da98952eb54f1126e964b104315",
+      "state_keys": [
+        "method",
+        "imports",
+        "module_scope",
+        "calls",
+        "called_by",
+        "call_graph",
+        "reading"
+      ],
+      "questions": [
+        "has_bug",
+        "kind",
+        "severity",
+        "refactor",
+        "does_what_it_claims",
+        "documented",
+        "exposed",
+        "injection",
+        "path_traversal",
+        "unsafe_deserialization",
+        "secret_exposure",
+        "missing_authorization",
+        "weak_crypto",
+        "unvalidated_destination",
+        "resource_exhaustion",
+        "unsafe_reflection",
+        "disabled_safeguard",
+        "buffer_overflow",
+        "use_after_free",
+        "uninitialized_use",
+        "integer_overflow",
+        "race_condition",
+        "type_confusion",
+        "bend-fuel-completeness",
+        "bend-machine-arithmetic",
+        "bend-borrow-lifetime",
+        "bend-ordered-f32",
+        "bend-effect-boundary",
+        "bend-device-stack",
+        "compiler-pattern-sharing",
+        "compiler-checker-trust",
+        "compiler-cache-identity",
+        "perf-growing-prefix-copy",
+        "perf-loop-invariant-work",
+        "perf-linked-list-indexing",
+        "perf-amortized-growth",
+        "where",
+        "follow"
+      ],
+      "law_source_occurrences": 0,
+      "state": {
+        "method": {
+          "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+          "name": "L.put_empty",
+          "leading_comment": null,
+          "metrics": null,
+          "source": "L0005| def L.put_empty(A,x): {==}"
+        },
+        "imports": [
+          "* from Base",
+          "* as T from ./task.bend",
+          "* as L from ./LAWS.bend"
+        ],
+        "module_scope": null,
+        "calls": [],
+        "called_by": [],
+        "call_graph": [],
+        "reading": {
+          "start_byte": 0,
+          "end_byte": 26,
+          "partial": false
+        }
+      }
+    }
+  ],
+  "regression_assertion": {
+    "passed": false,
+    "message": "every builtin request must include already-selected paired law exactly once",
+    "expected_exit_code": 1
+  },
+  "stderr": []
+}

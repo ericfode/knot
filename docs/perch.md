@@ -117,6 +117,17 @@ or dependency completeness. The
 [datatype-context repair evidence](perch-execution/role-v5-2026-09-27/datatype-context/README.md)
 records the changed request identities; earlier reviews remain historical.
 
+Working-copy built-in checks also receive the already-selected paired law text
+in a dedicated `laws` field. Each selected law appears once, including when its
+local source would otherwise repeat in module scope. These laws remain whole in
+every source chunk and token retry, within the existing request budgets; a law
+selected for the request that cannot fit causes an incomplete check. Shared Bend selection omissions
+remain visible in `context_notes`. Those notes describe the adapter's selection,
+not the final built-in helper/caller excerpts, which upstream may shorten further
+to fit its token budget. This wiring repair covers `check`; committed `scan`
+retains its separate context path. See the
+[paired-law context evidence](perch-execution/role-v5-2026-09-27/proof-context/REPORT.md).
+
 Named-declaration checks retain their unit and context identities in the same
 `units` receipt array as file checks. Early named-check receipts omitted that
 metadata; retain their raw output or supplemental context evidence when auditing

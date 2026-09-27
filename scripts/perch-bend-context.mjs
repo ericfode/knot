@@ -174,8 +174,9 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     const suppliedDatatypes = new Set();
     const datatypeContextFiles = new Set([path]);
     let importedTypeHelpers = 0;
-    let bytes = 0, truncated = false;
+    let bytes = 0, truncated = false, pairedLawAttempted = false;
     const add = (list, item) => {
+      if (list === laws) pairedLawAttempted = true;
       const size = Buffer.byteLength(item.source);
       if (bytes + size > bounds.bytes) { truncated = true; return false; }
       bytes += size;
@@ -275,15 +276,23 @@ export async function createBendReview({ root, path, source, analysis, limits = 
       unresolved: [...unresolved.values()], truncated,
       limits: bounds,
     };
+    const contextNotes = { basis: provenance.basis, profile: BEND_CONTEXT_PROFILE, unresolved: provenance.unresolved, truncated };
+    // A second view of the already admitted laws, not another traversal or
+    // budget. Keep missing/truncated proof contracts explicit too.
+    const pairedLawContext = pairedLawAttempted || declaration.law_location || declaration.syntax_kind === 'bend_law_fill'
+      ? { laws: laws.filter((law, index) => laws.findIndex(other => other.path === law.path
+          && other.line === law.line && other.end_line === law.end_line && other.source === law.source) === index), context_notes: contextNotes }
+      : null;
     return {
       seen: { calls, called_by: calledBy, laws, datatypes,
         imports: primary.imports.map(({ module, alias }) => ({ module, alias })),
-        context_notes: { basis: provenance.basis, profile: BEND_CONTEXT_PROFILE, unresolved: provenance.unresolved, truncated } },
+        context_notes: contextNotes },
       provenance,
       builtin: { node: node(primary, declaration),
         methods: analysis.declarations.map(decl => node(primary, decl)),
         imports: primary.imports.map(ref => ({ name: ref.imported_name, alias: ref.alias ?? ref.imported_name, module: ref.module })),
-        callees: calleeNodes, callers: callerNodes },
+        callees: calleeNodes, callers: callerNodes,
+        ...(pairedLawContext ? { paired_law_context: pairedLawContext } : {}) },
     };
   }
   return {

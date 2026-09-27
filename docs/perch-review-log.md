@@ -636,16 +636,6 @@ law wiring pass. Stubbed corpus runs verify coverage plumbing only. Prevention:
 test the actual configured glob forms and required dependency closure, and
 retain a complete failure manifest independently of presentation samples.
 
-## 2026-09-27 — Established memetic prose and a corrected control label
-
-The user requested external examples before applying Perch to system
-documentation. The [frozen prose probe](perch-calibration/memetic-prose-2026-09-27/README.md)
-uses the unchanged v5 questions at base `3dc7774`, rubric SHA-256
-`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`, and requested/resolved
-Jev 1.13.0. Ten requests returned 50 complete distributions; the
-[results](perch-calibration/memetic-prose-2026-09-27/results.json) and
-[prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
-
 ## 2026-09-27 — Datatype resolution must agree with supplied context
 
 The [datatype-context reproduction and repair](perch-execution/role-v5-2026-09-27/datatype-context/README.md)
@@ -669,6 +659,34 @@ this repair; previous scores and receipts remain unchanged.
 Prevention: test that declarations already supplied as context resolve to that
 same source, include explicit imported datatype controls, and verify dependency
 hashes and cap failures before spending model reviews on apparent uncertainty.
+
+## 2026-09-27 — paired laws now reach built-in proof review
+
+A nonzero offline request capture reproduced the omitted law: custom review
+received it; built-in review did not. The maintained installer now forwards the
+same already-selected law inside every budgeted method request, with local
+scope deduplication. [The repair report](perch-execution/role-v5-2026-09-27/proof-context/REPORT.md)
+retains before/after captures, changed cache identity, identical ordinary request
+controls, 94 passing tests and eight law-rule controls. Caps, questions, models
+and thresholds are unchanged; committed scan has a separate unmodified path.
+
+One fresh unchanged `L.put_empty` check still flags its claim at .78 despite
+receiving the law; exact compiler/source evidence makes this a false positive.
+The prior documentation flag is absent in this sample. Do not infer general
+model calibration improvement or reroll the request. All eighteen candidate-3
+style inputs and both compositions remain byte-identical, so their failure
+stands. Prevention: assert paired-contract visibility in actual outbound requests,
+then distinguish successful context transport from trustworthy model judgment.
+
+## 2026-09-27 — Established memetic prose and a corrected control label
+
+The user requested external examples before applying Perch to system
+documentation. The [frozen prose probe](perch-calibration/memetic-prose-2026-09-27/README.md)
+uses the unchanged v5 questions at base `3dc7774`, rubric SHA-256
+`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`, and requested/resolved
+Jev 1.13.0. Ten requests returned 50 complete distributions; the
+[results](perch-calibration/memetic-prose-2026-09-27/results.json) and
+[prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
 
 All four selected originals meet the memetic target and exceed their plain
 rewrites by 32–79 percentage points. None meets the entire five-axis conjunction.

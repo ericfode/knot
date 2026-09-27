@@ -500,3 +500,153 @@ test('parallel file checks preserve requests and ordering, isolate budgets, refr
   assert.equal((await run(257)).code, 1);
   assert.equal(attempts, before, 'invalid concurrency fails before a paid request');
 });
+
+test('built-in proof requests include the selected working-copy law once and change identity with it', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'knot-proof-context-'));
+  const previousFetch = globalThis.fetch, requests = [];
+  const proof = 'import Base\nimport ./LAWS.bend as L\ndef L.claim(n): {==}\n';
+  const oldLaw = 'import Base\nlaw claim:\n  for -n: U32\n  {n == n : U32}\n';
+  const newLaw = oldLaw.replace('{n == n : U32}', '{U32.add(n,0) == n : U32}');
+  const sha = value => createHash('sha256').update(value).digest('hex');
+  let changeAfterFirstRequest = true;
+  try {
+    await writeFile(join(root, 'PROOF.bend'), proof);
+    await writeFile(join(root, 'LAWS.bend'), oldLaw);
+    await writeFile(join(root, 'perch.yaml'), 'rules:\n  - name: fixture-proof\n    where: "**/*.bend"\n    each: method\n    gate: false\n    ensure: Fills its paired law.\n');
+    const git = args => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
+    git(['init', '-q']); git(['add', '.']);
+    git(['-c', 'user.name=Proof fixture', '-c', 'user.email=fixture@example.invalid',
+      '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Proof fixture']);
+    globalThis.fetch = async (_url, options) => {
+      const body = JSON.parse(options.body); requests.push(body);
+      if (changeAfterFirstRequest) {
+        changeAfterFirstRequest = false;
+        await writeFile(join(root, 'LAWS.bend'), newLaw);
+      }
+      const answers = Object.fromEntries(Object.entries(body.questions).map(([key, q]) => {
+        if (q.type === 'noul') return [key, { noul: key === 'fixture-proof' || key === 'does_what_it_claims' ? 1 : 0 }];
+        if (q.type === 'score') return [key, { score: 0, confidence: 1, probabilities: Object.fromEntries(q.criteria.map((_, i) => [i, i === 0 ? 1 : 0])) }];
+        const choice = Object.keys(q.criteria).at(-1);
+        return [key, { choice, confidence: 1, probabilities: { [choice]: 1 } }];
+      }));
+      const response = { model: 'offline-proof-context-only', answers };
+      return { ok: true, json: async () => response, clone: () => ({ json: async () => response }) };
+    };
+    const run = async target => {
+      const output = [], errors = [], start = requests.length;
+      const code = await runPerch(['check', target, '--parallel', '1'], { root,
+        env: { PERCH_API_KEY: 'offline-fixture' }, stdout: text => output.push(text), stderr: text => errors.push(text) });
+      assert.ok([0, 3].includes(code), errors.join('\n'));
+      return { result: JSON.parse(output.join('\n')), requests: requests.slice(start) };
+    };
+    const first = await run('PROOF.bend::L.claim');
+    assert.ok(first.result.checked >= 2, 'nonzero custom and built-in coverage');
+    assert.equal(first.requests.length, 2);
+    const firstCustom = first.requests.find(request => !request.state.method);
+    const firstBuiltin = first.requests.find(request => request.state.method);
+    assert.ok(firstCustom && firstBuiltin, 'capture both actual checkTarget paths');
+    assert.deepEqual(firstBuiltin.state.laws, firstCustom.state.laws);
+    assert.equal(firstBuiltin.state.laws.length, 1);
+    assert.equal(firstBuiltin.state.laws[0].source, oldLaw.slice(oldLaw.indexOf('law')).trimEnd());
+    assert.deepEqual(firstBuiltin.state.context_notes, firstCustom.state.context_notes);
+    assert.equal(firstBuiltin.state.context_notes.truncated, false);
+    assert.equal(first.result.context.files.find(file => file.path === 'LAWS.bend').source_sha256, sha(oldLaw),
+      'preflight snapshot survives a file edit between custom and built-in requests');
+    assert.equal(firstBuiltin.state.calls.length, 0, 'the paired law is not a fabricated callee');
+    assert.ok(!Object.keys(firstBuiltin.questions).some(key => key.startsWith('misuse_')));
+    const second = await run('PROOF.bend::L.claim');
+    const secondBuiltin = second.requests.find(request => request.state.method);
+    assert.equal(secondBuiltin.state.laws[0].source, newLaw.slice(newLaw.indexOf('law')).trimEnd());
+    assert.equal(second.result.context.files.find(file => file.path === 'LAWS.bend').source_sha256, sha(newLaw));
+    assert.equal(secondBuiltin.state.method.source, firstBuiltin.state.method.source);
+    assert.deepEqual(secondBuiltin.questions, firstBuiltin.questions);
+    assert.equal(await readFile(join(root, 'PROOF.bend'), 'utf8'), proof);
+    const { knotAskKey } = await import('../node_modules/@lakeday/perch/dist/cli.mjs');
+    const cacheKey = request => knotAskKey([{ state: request.state, questions: request.questions }], [], 'offline-fixed-client');
+    const stored = new Map([[cacheKey(firstBuiltin), 'old-law-answer']]);
+    assert.notEqual(cacheKey(firstBuiltin), cacheKey(secondBuiltin));
+    assert.equal(stored.get(cacheKey(secondBuiltin)), undefined, 'actual installed key cannot reuse the old-law answer');
+    assert.equal(cacheKey(secondBuiltin), cacheKey(structuredClone(secondBuiltin)), 'identical input retains its identity');
+
+    const local = 'import Base\ntype Marker is Data:\n  Marker{}\nlaw claim:\n  for -n: U32\n  {n == n : U32}\ndef unrelated() -> U32: 7\ndef claim(n): {==}\n';
+    await writeFile(join(root, 'local.bend'), local);
+    const localRun = await run('local.bend::claim');
+    const localBuiltin = localRun.requests.find(request => request.state.method);
+    const localCustom = localRun.requests.find(request => !request.state.method);
+    assert.deepEqual(localBuiltin.state.laws, localCustom.state.laws);
+    assert.equal(localBuiltin.state.laws.length, 1);
+    assert.ok(!localBuiltin.state.module_scope.includes('law claim'), 'no line-tagged duplicate in module scope');
+    assert.ok(!localBuiltin.state.module_scope.includes('{n == n'), 'the assertion is not duplicated either');
+    assert.match(localBuiltin.state.module_scope, /type Marker/);
+    assert.ok(!localBuiltin.state.method.source.includes('def unrelated'));
+  } finally {
+    globalThis.fetch = previousFetch;
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('paired-law omission and missing imports remain explicit without changing selection budgets', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'knot-proof-limits-'));
+  const source = 'import Base\nimport ./LAWS.bend as L\ndef L.claim(n): {==}\n';
+  const law = 'import Base\nlaw claim:\n  for -n: U32\n  {n == n : U32}\n';
+  try {
+    await writeFile(join(root, 'LAWS.bend'), law);
+    const prepare = async (text = source, limits = {}) => (await createBendReview({ root, path: 'PROOF.bend',
+      source: text, analysis: await analyzeBendSource(text), limits })).forUnit(text === source ? 'L.claim' : 'main');
+    const full = await prepare();
+    const lawBytes = Buffer.byteLength(full.seen.laws[0].source);
+    const exact = await prepare(source, { bytes: lawBytes });
+    const short = await prepare(source, { bytes: lawBytes - 1 });
+    assert.deepEqual(exact.builtin.paired_law_context.laws, full.seen.laws);
+    assert.equal(exact.provenance.truncated, false);
+    assert.deepEqual(short.builtin.paired_law_context.laws, []);
+    assert.equal(short.builtin.paired_law_context.context_notes.truncated, true);
+    assert.equal(short.provenance.limits.bytes, lawBytes - 1);
+    assert.deepEqual(short.builtin.callees, full.builtin.callees);
+    const helper = 'import Base\nlaw claim:\n  for -n: U32\n  {n == n : U32}\ndef claim(n): {==}\ndef main() -> U32: claim(1)\n';
+    const omittedHelperLaw = await prepare(helper, { bytes: Buffer.byteLength('def claim(n): {==}') });
+    assert.equal(omittedHelperLaw.builtin.paired_law_context.context_notes.truncated, true,
+      'an ordinary target still reports an attempted helper-law omission');
+    await rm(join(root, 'LAWS.bend'));
+    const missing = await prepare();
+    assert.deepEqual(missing.builtin.paired_law_context.laws, []);
+    assert.ok(missing.builtin.paired_law_context.context_notes.unresolved.some(item => /unavailable-local-import/.test(item.reason)));
+    await writeFile(join(root, 'LAWS.bend'), 'def malformed( -> U32: 1\n');
+    await assert.rejects(prepare(), /does not parse/);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test('paired laws stay inside every built-in token budget, chunk and retry preparation', async () => {
+  const { knotMethodSteps, knotMethodStep, knotEstimateTokens } = await import('../node_modules/@lakeday/perch/dist/cli.mjs');
+  const source = 'def claim(n):\n' + Array.from({ length: 180 }, (_, i) => `  let a${i} = U32.add(n,${i})`).join('\n') + '\n  {==}';
+  const lines = source.split('\n');
+  const node = { id: 'proof.bend::claim', qualified_name: 'claim', path: 'proof.bend', line: 1, end_line: lines.length };
+  const law = { name: 'claim', path: 'laws.bend', line: 1, end_line: 3, source: 'law claim:\n  for -n: U32\n  {n == n : U32}' };
+  const knotPairedLawContext = { laws: [law], context_notes: { basis: 'working-tree', unresolved: [], truncated: false } };
+  const args = { node, lines, callees: [], callers: [], knotPairedLawContext };
+  let chunked = false;
+  for (const budget of [24000, 1600, 1000, 700]) {
+    const steps = knotMethodSteps({ ...args, budget });
+    chunked ||= steps.length > 1;
+    for (const step of steps) {
+      assert.deepEqual(step.state.laws, [law]);
+      assert.ok(knotEstimateTokens(step.state) <= budget, 'law text is included before the budget check');
+      assert.equal(JSON.stringify(step.state).split('law claim:').length - 1, 1);
+    }
+  }
+  assert.ok(chunked, 'the regression must exercise nonzero multi-chunk preparation');
+  const hugeLaw = { ...law, source: law.source + '\n# ' + 'contract '.repeat(2000) };
+  assert.throws(() => knotMethodSteps({ ...args, lines: ['def claim(n): {==}'], node: { ...node, end_line: 1 },
+    knotPairedLawContext: { ...knotPairedLawContext, laws: [hugeLaw] }, budget: 700 }), /exceeds the token budget/,
+  'an oversized required law fails instead of vanishing when source chunks shrink');
+  const localLines = ['law claim:', '  for -n: U32', '  {n == n : U32}', 'def claim(n): {==}'];
+  const localLaw = { ...law, path: node.path };
+  const localStep = knotMethodStep({ ...args, node: { ...node, line: 4, end_line: 4 }, lines: localLines,
+    knotPairedLawContext: { ...knotPairedLawContext, laws: [localLaw] } });
+  assert.equal(localStep.state.module_scope, null, 'direct methodStep default excludes the same local law too');
+  assert.deepEqual(localStep.state.laws, [localLaw]);
+  const ordinary = knotMethodSteps({ node, lines, callees: [], callers: [] });
+  const absent = knotMethodSteps({ node, lines, callees: [], callers: [], knotPairedLawContext: undefined });
+  assert.deepEqual(absent, ordinary, 'absent optional context leaves the legacy state/question shape untouched');
+  assert.ok(ordinary.every(step => !('laws' in step.state) && !('context_notes' in step.state)));
+});

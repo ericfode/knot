@@ -1,0 +1,554 @@
+{
+  "schema": "knot-proof-context-reproduction-after-v1",
+  "created_at": "2026-09-27T08:08:16.470Z",
+  "mode": "offline installed CLI with fully replaced fetch",
+  "live_provider_requests": 0,
+  "stub_cli_exit": 3,
+  "stub_answers_are_review_evidence": false,
+  "target": ".local/perch-execution-current/candidate-3-review/PROOF.bend::L.put_empty",
+  "argv": [
+    "check",
+    ".local/perch-execution-current/candidate-3-review/PROOF.bend::L.put_empty",
+    "--parallel",
+    "1",
+    "--json"
+  ],
+  "inputs_sha256": {
+    "perch.yaml": "dfd4b029de6593015fd37245557ee4e5e80a3ec18e2bf5e7d67c26931ab32633",
+    "scripts/perch-bend.mjs": "38a7308db837a5181e174edba4f0d433efcbabd6b35944f7060a1e0779d60557",
+    "scripts/perch-bend-context.mjs": "87b725f5929ac1634bf4b80a80ca95e29cb5d630a62c9fa102adf9fbb9039a9c",
+    "scripts/install-perch-bend.mjs": "684e6f464ceca21d6d33a3aa8c2d38309c230ee533466e6260a02242760ca8f8",
+    "scripts/perch-throughput-patch.mjs": "720f4ea20bf7ff64e751493819b71e4a51e773daeb64da6fdf19ee9cf7046118",
+    "node_modules/@lakeday/perch/dist/cli.mjs": "b5ead90af3e6f258cc50acfca2c2491878da6293c1f8278441be91004135acd1",
+    ".local/perch-execution-current/candidate-3-review/PROOF.bend": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125",
+    ".local/perch-execution-current/candidate-3-review/LAWS.bend": "668a42b6914c879d65b02d3d474826251364a5331d2fddd2221244678c36490a"
+  },
+  "inputs_unchanged": true,
+  "proof_and_law_and_rules_match_before": true,
+  "selected_laws": [
+    {
+      "name": "put_empty",
+      "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+      "line": 5,
+      "end_line": 8,
+      "source": "law put_empty:\n  for -A: Type\n  for -x: A\n  {S.put(A,S.Vacant{},x) == S.Inserted{S.Occupied{x}} : S.Put<A>}"
+    }
+  ],
+  "provenance": {
+    "basis": "working-tree",
+    "profile": "working-tree-datatypes-v1",
+    "files": [
+      {
+        "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+        "source_sha256": "668a42b6914c879d65b02d3d474826251364a5331d2fddd2221244678c36490a"
+      },
+      {
+        "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+        "source_sha256": "f653d5802249799902e7fbaa33fff2868e7537fe3c272a92473f9f145ddd7125"
+      }
+    ],
+    "unresolved": [],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "request_count": 2,
+  "requests": [
+    {
+      "kind": "custom",
+      "state": {
+        "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+        "name": "L.put_empty",
+        "line": 5,
+        "source": "def L.put_empty(A,x): {==}",
+        "calls": [],
+        "called_by": [],
+        "laws": [
+          {
+            "name": "put_empty",
+            "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+            "line": 5,
+            "end_line": 8,
+            "source": "law put_empty:\n  for -A: Type\n  for -x: A\n  {S.put(A,S.Vacant{},x) == S.Inserted{S.Occupied{x}} : S.Put<A>}"
+          }
+        ],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          },
+          {
+            "module": "./task.bend",
+            "alias": "T"
+          },
+          {
+            "module": "./LAWS.bend",
+            "alias": "L"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "unresolved": [],
+          "truncated": false
+        }
+      },
+      "questions": {
+        "bend-fuel-completeness": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds."
+          }
+        },
+        "bend-machine-arithmetic": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file."
+          }
+        },
+        "bend-borrow-lifetime": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds."
+          }
+        },
+        "bend-ordered-f32": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect F32 folds and reductions whose contract requires deterministic results or equality with a serial reference. Independent calculations may run in parallel, but their values enter the stateful fold in the specified order. Completion order, regrouping, tree reduction, fused arithmetic, or changed rounding must not be substituted under an exact-equality contract. An explicitly approximate contract with an error budget is allowed. F32 arithmetic is not associative real arithmetic. Do not flag an integer reduction or parallel work that preserves the fold order. If no such contract appears, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect F32 folds and reductions whose contract requires deterministic results or equality with a serial reference. Independent calculations may run in parallel, but their values enter the stateful fold in the specified order. Completion order, regrouping, tree reduction, fused arithmetic, or changed rounding must not be substituted under an exact-equality contract. An explicitly approximate contract with an error budget is allowed. F32 arithmetic is not associative real arithmetic. Do not flag an integer reduction or parallel work that preserves the fold order. If no such contract appears, this rule holds."
+          }
+        },
+        "bend-effect-boundary": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds."
+          }
+        },
+        "bend-device-stack": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect large-input traversals visibly called from a Bend 2 GPU bang in this file, or explicitly documented as device-reachable. A traversal does not retain one non-tail continuation per list element or nest append chains proportional to an unbounded input without an explicit practical bound or stack-safe representation. Termination fuel by itself does not establish a safe machine-stack bound. Tail-recursive loops and balanced bounded-depth trees are allowed. Name the retained continuation and the input controlling depth. Do not infer unseen GPU reachability or flag recursion alone. If no such traversal is visible, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect large-input traversals visibly called from a Bend 2 GPU bang in this file, or explicitly documented as device-reachable. A traversal does not retain one non-tail continuation per list element or nest append chains proportional to an unbounded input without an explicit practical bound or stack-safe representation. Termination fuel by itself does not establish a safe machine-stack bound. Tail-recursive loops and balanced bounded-depth trees are allowed. Name the retained continuation and the input controlling depth. Do not infer unseen GPU reachability or flag recursion alone. If no such traversal is visible, this rule holds."
+          }
+        },
+        "perf-growing-prefix-copy": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds."
+          }
+        },
+        "perf-loop-invariant-work": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds."
+          }
+        },
+        "perf-linked-list-indexing": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds."
+          }
+        },
+        "perf-amortized-growth": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds."
+          }
+        }
+      },
+      "state_sha256": "128d6e6cb9f38cb544d8aafe41d86075ccb730e5ac44212897ee1efea92aeb9e",
+      "request_sha256": "26255ecfcd45416cb1de0fb502c94c1996331527de70209b131222970b3c228e",
+      "law_source_occurrences": 1
+    },
+    {
+      "kind": "builtin",
+      "state": {
+        "method": {
+          "path": ".local/perch-execution-current/candidate-3-review/PROOF.bend",
+          "name": "L.put_empty",
+          "leading_comment": null,
+          "metrics": null,
+          "source": "L0005| def L.put_empty(A,x): {==}"
+        },
+        "imports": [
+          "* from Base",
+          "* as T from ./task.bend",
+          "* as L from ./LAWS.bend"
+        ],
+        "module_scope": null,
+        "calls": [],
+        "called_by": [],
+        "call_graph": [],
+        "laws": [
+          {
+            "name": "put_empty",
+            "path": ".local/perch-execution-current/candidate-3-review/LAWS.bend",
+            "line": 5,
+            "end_line": 8,
+            "source": "law put_empty:\n  for -A: Type\n  for -x: A\n  {S.put(A,S.Vacant{},x) == S.Inserted{S.Occupied{x}} : S.Put<A>}"
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "unresolved": [],
+          "truncated": false
+        },
+        "reading": {
+          "start_byte": 0,
+          "end_byte": 26,
+          "partial": false
+        }
+      },
+      "questions": {
+        "has_bug": {
+          "type": "noul",
+          "instructions": "Does `method` contain a concrete behavioral defect that a caller can reach?",
+          "criteria": {
+            "true": "For some input a caller can pass, the method returns a wrong result, leaves wrong state, throws when it should not, or fails to throw when it should\n",
+            "false": "The method behaves correctly for every input its callers can pass; style, performance, and hypothetical misuse do not count\n"
+          }
+        },
+        "kind": {
+          "type": "choice",
+          "instructions": "If `method` has a defect, which kind is it?",
+          "criteria": {
+            "boundary": "An off-by-one, a wrong comparison, or a mishandled edge of a range",
+            "missing_null_handling": "A null, undefined, empty, or absent value is not handled",
+            "wrong_return": "The wrong value, or a value of the wrong shape, is returned for some input",
+            "swallowed_error": "An error is caught, ignored, or turned into a misleading result",
+            "state_mutation": "Shared or input state is mutated when it should not be, or left stale when it should change",
+            "ordering": "Operations run in the wrong order, or rely on an order that is not guaranteed",
+            "resource_leak": "A handle, lock, timer, process, or connection is not released on some path",
+            "inverted_condition": "A condition, sign, or boolean is the wrong way round"
+          }
+        },
+        "severity": {
+          "type": "score",
+          "instructions": "If something is wrong with `method`, how much would a caller feel it?",
+          "criteria": [
+            "No caller would notice",
+            "A wrong result in a rare case, or one the caller can see and recover from",
+            "A wrong result or wrong state in ordinary use",
+            "Data lost, corrupted, or exposed, or a check that should stop someone bypassed"
+          ]
+        },
+        "refactor": {
+          "type": "choice",
+          "instructions": "Judging from `method`, its `metrics` (risk_score and maintainability_index run 0-100, cyclomatic_complexity and max_nesting are counts), and how its callers use it, what does it most need?\n",
+          "criteria": {
+            "split": "Does too many things; split it into smaller methods with one job each",
+            "flatten": "Nested too deeply; flatten with early returns or extracted helpers",
+            "simplify_conditions": "Conditions are hard to follow; simplify or name them",
+            "deduplicate": "Repeats logic that exists elsewhere in the shown code; reuse it",
+            "rename": "The name or parameters misdescribe what it does; rename them",
+            "remove_dead_code": "Contains unreachable or unused code; remove it",
+            "none": "No refactor needed"
+          }
+        },
+        "does_what_it_claims": {
+          "type": "noul",
+          "instructions": "Does `method` do what its name, its parameters and its `leading_comment` say it does?",
+          "criteria": {
+            "true": "It behaves the way its name and its comment say it does",
+            "false": "It does something different from, less than, or more than its name and comment say, so one of the two is wrong"
+          }
+        },
+        "documented": {
+          "type": "noul",
+          "instructions": "Could a caller learn what `method` promises from its `leading_comment`, or from the code itself where it is small enough to read?",
+          "criteria": {
+            "true": "Its contract, its edge cases and its side effects are all there to be read",
+            "false": "A caller could not learn what it promises without reading it through. A comment that says something untrue is misaligned rather than this: this is what is missing."
+          }
+        },
+        "exposed": {
+          "type": "noul",
+          "instructions": "Does a value chosen by someone outside this program reach `method`, or does `method` act outside the program on such a value?",
+          "criteria": {
+            "true": "Something a person or another system chose reaches it, such as a request, an argument, a message, a row, or a file whose name or contents they control; or it runs, queries, writes or sends using such a value.",
+            "false": "Everything it works on was decided by this program, and anything it touches outside is named by this program."
+          }
+        },
+        "injection": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? A value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised.\n",
+          "criteria": {
+            "true": "Yes: a value from outside is put into a shell command, a query, a path of execution, or anything that gets evaluated, without being escaped or parameterised\n",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "path_traversal": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach.\n",
+          "criteria": {
+            "true": "Yes: a name from outside is used to build a filesystem path, URL, or key without being confined to the place it is meant to reach\n",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "unsafe_deserialization": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? Data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+          "criteria": {
+            "true": "Yes: data from outside is turned into code, or into an object whose type it chose. eval, new Function or a vm run over it; a deserializer that can instantiate arbitrary classes; a YAML or XML parser with tags or entities enabled; a merge that lets it set __proto__ or constructor. Parsing outside data into plain values is not this, however untrusted it is.",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "secret_exposure": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? A password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go.\n",
+          "criteria": {
+            "true": "Yes: a password, token, key, or other credential is written into the source, logged, returned to a caller, or sent somewhere it need not go\n",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "missing_authorization": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? An action that should check who is asking, or what they may touch, does not check, or checks after it has already acted.\n",
+          "criteria": {
+            "true": "Yes: an action that should check who is asking, or what they may touch, does not check, or checks after it has already acted\n",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "weak_crypto": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "Security rests on predictable randomness, a home-made scheme, a broken algorithm, or a comparison that leaks timing",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "unvalidated_destination": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? An address, host, or redirect target from outside decides where a request or a user is sent.\n",
+          "criteria": {
+            "true": "Yes: an address, host, or redirect target from outside decides where a request or a user is sent\n",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "resource_exhaustion": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? Input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+          "criteria": {
+            "true": "Yes: input from outside decides how much memory, recursion, time or work happens, and nothing bounds it. Work whose size is what the operator asked for is not this: a tool doing as much work as the input it was pointed at is doing its job.",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "unsafe_reflection": {
+          "type": "noul",
+          "instructions": "If `method` handles anything from outside the program: is this true of it? A name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+          "criteria": {
+            "true": "Yes: a name from outside chooses which function, class, field or module is reached, so it picks code the program never named. An import or require built from it, a property taken off an object and called, a class or handler resolved by name. A lookup in a table the program itself wrote, where a name that is not in it is handled, is not this.",
+            "false": "No, or nothing from outside reaches this method"
+          }
+        },
+        "disabled_safeguard": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "A check that exists is turned off or weakened: certificate verification skipped, a permission widened, a warning suppressed, a sandbox opened",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "buffer_overflow": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "An index, length or offset reaches past the end of a string, array, buffer or typed array. Where the language does not fault on that, the read returns undefined or the write lands somewhere nothing reads, which is harder to notice rather than safer.",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "use_after_free": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "Something already closed, aborted, destroyed or released is used again, or released twice. A stream written after it ended, a handle read after close, a controller used after abort, a connection used after it went back to the pool.",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "uninitialized_use": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "A value is read before anything has written it, so what comes back is undefined where a value was meant to be. A field never set, a binding read before its declaration runs, or a result used before the work that produces it has finished.",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "integer_overflow": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "Arithmetic can wrap, truncate, or change sign, and the result is then used as a size, an index, a length, or a permission",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "race_condition": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "Two paths can reach the same state at once without holding anything, or a check and the act it guards are separated in a way another path can exploit",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "type_confusion": {
+          "type": "noul",
+          "instructions": "Is this true of `method`?",
+          "criteria": {
+            "true": "A value is treated as a type, shape, or variant it may not be: an unchecked cast, a union read through the wrong member, a parsed object trusted to have a shape",
+            "false": "Nothing in `method` does this."
+          }
+        },
+        "bend-fuel-completeness": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds."
+          }
+        },
+        "bend-machine-arithmetic": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file."
+          }
+        },
+        "bend-borrow-lifetime": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds."
+          }
+        },
+        "bend-ordered-f32": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect F32 folds and reductions whose contract requires deterministic results or equality with a serial reference. Independent calculations may run in parallel, but their values enter the stateful fold in the specified order. Completion order, regrouping, tree reduction, fused arithmetic, or changed rounding must not be substituted under an exact-equality contract. An explicitly approximate contract with an error budget is allowed. F32 arithmetic is not associative real arithmetic. Do not flag an integer reduction or parallel work that preserves the fold order. If no such contract appears, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect F32 folds and reductions whose contract requires deterministic results or equality with a serial reference. Independent calculations may run in parallel, but their values enter the stateful fold in the specified order. Completion order, regrouping, tree reduction, fused arithmetic, or changed rounding must not be substituted under an exact-equality contract. An explicitly approximate contract with an error budget is allowed. F32 arithmetic is not associative real arithmetic. Do not flag an integer reduction or parallel work that preserves the fold order. If no such contract appears, this rule holds."
+          }
+        },
+        "bend-effect-boundary": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds."
+          }
+        },
+        "bend-device-stack": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect large-input traversals visibly called from a Bend 2 GPU bang in this file, or explicitly documented as device-reachable. A traversal does not retain one non-tail continuation per list element or nest append chains proportional to an unbounded input without an explicit practical bound or stack-safe representation. Termination fuel by itself does not establish a safe machine-stack bound. Tail-recursive loops and balanced bounded-depth trees are allowed. Name the retained continuation and the input controlling depth. Do not infer unseen GPU reachability or flag recursion alone. If no such traversal is visible, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect large-input traversals visibly called from a Bend 2 GPU bang in this file, or explicitly documented as device-reachable. A traversal does not retain one non-tail continuation per list element or nest append chains proportional to an unbounded input without an explicit practical bound or stack-safe representation. Termination fuel by itself does not establish a safe machine-stack bound. Tail-recursive loops and balanced bounded-depth trees are allowed. Name the retained continuation and the input controlling depth. Do not infer unseen GPU reachability or flag recursion alone. If no such traversal is visible, this rule holds."
+          }
+        },
+        "compiler-pattern-sharing": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect pattern lowering and generated decision trees. A shared continuation or large recursive body is not copied into the Cartesian product of numeric alternatives merely to distinguish control cases. Joint numeric matches, wildcard fallbacks, and optimization passes preserve branch priority and reasonable sharing. A small intentional duplication or a match on a compact algebraic datatype is allowed. Flag a concrete multiplication of substantial code, not an arbitrary preference for Boolean guards. If this declaration does not implement pattern lowering or code generation, this rule holds."
+          }
+        },
+        "compiler-checker-trust": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds."
+          }
+        },
+        "compiler-cache-identity": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect memoization, incremental compilation, and artifact reuse. A reused result is tied to every semantic input that can change that result, such as source and imported interfaces, binding context, compiler semantics, target, and relevant flags. Partial, failed, or timed-out work cannot be reused as a completed verified result. Intentional omission of an input is allowed when the result is explicitly independent of it. Identify a visible missing input or unsafe promotion; absence of an implementation in the supplied context is not evidence. If this declaration does not cache or reuse results, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect memoization, incremental compilation, and artifact reuse. A reused result is tied to every semantic input that can change that result, such as source and imported interfaces, binding context, compiler semantics, target, and relevant flags. Partial, failed, or timed-out work cannot be reused as a completed verified result. Intentional omission of an input is allowed when the result is explicitly independent of it. Identify a visible missing input or unsafe promotion; absence of an implementation in the supplied context is not evidence. If this declaration does not cache or reuse results, this rule holds."
+          }
+        },
+        "perf-growing-prefix-copy": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds."
+          }
+        },
+        "perf-loop-invariant-work": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds."
+          }
+        },
+        "perf-linked-list-indexing": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds."
+          }
+        },
+        "perf-amortized-growth": {
+          "type": "noul",
+          "instructions": "Is `rule` true of the code below?",
+          "criteria": {
+            "true": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds.",
+            "false": "Not so: Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect appendable storage that explicitly reallocates and copies its prior elements when capacity is exhausted. Repeated single-element appends use geometric growth or another visible amortized-linear strategy, rather than allocating exactly length+1 and copying the entire prefix on every append. A one-shot exact-size allocation, pre-reserving a known final size, bounded saturation at a documented maximum, and persistent structural sharing are allowed. Do not infer allocation costs for unknown library calls or reject checked overflow handling. Require a visible repeated copy of growing prior storage; if absent, this rule holds."
+          }
+        },
+        "where": {
+          "type": "choice",
+          "instructions": "Which line of `method` is the defect on? If there is no defect, pick the line most likely to hide one.",
+          "criteria": {
+            "L0005": null
+          }
+        },
+        "follow": {
+          "type": "choice",
+          "instructions": "Which related method most likely holds or reveals a defect connected to `method`, and is worth examining next?",
+          "criteria": {
+            "none": "No related method is worth following"
+          }
+        }
+      },
+      "state_sha256": "c28aac7cb2bbcc02419495b6a2555bf26064b4b85a1df29c4f84a43b2daf6a80",
+      "request_sha256": "9f0830443318e0b730c5fb49a459f8a219f8c2e6fbcf8a44511717a732bf488f",
+      "law_source_occurrences": 1
+    }
+  ],
+  "regression_assertion": {
+    "passed": true,
+    "exit_code": 0
+  },
+  "stderr": []
+}

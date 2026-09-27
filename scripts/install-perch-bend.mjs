@@ -96,6 +96,23 @@ export function patchPerch(source, profile) {
   patched = replaceOnce(patched,
     '    const context = await methodContext({ finding: { method: `${unit.path}::${unit.name}`, path: unit.path, revision: revision2 }, root, out, analyzer, revision: revision2, log: debug }).catch((error) => {',
     '    const context = bendReview?.builtin ?? await methodContext({ finding: { method: `${unit.path}::${unit.name}`, path: unit.path, revision: revision2 }, root, out, analyzer, revision: revision2, log: debug }).catch((error) => {');
+  // The law text has already passed the shared Bend context budget. Carry that
+  // same selection into every built-in chunk and token retry, inside build()
+  // so it cannot bypass the upstream request budget or disappear under pressure.
+  patched = replaceOnce(patched,
+    'callees: context.callees, callers: context.callers, budget });',
+    'callees: context.callees, callers: context.callers, knotPairedLawContext: context.paired_law_context, budget });');
+  patched = replaceOnce(patched,
+    'function methodStep({ node, lines, imports = [], methods = [node], moduleScopeText = moduleScope(lines, methods),',
+    'function methodStep({ node, lines, imports = [], methods = [node], knotPairedLawContext = null, moduleScopeText = moduleScope(lines, [...methods, ...(knotPairedLawContext?.laws ?? []).filter(law => law.path === node.path)]),');
+  patched = replaceOnce(patched,
+    '    call_graph: fewerCallees || fewerCallers ? edges : []\n  });',
+    '    call_graph: fewerCallees || fewerCallers ? edges : [],\n    ...(knotPairedLawContext ?? {})\n  });');
+  // Local paired laws also occur outside def ranges in module scope. Suppress
+  // only that duplicate rendering; these are not additional method/graph nodes.
+  patched = replaceOnce(patched,
+    '  const moduleScopeText = moduleScope(lines, methods);',
+    '  const moduleScopeText = moduleScope(lines, [...methods, ...(options2.knotPairedLawContext?.laws ?? []).filter(law => law.path === node.path)]);');
   patched = replaceOnce(patched, '    checked: rules.length + (issues2 ? 1 : 0),',
     '    parser: unit.parser ?? null,\n    end_line: unit.end_line ?? null,\n    asked,\n    context: bendReview?.provenance ?? null,\n    checked: rules.length + (issues2 ? 1 : 0),');
   patched = replaceOnce(patched, '      { run, issues: issues2, usage: meter.toJSON() },',
@@ -125,7 +142,7 @@ export function patchPerch(source, profile) {
     'resolve3(file, value2.name) ?? unique.get(value2.name.split(/::|\\./).at(-1)) ?? null',
     'resolve3(file, value2.name) ?? (file.language === "bend" ? null : unique.get(value2.name.split(/::|\\./).at(-1))) ?? null');
   patched = patchThroughput(patched);
-  return `${marker}\nimport { DEFAULT_PERCH_JOBS as knotDefaultJobs, perchConcurrency as knotConcurrency, mapConcurrent as knotMapConcurrent, runWorkers as knotRunWorkers, memoizeTextCount as knotMemoizeTextCount, drainAll as knotDrainAll, limitConcurrent as knotLimitConcurrent, failureCohorts as knotFailureCohorts } from "../../../../scripts/perch-throughput.mjs";\nimport { analyzeBendSource as knotAnalyzeBendSource } from "../../../../scripts/perch-bend.mjs";\nimport { createBendReview as knotCreateBendReview, bendDeclarationSource as knotBendDeclarationSource } from "../../../../scripts/perch-bend-context.mjs";\n${patched}\nexport { createSourceAnalyzer as knotCreateSourceAnalyzer, resolveModule as knotResolveModule, buildGraph as knotBuildGraph, createLineReader as knotCreateLineReader, openStore as knotOpenStore };\n`;
+  return `${marker}\nimport { DEFAULT_PERCH_JOBS as knotDefaultJobs, perchConcurrency as knotConcurrency, mapConcurrent as knotMapConcurrent, runWorkers as knotRunWorkers, memoizeTextCount as knotMemoizeTextCount, drainAll as knotDrainAll, limitConcurrent as knotLimitConcurrent, failureCohorts as knotFailureCohorts } from "../../../../scripts/perch-throughput.mjs";\nimport { analyzeBendSource as knotAnalyzeBendSource } from "../../../../scripts/perch-bend.mjs";\nimport { createBendReview as knotCreateBendReview, bendDeclarationSource as knotBendDeclarationSource } from "../../../../scripts/perch-bend-context.mjs";\n${patched}\nexport { createSourceAnalyzer as knotCreateSourceAnalyzer, resolveModule as knotResolveModule, buildGraph as knotBuildGraph, createLineReader as knotCreateLineReader, openStore as knotOpenStore, methodSteps as knotMethodSteps, methodStep as knotMethodStep, askKey as knotAskKey, estimateTokens as knotEstimateTokens };\n`;
 }
 
 export async function install() {
