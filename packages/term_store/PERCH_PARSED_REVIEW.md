@@ -1,5 +1,9 @@
 # TermStore: bounded parsed Perch review — 2026-09-26
 
+Style follow-up: [all three axes, including memetic scores](STYLE_REVIEW.md).
+The ratings match the current source and context. The semantic checks below do
+not include style; the current style workflow requires no alternative candidate.
+
 **No implementation change needed.** Fresh live review completed **169 checks**:
 16 actual Bend declarations × (six Bend + four performance rules), plus the current
 law-review packet × (eight law rules + the owned memo-completion rule).
