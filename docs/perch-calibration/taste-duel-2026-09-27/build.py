@@ -20,10 +20,16 @@ LABEL = {'deadpan': 'Deadpan: maximally plain', 'algebra': 'Algebra: one idea ab
          'mythic': 'Mythic: invented vocabulary and rhythm', 'baroque': 'Baroque: deliberate ornament and ceremony',
          'golf': 'Golf: compressed to cryptic', 'literate': 'Literate: a narrated story'}
 TASK_ORDER = ['bitpath', 'fuel', 'pipeline', 'slots']
-DUELS = [('bitpath', 'mythic', 'deadpan'), ('bitpath', 'algebra', 'baroque'),
-         ('fuel', 'mythic', 'baroque'), ('fuel', 'golf', 'literate'),
-         ('pipeline', 'mythic', 'algebra'), ('pipeline', 'deadpan', 'literate'),
-         ('slots', 'algebra', 'golf'), ('slots', 'baroque', 'literate')]
+# Round 2 (after the user's lineups): single-factor ablations of the renderings
+# they preferred, interleaved so neighbouring duels differ in task and factor.
+DUELS = [('bitpath', 'algebra', 'algebra-nolaws'), ('fuel', 'algebra', 'algebra-mythic'),
+         ('pipeline', 'algebra', 'literate'), ('slots', 'algebra', 'algebra-nolaws'),
+         ('bitpath', 'algebra', 'algebra-longnames'), ('fuel', 'algebra', 'algebra-noproof'),
+         ('pipeline', 'literate', 'literate-nopuzzle'), ('slots', 'algebra', 'algebra-words'),
+         ('bitpath', 'algebra', 'algebra-riddle'), ('fuel', 'algebra', 'algebra-dense'),
+         ('pipeline', 'literate', 'literate-lite')]
+REPEAT = 1  # index of the duel repeated last with sides swapped (fuel identity)
+ABLATION_LABELS = json.loads((HERE / 'ablation-labels.json').read_text()) if (HERE / 'ablation-labels.json').exists() else {}
 SALT = 'knot-taste-duel-2026-09-27'
 
 def vid(task, pole):
@@ -51,12 +57,20 @@ def main(summaries_path, out_path, mapping_path):
         tasks.append({'id': task, 'title': summaries[task]['title'], 'contract': summaries[task]['contract'], 'order': order})
     duels = []
     for n, (task, a, b) in enumerate(DUELS, 1):
-        left, right = (a, b) if rng.random() < .5 else (b, a)
-        duels.append({'id': f'd{n}', 'task': task, 'left': vid(task, left), 'right': vid(task, right)})
-    first = duels[0]
-    duels.append({'id': f'd{len(duels) + 1}', 'task': first['task'], 'left': first['right'], 'right': first['left'], 'repeat_of': first['id']})
-    reveal = {i: LABEL[m['pole']] for i, m in mapping.items()}
-    data = {'tasks': tasks, 'variants': variants, 'duels': duels, 'reveal': reveal}
+        # Alternate which side holds the base (first of the pair) to avoid position bias.
+        left, right = (a, b) if n % 2 == 1 else (b, a)
+        for pole in (left, right):
+            i = vid(task, pole)
+            if i not in variants:
+                sub = 'ablations/' if pole not in POLES else ''
+                code = shown(VARIANTS / task / f'{sub}{pole}{SUFFIX}')
+                variants[i] = {'code': code, 'lines': code.count('\n')}
+                mapping[i] = {'task': task, 'pole': pole}
+        duels.append({'id': f'e{n}', 'task': task, 'left': vid(task, left), 'right': vid(task, right)})
+    rep = duels[REPEAT]
+    duels.append({'id': f'e{len(duels) + 1}', 'task': rep['task'], 'left': rep['right'], 'right': rep['left'], 'repeat_of': rep['id']})
+    reveal = {i: LABEL.get(m['pole']) or ABLATION_LABELS[f"{m['task']}/{m['pole']}"] for i, m in mapping.items()}
+    data = {'round': 2, 'tasks': tasks, 'variants': variants, 'duels': duels, 'reveal': reveal}
     template = (HERE / 'template.html').read_text()
     assert template.count('/*DATA*/null') == 1
     payload = json.dumps(data, ensure_ascii=False).replace('</', '<\\/')

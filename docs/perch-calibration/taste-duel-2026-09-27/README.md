@@ -130,3 +130,51 @@ Round 2 replaces the duels with single-factor ablations of the preferred
 renderings. It asks which part of algebra carries the preference, and whether
 the pipeline's puzzle setup and payoff, rather than prose volume, is what
 makes that literate rendering work.
+
+## Round 2: single-factor duels (published as version 2 of the page)
+
+Round 2 keeps the four lineups (same card ids and letter order; the saved
+answers still apply) and replaces the duels. Each duel changes one factor of a
+rendering the user preferred:
+
+| Duel | Task | Pair | Factor | Isolation |
+|---|---|---|---|---|
+| e1 | bitpath | algebra vs `algebra-nolaws` | stated laws | comments only |
+| e2 | fuel | algebra vs `algebra-mythic` | invented vocabulary and rhythm | consistent rename |
+| e3 | pipeline | algebra vs literate | compression vs narrated puzzle | originals |
+| e4 | slots | algebra vs `algebra-nolaws` | stated laws (replicate) | comments only |
+| e5 | bitpath | algebra vs `algebra-longnames` | long explicit names | consistent rename |
+| e6 | fuel | algebra vs `algebra-noproof` | checked proof beside the code | declarations removed |
+| e7 | pipeline | literate vs `literate-nopuzzle` | puzzle setup and payoff | comments only |
+| e8 | slots | algebra vs `algebra-words` | math notation vs plain English | comments only |
+| e9 | bitpath | algebra vs `algebra-riddle` | a riddle posed and answered | comments only |
+| e10 | fuel | algebra vs `algebra-dense` | density toward golf | consistent rename |
+| e11 | pipeline | literate vs `literate-lite` | prose volume, puzzle kept | comments only |
+| e12 | fuel | e2 with the sides swapped | consistency check | — |
+
+The base rendering is on the left in six duels and on the right in six.
+Duels are interleaved so that neighbouring duels differ in both task and
+factor.
+
+**How the ablations were checked.** Each was written by one agent, then
+checked and strengthened by a second. All ten were then independently
+recompiled with the pinned compiler, parsed, and passed 64 of 64 probes against
+the unchanged oracles.
+
+[`isolation.py`](isolation.py) proves the single-factor claim mechanically:
+
+- **Comments-only** variants have identical code tokens.
+- **Rename** variants match up to a consistent one-to-one renaming.
+- **Declarations-removed** variants keep every other declaration unchanged.
+
+Even `algebra-dense` passes rename isolation (7 identifiers). It is the base
+algorithm token for token, crushed to eight lines.
+
+The bitpath critic caught one fairness problem. Long names had pushed lines to
+293 columns, which would have hidden the laws behind a scrollbar. The file was
+reflowed to the base's own 74-column width; only whitespace changed. It is
+still longer (113 lines against 52), which is part of that factor's cost.
+
+Files: `<task>/ablations/*.bend.snapshot`, `ablation-labels.json`,
+`page-r2.html` and `mapping-r2.json`. `build.py` now builds round 2. The
+round-1 `page.html` and `mapping.json` are kept as that round's record.

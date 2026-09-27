@@ -1,0 +1,53 @@
+import Base
+
+# One move, iterated. Fuel is its exponent; Paid is its fixed point.
+#
+#   owe(0, v)        = Paid v                     the only zero test
+#   tick(Paid v)     = Paid v                     paid never moves
+#   tick(Owed r v)   = owe(r - 1, 3v + r mod 7)   the only real work
+#   run(n)           = tickⁿ                      fuel is an exponent
+#   ────────────────────────────────────────────────────────────────
+#   law: run(m) ∘ run(n) = run(n + m)
+
+type Outcome is Data:
+  Paid{v: U32}
+  Owed{r: U32, v: U32}
+
+def owe(+r: U32, +v: U32) -> Outcome:
+  Bool.pick(Outcome, U32.is_zero(r), Paid{v}, Owed{r, v})
+
+def tick(o: Outcome) -> Outcome:
+  match o:
+    case Paid{v}:     Paid{v}
+    case Owed{+r, v}: owe((r - 1 : U32), (v * 3 + r % 7 : U32))
+
+def run(n: Nat, o: Outcome) -> Outcome:
+  match n:
+    case 0n:   o
+    case 1n+k: run(k, tick(o))
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> Outcome:
+  owe((n % 40 : U32), n)
+
+def h_run(f: Nat, x: Outcome) -> Outcome:
+  run(f, x)
+
+def h_code(x: Outcome) -> U32:
+  match x:
+    case Paid{v}: (v * 2 + 1 : U32)
+    case Owed{r, v}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

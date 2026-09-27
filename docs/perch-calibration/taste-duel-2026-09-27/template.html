@@ -142,6 +142,7 @@
 
 <script>
 const DATA = /*DATA*/null;
+const STEP_KEY = 'knot-taste-duel-step' + (DATA.round > 1 ? '-r' + DATA.round : '');
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const el = (tag, attrs = {}, ...kids) => {
@@ -237,10 +238,20 @@ function nav(hint) {
 }
 
 function renderIntro(main) {
+  if (DATA.round === 2) {
+    const first = steps.findIndex(s => s.duel);
+    main.append(
+      el('h1', {}, 'Round 2: one difference at a time.'),
+      el('p', { class: 'lede' }, `Your four lineups are saved. This round has ${DATA.duels.length} duels. In each one the two versions differ in a single respect and are otherwise the same program, token for token or up to renaming. Every version still type-checks and returns identical results on 64 probe runs.`),
+      el('p', { class: 'lede' }, 'Pick the one you want more of in Knot, and how strongly. The reason chips are optional. Nothing is labelled until the end.'),
+      el('div', { class: 'nav' }, el('span', { class: 'hint' }, `${DATA.duels.length} duels · about 8 minutes`),
+        el('button', { type: 'button', class: 'primary', onclick: () => go(first) }, 'Start the duels →')));
+    return;
+  }
   main.append(
     el('h1', {}, 'Same behavior. Six opposite voices.'),
     el('p', { class: 'lede' }, 'Each round shows one small Knot task written six ways: plain to baroque, compressed to narrated, cryptic to ritual. Every version type-checks with the pinned Bend compiler and returns identical results on 64 probe runs, so the only difference is how it reads.'),
-    el('p', { class: 'lede' }, `React fast. Gut calls are the point: mark each card “want more”, “meh” or “too much”, then pick the one you would copy and the one you would reject in review. After ${DATA.tasks.length} lineups come ${DATA.duels.length} head-to-head duels between opposites. Nothing is labelled until the end.`),
+    el('p', { class: 'lede' }, `React fast. Gut calls are the point: mark each card “want more”, “meh” or “too much”, then pick the one you would copy and the one you would reject in review. After ${DATA.tasks.length} lineups come ${DATA.duels.length} head-to-head duels. Nothing is labelled until the end.`),
     el('div', { class: 'legend' },
       el('span', {}, el('i', { style: 'background:var(--more)' }), 'want more of this'),
       el('span', {}, el('i', { style: 'background:var(--meh)' }), 'meh / no pull'),
@@ -325,6 +336,15 @@ function renderFinal(main) {
     reveal.append(el('div', { class: 'tablewrap' }, el('table', { class: 'reveal' },
       el('thead', {}, el('tr', {}, ...['Task', 'Card', 'Style', 'Your reaction', 'Pick'].map(h => el('th', {}, h)))),
       el('tbody', {}, rows))));
+    const lean = v => typeof v !== 'number' ? '—' : v === 0 ? 'no preference' : `${Math.abs(v) === 2 ? 'strongly ' : ''}${v < 0 ? 'left' : 'right'}`;
+    const duelRows = DATA.duels.map((du, i) => {
+      const r = state.docs['duel-' + du.id] || {};
+      return el('tr', {}, el('td', {}, `D${i + 1}${du.repeat_of ? ' (repeat)' : ''}`),
+        el('td', {}, DATA.reveal[du.left] || '?'), el('td', {}, DATA.reveal[du.right] || '?'), el('td', {}, lean(r.score)));
+    });
+    reveal.append(el('div', { class: 'tablewrap', style: 'margin-top:16px' }, el('table', { class: 'reveal' },
+      el('thead', {}, el('tr', {}, ...['Duel', 'Left', 'Right', 'You chose'].map(h => el('th', {}, h)))),
+      el('tbody', {}, duelRows))));
   } }, 'Reveal which style each card was');
   reveal.append(el('p', { class: 'lede', style: 'margin-top:0' }, 'Reveal only after you are done: your answers are already saved, and knowing the styles would bias any later round.'), btn);
   main.append(reveal, nav('thank you'));
@@ -339,12 +359,12 @@ function render() {
   else renderFinal(main);
   if (!db) main.append(el('p', { class: 'banner' }, 'Answers are being kept in this browser only until the page connects to its store.'));
   renderSteps();
-  try { localStorage.setItem('knot-taste-duel-step', String(state.step)); } catch {}
+  try { localStorage.setItem(STEP_KEY, String(state.step)); } catch {}
 }
 
 // Boot: render immediately from any local draft, then light up the store.
 try { Object.assign(state.docs, JSON.parse(localStorage.getItem('knot-taste-duel') || '{}')); } catch {}
-try { state.step = Math.min(steps.length - 1, Number(localStorage.getItem('knot-taste-duel-step') || 0) || 0); } catch {}
+try { state.step = Math.min(steps.length - 1, Number(localStorage.getItem(STEP_KEY) || 0) || 0); } catch {}
 render();
 (async () => {
   db = window.claude?.use ? await window.claude.use('db') : null;

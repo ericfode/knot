@@ -1,0 +1,67 @@
+import Base
+
+#   one stoke, breathed again.   breath is its power.   ash is its rest.
+#   no sparks, no fire.          ash stays ash.         one spark falls.
+#   one breath, one stoke.       sworn: hearth_forgets.
+#
+#   bank(0, heat)           = Ash heat
+#   stoke(Ash heat)         = Ash heat
+#   stoke(Coal sparks heat) = bank(sparks - 1, 3·heat + sparks mod 7)
+#   burn(breath)            = stokeᵇʳᵉᵃᵗʰ
+#   ─────────────────────────────────────────────────────────────────
+#   oath: burn(gust) ∘ burn(breath) = burn(breath + gust)
+
+type Hearth is Data:
+  Ash{heat: U32}
+  Coal{sparks: U32, heat: U32}
+
+def bank(+sparks: U32, +heat: U32) -> Hearth:
+  Bool.pick(Hearth, U32.is_zero(sparks), Ash{heat}, Coal{sparks, heat})
+
+def stoke(hearth: Hearth) -> Hearth:
+  match hearth:
+    case Ash{heat}:           Ash{heat}
+    case Coal{+sparks, heat}: bank((sparks - 1 : U32), (heat * 3 + sparks % 7 : U32))
+
+def burn(breath: Nat, hearth: Hearth) -> Hearth:
+  match breath:
+    case 0n:      hearth
+    case 1n+more: burn(more, stoke(hearth))
+
+# the oath never opens stoke: one breath or two, the hearth forgets.
+law hearth_forgets:
+  for gust: Nat
+  for breath: Nat
+  for hearth: Hearth
+  {burn(gust, burn(breath, hearth)) == burn(Nat.add(breath, gust), hearth) : Hearth}
+
+def hearth_forgets(gust, breath, hearth):
+  match breath:
+    case 0n:      {==}
+    case 1n+more: hearth_forgets(gust, more, stoke(hearth))
+
+# ---- harness (not shown) ----
+def h_start(+n: U32) -> Hearth:
+  bank((n % 40 : U32), n)
+
+def h_run(f: Nat, x: Hearth) -> Hearth:
+  burn(f, x)
+
+def h_code(x: Hearth) -> U32:
+  match x:
+    case Ash{v}: (v * 2 + 1 : U32)
+    case Coal{r, v}: (r * 2 : U32)
+
+def h_splits(+n: U32, s: List<&2, Nat>) -> List<&2, U32>:
+  match s:
+    case Nil{}: Nil{}
+    case Con{a, Nil{}}: Nil{}
+    case Con{+a, Con{+b, rest}}:
+      h_code(h_run(Nat.add(a, b), h_start(n)))
+        <> h_code(h_run(b, h_run(a, h_start(n))))
+        <> h_splits(n, rest)
+
+# For each split (a, b): run(a + b, t) then run(b, run(a, t)).
+def scenario(+n: U32) -> List<&2, U32>:
+  h_splits(n, [0n, 0n, 0n, 1n, 1n, 0n, 2n, 3n, 5n, 8n, 13n, 21n,
+               20n, 19n, 34n, 6n, 39n, 1n, 40n, 0n, 3n, 50n, 17n, 17n])

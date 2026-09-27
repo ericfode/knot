@@ -1,0 +1,107 @@
+import Base
+
+# How to stop at the first error
+# ==============================
+# Sum "4,8,15", or report the *first* failure. Three inspectors take turns:
+# 1 lex, 2 parse, 3 check.
+#
+# Keep one puzzle in mind as we go: "1,,2x" has two mistakes, a doubled comma
+# and a stray x. Which one should we report? We will answer it at the end.
+type Outcome is Data:
+  Ok{sum: U32}
+  Err{stage: U32, position: U32}
+
+type Token is Data:
+  Number{value: U32}
+  Comma{}
+
+# 3. check: each number at most 1000 and at least `floor`, one past the last.
+def check(tokens: List<&2, Token>, +index: U32, +floor: U32, +sum: U32) -> Outcome:
+  match tokens:
+    case Nil{}: Ok{sum}
+    case Comma{} <> rest: check(rest, index, floor, sum)
+    case Number{+value} <> rest:
+      fine = (floor <= value : U32) && (value <= 1000 : U32)
+      Bool.pick(Outcome, fine, check(rest, (index + 1 : U32), (value + 1 : U32), (sum + value : U32)), Err{3, index})
+
+# 2. parse: number, comma, ..., number; if so, it passes on check's verdict.
+# We call that verdict `later`. Remember the name.
+def parse(tokens: List<&2, Token>, +index: U32, want_number: Bool, later: Outcome) -> Outcome:
+  match tokens want_number:
+    case Nil{} False{}: later
+    case Number{value} <> rest True{}: parse(rest, (index + 1 : U32), False{}, later)
+    case Comma{} <> rest False{}: parse(rest, (index + 1 : U32), True{}, later)
+    case surprise expected: Err{2, index}
+
+# 1. lex, the crucial move: digits and commas only. Bend cannot branch on
+# computed values, so compute every outcome and pick.
+def lex(chars: List<&2, U32>, +position: U32, +number: U32, +reading: Bool, +tokens: List<&2, Token>) -> Outcome:
+  match chars:
+    case Nil{}:
+      # All read: only now do parse and check get a turn.
+      +all = List.reverse(&2, Token, Bool.pick(List<&2, Token>, reading, Number{number} <> tokens, tokens))
+      parse(all, 0, True{}, check(all, 0, 0, 0))
+    case +c <> rest:
+      +digit = (c >= 48 : U32) && (c <= 57 : U32)
+      +comma = U32.is_eq(c, 44)
+      +closed = Bool.pick(List<&2, Token>, comma && reading, Number{number} <> tokens, tokens)
+      grown = Bool.pick(U32, digit, (number * 10 + c - 48 : U32), 0)
+      pile = Bool.pick(List<&2, Token>, comma, Comma{} <> closed, closed)
+      Bool.pick(Outcome, digit || comma, lex(rest, (position + 1 : U32), grown, digit, pile), Err{1, position})
+
+# And the puzzle? In "1,,2x" the lexer meets the x at position 4 before parse
+# has seen a single token, so the answer is Err(1, 4). Parse speaks only after
+# lexing ends, and check's verdict rides inside it as `later`. That is the whole
+# trick: each inspector gets a say only if everyone before it stayed silent.
+def run(chars: List<&2, U32>) -> Outcome:
+  lex(chars, 0, 0, False{}, Nil{})
+
+# ---- harness (not shown) ----
+
+def h_chars(s: String) -> List<&2, U32>:
+  match s:
+    case SNil{}:
+      Nil{}
+    case SCon{c, t}:
+      Char.to_u32(c) <> h_chars(t)
+
+def h_insert(k: Nat, c: U32, xs: List<&2, U32>) -> List<&2, U32>:
+  match k:
+    case 0n:
+      c <> xs
+    case 1n+p:
+      match xs:
+        case Nil{}:
+          [c]
+        case x <> rest:
+          x <> h_insert(p, c, rest)
+
+def h_mark(+m: U32, +k: U32) -> U32:
+  Bool.pick(U32, U32.is_eq(m, 1), (48 + k % 10 : U32),
+    Bool.pick(U32, U32.is_eq(m, 2), 44, (47 + k % 2 * 11 : U32)))
+
+def h_perturb(same: Bool, +n: U32, s: String) -> List<&2, U32>:
+  match same:
+    case True{}:
+      h_chars(s)
+    case False{}:
+      h_insert(U32.to_nat((n / 4 : U32)), h_mark((n % 4 : U32), (n / 4 : U32)), h_chars(s))
+
+def h_input(+n: U32, s: String) -> List<&2, U32>:
+  h_perturb(U32.is_eq((n % 4 : U32), 0), n, s)
+
+def h_code(r: Outcome) -> U32:
+  match r:
+    case Ok{v}:
+      (v * 4 : U32)
+    case Err{s, p}:
+      (p * 4 + s : U32)
+
+def h_run(+n: U32, s: String) -> U32:
+  h_code(run(h_input(n, s)))
+
+def scenario(+n: U32) -> List<&2, U32>:
+  [h_run(n, "1,2,3"), h_run(n, "10,20,300"), h_run(n, ""), h_run(n, "1,,2"),
+   h_run(n, "5,3"), h_run(n, "999,1000"), h_run(n, "12a,3"), h_run(n, "1,2000,"),
+   h_run(n, ",7"), h_run(n, "4,8,15,16,23,42"), h_run(n, "1001"), h_run(n, "0,0"),
+   h_run(n, "1,,2x"), h_run(n, "2000,1x"), h_run(n, "2000,,1")]

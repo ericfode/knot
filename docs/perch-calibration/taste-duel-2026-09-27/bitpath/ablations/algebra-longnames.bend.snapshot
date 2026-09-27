@@ -1,0 +1,187 @@
+import Base
+
+# A BinaryTrieNode of depth remaining_depth_levels is
+# 2^remaining_depth_levels slots; a key, read low bit first, names one.
+# One bit-indexed pair, select_child_on_bit_side and
+# build_fork_with_child_on_side, is the entire structure:
+#
+#   law  select_child_on_bit_side(chosen_side_bit,
+#          build_fork_with_child_on_side(chosen_side_bit,
+#            new_subtree_being_placed, existing_sibling_subtree))
+#          = new_subtree_being_placed                      retract
+#   law  select_child_on_bit_side(¬chosen_side_bit,
+#          build_fork_with_child_on_side(chosen_side_bit,
+#            new_subtree_being_placed, existing_sibling_subtree))
+#          = existing_sibling_subtree                      frame
+#   law  build_fork_with_child_on_side(chosen_side_bit,
+#          EmptySubtree, EmptySubtree)
+#          = EmptySubtree    collapse: no ForkNode of two EmptySubtrees
+#
+# descend_along_key_bits and rebuild_path_with_new_leaf iterate the pair
+# remaining_depth_levels times, so by induction on remaining_depth_levels
+#   law  descend_along_key_bits(remaining_key_bits,
+#          rebuild_path_with_new_leaf(remaining_key_bits,
+#            new_subtree_being_placed, current_trie_node))
+#          = new_subtree_being_placed                      lens
+# and the API is three single expressions. Deletion is
+# rebuild_path_with_new_leaf with an EmptySubtree.
+
+type BinaryTrieNode is Data:
+  EmptySubtree{}
+  StoredValueLeaf{stored_leaf_value: U32}
+  ForkNode{
+    left_child_subtree: BinaryTrieNode,
+    right_child_subtree: BinaryTrieNode
+  }
+
+def select_child_on_bit_side(
+  chosen_side_bit: Bool, current_trie_node: BinaryTrieNode
+) -> BinaryTrieNode:
+  match chosen_side_bit current_trie_node:
+    case False{} ForkNode{left_child_subtree, right_child_subtree}:
+      left_child_subtree
+    case True{}  ForkNode{left_child_subtree, right_child_subtree}:
+      right_child_subtree
+    case _       _:
+      EmptySubtree{}
+
+def build_fork_with_child_on_side(
+  chosen_side_bit: Bool, new_subtree_being_placed: BinaryTrieNode,
+  existing_sibling_subtree: BinaryTrieNode
+) -> BinaryTrieNode:
+  match chosen_side_bit new_subtree_being_placed existing_sibling_subtree:
+    case _       EmptySubtree{}           EmptySubtree{}:
+      EmptySubtree{}
+    case False{} new_subtree_being_placed existing_sibling_subtree:
+      ForkNode{new_subtree_being_placed, existing_sibling_subtree}
+    case True{}  new_subtree_being_placed existing_sibling_subtree:
+      ForkNode{existing_sibling_subtree, new_subtree_being_placed}
+
+def read_lowest_key_bit(+remaining_key_bits: U32) -> Bool:
+  Bool.not(U32.is_even(remaining_key_bits))
+
+def descend_along_key_bits(
+  remaining_depth_levels: Nat, +remaining_key_bits: U32,
+  current_trie_node: BinaryTrieNode
+) -> BinaryTrieNode:
+  match remaining_depth_levels:
+    case 0n:                        current_trie_node
+    case 1n+remaining_depth_levels:
+      descend_along_key_bits(remaining_depth_levels,
+        U32.shr(remaining_key_bits),
+        select_child_on_bit_side(read_lowest_key_bit(remaining_key_bits),
+          current_trie_node))
+
+def rebuild_path_with_new_leaf(
+  remaining_depth_levels: Nat, +remaining_key_bits: U32,
+  new_subtree_being_placed: BinaryTrieNode,
+  +current_trie_node: BinaryTrieNode
+) -> BinaryTrieNode:
+  match remaining_depth_levels:
+    case 0n:                        new_subtree_being_placed
+    case 1n+remaining_depth_levels:
+      +chosen_side_bit = read_lowest_key_bit(remaining_key_bits)
+      build_fork_with_child_on_side(chosen_side_bit,
+        rebuild_path_with_new_leaf(remaining_depth_levels,
+          U32.shr(remaining_key_bits), new_subtree_being_placed,
+          select_child_on_bit_side(chosen_side_bit, current_trie_node)),
+        select_child_on_bit_side(Bool.not(chosen_side_bit),
+          current_trie_node))
+
+def extract_leaf_value_if_present(
+  current_trie_node: BinaryTrieNode
+) -> +Maybe<U32>:
+  match current_trie_node:
+    case StoredValueLeaf{stored_leaf_value}: Some{stored_leaf_value}
+    case _:                                  None{}
+
+def lookup_value_at_key(
+  current_trie_node: BinaryTrieNode, remaining_key_bits: U32
+) -> +Maybe<U32>:
+  extract_leaf_value_if_present(
+    descend_along_key_bits(8n, remaining_key_bits, current_trie_node))
+def store_value_at_key(
+  current_trie_node: BinaryTrieNode, remaining_key_bits: U32,
+  stored_leaf_value: U32
+) -> BinaryTrieNode:
+  rebuild_path_with_new_leaf(8n, remaining_key_bits,
+    StoredValueLeaf{stored_leaf_value}, current_trie_node)
+def delete_value_at_key(
+  current_trie_node: BinaryTrieNode, remaining_key_bits: U32
+) -> BinaryTrieNode:
+  rebuild_path_with_new_leaf(8n, remaining_key_bits,
+    EmptySubtree{}, current_trie_node)
+
+# ---- harness (not shown) ----
+# Shared test driver. Only the shim defs H.nil through H.forks name this API;
+# everything after them is byte-identical across the six renderings.
+def H.nil() -> BinaryTrieNode: EmptySubtree{}
+def H.get(t: BinaryTrieNode, k: U32) -> +Maybe<U32>: lookup_value_at_key(t, k)
+def H.put(t: BinaryTrieNode, k: U32, v: U32) -> BinaryTrieNode: store_value_at_key(t, k, v)
+def H.del(t: BinaryTrieNode, k: U32) -> BinaryTrieNode: delete_value_at_key(t, k)
+def H.forks(t: BinaryTrieNode) -> U32:
+  match t:
+    case ForkNode{l, r}: (1 + H.forks(l) + H.forks(r) : U32)
+    case _: 0
+
+def H.seen(m: +Maybe<U32>) -> U32:
+  match m:
+    case None{}: 0
+    case Some{v}: (v + 1 : U32)
+
+def H.key(n: U32, i: U32) -> U32:
+  U32.mod((n * 37 + i * 11 : U32), 256)
+
+def H.flip(k: U32) -> U32:
+  U32.mod((k + 128 : U32), 256)
+
+def scenario(+n: U32) -> +List<U32>:
+  +k0 = H.key(n, 0)
+  +k1 = H.key(n, 1)
+  +k2 = H.key(n, 2)
+  +k3 = H.key(n, 3)
+  +k4 = H.key(n, 4)
+  +k5 = H.key(n, 5)
+  +k6 = H.key(n, 6)
+  +k7 = H.key(n, 7)
+  +w = U32.mod((n * 7 + 3 : U32), 256)
+  +v = (n + 5 : U32)
+  m0 = H.put(H.nil(), k0, (v * 0 : U32))
+  m1 = H.put(m0, k1, (v * 1 : U32))
+  m2 = H.put(m1, k2, (v * 2 : U32))
+  m3 = H.put(m2, k3, (v * 3 : U32))
+  m4 = H.put(m3, k4, (v * 4 : U32))
+  m5 = H.put(m4, k5, (v * 5 : U32))
+  m6 = H.put(m5, k6, (v * 6 : U32))
+  m7 = H.put(m6, k7, (v * 7 : U32))
+  m8 = H.put(m7, w, n)
+  m9 = H.put(m8, k3, (n + 100 : U32))
+  +m10 = H.put(m9, H.flip(k0), 7)
+  c1 = H.forks(m10)
+  m11 = H.del(m10, k1)
+  m12 = H.del(m11, k4)
+  m13 = H.del(m12, H.flip(k0))
+  m14 = H.del(m13, H.flip(k2))
+  +m = H.del(m14, k1)
+  c2 = H.forks(m)
+  o0 = H.seen(H.get(m, k0))
+  o1 = H.seen(H.get(m, k1))
+  o2 = H.seen(H.get(m, k2))
+  o3 = H.seen(H.get(m, k3))
+  o4 = H.seen(H.get(m, k4))
+  o5 = H.seen(H.get(m, k5))
+  o6 = H.seen(H.get(m, k6))
+  o7 = H.seen(H.get(m, k7))
+  o8 = H.seen(H.get(m, H.flip(k0)))
+  o9 = H.seen(H.get(m, H.flip(k2)))
+  o10 = H.seen(H.get(m, w))
+  o11 = H.seen(H.get(m, H.key(n, 8)))
+  e0 = H.del(m, k0)
+  e1 = H.del(e0, k2)
+  e2 = H.del(e1, k3)
+  e3 = H.del(e2, k5)
+  e4 = H.del(e3, k6)
+  e5 = H.del(e4, k7)
+  e6 = H.del(e5, w)
+  c3 = H.forks(e6)
+  [o0, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, o11, c1, c2, c3]

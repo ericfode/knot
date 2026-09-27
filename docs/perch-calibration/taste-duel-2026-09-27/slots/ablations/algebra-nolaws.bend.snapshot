@@ -1,0 +1,84 @@
+import Base
+
+type Cell is Data:
+  Void{}
+  Held{v: U32}
+
+type Aim is Data:
+  Hole{}
+  At{i: U32}
+
+def next(a: Aim) -> Aim:
+  match a:
+    case Hole{}: Hole{}
+    case At{i}:  At{(i - 1 : U32)}
+
+def trade(s: List<Cell>, a: Aim, h: Cell, +k: U32, z: List<Cell> -> List<Cell>)
+  -> List<Cell> & Cell & U32:
+  match s a:
+    case []          _:      (z([]),     h,      k)
+    case Void{} <> t Hole{}: (z(h <> t), Void{}, k)
+    case c <> t      At{0}:  (z(h <> t), c,      k)
+    case c <> t      a:      trade(t, next(a), h, (k + 1 : U32), r => z(c <> r))
+
+type Put is Type:
+  Placed{s: List<Cell>, i: U32}
+  Refused{s: List<Cell>, v: U32}
+
+type Take is Type:
+  Missing{s: List<Cell>}
+  Taken{s: List<Cell>, v: U32}
+
+def read_put(r: List<Cell> & Cell & U32) -> Put:
+  match r:
+    case (s, Void{}, i):  Placed{s, i}
+    case (s, Held{v}, _): Refused{s, v}
+
+def read_take(r: List<Cell> & Cell & U32) -> Take:
+  match r:
+    case (s, Void{}, _):  Missing{s}
+    case (s, Held{v}, _): Taken{s, v}
+
+def empty() -> List<Cell>: [Void{}, Void{}, Void{}, Void{}]
+def put(s: List<Cell>, v: U32) -> Put:   read_put(trade(s, Hole{}, Held{v}, 0, r => r))
+def take(s: List<Cell>, i: U32) -> Take: read_take(trade(s, At{i}, Void{}, 0, r => r))
+
+# ---- harness (not shown) ----
+
+type HarnessOp is Data:
+  HarnessPut{value: U32}
+  HarnessTake{index: U32}
+
+def harness_value(+n: U32, k: U32) -> U32:
+  (n * 7 + k * 13 + 3 : U32)
+
+def harness_script(+n: U32) -> List<HarnessOp>:
+  [HarnessPut{harness_value(n, 0)}, HarnessPut{harness_value(n, 1)}, HarnessTake{(n % 4 : U32)},
+   HarnessPut{harness_value(n, 2)}, HarnessPut{harness_value(n, 3)},
+   HarnessPut{harness_value(n, 4)}, HarnessPut{harness_value(n, 5)},
+   HarnessTake{(n / 4 % 4 : U32)}, HarnessTake{(n / 4 % 4 : U32)}, HarnessPut{harness_value(n, 6)},
+   HarnessTake{(n / 16 % 4 : U32)}, HarnessTake{(n % 6 : U32)},
+   HarnessPut{harness_value(n, 7)}, HarnessPut{harness_value(n, 8)}]
+
+def harness_on_put(r: Put, k: List<Cell> -> List<U32>) -> List<U32>:
+  match r:
+    case Placed{s, i}: (i + 1 : U32) <> k(s)
+    case Refused{s, v}: (100 + v % 50 : U32) <> k(s)
+
+def harness_on_take(r: Take, k: List<Cell> -> List<U32>) -> List<U32>:
+  match r:
+    case Taken{s, v}: (200 + v % 50 : U32) <> k(s)
+    case Missing{s}: 999 <> k(s)
+
+def harness_apply(o: HarnessOp, s: List<Cell>, k: List<Cell> -> List<U32>) -> List<U32>:
+  match o:
+    case HarnessPut{v}: harness_on_put(put(s, v), k)
+    case HarnessTake{i}: harness_on_take(take(s, i), k)
+
+def harness_drive(ops: List<HarnessOp>, s: List<Cell>) -> List<U32>:
+  match ops:
+    case []: []
+    case o <> rest: harness_apply(o, s, t => harness_drive(rest, t))
+
+def scenario(n: U32) -> List<U32>:
+  harness_drive(harness_script(n), empty())
