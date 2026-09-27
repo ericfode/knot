@@ -531,3 +531,19 @@ differences this small do not establish a preference. The experiment is retained
 and rejected as an all-three success. No candidate, assertion, rubric or
 threshold changed, and its successful rating was reused by identity rather than
 requested again.
+
+## 2026-09-26 — Galaxy brain extends conceptual compression
+
+The user requested **Galaxy brain** above the existing big-brain scale.
+[Level 5](../perch-style.json) rewards a reframing that unifies apparently
+essential distinctions and reveals further traceable connections. Level 4
+continues to reward an unusually economical solution. The target remains at
+least 60% probability on level 3 or higher; the other two axes are unchanged.
+
+The scorer already uses each dimension's own level count. Test fixtures assumed
+equal lengths; they now follow each rubric, and the request/receipt integration
+check exercises a level-5 answer and its contribution to target probability.
+`npm run lint:rules -- --json` and `npm run lint:verify` pass: 28 offline tests
+and the eight-law wiring gate. These checks establish wiring, not taste
+calibration. No live style ratings were requested. Human calibration of the new
+level remains pending; earlier receipts keep their original rubric identity.

@@ -8,7 +8,7 @@ const identity = { rubric_sha256: 'rubric', parser: 'parser' };
 const specimen = target => ({ target, path: target.split('::')[0], kind: 'bend_definition', line: 1,
   source_sha256: 'source', state_sha256: 'state', context: { truncated: false, files: [] },
   model: 'model', answers: Object.fromEntries(config.dimensions.map(d => [d.id,
-    { probabilities: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0 }, score: 3, confidence: 1 }])) });
+    { probabilities: Object.fromEntries(d.levels.map((_, i) => [i, i === 3 ? 1 : 0])), score: 3, confidence: 1 }])) });
 const baseline = rows => ({ schema: 2, command: 'style-rank', ...identity, rows, assessments: [], requested_model: 'requested' });
 const inventory = { discovered_files: ['src/a.bend', 'src/new.bend', 'tests/broken.bend', 'tests/empty.bend'],
   unranked: [{ path: 'tests/broken.bend', reason: 'expected parser rejection' }], empty_files: ['tests/empty.bend'] };

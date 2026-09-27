@@ -11,10 +11,10 @@ const targets = ['a.bend::solve', 'b.bend::solve'];
 const args = ['--live', '--json', '--cohort=Add one to an unsigned word', ...targets];
 const key = 'offline-secret-must-not-be-recorded';
 const source = 'import Base\nimport ./helper.bend as H\ndef solve(x: U32) -> U32: H.next(x)\ndef unrelated() -> U32: 999\n';
-const score = level => ({ type: 'score', score: level, confidence: 1,
-  probabilities: Object.fromEntries(config.dimensions[0].levels.map((_, i) => [i, i === level ? 1 : 0])) });
+const score = (level, dimension = config.dimensions[0]) => ({ type: 'score', score: level, confidence: 1,
+  probabilities: Object.fromEntries(dimension.levels.map((_, i) => [i, i === level ? 1 : 0])) });
 const response = (brain = 3, delight = 2, model = 'offline-style-fixture', memetic = 3) => ({ ok: true, json: async () => ({
-  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight), highly_memetic: score(memetic) },
+  model, answers: { maximally_big_brain: score(brain), delightful_to_read: score(delight, config.dimensions[1]), highly_memetic: score(memetic, config.dimensions[2]) },
   usage: { input_tokens: 100, output_tokens: 10 },
 }) });
 
@@ -57,24 +57,33 @@ test('one request per unit carries three ordinal questions; receipts assess each
     fetchImpl: async (_url, request) => {
       requests.push(JSON.parse(request.body));
       assert.equal(request.headers.authorization, `Bearer ${key}`);
-      return requests.length === 1 ? response(4, 1) : response(2, 4);
+      return requests.length === 1 ? response(5, 1) : response(2, 4);
     },
   });
   assert.equal(code, 3, 'completed review with unmet style targets needs attention');
   assert.equal(requests.length, 2);
   for (const request of requests) {
     assert.equal(Object.keys(request.questions).length, 3);
-    assert.ok(Object.values(request.questions).every(q => q.type === 'score' && q.criteria.length === 5));
+    for (const dimension of config.dimensions) {
+      assert.equal(request.questions[dimension.id].type, 'score');
+      assert.deepEqual(request.questions[dimension.id].criteria, dimension.levels);
+    }
   }
   const report = JSON.parse(output[0]);
   assert.equal(report.status, 'completed');
   assert.equal(report.provider_requests, 2);
   assert.equal(report.provider_responses, 2);
   assert.equal(report.rankings[0].entries[0].target, targets[0]);
+  assert.equal(report.rankings[0].entries[0].score, 5);
+  assert.equal(report.rankings[0].entries[0].probabilities[5], 1);
   assert.equal(report.rankings[1].entries[0].target, targets[1]);
   assert.equal(report.typechecked, false);
   assert.equal(report.behavioral_equivalence_checked, false);
   assert.equal(report.assessments.length, 6);
+  const brain = report.assessments.find(a => a.target === targets[0] && a.dimension === 'maximally_big_brain');
+  assert.equal(brain.target_level, 3);
+  assert.equal(brain.probability_at_target, 1);
+  assert.equal(brain.status, 'meets_target');
   assert.equal(report.style_summary.meets_all, 0);
   assert.equal(report.style_summary.needs_review, 2);
   const receipts = await readdir(join(root, '.perch/usage'));
@@ -119,8 +128,8 @@ test('a single existing declaration is assessed without a cohort or alternative;
   assert.equal(code, 0);
   assert.equal(report.provider_requests, 1);
   assert.equal(report.style_summary.meets_all, 1);
-  const uncertain = { ...score(3), score: 2.5, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
-  const assessment = assessStyle([{ target: 'x', answers: { maximally_big_brain: score(4), delightful_to_read: uncertain, highly_memetic: score(1) } }], config);
+  const uncertain = { ...score(3, config.dimensions[1]), score: 2.5, confidence: 0.5, probabilities: { 0: 0, 1: 0, 2: 0.5, 3: 0.5, 4: 0 } };
+  const assessment = assessStyle([{ target: 'x', answers: { maximally_big_brain: score(4), delightful_to_read: uncertain, highly_memetic: score(1, config.dimensions[2]) } }], config);
   assert.deepEqual(assessment.map(a => a.status), ['meets_target', 'uncertain', 'below_target']);
 });
 
@@ -213,8 +222,8 @@ test('missing credentials, unauthorized responses, malformed scores and model dr
     assert.deepEqual(report.rankings, [], mode);
     assert.equal(calls, mode === 'missing-key' ? 0 : mode === 'model-drift' ? 2 : 1, mode);
   }
-  assert.throws(() => validateScore({ ...score(4), score: 1 }, 5), /Inconsistent/);
-  assert.throws(() => validateScore({ ...score(4), probabilities: { 4: 1 } }, 5), /Incomplete/);
+  assert.throws(() => validateScore({ ...score(4), score: 1 }, config.dimensions[0].levels.length), /Inconsistent/);
+  assert.throws(() => validateScore({ ...score(4), probabilities: { 4: 1 } }, config.dimensions[0].levels.length), /Incomplete/);
 });
 
 test('ties share a rank, near ties remain visible, and existing output is rejected before requests', async t => {

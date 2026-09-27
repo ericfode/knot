@@ -75,12 +75,21 @@ or assessments. This allows recovery without paying again for unchanged answers.
 
 ## Interpret the result
 
-[perch-style.json](../perch-style.json) contains three five-level ordered rubrics.
-A request asks all three typed Score questions together. Each declaration receives
-its own distributions, independent of other candidates or their order.
+[perch-style.json](../perch-style.json) contains three ordered rubrics. Big brain
+runs from 0 to 5; delight and memetic identity run from 0 to 4. A request asks all
+three typed Score questions together. Each declaration receives its own
+distributions, independent of other candidates or their order.
 
-The current target on every axis is **level 3 or 4**. Sum the normalized
-probability mass on those two levels:
+Big brain level 4 rewards an unusually economical solution. Level 5, **Galaxy
+brain**, rewards a surprising reframing: apparently essential distinctions become
+consequences of one principle, revealing further connections that can be traced
+through the supplied mechanism. Complexity or obscurity alone does not qualify.
+The new level is a user-requested taste criterion; human calibration remains
+pending. Earlier receipts retain their original rubric identity and cannot be
+reused as ratings under the expanded scale.
+
+The current target on every axis remains **level 3 or higher**. Sum the normalized
+probability mass on levels 3–5 for big brain and levels 3–4 for the other axes:
 
 - At least 60%: `meets_target`.
 - At most 40%: `below_target`.
