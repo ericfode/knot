@@ -1,0 +1,103 @@
+import Base
+
+# B3/S23 asks for three in either view: the ring, or the ring plus its center.
+def Life.three(cell: U32, +ring: U32) -> U32:
+  Bool.to_u32(
+    Bool.or(
+      U32.is_eq(ring, 3),
+      U32.is_eq((ring + cell : U32), 3)))
+
+# Cut the flat board into rows and cap every row with dead cells.
+def Life.halo(
+  height: Nat,
+  +width: Nat,
+  +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      (0 <> List.append(
+        &2,
+        U32,
+        List.take(&2, U32, cells, width),
+        [0])) <>
+        Life.halo(
+          rest,
+          width,
+          List.drop(&2, U32, cells, width))
+
+# Three columns advance together across three haloed rows.
+def Life.focus(
+  +north: List<&2, U32>,
+  +middle: List<&2, U32>,
+  +south: List<&2, U32>
+) -> List<&2, U32>:
+  match north middle south:
+    case nw <> north1 w <> middle1 sw <> south1:
+      match north1 middle1 south1:
+        case n <> north2 cell <> middle2 s <> south2:
+          match north2 middle2 south2:
+            case ne <> nt e <> mt se <> st:
+              +ring = (
+                nw + n + ne
+                + w + e
+                + sw + s + se : U32)
+              Life.three(cell, ring) <>
+                Life.focus(north1, middle1, south1)
+            case _ _ _:
+              Nil{}
+        case _ _ _:
+          Nil{}
+    case _ _ _:
+      Nil{}
+
+# The same three-wide focus advances one row at a time down the haloed board.
+def Life.sweep(
+  +rows: List<&2, List<&2, U32>>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case north <> tail:
+      match tail:
+        case Nil{}:
+          Nil{}
+        case middle <> after:
+          match after:
+            case Nil{}:
+              Nil{}
+            case south <> rest:
+              List.append(
+                &2,
+                U32,
+                Life.focus(north, middle, south),
+                Life.sweep(tail))
+
+def step(
+  width: U32,
+  height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  +w = U32.to_nat(width)
+  h = U32.to_nat(height)
+  +dead = List.replicate(U32, Nat.add(w, 2n), 0)
+  Life.sweep(
+    dead <>
+      List.append(
+        &2,
+        List<&2, U32>,
+        Life.halo(h, w, cells),
+        [dead]))
+
+def evolve(
+  turns: Nat,
+  +width: U32,
+  +height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

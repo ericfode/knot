@@ -1,0 +1,102 @@
+import Base
+
+# A U32 row evolves thirty-two columns at once. These fields are the low
+# binary planes of their aligned population counts; totals 8 and 9 wrap
+# to 0 and 1, which cannot be mistaken for the only relevant totals, 3 and 4.
+type Life.Tally is Data:
+  Tally{one: U32, two: U32, four: U32}
+
+def Life.Tally.add(+bit: U32, tally: Life.Tally) -> Life.Tally:
+  match tally:
+    case Tally{+one, +two, four}:
+      +carry1 = (one .&. bit : U32)
+      carry2 = (two .&. carry1 : U32)
+      Tally{
+        (one .^. bit : U32),
+        (two .^. carry1 : U32),
+        (four .^. carry2 : U32)
+      }
+
+def Life.Tally.row(+row: U32, tally: Life.Tally) -> Life.Tally:
+  Life.Tally.add(U32.shl(row),
+    Life.Tally.add(row,
+      Life.Tally.add(U32.shr(row), tally)))
+
+# Counting the center as part of its 3-by-3 population turns B3/S23 into:
+# total 3, or total 4 with a live center.
+def Life.tick(north: U32, +here: U32, south: U32) -> U32:
+  counted = Life.Tally.row(north,
+    Life.Tally.row(here,
+      Life.Tally.row(south, Tally{0, 0, 0})))
+  Tally{+one, +two, +four} = counted
+  is3 = (one .&. two .&. U32.not(four) : U32)
+  is4 = (U32.not(one) .&. U32.not(two) .&. four : U32)
+  live4 = (here .&. is4 : U32)
+  (is3 .|. live4 : U32)
+
+def Life.pack.row(cells: List<&2, U32>, acc: U32) -> U32:
+  match cells:
+    case Nil{}:
+      acc
+    case cell <> rest:
+      Life.pack.row(rest, (U32.shl(acc) .|. cell : U32))
+
+def Life.pack(
+  rows: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match rows:
+    case 0n:
+      Nil{}
+    case 1n+more:
+      line = List.take(&2, U32, cells, width)
+      rest = List.drop(&2, U32, cells, width)
+      Life.pack.row(line, 0) <> Life.pack(more, width, rest)
+
+def Life.sweep(
+  rows: List<&2, U32>, north: U32
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case +here <> +rest:
+      south = Maybe.default(&2, U32, List.head(&2, U32, rest), 0)
+      Life.tick(north, here, south) <> Life.sweep(rest, here)
+
+def Life.unpack.row(
+  width: Nat, +bits: U32, acc: List<&2, U32>
+) -> List<&2, U32>:
+  match width:
+    case 0n:
+      acc
+    case 1n+more:
+      Life.unpack.row(more, U32.shr(bits),
+        (bits .&. 1 : U32) <> acc)
+
+def Life.unpack(
+  rows: List<&2, U32>, +width: Nat
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case bits <> rest:
+      List.append(&2, U32,
+        Life.unpack.row(width, bits, Nil{}),
+        Life.unpack(rest, width))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  Life.unpack(
+    Life.sweep(
+      Life.pack(U32.to_nat(height), span, cells), 0),
+    span)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

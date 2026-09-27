@@ -1,0 +1,168 @@
+import Base
+
+# Each field is a bit-plane: thirty-two cells count without carrying between them.
+type Counts is Data:
+  Counts{one: U32, two: U32, four: U32, eight: U32}
+
+# One vote ripples through every selected bit-sliced counter at once.
+def Counts.vote(counts: Counts, +votes: U32) -> Counts:
+  match counts:
+    case Counts{+one, +two, +four, eight}:
+      +into_two = U32.and(one, votes)
+      +into_four = U32.and(two, into_two)
+      into_eight = U32.and(four, into_four)
+      Counts{
+        U32.xor(one, votes),
+        U32.xor(two, into_two),
+        U32.xor(four, into_four),
+        U32.xor(eight, into_eight)
+      }
+
+# A row casts left, center and right; a zero center excludes the focal row.
+def Counts.cast(counts: Counts, +row: U32, center: U32) -> Counts:
+  Counts.vote(
+    Counts.vote(
+      Counts.vote(counts, U32.shl(row)),
+      center),
+    U32.shr(row))
+
+# B3/S23: has two, lacks four-or-eight, and is odd-or-alive.
+def Life.rule(counts: Counts, alive: U32) -> U32:
+  match counts:
+    case Counts{one, two, four, eight}:
+      U32.and(
+        two,
+        U32.and(
+          U32.not(U32.or(four, eight)),
+          U32.or(one, alive)))
+
+# Three casts form the Moore stencil: 3 above, 2 here, 3 below.
+def Life.row(+above: U32, +here: U32, +below: U32) -> U32:
+  Life.rule(
+    Counts.cast(
+      Counts.cast(
+        Counts.cast(Counts{0, 0, 0, 0}, above, above),
+        here,
+        0),
+      below,
+      below),
+    here)
+
+# Fold one row-major slice into a word, least-significant cell first.
+def Rows.pack.one(
+  cells: List<&2, U32>, +shift: Nat, row: U32
+) -> U32:
+  match cells:
+    case Nil{}:
+      row
+    case cell <> rest:
+      Rows.pack.one(
+        rest,
+        1n+shift,
+        U32.or(row, U32.shln(cell, shift)))
+
+# Repeat that fold without changing the board's row order.
+def Rows.pack(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      Rows.pack.one(List.take(&2, U32, cells, width), 0n, 0)
+        <> Rows.pack(rest, width, List.drop(&2, U32, cells, width))
+
+# Unroll one cell per fuel: shift the born row, then roll the vertical halo.
+def Life.unroll(
+  fuel: Nat,
+  columns: Nat,
+  rows: List<&2, U32>,
+  +above: U32,
+  +width: Nat,
+  +born: U32
+) -> List<&2, U32>:
+  match fuel columns:
+    case 0n _:
+      Nil{}
+    case 1n+rest 0n:
+      Nil{}
+    case 1n+rest 1n+more:
+      match more:
+        case 0n:
+          match rows:
+            case Nil{}:
+              U32.and(born, 1) <> Nil{}
+            case +here <> +below:
+              match below:
+                case Nil{}:
+                  U32.and(born, 1)
+                    <> Life.unroll(
+                      rest,
+                      width,
+                      Nil{},
+                      here,
+                      width,
+                      Life.row(above, here, 0))
+                case next <> _:
+                  U32.and(born, 1)
+                    <> Life.unroll(
+                      rest,
+                      width,
+                      below,
+                      here,
+                      width,
+                      Life.row(above, here, next))
+        case 1n+left:
+          U32.and(born, 1)
+            <> Life.unroll(
+              rest,
+              1n+left,
+              rows,
+              above,
+              width,
+              U32.shr(born))
+
+# The absent row above the first packed row is the initial dead boundary.
+def Life.unroll.start(
+  fuel: Nat, +width: Nat, rows: List<&2, U32>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case +here <> +below:
+      match below:
+        case Nil{}:
+          Life.unroll(
+            fuel,
+            width,
+            Nil{},
+            here,
+            width,
+            Life.row(0, here, 0))
+        case next <> _:
+          Life.unroll(
+            fuel,
+            width,
+            below,
+            here,
+            width,
+            Life.row(0, here, next))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +columns = U32.to_nat(width)
+  +rows = U32.to_nat(height)
+  Life.unroll.start(
+    Nat.mul(columns, rows),
+    columns,
+    Rows.pack(rows, columns, cells))
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

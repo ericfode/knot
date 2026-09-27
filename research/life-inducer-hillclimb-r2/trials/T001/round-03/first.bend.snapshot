@@ -1,0 +1,63 @@
+import Base
+
+# Empty input supplies a dead cell and remains empty.
+def uncons_zero(
+  cells: List<&2, U32>,
+  next: U32 -> List<&2, U32> -> List<&2, U32>
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      next(0, Nil{})
+    case Con{center, rest}:
+      next(center, rest)
+
+# One boundary predicate controls both the east neighbor and row rollover.
+def horizontal(
+  cells: List<&2, U32>, +width: U32, +column: U32, left: U32
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+center, +rest}:
+      +next = (column + 1 : U32)
+      +inside = U32.is_lt(next, width)
+      uncons_zero(rest, right => unused =>
+        (Bool.pick(U32, U32.is_zero(column), 0, left) + center +
+          Bool.pick(U32, inside, right, 0) : U32) <>
+        horizontal(rest, width, Bool.pick(U32, inside, next, 0), center))
+
+# Removing the center gives eight neighbors; its bit joins counts 2 and 3.
+def life(+center: U32, sum: U32) -> U32:
+  Bool.to_u32(U32.is_eq(U32.or((sum - center : U32), center), 3))
+
+# The finite center spine bounds three streams with implicit dead suffixes.
+def vertical(
+  cells: List<&2, U32>, north: List<&2, U32>,
+  middle: List<&2, U32>, south: List<&2, U32>
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{center, rest}:
+      uncons_zero(north, n => ns =>
+        uncons_zero(middle, m => ms =>
+          uncons_zero(south, s => ss =>
+            life(center, (n + m + s : U32)) <>
+              vertical(rest, ns, ms, ss))))
+
+# Valid input length supplies the height, including either empty dimension.
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +stride = U32.to_nat(width)
+  +bands = horizontal(cells, width, 0, 0)
+  north = List.append(&2, U32, List.replicate(U32, stride, 0), bands)
+  south = List.drop(&2, U32, bands, stride)
+  vertical(cells, north, bands, south)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))

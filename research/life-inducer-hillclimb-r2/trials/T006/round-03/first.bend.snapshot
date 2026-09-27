@@ -1,0 +1,109 @@
+import Base
+
+# One word is one row. `east` reaches zero exactly when the word is complete.
+def Life.pack(
+  scan: List<&2, U32>, +span: Nat, east: Nat, +bit: U32, row: U32
+) -> List<&2, U32>:
+  match scan east:
+    case Nil{} _:
+      Nil{}
+    case cell <> tail 0n:
+      U32.or(row, U32.mul(cell, bit)) <>
+        Life.pack(tail, span, Nat.sub(span, 1n), 1, 0)
+    case cell <> tail 1n+e:
+      Life.pack(
+        tail, span, e, U32.shl(bit),
+        U32.or(row, U32.mul(cell, bit))
+      )
+
+# These three words are the low bitplanes of thirty-two population counts.
+# Eight votes wrap eight to zero, so no fourth plane is needed: `twos` and
+# not `fours` selects two or three; `ones | alive` chooses S23 from B3.
+def Life.quorum(
+  votes: List<&2, U32>, alive: U32,
+  +ones: U32, +twos: U32, fours: U32
+) -> U32:
+  match votes:
+    case Nil{}:
+      U32.and(
+        U32.and(twos, U32.not(fours)),
+        U32.or(ones, alive)
+      )
+    case +bits <> rest:
+      +carry = U32.and(ones, bits)
+      Life.quorum(
+        rest, alive,
+        U32.xor(ones, bits),
+        U32.xor(twos, carry),
+        U32.xor(fours, U32.and(twos, carry))
+      )
+
+# Three rows become the eight winds around every column simultaneously.
+def Life.eight_winds(
+  +north: U32, +center: U32, +south: U32
+) -> U32:
+  Life.quorum(
+    [
+      U32.shl(north), north, U32.shr(north),
+      U32.shl(center),               U32.shr(center),
+      U32.shl(south), south, U32.shr(south)
+    ],
+    center, 0, 0, 0
+  )
+
+# Zero above and the appended zero below turn both dead boundaries into data.
+def Life.sweep(
+  rows: List<&2, U32>, below: List<&2, U32>, above: U32
+) -> List<&2, U32>:
+  match rows below:
+    case Nil{} _:
+      Nil{}
+    case row <> rest Nil{}:
+      Nil{}
+    case +row <> rest next <> future:
+      Life.eight_winds(above, row, next) <>
+        Life.sweep(rest, future, row)
+
+# Shifting the head spends one cell; an exhausted row is dropped at east zero.
+def Life.unpack(
+  fuel: Nat, +span: Nat, rows: List<&2, U32>, east: Nat
+) -> List<&2, U32>:
+  match fuel rows east:
+    case 0n _ _:
+      Nil{}
+    case 1n+f Nil{} _:
+      Nil{}
+    case 1n+f +row <> rest 0n:
+      U32.and(row, 1) <>
+        Life.unpack(f, span, rest, Nat.sub(span, 1n))
+    case 1n+f +row <> rest 1n+e:
+      U32.and(row, 1) <>
+        Life.unpack(f, span, U32.shr(row) <> rest, e)
+
+# Packing changes the basis: adjacency becomes shifts and every row evolves
+# as thirty-two parallel copies of the same three-bit circuit.
+def step(
+  +width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  +rows = Life.pack(cells, span, Nat.sub(span, 1n), 1, 0)
+  Life.unpack(
+    U32.to_nat((width * height : U32)),
+    span,
+    Life.sweep(
+      rows,
+      List.append(&2, U32, List.tail(&2, U32, rows), [0]),
+      0
+    ),
+    Nat.sub(span, 1n)
+  )
+
+# The Nat spine is both the composition count and its termination witness.
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

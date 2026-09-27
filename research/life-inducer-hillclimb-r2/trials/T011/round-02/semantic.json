@@ -1,0 +1,532 @@
+{
+  "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+  "name": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+    "status": "parsed",
+    "declarations": 4,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 16,
+  "units": [
+    {
+      "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+      "name": "horizontal",
+      "line": 4,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 17,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-linked-list-indexing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "source_sha256": "954099017987f681b2bc664884baec4873e7d4ea73a8da262a8f4a2d831bc853"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.inc",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Maybe.default",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.head",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.pick",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_zero",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+      "name": "vertical",
+      "line": 21,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 33,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-linked-list-indexing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+          "broken": 0.07999999999999996,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "source_sha256": "954099017987f681b2bc664884baec4873e7d4ea73a8da262a8f4a2d831bc853"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.to_u32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.or",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.and",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+      "name": "step",
+      "line": 35,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 41,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.48,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-linked-list-indexing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "source_sha256": "954099017987f681b2bc664884baec4873e7d4ea73a8da262a8f4a2d831bc853"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.to_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.replicate",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.drop",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.inc",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Maybe.default",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.head",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.pick",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_zero",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.to_u32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.or",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.and",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+      "name": "evolve",
+      "line": 43,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+        "status": "parsed",
+        "declarations": 4,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 50,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+          "broken": 0.20999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.51,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.18000000000000005,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-linked-list-indexing",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect full sequential traversals of linked lists. Repeated List.get from the same head at successive increasing indices is not used to visit all elements: each lookup retraverses the prefix and the full walk is quadratic. Walk the remaining list tail directly. A single lookup, a fixed small number of lookups, indexing an actual random-access Array or Vec, or indexing only into a shrinking suffix with a fixed index is allowed. Base List.get is a linear linked-list lookup, not an array operation. Require visible repetition across a length controlled by that input. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "source_sha256": "954099017987f681b2bc664884baec4873e7d4ea73a8da262a8f4a2d831bc853"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.to_nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.replicate",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.drop",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.inc",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Maybe.default",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "List.head",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.pick",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "U32.is_zero",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.to_u32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.or",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": ".local/life-inducer-hillclimb-r2/review/slot-11/life.bend",
+            "name": "Bool.and",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 4,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}

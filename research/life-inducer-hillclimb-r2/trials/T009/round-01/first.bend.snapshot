@@ -1,0 +1,55 @@
+import Base
+
+# Missing positions contribute the additive identity.
+def head0(cells: List<&2, U32>) -> U32:
+  match cells:
+    case Nil{}:
+      0
+    case Con{head, tail}:
+      head
+
+# Sum each horizontal triple; reset the sliding window at row seams.
+def horizontal(cells: List<&2, U32>, +width: U32, +column: U32, left: U32) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+here, +rest}:
+      +next = U32.inc(column)
+      +seam = U32.is_eq(next, width)
+      right = Bool.pick(U32, seam, 0, head0(rest))
+      total = (left + here + right : U32)
+      total <> horizontal(rest, width,
+        Bool.pick(U32, seam, 0, next),
+        Bool.pick(U32, seam, 0, here))
+
+# The closed 3x3 sum includes the center: B3/S23 becomes total=3 or live total=4.
+def life(here: U32, +total: U32) -> U32:
+  Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+    Bool.and(U32.is_eq(here, 1), U32.is_eq(total, 4))))
+
+# Three aligned horizontal sums complete the separable 3x3 stencil.
+def vertical(cells: List<&2, U32>, +above: List<&2, U32>, +middle: List<&2, U32>, +below: List<&2, U32>) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{here, rest}:
+      total = (head0(above) + head0(middle) + head0(below) : U32)
+      life(here, total) <> vertical(rest,
+        List.tail(&2, U32, above),
+        List.tail(&2, U32, middle),
+        List.tail(&2, U32, below))
+
+# Valid input length already carries height; the original list bounds output.
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  +band = horizontal(cells, width, 0, 0)
+  above = List.append(&2, U32, List.replicate(U32, span, 0), band)
+  below = List.drop(&2, U32, band, span)
+  vertical(cells, above, band, below)
+
+def evolve(turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))

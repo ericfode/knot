@@ -1,0 +1,58 @@
+import Base
+
+# Missing entries are the dead halo surrounding each finite row.
+def head0(xs: List<&2, U32>) -> U32:
+  Maybe.default(&2, U32, List.head(&2, U32, xs), 0)
+
+# The middle row supplies the shape; the other rows supply vertical mass.
+def columns(
+  middle: List<&2, U32>, +above: List<&2, U32>, +below: List<&2, U32>
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case Con{cell, rest}:
+      (head0(above) + cell + head0(below) : U32) <>
+        columns(rest, List.tail(&2, U32, above), List.tail(&2, U32, below))
+
+# Counting the center turns B3/S23 into total=3 or (alive and total=4).
+def sweep(
+  cells: List<&2, U32>, +mass: List<&2, U32>, left: U32
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{cell, rest}:
+      +center = head0(mass)
+      +right = List.tail(&2, U32, mass)
+      +total = (left + center + head0(right) : U32)
+      next = Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(cell, 1), U32.is_eq(total, 4))))
+      next <> sweep(rest, right, center)
+
+# Advance an immutable three-row window; only completed output is appended.
+def rows(
+  remaining: Nat, +width: Nat,
+  above: List<&2, U32>, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match remaining:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +middle = List.take(&2, U32, cells, width)
+      +below = List.drop(&2, U32, cells, width)
+      mass = columns(middle, above, List.take(&2, U32, below, width))
+      List.append(&2, U32, sweep(middle, mass, 0),
+        rows(rest, width, middle, below))
+
+def step(width: U32, height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  rows(U32.to_nat(height), U32.to_nat(width), Nil{}, cells)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

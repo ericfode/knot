@@ -1,0 +1,101 @@
+import Base
+
+def Life.rule(cell: U32, +neighbors: U32) -> U32:
+  Bool.to_u32(
+    Bool.or(
+      U32.is_eq(neighbors, 3),
+      Bool.and(U32.is_eq(cell, 1), U32.is_eq(neighbors, 2))))
+
+def Life.peek(cells: List<&2, U32>) -> U32:
+  Maybe.default(&2, U32, List.head(&2, U32, cells), 0)
+
+def Life.row(
+  +current: List<&2, U32>,
+  +above: List<&2, U32>,
+  +below: List<&2, U32>,
+  left_current: U32,
+  left_above: U32,
+  left_below: U32
+) -> List<&2, U32>:
+  match current:
+    case Nil{}:
+      Nil{}
+    case cell <> rest:
+      +above_rest = List.tail(&2, U32, above)
+      +below_rest = List.tail(&2, U32, below)
+      +north = Life.peek(above)
+      +south = Life.peek(below)
+      northeast = Life.peek(above_rest)
+      east = Life.peek(rest)
+      southeast = Life.peek(below_rest)
+      +neighbors = (
+        left_above + north + northeast
+        + left_current + east
+        + left_below + south + southeast : U32)
+      Life.rule(cell, neighbors) <>
+        Life.row(rest, above_rest, below_rest, cell, north, south)
+
+def Life.rows.go(
+  cells: List<&2, U32>,
+  +width: Nat,
+  remaining: Nat,
+  reversed: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case cell <> rest:
+      match remaining:
+        case 0n:
+          Life.rows.go(rest, width, width, reversed)
+        case 1n+more:
+          match more:
+            case 0n:
+              List.reverse(&2, U32, cell <> reversed) <>
+                Life.rows.go(rest, width, width, Nil{})
+            case 1n+tail:
+              Life.rows.go(rest, width, 1n+tail, cell <> reversed)
+
+def Life.board(
+  +rows: List<&2, List<&2, U32>>,
+  +zero: List<&2, U32>,
+  above: List<&2, U32>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case current <> rest:
+      below = Maybe.default(
+        &2,
+        List<&2, U32>,
+        List.head(&2, List<&2, U32>, rest),
+        zero)
+      List.append(
+        &2,
+        U32,
+        Life.row(current, above, below, 0, 0, 0),
+        Life.board(rest, zero, current))
+
+def step(
+  width: U32,
+  height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  +w = U32.to_nat(width)
+  +zero = List.replicate(U32, w, 0)
+  Life.board(
+    Life.rows.go(cells, w, w, Nil{}),
+    zero,
+    zero)
+
+def evolve(
+  turns: Nat,
+  +width: U32,
+  +height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+prior:
+      evolve(prior, width, height, step(width, height, cells))

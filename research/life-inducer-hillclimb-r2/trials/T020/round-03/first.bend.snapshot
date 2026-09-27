@@ -1,0 +1,143 @@
+import Base
+
+# One word is one row. Opposed neighbors are paired first, then the
+# orthogonal and diagonal quartets meet in a final bit-sliced census.
+def Row.step(
+  +north: U32, +here: U32, +south: U32, horizon: U32
+) -> U32:
+  +northwest = U32.shl(north)
+  +northeast = U32.shr(north)
+  +west = U32.shl(here)
+  +east = U32.shr(here)
+  +southwest = U32.shl(south)
+  +southeast = U32.shr(south)
+
+  +ns_odd = U32.xor(north, south)
+  +ns_twos = U32.and(north, south)
+  +ew_odd = U32.xor(west, east)
+  +ew_twos = U32.and(west, east)
+  +nwse_odd = U32.xor(northwest, southeast)
+  +nwse_twos = U32.and(northwest, southeast)
+  +nesw_odd = U32.xor(northeast, southwest)
+  +nesw_twos = U32.and(northeast, southwest)
+
+  +axes_odd = U32.xor(ns_odd, ew_odd)
+  axes_carry = U32.and(ns_odd, ew_odd)
+  axes_seed = U32.xor(ns_twos, ew_twos)
+  +axes_twos = U32.xor(axes_seed, axes_carry)
+  axes_four = U32.and(ns_twos, ew_twos)
+
+  +diagonals_odd = U32.xor(nwse_odd, nesw_odd)
+  diagonals_carry = U32.and(nwse_odd, nesw_odd)
+  diagonals_seed = U32.xor(nwse_twos, nesw_twos)
+  +diagonals_twos = U32.xor(diagonals_seed, diagonals_carry)
+  diagonals_four = U32.and(nwse_twos, nesw_twos)
+
+  odd = U32.xor(axes_odd, diagonals_odd)
+  +carry = U32.and(axes_odd, diagonals_odd)
+  +twos_seed = U32.xor(axes_twos, diagonals_twos)
+  twos = U32.xor(twos_seed, carry)
+  into_crowd = U32.or(
+    U32.and(axes_twos, diagonals_twos),
+    U32.and(twos_seed, carry)
+  )
+  crowd = U32.or(axes_four, U32.or(diagonals_four, into_crowd))
+
+  # Counts two and three share twos without crowd. Odd selects three;
+  # an existing cell also admits two. The horizon seals the row here.
+  U32.and(horizon,
+    U32.and(
+      U32.and(twos, U32.not(crowd)),
+      U32.or(odd, here)
+    )
+  )
+
+# Folding and unfolding are dual views of the row-word representation.
+def Row.fold(width: Nat, cells: List<&2, U32>) -> U32:
+  match width cells:
+    case 0n _:
+      0
+    case 1n+w Nil{}:
+      0
+    case 1n+w cell <> rest:
+      U32.or(cell, U32.shl(Row.fold(w, rest)))
+
+def Rows.fold(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+h:
+      Row.fold(width, cells)
+        <> Rows.fold(h, width, List.drop(&2, U32, cells, width))
+
+def Row.unfold(width: Nat, +bits: U32) -> List<&2, U32>:
+  match width:
+    case 0n:
+      Nil{}
+    case 1n+w:
+      U32.and(bits, 1) <> Row.unfold(w, U32.shr(bits))
+
+def Rows.unfold(
+  rows: List<&2, U32>, +width: Nat
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case bits <> rest:
+      List.append(&2, U32,
+        Row.unfold(width, bits),
+        Rows.unfold(rest, width)
+      )
+
+# A three-row window advances once per result row. Zero supplies both
+# vertical horizons; Row.step supplies the horizontal horizon.
+def Rows.sweep(
+  rest: List<&2, U32>, north: U32, +here: U32, +horizon: U32
+) -> List<&2, U32>:
+  match rest:
+    case Nil{}:
+      Row.step(north, here, 0, horizon) <> Nil{}
+    case +south <> tail:
+      Row.step(north, here, south, horizon)
+        <> Rows.sweep(tail, here, south, horizon)
+
+def Rows.step(
+  rows: List<&2, U32>, horizon: U32
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case here <> rest:
+      Rows.sweep(rest, 0, here, horizon)
+
+def Rows.evolve(
+  turns: Nat, +horizon: U32, rows: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      rows
+    case 1n+more:
+      Rows.evolve(more, horizon, Rows.step(rows, horizon))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  horizon = U32.sub(U32.shln(1, span), 1)
+  Rows.unfold(
+    Rows.step(Rows.fold(U32.to_nat(height), span, cells), horizon),
+    span
+  )
+
+def evolve(
+  turns: Nat, width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  +horizon = U32.sub(U32.shln(1, span), 1)
+  Rows.unfold(
+    Rows.evolve(turns, horizon,
+      Rows.fold(U32.to_nat(height), span, cells)),
+    span
+  )

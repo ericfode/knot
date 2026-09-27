@@ -1,0 +1,70 @@
+import Base
+
+# A column carries its center cell beside its vertical population.
+type Column is Data:
+  Column{cell: U32, mass: U32}
+
+# An exhausted source row supplies the dead halo.
+def head0(xs: List<&2, U32>) -> U32:
+  match xs:
+    case Nil{}:
+      0
+    case Con{cell, rest}:
+      cell
+
+def columns(
+  middle: List<&2, U32>, +above: List<&2, U32>, +below: List<&2, U32>
+) -> List<&2, Column>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case Con{+cell, rest}:
+      Column{cell, (head0(above) + cell + head0(below) : U32)} <>
+        columns(rest, List.tail(&2, U32, above), List.tail(&2, U32, below))
+
+# Beyond the final column, vertical population is zero.
+def mass0(columns: List<&2, Column>) -> U32:
+  match columns:
+    case Nil{}:
+      0
+    case Con{Column{cell, mass}, rest}:
+      mass
+
+# Three vertical populations form the inclusive neighborhood.
+# B3/S23 becomes total=3 or (alive and total=4).
+def sweep(columns: List<&2, Column>, left: U32) -> List<&2, U32>:
+  match columns:
+    case Nil{}:
+      Nil{}
+    case Con{Column{cell, +center}, +rest}:
+      +total = (left + center + mass0(rest) : U32)
+      next = Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(cell, 1), U32.is_eq(total, 4))))
+      next <> sweep(rest, center)
+
+# The immutable source window advances above <- middle <- below.
+def rows(
+  remaining: Nat, +width: Nat,
+  above: List<&2, U32>, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match remaining:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +middle = List.take(&2, U32, cells, width)
+      +below = List.drop(&2, U32, cells, width)
+      window = columns(middle, above, List.take(&2, U32, below, width))
+      List.append(&2, U32, sweep(window, 0),
+        rows(rest, width, middle, below))
+
+def step(width: U32, height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  rows(U32.to_nat(height), U32.to_nat(width), Nil{}, cells)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

@@ -1,0 +1,72 @@
+import Base
+
+# A Moore sum is a rolling three-column box sum with its focus removed.
+def Life.stencil(
+  +here: List<&2, U32>,
+  +north: List<&2, U32>,
+  +south: List<&2, U32>,
+  west: U32
+) -> List<&2, U32>:
+  match here:
+    case Nil{}:
+      Nil{}
+    case cell <> eastward:
+      n = Maybe.default(&2, U32, List.head(&2, U32, north), 0)
+      ne = Maybe.default(
+        &2, U32, List.head(&2, U32, List.tail(&2, U32, north)), 0)
+      e = Maybe.default(&2, U32, List.head(&2, U32, eastward), 0)
+      s = Maybe.default(&2, U32, List.head(&2, U32, south), 0)
+      se = Maybe.default(
+        &2, U32, List.head(&2, U32, List.tail(&2, U32, south)), 0)
+      +middle = (n + cell + s : U32)
+      east = (ne + e + se : U32)
+      +neighbors = (west + middle + east - cell : U32)
+      # Two keeps; three creates.
+      Bool.pick(
+        U32,
+        U32.is_eq(neighbors, 2),
+        cell,
+        Bool.to_u32(U32.is_eq(neighbors, 3))) <>
+        Life.stencil(
+          eastward,
+          List.tail(&2, U32, north),
+          List.tail(&2, U32, south),
+          middle)
+
+# The consumed row becomes north; the remaining board exposes south.
+def Life.sweep(
+  height: Nat,
+  +width: Nat,
+  +cells: List<&2, U32>,
+  north: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+more:
+      +here = List.take(&2, U32, cells, width)
+      +below = List.drop(&2, U32, cells, width)
+      south = List.take(&2, U32, below, width)
+      List.append(
+        &2,
+        U32,
+        Life.stencil(here, north, south, 0),
+        Life.sweep(more, width, below, here))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  Life.sweep(
+    U32.to_nat(height),
+    U32.to_nat(width),
+    cells,
+    Nil{})
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

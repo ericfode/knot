@@ -1,0 +1,67 @@
+
+> lint
+> node scripts/perch-workflow.mjs check research/life-inducer-hillclimb-r2/LAW_REVIEW.md --rules law-domain-inhabited,law-observable-essence,law-public-contract-coverage,law-independent-model,law-state-composition,law-boundaries-and-exhaustion,law-mutation-sensitivity,law-proof-claim-integrity --parallel 2
+
+{
+  "path": "research/life-inducer-hillclimb-r2/LAW_REVIEW.md",
+  "name": "research/life-inducer-hillclimb-r2/LAW_REVIEW.md",
+  "line": 1,
+  "parser": null,
+  "end_line": null,
+  "asked": [
+    {
+      "rule": "law-domain-inhabited",
+      "said": "Inspect the law statements and domain evidence in this packet. Each claimed behavioral law has a constructible domain, and every antecedent used to restrict the law has an exhibited satisfying witness in that domain. A nonempty collection operation includes a nonempty witness. Impossible preconditions, Empty arguments, contradictory invariants, and witnesses available only through an unsafe assumption break this rule. Explicit laws rejecting invalid inputs may use invalid-input witnesses. A missing witness is missing evidence, not a proof that a domain is empty; it still fails this packet's completeness requirement. Do not infer witnesses from unseen files.",
+      "broken": 0.55,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-observable-essence",
+      "said": "Inspect the stated purpose, observable results, and laws for the operation family in this packet. The behavioral laws constrain the result callers care about: preserved values and order, retrieval after update, stable identity, or the specified state transition, as appropriate. Merely proving length, successful construction, result equals itself, or the implementation equals an alias of itself does not specify those behaviors. A constant-result or discard-the-input implementation that satisfies all advertised behavioral laws but violates the stated purpose is a concrete counterexample. Auxiliary reflexivity and representation lemmas are allowed when clearly auxiliary. An observation that skips empty or invalid storage slots cannot by itself establish public logical-length, bounds, or error-result behavior. Constrain those separately when the API exposes them; a lossy projection may hide a stale length even while reporting the expected element list. Name a specific missing observation rather than judging prose style.",
+      "broken": 0.7,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-public-contract-coverage",
+      "said": "Compare the public operations listed for this packet's declared family with its operation-to-law matrix. Each operation's success behavior, important failure behavior, and effects on preserved state are covered by named laws or explicitly identified deterministic checks with their narrower claim. An undocumented omission, silently narrowed domain, or coverage justified only by a count of tests breaks this rule. An explicit out-of-scope operation is allowed only if it is not exported or promised by this package contract. Do not assume the packet contains operations from other families; require an explicit inventory for this family before claiming coverage.",
+      "broken": 0.43999999999999995,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-independent-model",
+      "said": "Inspect the reference observations used as the oracle for this operation family. They express the abstract semantics independently of the optimized operation under review. Calling that operation on both sides, using an alias of it as the oracle, or copying the same index arithmetic and defect into both implementation and oracle breaks this rule. A simple list model, mathematical relation, independently derived expected value, or separate refinement relation is acceptable. Shared primitive arithmetic is not by itself circularity. Auxiliary implementation lemmas may mention internals when the final public theorem still reaches an independent observation.",
+      "broken": 0.4,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-state-composition",
+      "said": "For stateful operations in this packet, laws specify how successive calls compose and which unrelated observations survive each update. Examples are push then pop, write then read, growth preserving old elements, repeated interning returning one identity, or a failed write preserving state. Only proving each call returns a well-formed value while allowing it to erase other entries breaks this rule. A genuinely stateless operation may state that no state-composition obligation applies. Scope lifetime and ID validity explicitly; do not demand global identity when only one store's lifetime is promised.",
+      "broken": 0.37,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-boundaries-and-exhaustion",
+      "said": "Inspect the domain partition for this operation family: empty and singleton inputs, boundary indices, duplicate keys, capacity changes, numeric overflow, and exhausted fuel where they apply. Relevant boundaries have explicit semantics and evidence. A wrapped Array index is not a checked logical index; exhausted work cannot masquerade as a complete result. Intentional modular arithmetic and an explicitly partial result are allowed. Mark irrelevant categories with reasons rather than demanding every category for every function. A success-only matrix for a fallible operation breaks this rule.",
+      "broken": 0.5,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-mutation-sensitivity",
+      "said": "Inspect the mutation evidence for the core behavioral claims in this packet. Each reported killed mutant first parses and type-checks as an implementation, violates a named contract observation on a concrete witness, and is then rejected by the intended law or assertion. A syntax error, missing import, timeout, crashed harness, or unrelated test failure is not a semantic kill. Surviving non-equivalent mutants are unresolved specification gaps, not passes. Explain genuinely equivalent mutants separately. At least one type-correct mutant attacks the defining behavior, not only a boundary. A plan to run mutants is not recorded execution evidence.",
+      "broken": 0.32999999999999996,
+      "floor": 0.8
+    },
+    {
+      "rule": "law-proof-claim-integrity",
+      "said": "Inspect the proof and validation claims in this packet. Universal quantified proofs, concrete normalization examples, runtime tests, source analysis, benchmarks, and model judgments are labeled separately and tied to the reviewed source hashes and compiler version. A hole, unfilled law, unsafe proof dependency, unrun check, or exhausted checker is not an unconditional proof. Any unsafe or native trust dependency is explicit. Formal statements about a reference model do not by themselves prove the optimized public API refines that model. Probability and a green command with zero relevant checks do not establish a theorem. Missing evidence cannot be promoted to verified status. A compile-fail negative test supports only the checker phase and diagnostic it actually reaches. A parse error cannot establish affine ownership or Data-element rejection; generic nonzero exit status is insufficient.",
+      "broken": 0.42000000000000004,
+      "floor": 0.8
+    }
+  ],
+  "context": null,
+  "checked": 8,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

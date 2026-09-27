@@ -1,0 +1,51 @@
+import Base
+
+# left is already zero at each row entrance; an edge cuts both directions.
+def horizontal(
+  cells: List<&2, U32>, +width: U32, +x: U32, left: U32
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+center, +rest}:
+      +next = U32.inc(x)
+      +edge = U32.is_eq(next, width)
+      right = Maybe.default(&2, U32, List.head(&2, U32, rest), 0)
+      east = Bool.pick(U32, edge, 0, right)
+      total = (left + center + east : U32)
+      total <> horizontal(rest, width,
+        Bool.pick(U32, edge, 0, next),
+        Bool.pick(U32, edge, 0, center))
+
+# Dead halos align the three bands; the original cells bound the output.
+# Inclusive totals give B3/S23 as total=3 or (alive and total=4).
+def vertical(
+  cells: List<&2, U32>, above: List<&2, U32>,
+  middle: List<&2, U32>, below: List<&2, U32>
+) -> List<&2, U32>:
+  match cells above middle below:
+    case Con{alive, rest} Con{north, nt} Con{center, ct} Con{south, st}:
+      +total = (north + center + south : U32)
+      next = Bool.to_u32(Bool.or(
+        U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(alive, 1), U32.is_eq(total, 4))))
+      next <> vertical(rest, nt, ct, st)
+    case _ _ _ _:
+      Nil{}
+
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +band = horizontal(cells, width, 0, 0)
+  +stride = U32.to_nat(width)
+  +halo = List.replicate(U32, stride, 0)
+  above = List.append(&2, U32, halo, band)
+  below = List.append(&2, U32, List.drop(&2, U32, band, stride), halo)
+  vertical(cells, above, band, below)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))

@@ -1,0 +1,123 @@
+import Base
+
+# Each field is one bit-plane of thirty-two independent neighbor counts.
+type Tally is Data:
+  Tally{ones: U32, twos: U32, fours: U32, eights: U32}
+
+def Tally.add(tally: Tally, +bits: U32) -> Tally:
+  match tally:
+    case Tally{+ones, +twos, +fours, eights}:
+      +carry1 = U32.and(ones, bits)
+      +carry2 = U32.and(twos, carry1)
+      carry4 = U32.and(fours, carry2)
+      Tally{
+        U32.xor(ones, bits),
+        U32.xor(twos, carry1),
+        U32.xor(fours, carry2),
+        U32.xor(eights, carry4)
+      }
+
+def Tally.row(tally: Tally, +bits: U32) -> Tally:
+  Tally.add(
+    Tally.add(
+      Tally.add(tally, U32.shl(bits)),
+      bits),
+    U32.shr(bits))
+
+def Tally.flank(tally: Tally, +bits: U32) -> Tally:
+  Tally.add(
+    Tally.add(tally, U32.shl(bits)),
+    U32.shr(bits))
+
+def Life.cell.finish(tally: Tally, here: U32) -> U32:
+  match tally:
+    case Tally{ones, twos, fours, eights}:
+      U32.and(
+        twos,
+        U32.and(
+          U32.not(fours),
+          U32.and(U32.not(eights), U32.or(ones, here))))
+
+# Full rows flank the center row: 3 + 2 + 3 is the Moore neighborhood.
+def Life.cell(above: U32, +here: U32, below: U32) -> U32:
+  Life.cell.finish(
+    Tally.row(
+      Tally.flank(
+        Tally.row(Tally{0, 0, 0, 0}, above),
+        here),
+      below),
+    here)
+
+# Packing is a row-major change of basis from cells to U32 rows.
+def Life.pack.row(
+  cells: List<&2, U32>, +shift: Nat, word: U32
+) -> U32:
+  match cells:
+    case Nil{}:
+      word
+    case cell <> rest:
+      Life.pack.row(
+        rest,
+        1n+shift,
+        U32.or(word, U32.shln(cell, shift)))
+
+def Life.pack(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      Life.pack.row(List.take(&2, U32, cells, width), 0n, 0)
+        <> Life.pack(rest, width, List.drop(&2, U32, cells, width))
+
+def Life.tick(rows: List<&2, U32>, previous: U32) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case +current <> +rest:
+      match rest:
+        case Nil{}:
+          Life.cell(previous, current, 0) <> Nil{}
+        case next <> more:
+          Life.cell(previous, current, next)
+            <> Life.tick(rest, current)
+
+def Life.unpack.row(width: Nat, +row: U32) -> List<&2, U32>:
+  match width:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      U32.and(row, 1) <> Life.unpack.row(rest, U32.shr(row))
+
+def Life.unpack(
+  rows: List<&2, U32>, +width: Nat
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case row <> rest:
+      List.append(
+        &2,
+        U32,
+        Life.unpack.row(width, row),
+        Life.unpack(rest, width))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +columns = U32.to_nat(width)
+  Life.unpack(
+    Life.tick(
+      Life.pack(U32.to_nat(height), columns, cells),
+      0),
+    columns)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

@@ -1,0 +1,57 @@
+import Base
+
+# In a center-inclusive window, B3/S23 is exactly 3 <= nine <= 3 + center.
+def life(+nine: U32, center: U32) -> U32:
+  Bool.to_u32(Bool.and(
+    U32.is_ge(nine, 3),
+    U32.is_le(nine, (3 + center : U32))))
+
+# The x-fold: peek east, emit the center, then carry this column west.
+def line(
+  middle: List<&2, U32>, +north: List<&2, U32>,
+  +south: List<&2, U32>, nw: U32, w: U32, sw: U32
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case +c <> +ct:
+      +n = Maybe.default(&2, U32, List.head(&2, U32, north), 0)
+      +s = Maybe.default(&2, U32, List.head(&2, U32, south), 0)
+      +nt = List.tail(&2, U32, north)
+      +st = List.tail(&2, U32, south)
+      ne = Maybe.default(&2, U32, List.head(&2, U32, nt), 0)
+      e = Maybe.default(&2, U32, List.head(&2, U32, ct), 0)
+      se = Maybe.default(&2, U32, List.head(&2, U32, st), 0)
+      +nine = (nw + n + ne + w + c + e + sw + s + se : U32)
+      life(nine, c) <> line(ct, nt, st, n, c, s)
+
+# The y-fold: cut one row, emit one line, then carry that row north.
+def plane(
+  height: Nat, +width: Nat, +cells: List<&2, U32>,
+  north: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+h:
+      +middle = List.take(&2, U32, cells, width)
+      +south = List.drop(&2, U32, cells, width)
+      List.append(&2, U32,
+        line(middle, north, List.take(&2, U32, south, width), 0, 0, 0),
+        plane(h, width, south, middle))
+
+# A dead halo seeds both spatial folds.
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  plane(U32.to_nat(height), U32.to_nat(width), cells, Nil{})
+
+# The t-fold: zero is identity; each successor composes one spatial step.
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

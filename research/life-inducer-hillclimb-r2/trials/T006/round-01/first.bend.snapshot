@@ -1,0 +1,86 @@
+import Base
+
+# A Chebyshev unit ball with its heart removed.
+def Life.halo(
+  +x: U32, +y: U32, +u: U32, +v: U32
+) -> Bool:
+  Bool.and(
+    Bool.and(
+      Bool.and(U32.is_le(x, U32.inc(u)), U32.is_le(u, U32.inc(x))),
+      Bool.and(U32.is_le(y, U32.inc(v)), U32.is_le(v, U32.inc(y)))
+    ),
+    Bool.or(U32.is_ne(x, u), U32.is_ne(y, v))
+  )
+
+# Each source site casts its bit into the focus's halo. The row clock
+# counts sites strictly east of the cursor, so zero is precisely an edge.
+def Life.census(
+  scan: List<&2, U32>, +span: Nat,
+  +x: U32, +y: U32, +u: U32, +v: U32,
+  east: Nat, n: U32
+) -> U32:
+  match scan east:
+    case Nil{} _:
+      n
+    case cell <> tail 0n:
+      Life.census(
+        tail, span, x, y, 0, U32.inc(v), Nat.sub(span, 1n),
+        U32.add(n, U32.mul(cell, Bool.to_u32(Life.halo(x, y, u, v))))
+      )
+    case cell <> tail 1n+e:
+      Life.census(
+        tail, span, x, y, U32.inc(u), v, e,
+        U32.add(n, U32.mul(cell, Bool.to_u32(Life.halo(x, y, u, v))))
+      )
+
+# Three is birth; two is inheritance.
+def Life.fate(alive: U32, +neighbors: U32) -> U32:
+  Bool.to_u32(
+    Bool.or(
+      U32.is_eq(neighbors, 3),
+      Bool.and(U32.is_eq(neighbors, 2), U32.is_eq(alive, 1))
+    )
+  )
+
+# todo advances through the old world; world stays fixed for synchronous time.
+def Life.sweep(
+  fuel: Nat, todo: List<&2, U32>, +world: List<&2, U32>, +span: Nat,
+  +x: U32, +y: U32, east: Nat
+) -> List<&2, U32>:
+  match fuel todo east:
+    case 0n _ _:
+      Nil{}
+    case 1n+f Nil{} _:
+      Nil{}
+    case 1n+f alive <> tail 0n:
+      Life.fate(
+        alive,
+        Life.census(world, span, x, y, 0, 0, Nat.sub(span, 1n), 0)
+      ) <> Life.sweep(
+        f, tail, world, span, 0, U32.inc(y), Nat.sub(span, 1n)
+      )
+    case 1n+f alive <> tail 1n+e:
+      Life.fate(
+        alive,
+        Life.census(world, span, x, y, 0, 0, Nat.sub(span, 1n), 0)
+      ) <> Life.sweep(
+        f, tail, world, span, U32.inc(x), y, e
+      )
+
+def step(
+  +width: U32, height: U32, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  Life.sweep(
+    U32.to_nat((width * height : U32)),
+    cells, cells, span, 0, 0, Nat.sub(span, 1n)
+  )
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

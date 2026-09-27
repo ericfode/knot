@@ -1,0 +1,84 @@
+import Base
+
+# Height is the fuel; valid boards make every slice exactly width.
+def Life.rows(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+more:
+      List.take(&2, U32, cells, width) <>
+        Life.rows(more, width, List.drop(&2, U32, cells, width))
+
+# The cursor carries nw/w/sw; n/cell/s become the next west column.
+def Life.stencil(
+  +here: List<&2, U32>,
+  +north: List<&2, U32>,
+  +south: List<&2, U32>,
+  nw: U32,
+  w: U32,
+  sw: U32
+) -> List<&2, U32>:
+  match here:
+    case Nil{}:
+      Nil{}
+    case cell <> eastward:
+      +n = Maybe.default(&2, U32, List.head(&2, U32, north), 0)
+      ne = Maybe.default(
+        &2, U32, List.head(&2, U32, List.tail(&2, U32, north)), 0)
+      e = Maybe.default(&2, U32, List.head(&2, U32, eastward), 0)
+      +s = Maybe.default(&2, U32, List.head(&2, U32, south), 0)
+      se = Maybe.default(
+        &2, U32, List.head(&2, U32, List.tail(&2, U32, south)), 0)
+      +neighbors = (nw + n + ne + w + e + sw + s + se : U32)
+      Bool.to_u32(Bool.or(
+        U32.is_eq(neighbors, 3),
+        Bool.and(U32.is_eq(cell, 1), U32.is_eq(neighbors, 2)))) <>
+        Life.stencil(
+          eastward,
+          List.tail(&2, U32, north),
+          List.tail(&2, U32, south),
+          n,
+          cell,
+          s)
+
+# One dead row closes both ends of the vertical sweep.
+def Life.sweep(
+  +rows: List<&2, List<&2, U32>>,
+  +dead: List<&2, U32>,
+  north: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case here <> rest:
+      south = Maybe.default(
+        &2,
+        List<&2, U32>,
+        List.head(&2, List<&2, U32>, rest),
+        dead)
+      Life.stencil(here, north, south, 0, 0, 0) <>
+        Life.sweep(rest, dead, here)
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +columns = U32.to_nat(width)
+  +dead = List.replicate(U32, columns, 0)
+  List.concat(
+    &2,
+    U32,
+    Life.sweep(
+      Life.rows(U32.to_nat(height), columns, cells),
+      dead,
+      dead))
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))
