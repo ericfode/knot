@@ -49,7 +49,7 @@ def main():
         ('reverse-emit','main.bend','emit(left, emit(right, suffix))','emit(right, emit(left, suffix))','text-512-triples'),
         ('accept-256','bytes.bend','U32.is_le(h,255)','U32.is_le(h,256)','byte-success-failure-persistence'),
         ('one-past-capacity','bytes.bend','U32.is_lt(count,room)','U32.is_le(count,room)','byte-success-failure-persistence'),
-        ('drop-right-bytes','bytes.bend','Buffer{cap,left_n,left},right)','Buffer{cap,left_n,left},Empty{})','byte-success-failure-persistence'),
+        ('drop-right-bytes','bytes.bend','Join{left,right}}}','Join{left,Empty{}}}}','byte-success-failure-persistence'),
         ('wrong-remaining-room','bytes.bend','U32.is_le(m,U32.sub(cap,n))','U32.is_le(m,U32.add(cap,n))','byte-composition-order-limits'),
     ]
     results['mutations'] = []

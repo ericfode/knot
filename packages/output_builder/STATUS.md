@@ -1,6 +1,13 @@
 # OutputBuilder status
 
-Complete: published and remotely verified on 2026-09-26.
+Current working state: **unreleased output-builder-grammar-1 revision**.
+The counted byte-join transition is shared by append and compose; public contracts
+are unchanged. First-try proof, native/JS, nine mutants and scaling gates pass.
+Style deficits remain; this is not a full style pass. See STYLE_CAMPAIGN.md.
+
+Published snapshot: complete and remotely verified on 2026-09-26. The release
+identity and receipts below still describe that immutable snapshot. Working
+bytes.bend now differs from it; no republication or dependency update occurred.
 
 Content hash: `0xc409b77d3230ca33374caf6b0993f0cb`. Official hub: https://hub.bend-lang.com.
 Text import: `import 0xc409b77d3230ca33374caf6b0993f0cb/main.bend as Text`.

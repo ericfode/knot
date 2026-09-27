@@ -41,16 +41,12 @@ def scan(values: List<&2,U32>, +room: U32, +count: U32) -> Result<Error,U32>:
       guard(U32.is_le(h,255),InvalidByte{h},u =>
         guard(U32.is_lt(count,room),Limit{},v => scan(t,room,U32.add(count,1))))
 
-# The admitted count must describe the suffix and fit the builder's room.
-def join(admitted: Result<Error,U32>, builder: Builder, suffix: Tree) -> Result<Error,Builder>:
-  match admitted builder:
-    case Fail{err} Buffer{cap,n,prefix}:
-      Fail{err}
-    case Done{k} Buffer{cap,n,prefix}:
-      Done{Buffer{cap,U32.add(n,k),Join{prefix,suffix}}}
-
 def attach(result: Result<Error,U32>, b: Builder, values: List<&2,U32>) -> Result<Error,Builder>:
-  join(result,b,Chunk{values})
+  match result b:
+    case Fail{err} Buffer{cap,n,t}:
+      Fail{err}
+    case Done{k} Buffer{cap,n,t}:
+      Done{Buffer{cap,U32.add(n,k),Join{t,Chunk{values}}}}
 
 def append(builder: Builder, +values: List<&2,U32>) -> Result<Error,Builder>:
   match builder:
@@ -64,7 +60,11 @@ def byte(builder: Builder, value: U32) -> Result<Error,Builder>:
   append(builder,Con{value,Nil{}})
 
 def combine(ok: Bool, cap: U32, left_n: U32, right_n: U32, left: Tree, right: Tree) -> Result<Error,Builder>:
-  join(guard(ok,Limit{},u => Done{right_n}),Buffer{cap,left_n,left},right)
+  match ok:
+    case False{}:
+      Fail{Limit{}}
+    case True{}:
+      Done{Buffer{cap,U32.add(left_n,right_n),Join{left,right}}}
 
 def compose(left: Builder, right: Builder) -> Result<Error,Builder>:
   match left right:

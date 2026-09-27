@@ -1,0 +1,1555 @@
+
+> lint
+> node scripts/perch-workflow.mjs check packages/output_builder/bytes.bend --rules bend-machine-arithmetic,bend-borrow-lifetime,bend-effect-boundary,perf-growing-prefix-copy,perf-loop-invariant-work --json
+
+{
+  "path": "packages/output_builder/bytes.bend",
+  "name": "packages/output_builder/bytes.bend",
+  "line": 1,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+    "status": "parsed",
+    "declarations": 14,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "checked": 70,
+  "units": [
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "empty",
+      "line": 15,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 16,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.52,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.06999999999999995,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "length",
+      "line": 18,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 21,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.53,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.07999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.07999999999999996,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "limit",
+      "line": 23,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 26,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.54,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "guard",
+      "line": 29,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 34,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.54,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "scan",
+      "line": 36,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 42,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "join",
+      "line": 45,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 50,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "attach",
+      "line": 52,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 53,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5800000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.15000000000000002,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "append",
+      "line": 55,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 58,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5900000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.14,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "fragment",
+      "line": 60,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 61,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.61,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "byte",
+      "line": 63,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 64,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.5700000000000001,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.17000000000000004,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_lt",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "combine",
+      "line": 66,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 67,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.52,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.08999999999999997,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.12,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "compose",
+      "line": 69,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 72,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.55,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Error",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.is_le",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.sub",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "emit",
+      "line": 74,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 81,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.07999999999999996,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.32999999999999996,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    },
+    {
+      "path": "packages/output_builder/bytes.bend",
+      "name": "finish",
+      "line": 83,
+      "parser": {
+        "profile": "language-pack-1.20-v3+knot-bend-0cd9e831fc413760",
+        "status": "parsed",
+        "declarations": 14,
+        "diagnostics": [
+          {
+            "kind": "unsupported",
+            "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+            "location": null
+          }
+        ],
+        "metadata": {
+          "profile": "bend-2.0.29-574b6d3-observer-v2",
+          "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+          "dependency_resolution": "none",
+          "typechecked": false,
+          "metrics_status": "unsupported"
+        }
+      },
+      "end_line": 86,
+      "asked": [
+        {
+          "rule": "bend-machine-arithmetic",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect arithmetic used for bounds, indices, sizes, and signed differences in this Bend 2 declaration. U32 arithmetic is modulo 2^32, not unbounded Nat arithmetic. Subtraction used as a nonnegative count needs an established ordering; a difference that can be negative must retain its intended signed meaning. A masked or wrapped storage index does not itself validate a source position. Report a concrete path where wraparound or conversion violates the operation's stated domain. Intentional word arithmetic for hashing, PRNGs, bit operations, or an explicit modular representation is allowed. Do not invent caller bounds or declare a bug solely because supporting code is outside this file.",
+          "broken": 0.56,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+          "broken": 0.13,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "perf-growing-prefix-copy",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.",
+          "broken": 0.18000000000000005,
+          "floor": 0.7
+        },
+        {
+          "rule": "perf-loop-invariant-work",
+          "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect repeated pure whole-input summaries inside a traversal. An unchanged list or tree is not fully walked to compute the same length, sum, hash, or summary for every element of another traversal. Compute that invariant once and carry its result when the helper visibly visits the whole input. A changing suffix, a constant-time metadata lookup, distinct disjoint inputs, and an explicitly fixed small bound are allowed. Require both the unchanged data flow and the repeated linear helper body or known Base List.length; do not guess costs or equate recursion itself with wasted work. If absent, this rule holds.",
+          "broken": 0.10999999999999999,
+          "floor": 0.6
+        }
+      ],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "source_sha256": "c6ac3bc4c2a29e5745f657aa799a2b5387ea5536bd00a9e808a6dea6ea5f0d73"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Builder",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "Tree",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "packages/output_builder/bytes.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "checked": 5,
+      "broken": [],
+      "issues": null,
+      "note": null,
+      "clean": true
+    }
+  ],
+  "broken": [],
+  "issues": [],
+  "note": null,
+  "clean": true
+}
