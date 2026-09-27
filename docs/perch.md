@@ -16,6 +16,12 @@ failed the Bend performance controls, and the unchanged style rubric exceeds its
 option-description limit. It is experimental evidence tooling, not an accepted
 replacement for these reviews. The normal Perch endpoint remains unchanged.
 
+The subsequent [Kev-4B local trial](kev-local-2026-09-26.md), available through
+`npm run review:kev`, completed the same frozen requests on Apple Silicon via
+MLX. It classified six of eight defect controls correctly and accepted the full
+frozen style rubrics, but missed both growing-prefix defects. It remains an
+opt-in experimental runner; it is not qualified as the default reviewer.
+
 ## Commands
 
 ```sh
