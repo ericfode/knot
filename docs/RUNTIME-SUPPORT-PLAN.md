@@ -54,6 +54,59 @@ representation needs cycle detection and an explicit rejection/indirection rule.
 Two-pass declaration resolution is required now. SCC analysis is needed only
 where a later layout or analysis actually distinguishes cyclic groups.
 
+## Structural matching and ownership
+
+The current [structural-term contract](../research/compiler-fields/SPEC.md) and
+working-copy code supply a further constraint on R1–R3. This is a source review
+of ongoing compiler work, recorded with hashes in the
+[field-contract review](runtime-support-fields-2026-09-26.json); no compiler or
+runtime gate was rerun for this handoff.
+
+Opening an affine constructor transfers its live fields into the branch. A use
+of the matched parent is a **reconstruction from those fields**, not another
+owner of the unopened object. In [patterns.bend](../src/patterns.bend), `finish`
+records that reconstruction; [check.bend](../src/check.bend)'s `Rebuild` resolves
+its references through stable lexical identities and rechecks their current
+quantities/refinements. Shadowing changes name lookup, not those identities.
+A later field match must refine parent reconstructions that refer to that field.
+
+Consequently, consuming an unrefined affine field and reconstructing its parent
+cannot consume the same field twice. Do not replace this rule with a blanket
+ban on using a parent after any field match: a nullary constructor refinement
+can supply a fresh value, removing the original field-use dependency. Reusable
+Data fields may support repeated reconstruction where their effective quantities
+permit it; this grants no duplicate owner of a `Type` child. Reconstruction may
+reuse storage or allocate anew, but must preserve these transfers, values and
+exhaustion behavior. No physical object-identity promise follows from the parent
+name or its reconstruction recipe.
+
+Keep four maps separate: declaration position, stable lexical identity, ordered
+match eligibility and compact live-slot position. In [scope.bend](../src/scope.bend)
+and `patterns.finish`, matching identity `p` changes the match frontier to
+`field_ids ++ suffix_after(p, frontier)`. Newly introduced fields precede later
+parameters even though their lexical levels are allocated later. Removing the
+earlier prefix removes match eligibility; it does **not** itself perform a runtime
+drop or remove ordinary variable lookup. Local lets close match eligibility;
+runtime ownership/liveness remains a separate obligation.
+
+A minimal checker control starts with parameter identities `[0,1]`, matches 0
+and introduces field 2: the next frontier is `[2,1]`. Matching 2 then 1 is
+permitted; matching 1 then 2 must fail for match eligibility, not parsing. Existing
+[forward-order](../tests/compiler-fields/fixtures/field-before-parameter.bend),
+[reverse-order](../tests/compiler-fields/fixtures/parameter-before-field.bend),
+[shadowing](../tests/compiler-fields/fixtures/duplicate-pattern-names.bend) and
+[parent-refinement](../tests/compiler-fields/fixtures/field-then-parent-refinement.bend)
+fixtures give concrete controls; their current code was inspected, not rerun here.
+
+The independent [evaluator](../src/eval.bend) keeps declaration metadata in
+`Construct`/`Fields`, skips erased arguments before evaluation, and stores only
+live values in declaration order. `Unpack` skips erased binders without advancing
+the live-value cursor. R1 must use the same projection for construction and
+unpacking, while retaining erased declarations for checking and lexical identity.
+The evaluator's reusable tree-shaped `Value` and retained environments model
+checked results; they do not implement affine heap extraction or reclamation.
+The emitter still rejects fielded books through `enum_profile`.
+
 ## What the published packages supply
 
 Exact identities and imports remain in the [release catalog](PACKAGE-RELEASES.md).
@@ -98,6 +151,27 @@ and decode tags before using offsets. Failed object construction either reserves
 all required space before transferring inputs or uses an explicit rollback that
 returns every input owner. Do not confuse this operation guarantee with rolling
 back arbitrary source evaluation or effects.
+
+Structural matching adds three focused requirements to these proposed probes:
+
+- **R1:** Construct and unpack erased/live/erased/live fields with distinct live
+  values and shadowed pattern binders. Check declaration-to-slot and lexical-to-slot
+  maps independently. Kill mutants that advance the live cursor for an erased
+  binder, use lexical levels as offsets, or substitute by spelling rather than
+  identity. Include the `[2,1]` match-frontier control above.
+- **R2/R3:** Open a `Type` object containing an owned nontrivial child and reusable
+  Data, reconstruct it, then extract/drop each owned child once. A competing use
+  of an unrefined affine field and its parent must fail the checker; a matched
+  nullary-field reconstruction is the valid neighbor. Preserve a permitted Data
+  alias across reconstruction and release. Kill an implementation that retains
+  both the old parent owner and the extracted fields, and one that loses the
+  surviving Data lifetime obligation.
+- **R5/R7:** Suspend immediately after opening and after reconstruction, then
+  resume or cancel each case. A reconstruction recipe in compiler metadata is
+  not an additional runtime owning root. Keep each required field alive without
+  capturing/dropping both a parent owner and those same extracted owners. If a
+  representation keeps a container as backing storage, account for that lifetime
+  separately and demonstrate a single owning path to each affine child.
 
 R4's copied locator is not an unforgeable capability. Legal extraction must also
 consume an owner or pass the store's state/transfer protocol. Object generation
@@ -198,8 +272,12 @@ Wasm/GPU costs, and no runtime performance claim is made here.
 
 ## Evidence and ownership of this increment
 
-This increment adds this plan and the thirteen-case reference receipt and links
-them from the campaign notes. It changes no package, compiler or probe source.
+The initial increment added this plan and the thirteen-case reference receipt
+and linked them from the campaign notes. The structural-matching follow-up adds
+the source-review record and the implications above. Its working-copy sources
+remain owned by Compiler Planning; hashes identify the inspected versions, not a
+validated compiler build. Neither documentation increment changes a package,
+compiler or probe source.
 Perch is not applicable: no owned executable declaration or law packet changed,
 so no model request or semantic-pass claim is made. Runtime probes, policy
 selection, compiled allocation and generated GPU validation remain future work.

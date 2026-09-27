@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "observed_utc": "2026-09-27T00:14:24.996431+00:00",
+  "reviewed_head": "e3af68536227c7cca799a84e6fe765d46873902b",
+  "scope": "Documentation-only contract review of current, uncommitted Compiler Planning work; not compiler conformance or runtime validation.",
+  "owner": "Compiler Planning",
+  "sources": [
+    {
+      "path": "research/compiler-fields/SPEC.md",
+      "sha256": "c0aa07963578e3c3ccbe7986aef4b2dfca3976ace8f59fea43b0cc6f5cfe533e",
+      "reviewed": [
+        "Structural matching and field binding contract"
+      ]
+    },
+    {
+      "path": "src/patterns.bend",
+      "sha256": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+      "reviewed": [
+        "quantity",
+        "add",
+        "fields",
+        "finish",
+        "open_fields"
+      ]
+    },
+    {
+      "path": "src/scope.bend",
+      "sha256": "1457a6c70081f3c31d7eda4277ceb662399c7e8f3c40be2312001ccf287bd51e",
+      "reviewed": [
+        "find",
+        "extend",
+        "after",
+        "levels",
+        "find_level",
+        "replace",
+        "branch",
+        "matchable"
+      ]
+    },
+    {
+      "path": "src/check.bend",
+      "sha256": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+      "reviewed": [
+        "variable",
+        "run/Rebuild",
+        "run/RebuildArguments",
+        "enum_profile"
+      ]
+    },
+    {
+      "path": "src/eval.bend",
+      "sha256": "dac4d2c2dd754d5ff28ec16cc88180cb64ddbb8a2182a5d6c5f2e52e7c904326",
+      "reviewed": [
+        "Value",
+        "State",
+        "unpack_live",
+        "step/Fields",
+        "step/Unpack"
+      ]
+    },
+    {
+      "path": "src/wasm.bend",
+      "sha256": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+      "reviewed": [
+        "emit enum_profile guard"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "path": "tests/compiler-fields/fixtures/field-before-parameter.bend",
+      "sha256": "68b77a2c662d0987c29d74ffee84f4b1aa2e5decafedf3b9a2df9068d19e5ee6",
+      "intended_observation": "New field identity precedes a later parameter in match eligibility.",
+      "executed_by_this_review": false
+    },
+    {
+      "path": "tests/compiler-fields/fixtures/parameter-before-field.bend",
+      "sha256": "1ecaae1f68cee65d900325e4f4b00954291e7ec1b9a4a5e13b8f14cc1b341eac",
+      "intended_observation": "Matching the later parameter removes the earlier field from match eligibility.",
+      "executed_by_this_review": false
+    },
+    {
+      "path": "tests/compiler-fields/fixtures/duplicate-pattern-names.bend",
+      "sha256": "8dde0b47c57f066ec139e3978d0451cdddc6fed2880537b666a82998625ee4ed",
+      "intended_observation": "Equal field spellings retain distinct lexical identities; ordinary lookup selects the nearer binder.",
+      "executed_by_this_review": false
+    },
+    {
+      "path": "tests/compiler-fields/fixtures/reconstruct.bend",
+      "sha256": "9d64af15a1331b57339de5e5de3280e3f49da74d746608caacd35b0229c589a0",
+      "intended_observation": "A matched parent use reconstructs from its field.",
+      "executed_by_this_review": false
+    },
+    {
+      "path": "tests/compiler-fields/fixtures/parent-and-field.bend",
+      "sha256": "c18afc481cb451662263a3f7176811e2294f9bbe0c9ab83f6bc62680439cdcfc",
+      "intended_observation": "An unrefined affine field cannot be consumed separately and through parent reconstruction.",
+      "executed_by_this_review": false
+    },
+    {
+      "path": "tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
+      "sha256": "3dd85307fc5ac057215fb72bbb806d0c16cfc68e323149ad6597c01979e89663",
+      "intended_observation": "A field match refines the parent reconstruction by lexical identity.",
+      "executed_by_this_review": false
+    }
+  ],
+  "owner_probe_context": {
+    "records": [
+      {
+        "path": ".local/compiler-fields/reference.json",
+        "sha256": "bcb6a9bc233f8851008e742b108ab37a3521e4f09ad074f6e711924156a322ee"
+      },
+      {
+        "path": ".local/compiler-fields/observed.json",
+        "sha256": "fc292ea84ae4cefb3b23c0aa92567d0e931c8ac14ae4f74a2b01beb9668f325d"
+      }
+    ],
+    "limitation": "Owner-authored local observations inspected as context. These records lack source/build hashes and do not establish conformance of the currently inspected working copy."
+  },
+  "validation_boundary": {
+    "source_inspection": true,
+    "compiler_or_reference_runs": 0,
+    "laws_proved": 0,
+    "runtime_storage_tested": false,
+    "wasm_field_lowering_tested": false,
+    "gpu_tested": false,
+    "perch": "Not applicable: no executable declaration or law packet changed.",
+    "new_acceptance_probes": "Proposed and unrun."
+  },
+  "campaign_status": "PAUSED",
+  "memory_management_strategy_selected": false
+}
