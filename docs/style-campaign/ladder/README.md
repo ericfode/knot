@@ -19,11 +19,26 @@ here is production source; the accepted machine is untouched.
 | D | [D-notation.bend](D-notation.bend) | One- and two-letter names, comment rulers as section marks, one-line laws | The machine and all four laws |
 | E | [E-past.bend](E-past.bend) | Single letters everywhere, laws l0 to l3, no comments, no blank lines | The machine and all four laws |
 
-The user tags each rung on the taste-anchor page. The rung where "too much"
-begins is the first negative anchor; any rung tagged "want more" is the first
-positive anchor. After those verdicts are recorded, and not before, each rung
-is reviewed with `npm run lint:style` so the judge's reading can be compared
-with the user's on the same five files.
+## Verdicts, 2026-09-27
+
+| Rung | User | Reading |
+| --- | --- | --- |
+| A | "boring" | Layout alone earns nothing |
+| B | good, still a little dull | One metaphor through the vocabulary is a first positive move |
+| C | good, still a little dull | A real added idea with its own laws is a second |
+| D | over-styled: "the one letter things are too hard to read" | The edge is abbreviation, not rulers or one-line laws |
+| E | over-styled | Past the edge, as intended |
+
+Consequence: push idea density, not notation density. Rung F,
+[F-affine.bend](F-affine.bend), reads every frame and the clock tick as an
+affine map, so a task is a composition of maps waiting for its seed and `plan`
+is the whole task read at once, with one concrete law that stepping and planning
+agree. It also checks under the pinned compiler.
+
+The page now compares treatments in pairs, with the current committed code as
+one of the seven treatments, and records for each pair which is more fun to
+read, whether either is too much, and why. Model review of the rungs waits
+until the pair verdicts are recorded.
 
 Rung B's `Purse` type replaced `Word`, which Base reserves; the rename is the
 only compiler-driven change.
