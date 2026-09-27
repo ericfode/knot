@@ -652,3 +652,27 @@ as a negative memetic label. Do not rewrite docs solely to satisfy a code-orient
 five-axis conjunction. Verification: exact production questions/request hashes,
 50 validated distributions and 51 passing focused offline style tests. No
 compiler contracts or package-owned code changed.
+
+## 2026-09-27 — Separate memetic appeal from conceptual value (v6)
+
+The user's explicit judgment that the vacuous prose control is memetic resolves
+the intended criterion: substance is not a prerequisite for memetic appeal.
+Updated only the memetic instructions/levels and the shared composition wording
+that could reintroduce that prerequisite. Kept every other rubric and threshold.
+Root guidance and the style guide now state the independence explicitly.
+
+The [frozen comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
+reuses two exactly matching v5 responses and obtains six fresh Jev 1.13.0
+responses across v5/v6. Human-positive wordplay is 78% → 99% memetic, with v6
+compression still 30%; Go's proverb is 93% → 93%. Fresh Colorless-green-ideas
+prose is 76.8% → 100%, and a plain reporting sentence is 0% → 0%. All match the
+prerecorded expectations; fresh labels remain assistant hypotheses. Single
+observations and one exposed human label do not establish an accuracy gain.
+
+Judgment: prior negative-label error confirmed by user; no confirmed model
+false positive. Prevention: record human taste before subsequent review, keep
+memetic and value labels separate, and never use vacuity alone as a negative
+memetic control. Historical inputs, labels and scores remain unchanged.
+Validation: 40 complete distributions; exact request checks; unchanged other
+axes/targets; 84 offline tests and law wiring pass. No Bend code changed. A live
+Bend-composition calibration remains outside this prose experiment's evidence.

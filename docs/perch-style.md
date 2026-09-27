@@ -5,7 +5,16 @@ The target is a distinctive code aesthetic: **Maximally big brain**,
 parsed declaration is assessed against all three; an alternative implementation
 is not required. Rankings are a secondary view of those independent ratings.
 
-Version 5 separates **expressive role** from contract importance. Supporting
+Version 6 separates **memetic appeal from conceptual value**. A vacuous,
+nonsensical, decorative or incorrect expression can be highly memetic. Its
+conceptual compression, other reading qualities and correctness are independent
+judgments; a high memetic score cannot compensate for a failure on those axes.
+This follows the user's judgment of the [prose control](perch-calibration/memetic-prose-2026-09-27/README.md).
+The [v5/v6 comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
+retains that exposed human example and fresh prose controls. Earlier receipts
+keep their original rubric meaning and cannot qualify changed requests.
+
+Version 5 separated **expressive role** from contract importance. Supporting
 helpers should reinforce the main mechanism's identity and prepare the reader
 for their bounded contribution. They need no independent hook or dramatic arc.
 Leading declarations and the complete mechanism retain the stronger requirements.
@@ -22,16 +31,16 @@ receipts retain their original rubric identity and meaning.
 | --- | --- |
 | Maximally big brain | A small expressive algebra or representation absorbs cases and exposes invariants. Each abstraction explains more than it adds. |
 | Delightful to read — high dopamine | Exact names, rhythmic layout, symmetry and dense composition create repeated satisfying moments where the structure clicks. |
-| Highly memetic | The code has its own ideas, vocabulary and felt rhythm: an earned hook gets into your head, rewards insider fluency, and makes you want to read, write and share more of this particular style. |
+| Highly memetic | A distinctive vocabulary, form or felt rhythm gets into your head and makes you want to quote, repeat, imitate or remix it. Conceptual value is not required. |
 
 Memetic is used in the internet sense. Mere recall or ease of teaching is not the
 whole goal. The form should land: motifs repeat with variation, an expression
-has a satisfying turn, and mechanism, words and visual shape establish a
-recognizable identity. Knowing the vocabulary unlocks the ideas and creates a
-shared grammar. A distinctive aesthetic can teach the reader what to anticipate
-and then reward that anticipation. This describes the desired reading experience,
-not a measured psychological effect. Decorative slogans and self-praise do not
-substitute for the code's actual character.
+has a satisfying turn, and words or visual shape establish a recognizable
+identity. Knowing the vocabulary can unlock a shared grammar even when its
+content is vacuous. Meaning, utility and truth are not prerequisites for that
+pull. Repetition or decoration can contribute to it; neither automatically
+earns a high score. Judge the actual form rather than source self-praise. This
+describes expressive appeal, not a measured psychological or social effect.
 
 Terse notation, learned idioms and dense composition are welcome. Simple helpers
 can qualify through one fitting operation or resonant expression; adding layers
@@ -151,9 +160,10 @@ explicit task, before the provider receives any implementation. Each declaration
 of other candidates or their order.
 
 The memetic ladder is **Unformed → Ordinary → Recognizable → Contagious →
-Generative grammar**. Level 3 requires an earned hook carrying a substantive
-relationship worth quoting or adapting. One sharp expression can suffice.
-Level 4 requires a traceable grammar for further expressions. Popularity,
+Generative grammar**. Level 3 requires a distinctive, appealing hook inviting
+quotation, repetition, imitation or remix. One sharp expression can suffice;
+it need not carry a substantive idea. Level 4 requires a recognizable, inviting
+grammar for further expressions, independent of its technical value. Popularity,
 actual sharing and an existing community require separate social evidence.
 
 | Level | Anticipation | Payoff |
@@ -192,8 +202,9 @@ above its level. Compression and Delight are relative to the helper's actual
 obligation: one exact access/default operation can qualify without invented
 abstraction or a separate revelation. The three scaled axes reward a helper's
 contribution to the surrounding vocabulary, convention and reading path.
-Arbitrary names, argument permutations, detours and decorative relays earn no
-credit merely because they repeat a motif.
+Names, argument permutations, detours and decorative relays earn no automatic
+credit merely because they repeat a motif. Judge their actual expressive pull
+on memetic identity, and their economy and readability on the other axes.
 
 Supporting means a bounded subordinate operation, such as access/default,
 boundary handling, conversion, construction or a thin adapter. Leading means

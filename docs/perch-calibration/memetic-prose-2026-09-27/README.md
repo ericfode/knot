@@ -172,3 +172,8 @@ project credential loaded privately through Node's `--env-file` option. The
 runner refuses an existing request/response directory to prevent silent rerolls.
 Do not delete receipts to run it again; a successor needs its own experiment
 identity, frozen expectations and explicit comparison scope.
+
+This original runner also pins the repository's current rubric to v5; run its
+verification at checkpoint `80c7ca5`. The later
+[v6 comparison](../memetic-value-v6-2026-09-27/README.md) has its own frozen-policy
+verifier. Do not replace the current production rubric to replay this history.
