@@ -618,3 +618,37 @@ deleted units and failed rereads, not only an unchanged second invocation.
 Count carried applicable answers separately from provider calls. The full
 offline inventory retains the existing 16 parser failures with zero warm
 requests; cache speed is not acceptance evidence or a fresh model judgment.
+
+## 2026-09-27 — Established memetic prose and a corrected control label
+
+The user requested external examples before applying Perch to system
+documentation. The [frozen prose probe](perch-calibration/memetic-prose-2026-09-27/README.md)
+uses the unchanged v5 questions at base `3dc7774`, rubric SHA-256
+`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`, and requested/resolved
+Jev 1.13.0. Ten requests returned 50 complete distributions; the
+[results](perch-calibration/memetic-prose-2026-09-27/results.json) and
+[prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
+
+All four selected originals meet the memetic target and exceed their plain
+rewrites by 32–79 percentage points. None meets the entire five-axis conjunction.
+An invented chiasmus intended to lack an explained mechanism receives 78%
+memetic target mass. The initial false-positive label was too strong: the user
+asked why, and the negative expectation was only the assistant's hypothesis.
+The passage may invite a meaningful interpretation; positive aphorisms likewise
+rely on inference. The user then explicitly judged it vacuous and memetic, and
+stated that something can be memetic without being valuable. Judgment:
+**human-adjudicated memetic; assistant negative label rejected**. No numerical
+level was assigned by the user. Preserve the original expected label and actual
+response; the historical result is not a false positive under the clarified
+objective. Cross-domain applicability to prose
+also remains unresolved. This is not a demonstrated Bend-code defect, and
+social reuse is not a correctness or aesthetic-accuracy label. Measured avoidable
+rework: unknown; this was a requested calibration experiment.
+
+Preserve this run's rubric and thresholds. The user clarification requires a
+successor to separate memetic appeal from conceptual value. Prevention: fix the
+review unit and independently adjudicate labels; do not use semantic emptiness
+as a negative memetic label. Do not rewrite docs solely to satisfy a code-oriented
+five-axis conjunction. Verification: exact production questions/request hashes,
+50 validated distributions and 51 passing focused offline style tests. No
+compiler contracts or package-owned code changed.

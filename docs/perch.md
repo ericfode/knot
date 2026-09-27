@@ -82,6 +82,12 @@ reported separately from defect findings. The output retains distributions,
 context limits and secondary ranks. Run it on materially changed Bend code beside
 the relevant semantic checks. See [style targets, commands and evidence](perch-style.md).
 
+A bounded [prose transfer experiment](perch-calibration/memetic-prose-2026-09-27/README.md)
+applies the unchanged five style questions to established technical expressions,
+plain rewrites and a Knot architecture paragraph. It records recognition of
+known examples and the user's judgment that a vacuous control is also memetic. This is calibration
+evidence, not a Markdown mode for `lint:style` or a qualified documentation gate.
+
 Scan, check and style default to 16 workers. Use `--parallel N` for semantic
 commands, `--jobs=N` for style, or `PERCH_JOBS` for either (explicit flags win).
 The range is 1–256, but larger values overloaded the provider in measured
