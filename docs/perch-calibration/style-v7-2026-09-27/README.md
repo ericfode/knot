@@ -73,6 +73,16 @@ two figures that have them: 7 of 20 ratings meet in owned-time-slicing, 14 of
   recorded for figures. The user's five taste anchors are still required
   before any threshold discussion.
 
+## Human anchors
+
+The user records taste anchors in a private page,
+<https://claude.ai/artifact/PFwdEppca7TSeUCpPCx1YY>: 28 real declarations, each
+tagged want-more, generic or over-styled with a reason, plus three free-text
+prompts. Answers live in that artifact's database (collections `anchors`,
+`notes`, `custom`) and are read back with the Artifact data tool, never
+retyped. Record them here as a dated JSON export before the next rubric or
+sheet change; until then this section is the only pointer.
+
 ## Pre-registered expectations
 
 [expectations.json](expectations.json) records, before any provider response,
