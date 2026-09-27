@@ -158,3 +158,37 @@ The remaining 723 role-limited units are:
 
 Of the 723, 448 depend on the context-cap decision and 256 on the hash-import
 decision.
+
+## Helper limit raised to 48
+
+On 2026-09-27 the user asked for the context helper limit to be raised.
+[`helper-limit-sweep.json`](helper-limit-sweep.json) sweeps it offline over
+main `b64a672`; other caps are unchanged.
+
+| Helpers | Truncated | Supporting impossible | Largest state | With a 16 KB task |
+| ---: | ---: | ---: | ---: | --- |
+| 16 | 448 | 723 | 24.4 KB | — |
+| 24 | 355 | 680 | 29.3 KB | — |
+| 32 | 278 | 634 | 34.9 KB | — |
+| **48** | **195** | **602** | **38.8 KB** | **54.6 KB; no overflow** |
+| 64 | 151 | 591 | 45.7 KB | 59.1 KB; `src/check-cli.bend` and `src/eval-cli.bend` exceed the 60 KB state cap |
+| 96 | 99 | 552 | 59.9 KB | 2 files overflow even without a task |
+
+A task can add up to 16 KB to every declaration state, and a state over 60 KB
+aborts that file's review. `src/SPEC.md` alone is 12.6 KB. 48 is the largest
+measured value with no overflow at the maximum task size.
+
+Effect of 48 ([preflight](project-preflight-helpers-48.txt)):
+
+- Helper-limit truncations fall from 365 to 112. Truncated units fall from 448
+  to 195.
+- Units that cannot take the supporting role fall from 723 to 602.
+- Composable single-file groups rise from 204 to 208.
+- The remaining truncation is 112 helper-limit, 47 caller or byte limit and 36
+  file limit.
+- 444 role-limited units reference hash-addressed package imports; that is now
+  the largest remaining blocker.
+
+Larger contexts make requests longer and cost more for both style and semantic
+review, which share the context builder. Earlier answers are not reused,
+because context hashes change.

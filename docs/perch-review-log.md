@@ -879,3 +879,19 @@ Prevention: the first cherry-pick resolution inserted entries inside existing
 entries, because a conflict region can begin mid-entry and carry base lines
 from the other branch. Resolve append-only logs by section, and verify that
 removing the added sections restores the target branch byte for byte.
+
+## 2026-09-27 — Helper context limit raised from 16 to 48
+
+User decision. An offline sweep chose the value: 16, 24, 32, 48, 64 and 96, the
+last two also with a maximum 16 KB task. At 64 a realistic task overflows the
+60 KB state cap for `src/check-cli.bend` and `src/eval-cli.bend`, which would
+abort their reviews; 48 peaks at 54.6 KB. Truncated units fall from 448 to 195.
+Units that cannot take the supporting role fall from 723 to 602. Callers (4),
+files (12), bytes (48 KB) and all rubric targets are unchanged. Request size
+and cost rise for style and semantic review; context hashes change, so earlier
+answers are not reused. [Sweep and preflight](perch-calibration/style-preflight-2026-09-27/README.md#helper-limit-raised-to-48).
+`lint:verify`: 102 tests pass.
+
+Prevention: before raising any context cap, sweep it with `--preflight` at the
+maximum task size, not only the default cohort. The state cap is a hard
+failure, not truncation.

@@ -59,7 +59,7 @@ export function bendDeclarationSource(source, declaration, location = declaratio
 
 /** One immutable working-tree source snapshot per file-check invocation. */
 export async function createBendReview({ root, path, source, analysis, limits = {}, snapshot = null }) {
-  const bounds = { helpers: 16, files: 12, bytes: 48_000, callers: 4, ...limits };
+  const bounds = { helpers: 48, files: 12, bytes: 48_000, callers: 4, ...limits };
   const realRoot = await realpath(root);
   if (snapshot && snapshot.root !== realRoot) throw new Error('Bend source snapshot belongs to another workspace');
   const files = new Map();

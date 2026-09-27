@@ -107,13 +107,18 @@ transitively, including generic type arguments. Imported datatypes share the
 existing helper budget. It does not discover arbitrary repository files, fetch
 remote imports, or substitute stale committed helpers. Every used file has a
 source hash, including an inspected import whose named declaration is missing.
-Context caps are 16 helpers, four callers, 12 files and 48 KB; unresolved
+Context caps are 48 helpers, four callers, 12 files and 48 KB; unresolved
 references and truncation stay visible in each unit receipt. Direct datatype
 style targets retain their separate one-file, four-caller and 48 KB limits, so
 required external types report a file-cap failure. The target declaration itself
 remains complete. A malformed admitted local dependency fails preflight before
 a model request. A syntactically valid context is not evidence of type checking
-or dependency completeness. The
+or dependency completeness. The helper cap was raised from 16 to 48 on
+2026-09-27 at the user's request. 48 is the largest measured value that
+keeps every current declaration under the 60 KB request cap with a
+maximum-size (16 KB) task; 64 overflowed `src/check-cli.bend` and
+`src/eval-cli.bend`. See [the preflight record](perch-calibration/style-preflight-2026-09-27/README.md#helper-limit-raised-to-48).
+The
 [datatype-context repair evidence](perch-execution/role-v5-2026-09-27/datatype-context/README.md)
 records the changed request identities; earlier reviews remain historical.
 
