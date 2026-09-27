@@ -1,0 +1,90 @@
+{
+  "accepted_deterministically": true,
+  "candidate_sha256": "53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2",
+  "immutable_inputs_unchanged": true,
+  "mutation_locator_changes": false,
+  "compiler_retry_used": false,
+  "steps": [
+    {
+      "name": "proof-zero-holes",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "seconds": 0.5262770419940352,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    {
+      "name": "native-build",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-1/release"
+      ],
+      "exit": 0,
+      "seconds": 1.3157430000137538,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "native-conformance",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-1/release"
+      ],
+      "exit": 0,
+      "seconds": 0.2519512919243425,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "javascript-build",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-1/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.5500642079859972,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "javascript-conformance",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-1/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.0619673749897629,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "semantic-mutants",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/mutations.py"
+      ],
+      "exit": 0,
+      "seconds": 1.8906311669852585,
+      "stdout": "{\"name\": \"discard_set\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"5ec2f0bdfb897fe1a20ef5bc61e1b77efe839ab39c50b9a2d7fb5aedf5a65a51\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"lose_sibling\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"c15752cf9c1d55fcb96a80b2f790496ee72463a9d8100c13cabd74e83dcd864d\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"truncate_high_bit\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"8526af560e1d1411b5a5beb6c89f7cd5a982151ffce8d0fa001e72c44f91b795\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"all-32-bits/complements\", \"killed\": true, \"output\": \"all-32-bits/complements\\n\"}\n{\"name\": \"stale_remove\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"431dcde3e022d5bc92ba5eed2418b2ecba4a0e1648045cc69ba847e796a4340c\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"false_contains\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"cfbee4ea1fe96e41ac67588d883c73b64a9f74ce58c09095f2a638b7a24df19e\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"bad_size\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"0584321891109feaaa6a78c236035a4aea7efae835523744bd86da5dd4846109\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"discard_fold\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"5931b20f073928c4f386ac8ff445cdf50f975bdad409d67bc0a51dacf3aadb64\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_fold\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"e4f7077bc229c382706f2a2291fb92cc92e038295ee9639e97bef68f0f3c2a37\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_combiner\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"34a35980e606b0fbe964ae146a8934cc6ce0733c6ba9a010c0f095a297b2d23a\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"combine_singleton\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"1c9a4898e3b75fcc560ab74dbbbe5cb434222e969950e750c32d351a0ccc3a1d\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"double_combine\", \"baseline_sha256\": \"53f771454f0e13b7128494a45e4ace529740eeb60c8eccb1f7724532359048d2\", \"mutant_sha256\": \"d81d8e4875c2b2d7ed9f62c40e76435d7691de4c00f4d322a41a859c3f04c920\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "performance-model-gates",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/performance.py"
+      ],
+      "exit": 0,
+      "seconds": 4.229174125008285,
+      "stdout": "[{\"n\": 64, \"backend\": \"native\", \"seconds\": [0.18207312491722405, 0.0030197501182556152, 0.0028643750119954348], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}, {\"n\": 64, \"backend\": \"javascript\", \"seconds\": [0.02111366600729525, 0.01779625006020069, 0.018449041061103344], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}]\n[{\"n\": 256, \"backend\": \"native\", \"seconds\": [0.004700500052422285, 0.004515541018918157, 0.0045552500523626804], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}, {\"n\": 256, \"backend\": \"javascript\", \"seconds\": [0.01933591696433723, 0.020132124889642, 0.020004333928227425], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}]\n[{\"n\": 1024, \"backend\": \"native\", \"seconds\": [0.010544500080868602, 0.010548417223617435, 0.010422958061099052], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}, {\"n\": 1024, \"backend\": \"javascript\", \"seconds\": [0.027267666067928076, 0.029168499866500497, 0.027613499900326133], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}]\n[{\"n\": 4096, \"backend\": \"native\", \"seconds\": [0.03520066710188985, 0.03544587502256036, 0.03567083296366036], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}, {\"n\": 4096, \"backend\": \"javascript\", \"seconds\": [0.0522214169614017, 0.05484716687351465, 0.054265083046630025], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}]\n",
+      "stderr": ""
+    }
+  ]
+}

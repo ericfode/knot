@@ -1,0 +1,57 @@
+{
+  "scope": "Descriptive paired process timings, one warmup per version/backend and five alternating samples; startup and full dense/shared-prefix workload included; concurrent machine; no speedup or universal nonregression claim",
+  "rows": [
+    {
+      "backend": "native",
+      "n": 4096,
+      "seconds": {
+        "baseline": [
+          0.037945458898320794,
+          0.037639208137989044,
+          0.03785916604101658,
+          0.037248624954372644,
+          0.03723604208789766
+        ],
+        "candidate": [
+          0.03742625005543232,
+          0.03742499998770654,
+          0.037634958047419786,
+          0.03696304187178612,
+          0.036537749925628304
+        ]
+      },
+      "median_seconds": {
+        "baseline": 0.037639208137989044,
+        "candidate": 0.03742499998770654
+      },
+      "candidate_over_baseline": 0.9943089092231379,
+      "identical_stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n"
+    },
+    {
+      "backend": "javascript",
+      "n": 4096,
+      "seconds": {
+        "baseline": [
+          0.05459408299066126,
+          0.05560854193754494,
+          0.05684800003655255,
+          0.05752487503923476,
+          0.05564495804719627
+        ],
+        "candidate": [
+          0.053930917056277394,
+          0.05547904199920595,
+          0.05582866701297462,
+          0.056686666095629334,
+          0.05481866700574756
+        ]
+      },
+      "median_seconds": {
+        "baseline": 0.05564495804719627,
+        "candidate": 0.05547904199920595
+      },
+      "candidate_over_baseline": 0.9970183094064048,
+      "identical_stdout": "n=4096\nshift=0\nretained_nonempty_nodes=90111\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\nn=4096\nshift=16\nretained_nonempty_nodes=24591\nmax_key_depth=32\nunion_sum=16781312\nsource_set_trie_constructors=135168\n"
+    }
+  ]
+}

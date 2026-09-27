@@ -1,6 +1,17 @@
 # IntMap status
 
-**Complete — published and verified remotely, 2026-09-26.**
+**Published release verified remotely, 2026-09-26. Working source has an
+unreleased style revision.**
+
+Batch int-map-paths-1 simplifies only `branch` to an empty-pair case and a
+binding fallback. Fixed proofs, native/JS conformance, all11 mutants and scaling
+gates pass;29 targeted semantic checks reported no findings. All four reviewed
+declarations meet compression and delight targets, but remain below memetic
+target. No all-axis style pass. See [STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md) for
+source identities, before/after evidence and remaining work. The published hash
+and its historical receipts below remain unchanged; current main.bend differs.
+
+## Historical release and subsequent audits
 
 Content hash: `0x99e32f5f97dad3791a32b01d133555c5`.
 

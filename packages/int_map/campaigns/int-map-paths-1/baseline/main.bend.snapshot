@@ -51,9 +51,14 @@ def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> In
       Branch{low(V,m),set_path(V,tail,high(V,m),key,v)}
 
 def branch(-V: Data, lo: IntMap<V>, hi: IntMap<V>) -> IntMap<V>:
-  match lo hi:
-    case Tip{} Tip{}: Tip{}
-    case a b: Branch{a,b}
+  match lo:
+    case Tip{}:
+      match hi:
+        case Tip{}: Tip{}
+        case Entry{k,v}: Branch{Tip{},Entry{k,v}}
+        case Branch{a,b}: Branch{Tip{},Branch{a,b}}
+    case Entry{k,v}: Branch{Entry{k,v},hi}
+    case Branch{a,b}: Branch{Branch{a,b},hi}
 
 def remove_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>) -> IntMap<V>:
   match path:
