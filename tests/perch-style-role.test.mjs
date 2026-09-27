@@ -6,7 +6,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as style from '../scripts/perch-style.mjs';
 
-const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
+// Frozen v5 policy: version 6 adds the pattern sheet and figure manifests, tested separately.
+const config = JSON.parse(await readFile(new URL('./perch-style/v5.json', import.meta.url), 'utf8'));
 // Existing v4 fixture, unchanged; these tests vary judgments, not its behavior.
 const source = 'import Base\ndef helper(x: U32) -> U32: U32.add(x,1)\ndef solve(x: U32) -> U32: helper(x)\n';
 const scaled = ['highly_memetic', 'anticipation', 'payoff'];

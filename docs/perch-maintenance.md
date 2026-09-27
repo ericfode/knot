@@ -39,6 +39,15 @@ after rubric changes; do not promote the small historical two-axis pilot into
 an accuracy claim for the current three-axis rubric. The [style guide](perch-style.md)
 defines the desired taste and current evidence limits.
 
+The pattern sheet [KNOT-SHAPES.md](KNOT-SHAPES.md) and the figure manifests
+under `docs/style-campaign/figures/` are shared configuration owned by the
+style coordinator. Editing the sheet changes every style request identity, so
+treat it like a rubric change: record the reason, keep the previous text in Git,
+and re-run the frozen figures before comparing scores. A shape needs two
+instances in different vocabularies to enter or stay on the sheet. Owners
+propose manifests for their figures; the coordinator checks that declared leads
+and opaque interfaces match the actual source before accepting them.
+
 Record a concise entry in `docs/perch-review-log.md` after meaningful rework,
 a discovered missed defect, a false positive, or repeated unhelpful findings.
 Include the source or receipt, root cause, judgment, measured effort if known,

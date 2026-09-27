@@ -48,6 +48,7 @@ npm run lint:history                # local usage and finding counts
 npm run lint:style -- --live --task=src/SPEC.md src/scope.bend
 npm run lint:style -- --live --all  # explicitly requested project style review
 npm run lint:style -- --live --all --incremental # automatic working-copy reuse
+npm run lint:style -- --live --figure=docs/style-campaign/figures/int-map-paths.json # one figure against the pattern sheet
 npm run lint:verify                 # offline workflow and rule-wiring checks
 ```
 
@@ -73,8 +74,10 @@ is required. A separate expressive-role judgment gives supporting helpers level 
 targets for identity, Anticipation and Payoff; leading or uncertain declarations
 retain level 3. Compression and Delight remain level 3, relative to the actual
 obligation. The complete bounded mechanism independently needs level 3 on the
-three scaled axes. `--all` inventories declarations but cannot qualify an unseen
-whole-project composition. Supply a fixed task with `--task=SPEC.md`
+three scaled axes. `--figure=manifest.json` reviews one declared figure with the pattern sheet in
+[docs/KNOT-SHAPES.md](KNOT-SHAPES.md) as context; see the version 6 section of
+[the style guide](perch-style.md). `--all` inventories declarations but cannot
+qualify an unseen whole-project composition. Supply a fixed task with `--task=SPEC.md`
 or an explicit `--cohort`: the separate potential-profundity judgment decides
 whether the combined mechanism also requires Galaxy brain. Missing or uncertain
 task relevance leaves Galaxy brain advisory and does not block ordinary targets. Below-target and uncertain ratings are

@@ -7,7 +7,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { BEND_PARSER_PROFILE } from './perch-bend.mjs';
-import { assessStyle, changedStyleSources, prepareStyleInventory } from './perch-style.mjs';
+import { assessStyle, changedStyleSources, inventoryScope, loadPatternSheet, prepareStyleInventory } from './perch-style.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const BASELINE = 'docs/perch-calibration/style-project-2026-09-26.json.gz';
@@ -38,6 +38,7 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
     const meetsRequired = meetsDeclaration && !config.potential_profundity;
     return {
       target: unit.target, kind: unit.kind, line: unit.line,
+      scope: inventoryScope(unit.target.split('::')[0], config).id,
       source_sha256: unit.source_sha256, state_sha256: unit.state_sha256,
       baseline_status: !old ? 'unrated' : matches ? 'matches' : 'stale',
       baseline_axes: axes.get(unit.target) ?? null,
@@ -60,7 +61,11 @@ export function compareStyleBaseline(candidates, inventory, baseline, config, id
       matches_all_required_baseline_targets: selected.filter(u => u.matches_all_required_baseline_targets).length,
       matches_all_three_baseline_targets: selected.filter(u => u.matches_all_three_baseline_targets).length };
   });
+  const scopes = (config.inventory_scopes ?? []).map(scope => ({ id: scope.id, gate: scope.gate,
+    declarations: units.filter(u => u.scope === scope.id).length,
+    matches_all_required_baseline_targets: units.filter(u => u.scope === scope.id && u.matches_all_required_baseline_targets).length }));
   return { compatible_rubric_and_parser: compatible,
+    scopes,
     baseline_requested_model: baseline.requested_model,
     baseline_resolved_models: [...new Set(baseline.rows.map(row => row.model))],
     summary: { discovered_files: inventory.discovered_files.length, parsed_units: units.length,
@@ -78,7 +83,8 @@ export async function buildCampaignInventory(root = ROOT) {
   const rubricText = await readFile(resolve(root, 'perch-style.json'), 'utf8');
   const config = JSON.parse(rubricText);
   const headBefore = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
-  const { candidates, inventory } = await prepareStyleInventory(baseline.cohort, config, root);
+  const sheet = await loadPatternSheet(config, root);
+  const { candidates, inventory } = await prepareStyleInventory(baseline.cohort, config, root, null, { sheet });
   const changed = await changedStyleSources(candidates, root);
   return { schema: 1, at: new Date().toISOString(), baseline: BASELINE,
     baseline_sha256: sha256(baselineBytes), baseline_at: baseline.at,
@@ -86,6 +92,7 @@ export async function buildCampaignInventory(root = ROOT) {
     git_head_after_inventory: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
     source_basis: 'working-tree', source_freshness: { status: changed.length ? 'changed-during-inventory' : 'matched-at-inventory', changed_sources: changed },
     rubric_sha256: sha256(rubricText), parser: BEND_PARSER_PROFILE,
+    pattern_sheet: sheet ? { path: sheet.path, sha256: sheet.sha256, bytes: sheet.bytes } : null,
     provider_requests: 0, typechecked: false, behavioral_equivalence_checked: false,
     note: 'Dated baseline comparison only. Matching means source, request state, context, parser and rubric match; it is not fresh provider evidence, human acceptance or completion. Batch receipts remain separate. Historical axes stay historical when stale. Unranked and missing declarations remain visible.',
     ...compareStyleBaseline(candidates, inventory, baseline, config, { rubric_sha256: sha256(rubricText), parser: BEND_PARSER_PROFILE }) };

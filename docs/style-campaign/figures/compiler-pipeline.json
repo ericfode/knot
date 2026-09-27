@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "id": "compiler-pipeline",
+  "title": "Compiler driver: text to checked book as one first-error composition",
+  "shapes": ["S6"],
+  "sheet": "docs/KNOT-SHAPES.md",
+  "task": "src/style-campaign/compiler-pipeline-1/SPEC.md",
+  "owner": "Compiler Planning",
+  "reading_hypothesis": "Tokenize, parse and check read as one bind chain with the IO continuation outermost; the unchanged stages are opaque interfaces, so the figure is judged on the composition it actually owns.",
+  "declarations": [
+    "src/driver.bend::Limits",
+    "src/driver.bend::fail",
+    "src/driver.bend::checked",
+    "src/driver.bend::parsed_root",
+    "src/driver.bend::parsed",
+    "src/driver.bend::source"
+  ],
+  "leads": ["src/driver.bend::source"],
+  "interfaces": [
+    { "name": "S.Error", "signature": "type Error is Data: Invalid{phase,code,at} | Unsupported{phase,code,at} | Exhausted{phase,at} | Internal{phase,code} | Host{phase,code}", "note": "Shared error datatype; first failure propagates unchanged." },
+    { "name": "S.Token", "signature": "type Token is Data: Token{text: String, at: At}" },
+    { "name": "S.Node", "signature": "type Node is Data", "note": "Parsed syntax tree; opaque here." },
+    { "name": "S.bind", "signature": "def bind(-A: Data, -B: Data, result: Result<Error,A>, next: A -> Result<Error,B>) -> Result<Error,B>", "note": "bind(Fail{e},k) = Fail{e}; bind(Done{x},k) = k(x)." },
+    { "name": "C.Book", "signature": "type Book is Data: Book{types: List<&2,Datatype>, functions: List<&2,Function>}" },
+    { "name": "L.tokenize", "signature": "def tokenize(fuel: Nat, input: String) -> Result<S.Error,List<&2,S.Token>>" },
+    { "name": "P.Parsed", "signature": "type Parsed is Data: Parsed{value: S.Node, rest: List<&2,S.Token>}" },
+    { "name": "P.parse", "signature": "def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>" },
+    { "name": "K.check", "signature": "def check(depth: Nat, root: S.Node) -> Result<S.Error,C.Book>" },
+    { "name": "D.status", "signature": "def status(e: S.Error) -> U32" },
+    { "name": "D.error", "signature": "def error(e: S.Error) -> String" }
+  ]
+}

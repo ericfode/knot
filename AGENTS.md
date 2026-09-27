@@ -130,6 +130,20 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   preferences or incentives toward obscurity in docs/perch-review-log.md and
   follow docs/perch-maintenance.md. Optimize the code's reading experience;
   do not chase scores through self-praise in comments or needless rewrites.
+- Rubric version 6 (2026-09-27) judges identity at the **figure** against the
+  shared **pattern sheet** in [docs/KNOT-SHAPES.md](docs/KNOT-SHAPES.md). A figure
+  is one bounded mechanism declared in `docs/style-campaign/figures/*.json`: its
+  datatype, lead recurrence, projections, laws, proof fills and one use, with
+  opaque interfaces standing in for outside collaborators. Run
+  `npm run lint:style -- --live --figure=<manifest>` for a changed mechanism.
+  The sheet travels with every request, so a supporting declaration passes by
+  instantiating a sheet shape exactly, a declared lead always carries level 3,
+  and a proof fill inside a figure is advisory because the figure's law/proof
+  mirror is judged in the composition. A comment naming a shape earns nothing.
+  Adding a shape to the sheet requires two instances in different vocabularies.
+  Fixtures, models, benchmarks and evidence directories are reported, never
+  gated. Thresholds, deterministic gates and the no-score-chasing rule are
+  unchanged; recorded human anchors still precede any threshold discussion.
 
 ## Active style campaign
 

@@ -7,6 +7,46 @@ laws, compiler integration and one standard library. The current
 The [state file](style-campaign/state.json) records assignments and evidence.
 The completed package-publication campaign remains a separate workflow.
 
+## Shape adoption passes (from 2026-09-27)
+
+The user's 2026-09-27 request replaces owner batches that raise one declaration
+at a time with **shape adoption passes** judged at the figure. The framework is
+recorded in [KNOT-SHAPES.md](KNOT-SHAPES.md), the version 6 section of
+[perch-style.md](perch-style.md) and the review log. Its premise is the survey
+result below: compression and delight pass broadly, supporting helpers pass under
+version 5, and the remaining failures sit in the declared lead and the
+composition, judged without the repertoire they were supposed to be quoting.
+
+One pass is one shape from the sheet applied to one owner's figure:
+
+1. The owner writes or updates a figure manifest under
+   `docs/style-campaign/figures/` naming the declarations, the lead, the task
+   and the opaque interfaces. The coordinator owns the sheet and the manifests'
+   schema; the owner owns the source.
+2. Record the reading hypothesis and which sheet shapes the figure claims. Run
+   `npm run lint:style -- --live --figure=<manifest>` once on the frozen baseline.
+3. Make one substantive candidate under the existing generation, gate and
+   retry rules. Layout conventions from the sheet apply first: stop arms
+   first, shared spines, laws in mechanism order, mirrored proofs.
+4. Run the figure review once on the candidate. Keep the change only with a
+   concrete reading benefit and deterministic acceptance. Declarations that fit
+   no sheet shape are the design work; record them, do not force them.
+5. A shape earns a place on the sheet only with two instances in different
+   vocabularies. Retiring or splitting a shape is a coordinator change with a
+   review-log entry.
+
+Prepared figures: `owned-time-slicing`, `int-map-paths`, `symbols-trie` and
+`compiler-pipeline`. All four validate offline with complete context; the
+compiler pipeline composition was unavailable under version 5. Live version 6
+results are recorded under `docs/perch-calibration/style-v6-2026-09-27/` when
+credentials are available in the checkout being used. Human anchors recorded
+before model review remain the prerequisite for any threshold discussion.
+
+The passing criterion for the repository is: every mechanism-scope figure
+returns exit 0 under the current rubric, and inventory outside mechanism scope
+is reported. Fixtures, models, benchmarks and retained evidence are not gated.
+The bounded-trial history below is retained unchanged.
+
 ## Target and baseline
 
 Selected families should earn conceptual compression, high-dopamine readability,

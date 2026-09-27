@@ -38,6 +38,70 @@ can qualify through one fitting operation or resonant expression; adding layers
 solely to look clever would work against the goal. Correctness, quantity, proofs,
 backend behavior and performance remain independent deterministic gates.
 
+## Version 6: shapes, figures and the pattern sheet
+
+Version 6 (2026-09-27) changes the unit and the context of the identity
+judgment, not its thresholds. The survey behind it is recorded in
+[the review log](perch-review-log.md). Three facts drove it: after version 5,
+supporting helpers pass but every declared lead and every composition still
+fails memetic identity, anticipation and payoff; composition review was
+unavailable for most compiler groups because of unresolved imports and the
+48 KB bound; and no request had ever shown the judge what Knot's idiom is.
+
+- **Pattern sheet.** [docs/KNOT-SHAPES.md](KNOT-SHAPES.md) names the recurring
+  shapes with skeletons, fixed parts, law shapes and exact instances. Its text
+  is attached to every declaration and composition request as `sheet` and is
+  part of each request identity, so editing the sheet invalidates cached
+  answers. The rubric asks the judge to recognize instantiation of a sheet
+  shape, not to reward the sheet's prose. A missing or oversized sheet fails
+  before any paid request.
+- **Figure manifests.** `--figure=docs/style-campaign/figures/<id>.json` selects
+  one bounded mechanism: `declarations` as `file.bend::name`, at least one
+  declared `leads` entry, optional `task`, and `interfaces` giving exact
+  signatures for collaborators outside the figure. Members see the figure as
+  their context: calls, callers, laws and datatypes come from the manifest, so
+  the 16-helper and four-user caps no longer make anticipation and payoff
+  unavailable. Unresolved references are recorded per member and make its role
+  uncertain. The composition sees exactly the manifest declarations grouped by
+  file, the interfaces and the sheet, never whole files. Author claims such as
+  `shapes` and `reading_hypothesis` are recorded in the receipt and withheld
+  from the request.
+- **Declared leads.** A manifest can only raise a declaration to the leading
+  bar. The model's role answer is still recorded as `model_status`; it cannot
+  grant a declared lead the supporting exemption.
+- **Advisory proof fills.** Inside a figure, `bend_law_fill` and
+  `bend_law_definition` ratings are reported with `advisory: true` and counted
+  under `style_summary.advisory`; they do not block `meets_all`. The figure's
+  law/proof mirror is judged in the composition instead. Outside a figure the
+  same declarations gate exactly as in version 5. This removes a
+  self-contradiction: the guide forbids inflating a canonical `{==}` fill while
+  the gate demanded that it reach level 3 on its own.
+- **Inventory scopes.** `inventory_scopes` partitions `--all` by path into
+  `mechanism` (gated), `fixture` and `evidence` (reported). The campaign
+  inventory records each unit's scope. The refreshed inventory has 2,367 parsed
+  units: 1,369 mechanism, 980 fixture, 18 evidence.
+
+| Scope | Compression | Delight | Memetic identity | Anticipation | Payoff |
+| --- | --- | --- | --- | --- | --- |
+| Supporting member | 3 | 3 | 2 Recognizable: instantiates a sheet shape | 2 Guided | 2 Fitting |
+| Declared or classified lead | 3 | 3 | 3 Contagious | 3 Inviting | 3 Earned |
+| Proof fill inside a figure | advisory | advisory | advisory | advisory | advisory |
+| Figure composition | Galaxy 5 only when relevant | declaration checks | 3 Contagious | 3 Inviting | 3 Earned |
+
+Four figure manifests are prepared and validate offline with complete context:
+`owned-time-slicing` (21 declarations), `int-map-paths` (23), `symbols-trie` (8)
+and `compiler-pipeline` (6, previously unavailable as a composition). Offline
+coverage is `tests/perch-style-figure.test.mjs`. Live version 6 evidence and
+recorded author expectations live in
+[the version 6 calibration record](perch-calibration/style-v6-2026-09-27/README.md);
+no human preference has been recorded yet, so version 6 is a measurement
+change with pending calibration, not a demonstrated pass.
+
+```sh
+npm run lint:style -- --live --figure=docs/style-campaign/figures/owned-time-slicing.json \
+  --json --output=docs/perch-calibration/style-v6-2026-09-27/owned-time-slicing.json
+```
+
 ## Run it
 
 ```sh

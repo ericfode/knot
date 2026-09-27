@@ -14,6 +14,12 @@ The reading hypothesis is that giving a computation time returns either its
 answer or the work still owed. The broader compiler goal was **paused in the app**
 when inspected during this handoff; its state was not changed or completed.
 
+Update 2026-09-27: the style framework now judges identity at the figure
+against [the pattern sheet](KNOT-SHAPES.md); the four prepared manifests under
+`docs/style-campaign/figures/` include this family. Use
+`npm run lint:style -- --live --figure=docs/style-campaign/figures/owned-time-slicing.json`
+before and after any candidate here.
+
 Read [the starting packet](../research/compiler-style/hillclimb/START-HERE.md),
 [hill-climbing plan](../research/compiler-style/MEMETIC-HILLCLIMB.md),
 [transfer contract](../research/compiler-style/hillclimb/TRANSFER.md) and

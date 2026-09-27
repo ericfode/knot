@@ -1,5 +1,52 @@
 # Perch review log
 
+## 2026-09-27 — style rules judged identity without a repertoire; version 6 fixes the unit and the context
+
+Survey of every style receipt and campaign report. The gate had never returned
+exit 0 for a real mechanism. Baseline: 1,887 units, five memetic passes, median
+memetic mass 0.06 for definitions, 0.03 for proof fills, 0.02 for datatypes.
+After version 5, supporting helpers pass; every declared lead and every
+composition still fails memetic identity, anticipation and payoff (IntMap
+edit_path .09/.08/.03, composition .30/.04/.11; central laws family .29/.04/.14;
+compiler pipeline composition unavailable). Four of the five baseline memetic
+passes had truncated context. No request ever contained the project's idiom.
+No human preference has been recorded under any rubric version.
+
+Confirmed measurement defects, not code defects: the judged unit was one
+declaration with capped helper context while the criterion was a shared
+grammar; the composition was unavailable for any group importing an outside
+collaborator or exceeding 48 KB; the guide forbade inflating canonical `{==}`
+fills while the gate demanded that each reach level 3 alone; and a quarter of
+the inventory (fixtures, models, benchmarks, negatives) was gated as if it were
+mechanism.
+
+Change: rubric version 6. [KNOT-SHAPES.md](KNOT-SHAPES.md) names eight shapes
+drawn from existing code and is attached to every request as part of its
+identity. `--figure=manifest.json` judges one declared mechanism with the figure
+as each member's context and opaque interfaces for outside collaborators;
+declared leads can only be raised to level 3; proof fills inside a figure are
+advisory and judged through the figure's law/proof mirror; `--all` partitions
+fixture and evidence scopes from gated mechanisms. Thresholds, the 60% mass
+rule, criticality, potential profundity and every deterministic gate are
+unchanged. Version 5 receipts keep their meaning and cannot be reused under
+the new rubric hash.
+
+Evidence: 94 offline tests and law-rule wiring pass (`npm run lint:verify`);
+`tests/perch-style-figure.test.mjs` covers sheet identity, manifest
+validation, lead monotonicity, advisory fills, interface resolution, stale
+sheet disclosure and scope partition. Four real manifests validate with
+complete context and zero unresolved references, including the compiler
+pipeline that version 5 could not compose. Frozen v5 policy is retained as
+`tests/perch-style/v5.json`. No provider was contacted; live figure reviews
+and human anchors are pending and recorded as such in
+[the version 6 record](perch-calibration/style-v6-2026-09-27/README.md).
+
+Prevention: never judge a memetic criterion without supplying the repertoire it
+refers to; make the judged unit match the criterion's unit; and keep the
+inventory's gating scope explicit. Elapsed effort for the prior campaign is
+unknown; the receipts record roughly thirty candidates across ten batches with
+one memetic pass.
+
 ## 2026-09-26 Pacific — expressive role and helper scale
 
 Confirmed policy mismatch: marginal contract importance was making tiny access,

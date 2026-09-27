@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "id": "owned-time-slicing",
+  "title": "Owned time slicing: Run, step, run, slices",
+  "shapes": ["S1", "S2", "S6", "S8"],
+  "sheet": "docs/KNOT-SHAPES.md",
+  "task": "research/adaptive-tasks/SPEC.md",
+  "owner": "Compiler Planning (research/adaptive-tasks)",
+  "reading_hypothesis": "Giving a computation time returns either its answer or the work still owed. After run and fuel_add, the reader anticipates L.fuel_add and a budget-list run_many.",
+  "declarations": [
+    "research/adaptive-tasks/task.bend::Payload",
+    "research/adaptive-tasks/task.bend::Frame",
+    "research/adaptive-tasks/task.bend::Task",
+    "research/adaptive-tasks/task.bend::Run",
+    "research/adaptive-tasks/task.bend::tick",
+    "research/adaptive-tasks/task.bend::tick_owned",
+    "research/adaptive-tasks/task.bend::combine",
+    "research/adaptive-tasks/task.bend::unary",
+    "research/adaptive-tasks/task.bend::apply",
+    "research/adaptive-tasks/task.bend::step_parts",
+    "research/adaptive-tasks/task.bend::step",
+    "research/adaptive-tasks/task.bend::run",
+    "research/adaptive-tasks/task.bend::slices",
+    "research/adaptive-tasks/LAWS.bend::zero_fuel",
+    "research/adaptive-tasks/LAWS.bend::delivered_absorbs",
+    "research/adaptive-tasks/LAWS.bend::one_tick",
+    "research/adaptive-tasks/LAWS.bend::fuel_add",
+    "research/adaptive-tasks/PROOF.bend::L.zero_fuel",
+    "research/adaptive-tasks/PROOF.bend::L.delivered_absorbs",
+    "research/adaptive-tasks/PROOF.bend::L.one_tick",
+    "research/adaptive-tasks/PROOF.bend::L.fuel_add"
+  ],
+  "leads": ["research/adaptive-tasks/task.bend::run"],
+  "interfaces": [
+    { "name": "T.start", "signature": "def start(dest: U32, ticks: Nat, seed: U32, frames: List<&1,Frame>) -> Run", "note": "Constructor used by one_tick; opaque here." }
+  ]
+}

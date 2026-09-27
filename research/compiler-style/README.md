@@ -29,6 +29,14 @@ mutations, reconstruction and transfer, then owner-led propagation. Its
 [planning state](hillclimb/state.json) starts with zero candidates and distinguishes
 the proposed successor protocol from the unresolved existing pilot.
 
+On 2026-09-27 the coordinator turned Phase 4 of the hill-climbing plan, the
+style reference, into an executable artifact seeded from existing code:
+[the pattern sheet](../../docs/KNOT-SHAPES.md), attached to every style request,
+and figure manifests under `docs/style-campaign/figures/`, including this
+family's `owned-time-slicing`. The exemplar-first sequence stands; the sheet
+records the shapes the exemplars already share so that transfer exercises and
+owner passes are judged against the same repertoire.
+
 [Start with owned time slicing](hillclimb/START-HERE.md) selects the first family,
 pins its before/current source and gate inputs, and supplies the complete
 [budget-list transfer contract](hillclimb/TRANSFER.md). The packet is prepared;

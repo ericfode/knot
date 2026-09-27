@@ -15,6 +15,10 @@ config.version = 3;
 config.criticality.style_target ??= config.potential_profundity?.style_target;
 delete config.potential_profundity;
 delete config.style_role;
+// Version 6 adds the shared pattern sheet, figure manifests and inventory scopes; v3 receipts predate them.
+delete config.pattern_sheet;
+delete config.figures;
+delete config.inventory_scopes;
 const targets = ['a.bend::solve', 'b.bend::solve'];
 const args = ['--live', '--json', '--cohort=Add one to an unsigned word', ...targets];
 const key = 'offline-secret-must-not-be-recorded';
