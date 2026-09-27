@@ -1,0 +1,67 @@
+import Base
+
+# Sampling beyond a finite sequence returns its zero.
+def sample(-A: Data, xs: List<&2, A>, zero: A) -> A:
+  Maybe.default(&2, A, List.head(&2, A, xs), zero)
+
+# The middle sequence fixes the output extent; either flank may be empty.
+def sum3(
+  middle: List<&2, U32>, +left: List<&2, U32>, +right: List<&2, U32>
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case h <> t:
+      (sample(U32, left, 0) + h + sample(U32, right, 0) : U32)
+        <> sum3(t, List.tail(&2, U32, left), List.tail(&2, U32, right))
+
+# Horizontal convolution: shifted copies share the same finite row.
+def bands(
+  rows: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match rows:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +row = List.take(&2, U32, cells, width)
+      sum3(row, 0 <> row, List.tail(&2, U32, row))
+        <> bands(rest, width, List.drop(&2, U32, cells, width))
+
+# Vertical convolution completes the inclusive 3-by-3 sum.
+def totals(
+  rows: List<&2, List<&2, U32>>, above: List<&2, U32>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case +row <> +rest:
+      below = sample(List<&2, U32>, rest, Nil{})
+      List.append(&2, U32, sum3(row, above, below), totals(rest, row))
+
+# Including the center turns B3/S23 into total=3 or (alive and total=4).
+def resolve(
+  cells: List<&2, U32>, counts: List<&2, U32>
+) -> List<&2, U32>:
+  match cells counts:
+    case Nil{} _:
+      Nil{}
+    case h <> t Nil{}:
+      Nil{}
+    case h <> t +n <> ns:
+      Bool.to_u32(Bool.or(U32.is_eq(n, 3),
+        Bool.and(U32.is_eq(h, 1), U32.is_eq(n, 4))))
+        <> resolve(t, ns)
+
+def step(
+  width: U32, height: U32, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  resolve(cells, totals(bands(U32.to_nat(height), U32.to_nat(width), cells), Nil{}))
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

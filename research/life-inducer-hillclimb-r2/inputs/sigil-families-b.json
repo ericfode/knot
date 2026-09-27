@@ -1,0 +1,26 @@
+[
+  {
+    "id": 4,
+    "name": "Vanishing Lattice",
+    "algorithm": "Create a square grid of odd side length n (use n=9). Put one distinct glyph in each cell, with the center cell occupied. For rounds r from 0 through (n-1)/2, delete every cell on the perimeter of the current square whose Manhattan distance from the center is r modulo 2; record deleted cells in deletion order. Rotate the surviving inner square one quarter-turn clockwise, then continue with the next perimeter. When one cell remains, rebuild the original dimensions by replaying the recorded deletions in reverse order, but insert each deleted glyph into the first empty cell encountered by a clockwise spiral from its former position. Return the sequence of intermediate grids and the final grid.",
+    "glyph_inventory": "⌁ ◌ · ⁙ ⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬",
+    "example": "⌁ ◌ · ⁙ ⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬\n◌ · ⁙ ⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁\n· ⁙ ⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌\n⁙ ⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌ ·\n⟡ ⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌ · ⁙\n⧈ ⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌ · ⁙ ⟡\n⌂ ⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌ · ⁙ ⟡ ⧈\n⊙ ∴ ⋮ ⊘ ⟟ ⫯ ⌬ ⸬ ⌁ ◌ · ⁙ ⟡ ⧈ ⌂",
+    "intended_pressure": "Measure whether progressive omission and spatial re-entry make absence behave like a positive structural force during comparison."
+  },
+  {
+    "id": 5,
+    "name": "Migrating Boundary",
+    "algorithm": "Represent a sequence as a list of glyphs and a boundary index b initially equal to 0. For each pass p from 0 through 11, partition the list at b, move the left partition to the right by one position using a stable cyclic rotation, and move the right partition to the left by two positions using the same operation in the opposite direction. Set b to (b + 1 + p) modulo the list length. After each pass, mark the two glyphs adjacent to b and append the marked pair to a trace. On passes divisible by 3, reverse only the marked pair. Return all list states, boundary positions, and marks; preserve glyph identity throughout.",
+    "glyph_inventory": "╱ ╲ ┆ ┇ ┄ ┅ ⟋ ⟍ ⌇ ⌁ ⊣ ⊢ ◖ ◗ ◇",
+    "example": "╱╲ ┆┇ ┄┅ ⟋⟍ ⌇⌁ ⊣⊢ ◖◗ ◇\n╱ ┆ ╲ ┇ ┄ ⟋ ┅ ⟍ ⌇ ⌁ ⊣ ⊢ ◖ ◗ ◇\n┆ ╲ ┇ ╱ ⟋ ┄ ⌇ ┅ ⊣ ⟍ ⌁ ◖ ⊢ ◗ ◇\n┇ ╱ ┄ ╲ ⌇ ⟋ ┅ ⊣ ⌁ ⟍ ◗ ◖ ◇ ⊢\n┄ ╲ ⌇ ┇ ┅ ⟋ ⊣ ╱ ⌁ ◖ ◗ ⟍ ◇ ⊢\n┅ ┇ ⟋ ╲ ⊣ ⌇ ⌁ ┄ ◗ ◖ ╱ ◇ ⟍ ⊢\n⟋ ╱ ⌁ ┇ ◖ ⊣ ⌇ ⟍ ◗ ┄ ◇ ╲ ⊢\n⟍ ┇ ◗ ⟋ ⌁ ◖ ⊣ ╲ ⌇ ◇ ┄ ⊢ ╱\n⌇ ⟋ ⊣ ◗ ◖ ⌁ ◇ ┇ ╲ ⟍ ⊢ ┄ ╱\n⌁ ⊣ ◖ ⌇ ◇ ◗ ⟋ ┇ ┄ ╲ ╱ ⟍ ⊢\n⊣ ◗ ◇ ◖ ⌁ ⟍ ⟋ ┇ ╱ ┄ ⊢ ╲\n⊢ ◖ ⌇ ◇ ◗ ⌁ ┄ ⟋ ⟍ ╱ ╲ ┇",
+    "intended_pressure": "Test whether a visibly relocating separator destabilizes stable grouping while leaving every local token recoverable."
+  },
+  {
+    "id": 6,
+    "name": "Reciprocal Blur",
+    "algorithm": "Start with k equal-length rows of glyphs, each row containing a permutation of the same inventory (use k=4 and width 8). For round r from 0 through 7, replace every row with a new row computed simultaneously: at column c, take the glyph at (row + r) modulo k and column (c + row + r) modulo width, then choose between that glyph and the glyph at (row - 1) modulo k and column (c - r - 1) modulo width according to whether (row + c + r) is even. Apply the resulting rows only after all cells are read. Rotate row order left by r modulo k, and rotate columns right by r modulo width. Emit each round without naming a source row or preferred direction.",
+    "glyph_inventory": "ᚫ ʘ ƛ ǂ ꙮ ȝ Ƶ ɬ ⟁ ʒ Ƿ ⌘",
+    "example": "ᚫ ʘ ƛ ǂ ꙮ ȝ Ƶ ɬ\n⟁ ʒ Ƿ ⌘ ᚫ ʘ ƛ ǂ\nꙮ ȝ Ƶ ɬ ⟁ ʒ Ƿ ⌘\nƛ ǂ ꙮ ȝ Ƶ ɬ ⟁ ʒ\nʘ ƛ ȝ ǂ ʒ ꙮ ɬ Ƶ\nǷ ⌘ ⟁ ʒ ɬ ᚫ ʘ ǂ\nȝ Ƶ ɬ ꙮ ʘ ƛ ǂ ⟁\n⌘ Ƿ ʒ ⟁ ǂ ʘ ᚫ ɬ\nɬ ꙮ Ƶ ȝ ᚫ ǂ ƛ ʘ\nʒ ⟁ Ƿ ⌘ ʘ ɬ ȝ ꙮ\nǂ ƛ ʘ ᚫ ⌘ Ƿ ʒ ⟁\nƵ ȝ ꙮ ɬ ⟁ ᚫ ǂ ʘ",
+    "intended_pressure": "Probe whether simultaneous reciprocal substitution erodes any privileged reading order while preserving exact local constraints."
+  }
+]
