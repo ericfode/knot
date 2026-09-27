@@ -66,6 +66,44 @@ Per axis, over all 59 pairs, v8 moved agreement as follows (v6 → v8):
 | Declaration delight | 63% | 83% |
 | Declaration compression | 63% | 70% |
 
+On the held-out tasks alone (25 pairs), v8's per-axis agreement is weakest on
+the axes this work cares most about:
+
+| Axis | Held-out agreement |
+|---|---|
+| Composition memetic | 62% |
+| Composition anticipation | 80% |
+| Composition payoff | 68% |
+| Declaration delight | 90% |
+| Declaration compression | 72% |
+| Declaration memetic | 76% |
+
+The overall mean agrees more than composition memetic does alone, so memetic
+is the least-validated axis.
+
+**Ordering is not pass or fail.** Under v8 no rendering is fully qualified,
+including the user's favourites.
+
+- **Composition passes for the favourites.** It meets its targets for bitpath,
+  fuel and slots algebra and for pipeline literate without its puzzle. Mythic,
+  baroque and golf mostly fall below target, and literate is below or
+  uncertain.
+- **Leading declarations fail the favourites.** Small core definitions (for
+  example fuel's owe/tick/run) still miss per-declaration Anticipation and
+  Payoff at level 3 at 60%.
+- **pipeline algebra's composition is still below target.**
+
+So v8 agrees with the user on ranking and largely on composition pass or fail,
+but not on declaration qualification. Whether leading declarations should keep
+the level-3 Anticipation and Payoff bar is a threshold decision for the user.
+
+**Cheapest lever: a law comment.** On the bitpath development task, adding the
+law header alone moved composition M/A/P from 0.88/0.73/0.44 to
+1.00/0.99/0.84. The user does prefer stated laws, but nothing deterministic
+checks a comment's claim. A code-improvement brief should therefore ask for
+real `law` declarations with proofs, which the pinned compiler checks, not
+unchecked law comments.
+
 Absolute behaviour on the development tasks. The algebra renderings the user
 preferred now meet the whole-mechanism targets: bitpath M/A/P at level 3 or
 above scores 1.00/0.99/0.84, and fuel scores 0.97/0.96/0.83. The rejected

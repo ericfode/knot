@@ -89,8 +89,9 @@ plain rewrites and a Knot architecture paragraph. It records recognition of
 known examples and the user's judgment that a vacuous control is also memetic. This is calibration
 evidence, not a Markdown mode for `lint:style` or a qualified documentation gate.
 The [v6 comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
-separates memetic appeal from conceptual value while retaining other axes and
-thresholds.
+separated memetic appeal from conceptual value. Rubric v8 superseded that, after
+blind human anchors showed v6 preferring the styles the user rejected; see the
+[v8 calibration](perch-calibration/style-v8-2026-09-27/README.md).
 
 Scan, check and style default to 16 workers. Use `--parallel N` for semantic
 commands, `--jobs=N` for style, or `PERCH_JOBS` for either (explicit flags win).

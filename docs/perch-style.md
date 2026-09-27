@@ -223,11 +223,13 @@ explicit task, before the provider receives any implementation. Each declaration
 of other candidates or their order.
 
 The memetic ladder is **Unformed → Ordinary → Recognizable → Contagious →
-Generative grammar**. Level 3 requires a distinctive, appealing hook inviting
-quotation, repetition, imitation or remix. One sharp expression can suffice;
-it need not carry a substantive idea. Level 4 requires a recognizable, inviting
-grammar for further expressions, independent of its technical value. Popularity,
-actual sharing and an existing community require separate social evidence.
+Generative grammar**. Since v8, level 3 requires a distinctive, compact
+mechanical pattern that a reader would copy into new code: a representation, a
+set of combinators, a law with its proof or a recurrence shape. Themed names or
+decoration alone never qualify. Level 4 requires a small vocabulary of
+operations, with any stated laws, from which further operations visibly follow.
+Popularity, actual sharing and an existing community require separate social
+evidence.
 
 | Level | Anticipation | Payoff |
 | --- | --- | --- |
@@ -237,9 +239,13 @@ actual sharing and an existing community require separate social evidence.
 | 3 | Inviting | Earned |
 | 4 | Compelling | Resonant |
 
-Anticipation asks how the expression prepares the reader for an inviting next
-relationship. Payoff asks how satisfyingly the expression fulfills, varies or
-reframes that expectation. Confirmation and surprise can both qualify. Tiny
+Since v8, Anticipation asks how the stated contract (types, operation names and
+compact laws) prepares the reader for what the code must realize. Suspense,
+puzzles and withheld reveals score below a plain statement of the same
+relationship. Payoff asks how visibly the definitions realize that contract: a
+law checked by its proof resolves most, then a law that holds by construction,
+and prose answers or reveals resolve nothing. Confirmation and surprise can both
+qualify. Tiny
 helpers need only provide an immediate, guided setup and fitting resolution;
 extra buildup earns no credit. Keep both distributions separate from overall Delight: neither their
 average nor one exceptional score can substitute for the other requirement.
