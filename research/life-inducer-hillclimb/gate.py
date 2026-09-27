@@ -43,6 +43,7 @@ BEHAVIOR_PINS = {
 }
 REVIEW_FILES = {
     "perch-style.json", "scripts/perch-style.mjs", "scripts/perch-workflow.mjs",
+    "scripts/perch-style-cache.mjs",
     "scripts/perch-bend.mjs", "scripts/perch-bend-context.mjs",
     "scripts/perch-throughput.mjs", "scripts/perch-throughput-patch.mjs",
     "scripts/install-perch-bend.mjs", "perch.yaml",
@@ -295,8 +296,9 @@ def evaluate_behavior(candidate, outdir, unique_id, *, lock=None) -> dict:
             report["counts"]["native"] = {"fixtures": native["fixtures"], "failure_count": mismatches}
             if not native["passed"]:
                 failures["native"] = {"actual": native["actual"], "expected": native["expected"]}
-        failure_path = outdir / "behavior-failures.json"
-        _write(failure_path, failures)
+        failure_path = outdir / "behavior-failures.json.gz"
+        with failure_path.open("xb") as stream:
+            stream.write(gzip.compress((json.dumps(failures, indent=2, allow_nan=False) + "\n").encode(), mtime=0))
         report["failures_receipt"] = _rel(failure_path)
         report["artifacts"] = raw.get("artifacts")
         report["legacy_status"] = raw["status"]
@@ -428,6 +430,8 @@ def _style_valid(style, source_hash, neutral, model):
              "Incomplete style provider/reuse coverage", "provider_failure")
     _require(style.get("concurrency") == 2 and 0 <= style.get("provider_peak_in_flight", -1) <= 2,
              "Style concurrency outside bound")
+    _require(style.get("incremental_cache") is None and style.get("cached_units", 0) == 0,
+             "Unrequested incremental cache use; only explicit previous_style reuse is permitted")
     _require(all(row.get("model") == model and row.get("path") == neutral
                  and row.get("source_sha256") == source_hash for row in rows), "Style model/source mismatch")
     _contexts(rows, source_hash, neutral)
@@ -492,6 +496,8 @@ def evaluate_reviews(candidate, outdir, neutral_path, cohort, previous_style=Non
             if usage.get("command") == "check" and usage.get("target") == neutral:
                 usages.append(usage)
         _write(outdir / "semantic-usage.json", usages)
+        _require(all(not usage.get("models") or usage["models"] == [model] for usage in usages),
+                 "Semantic judge model changed")
         _require(command["exit"] in (0, 3) and not command.get("timed_out") and not command.get("error"),
                  "Semantic command failed; do not retry automatically", "provider_failure")
         _require(len(usages) == 1, "Expected exactly one matching semantic usage receipt", "provider_failure")
@@ -511,12 +517,17 @@ def evaluate_reviews(candidate, outdir, neutral_path, cohort, previous_style=Non
         if previous_style is not None:
             argv.append("--reuse=" + str(previous_style))
         style_command = _command(argv, outdir / "style-command.json", timeout=180, env=env)
+        style = None
         if style_path.exists():
             report["style_receipt"] = _rel(style_path)
+            style = _read(style_path)
+            observed = style.get("rows", []) + style.get("completed_rows", [])
+            _require(all(row.get("model") == model for row in observed), "Style judge model changed")
+            _require(not re.search(r"model (?:changed|mismatch)", str(style.get("failure", "")), re.I),
+                     "Style judge model changed")
         _require(style_command["exit"] in (0, 3) and not style_command.get("timed_out") and not style_command.get("error"),
                  "Style command failed; do not retry automatically", "provider_failure")
         _require(style_path.exists(), "Style command produced no receipt", "provider_failure")
-        style = _read(style_path)
         _style_valid(style, report["source_sha256"], neutral, model)
         audit_command = _command(["node", "--input-type=module", "-e", STYLE_AUDIT, style_path, ROOT / "perch-style.json"],
                                  outdir / "style-policy-command.json", timeout=30)
