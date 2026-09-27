@@ -572,3 +572,27 @@ including missing/uncertain criticality, law/proof forms, probability thresholds
 and receipt reuse. These establish enforcement independently of the model's
 taste. Future calibration needs fresh held-out human judgments; deterministic
 proof, type, quantity, backend and performance gates retain their authority.
+
+## 2026-09-26 — Symbols rejection retained; iterative owner search active
+
+The [owner update](style-campaign/symbols-owner-update-2026-09-27.json) preserves
+commit `d35999a` as a rejected historical experiment. The first
+candidate and its diagnostic retry both failed syntax preflight when tuple
+destructuring scrutinized a computed call: first `Map.get`, then `Vec.length`.
+Both candidate snapshot hashes match their recorded diagnostics. Later semantic,
+performance and style gates were unrun; this batch established zero new memetic
+passes. No compiler or model check was rerun by this coordinator.
+
+The workflow correction is to include computed tuple destructuring in the
+parameter-or-field scrutinee restriction and explain the existing
+`append_name` parameter boundary before requesting its removal. The failed
+retry changed the location of the same underlying mistake. Total avoidable
+rework time was not measured.
+
+The user's subsequent instruction to try many options was verified in
+**Build and publish Bend symbol interning**. Its active iterative search
+supersedes the attempt limit for that owner scope; the rejection is not the
+component's final disposition. Reserve `packages/symbols/` for that owner,
+retain its frozen contracts and rubric identity, and do not dispatch overlapping
+work. The broader coordinator queue stays on hold. The current hash comparison
+and authorization snapshot are in the receipt; no iterative success is claimed.

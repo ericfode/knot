@@ -1,0 +1,252 @@
+{
+  "recorded_at": "2026-09-27T02:44:06.877Z",
+  "source_checkout": "/Users/ericfode/src/knot",
+  "owner_thread_id": "01a0deee-ba32-7262-ac71-aa75e2356709",
+  "owner_title": "Build and publish Bend symbol interning",
+  "user_authorization_verified": {
+    "method": "read_thread",
+    "turn_id": "01a0e0b9-7d71-7ef2-bb8c-6566d179c849",
+    "text": "That's not what i want i want you to iterate until you manage too try many different options"
+  },
+  "owner_activity": "active when read",
+  "historical_commit": "d35999a7bfc94a777d193889291fd831597c3f00",
+  "historical_disposition": {
+    "disposition": "rejected_at_syntax_preflight",
+    "new_memetic_passes": 0,
+    "production_source_changed": false,
+    "frozen_inputs_verified": {
+      "packages/symbols/LAWS.bend": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+      "packages/symbols/PROOF.bend": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+      "packages/symbols/benchmark.bend": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+      "packages/symbols/cases.bend": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+      "packages/symbols/conformance.bend": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+      "packages/symbols/example.bend": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+      "packages/symbols/main.bend": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b",
+      "packages/symbols/model.bend": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270",
+      "packages/symbols/observe.bend": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+      "packages/symbols/protocol.bend": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+      "packages/symbols/release.bend": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+      "packages/symbols/SPEC.md": "ee16f595638728ea0b2ad5bad72eec9ade4580803fbb3d8677965d3c4801a800",
+      "packages/symbols/INTERFACE.md": "c60c8c6ec561d4e02edcb058b9cf163126c47222e854056f822019a4eae37470",
+      "packages/symbols/LICENSE": "6d752ebfbcc29d0db461bf33b7aee615dfd620c9e58b85e63b0a38ae8838fbbe",
+      "packages/symbols/scripts/mutations.py": "c97ae834864afd1fa5f32e9e88ae0d8d54a7884b9055fe95a81e04ceed3416eb",
+      "packages/symbols/scripts/benchmark.py": "177427eb98fbc14be1de8a7dc018b046477702a20685d235ff5b62f70752a566",
+      "perch-style.json": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3",
+      "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3"
+    },
+    "first_shot_success": false,
+    "single_diagnostic_retry_success": false,
+    "candidate_model_requested": "gpt-6-astra",
+    "candidate_reasoning_requested": "max",
+    "style_ratings_after": null,
+    "unrun_gates": [
+      "types and quantities",
+      "proof",
+      "native and JS conformance",
+      "semantic mutation",
+      "performance",
+      "semantic Perch",
+      "style Perch"
+    ],
+    "historical_release_unchanged": "0xf5507d46d06a1a8043dcb1a582194615"
+  },
+  "historical_diagnostics": [
+    {
+      "name": "candidate-first",
+      "candidate_sha256": "be542f5e43499eb97f5bca039aab13d83647e856040681e2b45dcc4e5d34c01d",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/style-intern-identity-1/first/main.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n42 |     case InternTable{names,ids0}:\n43>|       (ids,found) = Map.get(Maybe<&2,U32>,None{},ids0,name)\n   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n44 |       match found:\n",
+      "elapsed_seconds": 0.11862045899033546,
+      "snapshot_sha256_verified": true
+    },
+    {
+      "name": "candidate-retry",
+      "candidate_sha256": "7b2ba72ed093fd91d1d6ab0d9c671162f2d68c5f45b18f85578742e4f3f1c0cb",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/style-intern-identity-1/retry/main.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- message  : a parameter or field scrutinee (a match cannot scrutinize a computed value: give it its own def)\nLocation:\n55 |     case None{}:\n56>|       (before,+id) = V.Vec.length(String,names)\n   |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\n57 |       intern_commit(ids,name,id,V.Vec.push(String,before,name))\n",
+      "elapsed_seconds": 0.04462508298456669,
+      "snapshot_sha256_verified": true
+    }
+  ],
+  "active_search": {
+    "source_path": "packages/symbols/style-campaign/iterative-identity/search.json",
+    "sha256": "22795c38b327cb9c739337f85e16d92a8ce1039f1f02c4ed7e93eca51a142dc6",
+    "record": {
+      "started_at": "2026-09-27T02:38:45.790900+00:00",
+      "user_authorization": "That's not what i want i want you to iterate until you manage too try many different options",
+      "supersedes": [
+        "One-candidate limit",
+        "One compiler-diagnostic retry limit",
+        "Stopping after a rejected experiment"
+      ],
+      "scope": "Symbols implementation and owned evidence; parallel scratch candidates, integration by parent only.",
+      "preserved": [
+        "Seven public Table operations and public error semantics",
+        "Exact string and ID-lifetime contract",
+        "Independent model, observations, test expectations, and accepted laws",
+        "Pinned Vec dependency",
+        "Unchanged three-axis rubric and 60 percent targets",
+        "Published package identity until separate publication"
+      ],
+      "success": "At least one substantively improved declaration meets the memetic identity target with correctness and applicable performance gates; report every changed declaration on all three axes and any remaining debt. Prefer a coherent family with all three targets met.",
+      "iteration_policy": "Distinct concrete reading hypotheses, immutable snapshots and first/retry diagnostics, no unchanged score retries, no rubric edits or decorative judge instructions. Fix compiler issues and iterate on substantive mechanisms.",
+      "baseline_preregistration": "../intern-identity-1/preregistration.json",
+      "baseline_inputs_sha256": {
+        "packages/symbols/LAWS.bend": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+        "packages/symbols/PROOF.bend": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+        "packages/symbols/benchmark.bend": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+        "packages/symbols/cases.bend": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+        "packages/symbols/conformance.bend": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+        "packages/symbols/example.bend": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+        "packages/symbols/main.bend": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b",
+        "packages/symbols/model.bend": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270",
+        "packages/symbols/observe.bend": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+        "packages/symbols/protocol.bend": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+        "packages/symbols/release.bend": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+        "packages/symbols/SPEC.md": "ee16f595638728ea0b2ad5bad72eec9ade4580803fbb3d8677965d3c4801a800",
+        "packages/symbols/INTERFACE.md": "c60c8c6ec561d4e02edcb058b9cf163126c47222e854056f822019a4eae37470",
+        "packages/symbols/LICENSE": "6d752ebfbcc29d0db461bf33b7aee615dfd620c9e58b85e63b0a38ae8838fbbe",
+        "packages/symbols/scripts/mutations.py": "c97ae834864afd1fa5f32e9e88ae0d8d54a7884b9055fe95a81e04ceed3416eb",
+        "packages/symbols/scripts/benchmark.py": "177427eb98fbc14be1de8a7dc018b046477702a20685d235ff5b62f70752a566",
+        "perch-style.json": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3",
+        "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3"
+      },
+      "baseline_style": "../../receipts/memetic-review-2026-09-26/style.json",
+      "candidate_model": "gpt-6-astra",
+      "reasoning": "max"
+    }
+  },
+  "current_frozen_input_comparison": [
+    {
+      "path": "packages/symbols/LAWS.bend",
+      "expected_sha256": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+      "current_sha256": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/PROOF.bend",
+      "expected_sha256": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+      "current_sha256": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/benchmark.bend",
+      "expected_sha256": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+      "current_sha256": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/cases.bend",
+      "expected_sha256": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+      "current_sha256": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/conformance.bend",
+      "expected_sha256": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+      "current_sha256": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/example.bend",
+      "expected_sha256": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+      "current_sha256": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/main.bend",
+      "expected_sha256": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b",
+      "current_sha256": "65dc5051a91257adee3eb660f186fb71f4fc40f85aa81bac4b100adb15a5f17b",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/model.bend",
+      "expected_sha256": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270",
+      "current_sha256": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/observe.bend",
+      "expected_sha256": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+      "current_sha256": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/protocol.bend",
+      "expected_sha256": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+      "current_sha256": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/release.bend",
+      "expected_sha256": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+      "current_sha256": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/SPEC.md",
+      "expected_sha256": "ee16f595638728ea0b2ad5bad72eec9ade4580803fbb3d8677965d3c4801a800",
+      "current_sha256": "ee16f595638728ea0b2ad5bad72eec9ade4580803fbb3d8677965d3c4801a800",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/INTERFACE.md",
+      "expected_sha256": "c60c8c6ec561d4e02edcb058b9cf163126c47222e854056f822019a4eae37470",
+      "current_sha256": "c60c8c6ec561d4e02edcb058b9cf163126c47222e854056f822019a4eae37470",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/LICENSE",
+      "expected_sha256": "6d752ebfbcc29d0db461bf33b7aee615dfd620c9e58b85e63b0a38ae8838fbbe",
+      "current_sha256": "6d752ebfbcc29d0db461bf33b7aee615dfd620c9e58b85e63b0a38ae8838fbbe",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/scripts/mutations.py",
+      "expected_sha256": "c97ae834864afd1fa5f32e9e88ae0d8d54a7884b9055fe95a81e04ceed3416eb",
+      "current_sha256": "c97ae834864afd1fa5f32e9e88ae0d8d54a7884b9055fe95a81e04ceed3416eb",
+      "matches": true
+    },
+    {
+      "path": "packages/symbols/scripts/benchmark.py",
+      "expected_sha256": "177427eb98fbc14be1de8a7dc018b046477702a20685d235ff5b62f70752a566",
+      "current_sha256": "177427eb98fbc14be1de8a7dc018b046477702a20685d235ff5b62f70752a566",
+      "matches": true
+    },
+    {
+      "path": "perch-style.json",
+      "expected_sha256": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3",
+      "current_sha256": "a2e20d01461c2d0fb07aaa8cb577423693b73d07617318e9e30ed674186a01d3",
+      "matches": true
+    },
+    {
+      "path": "scripts/bend-reference",
+      "expected_sha256": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
+      "current_sha256": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
+      "matches": true
+    }
+  ],
+  "verification_limits": [
+    "Historical compiler diagnostics inspected, not rerun.",
+    "Current owner input hashes compared; candidate correctness and style results were not independently rerun.",
+    "Iterative search is active; no successful candidate or new memetic pass is established by this update.",
+    "Owner frozen rubric identity is retained; it is not relabeled as the coordinator current criticality policy."
+  ],
+  "coordinator_actions": {
+    "new_dispatches": 0,
+    "overlapping_symbols_work": false,
+    "broader_queue_resumed": false
+  }
+}
