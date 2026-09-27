@@ -3,6 +3,21 @@
 **Published release verified remotely, 2026-09-26. Working source has an
 unreleased style revision.**
 
+Latest bounded trial **int-map-paths-2 is accepted, unreleased (2026-09-27)**.
+It shares insertion/deletion rebuilding through edit_path while retaining their
+Entry/Tip endpoints and raw/pruning branch rules. The exact first candidate
+passed unchanged proofs, native/JS conformance, all 11 mutants and scaling/model
+checks; 39 targeted semantic checks reported no findings.
+
+A focused timing follow-up measured 3.1% native and 5.4% JS slower medians at
+4096 entries. The user explicitly authorized up to 20% degradation, so this
+regression is accepted as deferred performance work. Seven supporting style
+declarations pass; the leading recurrence and whole-file composition remain
+below Memetic/Anticipation/Payoff targets. No full style pass or nonregression
+claim. See [STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md) and campaigns/int-map-paths-2
+for the candidate, raw evidence and changed performance allowance. The published
+hash and dependency pins remain unchanged.
+
 Batch int-map-paths-1 simplifies only `branch` to an empty-pair case and a
 binding fallback. Fixed proofs, native/JS conformance, all11 mutants and scaling
 gates pass;29 targeted semantic checks reported no findings. All four reviewed

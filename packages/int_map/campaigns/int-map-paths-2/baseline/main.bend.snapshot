@@ -41,18 +41,14 @@ def get_path(-V: Data, path: List<&2,Bool>, m: IntMap<V>) -> Maybe<&2,V>:
     case Con{True{},tail}:
       get_path(V,tail,high(V,m))
 
-def edit_path(~join: @-T: Data -> IntMap<T> -> IntMap<T> -> IntMap<T>,
-              -V: Data, path: List<&2,Bool>, +m: IntMap<V>, end: IntMap<V>) -> IntMap<V>:
+def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:
   match path:
     case Nil{}:
-      end
+      Entry{key,v}
     case Con{False{},tail}:
-      join(V,edit_path(~join,V,tail,low(V,m),end),high(V,m))
+      Branch{set_path(V,tail,low(V,m),key,v),high(V,m)}
     case Con{True{},tail}:
-      join(V,low(V,m),edit_path(~join,V,tail,high(V,m),end))
-
-def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:
-  edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})
+      Branch{low(V,m),set_path(V,tail,high(V,m),key,v)}
 
 def branch(-V: Data, lo: IntMap<V>, hi: IntMap<V>) -> IntMap<V>:
   match lo hi:
@@ -60,7 +56,13 @@ def branch(-V: Data, lo: IntMap<V>, hi: IntMap<V>) -> IntMap<V>:
     case a b: Branch{a,b}
 
 def remove_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>) -> IntMap<V>:
-  edit_path(~branch,V,path,m,Tip{})
+  match path:
+    case Nil{}:
+      Tip{}
+    case Con{False{},tail}:
+      branch(V,remove_path(V,tail,low(V,m)),high(V,m))
+    case Con{True{},tail}:
+      branch(V,low(V,m),remove_path(V,tail,high(V,m)))
 
 def IntMap.empty(-V: Data) -> IntMap<V>:
   Tip{}

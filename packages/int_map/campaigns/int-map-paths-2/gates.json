@@ -1,0 +1,90 @@
+{
+  "accepted_deterministically": true,
+  "candidate_sha256": "c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04",
+  "immutable_inputs_unchanged": true,
+  "mutation_locator_changes": true,
+  "compiler_retry_used": false,
+  "steps": [
+    {
+      "name": "proof-zero-holes",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "seconds": 0.5437738751061261,
+      "stdout": "All terms check.\n",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    },
+    {
+      "name": "native-build",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-2/release"
+      ],
+      "exit": 0,
+      "seconds": 1.552135624922812,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    },
+    {
+      "name": "native-conformance",
+      "args": [
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-2/release"
+      ],
+      "exit": 0,
+      "seconds": 0.30378379207104445,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "javascript-build",
+      "args": [
+        "scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/int_map/release.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-2/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.5493316669017076,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    },
+    {
+      "name": "javascript-conformance",
+      "args": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/int_map/build/int-map-paths-2/release.js"
+      ],
+      "exit": 0,
+      "seconds": 0.07072679186239839,
+      "stdout": "PASS boundary/absence/overwrite/removal/persistence\nPASS all-32-bits/complements\nPASS fold-exact-contents/order\nPASS noncommutative/add/max/union-identities\nPASS combiner-invocation-tree/order/singletons\nPASS independent-union-model\nPASS 192-composed-model-transitions\nPASS 96-entry-unions-vs-independent-model\nPASS fold-initial-accumulator/composition\nadd=17\njoin=14\nprevious=5\n",
+      "stderr": ""
+    },
+    {
+      "name": "semantic-mutants",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/mutations.py"
+      ],
+      "exit": 0,
+      "seconds": 1.8855477499309927,
+      "stdout": "{\"name\": \"discard_set\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"abb26d91429fe3eec4d0eea842037acdf1923b8d525fcd28c25a95022686cafe\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"lose_sibling\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"f2973a2cdd6b0992c0916f13c6ee9aa2258d4937bf7aa76b0345256d7e27e5a5\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"truncate_high_bit\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"30ffba4e1b65db4d910d6ea84c3e4f226de2e14c994bd04bf451f4643f13b88e\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"all-32-bits/complements\", \"killed\": true, \"output\": \"all-32-bits/complements\\n\"}\n{\"name\": \"stale_remove\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"2205ab71b0a68a57336a5c11af48ccee56067601b1a26ebf96d32016351ce638\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"false_contains\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"b8e93dc08668885a70e36fac664c1214b82cdfa0fca01e6dea0db30b8d69596e\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"bad_size\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"2a87ef51c3c43467ff274cf55ecb617581b4c2d895d7e48d168acd112efaae75\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"boundary/absence/overwrite/removal/persistence\", \"killed\": true, \"output\": \"boundary/absence/overwrite/removal/persistence\\n\"}\n{\"name\": \"discard_fold\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"d3115f2a3bfcee9a31efe5870a7980d40924aa8dfc213eae9b88a1f084e915aa\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_fold\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"b874c326a1dafacbaa8ae45f8f9e155c7c4e914f3ca55e161affed8c5ecbc1f7\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"fold-exact-contents/order\", \"killed\": true, \"output\": \"fold-exact-contents/order\\n\"}\n{\"name\": \"reverse_combiner\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"73ec5854b60e5eac3235dcd70d5bfd7d38a303216f96289b4e6d1e0267239c50\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"combine_singleton\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"d965f2d4a4245dd3cf6feccdaef339b36770fd221aa2eaa652e2453987f68231\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n{\"name\": \"double_combine\", \"baseline_sha256\": \"c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04\", \"mutant_sha256\": \"2662b522c3b6e7eb179ab5a8430f8ff44dd1fa1aee9ca437b3b25de870f9b95c\", \"unchanged_fixture_sha256\": \"22374c110d4043af068e92d82c763022abebc10e292a5edd278f09f765a41b5e\", \"typecheck\": \"pass\", \"runtime_exit\": 1, \"expected\": \"noncommutative/add/max/union-identities\", \"killed\": true, \"output\": \"noncommutative/add/max/union-identities\\n\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "performance-model-gates",
+      "args": [
+        "python3",
+        "/Users/ericfode/src/knot/packages/int_map/scripts/performance.py"
+      ],
+      "exit": 0,
+      "seconds": 4.371290958020836,
+      "stdout": "[{\"n\": 64, \"backend\": \"native\", \"seconds\": [0.17968179192394018, 0.0030362089164555073, 0.0026882090605795383], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}, {\"n\": 64, \"backend\": \"javascript\", \"seconds\": [0.019626458873972297, 0.017702499870210886, 0.01713824993930757], \"receipt\": \"n=64\\nshift=0\\nretained_nonempty_nodes=1791\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\nn=64\\nshift=16\\nretained_nonempty_nodes=783\\nmax_key_depth=32\\nunion_sum=4160\\nsource_set_trie_constructors=2112\\n\"}]\n[{\"n\": 256, \"backend\": \"native\", \"seconds\": [0.00470383302308619, 0.004933834075927734, 0.005323833087459207], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}, {\"n\": 256, \"backend\": \"javascript\", \"seconds\": [0.020519166951999068, 0.022517707897350192, 0.02081199991516769], \"receipt\": \"n=256\\nshift=0\\nretained_nonempty_nodes=6655\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\nn=256\\nshift=16\\nretained_nonempty_nodes=2575\\nmax_key_depth=32\\nunion_sum=65792\\nsource_set_trie_constructors=8448\\n\"}]\n[{\"n\": 1024, \"backend\": \"native\", \"seconds\": [0.011126750148832798, 0.011426959186792374, 0.011484290938824415], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}, {\"n\": 1024, \"backend\": \"javascript\", \"seconds\": [0.027601625071838498, 0.02817491698078811, 0.027565250173211098], \"receipt\": \"n=1024\\nshift=0\\nretained_nonempty_nodes=24575\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\nn=1024\\nshift=16\\nretained_nonempty_nodes=8207\\nmax_key_depth=32\\nunion_sum=1049600\\nsource_set_trie_constructors=33792\\n\"}]\n[{\"n\": 4096, \"backend\": \"native\", \"seconds\": [0.035829665837809443, 0.037070624995976686, 0.037509042071178555], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}, {\"n\": 4096, \"backend\": \"javascript\", \"seconds\": [0.059953292133286595, 0.08427004213444889, 0.06656362512148917], \"receipt\": \"n=4096\\nshift=0\\nretained_nonempty_nodes=90111\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\nn=4096\\nshift=16\\nretained_nonempty_nodes=24591\\nmax_key_depth=32\\nunion_sum=16781312\\nsource_set_trie_constructors=135168\\n\"}]\n",
+      "stderr": "bend 2.0.31 is available: run bend update\nbend 2.0.31 is available: run bend update\nbend 2.0.31 is available: run bend update\nbend 2.0.31 is available: run bend update\n"
+    }
+  ]
+}

@@ -185,3 +185,251 @@ and its unchanged callers as role/size calibration evidence alongside larger
 families; low memetic scores alone establish neither a defective rubric nor
 a reason to rename code. Remaining package declarations still need campaign
 coverage. No second candidate was generated in this batch.
+
+## Batch int-map-paths-2 — pre-registered hypothesis
+
+Recorded before generation. Author model: GPT-6 Astra, max reasoning. The new
+component dispatch asks for a small trial and permits retaining a concrete
+reading improvement with honest below-target style status; it supersedes the
+old all-target adaptive-task pilot prerequisite for this batch. One substantive
+candidate, at most one separately recorded compiler-diagnostic retry.
+
+**Reading problem:** set_path and remove_path repeat the same descent and sibling
+retention, with only the terminal node and rebuilding operation differing. Lookup
+already provides the three-case Nil/False/True traversal grammar.
+
+**Author hypothesis, not a user-approved taste judgment:** put the shared edit
+recurrence beside lookup, then define insertion and deletion by their endpoint
+and rebuilding rule. The reader should learn descent once, then recognize how
+edits rebuild exactly the traversed spine. Keep low/high/value and the accepted
+branch(Tip,Tip) collapse. Avoid an abstraction for lookup itself: it has no
+rebuilding obligation, and forcing it into an edit fold adds irrelevant policy.
+The requested inducer was decoded and read before design; its repeated paired
+forms suggest a shared structure with visible variation, not new terminology.
+
+**Candidate shape:** one edit_path template parameterized by a closed polymorphic
+branch constructor and a runtime terminal IntMap. set_path selects raw Branch
+and Entry(key,value); remove_path selects existing branch and Tip. These are
+compile-time policies, avoiding reusable affine closures and runtime callback
+allocation. Verify the pinned compiler accepts specialization and unchanged
+inductive proofs; reject if it does not after the single allowed retry.
+
+**Fixed contract:** every U32 bit, persistent versions, None versus Some(0),
+depth 32 and no child promotion, low-bit-first fold order, combine(left,right)
+on overlaps, and existing work/allocation bounds. SPEC/INTERFACE and all
+independent model, law, proof and assertion bodies remain fixed. Original
+mutation semantic violations and observing assertions remain fixed; only text
+locators invalidated by the shared recurrence may be adapted with evidence.
+
+[Preregistration](campaigns/int-map-paths-2/preregistration.json) records all
+baseline hashes; exact snapshots are in campaigns/int-map-paths-2/baseline.
+The baseline includes the accepted int-map-paths-1 branch simplification.
+
+Acceptance gates: complete proofs; native/JS release conformance; all 11
+type-valid mutants; existing scaling/list-model checks; paired timings against
+the exact baseline because the edit recurrence changes. Run targeted semantic
+Perch and current role-aware live style for every changed/new declaration plus
+the selected path family, with SPEC.md as fixed task evidence. Preserve full
+distributions, role/composition results and context limits. No score retries,
+whole-repository inventory, publication or compiler dependency changes.
+
+### Trial outcome — kept under the user-authorized performance budget
+
+The candidate has a concrete reading benefit: one edit recurrence explains the
+shared spine reconstruction, and the wrappers expose insertion as (Entry, raw
+Branch) and deletion as (Tip, pruning branch). Lookup keeps its matching
+Nil/False/True grammar. The cost is a polymorphic template signature plus a
+measured slowdown in the larger paired workload. The initial disposition rejected
+that tradeoff and restored the prior source. The user then explicitly authorized
+up to 20% performance degradation. The same candidate is now retained under that
+budget, without regeneration or another style review. Its reading benefit remains
+the author's judgment; the performance allowance is an explicit user instruction.
+This acceptance does not establish nonregression.
+
+Candidate source SHA-256:
+`c4c6e55effd8507d21a184428d36c3711bd282493133139d88782476b0cf0a04`.
+Current main.bend equals that first candidate byte-for-byte. The adapted mutation
+harness is also reinstated exactly. The temporary restoration of the paths-1
+source is preserved as historical evidence in restoration.json; it is no longer
+the current source state. All release and paths-1 receipts remain unchanged.
+
+**Before:** insertion and removal each contain the descent/rebuild recurrence.
+
+```bend
+def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:
+  match path:
+    case Nil{}:
+      Entry{key,v}
+    case Con{False{},tail}:
+      Branch{set_path(V,tail,low(V,m),key,v),high(V,m)}
+    case Con{True{},tail}:
+      Branch{low(V,m),set_path(V,tail,high(V,m),key,v)}
+
+def remove_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>) -> IntMap<V>:
+  match path:
+    case Nil{}:
+      Tip{}
+    case Con{False{},tail}:
+      branch(V,remove_path(V,tail,low(V,m)),high(V,m))
+    case Con{True{},tail}:
+      branch(V,low(V,m),remove_path(V,tail,high(V,m)))
+```
+
+**Accepted candidate:** share the recurrence and choose its endpoint/rebuilder.
+
+```bend
+def edit_path(~join: @-T: Data -> IntMap<T> -> IntMap<T> -> IntMap<T>,
+              -V: Data, path: List<&2,Bool>, +m: IntMap<V>, end: IntMap<V>) -> IntMap<V>:
+  match path:
+    case Nil{}:
+      end
+    case Con{False{},tail}:
+      join(V,edit_path(~join,V,tail,low(V,m),end),high(V,m))
+    case Con{True{},tail}:
+      join(V,low(V,m),edit_path(~join,V,tail,high(V,m),end))
+
+def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:
+  edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})
+
+def remove_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>) -> IntMap<V>:
+  edit_path(~branch,V,path,m,Tip{})
+```
+
+The original two-tip branch collapse is unchanged in both. The first generated
+candidate passed the complete unchanged PROOF.bend entry; no diagnostic retry
+or source repair occurred. Full frozen candidate and response are retained in
+[candidate-first.bend.snapshot](campaigns/int-map-paths-2/candidate-first.bend.snapshot)
+and [first-result.json](campaigns/int-map-paths-2/first-result.json).
+
+#### Fixed gates and semantic review
+
+All 23 filled laws checked on pinned Bend 2.0.29, including quantity/termination
+and the same proof boundary. Native CPU and JavaScript passed all nine
+conformance families and the example, including all 32 bits, persistence,
+absence versus zero, fold order/seed and noncommutative union. The independent
+model and scaling gates passed at 64,256,1024,4096 for dense and 16-shared-low-bit
+keys. Every frozen contract, model, law, proof and assertion hash remained fixed.
+
+All 11 mutants typechecked and were killed by their original named observations.
+Two text locators changed: discard_set targets the Entry supplied by the new
+wrapper; lose_sibling substitutes the original faulty set recurrence for that
+wrapper, preserving specifically the False-branch high-sibling loss and leaving
+its True branch and deletion intact. The nine other mutants and all observer
+assertions were unchanged. Only formatting of unchanged mutation tuples was
+restored after the run; AST equality confirmed no harness semantic change.
+The exact adapted harness is retained as candidate-mutations.py.snapshot.
+
+Targeted semantic Perch: 39 checks, four completed jev-1.13.0 provider responses,
+zero findings: 10 each on edit_path/set_path/remove_path and nine on the bounded
+law packet. No reported source context was truncated. Limits were 16 helpers,
+12 files, 48,000 bytes and four callers; Bool/U32 builtins remained explicitly
+marked unresolved-or-builtin where used. These judgments remain advisory.
+
+Evidence: [gates](campaigns/int-map-paths-2/gates.json),
+[mutations](campaigns/int-map-paths-2/mutations.json),
+[locator adaptations](campaigns/int-map-paths-2/mutation-locators.json),
+[semantic edit review](campaigns/int-map-paths-2/semantic-edit_path.json),
+[set review](campaigns/int-map-paths-2/semantic-set_path.json),
+[remove review](campaigns/int-map-paths-2/semantic-remove_path.json),
+[law packet review](campaigns/int-map-paths-2/semantic-laws.json).
+validate.py verifies the exact candidate and adapted harness before running.
+Future replays should use an isolated checkout and new output paths; preserve
+the original receipts. No unrelated gate was rerun when the exact candidate
+was reinstated after the user changed the performance budget.
+
+#### Performance disposition
+
+The first five-pair comparison at 4096 entries showed medians
+40.19 -> 41.78 ms native (+3.97%) and 60.48 -> 63.21 ms JavaScript (+4.52%).
+That measured concern justified one longer comparison, with no candidate
+regeneration or unrelated gate reruns: three warmups per version/backend and
+21 alternating paired process samples at each size. Exact baseline and candidate
+observations matched throughout.
+
+| Entries | Backend | Baseline ms | Candidate ms | Median change | Slower candidate pairs |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1024 | native | 10.68 | 10.70 | +0.23% | 13/21 |
+| 1024 | javascript | 28.57 | 28.89 | +1.12% | 10/21 |
+| 4096 | native | 37.07 | 38.21 | +3.06% | 14/21 |
+| 4096 | javascript | 55.98 | 59.03 | +5.44% | 19/21 |
+
+The larger workload retained a slowdown on both backends. These process timings
+include startup and the full dense/shared-prefix workload on a shared machine;
+they do not prove a universal slowdown or identify its exact cause. The generated
+JS contains separate template specializations with direct constructor/helper
+calls, so no runtime join closure is introduced. However, the endpoint is now
+constructed before descent and passed down the spine, and there is an extra
+wrapper call. No stronger allocation or causal claim is made. Asymptotic bounds
+and structural counts stayed intact, but established nonregression is not
+supported. The initial rejection is retained in initial-disposition.json. The
+user subsequently authorized a 20% degradation budget, explicitly changing the
+acceptance policy after seeing this result. All four confirmation medians are
+within that budget. performance-budget.json records the instruction and exact
+ratios. This is an acknowledged tradeoff, not a reclassification as nonregression.
+
+[Initial paired timings](campaigns/int-map-paths-2/performance-comparison.json),
+[focused confirmation](campaigns/int-map-paths-2/performance-confirmation.json),
+and [existing scaling/model gate](campaigns/int-map-paths-2/performance.json)
+retain raw samples and observations. compare-performance.py materializes the
+frozen versions, so it remains reproducible after source restoration; use a new
+output location to preserve original receipts.
+
+#### Role-aware style results
+
+Both runs used rubric v5, SHA-256
+`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`,
+parser bend-2.0.29-574b6d3-observer-v2 and jev-1.13.0. SPEC.md was supplied
+unchanged as task evidence. The source-blind potential assessment was reused
+exactly for the candidate: relevant probability 0.31, low; Galaxy 5 was therefore
+not required. Baseline used seven declaration rows plus task/composition reviews;
+candidate used eight fresh declaration rows plus composition (nine fresh
+responses each, task answer reused on the second run). No declaration rows
+qualified for reuse. No model retries or score hunting occurred.
+
+Candidate values below are probability mass at each applicable level; the bar
+is 0.60. Supporting M/A/P targets are level 2; edit_path carries level 3.
+
+| Declaration | Role | Compression | Delight | Memetic | Anticipation | Payoff |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| low | supporting | 0.96 / L3 | 0.77 / L3 | 0.87 / L2 | 0.97 / L2 | 0.98 / L2 |
+| high | supporting | 0.96 / L3 | 0.72 / L3 | 0.87 / L2 | 0.95 / L2 | 0.97 / L2 |
+| value | supporting | 0.97 / L3 | 0.68 / L3 | 0.73 / L2 | 0.98 / L2 | 0.99 / L2 |
+| get_path | supporting | 0.84 / L3 | 0.92 / L3 | 0.88 / L2 | 1.00 / L2 | 1.00 / L2 |
+| edit_path | leading | 0.94 / L3 | 0.93 / L3 | 0.09 / L3 | 0.08 / L3 | 0.03 / L3 |
+| set_path | supporting | 0.91 / L3 | 0.90 / L3 | 0.90 / L2 | 0.99 / L2 | 0.99 / L2 |
+| branch | supporting | 0.98 / L3 | 0.82 / L3 | 0.85 / L2 | 0.99 / L2 | 0.97 / L2 |
+| remove_path | supporting | 0.88 / L3 | 0.89 / L3 | 0.87 / L2 | 0.99 / L2 | 0.97 / L2 |
+
+Seven supporting declarations meet all their applicable targets. The organizing
+edit_path recurrence meets Compression/Delight but fails Memetic/Anticipation/
+Payoff. Baseline set_path was classified leading; its new supporting role reflects
+the algorithm moving into edit_path. Changing the threshold is not evidence that
+the same expression became more memetic. The small changes in unchanged helpers
+are weak model preferences, not measured reading effects.
+
+The mandatory composition review reads the full main.bend file, not only the
+selected spans: 3295 bytes before, 3356 after, untruncated against a 48,000-byte
+limit. At level 3, composition probabilities were Memetic 0.24 -> 0.30,
+Anticipation 0.04 -> 0.04, Payoff 0.08 -> 0.11: all below target. Both commands
+returned attention status 3. There is no automatic style pass. Declaration
+contexts were also untruncated with the standard 16/12/48000/4 limits. Full
+probability distributions, roles, task/composition inputs, source/helper hashes
+and unresolved references remain in [style-before.json](campaigns/int-map-paths-2/style-before.json)
+and [style-after.json](campaigns/int-map-paths-2/style-after.json). Current source
+matches the candidate these ratings describe exactly; no ratings were repeated
+when the candidate was reinstated.
+
+#### Handoff
+
+One candidate is retained; no second generation or compiler-diagnostic retry
+occurred. The measured runtime regression is deferred debt under the explicit
+20% allowance. The leading recurrence and full-file composition still fail their
+Memetic/Anticipation/Payoff targets. Do not rerun unchanged style ratings or revisit
+the accepted two-tip branch collapse to chase scores. The published package hash
+is unchanged and no compiler dependency pin was edited. See
+[outcome.json](campaigns/int-map-paths-2/outcome.json),
+[performance-budget.json](campaigns/int-map-paths-2/performance-budget.json),
+[source-verification.json](campaigns/int-map-paths-2/source-verification.json),
+[initial disposition](campaigns/int-map-paths-2/initial-disposition.json),
+[temporary restoration](campaigns/int-map-paths-2/restoration.json) and
+[release-preservation.json](campaigns/int-map-paths-2/release-preservation.json).

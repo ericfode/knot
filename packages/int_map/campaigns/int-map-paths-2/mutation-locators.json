@@ -1,0 +1,24 @@
+{
+  "assertions_unchanged": true,
+  "mutant_names_and_expected_observations_unchanged": true,
+  "changes": [
+    {
+      "name": "discard_set",
+      "previous_locator": "Entry{key,v}\n    case Con{False{},tail}:",
+      "previous_replacement": "Tip{}\n    case Con{False{},tail}:",
+      "candidate_locator": "edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})",
+      "candidate_replacement": "edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Tip{})",
+      "unchanged_observing_assertion": "boundary/absence/overwrite/removal/persistence",
+      "reason": "Insertion endpoint is now supplied by set_path, so discard the same entry at that call."
+    },
+    {
+      "name": "lose_sibling",
+      "previous_locator": "Branch{set_path(V,tail,low(V,m),key,v),high(V,m)}",
+      "previous_replacement": "Branch{set_path(V,tail,low(V,m),key,v),Tip{}}",
+      "candidate_locator": "def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:\n  edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})\n",
+      "candidate_replacement": "def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:\n  match path:\n    case Nil{}:\n      Entry{key,v}\n    case Con{False{},tail}:\n      Branch{set_path(V,tail,low(V,m),key,v),Tip{}}\n    case Con{True{},tail}:\n      Branch{low(V,m),set_path(V,tail,high(V,m),key,v)}\n",
+      "unchanged_observing_assertion": "boundary/absence/overwrite/removal/persistence",
+      "reason": "Shared edit_path removed the original insertion body; replace only the set wrapper with the original faulty recurrence for lose_sibling, preserving the False-branch sibling deletion and untouched True branch."
+    }
+  ]
+}

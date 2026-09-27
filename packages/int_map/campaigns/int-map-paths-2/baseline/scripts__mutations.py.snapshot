@@ -5,8 +5,8 @@ P=pathlib.Path(__file__).resolve().parents[1]
 ROOT=P.parents[1]
 BEND=ROOT/'scripts/bend-reference'
 mutants=[
- ('discard_set', 'edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})', 'edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Tip{})', 'boundary/absence/overwrite/removal/persistence'),
- ('lose_sibling', 'def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:\n  edit_path(~(T => lo => hi => Branch{lo,hi}),V,path,m,Entry{key,v})\n', 'def set_path(-V: Data, path: List<&2,Bool>, +m: IntMap<V>, key: U32, v: V) -> IntMap<V>:\n  match path:\n    case Nil{}:\n      Entry{key,v}\n    case Con{False{},tail}:\n      Branch{set_path(V,tail,low(V,m),key,v),Tip{}}\n    case Con{True{},tail}:\n      Branch{low(V,m),set_path(V,tail,high(V,m),key,v)}\n', 'boundary/absence/overwrite/removal/persistence'),
+ ('discard_set','Entry{key,v}\n    case Con{False{},tail}:','Tip{}\n    case Con{False{},tail}:','boundary/absence/overwrite/removal/persistence'),
+ ('lose_sibling','Branch{set_path(V,tail,low(V,m),key,v),high(V,m)}','Branch{set_path(V,tail,low(V,m),key,v),Tip{}}','boundary/absence/overwrite/removal/persistence'),
  ('truncate_high_bit','bits(32n,key)','bits(31n,key)','all-32-bits/complements'),
  ('stale_remove','remove_path(V,bits(32n,key),m)','m','boundary/absence/overwrite/removal/persistence'),
  ('false_contains','case Some{x}: True{}','case Some{x}: False{}','boundary/absence/overwrite/removal/persistence'),
