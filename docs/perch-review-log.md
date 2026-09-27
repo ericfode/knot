@@ -369,3 +369,27 @@ changes and compressed receipt reuse. A separate live review of the changed CLI
 retains destination (false-positive), size (unresolved) and ignored-error
 (unresolved, not reproduced) advisories. No repair model was needed. Total work
 time was not measured; the recorded project evaluation/report phase was 25.890 s.
+
+## 2026-09-26 — style campaign: two improvements, memetic target still unmet
+
+The [first campaign wave](style-campaign/first-wave.md) accepted IntMap's
+single-exception branch constructor and OutputBuilder's shared counted join.
+Both first candidates passed the unchanged deterministic gates; 20 semantic
+mutants were killed by their intended observations. The owners ran 108 semantic
+Perch checks without findings and rated 21 declarations on all three axes.
+These were style improvements, not repairs of confirmed semantic defects.
+
+All 21 remain below or uncertain on memetic identity. IntMap branch compression
+rose 0.61 to 0.92 while delight fell 0.81 to 0.77. OutputBuilder combine's
+memetic mass rose 0.04 to 0.32, while attach's delight fell 0.83 to 0.67. These
+are distributions from individual judgments, not statistically established
+preferences. Reports retain the preregistered author hypotheses, fixed inputs,
+full outputs and two capped datatype contexts. No human taste labels were
+invented and no threshold changed.
+
+Prevention: preserve a concrete reading hypothesis before each candidate and
+keep per-axis regressions visible. Reserve fresh examples for a later test of
+small-helper and context sensitivity. Do not repeatedly score the same source,
+decorate canonical helpers, or equate successful refactoring with memetic
+acceptance. The campaign's rolling inventory invalidates old source/helper
+identities and records unrated new declarations without paid rescans.
