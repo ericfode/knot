@@ -1,0 +1,164 @@
+
+> lint
+> node scripts/perch-workflow.mjs check src/check-LAWS.bend::empty_sequence_preserves_uses --rules compiler-checker-trust,bend-borrow-lifetime --json
+
+{
+  "path": "src/check-LAWS.bend",
+  "name": "empty_sequence_preserves_uses",
+  "line": 8,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-242a2b8f26068922",
+    "status": "parsed",
+    "declarations": 7,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v3",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 13,
+  "asked": [
+    {
+      "rule": "bend-borrow-lifetime",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+      "broken": 0.13,
+      "floor": 0.8
+    },
+    {
+      "rule": "compiler-checker-trust",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+      "broken": 0.37,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "profile": "working-tree-datatypes-v1",
+    "files": [
+      {
+        "path": "src/check-LAWS.bend",
+        "source_sha256": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52"
+      },
+      {
+        "path": "src/core.bend",
+        "source_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+      },
+      {
+        "path": "src/scope.bend",
+        "source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd"
+      },
+      {
+        "path": "src/syntax.bend",
+        "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "src/check-LAWS.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/check-LAWS.bend",
+        "name": "List",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/check-LAWS.bend",
+        "name": "Result",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "Result",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "List",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Bool",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Unit",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "Bool",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "Bool.or",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/scope.bend",
+        "name": "U32.is_eq",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/core.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/core.bend",
+        "name": "Result",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Result",
+        "reason": "unresolved-or-builtin"
+      }
+    ],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 2,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}
