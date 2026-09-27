@@ -12,7 +12,9 @@ below are our synthesis; none of these authors proposes this exact scale.
 
 The [Perch criteria proposal](perch-memetic-criteria-proposal.md) adapts these
 findings to bounded source review, with candidate instructions and level anchors.
-It remains a proposal rather than an installed or calibrated rubric.
+Those refinements are now installed as rubric version 3; see the
+[operating guide](perch-style.md). Their agreement with human taste remains
+uncalibrated. This research does not establish a validated scale for code.
 
 ## Closest existing frameworks
 

@@ -1,11 +1,14 @@
-# Proposed changes to Perch's memetic and delight criteria
+# Research-informed Perch memetic and delight criteria
 
-Status: suggestions for review, not an installed rubric. Prepared from the
+Status: implemented in rubric version 3 after user approval. Prepared from the
 [research on ideas generally](memetic-ideas-research-2026-09-26.md) and the
-memetic instructions at `da6b811`. No new model or human calibration was run.
+memetic instructions at `da6b811`. This design document records no human calibration.
 The user endorsed the suggested additions and asked whether expectation and
-payoff should have separate scales. The extension below proposes two diagnostic
-ratings within Delight; it does not change live targets or their enforcement.
+payoff should have separate scales, then required both for anything marginally
+critical. The installed policy gives Anticipation and Payoff separate distributions
+and level-3 targets at 60% probability for every critical or uncertain declaration,
+including datatypes. They remain advisory for confidently noncritical declarations.
+The [operating guide](perch-style.md) describes enforcement and receipt semantics.
 
 ## Recommendation
 
@@ -38,7 +41,7 @@ Berger's work motivates asking why someone would share, beyond whether they can
 remember. [Sharing mechanisms](https://jonahberger.com/wp-content/uploads/2013/03/Crafting-Contagious-Workbook.pdf).
 Wenger-Trayner's account motivates reserving claims about shared practice for
 social evidence. [Shared practice](https://uark.pressbooks.pub/edtech/chapter/introduction-to-communities-of-practice-wenger-trayner/).
-These are design inferences, not research validation of this proposed rubric.
+These are design inferences, not research validation of the installed rubric.
 
 ## Candidate replacement instructions for highly_memetic
 
@@ -85,8 +88,8 @@ in the source and evaluate the actual expression.
 | 4 | Generative grammar | Mechanism, vocabulary and form establish an inviting grammar for further expressions. The supplied material makes recognizable variation traceable: a fluent reader can anticipate its moves, extend its ideas and want to inhabit the idiom. |
 
 All five descriptions concern assessed potential for the specified audience.
-These are proposed ordinal taste anchors, not a validated developmental model.
-The proposed level-3 boundary keeps the current requirement for an earned hook
+These are ordinal taste anchors, not a validated developmental model.
+The level-3 boundary keeps the earlier requirement for an earned hook
 and an appetite for more. Whether the new wording preserves that boundary in
 model behavior is a calibration question.
 
@@ -95,7 +98,8 @@ model behavior is a calibration question.
 For **Maximally big brain**, add: "Judge what the representation explains or
 eliminates. A distinctive vocabulary or urge to quote the result does not by
 itself increase conceptual compression." Retain the existing levels, including
-Galaxy brain; this proposal does not change criticality or target policy.
+Galaxy brain. The later user instruction adds conditional Anticipation and Payoff
+requirements without replacing the established Galaxy-brain requirement.
 
 For **Delightful to read**, add: "Reward fitting expectation and payoff: a
 pattern teaches the reader what to anticipate, and its continuation or variation
@@ -112,7 +116,7 @@ The same feature may support more than one axis, but the claims differ:
 
 ## Separate Anticipation and Payoff scales
 
-Recommend two distinct 0-4 ratings within Delight: **Anticipation** for how well
+Use two distinct 0-4 ratings alongside Delight: **Anticipation** for how well
 the expression establishes an inviting expectation, and **Payoff** for how
 satisfyingly the expression fulfills, varies or reframes that expectation.
 These describe the quality of two parts of the reading experience, not amounts
@@ -168,7 +172,7 @@ presentation does not establish correctness or conceptual originality.
 
 The word expectation refers to the reader's model, not a prediction of what the
 program will output on a test. Payoff describes expressive satisfaction, not
-passing a semantic gate. These are proposed taste anchors; model probability
+passing a semantic gate. These are taste anchors; model probability
 does not measure a reader's neurochemistry or demonstrate a dopamine response.
 
 ### Keep the pair informative
@@ -180,27 +184,31 @@ does not measure a reader's neurochemistry or demonstrate a dopamine response.
 | High on both | Preparation and resolution reinforce one another. |
 | Low on both | This particular route to delight is weak; inspect fluency, rhythm and other sources of pleasure separately. |
 
-Keep the overall Delight judgment during calibration. Do not average these two
-numbers into Delight or impose two new pass requirements on every declaration.
-Doing so would assume that they exhaust reading pleasure and would encourage
-unnecessary buildup in tiny helpers. Existing target and criticality policies
-continue to govern the live rubric. The proposal is to collect independent
-distributions for diagnosis, with the source of the expectation and the point
-of resolution recorded in manual review.
+Keep the overall Delight judgment. Do not average these two numbers into Delight;
+they do not exhaust reading pleasure. The initial recommendation was diagnostic
+only. The user's later instruction supersedes that rollout policy: every
+declaration with even marginal contract importance must meet both targets,
+and uncertain criticality receives the same requirements. Each needs at least
+60% probability on levels 3–4. An exceptional score elsewhere cannot compensate
+for either missing bar. Avoid unnecessary buildup in tiny helpers; the setup
+and payoff can be immediate. Record the source of the expectation and the point
+of resolution in manual review.
 
 No numeric rating should be fabricated when the relevant context is missing.
 Record an unavailable/limited-context judgment separately from a low score.
-Adding diagnostic distributions, their optional applicability status and
-explanatory notes needs an explicit runner/report change: adding ordinary
-dimensions to today's configuration would also invoke its per-axis target
-policy. That implementation is outside this proposal.
+The runner now reads `diagnostic_dimensions` separately from the three primary
+dimensions, and `criticality.diagnostic_targets` selects their conditional
+requirements. Truncated context suppresses their numeric questions and records
+`unavailable`; missing required evidence cannot pass. Other unresolved references
+remain explicit context limits. Full distributions are retained in the receipt.
+Structured model rationales are not part of this typed Score implementation.
 
 Calibrate using human preferences recorded before model review. Include a
 clear setup with a flat resolution, a weak setup with a satisfying immediate
 reveal, earned confirmation, earned surprise, and unnecessary delay. Preserve
 equivalent behavior when comparing code variants. Check whether the separate
 ratings explain preferences beyond the existing Delight score on held-out
-examples before changing acceptance policy.
+examples to evaluate the adopted policy's agreement with human taste.
 
 ## Evidence and rollout
 
@@ -220,7 +228,9 @@ Do not import SUCCESs or STEPPS as mandatory checklists. Code does not need a
 story, emotional claim or social-status signal to qualify. Do not automatically
 award levels for recognized famous idioms. The evidence should be in their use.
 
-For an initial comparison, keep target policy fixed so a wording change and a
-threshold change are not confounded. Preserve full distributions and historical
-rubric identities. Any later deployment needs a distinct rubric identity and
-fresh calibration; this proposal makes no claim that new scores would improve.
+For research comparisons, hold target policy fixed so wording and threshold
+effects can be distinguished. The user-approved deployment changes both wording
+and conditional targets under version 3; it is not such a controlled comparison.
+Preserve full distributions and historical rubric identities. Fresh calibration
+remains necessary; deployment alone makes no claim that new scores improve
+agreement with human preferences.

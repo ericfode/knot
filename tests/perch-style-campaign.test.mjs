@@ -7,7 +7,7 @@ const config = JSON.parse(await readFile(new URL('../perch-style.json', import.m
 const identity = { rubric_sha256: 'rubric', parser: 'parser' };
 const specimen = target => ({ target, path: target.split('::')[0], kind: 'bend_definition', line: 1,
   source_sha256: 'source', state_sha256: 'state', context: { truncated: false, files: [] },
-  model: 'model', answers: { ...Object.fromEntries(config.dimensions.map(d => [d.id,
+  model: 'model', answers: { ...Object.fromEntries([...config.dimensions, ...config.diagnostic_dimensions].map(d => [d.id,
     { probabilities: Object.fromEntries(d.levels.map((_, i) => [i, i === 3 ? 1 : 0])), score: 3, confidence: 1 }])),
     criticality: { probabilities: { 0: 1, 1: 0 }, score: 0, confidence: 1 } } });
 const baseline = rows => ({ schema: 2, command: 'style-rank', ...identity, rows, assessments: [], requested_model: 'requested' });
@@ -53,4 +53,12 @@ test('a matching critical baseline still needs Galaxy brain under the current po
   assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_three_baseline_targets, 0);
   unit.answers.maximally_big_brain = { probabilities: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }, score: 5, confidence: 1 };
   assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_three_baseline_targets, 1);
+  assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_required_baseline_targets, 1);
+  unit.answers.payoff = { probabilities: { 0: 0, 1: 0, 2: 1, 3: 0, 4: 0 }, score: 2, confidence: 1 };
+  assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_required_baseline_targets, 0);
+  assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_three_baseline_targets, 0);
+  delete unit.answers.payoff;
+  assert.throws(() => compareStyleBaseline([unit], inventory, baseline([unit]), config, identity), /Invalid Score answer/);
+  unit.context.truncated = true;
+  assert.equal(compareStyleBaseline([unit], inventory, baseline([unit]), config, identity).summary.matches_all_required_baseline_targets, 0);
 });
