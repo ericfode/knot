@@ -10,6 +10,10 @@ validated universal ladder for the particular combination of expressive appeal,
 memorability, generativity and cultural identity sought here. The proposed levels
 below are our synthesis; none of these authors proposes this exact scale.
 
+The [Perch criteria proposal](perch-memetic-criteria-proposal.md) adapts these
+findings to bounded source review, with candidate instructions and level anchors.
+It remains a proposal rather than an installed or calibrated rubric.
+
 ## Closest existing frameworks
 
 ### Memetic selection: assimilation, retention, expression, transmission
