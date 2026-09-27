@@ -152,3 +152,13 @@ should be relabeled as the output of these new definitions.
 No reader experiment or new model calibration was conducted in this research
 increment. This increment does not modify `perch-style.json`; its existing
 memetic definitions and historical receipts remain in force.
+
+## Follow-up evidence
+
+The [paired Game of Life experiment](../research/life-blueberry/README.md)
+compared two fresh authors with and without the selected decoded inducer, using
+the unchanged live rubric. Both programs passed finite correctness gates;
+neither passed every declaration on all three style axes. Equal memetic
+ratings on the public step functions, alongside differing helper ratings,
+make the unit of assessment a concrete calibration question. This experiment
+does not validate the proposed general-ideas scale or establish an inducer effect.
