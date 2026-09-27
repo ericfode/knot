@@ -107,3 +107,15 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   preferences or incentives toward obscurity in docs/perch-review-log.md and
   follow docs/perch-maintenance.md. Optimize the code's reading experience;
   do not chase scores through self-praise in comments or needless rewrites.
+
+## Active style campaign
+
+The user's 2026-09-26 campaign request authorizes ongoing bounded improvement
+work and coordination with the existing component-owner chats. Follow
+[docs/STYLE-CAMPAIGN.md](docs/STYLE-CAMPAIGN.md) and record assignments, receipts
+and commits in `docs/style-campaign/state.json`. Preserve active compiler
+milestones and package ownership. Every batch needs a concrete reading
+hypothesis, before/after evidence, fixed independent gates, all three style
+ratings and an explicit disposition. Low scores alone do not justify churn.
+Historical failures remain evidence. The campaign heartbeat continues the
+queue; it does not restart the completed package-publication campaign.

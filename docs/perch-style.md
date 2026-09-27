@@ -112,6 +112,11 @@ applicable checks and report their coverage separately.
 The complete project pass and a live example are recorded in
 [the three-axis report](perch-style-project-2026-09-26.md).
 
+The user has started an [implementation campaign](STYLE-CAMPAIGN.md) to improve
+the whole inventory. Its owner queue, continuation policy and receipt-aware
+baseline inventory live in `docs/style-campaign/`. The campaign preserves
+independent acceptance and records unresolved taste judgments explicitly.
+
 ## Historical two-axis comparison pilot
 
 The pilot below used version 1, required competing implementations, and did not

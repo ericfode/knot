@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "started_local_date": "2026-09-26",
+  "status": "running",
+  "coordinator_thread_id": "01a0deae-38e5-7120-ad10-77ee5b1e7f0a",
+  "objective": "Bring every applicable Bend declaration to all three style targets while preserving deterministic acceptance and explicit historical exceptions.",
+  "plan": "docs/STYLE-CAMPAIGN.md",
+  "baseline": "docs/perch-calibration/style-project-2026-09-26.json.gz",
+  "inventory": "docs/style-campaign/inventory.json.gz",
+  "automatic_all_three_baseline": 0,
+  "reviewed_units_baseline": 1887,
+  "automation": {
+    "id": "improve-knot-three-axis-style",
+    "kind": "heartbeat",
+    "status": "ACTIVE",
+    "interval_minutes": 15
+  },
+  "limits": {
+    "active_package_or_research_batches": 2,
+    "new_batches_per_wake": 1,
+    "live_declarations_per_batch": 24,
+    "candidate_generations_per_batch": 1,
+    "compiler_diagnostic_retries": 1
+  },
+  "batches": [
+    {
+      "id": "int-map-paths-1",
+      "wave": 1,
+      "owner_title": "Build and publish Bend integer maps",
+      "thread_id": "01a0deee-b662-7730-98de-0679e0f47959",
+      "paths": [
+        "packages/int_map/"
+      ],
+      "status": "in_progress",
+      "focus": "Branch pruning and the mirrored path traversal vocabulary; preserve the public API, all 32 bits, persistence and fold order.",
+      "report": "packages/int_map/STYLE_CAMPAIGN.md",
+      "commits": [],
+      "dispatch_confirmed": true,
+      "pre_review_hypothesis": "Branch pruning has one exception: two empty children collapse to empty; every other pair stays intact.",
+      "wait_cursor": "c24eb096-f0d0-4a69-958c-9ca1bbf37dac:14"
+    },
+    {
+      "id": "output-builder-grammar-1",
+      "wave": 1,
+      "owner_title": "Build and publish Bend output builder",
+      "thread_id": "01a0deee-b07f-77e1-a03b-809505e9b827",
+      "paths": [
+        "packages/output_builder/"
+      ],
+      "status": "in_progress",
+      "focus": "Chunk/join/suffix rhythm shared across text and bytes; preserve checked-byte error precedence, limits, persistence and linear emission.",
+      "report": "packages/output_builder/STYLE_CAMPAIGN.md",
+      "commits": [],
+      "dispatch_confirmed": true,
+      "pre_review_hypothesis": "Normalize append and compose to a checked count feeding the same counted-tree join, while preserving scan and error order.",
+      "wait_cursor": "99339217-03fa-4f02-9789-322d764fcecd:13"
+    },
+    {
+      "id": "compiler-family-1",
+      "wave": 1,
+      "owner_title": "Compiler Planning",
+      "thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
+      "paths": [
+        "src/",
+        "tests/compiler-*/",
+        "research/compiler-*/"
+      ],
+      "status": "queued_for_safe_checkpoint",
+      "focus": "Choose one coherent family after the active structural-field increment; preserve the self-hosting and GPU goal.",
+      "report": "research/compiler-style/README.md",
+      "commits": [],
+      "dispatch_confirmed": true,
+      "wait_cursor": "43362090-6e6a-4c4e-8c71-53775bb4cd20:15"
+    }
+  ],
+  "queued_components": [
+    "packages/vec",
+    "packages/source",
+    "packages/symbols",
+    "packages/term_store",
+    "remaining src families",
+    "research runtime and execution models",
+    "remaining laws, proofs, models, tests, examples and historical artifacts"
+  ],
+  "accepted_improvements": [],
+  "rejected_candidates": [],
+  "calibration_questions": [
+    "Does the memetic judge penalize tiny exact helpers or canonical proofs irrespective of their role in the shared grammar?",
+    "Can a substantive representation or composition improvement move all three axes without decorative naming or extra layers?"
+  ],
+  "completion": null,
+  "updated_at": "2026-09-27T00:26:15.107881+00:00",
+  "inventory_snapshot": {
+    "at": "2026-09-27T00:25:25.157Z",
+    "discovered_files": 276,
+    "parsed_units": 2095,
+    "matches": 1469,
+    "stale": 418,
+    "unrated": 208,
+    "unranked_files": 16,
+    "empty_files": 1,
+    "no_longer_parsed_targets": 0,
+    "matches_all_three_baseline_targets": 0,
+    "source_freshness": {
+      "status": "matched-at-inventory",
+      "changed_sources": []
+    }
+  },
+  "verification": {
+    "tooling": "npm run lint:verify",
+    "tests_passed": 28,
+    "law_rule_wiring": "passed",
+    "provider_calls_for_inventory": 0
+  }
+}
