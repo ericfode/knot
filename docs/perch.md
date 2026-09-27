@@ -48,6 +48,12 @@ reported separately from defect findings. The output retains distributions,
 context limits and secondary ranks. Run it on materially changed Bend code beside
 the relevant semantic checks. See [style targets, commands and evidence](perch-style.md).
 
+For slow checks, see the [measured latency diagnosis](perch-latency-2026-09-26.md).
+Bend file checks currently serialize declaration requests and reload rules per
+declaration. Select `file.bend::name` for a bounded edit. Explicit-file style
+checks support `--jobs=8`; their default is one worker. These choices preserve
+the selected declaration's context and questions.
+
 The context includes exact local callees and referenced values, transitive
 explicit relative imports within the workspace, direct same-file callers,
 datatypes, and corresponding law statements. It does not discover arbitrary
