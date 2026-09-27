@@ -646,6 +646,30 @@ Jev 1.13.0. Ten requests returned 50 complete distributions; the
 [results](perch-calibration/memetic-prose-2026-09-27/results.json) and
 [prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
 
+## 2026-09-27 — Datatype resolution must agree with supplied context
+
+The [datatype-context reproduction and repair](perch-execution/role-v5-2026-09-27/datatype-context/README.md)
+reproduced the exact prepared states for `tick_owned`, `combine` and the gate's
+`frame_json` helper. Local `Payload` source was supplied but marked unresolved;
+explicitly imported `F.Frame` was incorrectly reported absent and its source
+omitted. The resolver indexed functions and laws but not parsed datatypes.
+Known pinned Base names were already distinguished by the role assessment and
+were not the cause. These were context defects, not evidence for new scores.
+
+Parsed datatype metadata now resolves local and explicit imported types and
+their referenced types within the unchanged limits. Direct datatype style
+targets retain their one-file cap; required external context remains visibly
+unavailable. Independent controls cover aliases, generic types, cycles, exact-cap
+reuse, missing and malformed imports, negative-lookup provenance and unchanged
+function/law graph references. All 91 offline tests and eight law-wiring checks
+pass. Three unchanged Bend targets receive new request/context identities, and
+cache probes reject the historical identities. No provider was contacted by
+this repair; previous scores and receipts remain unchanged.
+
+Prevention: test that declarations already supplied as context resolve to that
+same source, include explicit imported datatype controls, and verify dependency
+hashes and cap failures before spending model reviews on apparent uncertainty.
+
 All four selected originals meet the memetic target and exceed their plain
 rewrites by 32–79 percentage points. None meets the entire five-axis conjunction.
 An invented chiasmus intended to lack an explained mechanism receives 78%

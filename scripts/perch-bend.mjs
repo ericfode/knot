@@ -1,9 +1,9 @@
 /** Side-effect-free Bend 2 source analysis for Perch. No module resolver or evaluator. */
-import { book_nil, parse_book, Qnt } from '../vendor/bend-parser/bend.mts';
+import { book_nil, parse_book, Qnt, term_lower } from '../vendor/bend-parser/bend.mts';
 import baseSource from '../vendor/bend-parser/base-source.mjs';
 
-export const BEND_PARSER_PROFILE = 'bend-2.0.29-574b6d3-observer-v2+law-template-arity';
-const ANALYSIS_PROFILE = 'language-pack-1.20-v3';
+export const BEND_PARSER_PROFILE = 'bend-2.0.29-574b6d3-observer-v3+law-template-arity';
+const ANALYSIS_PROFILE = 'language-pack-1.20-v3+datatype-context-v1';
 const NAMED = /^([a-z][a-z0-9-]{0,63})@((?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*)){3})$/;
 const NAME = /^[A-Za-z_]\w*(\.[A-Za-z_]\w*)*$/;
 
@@ -96,6 +96,27 @@ function termReferences(term, source, found) {
   }
 }
 
+/** Explicit type heads for review context, separate from function graph edges.
+ * Bound variables and synthetic constructor result types have no lexical Ref
+ * or ADT head span. Generic ADT spans include their arguments; their head is
+ * retained as expression spans. The datatype name comes from the parser AST.
+ */
+function typeContextReferences(term, source, found, includeRefs = false) {
+  if (!term || typeof term !== 'object') return;
+  if (term.$ === 'Var') return;
+  if (term.$ === 'ADT' || includeRefs && term.$ === 'Ref') {
+    const name = term.k.startsWith('@import/') ? term.k.slice(8) : term.k;
+    if (term.s && NAME.test(name) && (term.$ === 'ADT' || source.slice(term.s.beg, term.s.end) === name)) {
+      found.push({ name, beg: term.s.beg, end: term.s.end });
+    }
+  }
+  for (const [key, value] of Object.entries(term)) {
+    if (key === 's' || key === 'q') continue;
+    if (Array.isArray(value)) value.forEach(node => typeContextReferences(node, source, found, includeRefs));
+    else if (value && typeof value === 'object') typeContextReferences(value, source, found, includeRefs);
+  }
+}
+
 /**
  * Syntax analysis only. Metrics are null rather than fabricated; imported law
  * context and external datatype/template context are not compiler validation.
@@ -157,13 +178,21 @@ export async function analyzeBendSource(source) {
       declaration(kind, name, beg, end, term, tele = []) {
         if (kind === 'datatype') {
           const loc = location(beg, end);
-          analysis.datatype_declarations.push({ name, location: loc, line: loc.start.line, end_line: loc.end.line });
+          const datatype = book.tlds[name], refs = [];
+          for (const type of [datatype.T, ...datatype.c.map(constructor => constructor.T)]) {
+            typeContextReferences(term_lower(type), source, refs, true);
+          }
+          analysis.datatype_declarations.push({ name, location: loc, line: loc.start.line, end_line: loc.end.line,
+            context_references: [...new Map(refs.map(ref => [`${ref.beg}:${ref.end}`, ref])).values()]
+              .map(ref => ({ name: ref.name, kind: 'type', location: location(ref.beg, ref.end) })) });
           return;
         }
-        const values = [];
+        const values = [], types = [];
         termReferences(term, source, values);
         tele.forEach((node) => termReferences(node, source, values));
-        declarations.push({ kind, name, beg, end, values });
+        typeContextReferences(term, source, types);
+        tele.forEach(node => typeContextReferences(node, source, types));
+        declarations.push({ kind, name, beg, end, values, types });
       },
     });
     const byName = new Map();
@@ -192,6 +221,9 @@ export async function analyzeBendSource(source) {
       if (entry.law) decl.law_location = location(entry.law.beg, entry.law.end);
       analysis.declarations.push(decl);
       const fragments = entry.law ? [entry.law, entry] : [entry];
+      decl.context_references = [...new Map(fragments.flatMap(fragment => fragment.types)
+        .map(ref => [`${ref.beg}:${ref.end}`, ref])).values()]
+        .map(ref => ({ name: ref.name, kind: 'type', location: location(ref.beg, ref.end) }));
       const refs = new Map();
       for (const fragment of fragments) {
         for (const ref of fragment.values) refs.set(`${ref.beg}:${ref.end}`, { ...ref, kind: 'value' });

@@ -1,0 +1,404 @@
+{
+  "schema": "knot.datatype-context-preparation.v1",
+  "at": "2026-09-27T07:20:29.456Z",
+  "provider_requests": 0,
+  "answers_reassessed": false,
+  "parser": "bend-2.0.29-574b6d3-observer-v3",
+  "rubric_sha256": "c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec",
+  "context_contract_sha256": "7bcd6f75f65411cccdff49fb06a35a625b1ac9fd75e3a5c46ef96f584adf24d3",
+  "parser_adapter_sha256": "38a7308db837a5181e174edba4f0d433efcbabd6b35944f7060a1e0779d60557",
+  "targets": [
+    {
+      "receipt": "docs/perch-execution/role-v5-2026-09-27/task-baseline.json.gz",
+      "receipt_sha256": "9cda32a716a183528a76c8738eddfcca5734ac1ca3d12424d68c741ed5a6baef",
+      "recorded_source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+      "recorded_state_sha256": "18073c36ad39eeeb50a31c4c823ce5cb65f08e058c90a9bf6f7603b2e5cc99cb",
+      "source_matches_receipt": true,
+      "state_matches_receipt": false,
+      "context_sha256": "82a8017fdd66ee4e088a9d5de7eca4d3bd3ead365a17cff13501249ce765765d",
+      "request_sha256": "b2eaafce2ccf023fb58eb17e2f900e7b2cb76216df7f3606af0515b19e86757e",
+      "prepared": {
+        "target": "research/adaptive-tasks/task.bend::tick_owned",
+        "path": "research/adaptive-tasks/task.bend",
+        "kind": "bend_definition",
+        "line": 21,
+        "end_line": 23,
+        "source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+        "state_sha256": "e0ef9474856c7894ed5814954cda7acbb6c9331a9ed46f7d3a8a68fbf94e93ef",
+        "context": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "files": [
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5"
+            }
+          ],
+          "unresolved": [
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false,
+          "limits": {
+            "helpers": 16,
+            "files": 12,
+            "bytes": 48000,
+            "callers": 4
+          }
+        },
+        "state": {
+          "cohort": "# First adaptive-task increment\n\nStatus: bounded increment implemented and checked, 2026-09-26. See\n[the results and reproduction procedure](README.md) and\n[the exact device protocol](DEVICE-PROTOCOL.md).\n\nThis is a bounded runtime feasibility probe. It is not the Knot compiler, a\nBend-source lowerer, a general GPU heap, or a package release.\n\n## Contract\n\n- A task/frame is affine. Moving it consumes the previous owner. An owning slot\n  can be taken once; a rejected insertion returns both the unchanged slot and\n  the uninserted payload. Taking an empty slot is explicit failure.\n- A runnable task holds a logical destination, instruction state, captured\n  continuation data, and its live numeric payload. Quantum counts machine steps.\n  Zero fuel yields the same residual work. Returning a checkpoint never means\n  returning a successful partial value.\n- A binary continuation receives left and right in source order. Its\n  noncommutative operation is `left * 31 + right`, modulo 2^32. A unary frame\n  computes `value * factor + bias`, modulo 2^32. These are fixture operations,\n  not a proposal to restrict Bend's eventual primitive set.\n- Fixture programs are finite trees of delayed leaves, binary forks, and unary\n  frames. A leaf starts with a seed and repeats `x * 1664525 + 1013904223` for its\n  declared tick count. The independent Bend evaluator recursively computes the\n  tree's value, with no task scheduling or checkpoint representation.\n- GPU storage is preallocated for the validated tree. Each logical node has one\n  owning task slot. No slot is reused during a run. A producer writes only its\n  own task record; a later dispatch observes published results. Each join is\n  processed by one invocation. No cross-workgroup spin waiting is permitted.\n- Ready work is gathered into a bounded frontier, then distributed to worker\n  invocations. A checkpoint preserves task identity/destination while its\n  frontier position and worker may change. Capacity exhaustion, invalid input,\n  and round exhaustion are explicit outcomes. They cannot be reported as done.\n\nThe initial arena trades general allocation for an auditable lifetime: all\nrecords remain allocated until submitted GPU work is quiescent and the run is\nreleased. Retirement invalidates task execution; it is not physical slot reuse.\nGeneric closures, sharing/refcounts, arbitrary native handles, source effects,\nand cancellation during a dispatch remain outside this increment.\n\n## Evidence contract\n\n1. Complete Bend proof entry, quantified transition/composition laws, and\n   inhabited witnesses. Record any missing arbitrary-history/refinement proof.\n2. CPU reference and protocol fixtures agree on JS and native execution.\n3. A nearby valid affine control checks; deliberate reuse fails in the intended\n   quantity/type phase, not parsing. Type-valid behavior mutants are rejected.\n4. GPU results match the independently computed Bend values for balanced,\n   skewed, serial-frame, and reversed-result-order cases with multiple quanta.\n   Record real adapter identity, dispatch/completion/readback, bounds outcomes,\n   repeated runs, and migration observations. No speed claim follows.\n5. Targeted Perch checks have nonzero rule selection, or record one provider\n   blocker and continue deterministic work without repeated credential retries.",
+          "name": "tick_owned",
+          "path": "research/adaptive-tasks/task.bend",
+          "declaration_kind": "bend_definition",
+          "source": "def tick_owned(p: Payload) -> Payload:\n  match p:\n    case OwnedWord{x}: OwnedWord{tick(x)}",
+          "calls": [
+            {
+              "name": "tick",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 18,
+              "end_line": 19,
+              "source": "def tick(x: U32) -> U32:\n  U32.add(U32.mul(x,1664525),1013904223)"
+            }
+          ],
+          "called_by": [
+            {
+              "name": "step_parts",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 38,
+              "end_line": 45,
+              "source": "def step_parts(dest: U32, n: Nat, p: Payload, frames: List<&1,Frame>) -> Run:\n  match n frames:\n    case 1n+k _:\n      Checkpoint{Work{dest,k,tick_owned(p),frames}}\n    case 0n Nil{}:\n      Delivered{dest,p}\n    case 0n Con{frame,rest}:\n      Checkpoint{Work{dest,0n,apply(frame,p),rest}}"
+            }
+          ],
+          "laws": [],
+          "datatypes": [
+            {
+              "name": "Payload",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 4,
+              "end_line": 5,
+              "source": "# Type, not Data: neither a task nor its saved payload may be copied.\ntype Payload is Type:\n  OwnedWord{value: U32}"
+            },
+            {
+              "name": "Frame",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 7,
+              "end_line": 9,
+              "source": "type Frame is Type:\n  Unary{factor: U32, bias: U32}\n  Binary{left: Payload}"
+            },
+            {
+              "name": "Task",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 11,
+              "end_line": 12,
+              "source": "type Task is Type:\n  Work{destination: U32, remaining: Nat, payload: Payload, frames: List<&1,Frame>}"
+            },
+            {
+              "name": "Run",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 14,
+              "end_line": 16,
+              "source": "type Run is Type:\n  Checkpoint{task: Task}\n  Delivered{destination: U32, payload: Payload}"
+            }
+          ],
+          "imports": [
+            {
+              "module": "Base",
+              "alias": null
+            }
+          ],
+          "context_notes": {
+            "basis": "working-tree",
+            "profile": "working-tree-datatypes-v1",
+            "unresolved": [
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false
+          }
+        }
+      }
+    },
+    {
+      "receipt": "docs/perch-execution/role-v5-2026-09-27/task-baseline.json.gz",
+      "receipt_sha256": "9cda32a716a183528a76c8738eddfcca5734ac1ca3d12424d68c741ed5a6baef",
+      "recorded_source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+      "recorded_state_sha256": "f2105de42310895495c45cb02f684de40109053c83bf9140a735a86c08d97b83",
+      "source_matches_receipt": true,
+      "state_matches_receipt": false,
+      "context_sha256": "a765a41bfb2817df3527d15b5a9d20b6a49f42dab113ce42977ef665a3c7a8a6",
+      "request_sha256": "e37d37f3ecf531f0347d3184e44cbe2cdde4518ab8a053cc3ea647189e97a0d3",
+      "prepared": {
+        "target": "research/adaptive-tasks/task.bend::combine",
+        "path": "research/adaptive-tasks/task.bend",
+        "kind": "bend_definition",
+        "line": 25,
+        "end_line": 27,
+        "source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+        "state_sha256": "7abaf8506a03cda9f06e2c29efe5d51c1aabd6fa595f3b621f3d41128520daf2",
+        "context": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "files": [
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "source_sha256": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5"
+            }
+          ],
+          "unresolved": [
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/task.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false,
+          "limits": {
+            "helpers": 16,
+            "files": 12,
+            "bytes": 48000,
+            "callers": 4
+          }
+        },
+        "state": {
+          "cohort": "# First adaptive-task increment\n\nStatus: bounded increment implemented and checked, 2026-09-26. See\n[the results and reproduction procedure](README.md) and\n[the exact device protocol](DEVICE-PROTOCOL.md).\n\nThis is a bounded runtime feasibility probe. It is not the Knot compiler, a\nBend-source lowerer, a general GPU heap, or a package release.\n\n## Contract\n\n- A task/frame is affine. Moving it consumes the previous owner. An owning slot\n  can be taken once; a rejected insertion returns both the unchanged slot and\n  the uninserted payload. Taking an empty slot is explicit failure.\n- A runnable task holds a logical destination, instruction state, captured\n  continuation data, and its live numeric payload. Quantum counts machine steps.\n  Zero fuel yields the same residual work. Returning a checkpoint never means\n  returning a successful partial value.\n- A binary continuation receives left and right in source order. Its\n  noncommutative operation is `left * 31 + right`, modulo 2^32. A unary frame\n  computes `value * factor + bias`, modulo 2^32. These are fixture operations,\n  not a proposal to restrict Bend's eventual primitive set.\n- Fixture programs are finite trees of delayed leaves, binary forks, and unary\n  frames. A leaf starts with a seed and repeats `x * 1664525 + 1013904223` for its\n  declared tick count. The independent Bend evaluator recursively computes the\n  tree's value, with no task scheduling or checkpoint representation.\n- GPU storage is preallocated for the validated tree. Each logical node has one\n  owning task slot. No slot is reused during a run. A producer writes only its\n  own task record; a later dispatch observes published results. Each join is\n  processed by one invocation. No cross-workgroup spin waiting is permitted.\n- Ready work is gathered into a bounded frontier, then distributed to worker\n  invocations. A checkpoint preserves task identity/destination while its\n  frontier position and worker may change. Capacity exhaustion, invalid input,\n  and round exhaustion are explicit outcomes. They cannot be reported as done.\n\nThe initial arena trades general allocation for an auditable lifetime: all\nrecords remain allocated until submitted GPU work is quiescent and the run is\nreleased. Retirement invalidates task execution; it is not physical slot reuse.\nGeneric closures, sharing/refcounts, arbitrary native handles, source effects,\nand cancellation during a dispatch remain outside this increment.\n\n## Evidence contract\n\n1. Complete Bend proof entry, quantified transition/composition laws, and\n   inhabited witnesses. Record any missing arbitrary-history/refinement proof.\n2. CPU reference and protocol fixtures agree on JS and native execution.\n3. A nearby valid affine control checks; deliberate reuse fails in the intended\n   quantity/type phase, not parsing. Type-valid behavior mutants are rejected.\n4. GPU results match the independently computed Bend values for balanced,\n   skewed, serial-frame, and reversed-result-order cases with multiple quanta.\n   Record real adapter identity, dispatch/completion/readback, bounds outcomes,\n   repeated runs, and migration observations. No speed claim follows.\n5. Targeted Perch checks have nonzero rule selection, or record one provider\n   blocker and continue deterministic work without repeated credential retries.",
+          "name": "combine",
+          "path": "research/adaptive-tasks/task.bend",
+          "declaration_kind": "bend_definition",
+          "source": "def combine(left: Payload, right: Payload) -> Payload:\n  match left right:\n    case OwnedWord{a} OwnedWord{b}: OwnedWord{U32.add(U32.mul(a,31),b)}",
+          "calls": [],
+          "called_by": [
+            {
+              "name": "apply",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 33,
+              "end_line": 36,
+              "source": "def apply(frame: Frame, value: Payload) -> Payload:\n  match frame:\n    case Unary{factor,bias}: unary(value,factor,bias)\n    case Binary{left}: combine(left,value)"
+            }
+          ],
+          "laws": [],
+          "datatypes": [
+            {
+              "name": "Payload",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 4,
+              "end_line": 5,
+              "source": "# Type, not Data: neither a task nor its saved payload may be copied.\ntype Payload is Type:\n  OwnedWord{value: U32}"
+            },
+            {
+              "name": "Frame",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 7,
+              "end_line": 9,
+              "source": "type Frame is Type:\n  Unary{factor: U32, bias: U32}\n  Binary{left: Payload}"
+            },
+            {
+              "name": "Task",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 11,
+              "end_line": 12,
+              "source": "type Task is Type:\n  Work{destination: U32, remaining: Nat, payload: Payload, frames: List<&1,Frame>}"
+            },
+            {
+              "name": "Run",
+              "path": "research/adaptive-tasks/task.bend",
+              "line": 14,
+              "end_line": 16,
+              "source": "type Run is Type:\n  Checkpoint{task: Task}\n  Delivered{destination: U32, payload: Payload}"
+            }
+          ],
+          "imports": [
+            {
+              "module": "Base",
+              "alias": null
+            }
+          ],
+          "context_notes": {
+            "basis": "working-tree",
+            "profile": "working-tree-datatypes-v1",
+            "unresolved": [
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32.add",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32.mul",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/task.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false
+          }
+        }
+      }
+    },
+    {
+      "receipt": "research/adaptive-tasks/comparison-gate/receipts/style-oracle-v5.json.gz",
+      "receipt_sha256": "bd54529f2cff06a37551720adbf4f42b7a0a89890af0de03be6c678872dab2ab",
+      "recorded_source_sha256": "fcdba76e9c1a579f7cc93813ede620cb0bb1774af68d67a67b8174e51137f7a8",
+      "recorded_state_sha256": "c7bfd133a09bb4887454129e363a75f7f3ab5aee01c2be3a908acd53b34bf737",
+      "source_matches_receipt": true,
+      "state_matches_receipt": false,
+      "context_sha256": "0694be27428d6c37661fbc0c617471fd7f50faa209f950691329e3e8f6666a46",
+      "request_sha256": "a9d8f0f7df3da421e4690f2c80a2af7fcf9d71851d74da5c83e4339df1b91cfa",
+      "prepared": {
+        "target": "research/adaptive-tasks/comparison-gate/oracle.bend::frame_json",
+        "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+        "kind": "bend_definition",
+        "line": 26,
+        "end_line": 29,
+        "source_sha256": "fcdba76e9c1a579f7cc93813ede620cb0bb1774af68d67a67b8174e51137f7a8",
+        "state_sha256": "5929b34dc5bd3559954994cd324409b62e106e55d2c7cd140ce1c07474bb7f8a",
+        "context": {
+          "basis": "working-tree",
+          "profile": "working-tree-datatypes-v1",
+          "files": [
+            {
+              "path": "research/adaptive-tasks/comparison-gate/fixtures.bend",
+              "source_sha256": "849bf6859ec2fd88e507c02b15791e4c44a6f8d347f477cebc5a44b91ba2007f"
+            },
+            {
+              "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+              "source_sha256": "fcdba76e9c1a579f7cc93813ede620cb0bb1774af68d67a67b8174e51137f7a8"
+            }
+          ],
+          "unresolved": [
+            {
+              "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+              "name": "String",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+              "name": "String.concat",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+              "name": "U32.show",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "path": "research/adaptive-tasks/comparison-gate/fixtures.bend",
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false,
+          "limits": {
+            "helpers": 16,
+            "files": 12,
+            "bytes": 48000,
+            "callers": 4
+          }
+        },
+        "state": {
+          "cohort": "# Full residual and work comparison gate\n\nThis gate is prepared and qualified against the accepted task implementation\nbefore generating a successor. The governing contracts remain\n[`../SPEC.md`](../SPEC.md) and the frozen\n[`TRANSFER.md`](../../compiler-style/hillclimb/TRANSFER.md). No task behavior,\narithmetic, ownership rule, proof assertion, or previous receipt is changed.\n\n## Observation and independent expectations\n\nAn input recipe describes a waiting task or a delivered result. Recipes contain\nonly reusable data; each execution lane constructs a fresh affine owner from its\nrecipe. No live owner is copied. The observer consumes the resulting owner and\nserializes its complete state:\n\n- Pending: `[0,destination,ticks,payload,[frame,...]]`.\n- Delivered: `[1,destination,payload]`.\n- Unary frame: `[0,factor,bias]`; binary frame: `[1,leftPayload]`.\n\nThe ordered frame sequence, tags, captures, destination, payload and remaining\nticks are therefore compared explicitly. Observations cannot be fed back into\nthe implementation to reconstruct an owner.\n\n`oracle.bend` is an independent closed-budget evaluator. It sums natural-number\nbudgets, computes the consumed tick prefix, applies the corresponding frame\nprefix, and accounts for a separate delivery step. It imports only Base and the\ninput recipes; it does not import the task machine, adapter, transfer control,\nor any implementation transition. For pending work, its step expectation is\n`min(sum(budgets), ticks + frameCount + 1)`; delivered work expects zero steps.\n`witnesses.bend` prints eight literal, hand-derived observations from the frozen\ntransfer table. Those independently constrain both the oracle and the execution\nlanes. This is finite executable evidence, not a newly quantified refinement law.\n\n## Execution forms and counted work\n\nForty recipes include empty schedules, zero budgets, absorbing delivery, live\nticks through 65,536, U32 wraparound/extrema, varied destinations, both frame\nforms, differing captures, and ordering. Each is independently built for:\n\n1. Applying the budget list sequentially.\n2. Running once at its Nat sum.\n3. Splitting its first budget from the remaining list and composing the results.\n\nAll three forms are compared with the independent oracle on native and emitted\nJavaScript/Bun. The existing `slices` observations remain in the unchanged\nhistorical conformance gate. No universal theorem for budget-list transfer or\nslice multiplication is claimed here; the original arbitrary-Nat fuel law and\nall twelve original proofs are checked separately.\n\nFor emitted JavaScript, the host wraps the nominated `task.step` function and\ncounts its actual invocations. It also counts property reads on the input budget\nlist, separately from the nodes visited while constructing host observation\nproxies. These are separate counters. Input-list read counts impose no scheduling\nshape requirement: equivalent summation/regrouping remains legal. The host does\nnot calculate expected states, expected work, or fixture arithmetic.\n\nThe native lane establishes matching behavior. Count instrumentation does not\nestablish native allocation cost, native speed, GPU behavior, wall-time speedup,\nor an arbitrary-input runtime bound.\n\n## Gate qualification\n\nThe gate must pass the accepted baseline and reject type-valid mutations that\nlose ticks, frames, frame order, either capture, destination or LCG arithmetic;\nswap join operands; deliver early; or ignore a budget tail. A separate\nstep-on-delivered mutant must retain every final state yet fail counted work.\nNo parser/type failure counts as a semantic mutation rejection.\n\nThe five original semantic mutants are also reconstructed in isolated copies.\nTheir expected rejecting law and exact runtime observation must match the old\nreceipt. The valid ownership control and the two exact quantity negatives are\nrerun. All historical files are hash-checked before and after the gate.\n\n## Successor representation interface\n\n`adapter.bend` is the accepted representation's correspondence layer. A successor\nmust supply a separately identified adapter with these operations:\n\n- `seed(recipe)` constructs one fresh successor owner.\n- `show(owner)` consumes it into the same complete observation schema.\n- `scheduled`, `summed`, and `split` expose the same three execution forms.\n- `main` emits one named record per unchanged recipe.\n\nFor route/residual factoring, destination maps to the outer route; pending maps\nto its owned work; complete maps to delivered; Transform/JoinLeft map to the\nsame unary/binary frame tags and captures. This is a bijective constructor\ncorrespondence, not permission to erase fields or normalize a wrong state.\nRegister its exact source hash before evaluating a candidate, and retain the\nold adapter and oracle unchanged. The nominated step declaration must still\nrepresent one contract machine transition. Instrumentation failure or a changed\ntransition meaning leaves work-count evidence unavailable.\n\nThe judge-only `reference-transfer.bend` is an executable control. It is not a\nfresh reader transfer response and must not be disclosed as the answer to a\nclaimed unseen transfer exercise. If disclosed, record that rendering as\ndevelopment material and reserve a new rendering for later human/model transfer.\n\nCurrent Perch configuration is unchanged. Semantic/style review of this new gate\nis separate from deterministic qualification; unavailable paid review is not a\npass. No candidate has been generated or accepted by this gate-development work.",
+          "name": "frame_json",
+          "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+          "declaration_kind": "bend_definition",
+          "source": "def frame_json(f: F.Frame) -> String:\n  match f:\n    case F.Unary{factor,bias}: String.concat([\"[0,\",U32.show(factor),\",\",U32.show(bias),\"]\"])\n    case F.Binary{left}: String.concat([\"[1,\",U32.show(left),\"]\"])",
+          "calls": [],
+          "called_by": [
+            {
+              "name": "frame_rows",
+              "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+              "line": 31,
+              "end_line": 34,
+              "source": "def frame_rows(fs: List<&2,F.Frame>) -> List<&2,String>:\n  match fs:\n    case Nil{}: []\n    case Con{f,rest}: Con{frame_json(f),frame_rows(rest)}"
+            }
+          ],
+          "laws": [],
+          "datatypes": [
+            {
+              "name": "Frame",
+              "path": "research/adaptive-tasks/comparison-gate/fixtures.bend",
+              "line": 4,
+              "end_line": 6,
+              "source": "# Reusable input recipes. These are never observations of an affine owner.\ntype Frame is Data:\n  Unary{factor: U32, bias: U32}\n  Binary{left: U32}"
+            }
+          ],
+          "imports": [
+            {
+              "module": "Base",
+              "alias": null
+            },
+            {
+              "module": "./fixtures.bend",
+              "alias": "F"
+            }
+          ],
+          "context_notes": {
+            "basis": "working-tree",
+            "profile": "working-tree-datatypes-v1",
+            "unresolved": [
+              {
+                "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+                "name": "String",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+                "name": "String.concat",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/comparison-gate/oracle.bend",
+                "name": "U32.show",
+                "reason": "unresolved-or-builtin"
+              },
+              {
+                "path": "research/adaptive-tasks/comparison-gate/fixtures.bend",
+                "name": "U32",
+                "reason": "unresolved-or-builtin"
+              }
+            ],
+            "truncated": false
+          }
+        }
+      }
+    }
+  ]
+}

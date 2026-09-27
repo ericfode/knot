@@ -7,6 +7,7 @@ import { analyzeBendSource } from './perch-bend.mjs';
 
 const hash = source => createHash('sha256').update(source).digest('hex');
 const identifier = (path, declaration) => `${path}::${declaration.qualified_name}`;
+export const BEND_CONTEXT_PROFILE = 'working-tree-datatypes-v1';
 const within = (root, path) => {
   const rel = relative(root, path);
   return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
@@ -73,9 +74,22 @@ export async function createBendReview({ root, path, source, analysis, limits = 
       if (!callers.has(reference.name)) callers.set(reference.name, new Set());
       callers.get(reference.name).add(reference.source);
     }
+    // Datatypes are review context, never function nodes in the semantic graph.
+    const datatypes = new Map((parsed.datatype_declarations ?? []).map(decl => [decl.name, {
+      ...decl, id: `bend-type:${decl.name}`, qualified_name: decl.name, syntax_kind: 'bend_datatype',
+    }]));
+    for (const decl of [...parsed.declarations, ...datatypes.values()]) {
+      const refs = decl.context_references ?? [];
+      if (refs.length) references.set(decl.id, [...(references.get(decl.id) ?? []), ...refs]);
+      for (const ref of refs) {
+        if (!callers.has(ref.name)) callers.set(ref.name, new Set());
+        callers.get(ref.name).add(decl.id);
+      }
+    }
     return {
       path: filePath, source: text, analysis: parsed, source_sha256: hash(text),
       declarations: new Map(parsed.declarations.map(decl => [decl.qualified_name, decl])),
+      datatypes,
       imports: parsed.references.filter(ref => ref.kind === 'import'),
       references, callers, lines: text.split('\n'), declarationSources: new Map(),
     };
@@ -121,16 +135,17 @@ export async function createBendReview({ root, path, source, analysis, limits = 
   }
 
   async function resolveReference(file, name, admitted) {
-    const local = file.declarations.get(name);
+    const local = file.declarations.get(name) ?? file.datatypes.get(name);
     if (local) return { file, declaration: local };
     const dot = name.indexOf('.');
     const imported = dot < 0 ? null : file.imports.find(ref => ref.alias === name.slice(0, dot));
     if (!imported) return { reason: 'unresolved-or-builtin' };
-    if (admitted.size >= bounds.files) return { reason: 'context-file-limit', truncated: true };
+    const importedPath = relative(resolve(root), resolve(root, dirname(file.path), imported.module)).split(sep).join('/');
+    if (!admitted.has(importedPath) && admitted.size >= bounds.files) return { reason: 'context-file-limit', truncated: true };
     const loaded = await importedFile(file, imported.module);
     if (!loaded.file) return loaded;
     admitted.add(loaded.file.path);
-    const declaration = loaded.file.declarations.get(name.slice(dot + 1));
+    const declaration = loaded.file.declarations.get(name.slice(dot + 1)) ?? loaded.file.datatypes.get(name.slice(dot + 1));
     return declaration ? { file: loaded.file, declaration } : { reason: 'declaration-not-in-import', file: loaded.file };
   }
 
@@ -147,7 +162,7 @@ export async function createBendReview({ root, path, source, analysis, limits = 
   }
 
   async function contextFor(name) {
-    const declaration = primary.declarations.get(name);
+    const declaration = primary.declarations.get(name) ?? primary.datatypes.get(name);
     if (!declaration) throw new Error(`No parsed Bend declaration ${path}::${name}.`);
     const admitted = new Set([path]);
     const used = new Set([path]);
@@ -156,12 +171,16 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     const calls = [], calledBy = [], laws = [], datatypes = [];
     const calleeNodes = [], callerNodes = [];
     const pending = [{ file: primary, declaration }];
+    const suppliedDatatypes = new Set();
+    const datatypeContextFiles = new Set([path]);
+    let importedTypeHelpers = 0;
     let bytes = 0, truncated = false;
     const add = (list, item) => {
       const size = Buffer.byteLength(item.source);
       if (bytes + size > bounds.bytes) { truncated = true; return false; }
       bytes += size;
       used.add(item.path);
+      if (list !== datatypes) datatypeContextFiles.add(item.path);
       list.push(item);
       return true;
     };
@@ -169,6 +188,19 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     const note = (file, name, reason, limited = false) => {
       unresolved.set(`${file.path}:${name}:${reason}`, { path: file.path, name, reason });
       truncated ||= limited;
+    };
+    const includeDatatype = target => {
+      const { file, declaration: datatype } = target;
+      const id = identifier(file.path, datatype);
+      if (suppliedDatatypes.has(id)) return true;
+      if (!add(datatypes, entry(file, datatype))) {
+        note(file, datatype.name, 'context-byte-limit', true);
+        return false;
+      }
+      suppliedDatatypes.add(id);
+      visited.add(id);
+      pending.push(target);
+      return true;
     };
 
     if (declaration.law_location) add(laws, entry(primary, declaration, declaration.law_location));
@@ -193,10 +225,26 @@ export async function createBendReview({ root, path, source, analysis, limits = 
       const references = current.file.references.get(current.declaration.id) ?? [];
       for (const reference of references) {
         const target = await resolveReference(current.file, reference.name, admitted);
-        if (!target.declaration) { note(current.file, reference.name, target.reason, target.truncated); continue; }
+        if (!target.declaration) {
+          // A missing declaration was checked against this captured file; its
+          // hash must invalidate the result if the declaration is later added.
+          if (target.file) used.add(target.file.path);
+          note(current.file, reference.name, target.reason, target.truncated);
+          continue;
+        }
         const id = identifier(target.file.path, target.declaration);
         if (visited.has(id)) continue;
-        if (calls.length >= bounds.helpers) { note(current.file, reference.name, 'context-helper-limit', true); continue; }
+        if (target.declaration.syntax_kind === 'bend_datatype') {
+          // Local datatype source was already part of the context contract.
+          // Newly followed imported datatype declarations share the helper cap.
+          if (target.file.path !== path && calls.length + importedTypeHelpers >= bounds.helpers) {
+            note(current.file, reference.name, 'context-helper-limit', true);
+            continue;
+          }
+          if (includeDatatype(target) && target.file.path !== path) importedTypeHelpers++;
+          continue;
+        }
+        if (calls.length + importedTypeHelpers >= bounds.helpers) { note(current.file, reference.name, 'context-helper-limit', true); continue; }
         visited.add(id);
         if (add(calls, entry(target.file, target.declaration))) {
           calleeNodes.push({ node: node(target.file, target.declaration), lines: target.file.lines, calls: [] });
@@ -212,12 +260,17 @@ export async function createBendReview({ root, path, source, analysis, limits = 
       if (calledBy.length >= bounds.callers) { truncated = true; break; }
       if (add(calledBy, entry(primary, caller))) callerNodes.push({ node: node(primary, caller), lines: primary.lines, site: null });
     }
-    for (const filePath of [...used]) {
+    // Preserve the existing same-file datatype context. Any explicitly
+    // referenced type has already been included and traversed above.
+    for (const filePath of datatypeContextFiles) {
       const file = files.get(filePath);
-      for (const datatype of file.analysis.datatype_declarations ?? []) add(datatypes, entry(file, datatype));
+      for (const datatype of file.datatypes.values()) {
+        if (datatype !== declaration && !suppliedDatatypes.has(identifier(file.path, datatype))) add(datatypes, entry(file, datatype));
+      }
     }
     const provenance = {
       basis: 'working-tree',
+      profile: BEND_CONTEXT_PROFILE,
       files: [...used].sort().map(path => ({ path, source_sha256: files.get(path).source_sha256 })),
       unresolved: [...unresolved.values()], truncated,
       limits: bounds,
@@ -225,7 +278,7 @@ export async function createBendReview({ root, path, source, analysis, limits = 
     return {
       seen: { calls, called_by: calledBy, laws, datatypes,
         imports: primary.imports.map(({ module, alias }) => ({ module, alias })),
-        context_notes: { basis: provenance.basis, unresolved: provenance.unresolved, truncated } },
+        context_notes: { basis: provenance.basis, profile: BEND_CONTEXT_PROFILE, unresolved: provenance.unresolved, truncated } },
       provenance,
       builtin: { node: node(primary, declaration),
         methods: analysis.declarations.map(decl => node(primary, decl)),

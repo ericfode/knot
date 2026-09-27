@@ -111,11 +111,17 @@ their targets. Follow it with explicit file groups for the mechanisms being
 qualified; the command does not invent a whole-project composition score.
 
 Function/law context uses the same pinned Bend parser and bounded working-copy
-helpers as normal Perch checks. Datatype context includes sibling datatypes and
-up to four direct same-file users found through parsed references; imported and
-transitive datatype dependencies are explicitly unresolved. Every target retains
-source and context hashes, truncation markers and unresolved references. Syntax
-parsing does not establish typing or dependency completeness.
+helpers as normal Perch checks. Parsed datatype references resolve locally and
+through explicit relative imports, including aliases, generic type arguments and
+transitive referenced types, within the existing helper/file/byte limits.
+Direct datatype targets retain their one-file, four-caller and 48 KB limits:
+sibling datatypes and same-file users are included, while required external
+dependencies report an explicit file-cap failure. Explicit composition groups
+check datatype dependencies against their selected files within the existing
+48 KB bound. Every target retains source and context hashes, truncation markers
+and unresolved references. Missing dependencies and cap failures remain visible;
+syntax parsing does not establish typing or dependency completeness. See the
+[datatype-context repair evidence](perch-execution/role-v5-2026-09-27/datatype-context/README.md).
 
 Each invocation shares one source snapshot across targets and their explicit
 local imports. The snapshot reads and parses each real source file at most once,

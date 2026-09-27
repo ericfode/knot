@@ -154,7 +154,9 @@ export async function prepareStyleComposition(candidates, cohort, config, root =
   for (const [path, file] of loaded) {
     const names = new Set([...file.analysis.declarations.map(d => d.qualified_name), ...file.analysis.datatype_declarations.map(d => d.name)]);
     const imports = file.analysis.references.filter(r => r.kind === 'import');
-    for (const ref of file.analysis.references.filter(r => r.kind !== 'import')) {
+    const typeReferences = [...file.analysis.declarations, ...file.analysis.datatype_declarations]
+      .flatMap(d => d.context_references ?? []);
+    for (const ref of [...file.analysis.references.filter(r => r.kind !== 'import'), ...typeReferences]) {
       if (names.has(ref.name) || knownBuiltins().has(ref.name)) continue;
       const prefix = ref.name.split('.')[0], imp = imports.find(i => i.alias === prefix);
       const local = imp && (imp.module.startsWith('./') || imp.module.startsWith('../'));
@@ -332,24 +334,12 @@ export function assessStyle(rows, config) {
   });
 }
 
-function datatypeContext(file, path, declaration) {
-  const referencedBy = new Set(file.analysis.references.filter(r => r.name === declaration.name || r.name.startsWith(`${declaration.name}.`)).map(r => r.source));
-  const consumers = file.analysis.declarations.filter(d => referencedBy.has(d.id));
-  const types = file.analysis.datatype_declarations.filter(d => d.name !== declaration.name);
-  const limits = { callers: 4, files: 1, bytes: 48000 };
-  let bytes = 0, truncated = consumers.length > limits.callers;
-  const entries = declarations => declarations.flatMap(d => {
-    const source = bendDeclarationSource(file.source, d);
-    bytes += Buffer.byteLength(source);
-    if (bytes > limits.bytes) { truncated = true; return []; }
-    return [{ name: d.qualified_name ?? d.name, path, line: d.line, end_line: d.end_line, source }];
-  });
-  const called_by = entries(consumers.slice(0, limits.callers)), datatypes = entries(types);
-  const unresolved = [{ path, name: declaration.name, reason: 'datatype-context-is-same-file-only; imported and transitive dependencies are not resolved' }];
-  const provenance = { basis: 'working-tree', files: [{ path, source_sha256: file.source_sha256 }], unresolved, truncated, limits };
-  return { seen: { calls: [], called_by, laws: [], datatypes,
-    imports: file.analysis.references.filter(r => r.kind === 'import').map(({ module, alias }) => ({ module, alias })),
-    context_notes: { basis: provenance.basis, unresolved, truncated } }, provenance };
+async function datatypeContext(file, path, declaration, root, snapshot) {
+  // Retain the existing one-file datatype budget. Actual type dependencies now
+  // resolve locally or produce explicit limits, rather than a blanket warning.
+  file.datatypeReview ??= await createBendReview({ root, path, source: file.source,
+    analysis: file.analysis, snapshot, limits: { callers: 4, files: 1, bytes: 48000 } });
+  return file.datatypeReview.forUnit(declaration.name);
 }
 
 export async function prepareStyleTargets(targets, cohort, config, root = ROOT, snapshot = null) {
@@ -389,7 +379,7 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT, 
       if (selected.has(identity)) continue;
       selected.add(identity);
       if (selected.size > config.max_units) throw new Error(`Style run limited to ${config.max_units} units; narrow targets or raise max_units`);
-      const context = declaration.syntax_kind === 'bend_datatype' ? datatypeContext(file, path, declaration)
+      const context = declaration.syntax_kind === 'bend_datatype' ? await datatypeContext(file, path, declaration, realRoot, snapshot)
         : await file.review.forUnit(declaration.qualified_name);
       const state = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
         path, declaration_kind: declaration.syntax_kind,

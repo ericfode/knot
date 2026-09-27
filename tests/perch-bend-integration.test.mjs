@@ -8,7 +8,8 @@ import { test } from 'node:test';
 import { install, patchPerch } from '../scripts/install-perch-bend.mjs';
 import { runPerch } from '../scripts/perch-workflow.mjs';
 import { analyzeBendSource } from '../scripts/perch-bend.mjs';
-import { createBendReview } from '../scripts/perch-bend-context.mjs';
+import { createBendReview, createBendSourceSnapshot } from '../scripts/perch-bend-context.mjs';
+import { prepareStyleTargets, prepareStyleComposition } from '../scripts/perch-style.mjs';
 
 test('pinned installation is repeatable and refuses unknown bundle contents', async () => {
   const first = await install();
@@ -146,6 +147,116 @@ test('working-copy helper traversal is bounded and reports context limits', asyn
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+async function datatypeFixture(t, files, limits = {}, snapshot = null) {
+  const root = snapshot?.root ?? await mkdtemp(join(tmpdir(), 'knot-datatype-context-'));
+  if (!snapshot) t.after(() => rm(root, { recursive: true, force: true }));
+  for (const [path, source] of Object.entries(files)) await writeFile(join(root, path), source);
+  const captured = snapshot ?? await createBendSourceSnapshot(root);
+  const { source, analysis } = await captured.load('main.bend');
+  assert.equal(analysis.parser_status, 'parsed', analysis.parser_message);
+  const review = await createBendReview({ root, path: 'main.bend', source, analysis, snapshot: captured, limits });
+  return { root, snapshot: captured, context: await review.forUnit('main') };
+}
+
+test('datatype context resolves supplied local types without turning them into callees', async t => {
+  const { context } = await datatypeFixture(t, {
+    'main.bend': 'import Base\ntype Payload is Type:\n  Owned{x: U32}\ndef helper(p: Payload) -> Payload: p\ndef main(p: Payload) -> Payload: helper(p)\n',
+  });
+  assert.deepEqual(context.seen.calls.map(x => x.name), ['helper']);
+  assert.deepEqual(context.seen.datatypes.map(x => x.name), ['Payload']);
+  assert.ok(!context.provenance.unresolved.some(x => x.name === 'Payload'));
+  assert.equal(context.provenance.truncated, false);
+  assert.deepEqual(context.builtin.callees.map(x => x.node.name), ['helper']);
+});
+
+test('explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles', async t => {
+  const files = {
+    'main.bend': 'import Base\nimport ./types.bend as T\ndef main(p: T.Box<U32>) -> T.Box<U32>: p\n',
+    'types.bend': 'import Base\nimport ./leaf.bend as L\ntype Box<-A: Type> is Type:\n  Wrap{item: A, rest: L.Leaf}\n',
+    'leaf.bend': 'import Base\nimport ./types.bend as Again\ntype Leaf is Type:\n  End{}\n  Next{owner: Again.Box<U32>}\n',
+  };
+  const first = await datatypeFixture(t, files, { files: 3, helpers: 2 });
+  assert.deepEqual(first.context.provenance.files.map(x => x.path), ['leaf.bend', 'main.bend', 'types.bend']);
+  assert.deepEqual(first.context.seen.datatypes.map(x => x.name).sort(), ['Box', 'Leaf']);
+  assert.ok(first.context.seen.datatypes.find(x => x.name === 'Box').source.includes('item: A'));
+  assert.ok(!first.context.provenance.unresolved.some(x => ['T.Box', 'L.Leaf', 'Again.Box', 'A'].includes(x.name)));
+  assert.equal(first.context.provenance.truncated, false);
+  assert.deepEqual(first.context.seen.calls, []);
+  assert.equal(first.snapshot.stats.parse_calls, 3);
+  const oldHash = first.context.provenance.files.find(x => x.path === 'leaf.bend').source_sha256;
+  const changed = { 'leaf.bend': files['leaf.bend'].replace('End{}', 'End{value: U32}') };
+  const retained = await datatypeFixture(t, changed, { files: 3, helpers: 2 }, first.snapshot);
+  assert.deepEqual(retained.context, first.context, 'same command never refreshes one type dependency');
+  const fresh = await createBendSourceSnapshot(first.root);
+  const updated = await datatypeFixture(t, {}, {}, fresh);
+  assert.notEqual(updated.context.provenance.files.find(x => x.path === 'leaf.bend').source_sha256, oldHash);
+  assert.equal(await readFile(join(first.root, 'leaf.bend'), 'utf8'), changed['leaf.bend'], 'review leaves source unchanged');
+});
+
+test('missing imports and missing datatype declarations remain explicit; malformed imported types reject', async t => {
+  const { root, context } = await datatypeFixture(t, {
+    'main.bend': 'import Base\nimport ./types.bend as T\nimport ./absent.bend as Missing\ndef main(x: T.Absent, y: Missing.Type) -> U32: 0\n',
+    'types.bend': 'import Base\ntype Present is Data:\n  Present{}\n',
+  });
+  assert.ok(context.provenance.unresolved.some(x => x.name === 'T.Absent' && x.reason === 'declaration-not-in-import'));
+  assert.ok(context.provenance.unresolved.some(x => x.name === 'Missing.Type' && x.reason === 'unavailable-local-import:ENOENT'));
+  assert.ok(!context.seen.datatypes.some(x => x.name === 'Absent'));
+  assert.ok(context.provenance.files.some(x => x.path === 'types.bend'), 'negative lookup retains the inspected file identity');
+  await writeFile(join(root, 'types.bend'), 'import Base\ntype Present is Data:\n  Present{broken:}\n');
+  const snapshot = await createBendSourceSnapshot(root);
+  await assert.rejects(datatypeFixture(t, {}, {}, snapshot), /context types.bend does not parse/);
+});
+
+test('parsed generic datatype context preserves AST spans and existing function graph references', async t => {
+  const source = 'import Base\ntype Box<q, -A: Kind(q)> is Kind(q):\n  Box{item: A}\ndef main(x: +Box<U32>) -> +Box<U32>: x\n';
+  const parsed = await analyzeBendSource(source);
+  assert.equal(parsed.parser_status, 'parsed');
+  assert.ok(!parsed.references.some(x => x.name === 'Box'), 'generic datatype metadata must not add function graph edges');
+  assert.deepEqual(parsed.references.filter(x => x.source === 'bend:main').map(x => x.name), ['U32', 'U32']);
+  assert.equal(parsed.declarations.length, 1, 'datatype is not a new function/law target');
+  const types = parsed.declarations[0].context_references;
+  assert.deepEqual(types.map(x => x.name), ['Box', 'Box']);
+  assert.ok(types.every(x => Buffer.from(source).subarray(x.location.start.byte, x.location.end.byte).toString() === '+Box<U32>'));
+  const { context } = await datatypeFixture(t, { 'main.bend': source });
+  assert.deepEqual(context.seen.datatypes.map(x => x.name), ['Box']);
+  assert.ok(!context.provenance.unresolved.some(x => ['Box', 'A', 'q'].includes(x.name)));
+});
+
+test('datatype dependency file, helper and byte caps stay fail closed', async t => {
+  const files = {
+    'main.bend': 'import Base\nimport ./first.bend as F\ndef main(x: F.First) -> F.First: x\n',
+    'first.bend': 'import Base\nimport ./second.bend as S\ntype First is Type:\n  First{next: S.Second}\n',
+    'second.bend': 'import Base\ntype Second is Type:\n  Second{x: U32}\n',
+  };
+  for (const limits of [{ files: 2 }, { helpers: 1 }, { bytes: 1 }]) {
+    const { context } = await datatypeFixture(t, files, limits);
+    assert.equal(context.provenance.truncated, true, JSON.stringify(limits));
+    assert.ok(context.provenance.unresolved.length > 0, 'the omitted collaborator remains explicit');
+    assert.ok(!context.seen.datatypes.some(x => x.name === 'Second'), JSON.stringify(limits));
+  }
+});
+
+test('direct datatype style context retains one-file cap and composition checks explicit type dependencies', async t => {
+  const { root } = await datatypeFixture(t, {
+    'main.bend': 'import Base\nimport ./types.bend as T\ntype Local is Type:\n  Local{next: T.Imported}\ndef main(x: Local) -> Local: x\n',
+    'types.bend': 'import Base\ntype Imported is Type:\n  Imported{x: U32}\n',
+  });
+  const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
+  const selected = await prepareStyleTargets(['main.bend::Local'], 'Preserve the owner', config, root);
+  assert.equal(selected[0].context.limits.files, 1, 'do not widen the datatype style scope');
+  assert.equal(selected[0].context.truncated, true);
+  assert.ok(selected[0].context.unresolved.some(x => x.name === 'T.Imported' && x.reason === 'context-file-limit'));
+  assert.deepEqual(selected[0].state.called_by.map(x => x.name), ['main']);
+  assert.ok(!selected[0].state.datatypes.some(x => x.name === 'Local'), 'primary datatype is already the reviewed source');
+  const missing = await prepareStyleComposition(selected, 'Preserve the owner', config, root);
+  assert.equal(missing.available, false);
+  assert.ok(missing.candidate.context.unresolved.some(x => x.name === 'T.Imported' && x.reason === 'collaborator-not-in-group'));
+  const complete = await prepareStyleTargets(['main.bend::Local', 'types.bend::Imported'], 'Preserve the owner', config, root);
+  const composition = await prepareStyleComposition(complete, 'Preserve the owner', config, root);
+  assert.equal(composition.available, true, 'explicit complete group resolves type dependencies without a larger file cap');
+  assert.deepEqual(composition.candidate.context.unresolved, []);
 });
 
 test('real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request', async () => {
