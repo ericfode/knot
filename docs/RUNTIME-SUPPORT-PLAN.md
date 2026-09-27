@@ -8,17 +8,88 @@ reclamation qualification alongside structural runtime work, before bootstrap
 completion. Final generated-device acceptance follows A2/A3. The
 [bootstrap protocol](BEND-SUBSET-STAGES.md#bootstrap-protocol-and-first-self-compiling-stage)
 defines A2/A3 and the independent conformance obligations. This plan supplies
-early runtime contracts; it does not claim that the structural compiler or any
-new runtime package is implemented. The six-package campaign remains paused.
+early runtime contracts and stage-specific evidence; it does not establish a
+complete owning heap or generated device runtime. The six-package campaign
+remains paused.
 
 Compiler Planning owns `src/`, structural fixtures and compiler/runtime
 integration. Existing package owners retain their published sources. No new
 package assignment, publication or memory-management strategy is selected here.
 
+## Qualification status: seed CPU and bounded Wasm
+
+Commit `b61df8d` adds [research/owned-store](../research/owned-store/README.md),
+owned by Compiler Planning. Its affine `Store<A:Type>` qualifies R2 ownership
+transitions and part of R4 on the seed's native and Bun backends. Reusable
+locators contain arena/slot/generation; extraction still consumes the Store.
+Failed put/full preserve both store and incoming payload. Take increments below
+the ceiling and permanently retires at the ceiling without wrapping.
+
+The [stored gate](../research/owned-store/receipts/gate.json) contains fourteen
+filled equations, 3,532 independent-model traces per backend, fifteen literal
+witnesses, six type-correct semantic mutant kills, five quantity controls and
+four max-1/max generation observations. The equations include generic cell and
+disposer laws plus singleton/concrete normalizations; they do not prove arbitrary
+Array/list refinement or general composition. The [handoff audit](runtime-support-owned-store-2026-09-26.json)
+rechecked source/artifact hashes and stored observations, including 84 referenced
+trust files. It reran no compiler, device or model-review command. Recorded Perch
+coverage is 188 checks; all-three-axis style acceptance remains unmet.
+
+Source inspection shows balanced-array access and a free-list scan for explicit
+put; alloc/take operate on the free-list head in addition to array access.
+Completion through capacity 4096 is not an empirical complexity bound, a speedup
+or evidence of constant-time destruction.
+
+Commit `7478516` adds [research/flat-store](../research/flat-store/README.md):
+a Bend-written instruction/module emitter produces a fixed **1,050-byte Wasm
+word store**. Native and Bun emit identical bytes with SHA-256
+`0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4`.
+Node executes that module; this is bounded R2/partial-R4 runtime qualification,
+not a change to the Knot frontend's enum-only emission profile.
+
+The [flat-store gate](../research/flat-store/receipts/gate.json) records 3,534
+instances and 13,621 status/full-logical-word observations per emitter lane,
+seven lifecycle checks, 24 literal word-codec/address/instruction probes and
+nine valid-module semantic mutant kills. Fifteen filled equations comprise five
+quantified codec/failure equations and ten concrete normalizations, with zero
+holes; there is no universal Wasm transition-refinement theorem. The
+[flat-store handoff audit](runtime-support-flat-store-2026-09-26.json) matches
+17 Bend sources and 92 referenced trust files, checks oracle/report identities,
+and independently validates the binary and its exports. It does not replay
+transitions: successful execution reports retain assertion summaries rather than
+every actual memory image. The recorded all-three-axis style bar remains unmet.
+
+Payloads are scalar words representing owners. The actual store has an eight-word
+header, four-word cells, capacity at most 4096 and a fixed two-page memory.
+Backing memory exists at instantiation; rejected capacity avoids logical
+initialization, not that backing reservation. Ordinary failed operations may
+change result registers while preserving logical store state. Pre-init operations
+and rejected initialization preserve every byte. The repaired reinit check freezes its
+before-image; a valid-module mutant returning the correct error but writing memory
+fails it. The earlier aliased-snapshot receipt is historical, not preservation
+evidence. General Type graphs, Data lifetime, global arena authority and GPU
+storage remain outside this qualification. All six goal milestones remain open.
+
+| Gate | Current evidence | Still required |
+| --- | --- | --- |
+| R1: layouts | Structural declaration/live-field semantics; fixed four-word cell addressing and a three-word locator utility. | Mixed-width compact field descriptors with edge roles, heterogeneous address arithmetic, and independent twelve-byte/adjacent-locator transport qualification. |
+| R2: owning storage | Generic Type ownership under the seed; actual Wasm word-payload transitions, preserved rejection and retirement against the Bend model. | General transition refinement, nested-object representation/ownership, actual GPU storage and compiler field lowering. |
+| R3: reusable Data | No shared heap lifetime qualification. | Holder/edge contract, surviving aliases, policy decision and suspended/partial-join roots. |
+| R4: freshness | Same-store generation rejection/retirement in seed CPU and bounded Wasm, max boundaries and three-U32 list round-trip. | Non-reused arena issuance, serialized ownership/restore and twelve-byte transport. Arena uniqueness is still a caller precondition; the word codec yields numbers, not extraction authority. |
+| R5–R7: tasks and reclamation | Earlier bounded adaptive-task/Slot probes remain separate evidence. | Generic owned captures, joins/frontiers, cleanup progress and reader-safe reclamation for this object store. |
+
+The [remaining dependency contracts](RUNTIME-DEPENDENCY-CONTRACTS.md) specify
+arena issuance and single-owner restore, the proposed three-word transport with
+checked layout arithmetic, and Data roots across suspension, partial joins and
+device readers. Their remaining probes are pending. Compiler Planning owns the
+flat-store implementation/documentation and subsequent compiler/runtime
+integration. The coordinator owns this dependency plan. No package release is
+changed and no ownership boundary is transferred by this handoff.
+
 ## Reference constraints and layout model
 
-A bounded pinned-reference pass of the 13 current structural fixtures produced
-the expected seven successes and six rejections. The
+A bounded pinned-reference pass of thirteen structural fixtures at the initial
+handoff produced the expected seven successes and six rejections. The
 [receipt](runtime-support-reference-2026-09-26.json) preserves source text/hashes,
 commands, diagnostics and Bend 2.0.29 reference identities. It confirms
 declaration acceptance, not runtime field allocation or Knot structural support.
@@ -56,11 +127,13 @@ where a later layout or analysis actually distinguishes cyclic groups.
 
 ## Structural matching and ownership
 
-The current [structural-term contract](../research/compiler-fields/SPEC.md) and
-working-copy code supply a further constraint on R1–R3. This is a source review
-of ongoing compiler work, recorded with hashes in the
-[field-contract review](runtime-support-fields-2026-09-26.json); no compiler or
-runtime gate was rerun for this handoff.
+The [structural-term contract](../research/compiler-fields/SPEC.md) supplies a
+further constraint on R1–R3. The original
+[field-contract review](runtime-support-fields-2026-09-26.json) records source
+inspection of then-uncommitted work, without rerunning compiler/runtime gates.
+The subsequent [structural milestone](../research/compiler-fields/README.md)
+records the owner's checker/evaluator evidence; it still establishes no owning
+heap or Wasm field lowering.
 
 Opening an affine constructor transfers its live fields into the branch. A use
 of the matched parent is a **reconstruction from those fields**, not another
@@ -121,7 +194,9 @@ of their underlying arrays, arithmetic, allocation or ownership operations.
 | [Symbols](../packages/symbols/INTERFACE.md) | Field, type and constructor spellings, with declaration IDs allocated in deterministic source order. | First-intern numeric IDs are not lexical identities, runtime capabilities, arena epochs or canonical cross-build names. |
 | [Source](../packages/source/INTERFACE.md) | Origin spans and diagnostics for invalid declarations, bad layouts and unsupported constructs. | Scalar offsets and caller-managed file identity; no runtime addressing, byte decoding or heap validation. |
 | [OutputBuilder](../packages/output_builder/INTERFACE.md) | Checked Wasm bytes, WGSL text, deterministic layout manifests. Existing compiler-private ULEB/nonnegative signed-LEB helpers remain usable. | Not a packed object buffer, checked record codec, general signed codec or allocator. |
-| [Affine Slot probe](../research/adaptive-tasks/slot.bend) and [task/device protocol](../research/adaptive-tasks/DEVICE-PROTOCOL.md) | Seed contracts for put/take, suspension, logical destinations and phase-separated execution. | Slot is singular; device records are tree-shaped and never reused. Indexed owners, shared Data lifetime, generic captures and safe reclamation remain unimplemented. |
+| [Owning store qualification](../research/owned-store/SPEC.md), not a published package | Bounded indexed Type owners, ordered free IDs, preserved failed insertion, take/release and generation retirement under the seed. | Supplied arena IDs, trusted internal constructors and synchronous operations; no packed target storage, shared Data lifetime or general heap refinement. |
+| [Flat Wasm store qualification](../research/flat-store/SPEC.md), not a published package | Actual init/put/alloc/take/release for bounded scalar words, with an independent Bend model and whole-logical-state/canary checks. | Word proxies do not establish generic Type ownership in Wasm. Exported memory/host calls are privileged; no mixed fields, byte-locator transport, restore, shared Data or GPU store. |
+| [Affine Slot probe](../research/adaptive-tasks/slot.bend) and [task/device protocol](../research/adaptive-tasks/DEVICE-PROTOCOL.md) | Seed contracts for put/take, suspension, logical destinations and phase-separated execution. | Slot is singular; device records are tree-shaped and never reused. They do not extend the new CPU store to shared Data, generic captures or safe reclamation. |
 
 Wrapping an address in a `Data` record and putting it in Vec or TermStore does
 not close these gaps. The object state and authority to transfer/drop its contents
@@ -129,9 +204,11 @@ must be specified and validated separately.
 
 ## Missing contracts and smallest acceptance probes
 
-The probes below are **proposed**, not completed tests. Implement the independent
-state/ownership model in Bend. Begin with a bounded sequential transition model
-and generated Wasm. Qualify device layouts/lifetimes with focused device probes
+The table defines end-to-end acceptance requirements. R2 and part of R4 have the
+seed CPU and bounded Wasm word-store evidence above; general heap, field integration
+and GPU refinements remain open. Remaining runtime probes are **proposed**, not
+completed tests. Keep the independent state/ownership model in Bend and carry its
+observations into generated Wasm. Qualify device layouts/lifetimes with focused device probes
 alongside this work; later require the same observations from compiler-generated
 WGSL. Handwritten qualification is not that final gate. Host code may dispatch,
 decode and compare but must not implement the oracle.
@@ -218,15 +295,16 @@ R3 and R7 on the candidate before adopting it. No choice is made in this plan.
 
 ## Increment order, law quality and efficiency
 
-1. Finish declaration/type/quantity metadata and R1's live-slot projection in the
-   existing compiler. Specify versioned target layouts separately from source
-   declaration order. Keep recursive kinds/name resolution independent from heap
-   strategy.
-2. Implement a bounded object/handle model and the R2–R4 witnesses, then compile
-   one constructor/deconstruction/drop path to Wasm. Include explicit allocation
-   failure and preserved ownership. Qualify handle/record encoding and lifetime
-   premises against the device protocol now. Select a lifetime policy only after
-   the decision gate.
+1. Carry declaration/type/quantity metadata and R1's live-slot projection from the
+   existing compiler into checked packed records. Specify versioned target layouts
+   separately from source declaration order. Keep recursive kinds/name resolution
+   independent from heap strategy.
+2. Extend the qualified CPU/flat-Wasm word-store observations to checked mixed-width
+   fields and the separate twelve-byte locator transport, then compile one
+   constructor, deconstruction and drop path. Qualify GPU storage alongside this
+   work. Preserve failure ownership and generation/error behavior. Distinct supplied
+   arena IDs may remain an explicit bounded premise; they do not close issuer/restore
+   qualification. Select a Data lifetime policy only after the decision gate.
 3. Add structural recursion with explicit continuation/drop work and R5–R7.
    Keep the current independent evaluator and existing enum controls. Prototype
    finite storage first without presenting its size as a production heap bound.
@@ -257,8 +335,10 @@ Keep type-level negative fixtures distinct from runtime stale-handle failures.
 Quantified laws, bounded exploration, concrete normalizations and device runs
 remain different claims. A constant success, always-empty store, reversed join,
 or drop-all collector must fail the probe set. A zero-capacity failure law alone
-does not establish useful storage. None of these proposed runtime probes has
-been run by this documentation increment.
+does not establish useful storage. Seed CPU and flat Wasm evidence close only the
+bounded obligations listed above. New issuer/restore, mixed-field/byte-transport
+and Data-root/device probes remain unrun; this documentation audit does not execute
+store transitions.
 
 Efficiency targets need backend evidence: field projection should traverse the
 descriptor once; indexed lookup/handle validation should not scan the whole heap;
@@ -276,8 +356,15 @@ The initial increment added this plan and the thirteen-case reference receipt
 and linked them from the campaign notes. The structural-matching follow-up adds
 the source-review record and the implications above. Its working-copy sources
 remain owned by Compiler Planning; hashes identify the inspected versions, not a
-validated compiler build. Neither documentation increment changes a package,
+validated compiler build. These documentation increments change no package,
 compiler or probe source.
+
+The owning-store follow-up audits stored evidence at `b61df8d` and adds concrete
+remaining dependency contracts. The flat-store follow-up records `7478516` and
+audits its bounded Wasm qualification without treating words as a general owning
+heap. Mixed fields, byte transport, GPU storage, arena restore and general
+lifetime/reclamation gates remain open.
 Perch is not applicable: no owned executable declaration or law packet changed,
-so no model request or semantic-pass claim is made. Runtime probes, policy
-selection, compiled allocation and generated GPU validation remain future work.
+so no new model request or semantic-pass claim is made. Remaining runtime probes,
+policy selection, general compiled allocation and generated GPU validation remain
+future work.

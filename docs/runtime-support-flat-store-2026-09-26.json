@@ -1,0 +1,359 @@
+{
+  "schema": 1,
+  "audited_utc": "2026-09-27T01:53:24.094205+00:00",
+  "checkpoint": "74785162b33e8a7daa7eaece25dc32ea1bfcc5d4",
+  "scope": "Identity and stored-evidence audit; independent Wasm validation/export inspection only, no module instances or store-transition replay.",
+  "owner": "Compiler Planning; flat-store implementation and its documentation remain owner-controlled.",
+  "source_sha256": {
+    "research/flat-store/PROOF.bend": "646685770ca7e7fc092a79b5dc8af8ba88c6b1b80c37cc6dd8677c438a0ba1f9",
+    "research/flat-store/LAWS.bend": "3602fe79b1bccaef0b8f8dbb088d5c2226ac6c92cc1f77031dad30d75c77b6c6",
+    "research/flat-store/module.bend": "b38c0c098132daaed1044be271ca0087050f59a2d443b26a09d5f141fc5ddb2e",
+    "research/flat-store/layout.bend": "1c7ec2e03e4158593aa3d108ac7d97c3688a515ff1da1c0bebc3f2ff4cb976b6",
+    "research/flat-store/oracle.bend": "8fb1e430b9a5a5e13f058fa88532e4758fcf63568de95e1f85a374b25c5d6e7a",
+    "research/flat-store/probes.bend": "2e617b8aa430354f56ca94fbaa4dc9c25dd928c4e5015d8ab149189c386947b8",
+    "research/flat-store/runtime.bend": "586c23498e231525743c4882d2162ef20a4d31c02c4fb60bd33446c4c6a165ac",
+    "research/flat-store/assembly.bend": "ca0461b3114329cc0523715e17293a375f532fbc7f0b08ce70e2cf833dffcf2d",
+    "research/flat-store/emit-cli.bend": "56dd00d5098461bdac42018cab3f2b322580ad8be76c62a8734d684a18851ab7",
+    "research/owned-store/conformance.bend": "7519593529c2690b0ac65eb8a26c11ef3655ad7a0c87877b2e17e08e59878288",
+    "research/owned-store/PROOF.bend": "ac0effe0eef99f90316b737b74c9884b003d2b46d810e8fc68a7ecb33bad2b2a",
+    "research/owned-store/observe.bend": "d3fc11af358d653d281d34388fe625bb3a6af0362fc6950dc6625d1251aa4910",
+    "research/owned-store/LAWS.bend": "9859e42fce02b73eba69e035ecc957bf69f31167b846f891d7a60c7ffb4496f8",
+    "research/owned-store/protocol.bend": "fac9b00af588e61dd34ca257a860b41ae51b7d8e904c669de40a43127dc4d989",
+    "research/owned-store/bounds.bend": "0f665d9b9d822ba6e9d45ff60eb4518e5b04c965ebc934ab00e36f5fa8b0238e",
+    "research/owned-store/model.bend": "84714c47995b76d9902e09e600b77ebb66d157bfcb864dee813b546fe8a980f1",
+    "research/owned-store/store.bend": "80f6addb26deb38d46a4abacc91e9df59f734437e4c34598919b0c4f4ca15af5"
+  },
+  "harness_sha256": {
+    "research/flat-store/check.py": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69",
+    "research/flat-store/run-wasm.mjs": "019db009871857ab89c7abde01eb47156c63adc48c26fa8946c1a5bcace38ad2"
+  },
+  "receipt_sha256": {
+    "research/flat-store/receipts/gate.json": "82c8d7f4ff78b76e27310418b1a6634129244d02f1889681cc24860c68b0a2f3",
+    "research/flat-store/receipts/trust.json": "0f58a1929af3ad54083ed9be1705f08d6231b52618e3514e2c8e4e98856bfd23",
+    "research/flat-store/receipts/native.wasm": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+    "research/flat-store/receipts/store.wat": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+    "research/flat-store/receipts/native-wasm.json": "ebb115eb4ecf67b94c203fc294c59ebfe7a39f5aa32e0c8fd196498b321a8010",
+    "research/flat-store/receipts/bun-wasm.json": "ebb115eb4ecf67b94c203fc294c59ebfe7a39f5aa32e0c8fd196498b321a8010",
+    "research/flat-store/receipts/native-oracle.txt.gz": "d482e18d1acc36d7de5c0f1f43795f771e207dcd7feaf67750a5d6ddb2dfc13b",
+    "research/flat-store/receipts/bun-oracle.txt.gz": "02ae10073be4f312fe05214163a4bcb56d057a025d4060a9760d77510078d36e",
+    "research/flat-store/receipts/style.json.gz": "3aa0a6c053f2a14a1688a0fa55fb5320cc9afc1a8f5218527713f7698e8c8572",
+    "research/flat-store/receipts/initial-gate-lifecycle-gap.json.gz": "f09055557db0401ac1ff77b54ef185d3dffc1eab945ed79e3d1417d94d7bb3f8",
+    "research/flat-store/receipts/mutant-reuse-generation.json": "5b82110ea9dca6b73a8ecc48587c7fb19dc439e8a35549a68f4a10a08c71c8b0",
+    "research/flat-store/receipts/mutant-accept-padding.json": "f39bec77cbca0c9a7cf7e21375550102e67d43c58c30052b161841f3cc60a7b3",
+    "research/flat-store/receipts/mutant-overwrite-on-rejection.json": "54a1848faf41d25b2605a96ad1d9acef96f3c8da2b5285bce0730fee84bcd8bb",
+    "research/flat-store/receipts/mutant-ignore-arena.json": "4d927ff0d912587ebd01b2f06fcc0dac550864960b0ec160783110489cfd283b",
+    "research/flat-store/receipts/mutant-wrap-at-ceiling.json": "09353e095109213f8497a76d7c4edad619a6297879e49f845929edd8ae192001",
+    "research/flat-store/receipts/mutant-lose-free-tail.json": "3f78c4fd50db2d9ca5d2e80eb334cf1feda981068ac098c19edd4cfbb07db98d",
+    "research/flat-store/receipts/mutant-erase-allocated-payload.json": "19d5059758d41db1fdaf54c16adffb1c0cad141fc7b11447db76ce72d5c985b3",
+    "research/flat-store/receipts/mutant-zero-sentinel.json": "c545e83a8f3cbbbdb5e58e5d4ea1d7c3091ba400fa1909da980cd31d5c939385",
+    "research/flat-store/receipts/mutant-write-on-reinit.json": "6ba495d3fe1145abfd9cb032e2b7fcef42ef21cdc26fe0da5d759da7489df597"
+  },
+  "module": {
+    "bytes": 1050,
+    "sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+    "native_bun_emitter_bytes_equal": true,
+    "independent_metadata_validation": {
+      "node": "v22.22.3",
+      "valid": true,
+      "imports": [],
+      "exports": [
+        {
+          "name": "init",
+          "kind": "function"
+        },
+        {
+          "name": "put",
+          "kind": "function"
+        },
+        {
+          "name": "alloc",
+          "kind": "function"
+        },
+        {
+          "name": "take",
+          "kind": "function"
+        },
+        {
+          "name": "release",
+          "kind": "function"
+        },
+        {
+          "name": "memory",
+          "kind": "memory"
+        }
+      ],
+      "instances_created": 0
+    }
+  },
+  "trust": {
+    "referenced_files_verified": 92,
+    "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "holes_by_entry": {
+      "research/flat-store/PROOF.bend": 0,
+      "research/flat-store/emit-cli.bend": 0,
+      ".local/flat-store/oracle-entry.bend": 0,
+      "research/flat-store/probes.bend": 0
+    }
+  },
+  "proof_scope": {
+    "filled_equations": 15,
+    "quantified_codec_or_failure_equations": 5,
+    "concrete_normalizations": 10,
+    "universal_wasm_transition_refinement": false,
+    "compiler_rerun": false
+  },
+  "stored_execution_reports": {
+    "native": {
+      "status": "pass",
+      "node": "v22.22.3",
+      "module_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+      "oracle_sha256": "fa36275b9b47e957442957c4fa9e86d366246f8bed6eada70bc0639479d43e9e",
+      "observations": 13621,
+      "instances": 3534,
+      "installed_boundary_states": 2,
+      "lifecycle_checks": 7,
+      "imports": [],
+      "exports": [
+        {
+          "name": "init",
+          "kind": "function"
+        },
+        {
+          "name": "put",
+          "kind": "function"
+        },
+        {
+          "name": "alloc",
+          "kind": "function"
+        },
+        {
+          "name": "take",
+          "kind": "function"
+        },
+        {
+          "name": "release",
+          "kind": "function"
+        },
+        {
+          "name": "memory",
+          "kind": "memory"
+        }
+      ]
+    },
+    "bun": {
+      "status": "pass",
+      "node": "v22.22.3",
+      "module_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+      "oracle_sha256": "fa36275b9b47e957442957c4fa9e86d366246f8bed6eada70bc0639479d43e9e",
+      "observations": 13621,
+      "instances": 3534,
+      "installed_boundary_states": 2,
+      "lifecycle_checks": 7,
+      "imports": [],
+      "exports": [
+        {
+          "name": "init",
+          "kind": "function"
+        },
+        {
+          "name": "put",
+          "kind": "function"
+        },
+        {
+          "name": "alloc",
+          "kind": "function"
+        },
+        {
+          "name": "take",
+          "kind": "function"
+        },
+        {
+          "name": "release",
+          "kind": "function"
+        },
+        {
+          "name": "memory",
+          "kind": "memory"
+        }
+      ]
+    }
+  },
+  "independent_oracle_audit": {
+    "rows_per_lane": 13621,
+    "instance_ids_per_lane": 3534,
+    "installed_boundary_rows_per_lane": 2,
+    "rejected_initializations_with_empty_logical_image_per_lane": 2,
+    "same_native_bun_oracle": true
+  },
+  "stored_literal_probes": {
+    "per_lane": 24,
+    "both_stdout_lists_match_fixed_probes": true,
+    "scope": "Word-list locator codec, fixed address and instruction encoding probes; not independent twelve-byte adjacent-locator transport."
+  },
+  "mutants": [
+    {
+      "name": "reuse-generation",
+      "receipt": "mutant-reuse-generation.json",
+      "module_sha256": "465933171d41b13dd5d759e6a2531285e8e57bc9e7a2d1b3113ab67e952d598a",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "take"
+    },
+    {
+      "name": "accept-padding",
+      "receipt": "mutant-accept-padding.json",
+      "module_sha256": "4e2e046d1458e7d82e32f1454f7e75aba66298148877ada4e080870323a963bb",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "status mismatch",
+      "operation": "put"
+    },
+    {
+      "name": "overwrite-on-rejection",
+      "receipt": "mutant-overwrite-on-rejection.json",
+      "module_sha256": "00bafccf2f4da4c5e565d1480f07dc507ac7eaf969598048e4f29eab94c5546c",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "put"
+    },
+    {
+      "name": "ignore-arena",
+      "receipt": "mutant-ignore-arena.json",
+      "module_sha256": "f49be5f9e8234fb4c16a0088baed08cee960b0ff2936042fa7e90557d9d5fb81",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "status mismatch",
+      "operation": "take"
+    },
+    {
+      "name": "wrap-at-ceiling",
+      "receipt": "mutant-wrap-at-ceiling.json",
+      "module_sha256": "b60ced3d4b64004937637f2d4645dd75f79285438e42a5dff6fbfe79a3a86422",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "release"
+    },
+    {
+      "name": "lose-free-tail",
+      "receipt": "mutant-lose-free-tail.json",
+      "module_sha256": "2fbe81dbb22e49eada7bcb10ddae3d5d82149a4c537a6c070da40b64fbe9cacf",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "take"
+    },
+    {
+      "name": "erase-allocated-payload",
+      "receipt": "mutant-erase-allocated-payload.json",
+      "module_sha256": "24803af1180e337850ae8d4bf7b4166b367f8c172c8eb51b7e198320f3187979",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "put"
+    },
+    {
+      "name": "zero-sentinel",
+      "receipt": "mutant-zero-sentinel.json",
+      "module_sha256": "0676b0f2d15da0ec3feddfece3e3ec0b0738d74e4ccac5d73b0c519018c18499",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "word mismatch",
+      "operation": "init"
+    },
+    {
+      "name": "write-on-reinit",
+      "receipt": "mutant-write-on-reinit.json",
+      "module_sha256": "9b2f5f00f805cdc2b2842c2c510d39524ed9fae0503c7fd87cc97837e2e4f17f",
+      "command_exits": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "assertion": "unexpected memory write",
+      "operation": "reinit"
+    }
+  ],
+  "lifecycle_guard": {
+    "historical_aliased_snapshot_receipt_excluded": true,
+    "write_on_reinit_reports_correct_error_and_memory_mismatch": true
+  },
+  "style": {
+    "declarations": 106,
+    "meets_all": 0,
+    "disposition": "attention",
+    "by_axis": [
+      {
+        "id": "maximally_big_brain",
+        "title": "Maximally big brain",
+        "meets_target": 57,
+        "below_target": 29,
+        "uncertain": 20
+      },
+      {
+        "id": "delightful_to_read",
+        "title": "Delightful to read \u2014 high dopamine",
+        "meets_target": 44,
+        "below_target": 21,
+        "uncertain": 41
+      },
+      {
+        "id": "highly_memetic",
+        "title": "Highly memetic",
+        "meets_target": 0,
+        "below_target": 101,
+        "uncertain": 5
+      }
+    ],
+    "new_requests": 0
+  },
+  "audit_limits": [
+    "Successful runtime reports retain assertion summaries, not every actual memory image. This audit matches their module/oracle/harness/source identities and counts; it does not replay the transitions.",
+    "Stored type/proof, lifecycle, semantic mutation and style checks were not rerun.",
+    "Word payloads stand for owners. No nested Type graph, shared Data, task root, GPU storage or general reclamation refinement is established."
+  ],
+  "remaining": [
+    "mixed-width compact field descriptors and edge roles",
+    "twelve-byte little-endian and adjacent-locator transport",
+    "global arena issuance and single-owner restore",
+    "Data roots across suspension, joins and device readers",
+    "Wasm field lowering and all six goal milestones"
+  ],
+  "package_publication": "PAUSED",
+  "new_runtime_execution": false
+}
