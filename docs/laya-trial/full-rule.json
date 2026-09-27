@@ -1,0 +1,284 @@
+{
+  "model": {
+    "repo": "convaiinnovations/laya",
+    "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851"
+  },
+  "rule": {
+    "name": "perf-growing-prefix-copy",
+    "where": "**/*.bend",
+    "each": "method",
+    "min": 70,
+    "gate": false,
+    "ensure": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect loops or recursion that build a list or string. A growing accumulated prefix is not traversed or copied on every iteration by append, concatenate, or an equivalent visible helper. Such repeated prefix copying makes linear output construction quadratic. Prepending then reversing once, one final flatten, constant-time tree joins, and copying each disjoint chunk once are allowed. In Bend Base, List.append and String.append traverse their first argument. Appending a fixed-size first argument is allowed. Require a visible growing first argument and repetition; do not infer costs of unknown helpers or flag an isolated append. If absent, this rule holds.\n"
+  },
+  "rows": [
+    {
+      "label": "clean",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a",
+      "state": {
+        "name": "collect",
+        "source": "def collect(xs: List<&2,U32>, acc: List<&2,U32>) -> List<&2,U32>:\n  match xs:\n    case Nil{}: List.reverse(&2,U32,acc)\n    case h <> t:\n      collect(t,U32.add(U32.mul(h,3),1) <> acc)",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 9,
+            "end_line": 10,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  collect(xs,Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.reverse",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": 487,
+      "head_tokens": 201,
+      "elapsed_ms": 1561.0694580245763,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "noul": 0.8145,
+            "confidence": 0.8145,
+            "answer_confidence": 0.8145,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 487,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "broken",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499",
+      "state": {
+        "name": "collect",
+        "source": "def collect(xs: List<&2,U32>, acc: List<&2,U32>) -> List<&2,U32>:\n  match xs:\n    case Nil{}: acc\n    case h <> t:\n      collect(t,List.append(&2,U32,acc,[U32.add(U32.mul(h,3),1)]))",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 9,
+            "end_line": 10,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  collect(xs,Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.append",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": 488,
+      "head_tokens": 201,
+      "elapsed_ms": 50.482582999393344,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "noul": 0.8211,
+            "confidence": 0.8211,
+            "answer_confidence": 0.8211,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 488,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "heldout-clean",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "source_sha256": "145b6a452e48d8a9a211c56f3e2a1edb9408c7be8662826215b6342a16b2746e",
+      "state": {
+        "name": "solve",
+        "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  List.concat(&2,U32,chunks(xs))",
+        "calls": [
+          {
+            "name": "chunks",
+            "line": 3,
+            "end_line": 6,
+            "source": "def chunks(xs: List<&2,U32>) -> List<&2,List<&2,U32>>:\n  match xs:\n    case Nil{}: Nil{}\n    case h <> t: [U32.add(U32.mul(h,3),1)] <> chunks(t)"
+          }
+        ],
+        "called_by": [],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.concat",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.add",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "U32.mul",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": 480,
+      "head_tokens": 201,
+      "elapsed_ms": 178.85325010865927,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "noul": 0.7542,
+            "confidence": 0.7542,
+            "answer_confidence": 0.7542,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 480,
+          "output_tokens": 0
+        }
+      }
+    },
+    {
+      "label": "heldout-broken",
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "source_sha256": "6fb1a7ae3b0a6420d11455df5b1872a1900e983ceebccfd7805c7c11ce8b667e",
+      "state": {
+        "name": "assemble",
+        "source": "def assemble(parts: List<&2,List<&2,U32>>, result: List<&2,U32>) -> List<&2,U32>:\n  match parts:\n    case Nil{}: result\n    case h <> t: assemble(t,List.append(&2,U32,result,h))",
+        "calls": [],
+        "called_by": [
+          {
+            "name": "solve",
+            "line": 13,
+            "end_line": 14,
+            "source": "def solve(xs: List<&2,U32>) -> List<&2,U32>:\n  assemble(chunks(xs),Nil{})"
+          }
+        ],
+        "laws": [],
+        "datatypes": [],
+        "imports": [
+          {
+            "module": "Base",
+            "alias": null
+          }
+        ],
+        "context_notes": {
+          "basis": "working-tree",
+          "unresolved": [
+            {
+              "name": "U32",
+              "reason": "unresolved-or-builtin"
+            },
+            {
+              "name": "List.append",
+              "reason": "unresolved-or-builtin"
+            }
+          ],
+          "truncated": false
+        }
+      },
+      "tokens": 440,
+      "head_tokens": 201,
+      "elapsed_ms": 133.78174998797476,
+      "result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "prefix": {
+            "type": "noul",
+            "noul": 0.7745,
+            "confidence": 0.7745,
+            "answer_confidence": 0.7745,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 440,
+          "output_tokens": 0
+        }
+      }
+    }
+  ]
+}

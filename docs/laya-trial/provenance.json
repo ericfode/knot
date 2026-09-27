@@ -1,0 +1,350 @@
+{
+  "model": {
+    "repo": "convaiinnovations/laya",
+    "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+    "files_sha256": {
+      "encoder/config.json": "bf3ab80598fdccf414855a2ce80f22859e4492d06ca8a62ddd1cfb63972f8979",
+      "model.safetensors": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+      "rl_agent_config.json": "ae287b56bbcf5f8c4f4541ae9dfd00c914c4c48b940b8398c3058af37ba92bbd",
+      "tokenizer/tokenizer.json": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+      "tokenizer/tokenizer_config.json": "50044de60daaa73df97d262e15a40d4faf0160e7d742df64b377877a1320dd12"
+    }
+  },
+  "python": "3.14.3",
+  "gate_lock_sha256": "be943077833ee612b6f8ac9b56bc5fdb1af66971c04830b07976e8ca312a6fbb",
+  "oracle": "tests/perch-performance/evidence/controls.json",
+  "oracle_sha256": "6901e56bd04c8eb5fbc122684915f65996db423932b3494d9bd03ebc140e3d66",
+  "oracle_rerun": false,
+  "controls": [
+    {
+      "target": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend::collect",
+      "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+            "source_sha256": "3b0a3bc2e28e49571c68086b23c182240d81fb583eca6be4cbee477d9539db3a"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+            "name": "List.reverse",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/clean/main.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": true,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 4108
+    },
+    {
+      "target": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend::collect",
+      "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+            "source_sha256": "b33ef2f38ac247c6a60b51eda0fa14e54f555a6f8584c79bc2e1fee03b727499"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/baseline/main.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": false,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 1051656
+    },
+    {
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend::solve",
+      "source_sha256": "145b6a452e48d8a9a211c56f3e2a1edb9408c7be8662826215b6342a16b2746e",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend",
+            "source_sha256": "145b6a452e48d8a9a211c56f3e2a1edb9408c7be8662826215b6342a16b2746e"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend",
+            "name": "List.concat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/clean.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": true,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 8201
+    },
+    {
+      "target": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend::assemble",
+      "source_sha256": "6fb1a7ae3b0a6420d11455df5b1872a1900e983ceebccfd7805c7c11ce8b667e",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend",
+            "source_sha256": "6fb1a7ae3b0a6420d11455df5b1872a1900e983ceebccfd7805c7c11ce8b667e"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/growing-prefix-copy/fresh-held-out/broken.bend",
+            "name": "List.append",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": false,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 1053706
+    },
+    {
+      "target": "tests/perch-performance/cases/invariant-summary/clean/main.bend::annotate",
+      "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+            "source_sha256": "99d76816f03345a74c478753dae71c382ab5afb944d71063f0f97bc29935933d"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/clean/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": true,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 3080
+    },
+    {
+      "target": "tests/perch-performance/cases/invariant-summary/baseline/main.bend::annotate",
+      "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+            "source_sha256": "5ee310be10830be3e0b1baf5ef5367a55d0663c93dc574fe0010aa47327cf21a"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/invariant-summary/baseline/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": false,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 1051655
+    },
+    {
+      "target": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend::walk",
+      "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+            "source_sha256": "83ea830b50cd376489b50af55c3ca95813502f84906ee18743b997814acd1d25"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/clean/main.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": true,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 2055
+    },
+    {
+      "target": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend::walk",
+      "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "source_sha256": "38d2cd7de95abfabde6065cd1844ab1f1c324c19be61b2e253f5a0e37739a81e"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "name": "Nat",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "name": "List.get",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-performance/cases/indexed-linked-list/baseline/main.bend",
+            "name": "U32.from_nat",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      },
+      "expected_performance": false,
+      "historical_oracle_hash_match": true,
+      "work_at_1024": 534024
+    }
+  ]
+}
