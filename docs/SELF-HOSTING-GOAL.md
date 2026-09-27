@@ -46,7 +46,9 @@ the existing pilot's attempt budget. The
 [first-family packet](../research/compiler-style/hillclimb/START-HERE.md) now selects
 owned time slicing, pins its source and gate inputs, and fixes the semantic
 transfer contract. Next prepare a general full-state comparison/transfer gate and
-reconcile the existing pilot evidence with its owner before new candidates.
+record successor scope with the active style owner before new candidates. The
+old pilot's evidence is reconciled and its unaccepted candidate preserved as a
+snapshot; main retains the accepted runner.
 Establish concrete reading preferences before model ratings; preserve independent
 semantic gates and the three style targets. The existing scoped pilot remains
 unresolved and the wider campaign

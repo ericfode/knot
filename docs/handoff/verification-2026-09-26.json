@@ -1,0 +1,55 @@
+{
+  "schema": "knot.main-handoff-verification.v1",
+  "at": "2026-09-27T05:23:08.277879+00:00",
+  "main_checkpoint_before_handoff_document": "668e44719f759e877491fc65ea2aa78e03c8e5e2",
+  "tracked_and_nonignored_untracked_status_before_handoff_document": "clean",
+  "goal_status_observed_from_app": "paused",
+  "goal_status_changed": false,
+  "checkpoints": {
+    "runtime_contracts": "f1763e7",
+    "local_model_owner": "f9412ae",
+    "preserved_runner_pilot": "668e447",
+    "memetic_starting_packet": "707a346"
+  },
+  "root_checks": {
+    "runtime_recorded_file_hashes_matched": 52,
+    "runtime_markdown_links_checked": 36,
+    "pilot_preregistered_input_hashes_matched": 19,
+    "pilot_seed_hashes_matched": 4,
+    "pilot_prior_disposition_receipt_hashes_matched": 12,
+    "pilot_driver_hashes_matched": 2,
+    "pilot_json_files_parsed": 21,
+    "pilot_and_plan_markdown_links_checked": 40,
+    "pilot_python_ast": "passed",
+    "pilot_javascript_syntax": "node --check passed",
+    "production_runner": "byte-identical to accepted baseline",
+    "retained_candidate_patch": "git apply --check --directory=research/adaptive-tasks passed",
+    "untracked_files_credential_pattern_scan": "45 files; no recognized token/private-key patterns found"
+  },
+  "historical_diff_whitespace_exception": "candidate-first.diff line 15 contains the required single-space unified-diff context line. Other staged pilot paths pass git diff --check.",
+  "owner_report": {
+    "thread": "Swap Perch to Local Model",
+    "thread_id": "01a0e088-e79e-7e52-ad0b-793ec51cd43b",
+    "commit": "f9412ae",
+    "status_observed": "idle / turn completed",
+    "focused_input_integrity_tests_reported_passed": 35,
+    "tests_rerun_by_handoff_coordinator": false,
+    "owner_reports_no_trial_processes_remaining": true,
+    "shared_checkout_writes_held_for_handoff": true,
+    "report": "docs/local-models-2026-09-26.md"
+  },
+  "source_sha256": {
+    "research/adaptive-tasks/task.bend": "f0e822cdf6fd5d59d6b3069c750ef74995b58dcd3004e188b9980e1e07f82ca5",
+    "research/adaptive-tasks/style-pilot/adaptive-run-1/candidate-first.bend.snapshot": "03d0139685cd66110a70101b6d74f5f903ab6cdc545f5735ed243314003ffb81"
+  },
+  "new_compiler_runtime_device_runs_by_handoff_coordinator": 0,
+  "new_provider_requests_by_handoff_coordinator": 0,
+  "remote_configured": false,
+  "push_performed": false,
+  "limits": [
+    "Identity, syntax and documentation checks are distinct from re-executing historical gates.",
+    "The historical runner review uses a different rubric from current main and does not establish current style acceptance.",
+    "Separate owner worktrees remain outside this clean-main checkpoint.",
+    "The final handoff-document commit is found with git log -1 -- docs/HANDOFF.md; post-commit cleanliness is checked separately."
+  ]
+}

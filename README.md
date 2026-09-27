@@ -2,6 +2,9 @@
 
 Design workspace for a Bend 2 compiler implemented in Bend 2.
 
+[Current handoff](docs/HANDOFF.md): clean-main checkpoint, memetic starting point,
+next comparison gate, verification limits and owner worktrees.
+
 ## Requested outcome
 
 > create a whiteboard for us to design a bend compiler in bend.
