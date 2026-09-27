@@ -17,24 +17,15 @@ def checked(result: Result<S.Error,C.Book>, next: C.Book -> IO(Unit)) -> IO(Unit
     case Fail{error}: fail(error)
     case Done{book}: next(book)
 
-# The public parsed entry checks only the root; residual tokens are ignored.
-def parsed_root(value: P.Parsed) -> S.Node:
-  match value:
-    case P.Parsed{root,rest}: root
-
 def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):
-  match limits:
-    case Limits{chars,parser,+checker}:
-      checked(S.bind(P.Parsed,C.Book,result,tree => K.check(checker,parsed_root(tree))),next)
+  match limits result:
+    case Limits{chars,parser,checker} Done{P.Parsed{root,rest}}: checked(K.check(checker,root),next)
+    case _ Fail{error}: fail(error)
 
 def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
-    case Limits{chars,+parser,+checker}:
-      checked(
-        S.bind(List<&2,S.Token>,C.Book,L.tokenize(chars,text),tokens =>
-          S.bind(P.Parsed,C.Book,P.parse(parser,tokens),tree =>
-            K.check(checker,parsed_root(tree)))),
-        next)
+    case Limits{chars,+parser,checker}:
+      parsed(limits,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(chars,text),tokens => P.parse(parser,tokens)),next)
 
 def read_result(limits: Limits, result: Result<&1,&1,U32 & String,String>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match result:

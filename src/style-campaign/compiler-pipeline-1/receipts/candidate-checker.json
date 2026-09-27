@@ -1,0 +1,2270 @@
+{
+  "date": "2026-09-27T17:12:39.808781+00:00",
+  "status": "passed",
+  "scope": "Resolved syntax and semantic checking; no evaluator or Wasm emitter",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "inputs": {
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+    "src/SPEC.md": "f30ec6beb9d60a2b27cea0d328fd0544b27cdc3f874374ff101a428cc1eb697e",
+    "tests/compiler-checker/cases.json": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
+    "tests/compiler-checker/make-manifest.py": "d34e65a775c1dafef124cc441579e02472a9bee506d738b047db3acb5bdb13d3",
+    "tests/compiler-checker/bounds.bend": "b9491adc3146f51ab9ce87274c3c0cbc39f5082b522099c969f8b4edbeba6be8",
+    "tests/compiler-checker/check.py": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+    "tests/subsets/s1/affine-reuse.bend": "10ca59993f373c7598a4962b82e46708c89c5bee222d52c4a8ee0e5d8ae46b6c",
+    "tests/subsets/s1/constructor-arity.bend": "8e004fc31333088b84bd9b72ea59d466d247afd1751698b17c2ff1fd4a07f9a4",
+    "tests/subsets/s1/constructor-mismatch.bend": "69c0a6495de5de23fb46f5f58fbad817c060f811f8f4300002f92f0ae65e71d5",
+    "tests/subsets/s1/data-reuse.bend": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+    "tests/subsets/s1/erased-forward.bend": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+    "tests/subsets/s1/erased-live.bend": "de551e3db9e82200ea5b409cce9e1b4099062026d2c4972ff6561eb46e54d03e",
+    "tests/subsets/s1/flag.bend": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+    "tests/subsets/s1/forward-call.bend": "f46ecf0b6433eaee50ce2558855704abf752e1aa500ff4e5b8ffddf25baf213a",
+    "tests/subsets/s1/forward-type.bend": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+    "tests/subsets/s1/missing-arm.bend": "160b08f6ab6b1919b2003d1d1def7d17e8d81ba94e076b9b2c789acaa94db330",
+    "tests/subsets/s1/nested-match.bend": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+    "tests/subsets/s1/shadowing-type.bend": "2960eb8870b605fe8c1c91a18e3d2c4bdf862f2545cb828b978bf4ff6232264a",
+    "tests/subsets/s1/shadowing.bend": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+    "tests/subsets/s1/unannotated-constructor.bend": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020",
+    "tests/compiler-checker/fixtures/branch-duplicate.bend": "1d3cb783f5d51fe9ffd4b5b72affb486873a15f884a9758b82ee958efce44425",
+    "tests/compiler-checker/fixtures/branch-maximum.bend": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+    "tests/compiler-checker/fixtures/call-arity.bend": "02aee651f9db068d36ef57d95efe101ef40e916c5b9187c24099a536983a7c94",
+    "tests/compiler-checker/fixtures/data-affine-reuse.bend": "31f01662702e4c65471bd86fd5143ec17a6209a93ea7cbbaea09e9200a01ddd1",
+    "tests/compiler-checker/fixtures/data-argument.bend": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+    "tests/compiler-checker/fixtures/data-promote.bend": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+    "tests/compiler-checker/fixtures/duplicate-arm.bend": "31b211aaba2a981b225d17a17eac970926c7833edfef9e3d711f2d0f4fb4289f",
+    "tests/compiler-checker/fixtures/duplicate-constructor.bend": "14a7890d178f4241e3895612448e736d58c3aa0e2078fad0f0b7150488eb6ad4",
+    "tests/compiler-checker/fixtures/duplicate-global.bend": "40fa03b65177ab33127d174b6dd45c5368cac55b4ef3e5c8e560a9d975861e7e",
+    "tests/compiler-checker/fixtures/duplicate-parameters.bend": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+    "tests/compiler-checker/fixtures/erased-affine-copy.bend": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+    "tests/compiler-checker/fixtures/erased-binding.bend": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895",
+    "tests/compiler-checker/fixtures/erased-forward-call.bend": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce",
+    "tests/compiler-checker/fixtures/erased-free-name.bend": "10fc5882fac28624cc195f3f8461c99c4bcda2cb1b9ce2d94197bfb07985b531",
+    "tests/compiler-checker/fixtures/erased-live-in-erased.bend": "30bc1155ebc8cb0a3fc39911d8cbb9c1c73b0dcb5dd0782863e4c7c0d0a2894a",
+    "tests/compiler-checker/fixtures/erased-type-live.bend": "4e4a79f49131870f5b5dd1826cba520d0de8f1534d99ae24ef8745f6b207d5a3",
+    "tests/compiler-checker/fixtures/erased-type-mismatch.bend": "35461fe8915be82fb3b18b0ada2896cb1a610edbb6eeeee8f2f6dec566d1aa6e",
+    "tests/compiler-checker/fixtures/local-reusable-type.bend": "c67f31d70ec6034c0e002c35565277db64369cbd1de115e9404cb6e46d1a561a",
+    "tests/compiler-checker/fixtures/local-shadow-call.bend": "5bda36b3c9ed5a33e206ff67c540d8a693230426aad6fec5e1a334a9de41bd4b",
+    "tests/compiler-checker/fixtures/match-after-let.bend": "2c80c66d0811ac05fa02eda5bd182abba560c6645b136db2d1fed622baebf582",
+    "tests/compiler-checker/fixtures/match-again.bend": "984eb475db78740701f3114dd2e8794a7deceac7540d810196de8d66f4e228a5",
+    "tests/compiler-checker/fixtures/match-backwards.bend": "61b3385cc04e87597a741721cc216c5493bb9c216f47729e7bc98ffa525a331f",
+    "tests/compiler-checker/fixtures/matched-duplicate.bend": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+    "tests/compiler-checker/fixtures/matched-return.bend": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+    "tests/compiler-checker/fixtures/overloaded-constructor.bend": "2144d70ce3e298b20382d174fbad2b2afa22462db33c98acd6a01c821f798a1c",
+    "tests/compiler-checker/fixtures/recursive-call.bend": "949f6edea1b6beb7ca9a560cdd47bb5ed17a3d71ef7e2bb9800ba70008a22119",
+    "tests/compiler-checker/fixtures/renamed.bend": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+    "tests/compiler-checker/fixtures/reordered-arms.bend": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+    "tests/compiler-checker/fixtures/reusable-type.bend": "58ab03fa06b8231935b3ceae56dd99bba0deba6f4f36cacff48b860d5c64ebee",
+    "tests/compiler-checker/fixtures/unknown-type.bend": "184416e8d3e1ce1c61307ea4bb8fa4e4bf3c621b2fd1531c692824b977059a1a",
+    "tests/compiler-checker/fixtures/unused-affine-let.bend": "84376de2ba091a0ec40e9cdcf5878f402f8e0fe6764f21f1e21203c805ff7242",
+    "tests/compiler-checker/fixtures/unused-bad-function.bend": "c3991b526141b75d2893a4ea6bec93a0194ddfc9f16dcf2c9c0314aa76563dd1",
+    "tests/compiler-checker/fixtures/unused-erased-use.bend": "8906cbfd42091b91a4e903248276d7a027959ab4d2dbdeccfe269b77709139ff",
+    "tests/compiler-checker/fixtures/used-affine-let.bend": "e986cb82a8447f2214de2e762770aa633064cc6789773c730afa0a4723e9161a",
+    "tests/compiler-checker/fixtures/wrong-pattern-type.bend": "b561673d06f79c7183c8ba710494e11a140a90f86b4ffc79c8174c6a8b574e98"
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3"
+  },
+  "seed_inputs": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "proof": {
+    "argv": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/src/check-PROOF.bend"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "bend 2.0.31 is available: run bend update\n"
+  },
+  "builds": [
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/src/check-cli.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/src/check-cli.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    }
+  ],
+  "generated": {
+    ".local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js": "564b6ede7b11d000b325b233badedb0fd39ac4bf8ec4bbb78d6982842b599205",
+    ".local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli": "06f8c68c7ea9b013066873775b669c49a08801e2264796f1282bd104524a4493"
+  },
+  "fixtures": [
+    {
+      "file": "tests/subsets/s1/affine-reuse.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: reuse\n7 | \n8>| def reuse(x: Flag) -> Flag:\n  |           ^\n9 |   first(x,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t107:112:9:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t107:112:9:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/constructor-arity.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Off with 0 fields\n- observed : Off{On{}}\nLocation: main\n5 | def main() -> Flag:\n6>|   Off{On{}}\n  |   ^^^^^^^^^\n7 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tconstructor-arity\t57:60:6:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tconstructor-arity\t57:60:6:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/constructor-mismatch.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Flag:\n 9>|   OtherTag{}\n   |   ^^^^^^^^^^\n10 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t91:99:9:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t91:99:9:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/data-reuse.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(2:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(2:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/erased-forward.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nforward(0:0)->0=call0($0:0;v0.1)\nmain()->0=call1(v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nforward(0:0)->0=call0($0:0;v0.1)\nmain()->0=call1(v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/erased-live.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nLocation: observe\n6 |   match ghost:\n7>|     case Off{}: On{}\n  |          ^^^^^\n8 |     case On{}: Off{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-scrutinee\t78:83:6:8\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-scrutinee\t78:83:6:8\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/flag.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/forward-call.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : flip\nContext:\n- x : Flag\nLocation: forward\n5 | def forward(x: Flag) -> Flag:\n6>|   flip(x)\n  |   ^^^^\n7 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tforward-live-call\t67:71:6:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tforward-live-call\t67:71:6:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/forward-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nmake()->0=v0.1\nmain()->0=call0()\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nmake()->0=v0.1\nmain()->0=call0()\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/missing-arm.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for On\n- observed : \\{}\nLocation: flip\n5 | def flip(x: Flag) -> Flag:\n6>|   match x:\n  |   ^^^^^^^^\n7 |     case Off{}: On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tmissing-arm\t64:69:6:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tmissing-arm\t64:69:6:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/nested-match.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nboth(1:0,1:0)->0=case $0 [0=>case $1 [0=>v0.1;1=>v0.0];1=>$1:0]\nmain()->0=call0(v0.0;v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nboth(1:0,1:0)->0=case $0 [0=>case $1 [0=>v0.1;1=>v0.0];1=>$1:0]\nmain()->0=call0(v0.0;v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/shadowing-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nContext:\n- x : Flag\n- x : Other\nLocation: shadow\n12 |   x : Other = OtherTag{}\n13>|   identity(x)\n   |            ^\n14 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t170:171:13:11\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t170:171:13:11\n"
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/shadowing.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nshadow(1:0)->0=let1 $1:0=call0($0:0) in let1 $2:0=v0.1 in $2:0\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nshadow(1:0)->0=let1 $1:0=call0($0:0) in let1 $2:0=v0.1 in $2:0\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/subsets/s1/unannotated-constructor.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : On{}\nLocation: main\n5 | def main() -> Flag:\n6>|   x = On{}\n  |       ^^^^\n7 |   x\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tannotation-required\t61:63:6:6\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tannotation-required\t61:63:6:6\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/branch-duplicate.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-duplicate.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : y\n- observed : y (consumed more than once)\nLocation: f\n5 |   a\n6>| def f(x: Flag,y: Flag) -> Flag:\n  |               ^\n7 |   match x:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-duplicate.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t133:138:8:16\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-duplicate.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t133:138:8:16\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/branch-maximum.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-maximum.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-maximum.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0,1:0)->0=case $0 [0=>$1:0;1=>$1:0]\nmain()->0=call0(v0.0;v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/branch-maximum.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0,1:0)->0=case $0 [0=>$1:0;1=>$1:0]\nmain()->0=call0(v0.0;v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/call-arity.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/call-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n6 | def main() -> Flag:\n7>|   identity()\n  |   ^^^^^^^^\n8 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/call-arity.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tcall-arity\t91:99:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/call-arity.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tcall-arity\t91:99:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-affine-reuse.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-affine-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n5 |   a\n6>| def f(x: Flag) -> Flag:\n  |       ^\n7 |   first(x,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-affine-reuse.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:105:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-affine-reuse.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:105:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-argument.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-argument.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-argument.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntwice(2:0)->0=$0:0\nf(1:0)->0=call0($0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-argument.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntwice(2:0)->0=$0:0\nf(1:0)->0=call0($0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/data-promote.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-promote.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-promote.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=let2 $1:0=$0:0 in call0($1:0;$1:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/data-promote.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=let2 $1:0=$0:0 in call0($1:0;$1:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-arm.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-arm.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-arm.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tcheck\tduplicate-arm\t94:98:7:4\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-arm.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tcheck\tduplicate-arm\t94:98:7:4\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-constructor.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-constructor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Off)\n- observed : 'Off'\nLocation:\n2 |   Off{}\n3>|   Off{}\n  |   ^^^\n4 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-constructor\t29:32:3:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-constructor\t29:32:3:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-global.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-global.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a fresh name (duplicate declaration: f)\n- observed : 'f'\nLocation:\n5 |   Off{}\n6>| def f() -> Flag:\n  |     ^\n7 |   On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-global.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-global\t63:64:6:4\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-global.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-global\t63:64:6:4\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/duplicate-parameters.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-parameters.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-parameters.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0,1:0)->0=$1:0\nmain()->0=call0(v0.0;v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/duplicate-parameters.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0,1:0)->0=$1:0\nmain()->0=call0(v0.0;v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-affine-copy.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-affine-copy.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-affine-copy.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf(1:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-affine-copy.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf(1:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-binding.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-binding.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-binding.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(0:0)->0=let0 $1:0=$0:0 in v0.1\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-binding.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(0:0)->0=let0 $1:0=$0:0 in v0.1\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-forward-call.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-forward-call.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-forward-call.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf()->0=call0(call2();v0.1)\nlater()->0=v0.0\nmain()->0=call1()\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-forward-call.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nf()->0=call0(call2();v0.1)\nlater()->0=v0.0\nmain()->0=call1()\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-free-name.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-free-name.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n6 | def main() -> Flag:\n7>|   take(missing,On{})\n  |        ^^^^^^^\n8 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-free-name.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tfree-name\t101:108:7:7\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-free-name.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tfree-name\t101:108:7:7\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-live-in-erased.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-live-in-erased.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : -x\n- observed : x\nLocation: f\n6 |   y\n7>| def f(-x: Flag) -> Flag:\n  |        ^\n8 |   take(x,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-live-in-erased.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t110:111:8:9\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-live-in-erased.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t110:111:8:9\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-type-live.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-live.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : -y\n- observed : y\nContext:\n- x : Flag\nLocation: f\n6 | def f(x: Flag) -> Flag:\n7>|   -y = x\n  |   ^^\n8 |   y\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-live.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t109:110:8:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-live.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t109:110:8:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/erased-type-mismatch.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-mismatch.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Flag:\n 9>|   take(OtherTag{},On{})\n   |        ^^^^^^^^^^\n10 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-mismatch.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t134:142:9:7\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-mismatch.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t134:142:9:7\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/local-reusable-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-reusable-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- x : Flag\nLocation: f\n4 | def f(x: Flag) -> Flag:\n5>|   +y = x\n  |   ^^^\n6 |   y\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-reusable-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\treusable-type\t61:62:5:3\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-reusable-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\treusable-type\t61:62:5:3\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/local-shadow-call.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-shadow-call.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a function type\n- observed : Flag\nContext:\n- id : Flag\nLocation: f\n6 | def f(id: Flag) -> Flag:\n7>|   id(On{})\n  |   ^^^^^^^^\n8 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-shadow-call.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tnot-callable\t90:92:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/local-shadow-call.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tnot-callable\t90:92:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-after-let.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-after-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n6 |   y : Flag = Off{}\n7>|   match x:\n  |         ^\n8 |     case Off{}: y\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-after-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunmatchable-binder\t86:87:7:8\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-after-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunmatchable-binder\t86:87:7:8\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-again.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-again.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : an undestructed scrutinee (this value is already a constructor: bind its fields directly; if an outer match destructed it, fold the pattern into the outer case)\nLocation:\n7 |     case Off{}:\n8>|       match x:\n  |       ^^^^^^^^\n9 |         case Off{}: Off{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-again.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\talready-matched\t98:99:8:12\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-again.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\talready-matched\t98:99:8:12\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/match-backwards.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-backwards.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n7 |     case Off{}:\n8>|       match x:\n  |             ^\n9 |         case Off{}: Off{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-backwards.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunmatchable-binder\t107:108:8:12\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/match-backwards.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunmatchable-binder\t107:108:8:12\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/matched-duplicate.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-duplicate.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-duplicate.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=case $0 [0=>call0(v0.0;v0.0);1=>call0(v0.1;v0.1)]\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-duplicate.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=case $0 [0=>call0(v0.0;v0.0);1=>call0(v0.1;v0.1)]\nmain()->0=call1(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/matched-return.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-return.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-return.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0)->0=case $0 [0=>v0.0;1=>v0.1]\nmain()->0=call0(v0.1)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-return.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nf(1:0)->0=case $0 [0=>v0.0;1=>v0.1]\nmain()->0=call0(v0.1)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/overloaded-constructor.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/overloaded-constructor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: On)\n- observed : 'On'\nLocation:\n4 | type Other is Type:\n5>|   On{}\n  |   ^^\n6 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/overloaded-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-constructor\t56:58:5:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/overloaded-constructor.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tduplicate-constructor\t56:58:5:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/recursive-call.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/recursive-call.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- x : Flag\nLocation: f\n4 | def f(x: Flag) -> Flag:\n5>|   f(x)\n  |   ^\n6 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/recursive-call.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tcheck\trecursive-call\t60:61:5:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/recursive-call.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tcheck\trecursive-call\t60:61:5:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/renamed.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/renamed.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/renamed.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntoggle(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/renamed.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\ntoggle(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/reordered-arms.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reordered-arms.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reordered-arms.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [1=>v0.0;0=>v0.1]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reordered-arms.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\nflip(1:0)->0=case $0 [1=>v0.0;0=>v0.1]\nmain()->0=call0(v0.0)\n\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/reusable-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reusable-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n3 |   On{}\n4>| def f(+x: Flag) -> Flag:\n  |           ^^^^\n5 |   x\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reusable-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\treusable-type\t41:42:4:7\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/reusable-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\treusable-type\t41:42:4:7\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unknown-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unknown-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : Missing\nLocation: f\n3 |   On{}\n4>| def f(x: Missing) -> Flag:\n  |          ^^^^^^^\n5 |   On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unknown-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunknown-type\t43:50:4:9\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unknown-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tunknown-type\t43:50:4:9\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-affine-let.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-affine-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n5 |   a\n6>| def f(x: Flag) -> Flag:\n  |       ^\n7 |   y = x\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-affine-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-affine-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-bad-function.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-bad-function.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: bad\n6 | def bad() -> Flag:\n7>|   OtherTag{}\n  |   ^^^^^^^^^^\n8 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-bad-function.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t88:96:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-bad-function.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t88:96:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/unused-erased-use.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-erased-use.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : -ghost\n- observed : ghost\nLocation: f\n5 |   a\n6>| def f(-ghost: Flag) -> Flag:\n  |        ^^^^^\n7 |   y = ghost\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-erased-use.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t109:114:7:6\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/unused-erased-use.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\terased-live\t109:114:7:6\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/used-affine-let.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/used-affine-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n5 |   a\n6>| def f(x: Flag) -> Flag:\n  |       ^\n7 |   y = x\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/used-affine-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/used-affine-let.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\taffine-reuse\t100:101:7:2\n"
+        }
+      }
+    },
+    {
+      "file": "tests/compiler-checker/fixtures/wrong-pattern-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/wrong-pattern-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a constructor of Flag (missing, or already matched)\n- observed : \\{OtherTag: On{}}\nLocation: f\n7 |   match x:\n8>|     case OtherTag{}: On{}\n  |          ^^^^^^^^^^\n9 | def main() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/wrong-pattern-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tpattern-type\t106:110:8:4\n"
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+            "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/wrong-pattern-type.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\tpattern-type\t106:110:8:4\n"
+        }
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "lane": "bun",
+      "depth": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "depth": 1,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "1"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "depth": 3,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "3"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "depth": 4,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "4"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "depth": 5,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "depth": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "depth": 1,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "1"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "depth": 3,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "3"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "depth": 4,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "4"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "depth": 5,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/check-cli",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->0=call0(v0.0)\n\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "bounds": [
+    {
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/bounds.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "observation": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/bounds.js"
+        ],
+        "exit": 0,
+        "stdout": "Done 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\n",
+        "stderr": ""
+      },
+      "sha256": "74ce917e1964946c6796b0273f5aef8a128bf9ae5cd5fb111d7ad15c9abbdfc7"
+    },
+    {
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-checker/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/bounds"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "observation": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/bounds"
+        ],
+        "exit": 0,
+        "stdout": "Done 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\nDone 256\nExhausted\tcheck\tbudget\t0:0:1:0\n",
+        "stderr": ""
+      },
+      "sha256": "d24c895a61e0df27e97e4701db8fc251f288459db7c7068e53cea3e21c21a7df"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "accept-affine-reuse",
+      "file": "scope.bend",
+      "old": "contains(ys,h),u => C.invalid",
+      "new": "False{},u => C.invalid",
+      "source_sha256": "868c9203d5359d6c63325346e9a9a2a5fb418002c0abad81bd148140da7874e3",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-affine-reuse/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-affine-reuse/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-affine-reuse/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/subsets/s1/affine-reuse.bend",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-affine-reuse/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:0)->0=call0($0:0;$0:0)\nmain()->0=call1(v0.1)\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "accept-erased-live",
+      "file": "scope.bend",
+      "old": "Bool.and(live,U32.is_eq(q,0)),u =>",
+      "new": "False{},u =>",
+      "source_sha256": "979497993f9098a08beb7508867deb790f5ef57c55e5ae49fa357bb146be4263",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-erased-live/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-erased-live/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-erased-live/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/compiler-checker/fixtures/erased-type-live.bend",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-erased-live/check-cli.js",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/erased-type-live.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=let0 $1:0=$0:0 in $1:0\nmain()->0=call1(v0.1)\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "lose-refinement",
+      "file": "scope.bend",
+      "old": "Scope{refine(bindings,level,tag),next",
+      "new": "Scope{bindings,next",
+      "source_sha256": "a419f4af2820dc408641c502a791b81cd78d738f991a635557b0e4414e648de3",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-refinement/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-refinement/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-refinement/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/compiler-checker/fixtures/matched-duplicate.bend",
+      "expected": {
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nf(1:0)->0=case $0 [0=>call0(v0.0;v0.0);1=>call0(v0.1;v0.1)]\nmain()->0=call1(v0.1)"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-refinement/check-cli.js",
+          "/Users/ericfode/src/knot/tests/compiler-checker/fixtures/matched-duplicate.bend"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tcheck\taffine-reuse\t127:132:9:16\n"
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "lose-shadow-identity",
+      "file": "scope.bend",
+      "old": "C.Binding{token,next,q,type_id,False{}",
+      "new": "C.Binding{token,0,q,type_id,False{}",
+      "source_sha256": "1331fafd4689b2ddd9e15c6278cdb5080e704244bcff7cc621b63fad4d8630d6",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-shadow-identity/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-shadow-identity/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-shadow-identity/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/subsets/s1/shadowing.bend",
+      "expected": {
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nshadow(1:0)->0=let1 $1:0=call0($0:0) in let1 $2:0=v0.1 in $2:0\nmain()->0=call1(v0.1)"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/lose-shadow-identity/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tcheck\taffine-reuse\t147:148:11:2\n"
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "accept-missing-arm",
+      "file": "check.bend",
+      "old": "Nat.is_eq(List.length(&2,C.Constructor,tokens),List.length(&2,U32,seen))",
+      "new": "True{}",
+      "source_sha256": "902f62f1e18aadffa0d1a4511ac868c246a1aa466e2699eab6567d4be7fa1a5c",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-missing-arm/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-missing-arm/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-missing-arm/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/subsets/s1/missing-arm.bend",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-missing-arm/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nflip(1:0)->0=case $0 [0=>v0.1]\nmain()->0=call0(v0.0)\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "accept-wrong-reference-type",
+      "file": "check.bend",
+      "old": "U32.is_eq(type_id,actual),u => Done{value}",
+      "new": "True{},u => Done{value}",
+      "source_sha256": "cd2a0bdc769ebc19afdae5bb96abec0e2a48fa3b3fac14c7aa6e19dcf52349a4",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-wrong-reference-type/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-wrong-reference-type/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-wrong-reference-type/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/subsets/s1/shadowing-type.bend",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/accept-wrong-reference-type/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nidentity(1:0)->0=$0:0\nshadow(1:0)->0=let1 $1:1=v1.0 in call0($1:1)\nmain()->0=call1(v0.0)\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "execute-erased-arguments",
+      "file": "scope.bend",
+      "old": "Bool.and(live,U32.is_ne(q,0))",
+      "new": "live",
+      "source_sha256": "1819623f60cc74598d74386eeb3b1829f5b76320410a481d145a558b5cf4a7c9",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/execute-erased-arguments/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/execute-erased-arguments/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/execute-erased-arguments/check-cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "tests/subsets/s1/erased-forward.bend",
+      "expected": {
+        "exit": 0,
+        "stdout": "Checked\ntake(0:0,1:0)->0=$1:0\nforward(0:0)->0=call0($0:0;v0.1)\nmain()->0=call1(v0.0)"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/checker/execute-erased-arguments/check-cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tcheck\terased-live\t131:136:9:7\n"
+      },
+      "outcome": "semantic-kill"
+    }
+  ]
+}

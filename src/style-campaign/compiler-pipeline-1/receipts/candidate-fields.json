@@ -1,0 +1,4702 @@
+{
+  "date": "2026-09-27T17:12:39.923753+00:00",
+  "status": "passed",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "scope": "Structural checking and live-field tree evaluator. Owned heap and Wasm field lowering remain unimplemented.",
+  "inputs": {
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+    "tests/compiler-fields/fixtures/affine-field-reuse.bend": "f98f7cb99901c31c2dc5c082f18d7c94bbbc127f3ae86f4bf5b124d15584c500",
+    "tests/compiler-fields/fixtures/all-erased-return.bend": "d6e205013ff334d518b6d04dc4e53bb6b6bcb2673b06e8ff9dc8c2e7d4a54b07",
+    "tests/compiler-fields/fixtures/branch-use-union.bend": "87e912f30d41ece6cea3c459541c93dc81cfb8ede108f5896ee4400e72920f9b",
+    "tests/compiler-fields/fixtures/constructor-affine-reuse.bend": "8e7784a332bbb2e378d70e5552b3c3487e48cc81c0943b6267e360ed4e0eef3d",
+    "tests/compiler-fields/fixtures/constructor-arity.bend": "523c2d59dc8c145d5a2a419933c595db56c463b55ac04546db976caed4eb86d0",
+    "tests/compiler-fields/fixtures/constructor-name-binder.bend": "5d9e28128bd02b7d76c095203c1820b1b96a6f66ae5996ae6bdea9248210a937",
+    "tests/compiler-fields/fixtures/constructor-promotion-once.bend": "d096378882e66e7d373d10c594d1564fb154f4dad98ecd3ff3c413dced75e2c1",
+    "tests/compiler-fields/fixtures/constructor-type.bend": "96826b1acb146f491e4fad535d4bd0efec55c146875d00ca8af7bd4b467452d3",
+    "tests/compiler-fields/fixtures/data-parent.bend": "d8e3d28e808e81cf4a86874d37f1b2564f12ab51fcf848f768faf676719d05c3",
+    "tests/compiler-fields/fixtures/duplicate-pattern-names.bend": "8dde0b47c57f066ec139e3978d0451cdddc6fed2880537b666a82998625ee4ed",
+    "tests/compiler-fields/fixtures/erased-field-live.bend": "2241ea37a40057d51187c21815007395c2a3bae3a205dc170345bb6ad8bbe34b",
+    "tests/compiler-fields/fixtures/erased-field-promote.bend": "6d9e9732604978d6b6ef673a45c23c0daeca921d5548f69294e34801a8be4ae2",
+    "tests/compiler-fields/fixtures/erased-field-typechecked.bend": "2ca7383880f190f1dfe7b4b49a9611b4a5eb4b85c194b8c274d739a69f9f2284",
+    "tests/compiler-fields/fixtures/erased-forward.bend": "82954950eb8cdbcd8a872e111c4ba12c6dee974e42b2b227d75ad4fdea62f2c2",
+    "tests/compiler-fields/fixtures/erased-parent-reconstruction.bend": "46490c6b1b86557cbb69ab5bd14f07bad00b466df799cb72a2a08b453f493435",
+    "tests/compiler-fields/fixtures/field-before-parameter.bend": "68b77a2c662d0987c29d74ffee84f4b1aa2e5decafedf3b9a2df9068d19e5ee6",
+    "tests/compiler-fields/fixtures/field-let-closes-frontier.bend": "244ca27ec1619c5543b6141926443a9b2569941e457a38d4f71c4edfa2ddac00",
+    "tests/compiler-fields/fixtures/field-missing-arm.bend": "c3bc9945820e2fd69549c887b121f6c162c19c926f6188c41a8501a8dbbe00bb",
+    "tests/compiler-fields/fixtures/field-then-parent-refinement.bend": "3dd85307fc5ac057215fb72bbb806d0c16cfc68e323149ad6597c01979e89663",
+    "tests/compiler-fields/fixtures/inspection-shared-tree.bend": "909e65febd5ecee1cc5e7d7a4b0a501e283a7a1863bb9f26e0b50dfaffd78248",
+    "tests/compiler-fields/fixtures/live-forward.bend": "3f42d87e63f738d4a8af2092fd1b739b2ff217ca16c6aea42bc8526a13873317",
+    "tests/compiler-fields/fixtures/minus-pattern.bend": "5fd42323ab07806adde74c40efcad79b06ac7c93f0b559a503cd605f04283b22",
+    "tests/compiler-fields/fixtures/mixed-live-order.bend": "20d05183f85909d496c1667b1d1195cd201fba0c08875f8b77cdf9134ecd6e4f",
+    "tests/compiler-fields/fixtures/multi-constructor.bend": "9d7724a8b5843763be142d79cf021dd700aa0d836d482340f831991667e75e9f",
+    "tests/compiler-fields/fixtures/nested-pattern.bend": "5b1bf90f5a8c26a57c49345fd8dc6f9d88b44d377843d7ab347b496cb255f658",
+    "tests/compiler-fields/fixtures/nested-reconstruction.bend": "cea78ff4c5a19f4d0eff162a3cd4bfcf45d44ce46593743127a75885e0668aab",
+    "tests/compiler-fields/fixtures/nested-single-pattern.bend": "7921cd7a274547f3497da879b8382b654aab012d904e6ee706c980a1c1a562ed",
+    "tests/compiler-fields/fixtures/open.bend": "ea647c77ac7c70ec6dfc9885ce6560622a1bb7d2c670264cd30d88446c1a89e5",
+    "tests/compiler-fields/fixtures/owned-field-drop.bend": "2a29eeb1f84e967bc81794adef5cf70148f2b6c851cfbfe4603d4a1bd607f4fd",
+    "tests/compiler-fields/fixtures/owned-field-promotion.bend": "30e1418be8f3cab86188a61fc3b6aa589230c50a36131da210fce7fd2aff7728",
+    "tests/compiler-fields/fixtures/parameter-before-field.bend": "1ecaae1f68cee65d900325e4f4b00954291e7ec1b9a4a5e13b8f14cc1b341eac",
+    "tests/compiler-fields/fixtures/parent-and-field.bend": "c18afc481cb451662263a3f7176811e2294f9bbe0c9ab83f6bc62680439cdcfc",
+    "tests/compiler-fields/fixtures/parent-twice.bend": "aba6dad90a5352cec590c650b42c3c6f8631cf0d05046695de836ad96d24ab5b",
+    "tests/compiler-fields/fixtures/pattern-arity.bend": "98c627776a72c4e43a4602d24fc3e8e8d62c9e8380fbddcb6de93c8244ba3f74",
+    "tests/compiler-fields/fixtures/promote-field.bend": "54a40f7b0de7e3f7ed2beb90e71f1109c69093bea6e160944a7558bc6b873537",
+    "tests/compiler-fields/fixtures/reconstruct.bend": "9d64af15a1331b57339de5e5de3280e3f49da74d746608caacd35b0229c589a0",
+    "tests/compiler-fields/fixtures/reconstruction-shadow.bend": "1595602abdf33aa639f42288cecd6ec02cc187320775fc49c9af7010c113c59d",
+    "tests/compiler-fields/fixtures/reusable-field.bend": "ecb91d079340263264d1f9dfdd24abc84e068f4b8db21ee3f20843e3853831b2",
+    "tests/compiler-fields/fixtures/sibling-order.bend": "4500c8249ad4959681056dd3eb52b8ae5a15d35b6296f69bee6af6f1b7def86d",
+    "tests/compiler-fields/fixtures/sibling-reversed.bend": "3d73a47b9826d24cb5547c5fed634c738c2185c07c0f3f1678815392e1a9ff54",
+    "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+    "tests/compiler-fields/cases.json": "e01efe8b37004ff02e655586c2427484a798cc0b61ad5c3359135726be6612ac",
+    "tests/compiler-fields/bounds.bend": "570509cdd039e4e5591422f6aaabe42f2b5b1ee88bc47e39035445791b57759e",
+    "src/SPEC.md": "f30ec6beb9d60a2b27cea0d328fd0544b27cdc3f874374ff101a428cc1eb697e",
+    "src/CONTRACT.json": "ad392ee8b3990c6332a147aa5152a4db7c2c940fd5981bf3bfa1662c31a51bae",
+    "research/compiler-fields/SPEC.md": "038fe1928f8e3934b21e7d463fcdefdfc2f527afe0ef3936414198234b4f8b55"
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3"
+  },
+  "proof": {
+    "argv": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/src/fields-PROOF.bend"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "bend 2.0.31 is available: run bend update\n"
+  },
+  "builds": [
+    {
+      "lane": "native",
+      "phase": "check",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "12a3d7ab265e354bdef5961bee81b46a7b94cf5e85b05e2173eaedf20dc1dd62"
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/eval-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "3ac99715f9b3a4f76b5dd6644e4e9c939e935876a2f0dfadd904fe92ed92f0e5"
+    },
+    {
+      "lane": "native",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/compile-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "587bf7e5d78043fc62f90525326ebfa1dae3d94b69f2922ee2a4304ecd7b7104"
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "564b6ede7b11d000b325b233badedb0fd39ac4bf8ec4bbb78d6982842b599205"
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/eval-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "1c2c1452eb866c4cda3f3d6c6fb31c98b98b4120da589aa53cc6a0d15c9c82ca"
+    },
+    {
+      "lane": "bun",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/src/compile-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "sha256": "61d4f5200d56b8e1bd09454ad5d71bb2d3758f7a3e4b2d52a114c148343da031"
+    }
+  ],
+  "fixtures": [
+    {
+      "case": "affine-field-reuse",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: reuse\n 9 |   match x:\n10>|     case Box{v}:\n   |              ^\n11 |       first(v,v)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/affine-field-reuse-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/affine-field-reuse.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/affine-field-reuse-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t173:178:11:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "all-erased-return",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend"
+        ],
+        "exit": 0,
+        "stdout": "Ghost{On{}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nmain()->1=v1.0{v0.1}\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tGhost{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/all-erased-return-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t56:61:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nmain()->1=v1.0{v0.1}\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tGhost{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/all-erased-return.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/all-erased-return-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t56:61:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "branch-use-union",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nchoose(1:1,1:0)->0=case $0 [0(1 $2:0;)=>case $2 [0=>$1:0;1=>$1:0]]\nmain()->0=call0(v1.0{v0.0};v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/branch-use-union-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nchoose(1:1,1:0)->0=case $0 [0(1 $2:0;)=>case $2 [0=>$1:0;1=>$1:0]]\nmain()->0=call0(v1.0{v0.0};v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/branch-use-union.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/branch-use-union-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "constructor-affine-reuse",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: pair\n5 |   Pair{left: Flag, right: Flag}\n6>| def pair(x: Flag) -> Pair:\n  |          ^\n7 |   Pair{x,x}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-affine-reuse-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-affine-reuse.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-affine-reuse-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t114:118:7:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "constructor-arity",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Box with 1 field\n- observed : Box{Off{}, On{}}\nLocation: main\n6 | def main() -> Box:\n7>|   Box{Off{},On{}}\n  |   ^^^^^^^^^^^^^^^\n8 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-arity-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-arity.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-arity-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-arity\t92:95:7:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "constructor-name-binder",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a braced constructor pattern (On is a constructor: write On{}, or rename the binder)\nLocation:\n7 |   match x:\n8>|     case Box{On}:\n  |              ^^\n9 |       On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-name-binder-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-name-binder.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-name-binder-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t121:123:8:13\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "constructor-promotion-once",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend"
+        ],
+        "exit": 0,
+        "stdout": "Box{On{}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nbox(1:0)->1=v1.0{$0:0}\nmain()->1=call0(v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-promotion-once-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nbox(1:0)->1=v1.0{$0:0}\nmain()->1=call0(v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-promotion-once.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-promotion-once-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "constructor-type",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Box:\n 9>|   Box{Other{}}\n   |       ^^^^^^^\n10 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-type-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/constructor-type.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/constructor-type-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t126:131:9:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "data-parent",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(2:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/data-parent-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(2:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/data-parent.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/data-parent-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "duplicate-pattern-names",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nsecond(1:1)->0=case $0 [0(1 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/duplicate-pattern-names-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nsecond(1:1)->0=case $0 [0(1 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/duplicate-pattern-names.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/duplicate-pattern-names-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "erased-field-live",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : -v\n- observed : v\nLocation: open\n7 |   match x:\n8>|     case Box{v}:\n  |              ^\n9 |       v\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-live-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-live.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-live-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t132:133:9:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "erased-field-promote",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : -v\n- observed : v (consumed more than once)\nLocation: reuse\n 9 |   match x:\n10>|     case Box{+v}:\n   |              ^^\n11 |       first(v,v)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-promote-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-promote-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\terased-live\t181:182:11:12\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "erased-field-typechecked",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Box:\n 9>|   Box{Other{},On{}}\n   |       ^^^^^^^\n10 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-typechecked-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-typechecked.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-field-typechecked-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t140:145:9:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "erased-forward",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nopen(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{call2();v0.1})\nlater()->0=v0.0\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-forward-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nopen(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{call2();v0.1})\nlater()->0=v0.0\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-forward-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "erased-parent-reconstruction",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(0 $1:0;1 $2:0;)=>v1.0{$1:0;$2:0}]\nread(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call1(call0(v1.0{v0.0;v0.1}))\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-parent-reconstruction-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(0 $1:0;1 $2:0;)=>v1.0{$1:0;$2:0}]\nread(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call1(call0(v1.0{v0.0;v0.1}))\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-parent-reconstruction.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/erased-parent-reconstruction-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "field-before-parameter",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\norder(1:1,1:0)->0=case $0 [0(1 $2:0;)=>case $2 [0=>$1:0;1=>case $1 [0=>v0.1;1=>v0.0]]]\nmain()->0=call0(v1.0{v0.1};v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tOff{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-before-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\norder(1:1,1:0)->0=case $0 [0(1 $2:0;)=>case $2 [0=>$1:0;1=>case $1 [0=>v0.1;1=>v0.0]]]\nmain()->0=call0(v1.0{v0.1};v0.1)\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tOff{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-before-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "field-let-closes-frontier",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n 9 |       y : Flag = On{}\n10>|       match v:\n   |             ^\n11 |         case Off{}:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-let-closes-frontier-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-let-closes-frontier-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t159:160:10:12\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "field-missing-arm",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for Empty\n- observed : \\{}\nLocation: read\n7 | def read(x: Choice) -> Flag:\n8>|   match x:\n  |   ^^^^^^^^\n9 |     case One{v}:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-missing-arm-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-missing-arm.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-missing-arm-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t115:120:8:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "field-then-parent-refinement",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend"
+        ],
+        "exit": 0,
+        "stdout": "Box{On{}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;)=>case $1 [0=>v1.0{v0.0};1=>v1.0{v0.1}]]\nmain()->1=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-then-parent-refinement-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;)=>case $1 [0=>v1.0{v0.0};1=>v1.0{v0.1}]]\nmain()->1=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/field-then-parent-refinement-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "live-forward",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : later\nLocation: main\n10 | def main() -> Flag:\n11>|   open(Box{later(),On{}})\n   |            ^^^^^\n12 | def later() -> Flag:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/live-forward-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/live-forward.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/live-forward-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tforward-live-call\t179:184:11:11\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "minus-pattern",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '-'\nLocation:\n7 |   match x:\n8>|     case Box{-v}:\n  |              ^\n9 |       On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/minus-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/minus-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/minus-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tterm-form\t122:123:8:13\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "mixed-live-order",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(0 $1:0;1 $2:0;0 $3:0;2 $4:0;)=>$4:0]\nmain()->0=call0(v1.0{v0.0;v0.0;v0.1;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/mixed-live-order-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(0 $1:0;1 $2:0;0 $3:0;2 $4:0;)=>$4:0]\nmain()->0=call0(v1.0{v0.0;v0.0;v0.1;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/mixed-live-order-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "multi-constructor",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\npick(1:1)->0=case $0 [2(1 $1:0;1 $2:0;)=>$2:0;0=>v0.0;1(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.2{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/multi-constructor-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t67:70:6:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\npick(1:1)->0=case $0 [2(1 $1:0;1 $2:0;)=>$2:0;0=>v0.0;1(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.2{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/multi-constructor.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/multi-constructor-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t67:70:6:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "nested-pattern",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tduplicate-arm\t144:148:10:4\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "nested-reconstruction",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend"
+        ],
+        "exit": 0,
+        "stdout": "Outer{Inner{On{}}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:2)->2=case $0 [0(1 $1:1;)=>case $1 [0(1 $2:0;)=>case $2 [0=>v2.0{v1.0{v0.0}};1=>v2.0{v1.0{v0.1}}]]]\nmain()->2=call0(v2.0{v1.0{v0.1}})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t2\t0\tOuter{Inner{On{}}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-reconstruction-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t56:61:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:2)->2=case $0 [0(1 $1:1;)=>case $1 [0(1 $2:0;)=>case $2 [0=>v2.0{v1.0{v0.0}};1=>v2.0{v1.0{v0.1}}]]]\nmain()->2=call0(v2.0{v1.0{v0.1}})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t2\t0\tOuter{Inner{On{}}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-reconstruction-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t56:61:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "nested-single-pattern",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-single-pattern-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-single-pattern.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/nested-single-pattern-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tnested-field-pattern\t171:176:10:15\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "open",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/open-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/open-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "owned-field-drop",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\ndrop(1:1)->2=case $0 [0(1 $1:0;)=>v2.1]\nmain()->2=call0(v1.0{v0.0})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t2\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/owned-field-drop-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t50:53:4:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\ndrop(1:1)->2=case $0 [0(1 $1:0;)=>v2.1]\nmain()->2=call0(v1.0{v0.0})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t2\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-drop.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/owned-field-drop-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t50:53:4:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "owned-field-promotion",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: open\n7 |   match x:\n8>|     case Box{+v}:\n  |              ^^\n9 |       v\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/owned-field-promotion-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/owned-field-promotion.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/owned-field-promotion-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\treusable-type\t122:123:8:14\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "parameter-before-field",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n12 |         case On{}:\n13>|           match v:\n   |                 ^\n14 |             case Off{}:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parameter-before-field-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parameter-before-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parameter-before-field-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "parent-and-field",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: reuse\n 9 |   match x:\n10>|     case Box{v}:\n   |              ^\n11 |       first(v,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parent-and-field-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-and-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parent-and-field-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t172:177:11:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "parent-twice",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: again\n 9 |   match x:\n10>|     case Box{v}:\n   |              ^\n11 |       first(x,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parent-twice-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/parent-twice-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t169:174:11:6\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "pattern-arity",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a Box pattern with 1 field\nLocation:\n7 |   match x:\n8>|     case Box{a,b}:\n  |          ^^^^^^^^\n9 |       On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/pattern-arity-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/pattern-arity.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/pattern-arity-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tpattern-arity\t117:120:8:9\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "promote-field",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-field-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/promote-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-field-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "reconstruct",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend"
+        ],
+        "exit": 0,
+        "stdout": "Box{On{}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;)=>v1.0{$1:0}]\nmain()->1=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reconstruct-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;)=>v1.0{$1:0}]\nmain()->1=call0(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruct.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reconstruct-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "reconstruction-shadow",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend"
+        ],
+        "exit": 0,
+        "stdout": "Pair{Off{}, On{}}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;1 $2:0;)=>case $1 [0=>let1 $3:0=v0.1 in v1.0{v0.0;$2:0};1=>let1 $3:0=v0.0 in v1.0{v0.1;$2:0}]]\nmain()->1=call0(v1.0{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reconstruction-shadow-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nagain(1:1)->1=case $0 [0(1 $1:0;1 $2:0;)=>case $1 [0=>let1 $3:0=v0.1 in v1.0{v0.0;$2:0};1=>let1 $3:0=v0.0 in v1.0{v0.1;$2:0}]]\nmain()->1=call0(v1.0{v0.0;v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reconstruction-shadow-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "reusable-field",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reusable-field-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reusable-field-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t54:57:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "sibling-order",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(1 $1:0;1 $2:0;)=>case $1 [0=>$2:0;1=>case $2 [0=>v0.1;1=>v0.0]]]\nmain()->0=call0(v1.0{v0.1;v0.0})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/sibling-order-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(1 $1:0;1 $2:0;)=>case $1 [0=>$2:0;1=>case $2 [0=>v0.1;1=>v0.0]]]\nmain()->0=call0(v1.0{v0.1;v0.0})\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}\n",
+            "stderr": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-order.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/sibling-order-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t55:59:5:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "sibling-reversed",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n12 |         case On{}:\n13>|           match a:\n   |                 ^\n14 |             case Off{}:\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/sibling-reversed-native.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/sibling-reversed.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/sibling-reversed-bun.wasm"
+            ],
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t225:226:13:16\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    },
+    {
+      "case": "inspection-shared-tree",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "native": {
+          "check": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\ntwice(2:0)->0=v0.1{$0:0;$0:0}\nmain()->0=call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(v0.0))))))))))))))))))))))))\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 4,
+            "stdout": "",
+            "stderr": "Exhausted\tinspect\tbudget\t0:0:0:0\n"
+          },
+          "compile": {
+            "argv": [
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/inspection-shared-tree-native.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t30:34:3:2\n"
+          },
+          "artifact_preserved": true
+        },
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\ntwice(2:0)->0=v0.1{$0:0;$0:0}\nmain()->0=call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(call0(v0.0))))))))))))))))))))))))\n\n",
+            "stderr": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend",
+              "main",
+              "4096"
+            ],
+            "exit": 4,
+            "stdout": "",
+            "stderr": "Exhausted\tinspect\tbudget\t0:0:0:0\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/compile.js",
+              "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/inspection-shared-tree.bend",
+              "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/inspection-shared-tree-bun.wasm"
+            ],
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tcheck\tconstructor-fields\t30:34:3:2\n"
+          },
+          "artifact_preserved": true
+        }
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "open",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "open",
+      "budget": 4,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "4"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "open",
+      "budget": 5,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.0{v0.1})\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "open",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "open",
+      "budget": 13,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "13"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "open",
+      "budget": 14,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "14"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 5,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 6,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "6"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nopen(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{call2();v0.1})\nlater()->0=v0.0\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 15,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "15"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 16,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "16"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 13,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "13"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 14,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "14"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nagain(1:2)->2=case $0 [0(1 $1:1;)=>case $1 [0(1 $2:0;)=>case $2 [0=>v2.0{v1.0{v0.0}};1=>v2.0{v1.0{v0.1}}]]]\nmain()->2=call0(v2.0{v1.0{v0.1}})\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 29,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "29"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 30,
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "30"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t2\t0\tOuter{Inner{On{}}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "open",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "open",
+      "budget": 4,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "4"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "open",
+      "budget": 5,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=call0(v1.0{v0.1})\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "open",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "open",
+      "budget": 13,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "13"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "open",
+      "budget": 14,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "14"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 5,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "5"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "erased-forward",
+      "budget": 6,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "65536",
+          "6"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nopen(1:1)->0=case $0 [0(0 $1:0;1 $2:0;)=>$2:0]\nmain()->0=call0(v1.0{call2();v0.1})\nlater()->0=v0.0\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 15,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "15"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "erased-forward",
+      "budget": 16,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "16"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 13,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "13"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "case": "nested-reconstruction",
+      "budget": 14,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/check.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "65536",
+          "14"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nagain(1:2)->2=case $0 [0(1 $1:1;)=>case $1 [0(1 $2:0;)=>case $2 [0=>v2.0{v1.0{v0.0}};1=>v2.0{v1.0{v0.1}}]]]\nmain()->2=call0(v2.0{v1.0{v0.1}})\n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 0,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "0"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 29,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "29"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "case": "nested-reconstruction",
+      "budget": 30,
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/nested-reconstruction.bend",
+          "main",
+          "30"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t2\t0\tOuter{Inner{On{}}}\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "host_boundaries": [
+    {
+      "lane": "native",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "open",
+          "4096",
+          "0"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+      }
+    },
+    {
+      "lane": "native",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "open",
+          "4096",
+          "1"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\targument-range\n"
+      }
+    },
+    {
+      "lane": "native",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "4096",
+          "0"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\targument-arity\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "open",
+          "4096",
+          "0"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "open",
+          "4096",
+          "1"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\targument-range\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/eval.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/open.bend",
+          "main",
+          "4096",
+          "0"
+        ],
+        "exit": 5,
+        "stdout": "",
+        "stderr": "HostFailure\tinvoke\targument-arity\n"
+      }
+    }
+  ],
+  "bounds": [
+    {
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/bounds"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/bounds"
+        ],
+        "exit": 0,
+        "stdout": "Next 4096\nExhausted\tcheck\tbudget\t0:0:1:0\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nExhausted\tinspect\tbudget\t0:0:0:0\nx\n",
+        "stderr": ""
+      },
+      "sha256": "43bbb0653bcc8946a82188b17b1d1b851e3ac4d73fec3c132f03823074dc4be7"
+    },
+    {
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/compiler-fields/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/bounds.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/bounds.js"
+        ],
+        "exit": 0,
+        "stdout": "Next 4096\nExhausted\tcheck\tbudget\t0:0:1:0\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nExhausted\tinspect\tbudget\t0:0:0:0\nx\n",
+        "stderr": ""
+      },
+      "sha256": "bf2ba48112e63af1bedbd510d3c69c95ec96d87594a474de3c687ed9f627a8e9"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "promote-erased-field",
+      "file": "patterns.bend",
+      "old": "Bool.or(U32.is_eq(field,0),U32.is_eq(parent,0))",
+      "new": "U32.is_eq(parent,0)",
+      "sha256": "66d1f8c22c4aaa6411fbafee94e54f28d1bf8c37168c0518058b77a02e5c14f8",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-erased-field/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-erased-field/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-erased-field/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "erased-field-promote",
+      "phase": "check",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/promote-erased-field/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-field-promote.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:0,1:0)->0=$0:0\nreuse(1:1)->0=case $0 [0(2 $1:0;)=>call0($1:0;$1:0)]\nmain()->0=call1(v1.0{v0.1})\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "discard-parent-demand",
+      "file": "check.bend",
+      "old": "run(n,Rebuild{head},catalog,current,E.live_scope(scope,q))",
+      "new": "run(n,Rebuild{head},catalog,current,E.live_scope(scope,0))",
+      "sha256": "17b502bea15040fe23ff6db4de8a88449e5cd910d0564fa05a80c728891191d0",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/discard-parent-demand/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/discard-parent-demand/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/discard-parent-demand/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "parent-twice",
+      "phase": "check",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/discard-parent-demand/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/parent-twice.bend"
+        ],
+        "exit": 0,
+        "stdout": "Checked\nfirst(1:1,1:1)->1=$0:1\nagain(1:1)->1=case $0 [0(1 $1:0;)=>call0(v1.0{$1:0};v1.0{$1:0})]\nmain()->1=call1(v1.0{v0.1})\n\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "refine-by-spelling",
+      "file": "check.bend",
+      "old": "S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>",
+      "new": "S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>",
+      "sha256": "06d208955f43b904a241016a6d46092621bb2337b49401cace5a89a7429c8919",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/refine-by-spelling/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/refine-by-spelling/eval-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/refine-by-spelling/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "reconstruction-shadow",
+      "phase": "eval",
+      "expected": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/refine-by-spelling/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reconstruction-shadow.bend",
+          "main",
+          "4096"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tPair{On{},On{}}\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "fields-after-parameters",
+      "file": "patterns.bend",
+      "old": "List.append(&2,U32,E.levels(introduced),open)",
+      "new": "List.append(&2,U32,open,E.levels(introduced))",
+      "sha256": "0566cd71d2b1f5d3cb9e8ba42ef541dc3c444aa644b699e5aca5cb60feef0d34",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/fields-after-parameters/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/fields-after-parameters/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/fields-after-parameters/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "field-before-parameter",
+      "phase": "check",
+      "expected": {
+        "exit": 0,
+        "contains": "0(1 $2:0;)=>case $2"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/fields-after-parameters/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/field-before-parameter.bend"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tcheck\tunmatchable-binder\t217:218:13:16\n"
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "reverse-live-fields",
+      "file": "eval.bend",
+      "old": "Object{type_id,tag,List.reverse(&2,Value,values)}",
+      "new": "Object{type_id,tag,values}",
+      "sha256": "7aae46ea120fa542319f3ddfb2fb430db58576098e009e1cb66f7e4df03d1c40",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reverse-live-fields/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reverse-live-fields/eval-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reverse-live-fields/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "mixed-live-order",
+      "phase": "eval",
+      "expected": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/reverse-live-fields/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/mixed-live-order.bend",
+          "main",
+          "4096"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "forget-reusable-field",
+      "file": "patterns.bend",
+      "old": "Bool.or(U32.is_eq(field,2),Bool.or(U32.is_eq(parent,2),U32.is_eq(mark,2)))",
+      "new": "Bool.or(U32.is_eq(parent,2),U32.is_eq(mark,2))",
+      "sha256": "95373d16b2e094ee034fcb59a7dff19ddbe03247b4024dcafbc34805b6e9ca8d",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/forget-reusable-field/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/forget-reusable-field/check-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/forget-reusable-field/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "reusable-field",
+      "phase": "check",
+      "expected": {
+        "exit": 0,
+        "contains": "0(2 $1:0;)=>call0($1:0;$1:0)"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/forget-reusable-field/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/reusable-field.bend"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tcheck\taffine-reuse\t174:179:11:6\n"
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "execute-erased-field",
+      "file": "eval.bend",
+      "old": "U32.is_eq(q,0),u => Done{Fields{type_id,tag,params,args,env,values,frames}}",
+      "new": "False{},u => Done{Fields{type_id,tag,params,args,env,values,frames}}",
+      "sha256": "060776b2779a4c1b64690acafd38e68bfacf6d34721bac0f72b7e211b3ff93e6",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/execute-erased-field/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/execute-erased-field/eval-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/execute-erased-field/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "erased-forward",
+      "phase": "fuel",
+      "expected": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/execute-erased-field/mutant.js",
+          "/Users/ericfode/src/knot/tests/compiler-fields/fixtures/erased-forward.bend",
+          "main",
+          "16"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\teval\tbudget\t0:0:0:0\n"
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "ignore-inspection-capacity",
+      "file": "eval.bend",
+      "old": "Nat.is_le(size,capacity)",
+      "new": "True{}",
+      "sha256": "2d55eb33d1dee0098f67a4a5a592b3900f2e955692633312afcf1b9cc67c28f6",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/ignore-inspection-capacity/bounds.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/ignore-inspection-capacity/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/ignore-inspection-capacity/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "inspection-capacity",
+      "phase": "bounds",
+      "expected": {
+        "exit": 0,
+        "stdout": "Next 4096\nExhausted\tcheck\tbudget\t0:0:1:0\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nExhausted\tinspect\tbudget\t0:0:0:0\nx"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/ignore-inspection-capacity/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "Next 4096\nExhausted\tcheck\tbudget\t0:0:1:0\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nx\nx\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    },
+    {
+      "name": "allow-level-overflow",
+      "file": "patterns.bend",
+      "old": "U32.is_ge(level,4096)",
+      "new": "U32.is_gt(level,4096)",
+      "sha256": "4b46862d7702c39711887bb81131bd8a228c9821b7d4f7691b16a2ab899cd6c4",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/allow-level-overflow/bounds.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/allow-level-overflow/bounds.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/allow-level-overflow/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "witness": "levels",
+      "phase": "bounds",
+      "expected": {
+        "exit": 0,
+        "stdout": "Next 4096\nExhausted\tcheck\tbudget\t0:0:1:0\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nExhausted\tinspect\tbudget\t0:0:0:0\nx"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/fields/allow-level-overflow/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "Next 4096\nNext 4097\nExhausted\tinspect\tbudget\t0:0:0:0\nOff{}\nExhausted\tinspect\tbudget\t0:0:0:0\nx\n",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill"
+    }
+  ]
+}

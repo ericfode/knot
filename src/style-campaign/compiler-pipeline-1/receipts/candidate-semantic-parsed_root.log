@@ -1,0 +1,93 @@
+
+> lint
+> node scripts/perch-workflow.mjs check src/driver.bend::parsed_root --rules compiler-checker-trust,bend-fuel-completeness,bend-effect-boundary,bend-borrow-lifetime --json
+
+{
+  "path": "src/driver.bend",
+  "name": "parsed_root",
+  "line": 21,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+    "status": "parsed",
+    "declarations": 12,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 23,
+  "asked": [
+    {
+      "rule": "bend-fuel-completeness",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+      "broken": 0.10999999999999999,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+      "broken": 0.09999999999999998,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-effect-boundary",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+      "broken": 0.16000000000000003,
+      "floor": 0.8
+    },
+    {
+      "rule": "compiler-checker-trust",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+      "broken": 0.37,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "files": [
+      {
+        "path": "src/driver.bend",
+        "source_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "src/driver.bend",
+        "name": "P.Parsed",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "S.Node",
+        "reason": "declaration-not-in-import"
+      }
+    ],
+    "truncated": false,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 4,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

@@ -1,0 +1,496 @@
+
+> lint
+> node scripts/perch-workflow.mjs check src/driver.bend::source --rules compiler-checker-trust,bend-fuel-completeness,bend-effect-boundary,bend-borrow-lifetime --json
+
+{
+  "path": "src/driver.bend",
+  "name": "source",
+  "line": 30,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+    "status": "parsed",
+    "declarations": 12,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "end_line": 37,
+  "asked": [
+    {
+      "rule": "bend-fuel-completeness",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect fuel-bounded recursive traversals in this Bend 2 declaration. When a result promises complete parsing, traversal, construction, or search, exhausting Nat fuel before the input is consumed is an explicit failure or partial result, or a stated bound covers every recursive step. Silently substituting an empty tree, missing node, truncated token stream, or successful partial parse breaks this rule. For a split n/2 and n-n/2, the larger child and the leaf step count toward the depth bound. An intentionally bounded approximation with explicit partial status is allowed. If no such traversal exists, this rule holds.",
+      "broken": 0.36,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect uses of Bend 2 arrays, handles, borrows, and stored closures. A borrowed value is not retained in a returned closure, data structure, or deferred task past the owning value's lifetime. Consumed affine File, Socket, Chan, Array, or closure values are not reused or made reusable merely by adding Data or +. Read-only borrowed inputs may be shared between synchronous fork/join branches when the owner stays alive until they join. Explicit owned Data copies are allowed. Report only a visible escape or reuse, not the mere presence of a borrow, a closure, or parallel code. If none exist, this rule holds.",
+      "broken": 0.16000000000000003,
+      "floor": 0.8
+    },
+    {
+      "rule": "bend-effect-boundary",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect foreign imports and effect sequencing in this Bend 2 declaration. Host IO stays behind an explicit IO boundary and does not enter a pure parser, proof reduction, or GPU computation. A foreign operation's error result is handled or propagated before its returned value or resource is used. Unsupported backends fail explicitly instead of pretending the operation succeeded. Ordinary pure functions may be called from IO. If no foreign or fallible effects are present, this rule holds.",
+      "broken": 0.26,
+      "floor": 0.8
+    },
+    {
+      "rule": "compiler-checker-trust",
+      "said": "Judge the parsed target declaration, using supplied helpers to establish its behavior. Do not flag an unrelated declaration merely present in context. Inspect compiler paths that accept terms, proofs, or optimization results. Timeouts, normalization fuel exhaustion, missing law bodies, parse failures, and unsupported constructs cannot be converted to successful verification. Unsafe primitives and assumed axioms remain explicit trust dependencies. A test on concrete inputs is not promoted into a universal proof. Jev or any other probabilistic model verdict cannot authorize accepting an ill-typed or unproved program. Merely recognizing unsafe syntax is allowed. If this declaration makes no acceptance decision, this rule holds.",
+      "broken": 0.38,
+      "floor": 0.8
+    }
+  ],
+  "context": {
+    "basis": "working-tree",
+    "files": [
+      {
+        "path": "src/catalog.bend",
+        "source_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+      },
+      {
+        "path": "src/check.bend",
+        "source_sha256": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2"
+      },
+      {
+        "path": "src/core.bend",
+        "source_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "source_sha256": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0"
+      },
+      {
+        "path": "src/driver.bend",
+        "source_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15"
+      },
+      {
+        "path": "src/lex.bend",
+        "source_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
+      },
+      {
+        "path": "src/parse.bend",
+        "source_sha256": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217"
+      },
+      {
+        "path": "src/syntax.bend",
+        "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+      }
+    ],
+    "unresolved": [
+      {
+        "path": "src/driver.bend",
+        "name": "Limits",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "C.Book",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "IO",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "Unit",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "S.Token",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "P.Parsed",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Error",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "Nat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "S.Token",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Nat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.Token",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Parsed",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "Nat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "S.Node",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "C.Book",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "C.Catalog",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "S.Node",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "IO.die",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "State",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Mode",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.here",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.skip_lines",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.choose",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.matches",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "U32.is_eq",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.column",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "then",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "prepend",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "invalid",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Bool.or",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "U32.is_le",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Bool.and",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "S.identifier",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "expect",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "wrap_call",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "body_end",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "unsupported",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "parameter",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Bool.pick",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "term_failure",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "U32.is_gt",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "wrap_type",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "wrap_function",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "wrap_match",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "S.Node",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "C.Catalog",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "Unit",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "names",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "C.Datatype",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "collect_types",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "unique_constructors",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "resolve_types",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "C.Signature",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/catalog.bend",
+        "name": "collect_signatures",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "C.Function",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "functions",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/core.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/core.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "S.Error",
+        "reason": "declaration-not-in-import"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "U32",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "String",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "String.concat",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "location",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "List.reverse",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "String.reverse",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "Char",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "S.choose",
+        "reason": "context-helper-limit"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "U32.is_lt",
+        "reason": "unresolved-or-builtin"
+      },
+      {
+        "path": "src/lex.bend",
+        "name": "step_at",
+        "reason": "context-helper-limit"
+      }
+    ],
+    "truncated": true,
+    "limits": {
+      "helpers": 16,
+      "files": 12,
+      "bytes": 48000,
+      "callers": 4
+    }
+  },
+  "checked": 4,
+  "broken": [],
+  "issues": null,
+  "note": null,
+  "clean": true
+}

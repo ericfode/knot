@@ -1,0 +1,92 @@
+[
+  {
+    "name": "checked-invalid",
+    "call": "D.checked(Fail{S.Invalid{\"parse\",\"sentinel\",S.At{7,9,2,3}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 2,
+      "stdout": "Before\n",
+      "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+    }
+  },
+  {
+    "name": "checked-unsupported",
+    "call": "D.checked(Fail{S.Unsupported{\"lex\",\"sentinel\",S.At{7,9,2,3}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 3,
+      "stdout": "Before\n",
+      "stderr": "Unsupported\tlex\tsentinel\t7:9:2:3\n"
+    }
+  },
+  {
+    "name": "checked-exhausted",
+    "call": "D.checked(Fail{S.Exhausted{\"check\",S.At{7,9,2,3}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 4,
+      "stdout": "Before\n",
+      "stderr": "Exhausted\tcheck\tbudget\t7:9:2:3\n"
+    }
+  },
+  {
+    "name": "checked-host",
+    "call": "D.checked(Fail{S.Host{\"read\",\"sentinel\"}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 5,
+      "stdout": "Before\n",
+      "stderr": "HostFailure\tread\tsentinel\n"
+    }
+  },
+  {
+    "name": "checked-internal",
+    "call": "D.checked(Fail{S.Internal{\"check\",\"sentinel\"}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 6,
+      "stdout": "Before\n",
+      "stderr": "InternalFailure\tcheck\tsentinel\n"
+    }
+  },
+  {
+    "name": "checked-success",
+    "call": "D.checked(Done{C.Book{Nil{},Nil{}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 0,
+      "stdout": "Before\nNext\nAfter\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "parsed-first-failure",
+    "call": "D.parsed(D.Limits{0n,0n,0n},Fail{S.Invalid{\"parse\",\"sentinel\",S.At{7,9,2,3}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 2,
+      "stdout": "Before\n",
+      "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+    }
+  },
+  {
+    "name": "parsed-checker-zero",
+    "call": "D.parsed(D.Limits{0n,0n,0n},Done{P.Parsed{S.Sequence{Nil{}},Nil{}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 4,
+      "stdout": "Before\n",
+      "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+    }
+  },
+  {
+    "name": "parsed-unused-budgets-and-rest",
+    "call": "D.parsed(D.Limits{0n,0n,512n},Done{P.Parsed{S.Sequence{Nil{}},Con{S.Token{\"unconsumed\",S.At{7,9,2,3}},Nil{}}}},book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 0,
+      "stdout": "Before\nNext\nAfter\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "source-empty",
+    "call": "D.source(D.Limits{0n,512n,512n},\"\",book => IO.print(\"Next\"))",
+    "expected": {
+      "exit": 0,
+      "stdout": "Before\nNext\nAfter\n",
+      "stderr": ""
+    }
+  }
+]

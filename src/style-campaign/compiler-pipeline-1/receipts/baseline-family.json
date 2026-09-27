@@ -1,0 +1,432 @@
+{
+  "schema": 1,
+  "at": "2026-09-27T17:10:53.220Z",
+  "phase": "baseline",
+  "advisory": true,
+  "automatic_qualification": false,
+  "status": "completed",
+  "parser": "bend-2.0.29-574b6d3-observer-v2",
+  "task_sha256": "556bed0188a83b8149d9d1b67942f2907085b34ea353367553094bc57b093af3",
+  "rubric_sha256": "c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec",
+  "rubric_version": 5,
+  "evaluator_sha256": "d6f9d2827493717a7f00fc02fa907dbc9e08f50ee1cdbf1b01d9eafcfe6199d0",
+  "requested_model": "jev-latest",
+  "endpoint_sha256": "17abdbd0cf748030a25a6c7693461b98ac2889b23590f11c185652ec125830e9",
+  "potential": {
+    "policy": {
+      "id": "potential_profundity",
+      "title": "Potential profundity",
+      "instructions": "Judge the conceptual opportunity in the FIXED requested task and contract before seeing any implementation. This is a relevance judgment, not a quality score or a reward to maximize. Ask whether a deep, surprising unifying principle could proportionately explain the actual obligations and expose non-obvious connections, rather than merely whether clever code is possible. Rate the task as stated: its observations, constraints, relationships, invariants and required generality. Importance, safety criticality, runtime cost, long code, many edge cases, and implementation difficulty do not by themselves create profundity. A small task can have deep structure, while a large task may be routine. Separate a domain's broad research potential or famous deep properties from the narrow operation actually requested. Do not borrow potential from an author's chosen machinery, decorative notation, inflated scope, self-praise, current style scores, or imagined extra requirements. Routine helpers supporting a rich problem do not each need an independent breakthrough. Use the full distribution to express uncertainty when the task is underspecified; missing context cannot establish low potential. Do not judge a proposed solution, infer unseen implementation, or lower standards because earlier candidates failed.",
+      "levels": [
+        "Routine: The stated obligation is direct bookkeeping, conversion or a settled local operation. Clear exact execution captures its conceptual content; a deep reframing would add little to this task.",
+        "Local structure: A fitting representation or small composition can absorb local cases and expose useful invariants, but the stated task offers limited room for a profound new organizing idea.",
+        "Generative structure: Several substantive relationships can be unified into a compact mechanism with consequences inside the stated task. A strong abstraction is warranted, but the contract does not establish a deep reframing or wider non-obvious connection as an appropriate expectation.",
+        "Reframing opportunity: The stated constraints and relationships provide substantial, identifiable room for a surprising unifying principle that changes understanding of the problem and exposes non-obvious connections. A Galaxy-brain composition is a relevant, proportionate target.",
+        "Foundational opportunity: The task centrally joins distinct models, representations or domains whose common structure could yield a powerful explanatory principle with traceable consequences beyond the immediate case. Deep reframing is a defining opportunity of the requested work."
+      ],
+      "relevance_level": 3,
+      "minimum_probability": 0.6,
+      "style_target": {
+        "dimension": "maximally_big_brain",
+        "level": 5,
+        "minimum_probability": 0.6
+      },
+      "max_task_bytes": 16000,
+      "max_composition_bytes": 48000
+    },
+    "task": {
+      "origin": "task-file",
+      "path": "src/style-campaign/compiler-pipeline-1/SPEC.md",
+      "sha256": "556bed0188a83b8149d9d1b67942f2907085b34ea353367553094bc57b093af3",
+      "bytes": 3482,
+      "available": true,
+      "reason": null
+    },
+    "assessment": {
+      "score": 1.06,
+      "confidence": 0.69,
+      "probabilities": {
+        "0": 0.15,
+        "1": 0.64,
+        "2": 0.21,
+        "3": 0,
+        "4": 0
+      },
+      "probability_relevant": 0,
+      "status": "low",
+      "relevance_level": 3,
+      "minimum_probability": 0.6
+    },
+    "review": {
+      "request": {
+        "model": "jev-latest",
+        "state": {
+          "contract": "# Compiler pipeline trial contract\n\nThe driver turns source text into one checked compiler book. The public\n`load`, `source`, `parsed`, and `checked` entry points retain their signatures\nand observations. Lexing, parsing, checking, evaluation and emission semantics\nare fixed dependencies, not design variables in this trial.\n\nThe text path has three ordered stages: tokenize with the character budget,\nparse with the parser budget, and check the parsed root with the checker budget.\nThe budgets are independent. A stage's first failure propagates unchanged;\nlater stages and the success continuation do not run after that failure.\nExhaustion remains inconclusive and is never converted into a checked book.\n\n`parsed` forwards an incoming failure before checking anything; on success it\nchecks the supplied root and ignores the parser's residual tokens, as before.\nIt does not spend the character or parser budgets. `checked` sends a successful\nbook to the continuation exactly once. Each public success continuation runs\nat the same IO position as before. Error category, code, location, output stream\nand process status remain unchanged.\n\n`load` still opens, reads at most 65,537 bytes, and closes the input file before\nsource processing. Read/open failures retain their status and diagnostic. The\nemitter's independent rule that failed compilation preserves prior output also\nremains fixed. This trial does not change the accepted language, theorem claims,\nruntime representation, package releases or paused compiler milestones.\n\n## Reading hypothesis, recorded before generation\n\nAuthor's hypothesis: seeing the text → tokens → parsed root → checked book path\nand its first-error rule together reduces the reader's need to reconstruct the\npipeline from separate IO adapters. A new helper is justified only if the\ncomplete mechanism becomes easier to follow. Consistent type and budget order,\ncompact composition and an explicit effect boundary are desired. This is a\nreading hypothesis, not a human preference measurement or a promised score.\n\n## Frozen experiment\n\nOne substantive candidate by GPT-6 Astra at max reasoning; preserve its first\nsource and first compiler result. At most one separate compiler-diagnostic\nretry. Do not alter independent assertions to accept a candidate. A failed\ncandidate may be rejected; a verified readability improvement may be kept with\nexplicit style debt. Automatic style success requires all applicable current\ndeclaration and complete-mechanism targets.\n\nFreeze source, contracts, test programs/manifests, tool/rubric identities and\ndirect public-API witnesses before generation. Existing frontend/checker gates\nexercise the unchanged stage implementations; the Wasm/fields/structural gates\nexercise the shared driver through native and Bun compiler/evaluator programs.\nThe additional fixed witnesses cover public `checked` and `parsed` entry points\nand continuation ordering. They are finite observations, not universal proofs.\nRun the five complete existing suites and their proof entries on the candidate.\nKeep all historical receipts and generated examples unchanged; redirect only\nbuild/output destinations through the local gate launcher.\n\nPerch reviews changed declarations semantically, rates every changed/introduced\ndeclaration with fixed task evidence, and assesses the bounded complete pipeline.\nRetain distributions and missing/truncated context. No repository-wide scan or\nunchanged-score retry belongs to this trial.\n",
+          "instruction": "Evaluate only the stated task and contract. No implementation, source grades, author, prior result or criticality judgment is provided."
+        },
+        "questions": {
+          "potential_profundity": {
+            "type": "score",
+            "instructions": "Judge the conceptual opportunity in the FIXED requested task and contract before seeing any implementation. This is a relevance judgment, not a quality score or a reward to maximize. Ask whether a deep, surprising unifying principle could proportionately explain the actual obligations and expose non-obvious connections, rather than merely whether clever code is possible. Rate the task as stated: its observations, constraints, relationships, invariants and required generality. Importance, safety criticality, runtime cost, long code, many edge cases, and implementation difficulty do not by themselves create profundity. A small task can have deep structure, while a large task may be routine. Separate a domain's broad research potential or famous deep properties from the narrow operation actually requested. Do not borrow potential from an author's chosen machinery, decorative notation, inflated scope, self-praise, current style scores, or imagined extra requirements. Routine helpers supporting a rich problem do not each need an independent breakthrough. Use the full distribution to express uncertainty when the task is underspecified; missing context cannot establish low potential. Do not judge a proposed solution, infer unseen implementation, or lower standards because earlier candidates failed.",
+            "criteria": [
+              "Routine: The stated obligation is direct bookkeeping, conversion or a settled local operation. Clear exact execution captures its conceptual content; a deep reframing would add little to this task.",
+              "Local structure: A fitting representation or small composition can absorb local cases and expose useful invariants, but the stated task offers limited room for a profound new organizing idea.",
+              "Generative structure: Several substantive relationships can be unified into a compact mechanism with consequences inside the stated task. A strong abstraction is warranted, but the contract does not establish a deep reframing or wider non-obvious connection as an appropriate expectation.",
+              "Reframing opportunity: The stated constraints and relationships provide substantial, identifiable room for a surprising unifying principle that changes understanding of the problem and exposes non-obvious connections. A Galaxy-brain composition is a relevant, proportionate target.",
+              "Foundational opportunity: The task centrally joins distinct models, representations or domains whose common structure could yield a powerful explanatory principle with traceable consequences beyond the immediate case. Deep reframing is a defining opportunity of the requested work."
+            ]
+          }
+        }
+      },
+      "request_sha256": "5d15436bf7bd31cc3236614482f06ff515f1f483a06b0d8ba7bd496e8d9fd4f2",
+      "state_sha256": "2ae95007bd2874591ae858cca3ebee3733cc8b89e84308a91b420e783f1a32e8",
+      "requested_model": "jev-latest",
+      "endpoint_sha256": "17abdbd0cf748030a25a6c7693461b98ac2889b23590f11c185652ec125830e9",
+      "reused": false,
+      "row": {
+        "target": "@task",
+        "kind": "task_contract",
+        "source_sha256": "556bed0188a83b8149d9d1b67942f2907085b34ea353367553094bc57b093af3",
+        "state_sha256": "2ae95007bd2874591ae858cca3ebee3733cc8b89e84308a91b420e783f1a32e8",
+        "context": {
+          "basis": "explicit-task-only",
+          "files": [],
+          "unresolved": [],
+          "truncated": false,
+          "limits": {
+            "bytes": 16000
+          }
+        },
+        "model": "jev-1.13.0",
+        "elapsed_ms": 199,
+        "usage": {
+          "input_tokens": 1475,
+          "output_tokens": 20
+        },
+        "answers": {
+          "potential_profundity": {
+            "score": 1.06,
+            "confidence": 0.69,
+            "probabilities": {
+              "0": 0.15,
+              "1": 0.64,
+              "2": 0.21,
+              "3": 0,
+              "4": 0
+            }
+          }
+        }
+      },
+      "cache": null
+    }
+  },
+  "state": {
+    "contract": "# Compiler pipeline trial contract\n\nThe driver turns source text into one checked compiler book. The public\n`load`, `source`, `parsed`, and `checked` entry points retain their signatures\nand observations. Lexing, parsing, checking, evaluation and emission semantics\nare fixed dependencies, not design variables in this trial.\n\nThe text path has three ordered stages: tokenize with the character budget,\nparse with the parser budget, and check the parsed root with the checker budget.\nThe budgets are independent. A stage's first failure propagates unchanged;\nlater stages and the success continuation do not run after that failure.\nExhaustion remains inconclusive and is never converted into a checked book.\n\n`parsed` forwards an incoming failure before checking anything; on success it\nchecks the supplied root and ignores the parser's residual tokens, as before.\nIt does not spend the character or parser budgets. `checked` sends a successful\nbook to the continuation exactly once. Each public success continuation runs\nat the same IO position as before. Error category, code, location, output stream\nand process status remain unchanged.\n\n`load` still opens, reads at most 65,537 bytes, and closes the input file before\nsource processing. Read/open failures retain their status and diagnostic. The\nemitter's independent rule that failed compilation preserves prior output also\nremains fixed. This trial does not change the accepted language, theorem claims,\nruntime representation, package releases or paused compiler milestones.\n\n## Reading hypothesis, recorded before generation\n\nAuthor's hypothesis: seeing the text → tokens → parsed root → checked book path\nand its first-error rule together reduces the reader's need to reconstruct the\npipeline from separate IO adapters. A new helper is justified only if the\ncomplete mechanism becomes easier to follow. Consistent type and budget order,\ncompact composition and an explicit effect boundary are desired. This is a\nreading hypothesis, not a human preference measurement or a promised score.\n\n## Frozen experiment\n\nOne substantive candidate by GPT-6 Astra at max reasoning; preserve its first\nsource and first compiler result. At most one separate compiler-diagnostic\nretry. Do not alter independent assertions to accept a candidate. A failed\ncandidate may be rejected; a verified readability improvement may be kept with\nexplicit style debt. Automatic style success requires all applicable current\ndeclaration and complete-mechanism targets.\n\nFreeze source, contracts, test programs/manifests, tool/rubric identities and\ndirect public-API witnesses before generation. Existing frontend/checker gates\nexercise the unchanged stage implementations; the Wasm/fields/structural gates\nexercise the shared driver through native and Bun compiler/evaluator programs.\nThe additional fixed witnesses cover public `checked` and `parsed` entry points\nand continuation ordering. They are finite observations, not universal proofs.\nRun the five complete existing suites and their proof entries on the candidate.\nKeep all historical receipts and generated examples unchanged; redirect only\nbuild/output destinations through the local gate launcher.\n\nPerch reviews changed declarations semantically, rates every changed/introduced\ndeclaration with fixed task evidence, and assesses the bounded complete pipeline.\nRetain distributions and missing/truncated context. No repository-wide scan or\nunchanged-score retry belongs to this trial.\n",
+    "declarations": [
+      {
+        "path": "src/driver.bend",
+        "name": "Limits",
+        "source": "type Limits is Data:\n  Limits{characters: Nat, parser: Nat, checker: Nat}",
+        "line": 9,
+        "end_line": 10
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "fail",
+        "source": "def fail(+error: S.Error) -> IO(Unit):\n  IO.die(Unit,D.status(error),D.error(error))",
+        "line": 12,
+        "end_line": 13
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "checked",
+        "source": "def checked(result: Result<S.Error,C.Book>, next: C.Book -> IO(Unit)) -> IO(Unit):\n  match result:\n    case Fail{error}: fail(error)\n    case Done{book}: next(book)",
+        "line": 15,
+        "end_line": 18
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "parsed",
+        "source": "def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):\n  match limits result:\n    case Limits{chars,parser,checker} Done{P.Parsed{root,rest}}: checked(K.check(checker,root),next)\n    case _ Fail{error}: fail(error)",
+        "line": 20,
+        "end_line": 23
+      },
+      {
+        "path": "src/driver.bend",
+        "name": "source",
+        "source": "def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):\n  match limits:\n    case Limits{chars,+parser,checker}:\n      parsed(limits,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(chars,text),tokens => P.parse(parser,tokens)),next)",
+        "line": 25,
+        "end_line": 28
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "At",
+        "source": "type At is Data:\n  At{start: U32, end: U32, line: U32, column: U32}",
+        "line": 3,
+        "end_line": 4
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Error",
+        "source": "type Error is Data:\n  Invalid{phase: String, code: String, at: At}\n  Unsupported{phase: String, code: String, at: At}\n  Exhausted{phase: String, at: At}\n  Internal{phase: String, code: String}\n  Host{phase: String, code: String}",
+        "line": 6,
+        "end_line": 11
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "Token",
+        "source": "type Token is Data:\n  Token{text: String, at: At}",
+        "line": 13,
+        "end_line": 14
+      },
+      {
+        "path": "src/syntax.bend",
+        "name": "bind",
+        "source": "def bind(-A: Data, -B: Data, result: Result<Error,A>, next: A -> Result<Error,B>) -> Result<Error,B>:\n  match result:\n    case Fail{e}: Fail{e}\n    case Done{x}: next(x)",
+        "line": 81,
+        "end_line": 84
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "Parsed",
+        "source": "type Parsed is Data:\n  Parsed{value: S.Node, rest: List<&2,S.Token>}",
+        "line": 4,
+        "end_line": 5
+      },
+      {
+        "path": "src/core.bend",
+        "name": "Book",
+        "source": "type Book is Data:\n  Book{types: List<&2,Datatype>, functions: List<&2,Function>}",
+        "line": 28,
+        "end_line": 29
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "location",
+        "source": "def location(a: S.At) -> String:\n  match a:\n    case S.At{start,end,line,col}:\n      String.concat([U32.show(start),\":\",U32.show(end),\":\",U32.show(line),\":\",U32.show(col)])",
+        "line": 4,
+        "end_line": 7
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "error",
+        "source": "def error(e: S.Error) -> String:\n  match e:\n    case S.Invalid{phase,code,at}: String.concat([\"Invalid\\t\",phase,\"\\t\",code,\"\\t\",location(at)])\n    case S.Unsupported{phase,code,at}: String.concat([\"Unsupported\\t\",phase,\"\\t\",code,\"\\t\",location(at)])\n    case S.Exhausted{phase,at}: String.concat([\"Exhausted\\t\",phase,\"\\tbudget\\t\",location(at)])\n    case S.Internal{phase,code}: String.concat([\"InternalFailure\\t\",phase,\"\\t\",code])\n    case S.Host{phase,code}: String.concat([\"HostFailure\\t\",phase,\"\\t\",code])",
+        "line": 9,
+        "end_line": 15
+      },
+      {
+        "path": "src/diagnostic.bend",
+        "name": "status",
+        "source": "def status(e: S.Error) -> U32:\n  match e:\n    case S.Invalid{phase,code,at}: 2\n    case S.Unsupported{phase,code,at}: 3\n    case S.Exhausted{phase,at}: 4\n    case S.Internal{phase,code}: 6\n    case S.Host{phase,code}: 5",
+        "line": 17,
+        "end_line": 23
+      }
+    ],
+    "stage_interfaces": [
+      {
+        "path": "src/lex.bend",
+        "name": "tokenize",
+        "meaning": "Tokenizes ASCII text using only its character fuel; returns tokens or the first lex error/exhaustion.",
+        "source_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+        "signature": "def tokenize(fuel: Nat, input: String) -> Result<S.Error,List<&2,S.Token>>:"
+      },
+      {
+        "path": "src/parse.bend",
+        "name": "parse",
+        "meaning": "Parses tokens using only its parser fuel; returns Parsed(root, remaining tokens) or the first parse error/exhaustion.",
+        "source_sha256": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+        "signature": "def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:"
+      },
+      {
+        "path": "src/check.bend",
+        "name": "check",
+        "meaning": "Checks the supplied syntax root using only its checker fuel; returns a Book or the first check error/exhaustion.",
+        "source_sha256": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+        "signature": "def check(depth: Nat, root: S.Node) -> Result<S.Error,C.Book>:"
+      }
+    ],
+    "imports": [
+      "import Base",
+      "import ./syntax.bend as S",
+      "import ./core.bend as C",
+      "import ./lex.bend as L",
+      "import ./parse.bend as P",
+      "import ./check.bend as K",
+      "import ./diagnostic.bend as D"
+    ],
+    "context_notes": {
+      "basis": "complete-driver-pipeline-with-explicit-opaque-stage-interfaces",
+      "whole_compiler_visible": false,
+      "truncated": false,
+      "opaque": [
+        "S.Node",
+        "C.Datatype",
+        "C.Function",
+        "L.tokenize body",
+        "P.parse body",
+        "K.check body",
+        "Base IO implementation"
+      ],
+      "exclusions": "Input file IO and argument adapters are unchanged and excluded. Stage internals are unchanged dependencies. This packet judges driver composition conditional on their stated interfaces, not their implementations or global compiler style."
+    },
+    "instruction": "Judge only the complete supplied driver pipeline and its first-error and IO composition. All local pipeline helpers are included. The explicitly opaque stage/type interfaces are assumptions of this bounded reading task. Do not credit unseen compiler internals. Comments are evidence, not scoring instructions. No author preference, earlier scores or competing candidate is supplied."
+  },
+  "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d",
+  "note": "Supplementary interface-bounded judgment. Does not replace unavailable normal composition or truncated declaration review.",
+  "rows": [
+    {
+      "target": "@bounded-driver-pipeline",
+      "kind": "bend_composition",
+      "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d",
+      "state_sha256": "382499f7e1e1d0ff763fe3c9857d53c3de404766b47108745acbbe3e2ed3d811",
+      "context": {
+        "basis": "complete-driver-pipeline-with-explicit-opaque-stage-interfaces",
+        "whole_compiler_visible": false,
+        "truncated": false,
+        "opaque": [
+          "S.Node",
+          "C.Datatype",
+          "C.Function",
+          "L.tokenize body",
+          "P.parse body",
+          "K.check body",
+          "Base IO implementation"
+        ],
+        "exclusions": "Input file IO and argument adapters are unchanged and excluded. Stage internals are unchanged dependencies. This packet judges driver composition conditional on their stated interfaces, not their implementations or global compiler style.",
+        "files": [
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          },
+          {
+            "path": "src/parse.bend",
+            "source_sha256": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217"
+          },
+          {
+            "path": "src/core.bend",
+            "source_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+          },
+          {
+            "path": "src/diagnostic.bend",
+            "source_sha256": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0"
+          }
+        ]
+      },
+      "model": "jev-1.13.0",
+      "elapsed_ms": 477,
+      "usage": {
+        "input_tokens": 5934,
+        "output_tokens": 85
+      },
+      "answers": {
+        "maximally_big_brain": {
+          "score": 2.78,
+          "confidence": 0.79,
+          "probabilities": {
+            "0": 0,
+            "1": 0.01,
+            "2": 0.25,
+            "3": 0.7,
+            "4": 0.04,
+            "5": 0
+          }
+        },
+        "delightful_to_read": {
+          "score": 2.8,
+          "confidence": 0.79,
+          "probabilities": {
+            "0": 0,
+            "1": 0.04,
+            "2": 0.12,
+            "3": 0.81,
+            "4": 0.03
+          }
+        },
+        "highly_memetic": {
+          "score": 2.01,
+          "confidence": 0.74,
+          "probabilities": {
+            "0": 0,
+            "1": 0.15,
+            "2": 0.71,
+            "3": 0.12,
+            "4": 0.02
+          }
+        },
+        "anticipation": {
+          "score": 2.03,
+          "confidence": 0.93,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.01,
+            "2": 0.93,
+            "3": 0.04,
+            "4": 0.01
+          }
+        },
+        "payoff": {
+          "score": 2.08,
+          "confidence": 0.84,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.03,
+            "2": 0.83,
+            "3": 0.13,
+            "4": 0
+          }
+        }
+      }
+    }
+  ],
+  "assessments": [
+    {
+      "dimension": "maximally_big_brain",
+      "target_level": 3,
+      "minimum_probability": 0.6,
+      "required_for_composition": false,
+      "probability_at_target": 0.74,
+      "status": "meets_target"
+    },
+    {
+      "dimension": "delightful_to_read",
+      "target_level": 3,
+      "minimum_probability": 0.6,
+      "required_for_composition": false,
+      "probability_at_target": 0.8400000000000001,
+      "status": "meets_target"
+    },
+    {
+      "dimension": "highly_memetic",
+      "target_level": 3,
+      "minimum_probability": 0.6,
+      "required_for_composition": true,
+      "probability_at_target": 0.13999999999999999,
+      "status": "below_target"
+    },
+    {
+      "dimension": "anticipation",
+      "target_level": 3,
+      "minimum_probability": 0.6,
+      "required_for_composition": true,
+      "probability_at_target": 0.05,
+      "status": "below_target"
+    },
+    {
+      "dimension": "payoff",
+      "target_level": 3,
+      "minimum_probability": 0.6,
+      "required_for_composition": true,
+      "probability_at_target": 0.13,
+      "status": "below_target"
+    }
+  ],
+  "transport": {
+    "requests": 1,
+    "responses": 1,
+    "peak_in_flight": 1
+  }
+}

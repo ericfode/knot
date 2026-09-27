@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "id": "3a23551e-5ec0-414f-8186-782310420a08",
+  "at": "2026-09-27T17:13:10.956Z",
+  "command": "check",
+  "target": "src/driver.bend",
+  "revision": "f95ece4057c54cb272bbd9fb7ff81fe3e800804f",
+  "source_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+  "rules_sha256": "1be3e0c8aa5591b14ae6b82fd140b7218a5ee06d4416c7ebe54d1740b6e794bd",
+  "selected_rules": [
+    "compiler-checker-trust",
+    "bend-fuel-completeness",
+    "bend-effect-boundary",
+    "bend-borrow-lifetime"
+  ],
+  "perch_version": "0.3.5",
+  "requested_model": "jev-latest",
+  "resolved_model": "jev-1.13.0",
+  "model_resolution": "provider-responses-this-run",
+  "provider_requests": 1,
+  "provider_responses": 1,
+  "models": [
+    "jev-1.13.0"
+  ],
+  "answers": [
+    {
+      "rule": "bend-fuel-completeness",
+      "probability_true": 0.89
+    },
+    {
+      "rule": "bend-borrow-lifetime",
+      "probability_true": 0.9
+    },
+    {
+      "rule": "bend-effect-boundary",
+      "probability_true": 0.84
+    },
+    {
+      "rule": "compiler-checker-trust",
+      "probability_true": 0.63
+    }
+  ],
+  "usage": {
+    "input_tokens": 2189,
+    "output_tokens": 88
+  },
+  "elapsed_ms": 341,
+  "upstream_exit": 0,
+  "exit": 0,
+  "status": "completed",
+  "checked": 4,
+  "scan": null,
+  "parser": {
+    "profile": "language-pack-1.20-v3+knot-bend-db5b4e874fbd74a4",
+    "status": "parsed",
+    "declarations": 12,
+    "diagnostics": [
+      {
+        "kind": "unsupported",
+        "message": "Imported module identities, declaration existence, constructor and datatype arities, and template signatures are unresolved; this analysis never loads dependencies.",
+        "location": null
+      },
+      {
+        "kind": "unsupported",
+        "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+        "location": null
+      }
+    ],
+    "metadata": {
+      "profile": "bend-2.0.29-574b6d3-observer-v2",
+      "compiler_commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+      "dependency_resolution": "none",
+      "typechecked": false,
+      "metrics_status": "unsupported"
+    }
+  },
+  "parser_coverage": null,
+  "units": [
+    {
+      "path": "src/driver.bend",
+      "name": "parsed_root",
+      "line": 21,
+      "end_line": 23,
+      "checked": 4,
+      "asked": [
+        {
+          "rule": "bend-fuel-completeness",
+          "broken": 0.10999999999999999,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-borrow-lifetime",
+          "broken": 0.09999999999999998,
+          "floor": 0.8
+        },
+        {
+          "rule": "bend-effect-boundary",
+          "broken": 0.16000000000000003,
+          "floor": 0.8
+        },
+        {
+          "rule": "compiler-checker-trust",
+          "broken": 0.37,
+          "floor": 0.8
+        }
+      ],
+      "broken": [],
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/driver.bend",
+            "source_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/driver.bend",
+            "name": "P.Parsed",
+            "reason": "declaration-not-in-import"
+          },
+          {
+            "path": "src/driver.bend",
+            "name": "S.Node",
+            "reason": "declaration-not-in-import"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      }
+    }
+  ],
+  "findings": [],
+  "issue_count": null,
+  "adjudication": "unreviewed"
+}

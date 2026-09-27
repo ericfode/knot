@@ -1,0 +1,649 @@
+{
+  "date": "2026-09-27T17:12:39.996737+00:00",
+  "status": "passed",
+  "phase": "candidate",
+  "inputs": {
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+    "src/style-campaign/compiler-pipeline-1/witnesses.json": "0fc68c635402e03b695d3f056e27f6235bc7726d90798354a16131e77cbb5ac0",
+    "src/style-campaign/compiler-pipeline-1/run-witnesses.py": "d336fcdba2e91ad4d514e40604bf1b88286fedeb067fad1d9de135673e54e6a3"
+  },
+  "observations": [
+    {
+      "case": "checked-invalid",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "b4cb32eda351cefef8c759c93c340a512145b8b5333b4b67f8aab59deb2d1528",
+      "artifact_sha256": "29eb2da547855abd34623220e57fc43ea6851d88e2ce7bf3ef8cce8e45875327",
+      "expected": {
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid"
+        ],
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-invalid",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "b4cb32eda351cefef8c759c93c340a512145b8b5333b4b67f8aab59deb2d1528",
+      "artifact_sha256": "99a3ce6d096fd64caf2cd427b0675f4c9553eb7cd5c1829ac03fa0ae94c58a73",
+      "expected": {
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-invalid.js"
+        ],
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-unsupported",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "4f36d3dbb6b95c7bb633e928c79f86330b8ff4c3ff16247c2a35a6101ab382ae",
+      "artifact_sha256": "e6907dacdce26a56acb42f08c7393ca9aaa95547a1952dd970d0bc4f5d59d74c",
+      "expected": {
+        "exit": 3,
+        "stdout": "Before\n",
+        "stderr": "Unsupported\tlex\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported"
+        ],
+        "exit": 3,
+        "stdout": "Before\n",
+        "stderr": "Unsupported\tlex\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-unsupported",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "4f36d3dbb6b95c7bb633e928c79f86330b8ff4c3ff16247c2a35a6101ab382ae",
+      "artifact_sha256": "7c28e7caccef84b7b9601f2f404bc3793b0d08addc0758025f590b8f3c84dbb6",
+      "expected": {
+        "exit": 3,
+        "stdout": "Before\n",
+        "stderr": "Unsupported\tlex\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-unsupported.js"
+        ],
+        "exit": 3,
+        "stdout": "Before\n",
+        "stderr": "Unsupported\tlex\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-exhausted",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "b2a5d57aeb1f5643c70e2e5ee36869e42dcca8cfc0cbb6024f83965ea072deaa",
+      "artifact_sha256": "840dbec765accb2871493868a55659b65c3c11ab2de3990af930afb1b3ed7ba7",
+      "expected": {
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted"
+        ],
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-exhausted",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "b2a5d57aeb1f5643c70e2e5ee36869e42dcca8cfc0cbb6024f83965ea072deaa",
+      "artifact_sha256": "c70dc3d64496d6da5135e37c9ba28ac516caf2d0bdbaf1b37d956e04aa27a43b",
+      "expected": {
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-exhausted.js"
+        ],
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "checked-host",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "1dcf15f3a13cc3d3045dc4ee80d787715481a2e12c4109058decfb41669de780",
+      "artifact_sha256": "bbb917926b1ec9c79b07bd7c9922b7e91fec2c33deec3f4d76902b263924e1f8",
+      "expected": {
+        "exit": 5,
+        "stdout": "Before\n",
+        "stderr": "HostFailure\tread\tsentinel\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host"
+        ],
+        "exit": 5,
+        "stdout": "Before\n",
+        "stderr": "HostFailure\tread\tsentinel\n"
+      }
+    },
+    {
+      "case": "checked-host",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "1dcf15f3a13cc3d3045dc4ee80d787715481a2e12c4109058decfb41669de780",
+      "artifact_sha256": "a76325b4fcf3f0930d5638c092dca888e4ea84766755b619d9557d83bf0c9916",
+      "expected": {
+        "exit": 5,
+        "stdout": "Before\n",
+        "stderr": "HostFailure\tread\tsentinel\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-host.js"
+        ],
+        "exit": 5,
+        "stdout": "Before\n",
+        "stderr": "HostFailure\tread\tsentinel\n"
+      }
+    },
+    {
+      "case": "checked-internal",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "d27dbf92fcf59f4df420672e66f5c619137c5399945184fc0391921fb6959ebe",
+      "artifact_sha256": "2235f832f1a0003911ca68813e41b2be5726e84641d96041eebc093690171380",
+      "expected": {
+        "exit": 6,
+        "stdout": "Before\n",
+        "stderr": "InternalFailure\tcheck\tsentinel\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal"
+        ],
+        "exit": 6,
+        "stdout": "Before\n",
+        "stderr": "InternalFailure\tcheck\tsentinel\n"
+      }
+    },
+    {
+      "case": "checked-internal",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "d27dbf92fcf59f4df420672e66f5c619137c5399945184fc0391921fb6959ebe",
+      "artifact_sha256": "e6aedc6bf4d3bccff19ef56ef9b924a7dae436a3b12c8e6065f2a45b1c3c3eb5",
+      "expected": {
+        "exit": 6,
+        "stdout": "Before\n",
+        "stderr": "InternalFailure\tcheck\tsentinel\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-internal.js"
+        ],
+        "exit": 6,
+        "stdout": "Before\n",
+        "stderr": "InternalFailure\tcheck\tsentinel\n"
+      }
+    },
+    {
+      "case": "checked-success",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "5f9bd02a04d95fb48cb2b982cbaeada75570bfd41439c9422ba6f739e557a334",
+      "artifact_sha256": "507461eef0caaa5a5ef9356612dae2ad159acda9f2c8e2ae13e879da3976058b",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "checked-success",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "5f9bd02a04d95fb48cb2b982cbaeada75570bfd41439c9422ba6f739e557a334",
+      "artifact_sha256": "0ad6ecad69223092a01556fd06669ada7bf5062bbd32bba3aec188b13ad64f88",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/checked-success.js"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "parsed-first-failure",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "962906d9cfb7dbaa291874f231b079685c23d423e16bc05387ff53f2c3bd31fe",
+      "artifact_sha256": "5b2c1c7333671db0565dc345a4d06b6c8553900f8e1bd033580761fc777a0832",
+      "expected": {
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure"
+        ],
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "parsed-first-failure",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "962906d9cfb7dbaa291874f231b079685c23d423e16bc05387ff53f2c3bd31fe",
+      "artifact_sha256": "ed58e576a510c5d94d6f7dd442df2a0e3a9a0b74b68a787b49ed22ee94e9d45c",
+      "expected": {
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-first-failure.js"
+        ],
+        "exit": 2,
+        "stdout": "Before\n",
+        "stderr": "Invalid\tparse\tsentinel\t7:9:2:3\n"
+      }
+    },
+    {
+      "case": "parsed-checker-zero",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "33ac69693180f46d08e7bd3dcaa8e6055da9f1bddd39ed65f12ac1adb0bbdce3",
+      "artifact_sha256": "c605102eba1c723eed4602ed602b152b05042d197780ce7be259de4b2b68f135",
+      "expected": {
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero"
+        ],
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "case": "parsed-checker-zero",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "33ac69693180f46d08e7bd3dcaa8e6055da9f1bddd39ed65f12ac1adb0bbdce3",
+      "artifact_sha256": "16264202abce8e52417eabbf07a75caa8e2d77456856c90687bc448e9dd03516",
+      "expected": {
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-checker-zero.js"
+        ],
+        "exit": 4,
+        "stdout": "Before\n",
+        "stderr": "Exhausted\tcheck\tbudget\t0:0:0:0\n"
+      }
+    },
+    {
+      "case": "parsed-unused-budgets-and-rest",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "faa84b294e2aa9d7024357d1487abf55bec8f4c69e78c9408e2ecaf8d9a84ae3",
+      "artifact_sha256": "5ca43dca485a0b5dabb46547384cb4f0d631b717381b8d08a576f0d0fbab16de",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "parsed-unused-budgets-and-rest",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "faa84b294e2aa9d7024357d1487abf55bec8f4c69e78c9408e2ecaf8d9a84ae3",
+      "artifact_sha256": "a821d84ad89bf4e3ae101d984c792c51766282ac8313b269141ee0e9c4f84618",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/parsed-unused-budgets-and-rest.js"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "source-empty",
+      "lane": "native",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "6701416ff134bb8f820321db5dfe001f9bbaef964483ac3f99be48684902db10",
+      "artifact_sha256": "7a91b74716c4648659d7eca327da48cd6f6682b75eaa51195eee390c34eef23f",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "source-empty",
+      "lane": "bun",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "source_sha256": "6701416ff134bb8f820321db5dfe001f9bbaef964483ac3f99be48684902db10",
+      "artifact_sha256": "18025737b7018a82c468bf94d9de209c342252280ae2719b955246f7e8667859",
+      "expected": {
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      },
+      "actual": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/witnesses/source-empty.js"
+        ],
+        "exit": 0,
+        "stdout": "Before\nNext\nAfter\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

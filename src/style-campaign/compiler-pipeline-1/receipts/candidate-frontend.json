@@ -1,0 +1,996 @@
+{
+  "date": "2026-09-27T17:12:39.842053+00:00",
+  "scope": "Parser checkpoint, not checked source-to-Wasm compilation",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed",
+  "inputs": {
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+    "tests/subsets/s1/affine-reuse.bend": "10ca59993f373c7598a4962b82e46708c89c5bee222d52c4a8ee0e5d8ae46b6c",
+    "tests/subsets/s1/constructor-arity.bend": "8e004fc31333088b84bd9b72ea59d466d247afd1751698b17c2ff1fd4a07f9a4",
+    "tests/subsets/s1/constructor-mismatch.bend": "69c0a6495de5de23fb46f5f58fbad817c060f811f8f4300002f92f0ae65e71d5",
+    "tests/subsets/s1/data-reuse.bend": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+    "tests/subsets/s1/erased-forward.bend": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+    "tests/subsets/s1/erased-live.bend": "de551e3db9e82200ea5b409cce9e1b4099062026d2c4972ff6561eb46e54d03e",
+    "tests/subsets/s1/flag.bend": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+    "tests/subsets/s1/forward-call.bend": "f46ecf0b6433eaee50ce2558855704abf752e1aa500ff4e5b8ffddf25baf213a",
+    "tests/subsets/s1/forward-type.bend": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+    "tests/subsets/s1/missing-arm.bend": "160b08f6ab6b1919b2003d1d1def7d17e8d81ba94e076b9b2c789acaa94db330",
+    "tests/subsets/s1/nested-match.bend": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+    "tests/subsets/s1/shadowing-type.bend": "2960eb8870b605fe8c1c91a18e3d2c4bdf862f2545cb828b978bf4ff6232264a",
+    "tests/subsets/s1/shadowing.bend": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+    "tests/subsets/s1/unannotated-constructor.bend": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020",
+    "tests/subsets/frontend-cases.json": "34e1c5cb0f68b2d3c5a8c0f35c0cfd5eca22169d5339b4a7369ae31c33c8ff2e",
+    "tests/subsets/lexer-observe.bend": "e96860f0fb4f77f17c78de0424215042d4d8f8cb8f1dc040ab7134912c5bc220",
+    "tests/subsets/check_frontend.py": "0f6270231b787e027df8455bc6af30c917726811a1e637093d116419945e4996"
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3"
+  },
+  "proof": {
+    "argv": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/src/PROOF.bend"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": "bend 2.0.31 is available: run bend update\n"
+  },
+  "builds": [
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/src/parse-cli.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/src/parse-cli.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "bend 2.0.31 is available: run bend update\n"
+    }
+  ],
+  "generated": {
+    ".local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js": "9e9eb7bb3c80cd6cc97142dd6c98775ab5b6554f2814c63fa4a276c6181f530f",
+    ".local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli": "72ca94c1a8fed8a8806401390ae988b0e697137f36cf40ae0346992c4d597f80"
+  },
+  "fixtures": [
+    {
+      "file": "s1/flag.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/data-reuse.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/erased-forward.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/shadowing.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/nested-match.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/forward-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/affine-reuse.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: reuse\n7 | \n8>| def reuse(x: Flag) -> Flag:\n  |           ^\n9 |   first(x,x)\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/erased-live.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nLocation: observe\n6 |   match ghost:\n7>|     case Off{}: On{}\n  |          ^^^^^\n8 |     case On{}: Off{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/missing-arm.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : cases for On\n- observed : \\{}\nLocation: flip\n5 | def flip(x: Flag) -> Flag:\n6>|   match x:\n  |   ^^^^^^^^\n7 |     case Off{}: On{}\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/forward-call.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : flip\nContext:\n- x : Flag\nLocation: forward\n5 | def forward(x: Flag) -> Flag:\n6>|   flip(x)\n  |   ^^^^\n7 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/constructor-mismatch.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Flag:\n 9>|   OtherTag{}\n   |   ^^^^^^^^^^\n10 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/constructor-arity.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Off with 0 fields\n- observed : Off{On{}}\nLocation: main\n5 | def main() -> Flag:\n6>|   Off{On{}}\n  |   ^^^^^^^^^\n7 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/shadowing-type.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nContext:\n- x : Flag\n- x : Other\nLocation: shadow\n12 |   x : Other = OtherTag{}\n13>|   identity(x)\n   |            ^\n14 | \nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "file": "s1/unannotated-constructor.bend",
+      "reference": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : On{}\nLocation: main\n5 | def main() -> Flag:\n6>|   x = On{}\n  |       ^^^^\n7 |   x\nbend 2.0.31 is available: run bend update\n"
+      },
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n",
+          "stderr": ""
+        },
+        "native": {
+          "argv": [
+            "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 0,
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "lexer_observation": {
+    "argv": [
+      "/Users/ericfode/src/knot/scripts/bend-reference",
+      "/Users/ericfode/src/knot/tests/subsets/lexer-observe.bend"
+    ],
+    "exit": 0,
+    "stdout": "<nl>@3:4:1:3;a@5:6:2:1;<eof>@7:7:2:3;\nalpha.beta@0:10:1:0;(@10:11:1:10;foo@11:14:1:11;)@14:15:1:14;<eof>@15:15:1:15;\nExhausted\tlex\tbudget\t1:1:1:1\n<eof>@0:0:1:0;\n",
+    "stderr": "bend 2.0.31 is available: run bend update\n"
+  },
+  "boundaries": [
+    {
+      "case": "lex-zero",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/lex-zero.bend",
+        "0",
+        "512"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n"
+    },
+    {
+      "case": "lex-zero",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/lex-zero.bend",
+        "0",
+        "512"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n"
+    },
+    {
+      "case": "parse-zero",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-zero.bend",
+        "65536",
+        "0"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n"
+    },
+    {
+      "case": "parse-zero",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-zero.bend",
+        "65536",
+        "0"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n"
+    },
+    {
+      "case": "parse-small",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-small.bend",
+        "65536",
+        "3"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n"
+    },
+    {
+      "case": "parse-small",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-small.bend",
+        "65536",
+        "3"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n"
+    },
+    {
+      "case": "source-exact",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/source-exact.bend"
+      ],
+      "exit": 0,
+      "stdout": "Parsed\t\n",
+      "stderr": ""
+    },
+    {
+      "case": "source-exact",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/source-exact.bend"
+      ],
+      "exit": 0,
+      "stdout": "Parsed\t\n",
+      "stderr": ""
+    },
+    {
+      "case": "source-over",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/source-over.bend"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n"
+    },
+    {
+      "case": "source-over",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/source-over.bend"
+      ],
+      "exit": 4,
+      "stdout": "",
+      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n"
+    },
+    {
+      "case": "import",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/import.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "case": "import",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/import.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "case": "fields",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/fields.bend"
+      ],
+      "exit": 0,
+      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n",
+      "stderr": ""
+    },
+    {
+      "case": "fields",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/fields.bend"
+      ],
+      "exit": 0,
+      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n",
+      "stderr": ""
+    },
+    {
+      "case": "literal",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/literal.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n"
+    },
+    {
+      "case": "literal",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/literal.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n"
+    },
+    {
+      "case": "unicode",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/unicode.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n"
+    },
+    {
+      "case": "unicode",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/unicode.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n"
+    },
+    {
+      "case": "missing-colon",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/missing-colon.bend"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n"
+    },
+    {
+      "case": "missing-colon",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/missing-colon.bend"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n"
+    },
+    {
+      "case": "indent",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/indent.bend"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n"
+    },
+    {
+      "case": "indent",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/indent.bend"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n"
+    },
+    {
+      "case": "options",
+      "lane": "bun",
+      "argv": [
+        "bun",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli.js",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/options.bend",
+        "65537",
+        "512"
+      ],
+      "exit": 5,
+      "stdout": "",
+      "stderr": "HostFailure\targuments\tbudget-out-of-range\n"
+    },
+    {
+      "case": "options",
+      "lane": "native",
+      "argv": [
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/parse-cli",
+        "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/options.bend",
+        "65537",
+        "512"
+      ],
+      "exit": 5,
+      "stdout": "",
+      "stderr": "HostFailure\targuments\tbudget-out-of-range\n"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "word-spelling",
+      "file": "lex.bend",
+      "before": "String.reverse(rev)",
+      "after": "\"discarded\"",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/word-spelling/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "mutated_sha256": "40d047302769072e0070286bc294a3e47c5cf2af434140925d0ead22734e3571",
+      "killed_by": "word_source",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/word-spelling/PROOF.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Done{[syntax.Token{\"discarded\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\n- observed : Done{[syntax.Token{\"a\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\nLocation: LAWS.word_source\n10 |   match extra:\n11>|     case 0n: {==}\n   |              ^^^^\n12 |     case 1n+n: {==}\nbend 2.0.31 is available: run bend update\n"
+      }
+    },
+    {
+      "name": "zero-depth-accept",
+      "file": "parse.bend",
+      "before": "case 0n _: Fail{S.Exhausted{\"parse\",S.here(tokens)}}",
+      "after": "case 0n _: Done{Parsed{S.Sequence{Nil{}},tokens}}",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/zero-depth-accept/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "mutated_sha256": "4258cd5df1b5d54c184ba2592949bf492679f04aa62acf8479c20bea2ee51bd0",
+      "killed_by": "no_parser_budget",
+      "result": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/zero-depth-accept/PROOF.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Done{parse.Parsed{syntax.Sequence{[]}, tokens}}\n- observed : Fail{syntax.Exhausted{\"parse\", syntax.here(tokens)}}\nContext:\n- tokens : List<&2, syntax.Token>\nLocation: LAWS.no_parser_budget\n17 | def L.no_parser_budget(tokens):\n18>|   {==}\n   |   ^^^^\n19 | \nbend 2.0.31 is available: run bend update\n"
+      }
+    },
+    {
+      "name": "reverse-sequence",
+      "file": "parse.bend",
+      "before": "S.Sequence{Con{head,items}}",
+      "after": "S.Sequence{List.append(&2,S.Node,items,Con{head,Nil{}})}",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reverse-sequence/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "mutated_sha256": "9b596b855fcc2cb54995c0e84c97b981c160cfdf9fa65e7691fcd59ab4a49fcd",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reverse-sequence/parse-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reverse-sequence/cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "killed_by": "unchanged Flag tree observation",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reverse-sequence/cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stdout": "Parsed\tdef main()->Flag flip(Off{}); def flip(1 x:Flag)->Flag match[$x](On{} => Off{}; Off{} => On{}); type Flag Type(On{}; Off{})\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "reuse-default",
+      "file": "parse.bend",
+      "before": "parameter_parts(1,ts)",
+      "after": "parameter_parts(2,ts)",
+      "typecheck": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reuse-default/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "mutated_sha256": "59e3b12f133a0121bde0cada2a77985c98c8b358376e00c30121eb7edc9ca196",
+      "build": {
+        "argv": [
+          "/Users/ericfode/src/knot/scripts/bend-reference",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reuse-default/parse-cli.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reuse-default/cli.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "bend 2.0.31 is available: run bend update\n"
+      },
+      "killed_by": "unchanged Flag tree observation",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.local/style-campaign/compiler-pipeline-1/candidate/frontend/reuse-default/cli.js",
+          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(2 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
+        "stderr": ""
+      }
+    }
+  ]
+}
