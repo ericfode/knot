@@ -619,6 +619,23 @@ Count carried applicable answers separately from provider calls. The full
 offline inventory retains the existing 16 parser failures with zero warm
 requests; cache speed is not acceptance evidence or a fresh model judgment.
 
+## 2026-09-27 — Coverage must follow selection and retain a complete failure list
+
+The [coverage repair](perch-execution/role-v5-2026-09-27/coverage/README.md)
+reproduces two independent defects: semantic scans charged unrelated ignored
+parse failures to selected reviews, and the upstream terminal `/**` matcher
+failed to ignore nested descendants. The capped diagnostic sample also hid
+later failures behind successfully parsed files. Focused fixtures now cover
+selection, ignored required imports, caller dependencies, directory boundaries
+and a saturated diagnostic sample. Full-tree analysis remains available.
+
+The current corpus has 16 full-tree failures and 13 selected semantic failures
+after applying the already written ignores correctly; all 16 remain in style
+`--all`. No configuration or specimen changed. Eighty-five offline tests and
+law wiring pass. Stubbed corpus runs verify coverage plumbing only. Prevention:
+test the actual configured glob forms and required dependency closure, and
+retain a complete failure manifest independently of presentation samples.
+
 ## 2026-09-27 — Established memetic prose and a corrected control label
 
 The user requested external examples before applying Perch to system

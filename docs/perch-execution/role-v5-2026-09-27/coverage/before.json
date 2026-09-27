@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "source_revision": "74d87fd5fb3a39f784963bdafba13a4d9e8e072b",
+  "time": "2026-09-27T06:41:03.186Z",
+  "live_provider_calls": 0,
+  "model": "offline-fixture",
+  "installed_bundle_sha256": "b0b1831fe7ab95e7c1b4cbdebc45259660297d0059b02fbe5b67c788f6c99e0f",
+  "fixture": {
+    "main.bend": "import Base\ndef main() -> U32: 1\n",
+    "ignored/bad.bend": "def bad( -> U32: 2\n",
+    "perch.yaml": "scan_types: [defect, security, lint]\nignore: [\"ignored/**\"]\nrules: []\n"
+  },
+  "observations": [
+    {
+      "args": [
+        "scan",
+        "--json"
+      ],
+      "exit": 1,
+      "error": [
+        "Knot: partial-parser-coverage; this is not a successful lint check."
+      ],
+      "methods": 1,
+      "coverage": {
+        "supported": 2,
+        "parsed": 1,
+        "parse_failures": 1,
+        "parser_diagnostics": [
+          {
+            "path": "ignored/bad.bend",
+            "status": "parse-error",
+            "message": "Expected a name; observed '>'.",
+            "diagnostics": [
+              {
+                "kind": "syntax",
+                "message": "Expected a name; observed '>'.",
+                "location": {
+                  "start": {
+                    "line": 1,
+                    "column": 11,
+                    "byte": 10
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 11,
+                    "byte": 10
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "path": "main.bend",
+            "status": "parsed",
+            "message": null,
+            "diagnostics": [
+              {
+                "kind": "unsupported",
+                "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+                "location": null
+              }
+            ]
+          }
+        ],
+        "parsed_with_errors": 1,
+        "parser_cache": {
+          "hits": 0,
+          "misses": 2,
+          "write_failures": 0,
+          "revision_reused": false
+        },
+        "excluded": 1
+      },
+      "stub_requests_total": 1,
+      "expected_exit": 0,
+      "bug_reproduced": true
+    },
+    {
+      "args": [
+        "scan",
+        "--paths",
+        "main.bend",
+        "--json"
+      ],
+      "exit": 1,
+      "error": [
+        "Knot: partial-parser-coverage; this is not a successful lint check."
+      ],
+      "methods": 1,
+      "coverage": {
+        "supported": 2,
+        "parsed": 1,
+        "parse_failures": 1,
+        "parser_diagnostics": [
+          {
+            "path": "ignored/bad.bend",
+            "status": "parse-error",
+            "message": "Expected a name; observed '>'.",
+            "diagnostics": [
+              {
+                "kind": "syntax",
+                "message": "Expected a name; observed '>'.",
+                "location": {
+                  "start": {
+                    "line": 1,
+                    "column": 11,
+                    "byte": 10
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 11,
+                    "byte": 10
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "path": "main.bend",
+            "status": "parsed",
+            "message": null,
+            "diagnostics": [
+              {
+                "kind": "unsupported",
+                "message": "Complexity and Halstead metrics are unavailable. The graph reports explicit static calls and values in definitions and laws; dynamic calls, datatype declarations, constructors, foreign implementation paths, and desugared operations are omitted.",
+                "location": null
+              }
+            ]
+          }
+        ],
+        "parsed_with_errors": 1,
+        "parser_cache": {
+          "hits": 0,
+          "misses": 0,
+          "write_failures": 0,
+          "revision_reused": true
+        },
+        "excluded": 1
+      },
+      "stub_requests_total": 1,
+      "expected_exit": 0,
+      "bug_reproduced": true
+    }
+  ]
+}

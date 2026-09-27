@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "source_revisions": {
+    "scope_only": "74d87fd5fb3a39f784963bdafba13a4d9e8e072b",
+    "scope_and_glob": "703034d58b65b47330b1f0ea1f75f96b56167c2d"
+  },
+  "same_analyzed_source_blobs": true,
+  "same_parser_status_inventory": true,
+  "analyzed_files": 425,
+  "configuration_unchanged": true,
+  "configuration_sha256": {
+    "perch.yaml": "dfd4b029de6593015fd37245557ee4e5e80a3ec18e2bf5e7d67c26931ab32633",
+    "perch-style.json": "c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec"
+  },
+  "changes": {
+    "coverage_scope": {
+      "reproduction": "before.json",
+      "regression_before": "regression-before.txt.gz",
+      "scope_only_corpus": "after.json.gz",
+      "full_tree_failures": 16,
+      "selected_failures": 16,
+      "note": "Fixture establishes the scope defect. Real corpus stays at16 because the old trailing-glob matcher still selects nested experiment paths."
+    },
+    "trailing_recursive_glob": {
+      "regression_before": "glob-regression-before.txt.gz.gz",
+      "final_corpus": "after-both.json.gz",
+      "source_selection_before": 417,
+      "source_selection_after": 385,
+      "required_context_files_before": 6,
+      "required_context_files_after": 6,
+      "selected_failures_before": 16,
+      "selected_failures_after": 13,
+      "note": "Implements recursive descendant matching for already written /** globs. Six ignored context files remain required. No configuration or source fixture changed."
+    }
+  },
+  "validation": {
+    "focused_tests_passed": 27,
+    "full_lint_verify_tests_passed": 85,
+    "law_wiring_passed": true,
+    "live_provider_calls": 0,
+    "git_diff_check_passed": true
+  },
+  "final_adapter": {
+    "profile": "language-pack-1.20-v3+knot-bend-1d4fdc1f2d654dd5",
+    "bundle_sha256": "3fe2a6f7111b68710ffa209b1848df493a08f3bd49840f6b4f640bc82814d20e",
+    "patch_sha256": "720f4ea20bf7ff64e751493819b71e4a51e773daeb64da6fdf19ee9cf7046118"
+  },
+  "full_tree_failed_paths": [
+    "docs/perch-experiments/2026-09-26-astra-repair/indexed-linked-list.bend",
+    "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/indexed-linked-list.bend",
+    "docs/perch-experiments/2026-09-26-fast-repair/gpt-6-luna/indexed-linked-list.retry.bend",
+    "tests/compiler-checker/fixtures/duplicate-constructor.bend",
+    "tests/compiler-checker/fixtures/duplicate-global.bend",
+    "tests/compiler-checker/fixtures/match-after-let.bend",
+    "tests/compiler-checker/fixtures/match-again.bend",
+    "tests/compiler-checker/fixtures/match-backwards.bend",
+    "tests/compiler-checker/fixtures/overloaded-constructor.bend",
+    "tests/compiler-fields/fixtures/constructor-name-binder.bend",
+    "tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+    "tests/compiler-fields/fixtures/minus-pattern.bend",
+    "tests/compiler-fields/fixtures/parameter-before-field.bend",
+    "tests/compiler-fields/fixtures/pattern-arity.bend",
+    "tests/compiler-fields/fixtures/sibling-reversed.bend",
+    "tests/compiler-structural/fixtures/duplicate-field.bend"
+  ],
+  "semantic_failed_paths": [
+    "tests/compiler-checker/fixtures/duplicate-constructor.bend",
+    "tests/compiler-checker/fixtures/duplicate-global.bend",
+    "tests/compiler-checker/fixtures/match-after-let.bend",
+    "tests/compiler-checker/fixtures/match-again.bend",
+    "tests/compiler-checker/fixtures/match-backwards.bend",
+    "tests/compiler-checker/fixtures/overloaded-constructor.bend",
+    "tests/compiler-fields/fixtures/constructor-name-binder.bend",
+    "tests/compiler-fields/fixtures/field-let-closes-frontier.bend",
+    "tests/compiler-fields/fixtures/minus-pattern.bend",
+    "tests/compiler-fields/fixtures/parameter-before-field.bend",
+    "tests/compiler-fields/fixtures/pattern-arity.bend",
+    "tests/compiler-fields/fixtures/sibling-reversed.bend",
+    "tests/compiler-structural/fixtures/duplicate-field.bend"
+  ],
+  "historical_baseline": "The v5 baseline locked at74d87fd retains its original parser/context identities. These tooling fixes produce a new installed adapter identity; no old receipt is rewritten or promoted to current coverage.",
+  "limitations": "The remaining13 semantic parser failures and all16 style --all failures still prevent complete repository coverage. Fixed provider responses verify plumbing only; no current live semantic rerun was made."
+}

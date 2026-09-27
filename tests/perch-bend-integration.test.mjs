@@ -236,6 +236,97 @@ test('real CLI parses Bend-only scans, imports and method targets; syntax failur
   }
 });
 
+test('scan parser coverage follows configured selection while retaining required imports and caller context', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'knot-perch-coverage-'));
+  const originalFetch = globalThis.fetch;
+  t.after(async () => { globalThis.fetch = originalFetch; await rm(root, { recursive: true, force: true }); });
+  await mkdir(join(root, 'ignored'));
+  await mkdir(join(root, 'ignored/deep'));
+  await mkdir(join(root, 'other'));
+  await mkdir(join(root, 'aaa'));
+  await mkdir(join(root, 'ignoredness'));
+  await mkdir(join(root, 'single/deep'), { recursive: true });
+  await mkdir(join(root, 'misc'));
+  for (let i = 0; i < 21; i++) await writeFile(join(root, `aaa/data-${i}.bend`), 'type Token is Data:\n  Token{}\n');
+  const config = 'scan_types: [defect, security, lint]\nignore: ["ignored/**", "single/*.bend", "**/notes-*.bend"]\nrules: []\n';
+  await writeFile(join(root, 'perch.yaml'), config);
+  await writeFile(join(root, 'ignoredness/value.bend'), 'import Base\ndef neighbor() -> U32: 1\n');
+  await writeFile(join(root, 'ignored.bend'), 'import Base\ndef direct_file() -> U32: 2\n');
+  await writeFile(join(root, 'ignored/direct.bend'), 'import Base\ndef hidden_direct() -> U32: 3\n');
+  await writeFile(join(root, 'single/direct.bend'), 'import Base\ndef single_hidden() -> U32: 4\n');
+  await writeFile(join(root, 'single/deep/value.bend'), 'import Base\ndef single_nested() -> U32: 5\n');
+  await writeFile(join(root, 'misc/notes-hidden.bend'), 'import Base\ndef prefix_hidden() -> U32: 6\n');
+  await writeFile(join(root, 'main.bend'), 'import Base\nimport ./ignored/deep/helper.bend as H\ndef main() -> U32: H.identity(42)\n');
+  await writeFile(join(root, 'ignored/deep/helper.bend'), 'import Base\ndef identity(x: U32) -> U32: x\n');
+  await writeFile(join(root, 'ignored/deep/bad.bend'), 'def bad( -> U32: 1\n');
+  await writeFile(join(root, 'other/bad.bend'), 'def bad( -> U32: 2\n');
+  const git = args => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
+  const commit = message => {
+    git(['add', '.']);
+    git(['-c', 'user.name=Coverage test', '-c', 'user.email=fixture@example.invalid',
+      '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', 'commit', '-qm', message]);
+  };
+  git(['init', '-q', '-b', 'main']); commit('coverage fixture');
+  const requests = [];
+  globalThis.fetch = async (_url, options) => {
+    const body = JSON.parse(options.body); requests.push(body);
+    const answers = Object.fromEntries(Object.entries(body.questions).map(([key, question]) => {
+      if (question.type === 'noul') return [key, { noul: key === 'does_what_it_claims' ? 1 : 0 }];
+      if (question.type === 'score') return [key, { score: 0, confidence: 1,
+        probabilities: Object.fromEntries(question.criteria.map((_, i) => [i, i === 0 ? 1 : 0])) }];
+      const choice = Object.keys(question.criteria).at(-1);
+      return [key, { choice, confidence: 1, probabilities: { [choice]: 1 } }];
+    }));
+    const response = { model: 'offline-coverage-only', answers };
+    return { ok: true, json: async () => response, clone: () => ({ json: async () => response }) };
+  };
+  const run = async extra => {
+    const output = [], errors = [];
+    const code = await runPerch(['scan', '--json', ...extra], { root, env: { PERCH_API_KEY: 'offline-fixture' },
+      stdout: text => output.push(text), stderr: text => errors.push(text) });
+    return { code, errors: errors.join('\n'), result: JSON.parse(output.join('\n')) };
+  };
+  const selected = await run(['--paths', 'main.bend']);
+  assert.equal(selected.code, 0, selected.errors);
+  assert.equal(selected.result.run.methods, 1);
+  assert.equal(selected.result.parser_coverage.supported, 2);
+  assert.equal(selected.result.parser_coverage.parse_failures, 0);
+  assert.deepEqual(selected.result.parser_coverage.context_dependencies, ['ignored/deep/helper.bend']);
+  assert.equal(selected.result.run.analysis_coverage.parse_failures, 2);
+  assert.equal(selected.result.run.analysis_coverage.parser_diagnostics_capped, true);
+  assert.equal(selected.result.run.analysis_coverage.parser_diagnostics.length, 20);
+  assert.ok(selected.result.run.analysis_coverage.parser_diagnostics.every(file => file.status === 'parsed'));
+  assert.deepEqual(selected.result.run.analysis_coverage.failed_files.map(file => file.path), ['ignored/deep/bad.bend', 'other/bad.bend'],
+    'the complete failure list does not disappear behind the first twenty successful diagnostics');
+  assert.ok(requests.some(request => request.state.calls?.some(call => call.name === 'identity')),
+    'ignored helper remains in actual supplied source context');
+  const whole = await run([]);
+  assert.equal(whole.code, 1, 'unignored malformed source still blocks a whole scan');
+  assert.deepEqual(whole.result.run.visited.map(method => method.path).sort(),
+    ['ignored.bend', 'ignoredness/value.bend', 'main.bend', 'single/deep/value.bend'],
+    'recursive ignores respect directory boundaries; single stars and **/ prefixes retain their existing scope');
+  assert.equal(whole.result.parser_coverage.parse_failures, 1);
+  assert.deepEqual(whole.result.parser_coverage.failed_files.map(file => file.path), ['other/bad.bend']);
+  await writeFile(join(root, 'perch.yaml'), 'scan_types: [defect, security, lint]\nrules: []\n');
+  const changedSelection = await run([]);
+  assert.equal(changedSelection.result.parser_coverage.parse_failures, 2,
+    'working-copy ignore selection is applied again even when committed analysis is cached');
+  await writeFile(join(root, 'perch.yaml'), config);
+  await writeFile(join(root, 'ignored/deep/helper.bend'), 'def identity( -> U32: 3\n');
+  commit('malformed imported dependency');
+  const imported = await run(['--paths', 'main.bend']);
+  assert.equal(imported.code, 1);
+  assert.deepEqual(imported.result.parser_coverage.failed_files.map(file => file.path), ['ignored/deep/helper.bend']);
+  await writeFile(join(root, 'ignored/deep/helper.bend'), 'import Base\ndef identity(x: U32) -> U32: x\n');
+  await writeFile(join(root, 'ignored/caller.bend'),
+    'import Base\nimport ../main.bend as M\nimport ../other/bad.bend as B\ndef context() -> U32: U32.add(M.main(),B.value())\n');
+  commit('caller context has malformed dependency');
+  const caller = await run(['--paths', 'main.bend']);
+  assert.equal(caller.code, 1);
+  assert.ok(caller.result.parser_coverage.context_dependencies.includes('ignored/caller.bend'));
+  assert.deepEqual(caller.result.parser_coverage.failed_files.map(file => file.path), ['other/bad.bend']);
+});
+
 test('parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures', async t => {
   const root = await mkdtemp(join(tmpdir(), 'knot-perch-parallel-'));
   const originalFetch = globalThis.fetch;

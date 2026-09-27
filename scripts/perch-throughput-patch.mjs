@@ -4,6 +4,11 @@ export function patchThroughput(source) {
     if (source.split(before).length !== 2) throw new Error(`Perch throughput anchor changed: ${before.slice(0, 80)}`);
     source = source.replace(before, after);
   };
+  // Upstream understands **/ but turns a terminal ** into two single-level
+  // stars. Written recursive ignores such as docs/perch-experiments/** must
+  // cover descendants without matching a neighboring directory name.
+  replace('one.split("**/").map(segment).join("(?:.*/)?")',
+    '(one.endsWith("/**") ? one.slice(0, -2).split("**/").map(segment).join("(?:.*/)?") + ".*" : one.split("**/").map(segment).join("(?:.*/)?"))');
   replace('var DEFAULT_PARALLEL = 8;', 'var DEFAULT_PARALLEL = knotDefaultJobs;');
   replace('  retryDelayMs = 2e3,', '  concurrency = knotDefaultJobs,\n  retryDelayMs = 2e3,');
   replace('  let authenticationFailure = null, firstRequest = null;',
@@ -147,7 +152,7 @@ export function patchThroughput(source) {
   replace('        unitParallel: parallel,\n        min,',
     '        unitParallel: parallel,\n        fresh: Boolean(io.flags.fresh),\n        min,');
   replace('    paths,\n    parallel,\n    scan_id: scan.id,',
-    '    paths,\n    parallel,\n    mode: fresh ? "fresh" : "incremental",\n    parser_coverage: scan.coverage,\n    scan_id: scan.id,');
+    '    paths,\n    parallel,\n    mode: fresh ? "fresh" : "incremental",\n    analysis_coverage: scan.coverage,\n    parser_coverage: knotParserCoverageFor(scan, inScope, graph, candidateIds),\n    scan_id: scan.id,');
   replace('{ run, parser_coverage: scan.coverage, issues: issues2, usage: meter.toJSON() },',
     '{ run, parser_coverage: run.parser_coverage, issues: issues2, usage: meter.toJSON() },');
   replace('  const earlier = latest;', '  const earlier = fresh ? new Map() : latest;');
@@ -259,6 +264,64 @@ async function analyzeTree({ root, revision: revision2, out, analyzer,`);
     'coverage: { ...analysis.coverage, parser_cache: parserCache, excluded: tree.filter((item) => item.type === "blob").length - sources.length },');
   replace('    if (analysis.parser_status !== "parsed") {\n      coverage.parse_failures++;',
     '    if (analysis.parser_status !== "parsed") {\n      coverage.parse_failures++;\n      if (analysis.parser_status !== "parse-error") coverage.transient_parse_failures = (coverage.transient_parse_failures ?? 0) + 1;');
+
+  // Analyze the complete tree for caller/import context, but gate the current
+  // configured selection and the files whose context it actually depends on.
+  // The old capped diagnostic sample cannot reconstruct a failure inventory.
+  replace('  const coverage = { supported: files.length, parsed: 0, parse_failures: 0, parser_diagnostics: [] };',
+    '  const coverage = { supported: files.length, parsed: 0, parse_failures: 0, parser_diagnostics: [], file_statuses: [] };');
+  replace('    const analysis = await analyzer.analyzeSource(source2, languageOf(file.path));',
+    `    const analysis = await analyzer.analyzeSource(source2, languageOf(file.path));
+    coverage.file_statuses.push({ path: file.path, status: analysis.parser_status,
+      message: analysis.parser_message ?? null, diagnostics: analysis.diagnostics?.slice(0, 8) ?? [] });`);
+  replace('  return { coverage, functions, files: analyzed, candidates };',
+    `  coverage.failed_files = coverage.file_statuses.filter(file => file.status !== "parsed");
+  coverage.parser_diagnostics_capped = coverage.file_statuses.filter(file =>
+    file.status !== "parsed" || file.diagnostics.length).length > coverage.parser_diagnostics.length;
+  return { coverage, functions, files: analyzed, candidates };`);
+  replace('async function scanRepository({', `export function knotParserCoverageFor(scan, inScope, graph, candidateIds) {
+  const statuses = scan.coverage.file_statuses;
+  if (!Array.isArray(statuses) || statuses.length !== scan.coverage.supported)
+    throw new Error("Parser coverage has no complete per-file inventory; rebuild analysis before review");
+  const available = new Set(statuses.map(file => file.path));
+  const selected = new Set(statuses.filter(file => inScope(file.path)).map(file => file.path));
+  const required = new Set(selected);
+  // A method's direct callers and callees are supplied by stepFor, including
+  // ignored or out-of-path files. Their explicit import context remains required.
+  for (const id of candidateIds) for (const neighbor of [...graph.callees(id), ...graph.callers(id)]) {
+    const file = graph.nodes.get(neighbor)?.path;
+    if (available.has(file)) required.add(file);
+  }
+  const analyzed = new Map(scan.files.map(file => [file.path, file]));
+  const queue = [...required];
+  for (let at = 0; at < queue.length; at++) {
+    const file = analyzed.get(queue[at]);
+    if (!file) continue;
+    for (const imported of file.imports ?? []) {
+      const dependency = resolveModule(file.path, imported.module, file.language, available);
+      if (dependency && !required.has(dependency)) {
+        required.add(dependency); queue.push(dependency);
+      }
+    }
+  }
+  const files = statuses.filter(file => required.has(file.path));
+  const failures = files.filter(file => file.status !== "parsed");
+  const diagnostics = files.filter(file => file.status !== "parsed" || file.diagnostics.length);
+  const transient = failures.filter(file => file.status !== "parse-error").length;
+  return {
+    basis: "configured-selection-and-required-context",
+    supported: files.length, parsed: files.length - failures.length, parse_failures: failures.length,
+    parsed_with_errors: files.filter(file => file.status === "parsed" && file.diagnostics.length).length,
+    ...(transient ? { transient_parse_failures: transient } : {}),
+    parser_diagnostics: diagnostics.slice(0, 20), parser_diagnostics_capped: diagnostics.length > 20,
+    failed_files: failures, file_statuses: files,
+    selected_sources: selected.size,
+    context_dependencies: [...required].filter(path => !selected.has(path)).sort(),
+    outside_selection: statuses.length - files.length,
+    excluded: scan.coverage.excluded, parser_cache: scan.coverage.parser_cache
+  };
+}
+async function scanRepository({`);
 
   return source;
 }

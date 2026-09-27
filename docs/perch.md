@@ -190,6 +190,16 @@ standalone parsing: analysis never invokes `book_load`, downloads dependencies,
 executes a program or checks its proofs. Complexity/risk metrics are unavailable
 rather than invented. A static call graph is partial, not a resolution/type proof.
 
+Semantic scan coverage follows the configured selection plus required direct
+caller/callee context and transitive explicit imports. Ignoring a direct target
+does not excuse a malformed dependency supplied to a selected review.
+`run.analysis_coverage` retains full-tree analysis; `parser_coverage` describes
+the command's required files. Both expose a complete `failed_files` inventory,
+separate from the capped 20-entry diagnostic sample. Existing terminal `/**`
+ignore patterns match nested descendants. The
+[coverage repair evidence](perch-execution/role-v5-2026-09-27/coverage/README.md)
+distinguishes these two fixes; neither changes style `--all` selection.
+
 Compiler selectors cover `src/` and `compiler/`. The committed enum frontend
 under `src/` supplies applicable parsed declarations; a successful source review
 does not establish a completed compiler pipeline or Wasm backend. The shared law
