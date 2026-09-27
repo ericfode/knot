@@ -653,3 +653,32 @@ stopped until the user replenished credits. The recovery kept the same source
 and deterministic receipt and wrote new review receipts. Future harnesses should
 classify non-success exits and provider failures before parsing JSON, preserving
 the original diagnostic and partial usage. The frozen runner was not modified.
+
+## 2026-09-26 Pacific — inducer search and helper contribution revision
+
+The rebased v3 search completed 15 trajectories and 45 rounds before the user
+changed the style policy. Forty-two rounds passed the unchanged finite behavior
+gate; two exhausted compiler repair and one failed behavior. Forty-one had clean
+source review and none passed every v3 style requirement. The available-evidence
+audit found no receipt discrepancies; the bounded law packet completed eight
+checks with one observed Jev 1.13.0 response. The remaining 15 author trajectories
+were not dispatched. [Sources, distributions and interruption](../research/life-inducer-hillclimb-r2/README.md)
+remain intact.
+
+In the first ten trajectories, all 173 reviewed declaration visits were judged
+critical. None of the functions met Galaxy brain; the two passing big-brain
+assessments were datatypes with their ordinary target. The leading source passed
+every other required axis on five functions. This is an observed consequence of
+the policy, not a confirmed judge defect. The user clarified that helpers should
+support the main mechanism reaching Galaxy-brain status and requested a separate
+re-evaluation of old rounds. Preserve the original results; score the complete
+mechanism and each declaration's contribution separately, with same-behavior
+support controls and fresh held-out calibration before treating the new measure
+as useful. Do not equate changed review units with improved source.
+
+The standalone author account rejected GPT-6 Sol before generation, despite its
+availability on another agent surface. The failed startup was retained and the
+fresh run used the account's available GPT-5.6 Sol at xhigh. Check the actual
+transport's account catalog before dispatching a multi-model batch. Requested
+author settings remain distinct from resolved identity, which this CLI did not
+emit. Missing provider fields do not become verified model claims.

@@ -1,0 +1,67 @@
+import Base
+
+def Life.lag(
+  k: Nat, total: Nat, cells: List<&2, U32>
+) -> List<&2, U32>:
+  List.take(&2, U32,
+    List.append(&2, U32, List.replicate(U32, k, 0), cells), total)
+
+def Life.lead(+k: Nat, cells: List<&2, U32>) -> List<&2, U32>:
+  List.append(&2, U32,
+    List.drop(&2, U32, cells, k), List.replicate(U32, k, 0))
+
+def Life.rule(
+  +width: U32, +i: U32, cells: List<&2, U32>,
+  nw: List<&2, U32>, n: List<&2, U32>, ne: List<&2, U32>,
+  w: List<&2, U32>, e: List<&2, U32>,
+  sw: List<&2, U32>, s: List<&2, U32>, se: List<&2, U32>
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case cell <> rest:
+      match nw n ne w e sw s se:
+        case nw0 <> nws n0 <> ns ne0 <> nes w0 <> ws e0 <> es sw0 <> sws s0 <> ss se0 <> ses:
+          +x = U32.mod(i, width)
+          +west = Bool.to_u32(U32.is_ne(x, 0))
+          +east = Bool.to_u32(U32.is_lt(U32.inc(x), width))
+          +near = (
+            nw0 * west + n0 + ne0 * east +
+            w0  * west      + e0  * east +
+            sw0 * west + s0 + se0 * east
+            : U32)
+          Bool.to_u32(Bool.or(
+            U32.is_eq(near, 3),
+            Bool.and(U32.is_eq(cell, 1), U32.is_eq(near, 2))))
+            <> Life.rule(width, U32.inc(i), rest,
+              nws, ns, nes, ws, es, sws, ss, ses)
+        case _ _ _ _ _ _ _ _:
+          Nil{}
+
+def step(
+  +width: U32, height: U32, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  +total = U32.to_nat((width * height : U32))
+
+  nw = Life.lag(1n+span, total, cells)
+  n  = Life.lag(span, total, cells)
+  ne = Life.lag(Nat.sub(span, 1n), total, cells)
+
+  w = Life.lag(1n, total, cells)
+  e = Life.lead(1n, cells)
+
+  sw = Life.lead(Nat.sub(span, 1n), cells)
+  s  = Life.lead(span, cells)
+  se = Life.lead(1n+span, cells)
+
+  Life.rule(width, 0, cells, nw, n, ne, w, e, sw, s, se)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

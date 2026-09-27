@@ -1,0 +1,98 @@
+import Base
+
+# The center votes too: life is a quorum of three, or three plus self.
+# Every other bit is counted exactly when it lies in the closed Moore square.
+def Life.vote(
+  scan: List<&2, U32>, +span: Nat, alive: U32,
+  +x: U32, +y: U32, +u: U32, +v: U32,
+  east: Nat, +total: U32
+) -> U32:
+  match scan east:
+    case Nil{} _:
+      Bool.to_u32(
+        Bool.or(
+          U32.is_eq(total, 3),
+          U32.is_eq(total, U32.add(3, alive))
+        )
+      )
+    case cell <> tail 0n:
+      Life.vote(
+        tail, span, alive, x, y, 0, U32.inc(v), Nat.sub(span, 1n),
+        U32.add(
+          total,
+          U32.mul(
+            cell,
+            Bool.to_u32(
+              Bool.and(
+                Bool.and(
+                  U32.is_le(x, U32.inc(u)),
+                  U32.is_le(u, U32.inc(x))
+                ),
+                Bool.and(
+                  U32.is_le(y, U32.inc(v)),
+                  U32.is_le(v, U32.inc(y))
+                )
+              )
+            )
+          )
+        )
+      )
+    case cell <> tail 1n+e:
+      Life.vote(
+        tail, span, alive, x, y, U32.inc(u), v, e,
+        U32.add(
+          total,
+          U32.mul(
+            cell,
+            Bool.to_u32(
+              Bool.and(
+                Bool.and(
+                  U32.is_le(x, U32.inc(u)),
+                  U32.is_le(u, U32.inc(x))
+                ),
+                Bool.and(
+                  U32.is_le(y, U32.inc(v)),
+                  U32.is_le(v, U32.inc(y))
+                )
+              )
+            )
+          )
+        )
+      )
+
+# One tail recedes while one world remains: that separation is synchronous time.
+def Life.sweep(
+  todo: List<&2, U32>, +world: List<&2, U32>, +span: Nat,
+  +x: U32, +y: U32, east: Nat
+) -> List<&2, U32>:
+  match todo east:
+    case Nil{} _:
+      Nil{}
+    case alive <> tail 0n:
+      Life.vote(
+        world, span, alive, x, y, 0, 0, Nat.sub(span, 1n), 0
+      ) <> Life.sweep(
+        tail, world, span, 0, U32.inc(y), Nat.sub(span, 1n)
+      )
+    case alive <> tail 1n+e:
+      Life.vote(
+        world, span, alive, x, y, 0, 0, Nat.sub(span, 1n), 0
+      ) <> Life.sweep(
+        tail, world, span, U32.inc(x), y, e
+      )
+
+# Width clocks the rows; under the exact-length contract, the list carries height.
+def step(
+  width: U32, height: U32, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  Life.sweep(cells, cells, span, 0, 0, Nat.sub(span, 1n))
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+more:
+      evolve(more, width, height, step(width, height, cells))

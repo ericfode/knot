@@ -1,0 +1,55 @@
+import Base
+
+# A finite list denotes a stream with an absorbing zero tail.
+def uncons0(cells: List<&2, U32>) -> U32 & List<&2, U32>:
+  match cells:
+    case Nil{}:
+      (0, Nil{})
+    case Con{head, tail}:
+      (head, tail)
+
+# Horizontal windows restart at each row boundary.
+def horizontal(cells: List<&2, U32>, +width: U32, +column: U32, left: U32) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+here, +rest}:
+      +next = U32.inc(column)
+      +seam = U32.is_eq(next, width)
+      (right, unused) = uncons0(rest)
+      total = (left + here + Bool.pick(U32, seam, 0, right) : U32)
+      total <> horizontal(rest, width,
+        Bool.pick(U32, seam, 0, next),
+        Bool.pick(U32, seam, 0, here))
+
+# Including the center changes B3/S23 into closed totals 3 and live 4.
+def life(here: U32, +total: U32) -> U32:
+  Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+    Bool.and(U32.is_eq(here, 1), U32.is_eq(total, 4))))
+
+# Consume three zero-extended streams in lockstep with the output shape.
+def vertical(cells: List<&2, U32>, above: List<&2, U32>, middle: List<&2, U32>, below: List<&2, U32>) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{here, rest}:
+      (north, norths) = uncons0(above)
+      (center, centers) = uncons0(middle)
+      (south, souths) = uncons0(below)
+      total = (north + center + south : U32)
+      life(here, total) <> vertical(rest, norths, centers, souths)
+
+# Exact input length carries height; cells supplies the output shape.
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +span = U32.to_nat(width)
+  +band = horizontal(cells, width, 0, 0)
+  above = List.append(&2, U32, List.replicate(U32, span, 0), band)
+  below = List.drop(&2, U32, band, span)
+  vertical(cells, above, band, below)
+
+def evolve(turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))

@@ -1,0 +1,63 @@
+import Base
+
+# An exhausted row is the dead halo.
+def head0(xs: List<&2, U32>) -> U32:
+  match xs:
+    case Nil{}:
+      0
+    case Con{cell, rest}:
+      cell
+
+# Each column mass has exactly one corresponding middle-row cell.
+def columns(
+  middle: List<&2, U32>, +above: List<&2, U32>, +below: List<&2, U32>
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case Con{cell, rest}:
+      (head0(above) + cell + head0(below) : U32) <>
+        columns(rest, List.tail(&2, U32, above), List.tail(&2, U32, below))
+
+# Consume aligned cells and masses together; retain only the previous mass.
+# Including the center makes B3/S23 total=3 or (alive and total=4).
+def sweep(
+  cells: List<&2, U32>, mass: List<&2, U32>, left: U32
+) -> List<&2, U32>:
+  match cells mass:
+    case Nil{} _:
+      Nil{}
+    case Con{cell, rest} Nil{}:
+      Nil{}
+    case Con{cell, rest} Con{+center, +right}:
+      +total = (left + center + head0(right) : U32)
+      next = Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(cell, 1), U32.is_eq(total, 4))))
+      next <> sweep(rest, right, center)
+
+# Source rows advance independently of the output being constructed.
+def rows(
+  remaining: Nat, +width: Nat,
+  above: List<&2, U32>, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match remaining:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +middle = List.take(&2, U32, cells, width)
+      +below = List.drop(&2, U32, cells, width)
+      mass = columns(middle, above, List.take(&2, U32, below, width))
+      List.append(&2, U32, sweep(middle, mass, 0),
+        rows(rest, width, middle, below))
+
+def step(width: U32, height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  rows(U32.to_nat(height), U32.to_nat(width), Nil{}, cells)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

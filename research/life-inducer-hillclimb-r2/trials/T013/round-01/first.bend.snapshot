@@ -1,0 +1,63 @@
+import Base
+
+# Missing rows and missing columns share the same dead-cell boundary.
+def Life.head(cells: List<&2, U32>) -> U32:
+  Maybe.default(&2, U32, List.head(&2, U32, cells), 0)
+
+def Life.column(above: List<&2, U32>, middle: List<&2, U32>, below: List<&2, U32>) -> U32:
+  (Life.head(above) + Life.head(middle) + Life.head(below) : U32)
+
+# Including the center turns B3/S23 into total=3 or (total=4 and alive).
+def Life.rule(alive: U32, +total: U32) -> U32:
+  Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+    Bool.and(U32.is_eq(total, 4), U32.is_eq(alive, 1))))
+
+# Carry the previous column sum; the remaining lists expose this column and next.
+def Life.row(
+  middle: List<&2, U32>, +above: List<&2, U32>,
+  +below: List<&2, U32>, left: U32
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case Con{+alive, +rest}:
+      +upper = List.tail(&2, U32, above)
+      +lower = List.tail(&2, U32, below)
+      +center = (Life.head(above) + alive + Life.head(below) : U32)
+      right = Life.column(upper, rest, lower)
+      Life.rule(alive, (left + center + right : U32))
+        <> Life.row(rest, upper, lower, center)
+
+def Life.rows(
+  rows: List<&2, List<&2, U32>>, above: List<&2, U32>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case Con{+middle, +rest}:
+      below = Maybe.default(&2, List<&2, U32>,
+        List.head(&2, List<&2, U32>, rest), Nil{})
+      List.append(&2, U32, Life.row(middle, above, below, 0),
+        Life.rows(rest, middle))
+
+def Life.split(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      List.take(&2, U32, cells, width)
+        <> Life.split(rest, width, List.drop(&2, U32, cells, width))
+
+def step(width: U32, height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  Life.rows(Life.split(U32.to_nat(height), U32.to_nat(width), cells), Nil{})
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

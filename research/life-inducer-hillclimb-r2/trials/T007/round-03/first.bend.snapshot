@@ -1,0 +1,55 @@
+import Base
+
+# A finite stream denotes its zero extension.
+def head0(xs: List<&2, U32>) -> U32:
+  match xs:
+    case Nil{}:
+      0
+    case head <> tail:
+      head
+
+# Convolution by [1, 1, 1], retaining exactly the input support.
+def horizontal(cells: List<&2, U32>, left: U32) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case +center <> +right:
+      (left + center + head0(right) : U32) <> horizontal(right, center)
+
+# Emit directly onto the following rows, without an intermediate output row.
+# An inclusive count of three, or four with life, is exactly B3/S23.
+def resolve(cells: List<&2, U32>, +above: List<&2, U32>, +here: List<&2, U32>, +below: List<&2, U32>, suffix: List<&2, U32>) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      suffix
+    case alive <> rest:
+      +total = (head0(above) + head0(here) + head0(below) : U32)
+      next = Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(total, 4), U32.is_eq(alive, 1))))
+      next <> resolve(rest, List.tail(&2, U32, above),
+        List.tail(&2, U32, here), List.tail(&2, U32, below), suffix)
+
+# The frontier advances (above, here, below) to (here, below, next).
+# Each actual row's horizontal convolution is computed once.
+def sweep(fuel: Nat, +width: Nat, +cells: List<&2, U32>, above: List<&2, U32>, +here: List<&2, U32>) -> List<&2, U32>:
+  match fuel:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      row = List.take(&2, U32, cells, width)
+      +remaining = List.drop(&2, U32, cells, width)
+      +below = horizontal(List.take(&2, U32, remaining, width), 0)
+      resolve(row, above, here, below,
+        sweep(rest, width, remaining, here, below))
+
+def step(width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +stride = U32.to_nat(width)
+  first = horizontal(List.take(&2, U32, cells, stride), 0)
+  sweep(U32.to_nat(height), stride, cells, Nil{}, first)
+
+def evolve(turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

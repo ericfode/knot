@@ -1,0 +1,125 @@
+import Base
+
+# Each field is a bit-plane: thirty-two cells count without carrying into each other.
+type Counts is Data:
+  Counts{one: U32, two: U32, four: U32, eight: U32}
+
+# Add one simultaneous vote to every set bit.
+def Counts.vote(counts: Counts, +votes: U32) -> Counts:
+  match counts:
+    case Counts{+one, +two, +four, eight}:
+      +into_two = U32.and(one, votes)
+      +into_four = U32.and(two, into_two)
+      into_eight = U32.and(four, into_four)
+      Counts{
+        U32.xor(one, votes),
+        U32.xor(two, into_two),
+        U32.xor(four, into_four),
+        U32.xor(eight, into_eight)
+      }
+
+# A source row casts left, middle and right; middle=0 removes the focal cells.
+def Counts.cast(counts: Counts, +row: U32, middle: U32) -> Counts:
+  Counts.vote(
+    Counts.vote(
+      Counts.vote(counts, U32.shl(row)),
+      middle),
+    U32.shr(row))
+
+# Binary 2-or-3 becomes: two, no four/eight, and either one or already alive.
+def Life.rule(counts: Counts, alive: U32) -> U32:
+  match counts:
+    case Counts{one, two, four, eight}:
+      U32.and(
+        two,
+        U32.and(
+          U32.not(four),
+          U32.and(U32.not(eight), U32.or(one, alive))))
+
+# Three casts are the Moore stencil: 3 above, 2 here, 3 below.
+def Life.row(+above: U32, +here: U32, +below: U32) -> U32:
+  Life.rule(
+    Counts.cast(
+      Counts.cast(
+        Counts.cast(Counts{0, 0, 0, 0}, above, above),
+        here,
+        0),
+      below,
+      below),
+    here)
+
+# Row-major cells enter a row least-significant bit first.
+def Rows.pack.one(
+  cells: List<&2, U32>, +shift: Nat, row: U32
+) -> U32:
+  match cells:
+    case Nil{}:
+      row
+    case cell <> rest:
+      Rows.pack.one(
+        rest,
+        1n+shift,
+        U32.or(row, U32.shln(cell, shift)))
+
+def Rows.pack(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      Rows.pack.one(List.take(&2, U32, cells, width), 0n, 0)
+        <> Rows.pack(rest, width, List.drop(&2, U32, cells, width))
+
+# The zero rows implicit at both ends are the vertical dead boundary.
+def Life.sweep(rows: List<&2, U32>, above: U32) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case +here <> +below:
+      match below:
+        case Nil{}:
+          Life.row(above, here, 0) <> Nil{}
+        case next <> _:
+          Life.row(above, here, next)
+            <> Life.sweep(below, here)
+
+# Packing and unpacking use the same least-significant-bit-first basis.
+def Rows.unpack.one(width: Nat, +row: U32) -> List<&2, U32>:
+  match width:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      U32.and(row, 1) <> Rows.unpack.one(rest, U32.shr(row))
+
+def Rows.unpack(
+  rows: List<&2, U32>, +width: Nat
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case row <> rest:
+      List.append(
+        &2,
+        U32,
+        Rows.unpack.one(width, row),
+        Rows.unpack(rest, width))
+
+def step(
+  width: U32, height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  +columns = U32.to_nat(width)
+  Rows.unpack(
+    Life.sweep(
+      Rows.pack(U32.to_nat(height), columns, cells),
+      0),
+    columns)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

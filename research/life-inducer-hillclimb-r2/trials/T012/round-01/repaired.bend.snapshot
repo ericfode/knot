@@ -1,0 +1,113 @@
+import Base
+
+type Column is Data:
+  Column{north: U32, life: U32, south: U32}
+
+def Life.stencil(west: Column, center: Column, east: Column) -> U32:
+  match west center east:
+    case Column{nw, w, sw} Column{n, alive, s} Column{ne, e, se}:
+      +neighbors = (nw + n + ne + w + e + sw + s + se : U32)
+      Bool.to_u32(Bool.or(
+        U32.is_eq(neighbors, 3),
+        Bool.and(U32.is_eq(alive, 1), U32.is_eq(neighbors, 2))))
+
+def Halo.with(
+  -R: Type,
+  row: List<&2, U32>,
+  next: U32 -> List<&2, U32> -> R
+) -> R:
+  match row:
+    case Nil{}:
+      next(0, Nil{})
+    case head <> tail:
+      next(head, tail)
+
+def Life.line(
+  cells: List<&2, U32>,
+  above: List<&2, U32>,
+  below: List<&2, U32>,
+  west: Column,
+  +center: Column
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Life.stencil(west, center, Column{0, 0, 0}) <> Nil{}
+    case right <> rest:
+      Halo.with(List<&2, U32>, above, right_up => above2 =>
+        Halo.with(List<&2, U32>, below, right_down => below2 =>
+          +east = Column{right_up, right, right_down}
+          Life.stencil(west, center, east) <>
+            Life.line(rest, above2, below2, center, east)))
+
+def Life.row(
+  above: List<&2, U32>,
+  current: List<&2, U32>,
+  below: List<&2, U32>
+) -> List<&2, U32>:
+  match current:
+    case Nil{}:
+      Nil{}
+    case alive <> rest:
+      Halo.with(List<&2, U32>, above, up => above2 =>
+        Halo.with(List<&2, U32>, below, down => below2 =>
+          Life.line(
+            rest, above2, below2,
+            Column{0, 0, 0}, Column{up, alive, down})))
+
+def Rows.cut(
+  height: Nat,
+  +width: Nat,
+  +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      List.take(&2, U32, cells, width) <>
+        Rows.cut(rest, width, List.drop(&2, U32, cells, width))
+
+def Life.rows(
+  rest: List<&2, List<&2, U32>>,
+  zero: List<&2, U32>,
+  above: List<&2, U32>,
+  +current: List<&2, U32>
+) -> List<&2, U32>:
+  match rest:
+    case Nil{}:
+      Life.row(above, current, zero)
+    case +below <> tail:
+      List.append(&2, U32,
+        Life.row(above, current, below),
+        Life.rows(tail, zero, current, below))
+
+def Life.enter(
+  +zero: List<&2, U32>,
+  rows: List<&2, List<&2, U32>>
+) -> List<&2, U32>:
+  match rows:
+    case Nil{}:
+      Nil{}
+    case current <> rest:
+      Life.rows(rest, zero, zero, current)
+
+def step(
+  width: U32,
+  height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  +w = U32.to_nat(width)
+  Life.enter(
+    List.replicate(U32, w, 0),
+    Rows.cut(U32.to_nat(height), w, cells))
+
+def evolve(
+  turns: Nat,
+  +width: U32,
+  +height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

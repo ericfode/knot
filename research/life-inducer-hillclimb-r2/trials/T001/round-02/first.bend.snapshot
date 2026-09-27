@@ -1,0 +1,61 @@
+import Base
+
+# Empty input is a fixed point: each further observation is another dead cell.
+def uncons_zero(cells: List<&2, U32>) -> U32 & List<&2, U32>:
+  match cells:
+    case Nil{}:
+      (0, Nil{})
+    case Con{center, rest}:
+      (center, rest)
+
+# Column guards keep the sliding window inside its row.
+def horizontal(
+  cells: List<&2, U32>, +width: U32, +column: U32, left: U32
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+center, +rest}:
+      +next = (column + 1 : U32)
+      (right, unused) = uncons_zero(rest)
+      west = Bool.pick(U32, U32.is_zero(column), 0, left)
+      east = Bool.pick(U32, U32.is_lt(next, width), right, 0)
+      (west + center + east : U32) <>
+        horizontal(rest, width, (next % width : U32), center)
+
+# Including the center turns B3/S23 into S=3 or (S=4 and alive).
+def life(center: U32, +sum: U32) -> U32:
+  Bool.to_u32(Bool.or(U32.is_eq(sum, 3),
+    Bool.and(U32.is_eq(sum, 4), U32.is_eq(center, 1))))
+
+# The finite center spine bounds three streams with implicit dead suffixes.
+def vertical(
+  cells: List<&2, U32>, north: List<&2, U32>,
+  middle: List<&2, U32>, south: List<&2, U32>
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{center, rest}:
+      (n, ns) = uncons_zero(north)
+      (m, ms) = uncons_zero(middle)
+      (s, ss) = uncons_zero(south)
+      life(center, (n + m + s : U32)) <>
+        vertical(rest, ns, ms, ss)
+
+# Valid input length supplies the height, including either empty dimension.
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +stride = U32.to_nat(width)
+  +bands = horizontal(cells, width, 0, 0)
+  north = List.append(&2, U32, List.replicate(U32, stride, 0), bands)
+  south = List.drop(&2, U32, bands, stride)
+  vertical(cells, north, bands, south)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))

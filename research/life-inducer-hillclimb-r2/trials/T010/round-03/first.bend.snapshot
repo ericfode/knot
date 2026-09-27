@@ -1,0 +1,125 @@
+import Base
+
+# B3/S23 asks for three in either view: the ring, or the ring plus its center.
+def Life.three(cell: U32, +ring: U32) -> U32:
+  Bool.to_u32(
+    Bool.or(
+      U32.is_eq(ring, 3),
+      U32.is_eq((ring + cell : U32), 3)))
+
+# Cut the flat board into rows and cap every row with dead cells.
+def Life.halo(
+  height: Nat,
+  +width: Nat,
+  +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      (0 <> List.append(
+        &2,
+        U32,
+        List.take(&2, U32, cells, width),
+        [0])) <>
+        Life.halo(
+          rest,
+          width,
+          List.drop(&2, U32, cells, width))
+
+# A width-counted focus slides one three-by-three window across three haloed rows.
+def Life.focus(
+  width: Nat,
+  +north: List<&2, U32>,
+  +middle: List<&2, U32>,
+  +south: List<&2, U32>
+) -> List<&2, U32>:
+  match width:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +ring = (
+        Maybe.default(&2, U32, List.get(&2, U32, north, 0n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, north, 1n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, north, 2n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, middle, 0n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, middle, 2n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, south, 0n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, south, 1n), 0)
+        + Maybe.default(&2, U32, List.get(&2, U32, south, 2n), 0) : U32)
+      cell = Maybe.default(
+        &2,
+        U32,
+        List.get(&2, U32, middle, 1n),
+        0)
+      Life.three(cell, ring) <>
+        Life.focus(
+          rest,
+          List.tail(&2, U32, north),
+          List.tail(&2, U32, middle),
+          List.tail(&2, U32, south))
+
+# A height-counted sweep applies the same three-row focus down the haloed board.
+def Life.sweep(
+  height: Nat,
+  +width: Nat,
+  +rows: List<&2, List<&2, U32>>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +tail = List.tail(&2, List<&2, U32>, rows)
+      north = Maybe.default(
+        &2,
+        List<&2, U32>,
+        List.head(&2, List<&2, U32>, rows),
+        Nil{})
+      middle = Maybe.default(
+        &2,
+        List<&2, U32>,
+        List.head(&2, List<&2, U32>, tail),
+        Nil{})
+      south = Maybe.default(
+        &2,
+        List<&2, U32>,
+        List.head(
+          &2,
+          List<&2, U32>,
+          List.tail(&2, List<&2, U32>, tail)),
+        Nil{})
+      List.append(
+        &2,
+        U32,
+        Life.focus(width, north, middle, south),
+        Life.sweep(rest, width, tail))
+
+def step(
+  width: U32,
+  height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  +w = U32.to_nat(width)
+  +h = U32.to_nat(height)
+  +dead = List.replicate(U32, Nat.add(w, 2n), 0)
+  Life.sweep(
+    h,
+    w,
+    dead <>
+      List.append(
+        &2,
+        List<&2, U32>,
+        Life.halo(h, w, cells),
+        [dead]))
+
+def evolve(
+  turns: Nat,
+  +width: U32,
+  +height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

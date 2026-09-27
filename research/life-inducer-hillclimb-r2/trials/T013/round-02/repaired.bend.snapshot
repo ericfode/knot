@@ -1,0 +1,69 @@
+import Base
+
+# A finite three-point stencil, extended by zero at both ends.
+def Life.stencil(
+  ~A: Data, ~B: Data, ~f: A -> A -> A -> B,
+  xs: List<&2, A>, left: A, +zero: A
+) -> List<&2, B>:
+  match xs:
+    case Nil{}:
+      Nil{}
+    case Con{+center, +rest}:
+      right = Maybe.default(&2, A, List.head(&2, A, rest), zero)
+      f(left, center, right)
+        <> Life.stencil(~A, ~B, ~f, rest, center, zero)
+
+# Each column stores twice its population, with its center in the low bit.
+def Life.columns(
+  middle: List<&2, U32>, above: List<&2, U32>, below: List<&2, U32>
+) -> List<&2, U32>:
+  match middle:
+    case Nil{}:
+      Nil{}
+    case Con{+alive, rest}:
+      +upper = above
+      +lower = below
+      top = Maybe.default(&2, U32, List.head(&2, U32, upper), 0)
+      bottom = Maybe.default(&2, U32, List.head(&2, U32, lower), 0)
+      population = (top + alive + bottom : U32)
+      (2 * population + alive : U32)
+        <> Life.columns(rest, List.tail(&2, U32, upper),
+          List.tail(&2, U32, lower))
+
+# The inclusive population is three, or four with a living center.
+def Life.resolve(left: U32, center: U32, right: U32) -> U32:
+  +packed = center
+  +total = (U32.shr(left) + U32.shr(packed) + U32.shr(right) : U32)
+  Bool.to_u32(Bool.or(U32.is_eq(total, 3),
+    Bool.and(U32.is_eq(total, 4), U32.is_eq(U32.and(packed, 1), 1))))
+
+def Life.row(
+  above: List<&2, U32>, middle: List<&2, U32>, below: List<&2, U32>
+) -> List<&2, U32>:
+  Life.stencil(~U32, ~U32, ~Life.resolve,
+    Life.columns(middle, above, below), 0, 0)
+
+def Life.split(
+  height: Nat, +width: Nat, +cells: List<&2, U32>
+) -> List<&2, List<&2, U32>>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      List.take(&2, U32, cells, width)
+        <> Life.split(rest, width, List.drop(&2, U32, cells, width))
+
+def step(width: U32, height: U32, cells: List<&2, U32>) -> List<&2, U32>:
+  rows = Life.split(U32.to_nat(height), U32.to_nat(width), cells)
+  List.concat(&2, U32,
+    Life.stencil(~List<&2, U32>, ~List<&2, U32>, ~Life.row,
+      rows, Nil{}, Nil{}))
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

@@ -1,0 +1,84 @@
+import Base
+
+# An eastward sweep sees the board as north/middle/south columns.
+type Column is Data:
+  Column{north: U32, middle: U32, south: U32}
+
+def Life.stencil(west: Column, center: Column, east: Column) -> U32:
+  match west center east:
+    case Column{nw, w, sw} Column{n, alive, s} Column{ne, e, se}:
+      +ring = (nw + n + ne + w + e + sw + s + se : U32)
+      # For a binary center, B3/S23 is three around or three including it.
+      Bool.to_u32(Bool.or(
+        U32.is_eq(ring, 3),
+        U32.is_eq((ring + alive : U32), 3)))
+
+def Life.sweep(
+  +row: List<&2, U32>,
+  +north: List<&2, U32>,
+  +south: List<&2, U32>,
+  west: Column
+) -> List<&2, U32>:
+  match row:
+    case Nil{}:
+      Nil{}
+    case alive <> rest:
+      +north2 = {List.tail(&2, U32, north) : List<&2, U32>}
+      +south2 = {List.tail(&2, U32, south) : List<&2, U32>}
+      +center = {Column{
+        Maybe.default(&2, U32, List.head(&2, U32, north), 0),
+        alive,
+        Maybe.default(&2, U32, List.head(&2, U32, south), 0)
+      } : Column}
+      Life.stencil(
+        west,
+        center,
+        Column{
+          Maybe.default(&2, U32, List.head(&2, U32, north2), 0),
+          Maybe.default(&2, U32, List.head(&2, U32, rest), 0),
+          Maybe.default(&2, U32, List.head(&2, U32, south2), 0)
+        }) <>
+        Life.sweep(rest, north2, south2, center)
+
+def Life.rows(
+  height: Nat,
+  +width: Nat,
+  +cells: List<&2, U32>,
+  above: List<&2, U32>
+) -> List<&2, U32>:
+  match height:
+    case 0n:
+      Nil{}
+    case 1n+rest:
+      +row = {List.take(&2, U32, cells, width) : List<&2, U32>}
+      +future = {List.drop(&2, U32, cells, width) : List<&2, U32>}
+      List.append(&2, U32,
+        Life.sweep(
+          row,
+          above,
+          List.take(&2, U32, future, width),
+          Column{0, 0, 0}),
+        Life.rows(rest, width, future, row))
+
+def step(
+  width: U32,
+  height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  Life.rows(
+    U32.to_nat(height),
+    U32.to_nat(width),
+    cells,
+    Nil{})
+
+def evolve(
+  turns: Nat,
+  +width: U32,
+  +height: U32,
+  cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+rest:
+      evolve(rest, width, height, step(width, height, cells))

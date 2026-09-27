@@ -1,0 +1,55 @@
+import Base
+
+# Missing list positions contribute the additive identity.
+def head_zero(cells: List<&2, U32>) -> U32:
+  Maybe.default(&2, U32, List.head(&2, U32, cells), 0)
+
+# Each output is a horizontal three-cell sum, clipped at row edges.
+def horizontal(
+  cells: List<&2, U32>, +width: U32, +x: U32, left: U32
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{+center, +rest}:
+      +next = U32.inc(x)
+      +edge = U32.is_eq(next, width)
+      west = Bool.pick(U32, U32.is_zero(x), 0, left)
+      east = Bool.pick(U32, edge, 0, head_zero(rest))
+      total = (west + center + east : U32)
+      total <> horizontal(rest, width, Bool.pick(U32, edge, 0, next), center)
+
+# Including the center turns B3/S23 into total=3 or (alive and total=4).
+# The original cells determine output length; exhausted bands supply zeros.
+def vertical(
+  cells: List<&2, U32>, +above: List<&2, U32>,
+  +middle: List<&2, U32>, +below: List<&2, U32>
+) -> List<&2, U32>:
+  match cells:
+    case Nil{}:
+      Nil{}
+    case Con{alive, rest}:
+      +total = (head_zero(above) + head_zero(middle) + head_zero(below) : U32)
+      next = Bool.to_u32(Bool.or(
+        U32.is_eq(total, 3),
+        Bool.and(U32.is_eq(alive, 1), U32.is_eq(total, 4))))
+      next <> vertical(rest,
+        List.tail(&2, U32, above),
+        List.tail(&2, U32, middle),
+        List.tail(&2, U32, below))
+
+def step(+width: U32, height: U32, +cells: List<&2, U32>) -> List<&2, U32>:
+  +band = horizontal(cells, width, 0, 0)
+  +stride = U32.to_nat(width)
+  above = List.append(&2, U32, List.replicate(U32, stride, 0), band)
+  below = List.drop(&2, U32, band, stride)
+  vertical(cells, above, band, below)
+
+def evolve(
+  turns: Nat, +width: U32, +height: U32, cells: List<&2, U32>
+) -> List<&2, U32>:
+  match turns:
+    case 0n:
+      cells
+    case 1n+remaining:
+      evolve(remaining, width, height, step(width, height, cells))
