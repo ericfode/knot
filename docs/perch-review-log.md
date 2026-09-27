@@ -682,3 +682,33 @@ fresh run used the account's available GPT-5.6 Sol at xhigh. Check the actual
 transport's account catalog before dispatching a multi-model batch. Requested
 author settings remain distinct from resolved identity, which this CLI did not
 emit. Missing provider fields do not become verified model claims.
+
+## 2026-09-26 Pacific — whole-program review and helper support calibration
+
+The requested [post-hoc re-evaluation](../research/life-helper-review/README.md)
+preserved all 63 saved submissions and their original ratings. Sixty-one parse;
+49 now meet every declaration-support target, but none meets the whole-program
+Galaxy target. The maximum Galaxy mass is 0.10 against a 0.60 bar. Thus this
+sample supports treating ordinary helpers more appropriately, but does not
+show that helper policy alone prevented a full pass. Compare named policy
+outcomes; do not subtract scores from different review units. The historical
+v2 success remains a v2 success, with its lower conceptual-compression target.
+
+The new measure has a held-out calibration failure. Before live calls, a direct
+head helper was preferred over ignored-tag relays, and an ordered neighbor
+layout over an unnecessary argument permutation. The development helper scores
+0.95 versus 0.48, with relays at 0.04–0.05. The held-out layout scores 0.94 versus
+0.81 and its unnecessary route helper 0.78: both altered declarations still
+qualify. All controls pass the fixed behavior gate; the new negative sources
+receive clean semantic review. The source defect is editorial overhead, not a
+claimed behavior defect.
+
+Keep the policy experimental. Do not promote it, reroll the controls, move the
+threshold, or call a tuned reuse of this pair held out. A future revision needs
+fresh examples that separate a necessary representation adapter from a relay
+or argument shuffle with no compensating contribution. Preserve this miss and
+its [raw distributions](../research/life-helper-review/calibration/results.json).
+The full 63-entry review made 470 fresh requests and reused 15 exact completed
+requests in 26.334 seconds; this measured judge time establishes no author or
+program speedup. The bounded law packet completed eight checks without a
+threshold finding, with an observed Jev 1.13.0 response.

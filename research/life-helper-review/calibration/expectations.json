@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-27T05:01:57.482873+00:00",
+  "status": "expected-comparisons-recorded-before-live-calls",
+  "live_calls_made": 0,
+  "human_preference": "Helpers should support the main thing being Galaxy brain.",
+  "expectations_origin": "Assistant-recorded operationalization of the explicit user preference; not independently collected human panel ratings.",
+  "policy": "../config.json",
+  "policy_sha256": "2455ea1a27e80142f32f9cf0ca43af67ed905234e125811ecc06ff229d67d710",
+  "source_v3_rubric": "../../../perch-style.json",
+  "source_v3_rubric_sha256": "54cbef848b22aba58ab494b77b96f5c75832984ac4a8dbc2e8f8dc7223b65e40",
+  "scope": "Helper-support calibration only. Family scores remain separately measured; no whole-family Galaxy-brain pass or family ordering is assumed.",
+  "presentation": "Fixture identifiers and expectation labels are calibration metadata, not part of the model source/context. Present sources under neutral identifiers. Score every parsed declaration, retaining these target comparisons separately.",
+  "pairs": [
+    {
+      "id": "rolling-boundary",
+      "split": "development",
+      "base_source": "research/life-inducer-hillclimb-r2/trials/T007/round-03/first.bend.snapshot",
+      "base_source_sha256": "850392eda4d1a5be132ea36c03b9c39e52715157cbc6efc5f675e3dcb0de8d22",
+      "higher": {
+        "fixture": "fixtures/D01.bend.snapshot",
+        "sha256": "850392eda4d1a5be132ea36c03b9c39e52715157cbc6efc5f675e3dcb0de8d22",
+        "target": "head0",
+        "expected_support": "meets_target"
+      },
+      "lower": {
+        "fixture": "fixtures/D02.bend.snapshot",
+        "sha256": "4faaebac25dd92b25b143be859cd8d60faa54600117f53a350ec01e4305ff0e0",
+        "target": "head0",
+        "expected_support": "does_not_meet_target"
+      },
+      "lower_additional_targets": [
+        "Boundary.reserve",
+        "Boundary.transit"
+      ],
+      "comparison": "The direct zero-or-head match should contribute more clearly than the same match routed through ignored tags and alternating projection interfaces. The added projections are expected below the support target as well.",
+      "fixed_core": "horizontal, resolve, sweep, step and evolve remain byte-identical between fixtures.",
+      "semantic_equivalence_argument": "reserve(value,tag)=value and transit(tag,value)=value. Both branches of head0 therefore return exactly the original zero or head, for every list. No mutation, new error or change to the Life rule is introduced."
+    },
+    {
+      "id": "packed-neighbor-layout",
+      "split": "held_out",
+      "base_source": "research/life-inducer-hillclimb-r2/trials/T006/round-03/first.bend.snapshot",
+      "base_source_sha256": "13cd68c17f56f12df997035c083aa72ed35bc639c7635a1d785f1e14bd1df93f",
+      "higher": {
+        "fixture": "fixtures/H01.bend.snapshot",
+        "sha256": "13cd68c17f56f12df997035c083aa72ed35bc639c7635a1d785f1e14bd1df93f",
+        "target": "Life.eight_winds",
+        "expected_support": "meets_target"
+      },
+      "lower": {
+        "fixture": "fixtures/H02.bend.snapshot",
+        "sha256": "bc5be25325238ad31a135168eab28f50be3006fbbb9b594a9a858ed8ab29ffcf",
+        "target": "Life.eight_winds",
+        "expected_support": "does_not_meet_target"
+      },
+      "lower_additional_targets": [
+        "Life.route"
+      ],
+      "comparison": "The three-row neighbor layout with its center visibly absent should support the bitplane core better than a scrambled positional call reconstructed by an unexplained permutation. Life.route is expected below the support target.",
+      "fixed_core": "Life.pack, Life.quorum, Life.sweep, Life.unpack, step and evolve remain byte-identical between fixtures.",
+      "semantic_equivalence_argument": "The route call supplies [SE,NW,E,N,SW,NE,S,W]; route returns argument positions [2,4,6,8,3,5,7,1], exactly [NW,N,NE,W,E,SW,S,SE], preserving the original neighbor list and all original quorum arguments.",
+      "held_out_rule": "Reserve for validation after the policy/development interpretation is frozen; do not tune on this pair and continue to call it held out. The base family was observed under the old v3 review, but these support-control variants have no live support scores."
+    }
+  ],
+  "deterministic_validation": "Source-level equivalence arguments and parser/config checks only until separate pinned Life behavior receipts are attached by the parent; no universal proof claimed."
+}
