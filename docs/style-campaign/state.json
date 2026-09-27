@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "started_local_date": "2026-09-26",
-  "status": "bounded_trials_running",
+  "status": "bounded_trials_complete",
   "coordinator_thread_id": "01a0deae-38e5-7120-ad10-77ee5b1e7f0a",
   "objective": "Run three independent bounded reading experiments on central checker laws, compiler integration and IntMap while preserving fixed contracts and deterministic gates; record honest style outcomes without a whole-repository prerequisite.",
   "plan": "docs/STYLE-CAMPAIGN.md",
@@ -583,16 +583,17 @@
     "preserve_queue": true,
     "broader_queue_status": "parked_pending_user_selection",
     "new_package_batches_on_hold": true,
-    "allowed_trial_ids": [
-      "central-laws-1",
-      "compiler-pipeline-1",
-      "int-map-paths-2"
-    ],
+    "allowed_trial_ids": [],
     "prior_pilot_is_prerequisite": false,
     "correctness_gates_unchanged": true,
     "style_failures_remain_visible": true,
     "closeout": "Independent keep/reject/no-change disposition per trial; verified explicit-path commits for retained source. An unmet style target is not a pass and does not block another trial.",
-    "source": "User instruction on 2026-09-27; docs/style-campaign/bounded-sections.md; main policy commit 4a1c245."
+    "source": "User instruction on 2026-09-27; docs/style-campaign/bounded-sections.md; main policy commit 4a1c245.",
+    "completed_trial_ids": [
+      "central-laws-1",
+      "compiler-pipeline-1",
+      "int-map-paths-2"
+    ]
   },
   "scoped_pilot": {
     "id": "adaptive-run-feasibility-1",
@@ -845,7 +846,7 @@
     "commit": "668e44719f759e877491fc65ea2aa78e03c8e5e2"
   },
   "bounded_sections": {
-    "status": "running",
+    "status": "completed",
     "recorded_at": "2026-09-27T17:09:04.627247+00:00",
     "plan": "docs/style-campaign/bounded-sections.md",
     "policy_commit": "4a1c245",
@@ -858,7 +859,7 @@
     "trials": [
       {
         "id": "central-laws-1",
-        "status": "in_progress",
+        "status": "completed",
         "owner_thread_id": "01a0e16c-05d0-7543-a087-e84c21ebb01d",
         "owner": "Review plans for Perch",
         "checkout": "/Users/ericfode/.codex/worktrees/7b60/knot",
@@ -874,11 +875,37 @@
           "refined_constructor_is_fresh"
         ],
         "evidence_directory": "src/style-campaign/central-laws-1",
-        "integration": "Narrow source/evidence increment only; preserve divergent experiment history in its worktree."
+        "integration": "Narrow source/evidence increment only; preserve divergent experiment history in its worktree.",
+        "disposition": "keep_readability_improvement_with_style_debt",
+        "source_commit": "6661270524e673df877aa434351a150673150d5b",
+        "main_commit": "e5a7f38",
+        "report": "src/style-campaign/central-laws-1/README.md",
+        "candidate_count": 1,
+        "compiler_diagnostic_retries": 0,
+        "verification": {
+          "all_theorem_tokens_identical": true,
+          "proof_file_byte_identical": true,
+          "complete_proof_entries_passed": 5,
+          "checker_backend_observations_passed": 98,
+          "existing_semantic_mutants_killed": 7,
+          "semantic_perch_checks": 18,
+          "combined_main_check_proof_passed": true
+        },
+        "style": {
+          "changed_laws_meet_targets": 5,
+          "changed_laws_reviewed": 5,
+          "baseline_laws_already_met_targets": true,
+          "family_including_unchanged_proofs_meet_all": 5,
+          "family_declarations": 10,
+          "complete_family_targets": "Memetic, Anticipation and Payoff remain below target",
+          "actual_source_whole_file_composition": "unavailable",
+          "automatic_style_pass": false
+        },
+        "note": "Only equation layout changed. Retain the modest readability benefit without claiming a new representation or score improvement."
       },
       {
         "id": "compiler-pipeline-1",
-        "status": "in_progress",
+        "status": "completed",
         "owner_thread_id": "01a0dea7-91b5-7480-b80a-7fe9584f9966",
         "owner": "Compiler Planning",
         "checkout": "/Users/ericfode/src/knot",
@@ -891,11 +918,43 @@
           "source",
           "directly necessary helpers"
         ],
-        "evidence_directory": "src/style-campaign/compiler-pipeline-1"
+        "evidence_directory": "src/style-campaign/compiler-pipeline-1",
+        "disposition": "keep_readability_improvement_with_style_debt",
+        "candidate_count": 1,
+        "compiler_diagnostic_retries": 0,
+        "candidate_sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+        "verification": {
+          "existing_suites_passed": 5,
+          "complete_proof_entries": "passed",
+          "existing_semantic_mutants_killed": 34,
+          "direct_native_and_bun_io_observations_passed": 20,
+          "baseline_equal_wasm_modules": 25,
+          "semantic_perch_checks": 12,
+          "semantic_findings": 0,
+          "source_hash_verified_by_coordinator": true,
+          "law_packet_perch_checks": 8,
+          "law_packet_provider_responses": 1,
+          "law_packet_findings": 0,
+          "law_packet_followup": "research/compiler-style/compiler-pipeline-1/usage.json"
+        },
+        "style": {
+          "declarations_reviewed": 4,
+          "compression_and_delight": "all four meet targets",
+          "normal_memetic": "below target",
+          "parsed_and_source_context": "truncated",
+          "normal_composition": "unavailable",
+          "supplementary_family_context": "Explicit opaque interfaces for unchanged stages; supporting evidence only",
+          "supplementary_family_memetic_anticipation_payoff": "below target",
+          "automatic_style_pass": false
+        },
+        "main_commit": "c2045e3",
+        "report": "src/style-campaign/compiler-pipeline-1/STYLE_CAMPAIGN.md",
+        "outcome": "src/style-campaign/compiler-pipeline-1/disposition.json",
+        "note": "Owner retained the original zero-coverage packet attempt. Coordinator reviewed a relocated packet with explicit source and fixed witness context under unchanged rules; eight checks completed. Other source-context and role uncertainty limits remain explicit."
       },
       {
         "id": "int-map-paths-2",
-        "status": "in_progress",
+        "status": "completed",
         "owner_thread_id": "01a0deee-b662-7730-98de-0679e0f47959",
         "owner": "Build and publish Bend integer maps",
         "checkout": "/Users/ericfode/src/knot",
@@ -908,8 +967,46 @@
           "remove_path",
           "necessary supporting projections and branch constructor"
         ],
-        "evidence_directory": "packages/int_map/campaigns/int-map-paths-2"
+        "evidence_directory": "packages/int_map/campaigns/int-map-paths-2",
+        "disposition": "keep_unreleased_with_style_and_performance_debt",
+        "main_commit": "9492a5d",
+        "report": "packages/int_map/STYLE_CAMPAIGN.md",
+        "outcome": "packages/int_map/campaigns/int-map-paths-2/outcome.json",
+        "candidate_count": 1,
+        "compiler_diagnostic_retries": 0,
+        "verification": {
+          "proof_declarations_passed": 23,
+          "native_and_javascript_conformance": "passed",
+          "type_valid_mutants_killed": 11,
+          "scaling_and_independent_model": "passed",
+          "semantic_perch_checks": 39,
+          "semantic_findings": 0,
+          "fixed_laws_and_assertions_unchanged": true,
+          "published_release_preserved": true
+        },
+        "performance": {
+          "user_allowance_percent": 20,
+          "authorization_owner_thread": "01a0deee-b662-7730-98de-0679e0f47959",
+          "authorization_message_id": "01a0e3d9-15bc-74d3-8068-44ba95b4f073",
+          "evidence": "packages/int_map/campaigns/int-map-paths-2/performance-budget.json",
+          "measured_workload_entries": 4096,
+          "observed_native_median_slowdown_percent": 3.1,
+          "observed_javascript_median_slowdown_percent": 5.4,
+          "scope": "Descriptive paired process timings on a shared machine; not a universal performance guarantee."
+        },
+        "style": {
+          "supporting_declarations_meet_targets": 7,
+          "reviewed_declarations": 8,
+          "leading_edit_path": "below Memetic, Anticipation and Payoff targets",
+          "whole_file_composition": "below targets",
+          "automatic_style_pass": false
+        },
+        "note": "One shared edit_path recurrence with explicit endpoint/rebuild policies. Earlier rejection is retained; the later user budget authorizes keeping the same candidate."
       }
-    ]
+    ],
+    "updated_at": "2026-09-27T17:21:47.585553+00:00",
+    "all_retained_source_committed": true,
+    "automatic_style_pass": false,
+    "next_action": "No further style wave is dispatched; keep the broader queue parked pending user selection."
   }
 }

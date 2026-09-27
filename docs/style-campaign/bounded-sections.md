@@ -78,6 +78,12 @@ gates. Compare exact baseline performance when traversal changes. Preserve the
 published hash, historical release receipts and compiler dependency pins.
 Evidence belongs in `packages/int_map/campaigns/int-map-paths-2/`.
 
+The user's later instruction in the IntMap owner chat allows up to 20% measured
+performance degradation for this revision, with performance work deferred. That
+trial's `performance-budget.json` retains the authorization and measured costs.
+This exception does not relax correctness, law claims, asymptotic behavior or
+style targets, and is not a blanket performance waiver for other components.
+
 ## Trial and closeout rules
 
 Each owner freezes source and independent gate identities before one substantive
@@ -107,3 +113,24 @@ work. Do not publish packages or expand compiler milestones for this trial.
 The wave ends with three reviewable dispositions and verified commits for any
 retained source. A stalled or rejected family does not block the others. The
 former broader queue stays parked unless the user selects further work.
+
+## Completed wave
+
+All three first candidates were retained on main, with no compiler-diagnostic
+retry. The numerical style targets remain unchanged; none is an automatic
+complete-family style pass.
+
+| Trial | Main commit | Retained change and evidence |
+| --- | --- | --- |
+| Central laws | `e5a7f38` | Five equations share an operation/result/type layout. Theorem tokens and proof bodies are unchanged. [Report](../../src/style-campaign/central-laws-1/README.md). |
+| Compiler pipeline | `c2045e3` | The lex/parse/check sequence is visible inside one first-error composition before the IO continuation. Five suites, 34 mutants, 20 direct IO observations and 25 baseline-identical Wasm modules pass. [Report](../../src/style-campaign/compiler-pipeline-1/STYLE_CAMPAIGN.md). |
+| IntMap | `9492a5d` | Insertion and removal share `edit_path`, with explicit terminal and rebuilding policies. All 23 proofs, conformance, 11 mutants and scaling/model gates pass. Observed 4096-entry median slowdowns are 3.1% native and 5.4% JavaScript under the user's 20% allowance. [Report](../../packages/int_map/STYLE_CAMPAIGN.md). |
+
+The laws' complete family and IntMap's leading recurrence/composition remain
+below expressive targets. The compiler's normal composition review is unavailable
+because of context limits; its supplementary family also falls below the
+expressive targets. Small score differences are not an established style gain.
+The [coordinator packet review](../../research/compiler-style/compiler-pipeline-1/README.md)
+closes the compiler packet's path-selection gap with eight applicable semantic
+checks, preserving the original zero-coverage attempt and all style limitations.
+The state file records the independent outcomes. No further trial is dispatched.
