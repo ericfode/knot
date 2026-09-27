@@ -499,3 +499,10 @@ tests and the law-rule wiring gate pass against merged v3 policy.
 A final live check at merged revision `698d88a` received HTTP 402 on its first
 request. No further paid checks were attempted. Earlier complete measurements
 remain frozen evidence; the merged revision has no complete new live receipt.
+
+After the user purchased credits, [the deferred live checks completed](perch-throughput-2026-09-26.md#live-verification-after-credits-were-added)
+at `deddae2`: semantic scan 40.21 s across 1,986 declarations with zero failed
+requests; style 22.00 s with all 2,345 parsable units rated. The scan recovered
+152 rate-limit responses. The same 16 parser failures still prevent complete
+repository coverage. Full results are retained; model findings are untriaged.
+No implementation, rule, rubric, or concurrency change was needed.

@@ -144,3 +144,30 @@ The merged-tree offline scan completed 2,030 fixed-answer requests across 1,986
 declarations with zero failed requests; style rated all 2,345 parsable units.
 Both retain the same 16 unparseable files. These fixed answers establish
 execution/coverage only, not review findings or style quality.
+
+### Live verification after credits were added
+
+After the user purchased credits, both deferred checks ran on merged revision
+`deddae2`, sequentially at the default 16 workers. The earlier HTTP 402 is
+retained as historical evidence; it no longer blocks these completed runs.
+
+- Semantic scan: **40.21 s**, 1,986 declarations, 71,824 rule checks, zero
+  failed or incomplete requests, and no cached answers carried. All 152 HTTP
+  429 responses recovered; 2,082 requests returned HTTP 200. Native exit 3
+  reflects model findings, which this throughput task has not confirmed.
+- Whole-project style: **22.00 s**, all **2,345 parsable units** rated, 2,345
+  HTTP 200 responses and no provider failure. Source/context hashes remained
+  current throughout the run. No saved answers were reused.
+
+The same 16 parser failures remain visible, so neither run establishes a
+complete repository coverage pass. Style returns exit 1 for those unranked
+files; its ratings retain the current v3 requirements. These merged-source
+measurements close the deferred live validation, rather than replacing the
+earlier comparison on a different frozen inventory.
+
+The [restored-credit receipt](perch-calibration/throughput-credits-restored-2026-09-26.json)
+records counts, timings, hashes and coverage, with complete compressed
+[scan results](perch-calibration/throughput-credits-restored-2026-09-26-scan.json.gz)
+and [style results](perch-calibration/throughput-credits-restored-2026-09-26-style.json.gz).
+Implementation and configuration are unchanged; the previous 46-test and
+law-wiring verification remains the applicable deterministic evidence.
