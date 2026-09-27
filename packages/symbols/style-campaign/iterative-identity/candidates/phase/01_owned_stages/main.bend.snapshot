@@ -1,0 +1,77 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Map<&2,Maybe<&2,U32>>}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),Map.new(&2,Maybe<&2,U32>)}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),Map.new(&2,Maybe<&2,U32>)}
+
+def metadata(m: Map<&2,Maybe<&2,U32>>, r: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = r
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.limit(String,v))
+
+def found(v: V.Vec<String>, r: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>) -> Table & Maybe<&2,U32>:
+  (m,id) = r
+  (InternTable{v,m},id)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{v,m}:
+      found(v,Map.get(Maybe<&2,U32>,None{},m,name))
+
+type Intern is Type:
+  Lookup{names: V.Vec<String>, probe: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>}
+  Slot{ids: Map<&2,Maybe<&2,U32>>, position: V.Vec<String> & U32}
+  Commit{ids: Map<&2,Maybe<&2,U32>>, id: U32, append: V.Vec<String> & Result<V.Error,Unit>}
+
+def intern(+name: String, phase: Intern) -> Table & Result<Error,U32>:
+  match phase:
+    case Lookup{names,probe}:
+      (ids,hit) = probe
+      match hit:
+        case Some{id}: (InternTable{names,ids},Done{id})
+        case None{}: intern(name,Slot{ids,V.Vec.length(String,names)})
+    case Slot{ids,position}:
+      (names,+id) = position
+      intern(name,Commit{ids,id,V.Vec.push(String,names,name)})
+    case Commit{ids,+id,append}:
+      (names,result) = append
+      match result:
+        case Fail{error}: (InternTable{names,ids},Fail{Exhausted{}})
+        case Done{unit}: (InternTable{names,Map.set(&2,Maybe<&2,U32>,ids,name,Some{id})},Done{id})
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{names,ids}:
+      intern(name,Lookup{names,Map.get(Maybe<&2,U32>,None{},ids,name)})
+
+def resolved(m: Map<&2,Maybe<&2,U32>>, pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{InvalidId{}})
+    case Done{name}:
+      (InternTable{v,m},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{v,m}:
+      resolved(m,V.Vec.get(String,v,id))

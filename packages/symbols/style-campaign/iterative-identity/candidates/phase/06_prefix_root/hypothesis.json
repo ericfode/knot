@@ -1,0 +1,17 @@
+{
+  "reading_hypothesis": "A prefix may own a terminal ID before its red-black character siblings. Keep Here outside the balanced sibling tree, so empty-string behavior is direct and less/same/more retains the successful unbalanced traversal shape. Balancing moves character plus same/tail subtree together without introducing a Letter datatype.",
+  "representation": "Trie = Vacant | Here{id,more} | Fork{color,char,less,same,more}; Here can occur only at each prefix root and its more is a sibling tree.",
+  "invariants": [
+    "Each prefix root is an optional Here followed by Vacant or a black Fork.",
+    "Here never appears on a less/more sibling edge.",
+    "Red sibling Forks have black children.",
+    "Sibling paths have equal black height and strictly ordered U32 character codes.",
+    "Each same child is a complete independently blackened prefix Trie.",
+    "Terminal state is separate from every U32 character code, including zero."
+  ],
+  "risks": [
+    "All state invariants need independent additive validation; existing package laws retain their existing proof boundary.",
+    "Performance and representation documentation still require coordinator review."
+  ],
+  "fixed_inputs": "Original non-main Bend sources copied unchanged."
+}

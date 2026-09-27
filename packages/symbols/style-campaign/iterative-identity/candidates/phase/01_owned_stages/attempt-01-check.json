@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/ericfode/src/knot/scripts/bend-reference",
+    "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/01_owned_stages/main.bend",
+    "--check-only"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : intern\nContext:\n- name  : String\n- names : 0xd684886d10b431b9dce6c3b2d1ef1980/main.Vec<String>\n- ids   : Map<&2, Maybe<&2, U32>>\nLocation: intern\n50 |         case Some{id}: (InternTable{names,ids},Done{id})\n51>|         case None{}: intern(name,Slot{ids,V.Vec.length(String,names)})\n   |                      ^^^^^^\n52 |     case Slot{ids,position}:\n",
+  "elapsed_seconds": 0.0694371669087559
+}

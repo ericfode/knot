@@ -1,5 +1,24 @@
 # Symbols status
 
+2026-09-26: an unpublished working revision replaces the forward Base Map with
+a balanced character trie. Public behavior, independent model, accepted laws,
+Vec dependency and the published import are unchanged. The current implementation
+and complete search evidence are in [STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md).
+
+The original proofs, native/JS conformance and release consumers, eight semantic
+mutants, additive exact-string observations and structural balancing checks pass.
+Existing native common-prefix workloads take 0.244–0.568x baseline time; sorted
+single-character workloads take up to 1.61x baseline time. This tradeoff is accepted
+for the working compiler-support implementation; no universal speedup is claimed.
+
+The selected lookup passed all three frozen v2 style axes. Current v3 review
+still passes memetic identity, Delight, Anticipation and Payoff for that lookup,
+but not the new Galaxy-brain requirement. No complete v3 declaration/package
+style pass is claimed. Current commands write receipts/working/ so the published
+release receipts below remain intact. GPU remains unvalidated.
+
+## Published release evidence
+
 2026-09-26: published and remotely verified.
 
 `import 0xf5507d46d06a1a8043dcb1a582194615/main.bend as S`

@@ -1,0 +1,84 @@
+{
+  "source_sha256": "babfe9205dd805928984307cd59fdb7fe764fe111854a33b94d977ecb387a491",
+  "records": [
+    {
+      "name": "main",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.08008662494830787,
+      "expected_stdout": "All terms check.",
+      "output_matches": true
+    },
+    {
+      "name": "proof",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.17956750001758337,
+      "expected_stdout": "All terms check.",
+      "output_matches": true
+    },
+    {
+      "name": "native-build",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.7469244170933962
+    },
+    {
+      "name": "native-run",
+      "command": [
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "elapsed_seconds": 0.2335634999908507,
+      "expected_stdout": "1",
+      "output_matches": true
+    },
+    {
+      "name": "js-build",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.11276300018653274
+    },
+    {
+      "name": "js-run",
+      "command": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/05_balanced_trie/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "elapsed_seconds": 0.03822687501087785,
+      "expected_stdout": "1",
+      "output_matches": true
+    }
+  ]
+}

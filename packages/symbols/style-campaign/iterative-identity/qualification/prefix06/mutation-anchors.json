@@ -1,0 +1,58 @@
+[
+  {
+    "name": "alias_ids",
+    "old": "(InternTable{v,Trie.put(m,name,id)},Done{id})",
+    "new": "(InternTable{v,Trie.put(m,name,id)},Done{0})",
+    "case": "repeat",
+    "limit": 4
+  },
+  {
+    "name": "forget_forward",
+    "old": "Trie.put(m,name,id)",
+    "new": "Trie.put(Vacant{},name,id)",
+    "case": "repeat",
+    "limit": 4
+  },
+  {
+    "name": "repeat_grows",
+    "old": "(InternTable{v,m},Done{id})",
+    "new": "append_name(m,name,V.Vec.length(String,v))",
+    "case": "repeat",
+    "limit": 4
+  },
+  {
+    "name": "reverse_wrong",
+    "old": "(InternTable{v,m},Done{name})",
+    "new": "(InternTable{v,m},Done{\"wrong\"})",
+    "case": "unicode",
+    "limit": 6
+  },
+  {
+    "name": "wrap_invalid",
+    "old": "V.Vec.get(String,v,id)",
+    "new": "V.Vec.get(String,v,U32.and(id,0))",
+    "case": "full",
+    "limit": 1
+  },
+  {
+    "name": "exhaustion_success",
+    "old": "(InternTable{v,m},Fail{Exhausted{}})",
+    "new": "(InternTable{v,m},Done{0})",
+    "case": "full",
+    "limit": 1
+  },
+  {
+    "name": "failure_forgets",
+    "old": "(InternTable{v,m},Fail{Exhausted{}})",
+    "new": "(InternTable{v,Vacant{}},Fail{Exhausted{}})",
+    "case": "full",
+    "limit": 1
+  },
+  {
+    "name": "wrong_error",
+    "old": "Fail{InvalidId{}}",
+    "new": "Fail{Exhausted{}}",
+    "case": "full",
+    "limit": 1
+  }
+]

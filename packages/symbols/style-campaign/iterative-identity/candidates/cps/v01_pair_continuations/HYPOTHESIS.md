@@ -1,0 +1,1 @@
+Pair elimination through one owned continuation should collapse the three interning helper boundaries into a visible probe, length, push, publish progression. Each tuple binds once; branching remains structural. This tests whether compact nested continuation clauses reveal ownership more clearly than named transient states. Frozen API and independent inputs remain unchanged.

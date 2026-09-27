@@ -1,0 +1,18 @@
+{
+  "variant": "red-black-constructors",
+  "hypothesis": "Put red and black in the Index constructors themselves. E/R/B expose the four red/red tree silhouettes directly, with the same ordered fringe yielding the same R-of-two-B form. Balance is needed only when rebuilding a black parent; blacken changes only a red root. This removes the Color tag and one promotion wrapper, at the cost of duplicating color-insensitive lookup arms.",
+  "anticipated_cost": "The single-letter tree vocabulary must remain grounded by its constructor shape and invariant. Duplicated lookup/insert arms may outweigh the shorter rotations. Same whole-string comparison performance concerns apply.",
+  "algorithm_provenance": "Original implementation and rendering of general functional red-black insertion; no third-party source copied.",
+  "fixed_inputs": {
+    "conformance.bend": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+    "PROOF.bend": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+    "observe.bend": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+    "LAWS.bend": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+    "release.bend": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+    "protocol.bend": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+    "cases.bend": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+    "example.bend": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+    "benchmark.bend": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+    "model.bend": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270"
+  }
+}

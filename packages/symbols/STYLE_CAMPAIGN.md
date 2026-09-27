@@ -1,4 +1,20 @@
-# Symbols style experiment — intern identity
+# Symbols style campaign
+
+The user's subsequent instruction to keep iterating superseded the one-candidate
+and one-diagnostic-retry limit below. The completed search tried 24 source variants spanning several
+representations and compositions and installed a balanced character trie while
+preserving the public contract and independent tests. See the
+[iterative report](style-campaign/iterative-identity/README.md) for every candidate,
+the selected source, all style axes, correctness gates and measured tradeoffs.
+
+The selected `Trie.get` met all three frozen v2 targets: 69% conceptual,
+74% Delight, 62% memetic. During integration the shared coordinator installed
+rubric v3. A separate live v3 review gives it 62% memetic, 92% Delight,
+64% Anticipation and 79% Payoff; Galaxy brain remains below target. The working
+revision therefore contains an actual memetic pass, not a complete v3 style
+pass. The original failed experiment remains evidence below.
+
+## Initial intern-identity experiment
 
 2026-09-26. **Rejected at compiler preflight. No new memetic pass.**
 The working implementation and published release remain unchanged. This records

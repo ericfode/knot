@@ -1,6 +1,9 @@
 # Symbols interface
 
-Owned append-only String interner; Bend 2.0.29. Published and remotely verified.
+Owned append-only String interner; Bend 2.0.29. The interface below is unchanged.
+The working character-trie revision is verified locally and unpublished; see
+[STYLE_CAMPAIGN.md](STYLE_CAMPAIGN.md). The following import still identifies the
+published, remotely verified Base Map implementation.
 Import: `import 0xf5507d46d06a1a8043dcb1a582194615/main.bend as S`.
 Proof-inclusive entry: `import 0xf5507d46d06a1a8043dcb1a582194615/release.bend as Verified`.
 Pinned Vec: `0xd684886d10b431b9dce6c3b2d1ef1980/main.bend`.

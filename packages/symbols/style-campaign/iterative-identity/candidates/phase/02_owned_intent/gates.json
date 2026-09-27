@@ -1,0 +1,84 @@
+{
+  "source_sha256": "690f3caecff7290c81a2b5464d5e2dc40b3cc58c20836133ababe0d0a94c4b3e",
+  "records": [
+    {
+      "name": "main",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/main.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.06600983277894557,
+      "expected_stdout": "All terms check.",
+      "output_matches": true
+    },
+    {
+      "name": "proof",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/PROOF.bend",
+        "--check-only"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.2061653749551624,
+      "expected_stdout": "All terms check.",
+      "output_matches": true
+    },
+    {
+      "name": "native-build",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.6301312090363353
+    },
+    {
+      "name": "native-run",
+      "command": [
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "elapsed_seconds": 0.2173417080193758,
+      "expected_stdout": "1",
+      "output_matches": true
+    },
+    {
+      "name": "js-build",
+      "command": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance.bend",
+        "-o",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.11365562514401972
+    },
+    {
+      "name": "js-run",
+      "command": [
+        "bun",
+        "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/phase/02_owned_intent/conformance.js"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "elapsed_seconds": 0.03523154207505286,
+      "expected_stdout": "1",
+      "output_matches": true
+    }
+  ]
+}

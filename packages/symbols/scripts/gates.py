@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-import hashlib,json,pathlib,subprocess
+import hashlib,json,os,pathlib,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[3]; PKG=ROOT/'packages/symbols'; BEND=ROOT/'scripts/bend-reference'
+OUT=PKG/os.environ.get('SYMBOLS_RECEIPTS_DIR','receipts/working')
+OUT.mkdir(parents=True,exist_ok=True)
+(PKG/'build').mkdir(parents=True,exist_ok=True)
 def fingerprint():
  paths=list(PKG.glob('*.bend'))+[PKG/'LICENSE',ROOT/'packages/vec/main.bend',ROOT/'packages/vec/LICENSE']
  return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
@@ -24,5 +27,5 @@ review=PKG/'LAW_REVIEW.md'; text=review.read_text().split('<!-- SOURCE_HASHES --
 review.write_text(text+'<!-- SOURCE_HASHES -->\n\nReviewed Bend source SHA-256 (refreshed by scripts/gates.py):\n\n```text\n'+''.join(f'{v}  {k}\n' for k,v in sha.items())+'```\n')
 run(['node',PKG/'scripts/perch-wiring.mjs'])
 assert fingerprint()==before,'source or dependency changed during gates; rerun on stable files'
-(PKG/'receipts/gates.json').write_text(json.dumps({'source_sha256':sha,'checked_inputs_sha256':before,'records':records},indent=2)+'\n')
+(OUT/'gates.json').write_text(json.dumps({'source_sha256':sha,'checked_inputs_sha256':before,'records':records},indent=2)+'\n')
 print('PASS: proof zero holes, native/JS conformance and release consumer, eight semantic mutants, closure audit, Perch offline wiring.')

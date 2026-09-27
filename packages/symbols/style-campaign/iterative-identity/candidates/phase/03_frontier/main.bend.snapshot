@@ -1,0 +1,67 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+# next equals the reverse length; every stored ID is strictly below it.
+type Table is Type:
+  InternTable{next: U32, names: V.Vec<String>, ids: Map<&2,Maybe<&2,U32>>}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{0,V.Vec.bounded(String,limit),Map.new(&2,Maybe<&2,U32>)}
+
+def Table.new() -> Table:
+  InternTable{0,V.Vec.new(String),Map.new(&2,Maybe<&2,U32>)}
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{+next,names,ids}: (InternTable{next,names,ids},next)
+
+def limited(next: U32, ids: Map<&2,Maybe<&2,U32>>, pair: V.Vec<String> & U32) -> Table & U32:
+  (names,limit) = pair
+  (InternTable{next,names,ids},limit)
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{next,names,ids}: limited(next,ids,V.Vec.limit(String,names))
+
+def found(next: U32, names: V.Vec<String>, pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>) -> Table & Maybe<&2,U32>:
+  (ids,id) = pair
+  (InternTable{next,names,ids},id)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{next,names,ids}: found(next,names,Map.get(Maybe<&2,U32>,None{},ids,name))
+
+def commit(+next: U32, ids: Map<&2,Maybe<&2,U32>>, name: String,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (names,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{next,names,ids},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{U32.add(next,1),names,Map.set(&2,Maybe<&2,U32>,ids,name,Some{next})},Done{next})
+
+def claim(next: U32, names: V.Vec<String>, +name: String,
+  pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  (ids,hit) = pair
+  match hit:
+    case Some{id}: (InternTable{next,names,ids},Done{id})
+    case None{}: commit(next,ids,name,V.Vec.push(String,names,name))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{next,names,ids}: claim(next,names,name,Map.get(Maybe<&2,U32>,None{},ids,name))
+
+def resolved(next: U32, ids: Map<&2,Maybe<&2,U32>>,
+  pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (names,result) = pair
+  match result:
+    case Fail{error}: (InternTable{next,names,ids},Fail{InvalidId{}})
+    case Done{name}: (InternTable{next,names,ids},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{next,names,ids}: resolved(next,ids,V.Vec.get(String,names,id))
