@@ -1,0 +1,34 @@
+--- baseline/src/scope.bend
++++ candidate-first/src/scope.bend
+@@ -64,11 +64,16 @@
+     case Scope{bindings,+next,from,live}:
+       Scope{Con{C.Binding{token,next,q,type_id,False{},None{}},bindings},U32.add(next,1),Nil{},live}
+ 
+-def refine(bindings: List<&2,C.Binding>, +level: U32, +tag: U32) -> List<&2,C.Binding>:
++def set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, bindings: List<&2,C.Binding>, +level: U32, +payload: A) -> List<&2,C.Binding>:
+   match bindings:
+     case Nil{}: Nil{}
+-    case Con{C.Binding{+token,+id,+q,+type_id,+param,+known},tail}:
+-      Con{C.Binding{token,id,q,type_id,param,S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{C.Value{token,type_id,tag}},u => known)},refine(tail,level,tag)}
++    case Con{C.Binding{+token,+id,q,+type_id,param,+known},tail}:
++      Con{C.Binding{token,id,q,type_id,param,
++        S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{value(payload,token,type_id)},u => known)},
++        set_known(~A,~value,tail,level,payload)}
++
++def refine(bindings: List<&2,C.Binding>, +level: U32, +tag: U32) -> List<&2,C.Binding>:
++  set_known(~U32,~(tag => token => type_id => C.Value{token,type_id,tag}),bindings,level,tag)
+ 
+ # Lexical identity is stable; match order is an independent ordered frontier.
+ def after(ids: List<&2,U32>, +level: U32) -> List<&2,U32>:
+@@ -91,10 +96,7 @@
+           S.choose(Result<S.Error,C.Binding>,U32.is_eq(id,level),u => Done{head},u => find_level(tail,level))
+ 
+ def replace(bindings: List<&2,C.Binding>, +level: U32, +term: C.Term) -> List<&2,C.Binding>:
+-  match bindings:
+-    case Nil{}: Nil{}
+-    case Con{C.Binding{token,+id,q,type_id,param,known},tail}:
+-      Con{C.Binding{token,id,q,type_id,param,S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{term},u => known)},replace(tail,level,term)}
++  set_known(~C.Term,~(term => token => type_id => term),bindings,level,term)
+ 
+ def remove_fields(fields: List<&2,C.Binding>, uses: List<&2,U32>) -> List<&2,U32>:
+   match fields:

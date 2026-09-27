@@ -1,0 +1,36 @@
+{
+  "status": "first candidate seed pass; pending parent acceptance gates",
+  "first_candidate": "candidate-first.bend.snapshot",
+  "diff": "candidate-first.diff",
+  "manifest": "candidate-first-manifest.json",
+  "seed_receipt": "candidate-first-seed.json",
+  "retry": "not used; first candidate passed",
+  "changed_declarations": [
+    "set_known",
+    "refine",
+    "replace"
+  ],
+  "frozen_files_unchanged": {
+    "src/scope.bend": true,
+    "src/check-LAWS.bend": true,
+    "src/check-PROOF.bend": true,
+    "tests/compiler-checker/check.py": true,
+    "tests/compiler-checker/cases.json": true,
+    "tests/compiler-fields/check.py": true,
+    "tests/compiler-fields/cases.json": true,
+    "tests/compiler-wasm/check.py": true
+  },
+  "reading_benefit_hypothesis": "One traversal and one binding reconstruction make metadata retention and identity selection common; the public wrappers show only how the known term is built. Closed template arguments avoid runtime closure duplication.",
+  "semantic_review": "Traverses every list cell exactly as before; updates all matching IDs; does not truncate after the first match. Nonmatching known values remain unchanged. refine builds C.Value from the matching binding token and type ID and supplied tag; replace uses the exact supplied C.Term.",
+  "tradeoff": "Introduces one generic template and an explicit payload parameter; parent must judge whether centralizing the invariant outweighs that indirection. No reading target or performance improvement is claimed.",
+  "remaining_gates": [
+    "independent behavior and metadata observations",
+    "scaling and backend checks",
+    "targeted Perch semantic review",
+    "three-axis style review",
+    "parent integration decision"
+  ],
+  "live_source_edits": false,
+  "contracts_or_tests_edited": false,
+  "commits_created": false
+}

@@ -1,0 +1,72 @@
+{
+  "at": "2026-09-27T01:03:24.646451+00:00",
+  "disposition": "accepted implementation; style attention remains",
+  "candidate_attempt": "first",
+  "candidate_retry": false,
+  "live_source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+  "candidate_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+  "immutable_contracts_and_assertions": "matching preregistration hashes",
+  "commands": [
+    {
+      "command": "python3 tests/subsets/check_frontend.py",
+      "exit": 0,
+      "receipt": "tests/subsets/receipts/frontend.json",
+      "sha256": "45674d054733caab55bee585d3e395a1b6aa0f8f8ce4c1ca0846dcda2d80de76"
+    },
+    {
+      "command": "python3 tests/compiler-checker/check.py",
+      "exit": 0,
+      "receipt": "tests/compiler-checker/receipts/checker.json",
+      "sha256": "e336b3519c95dfd19a30a3e7ae91b93c41a686eb9cfbf30849d7c844204cce54"
+    },
+    {
+      "command": "python3 tests/compiler-structural/check.py",
+      "exit": 0,
+      "receipt": "tests/compiler-structural/receipts/catalog.json",
+      "sha256": "d3fd1473ae4135053d700eb3655e1574618f046b0e3a230667aa57210fb04c6c"
+    },
+    {
+      "command": "python3 tests/compiler-fields/check.py",
+      "exit": 0,
+      "receipt": "tests/compiler-fields/receipts/fields.json",
+      "sha256": "e5f897c092e75a661d813c12ff3db38bf7aca28fee6105f7df2e7481d2c9e660"
+    },
+    {
+      "command": "python3 tests/compiler-wasm/check.py",
+      "exit": 0,
+      "receipt": "tests/compiler-wasm/receipts/wasm.json",
+      "sha256": "d61c3224c591fc1d39ff6cc07826c781d6625d41e90f80ea11ba1f57c35b30e7"
+    },
+    {
+      "command": "bun tests/compiler-fields/trust.ts",
+      "exit": 0,
+      "receipt": "research/compiler-fields/receipts/trust.json",
+      "sha256": "40c1c1b6ada4f40998b2e16a8c31e4eef57ed2e6f7164e665dfae362ef475bfc"
+    },
+    {
+      "command": "bun tests/compiler-structural/trust.ts",
+      "exit": 0,
+      "receipt": "research/compiler-structural/receipts/trust.json",
+      "sha256": "cbcefe9d951c16d8936d180e102f88b7528a2834671d2553edb33ec4c82c7561"
+    },
+    {
+      "command": "bun tests/compiler-wasm/trust.ts",
+      "exit": 0,
+      "receipt": "research/compiler-wasm/receipts/trust.json",
+      "sha256": "69f80213d382555996efe794bf8f52ffaef24be1ba386bac75c19e45179a4c6d"
+    }
+  ],
+  "semantic_checks": 9,
+  "semantic_responses": 3,
+  "semantic_findings": 0,
+  "style_before": "style-before.json.gz",
+  "style_after": "style-after.json.gz",
+  "three_axis_pass": false,
+  "performance_claim": "Exact output and completion at increasing sizes; no speedup or isolated traversal-cost claim",
+  "fixture_semantic_checks": 36,
+  "fixture_semantic_responses": 18,
+  "fixture_semantic_findings": 0,
+  "fixture_style": "style-fixture.json.gz",
+  "reproducible_gate": "behavior-receipts/attempt-003.json",
+  "reproducible_gate_sha256": "97282d4a120b5d70adad98700894b851746a5435d92533c164e7b68c3c7d2078"
+}

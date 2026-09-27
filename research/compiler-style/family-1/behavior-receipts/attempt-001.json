@@ -1,0 +1,74 @@
+{
+  "status": "incomplete",
+  "at": "2026-09-27T00:47:07.250181+00:00",
+  "inputs_frozen_before_execution": {
+    "behavior.bend": "88857b785732fdc5232baacdadff35a22f81ab736e75c767ce04e6ffee6c8932",
+    "behavior-oracle.py": "e87337c58edd8f689001c3d438cef63fc02c61d45be57ac44f2f93afb19e314c",
+    "candidate-first.bend.snapshot": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "baseline/src__scope.bend.snapshot": "1457a6c70081f3c31d7eda4277ceb662399c7e8f3c40be2312001ccf287bd51e",
+    "preregistration.json": "a8fb8dc687f5b1c82eda2c4f589085b4ebb5b7966f3e8d50225bb3f1e1a8f960"
+  },
+  "commands": [
+    {
+      "argv": [
+        "bun",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "1.3.14\n",
+      "stderr": "",
+      "elapsed_seconds": 0.004588583949953318
+    },
+    {
+      "argv": [
+        "python3",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "Python 3.14.3\n",
+      "stderr": "",
+      "elapsed_seconds": 0.008695709053426981
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/compiler-style/family-1/behavior/baseline/fields-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": "",
+      "elapsed_seconds": 0.10895579191856086
+    },
+    {
+      "argv": [
+        "/Users/ericfode/src/knot/scripts/bend-reference",
+        "/Users/ericfode/src/knot/.local/compiler-style/family-1/behavior/baseline/behavior.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : show_terms\nContext:\n- token   : syntax.Token\n- type_id : U32\n- tag     : U32\n- fields  : List<&2, core.Parameter>\n- args    : List<&2, core.Term>\nLocation: show_term\n51 |     case C.Construct{token,type_id,tag,fields,args}:\n52>|       \"C(\" ++ show_token(token) ++ \";\" ++ U32.show(type_id) ++ \";\" ++ U32.show(tag) ++ \";\" ++ show_parameters(fields) ++ \";\" ++ show_terms(args) ++ \")\"\n   |                                                                                                                                 ^^^^^^^^^^\n53 |     case _: \"UNEXPECTED_TERM\"\n",
+      "elapsed_seconds": 0.06384420790709555
+    }
+  ],
+  "observations": [],
+  "sizes": [
+    0,
+    1,
+    7,
+    16,
+    64,
+    256,
+    1024
+  ],
+  "timing_boundary": "Wall time includes startup, formatting, and output; no speedup claim.",
+  "regression_gates": {
+    "status": "requires parent integration",
+    "reason": "Existing checker, fields, and Wasm runners derive ROOT from __file__, hard-code ROOT/src and shared output directories, and expose no supported source/build override. They were not edited or run against live sources."
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "python3": "Python 3.14.3"
+  },
+  "failure": "AssertionError({'argv': ['/Users/ericfode/src/knot/scripts/bend-reference', '/Users/ericfode/src/knot/.local/compiler-style/family-1/behavior/baseline/behavior.bend', '--check-only'], 'exit': 1, 'stdout': '', 'stderr': 'Error:\\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\\n- observed : show_terms\\nContext:\\n- token   : syntax.Token\\n- type_id : U32\\n- tag     : U32\\n- fields  : List<&2, core.Parameter>\\n- args    : List<&2, core.Term>\\nLocation: show_term\\n51 |     case C.Construct{token,type_id,tag,fields,args}:\\n52>|       \"C(\" ++ show_token(token) ++ \";\" ++ U32.show(type_id) ++ \";\" ++ U32.show(tag) ++ \";\" ++ show_parameters(fields) ++ \";\" ++ show_terms(args) ++ \")\"\\n   |                                                                                                                                 ^^^^^^^^^^\\n53 |     case _: \"UNEXPECTED_TERM\"\\n', 'elapsed_seconds': 0.06384420790709555})"
+}

@@ -1,0 +1,108 @@
+import Base
+import ./syntax.bend as S
+import ./core.bend as C
+import ./scope.bend as E
+
+# This fixture observes full records; its host oracle is independent of E.
+def token(+i: U32) -> S.Token:
+  S.Token{String.append("b",U32.show(i)),S.At{i,U32.add(i,2),U32.add(i,3),U32.add(i,4)}}
+
+def replacement() -> C.Term:
+  C.Construct{S.Token{"replacement",S.At{9001,9002,9003,9004}},701,702,
+    [C.Parameter{S.Token{"field",S.At{8001,8002,8003,8004}},2,703}],
+    [C.Reference{S.Token{"argument",S.At{7001,7002,7003,7004}},704,705}]}
+
+def known(kind: U32, +i: U32) -> Maybe<&2,C.Term>:
+  match kind:
+    case 0: None{}
+    case 1: Some{C.Value{token(U32.add(i,100)),U32.add(i,200),U32.add(i,300)}}
+    case 2: Some{C.Reference{token(U32.add(i,400)),U32.add(i,500),U32.add(i,600)}}
+    case _: Some{replacement()}
+
+def binding(+i: U32, duplicate: Bool) -> C.Binding:
+  C.Binding{token(i),S.choose(U32,Bool.and(duplicate,U32.is_eq(U32.mod(i,3),0)),u => 7,u => U32.add(i,10)),
+    U32.mod(i,3),U32.add(i,20),U32.is_eq(U32.mod(i,2),0),known(U32.mod(i,4),i)}
+
+def bindings(n: Nat, +i: U32, +duplicate: Bool) -> List<&2,C.Binding>:
+  match n:
+    case 0n: Nil{}
+    case 1n+p: Con{binding(i,duplicate),bindings(p,U32.add(i,1),duplicate)}
+
+def boolean(value: Bool) -> String:
+  match value:
+    case False{}: "false"
+    case True{}: "true"
+
+def show_token(value: S.Token) -> String:
+  match value:
+    case S.Token{text,S.At{start,end,line,column}}:
+      text ++ "," ++ U32.show(start) ++ "," ++ U32.show(end) ++ "," ++ U32.show(line) ++ "," ++ U32.show(column)
+
+def show_parameters(values: List<&2,C.Parameter>) -> String:
+  match values:
+    case Nil{}: ""
+    case Con{C.Parameter{token,q,type_id},tail}:
+      "P(" ++ show_token(token) ++ ";" ++ U32.show(q) ++ ";" ++ U32.show(type_id) ++ ")" ++ show_parameters(tail)
+
+def show_atom(value: C.Term) -> String:
+  match value:
+    case C.Value{token,type_id,tag}: "V(" ++ show_token(token) ++ ";" ++ U32.show(type_id) ++ ";" ++ U32.show(tag) ++ ")"
+    case C.Reference{token,level,type_id}: "R(" ++ show_token(token) ++ ";" ++ U32.show(level) ++ ";" ++ U32.show(type_id) ++ ")"
+    case _: "UNEXPECTED_ATOM"
+
+def show_terms(values: List<&2,C.Term>) -> String:
+  match values:
+    case Nil{}: ""
+    case Con{head,tail}: show_atom(head) ++ show_terms(tail)
+
+def show_term(value: C.Term) -> String:
+  match value:
+    case C.Construct{token,type_id,tag,fields,args}:
+      "C(" ++ show_token(token) ++ ";" ++ U32.show(type_id) ++ ";" ++ U32.show(tag) ++ ";" ++ show_parameters(fields) ++ ";" ++ show_terms(args) ++ ")"
+    case other: show_atom(other)
+
+def show_known(value: Maybe<&2,C.Term>) -> String:
+  match value:
+    case None{}: "None"
+    case Some{term}: "Some(" ++ show_term(term) ++ ")"
+
+def emit(values: List<&2,C.Binding>) -> IO(Unit):
+  match values:
+    case Nil{}: IO.print("END")
+    case Con{C.Binding{token,id,q,type_id,param,known},tail}:
+      do IO<Unit>:
+        IO.print(show_token(token) ++ "|" ++ U32.show(id) ++ "|" ++ U32.show(q) ++ "|" ++ U32.show(type_id) ++ "|" ++ boolean(param) ++ "|" ++ show_known(known))
+        emit(tail)
+
+def observe(+name: String, +values: List<&2,C.Binding>, +id: U32) -> IO(Unit):
+  do IO<Unit>:
+    IO.print("refine/" ++ name)
+    emit(E.refine(values,id,909))
+    IO.print("replace/" ++ name)
+    emit(E.replace(values,id,replacement()))
+
+def run(+n: Nat) -> IO(Unit):
+  +size = U32.from_nat(n)
+  +values = bindings(n,0,False{})
+  do IO<Unit>:
+    observe("empty",Nil{},10)
+    observe("missing",values,4294967295)
+    observe("first",values,10)
+    observe("middle",values,U32.add(U32.div(size,2),10))
+    observe("last",values,U32.add(U32.sub(size,1),10))
+    observe("duplicate",bindings(n,0,True{}),7)
+
+def parsed(value: Maybe<&2,Nat>) -> IO(Unit):
+  match value:
+    case None{}: IO.die(Unit,2,"expected a size")
+    case Some{+n}: S.choose(IO(Unit),Nat.is_le(n,1024n),u => run(n),u => IO.die(Unit,2,"size exceeds 1024"))
+
+def args(values: List<String>) -> IO(Unit):
+  match values:
+    case Nil{}: run(7n)
+    case Con{head,tail}: parsed(Nat.read(head))
+
+def main() -> IO(Unit):
+  do IO<Unit>:
+    values : List<String> <- IO.args()
+    args(values)

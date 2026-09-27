@@ -1,0 +1,810 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "cases": [
+    {
+      "name": "affine-field-reuse",
+      "file": "fixtures/affine-field-reuse.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "v (consumed more than once)"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      }
+    },
+    {
+      "name": "all-erased-return",
+      "file": "fixtures/all-erased-return.bend",
+      "observation": "live-field-projection; seed retains erased field",
+      "reference": {
+        "exit": 0,
+        "stdout": "Ghost{On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tGhost{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "branch-use-union",
+      "file": "fixtures/branch-use-union.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "constructor-affine-reuse",
+      "file": "fixtures/constructor-affine-reuse.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "x (consumed more than once)"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      }
+    },
+    {
+      "name": "constructor-arity",
+      "file": "fixtures/constructor-arity.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : Box with 1 field"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-arity\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-arity\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-arity\t"
+      }
+    },
+    {
+      "name": "constructor-name-binder",
+      "file": "fixtures/constructor-name-binder.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a braced constructor pattern"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "constructor-promotion-once",
+      "file": "fixtures/constructor-promotion-once.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Box{On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tBox{On{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "constructor-type",
+      "file": "fixtures/constructor-type.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : Flag\n- observed : Other"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      }
+    },
+    {
+      "name": "data-parent",
+      "file": "fixtures/data-parent.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(2 $1:0;)=>call0($1:0;$1:0)"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "duplicate-pattern-names",
+      "file": "fixtures/duplicate-pattern-names.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(1 $1:0;1 $2:0;)=>$2:0"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "erased-field-live",
+      "file": "fixtures/erased-field-live.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : -v"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      }
+    },
+    {
+      "name": "erased-field-promote",
+      "file": "fixtures/erased-field-promote.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : -v"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      }
+    },
+    {
+      "name": "erased-field-typechecked",
+      "file": "fixtures/erased-field-typechecked.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : Flag\n- observed : Other"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      }
+    },
+    {
+      "name": "erased-forward",
+      "file": "fixtures/erased-forward.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "erased-parent-reconstruction",
+      "file": "fixtures/erased-parent-reconstruction.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "field-before-parameter",
+      "file": "fixtures/field-before-parameter.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Off{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(1 $2:0;)=>case $2"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "field-let-closes-frontier",
+      "file": "fixtures/field-let-closes-frontier.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      }
+    },
+    {
+      "name": "field-missing-arm",
+      "file": "fixtures/field-missing-arm.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : cases for Empty"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+      }
+    },
+    {
+      "name": "field-then-parent-refinement",
+      "file": "fixtures/field-then-parent-refinement.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Box{On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "case $1 [0=>v1.0{v0.0};1=>v1.0{v0.1}]"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tBox{On{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "live-forward",
+      "file": "fixtures/live-forward.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a filled definition"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      }
+    },
+    {
+      "name": "minus-pattern",
+      "file": "fixtures/minus-pattern.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : a term\n- observed : '-'"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tterm-form\t"
+      }
+    },
+    {
+      "name": "mixed-live-order",
+      "file": "fixtures/mixed-live-order.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(0 $1:0;1 $2:0;0 $3:0;2 $4:0;)=>$4:0"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "multi-constructor",
+      "file": "fixtures/multi-constructor.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "nested-pattern",
+      "file": "fixtures/nested-pattern.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Off{}"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+      }
+    },
+    {
+      "name": "nested-reconstruction",
+      "file": "fixtures/nested-reconstruction.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Outer{Inner{On{}}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t2\t0\tOuter{Inner{On{}}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "nested-single-pattern",
+      "file": "fixtures/nested-single-pattern.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+      },
+      "eval": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+      }
+    },
+    {
+      "name": "open",
+      "file": "fixtures/open.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "owned-field-drop",
+      "file": "fixtures/owned-field-drop.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t2\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "owned-field-promotion",
+      "file": "fixtures/owned-field-promotion.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "- expected : Data\n- observed : Type"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      }
+    },
+    {
+      "name": "parameter-before-field",
+      "file": "fixtures/parameter-before-field.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      }
+    },
+    {
+      "name": "parent-and-field",
+      "file": "fixtures/parent-and-field.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "v (consumed more than once)"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      }
+    },
+    {
+      "name": "parent-twice",
+      "file": "fixtures/parent-twice.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "v (consumed more than once)"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      }
+    },
+    {
+      "name": "pattern-arity",
+      "file": "fixtures/pattern-arity.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a Box pattern with 1 field"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tpattern-arity\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tpattern-arity\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tpattern-arity\t"
+      }
+    },
+    {
+      "name": "promote-field",
+      "file": "fixtures/promote-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(2 $1:0;)=>call0($1:0;$1:0)"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "reconstruct",
+      "file": "fixtures/reconstruct.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Box{On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(1 $1:0;)=>v1.0{$1:0}"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tBox{On{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "reconstruction-shadow",
+      "file": "fixtures/reconstruction-shadow.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "Pair{Off{}, On{}}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "reusable-field",
+      "file": "fixtures/reusable-field.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "0(2 $1:0;)=>call0($1:0;$1:0)"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "sibling-order",
+      "file": "fixtures/sibling-order.bend",
+      "reference": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      }
+    },
+    {
+      "name": "sibling-reversed",
+      "file": "fixtures/sibling-reversed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a match on a parameter or field"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      }
+    },
+    {
+      "name": "inspection-shared-tree",
+      "file": "fixtures/inspection-shared-tree.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "All terms check."
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 4,
+        "diagnostic": "Exhausted\tinspect\tbudget\t"
+      },
+      "compile": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "observation": "Typechecked seed control; no seed full-tree display or value equivalence claim"
+    }
+  ]
+}

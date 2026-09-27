@@ -1,0 +1,43 @@
+{
+  "batch": "compiler-family-1",
+  "at": "2026-09-27T00:35:08.221078+00:00",
+  "baseline_commit": "6413a1a70ad09848e529a2eb1fc06ea7fada695d",
+  "hypothesis_kind": "author reading hypothesis; not a recorded user preference",
+  "hypothesis": "refine and replace duplicate the binding-list walk and full Binding record reconstruction. A single exact update operation could make stable identity and preservation of unrelated metadata easier to trace, while retaining distinct nullary refinement and structural reconstruction decisions. Reject extra indirection or worse scaling.",
+  "targets": [
+    "src/scope.bend::refine",
+    "src/scope.bend::replace"
+  ],
+  "maximum_declarations": 24,
+  "contracts": [
+    "Same binding order and metadata on nonmatching IDs",
+    "Same known nullary term versus arbitrary replacement term",
+    "Missing identity leaves the list unchanged",
+    "Public profile, all proof statements and independent observations unchanged"
+  ],
+  "candidate_model": "gpt-6-astra",
+  "reasoning": "high",
+  "attempts": {
+    "generation": 1,
+    "compiler_diagnostic_retry": 1
+  },
+  "baseline_hashes": {
+    "src/scope.bend": "1457a6c70081f3c31d7eda4277ceb662399c7e8f3c40be2312001ccf287bd51e",
+    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "tests/compiler-checker/check.py": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+    "tests/compiler-checker/cases.json": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
+    "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+    "tests/compiler-fields/cases.json": "e01efe8b37004ff02e655586c2427484a798cc0b61ad5c3359135726be6612ac",
+    "tests/compiler-wasm/check.py": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d"
+  },
+  "baseline_style": "research/compiler-fields/receipts/perch-style.json.gz",
+  "gates": [
+    "src/fields-PROOF.bend seed check",
+    "tests/compiler-checker/check.py",
+    "tests/compiler-fields/check.py",
+    "tests/compiler-wasm/check.py",
+    "bounded refine/replace workload with exact identity/metadata observations and scaling"
+  ],
+  "state": "preregistered"
+}
