@@ -1,6 +1,6 @@
 # Perch review log
 
-## 2026-09-27 — style rules judged identity without a repertoire; version 6 fixes the unit and the context
+## 2026-09-27 — style rules judged identity without a repertoire; version 7 fixes the unit and the context
 
 Survey of every style receipt and campaign report. The gate had never returned
 exit 0 for a real mechanism. Baseline: 1,887 units, five memetic passes, median
@@ -20,7 +20,8 @@ fills while the gate demanded that each reach level 3 alone; and a quarter of
 the inventory (fixtures, models, benchmarks, negatives) was gated as if it were
 mechanism.
 
-Change: rubric version 6. [KNOT-SHAPES.md](KNOT-SHAPES.md) names eight shapes
+Change: rubric version 7, on top of version 6's separation of memetic appeal
+from conceptual value. [KNOT-SHAPES.md](KNOT-SHAPES.md) names eight shapes
 drawn from existing code and is attached to every request as part of its
 identity. `--figure=manifest.json` judges one declared mechanism with the figure
 as each member's context and opaque interfaces for outside collaborators;
@@ -28,10 +29,12 @@ declared leads can only be raised to level 3; proof fills inside a figure are
 advisory and judged through the figure's law/proof mirror; `--all` partitions
 fixture and evidence scopes from gated mechanisms. Thresholds, the 60% mass
 rule, criticality, potential profundity and every deterministic gate are
-unchanged. Version 5 receipts keep their meaning and cannot be reused under
-the new rubric hash.
+unchanged. Version 5 and 6 receipts keep their meaning and cannot be reused
+under the new rubric hash.
 
-Evidence: 94 offline tests and law-rule wiring pass (`npm run lint:verify`);
+Evidence: 94 offline tests and law-rule wiring passed before merging main
+(`npm run lint:verify`); after the merge 93 pass and the one failure is main's
+own inherited parser-coverage case for `packages/int_map/locality/PROOF.bend`;
 `tests/perch-style-figure.test.mjs` covers sheet identity, manifest
 validation, lead monotonicity, advisory fills, interface resolution, stale
 sheet disclosure and scope partition. Four real manifests validate with
@@ -39,7 +42,7 @@ complete context and zero unresolved references, including the compiler
 pipeline that version 5 could not compose. Frozen v5 policy is retained as
 `tests/perch-style/v5.json`. No provider was contacted; live figure reviews
 and human anchors are pending and recorded as such in
-[the version 6 record](perch-calibration/style-v6-2026-09-27/README.md).
+[the version 7 record](perch-calibration/style-v7-2026-09-27/README.md).
 
 Prevention: never judge a memetic criterion without supplying the repertoire it
 refers to; make the judged unit match the criterion's unit; and keep the
@@ -665,3 +668,123 @@ deleted units and failed rereads, not only an unchanged second invocation.
 Count carried applicable answers separately from provider calls. The full
 offline inventory retains the existing 16 parser failures with zero warm
 requests; cache speed is not acceptance evidence or a fresh model judgment.
+
+## 2026-09-27 — Established memetic prose and a corrected control label
+
+The user requested external examples before applying Perch to system
+documentation. The [frozen prose probe](perch-calibration/memetic-prose-2026-09-27/README.md)
+uses the unchanged v5 questions at base `3dc7774`, rubric SHA-256
+`c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec`, and requested/resolved
+Jev 1.13.0. Ten requests returned 50 complete distributions; the
+[results](perch-calibration/memetic-prose-2026-09-27/results.json) and
+[prior expectations](perch-calibration/memetic-prose-2026-09-27/cases.json) are retained.
+
+All four selected originals meet the memetic target and exceed their plain
+rewrites by 32–79 percentage points. None meets the entire five-axis conjunction.
+An invented chiasmus intended to lack an explained mechanism receives 78%
+memetic target mass. The initial false-positive label was too strong: the user
+asked why, and the negative expectation was only the assistant's hypothesis.
+The passage may invite a meaningful interpretation; positive aphorisms likewise
+rely on inference. The user then explicitly judged it vacuous and memetic, and
+stated that something can be memetic without being valuable. Judgment:
+**human-adjudicated memetic; assistant negative label rejected**. No numerical
+level was assigned by the user. Preserve the original expected label and actual
+response; the historical result is not a false positive under the clarified
+objective. Cross-domain applicability to prose
+also remains unresolved. This is not a demonstrated Bend-code defect, and
+social reuse is not a correctness or aesthetic-accuracy label. Measured avoidable
+rework: unknown; this was a requested calibration experiment.
+
+Preserve this run's rubric and thresholds. The user clarification requires a
+successor to separate memetic appeal from conceptual value. Prevention: fix the
+review unit and independently adjudicate labels; do not use semantic emptiness
+as a negative memetic label. Do not rewrite docs solely to satisfy a code-oriented
+five-axis conjunction. Verification: exact production questions/request hashes,
+50 validated distributions and 51 passing focused offline style tests. No
+compiler contracts or package-owned code changed.
+
+## 2026-09-27 — Separate memetic appeal from conceptual value (v6)
+
+The user's explicit judgment that the vacuous prose control is memetic resolves
+the intended criterion: substance is not a prerequisite for memetic appeal.
+Updated only the memetic instructions/levels and the shared composition wording
+that could reintroduce that prerequisite. Kept every other rubric and threshold.
+Root guidance and the style guide now state the independence explicitly.
+
+The [frozen comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
+reuses two exactly matching v5 responses and obtains six fresh Jev 1.13.0
+responses across v5/v6. Human-positive wordplay is 78% → 99% memetic, with v6
+compression still 30%; Go's proverb is 93% → 93%. Fresh Colorless-green-ideas
+prose is 76.8% → 100%, and a plain reporting sentence is 0% → 0%. All match the
+prerecorded expectations; fresh labels remain assistant hypotheses. Single
+observations and one exposed human label do not establish an accuracy gain.
+
+Judgment: prior negative-label error confirmed by user; no confirmed model
+false positive. Prevention: record human taste before subsequent review, keep
+memetic and value labels separate, and never use vacuity alone as a negative
+memetic control. Historical inputs, labels and scores remain unchanged.
+Validation: 40 complete distributions; exact request checks; unchanged other
+axes/targets; 84 offline tests and law wiring pass. No Bend code changed. A live
+Bend-composition calibration remains outside this prose experiment's evidence.
+
+## 2026-09-27 — Imported template-law fills need observer context
+
+The additive [IntMap edit-locality proof](../packages/int_map/campaigns/edit-locality-1/README.md)
+checks under the pinned compiler, but the observer rejects its recursive `~join`
+argument. `scripts/perch-bend.mjs` supplies imported law fills with `x: 0`, so
+the body loses its template parameter context. The
+[parser receipt](../packages/int_map/campaigns/edit-locality-1/parser-observations.json)
+records eight parsed laws, zero parsed canonical proof fills, and the exact
+line15 failure. This is a confirmed observer coverage gap, not a compiler or
+proof defect. Original source-check/style preflight failures remain evidence.
+
+A mechanical combined law/fill view, with only local namespace qualification
+and import paths changed, passes the compiler and observer. Supplementary
+reviews cover its eight pairs. The first composition lacked original fixture
+collaborators; one expanded group supplies them and reuses all eight declaration
+answers plus the task answer. All six complete files fit the context bound.
+The expanded composition still falls below its three expressive targets; no
+canonical automatic style pass is claimed. Thirty-one targeted semantic checks
+have no findings. All raw distributions and source mappings are preserved.
+
+Prevention: give imported template-law fills validated signature context, or
+classify missing context as unsupported instead of reporting invalid Bend.
+Preflight that boundary before concurrent source reviews. Include complete
+declared collaborators in composition requests; preserve old answers when only
+composition context changes. A separate candidate-generation mistake placed
+local bindings before a later parameter match; the single compiler retry moved
+them beneath that match. Future proofs should preserve the pinned language's
+match-before-binding order. Measured avoidable rework: not recorded.
+
+## 2026-09-27 — Declaration contribution versus complete-mechanism hook
+
+The IntMap owner's proposal prompted a [frozen advisory comparison](perch-calibration/declaration-obligations-2026-09-27/README.md)
+at `af3b202`, production rubric v6, requested/resolved Jev 1.13.0. The draft
+requires declaration Memetic/Anticipation/Payoff level 2 inside a preselected
+complete reader unit, whose expressive axes retain level 3. Compression,
+Delight, every 0.60 threshold and the independent memetic criterion remain.
+Raw leading/supporting role distributions are retained, not relabelled.
+
+Eight bounded file-group checks produced 58 distinct responses and 62 policy
+rows. Exposed proof pairs meet all numerical declaration targets on 4/8 under
+the fresh v6 packet and 8/8 under the draft; API/internal rows move 0/12 to 5/12.
+Much of that gain follows arithmetically from the different obligation. No
+complete unit meets all targets. The historical proof receipt remains 3/8;
+its separately labelled target-only sensitivity is 4/8, not a retroactive pass.
+
+Judgment: **unresolved calibration**, no confirmed source defect or adjudicated
+model false positive. The reserved clear control still has uncertain Memetic-2
+mass on its ordinary step (.43) and public wrapper (.49). The obscured control
+fails Compression/Delight even where its form receives memetic credit. The
+historical `set_get`/`remove_get` role mismatch does not reproduce in the fresh
+fuller packet. Uncertain roles and the canonical template-fill observer gap
+remain visible. Measured avoidable rework: unknown.
+
+Retain v6 as the production default and keep this draft advisory. Prevention:
+name and freeze the whole reader unit before assigning declaration obligations;
+do not infer an independent hook from algorithmic centrality or visibility.
+Before promotion, define ordinary-contribution anchors and validate on new
+independently labelled controls. Both fresh implementations passed native and
+JavaScript observations, the two existing IntMap proof entry points still check,
+and exact artifact verification confirms 194 accepted IntMap/config files
+unchanged. No package rewrite or broader campaign restart follows this study.

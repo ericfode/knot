@@ -80,11 +80,17 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   tracing that structure; **Highly memetic** rewards a distinctive form and rhythm
   that gets into the reader's head and creates an appetite for more of this style.
   Each abstraction should explain more than it adds.
-- Memetic means an earned hook in the internet sense: you feel the form when you
+- Memetic means an appealing hook in the internet sense: you feel the form when you
   see it, recurring motifs prime and reward recognition, and the code feels worth
   quoting, imitating or sharing. Its own ideas and vocabulary create insider
   fluency: knowing the words unlocks the concepts and a shared grammar. Aim for
   an unmistakable expressive identity whose rhythm the reader wants to inhabit.
+  Memetic appeal is independent of conceptual value: something can be vacuous,
+  nonsensical, decorative, useless or incorrect and still be highly memetic.
+  Do not require a substantive idea to pass that axis. Judge compression,
+  Delight, Anticipation, Payoff and correctness separately; a high memetic score
+  does not compensate for their failures. This follows the user's 2026-09-27
+  clarification and supersedes earlier wording that required a valuable hook.
 - Terse names, symbolic structure and learned idioms are welcome when their
   vocabulary is consistent and their relationships can be followed. Comments
   should explain conventions, invariants or surprising decisions. Verbosity,
@@ -130,7 +136,7 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   preferences or incentives toward obscurity in docs/perch-review-log.md and
   follow docs/perch-maintenance.md. Optimize the code's reading experience;
   do not chase scores through self-praise in comments or needless rewrites.
-- Rubric version 6 (2026-09-27) judges identity at the **figure** against the
+- Rubric version 7 (2026-09-27) judges identity at the **figure** against the
   shared **pattern sheet** in [docs/KNOT-SHAPES.md](docs/KNOT-SHAPES.md). A figure
   is one bounded mechanism declared in `docs/style-campaign/figures/*.json`: its
   datatype, lead recurrence, projections, laws, proof fills and one use, with

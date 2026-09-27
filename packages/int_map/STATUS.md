@@ -3,6 +3,19 @@
 **Published release verified remotely, 2026-09-26. Working source has an
 unreleased style revision.**
 
+**Additive edit-locality proof accepted, unreleased (2026-09-27).**
+`locality/LAWS.bend` and `locality/PROOF.bend` derive insertion/deletion lookup
+guarantees from one shared pair of child-projection laws. Eight new filled laws
+and the original 23 check with zero holes after one retained parser-diagnostic
+retry. Native/JS conformance, all 11 original mutants and scaling/model gates
+pass; all 70 frozen inputs, including runtime and old proofs, remain identical.
+Thirty-one supplementary semantic checks report no findings. Canonical Perch
+proof parsing lacks imported template-law context; an exact mechanical review
+copy supplies supplementary ratings. Three of eight law/fill pairs meet all
+five targets, and the expanded composition remains below expressive targets.
+This is a retained proof abstraction, not a full style pass. See
+[the report](campaigns/edit-locality-1/README.md). No new runtime timing or release.
+
 Latest bounded trial **int-map-paths-2 is accepted, unreleased (2026-09-27)**.
 It shares insertion/deletion rebuilding through edit_path while retaining their
 Entry/Tip endpoints and raw/pruning branch rules. The exact first candidate

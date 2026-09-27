@@ -6,9 +6,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as style from '../scripts/perch-style.mjs';
 
-// Version 6: the shared pattern sheet, figure manifests, declared leads, advisory proof fills and inventory scopes.
+// Version 7: the shared pattern sheet, figure manifests, declared leads, advisory proof fills and inventory scopes.
 const live = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
-assert.equal(live.version, 6);
+assert.equal(live.version, 7);
 const config = structuredClone(live);
 config.pattern_sheet.path = 'SHEET.md';
 const sheetText = '# Shapes\n\nS1 Fuel-first machine: match fuel state; stop arms first; one advancing arm.\n';

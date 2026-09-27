@@ -11,7 +11,7 @@ The completed package-publication campaign remains a separate workflow.
 
 The user's 2026-09-27 request replaces owner batches that raise one declaration
 at a time with **shape adoption passes** judged at the figure. The framework is
-recorded in [KNOT-SHAPES.md](KNOT-SHAPES.md), the version 6 section of
+recorded in [KNOT-SHAPES.md](KNOT-SHAPES.md), the version 7 section of
 [perch-style.md](perch-style.md) and the review log. Its premise is the survey
 result below: compression and delight pass broadly, supporting helpers pass under
 version 5, and the remaining failures sit in the declared lead and the
@@ -37,8 +37,8 @@ One pass is one shape from the sheet applied to one owner's figure:
 
 Prepared figures: `owned-time-slicing`, `int-map-paths`, `symbols-trie` and
 `compiler-pipeline`. All four validate offline with complete context; the
-compiler pipeline composition was unavailable under version 5. Live version 6
-results are recorded under `docs/perch-calibration/style-v6-2026-09-27/` when
+compiler pipeline composition was unavailable under version 5. Live version 7
+results are recorded under `docs/perch-calibration/style-v7-2026-09-27/` when
 credentials are available in the checkout being used. Human anchors recorded
 before model review remain the prerequisite for any threshold discussion.
 

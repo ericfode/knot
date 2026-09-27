@@ -75,7 +75,7 @@ targets for identity, Anticipation and Payoff; leading or uncertain declarations
 retain level 3. Compression and Delight remain level 3, relative to the actual
 obligation. The complete bounded mechanism independently needs level 3 on the
 three scaled axes. `--figure=manifest.json` reviews one declared figure with the pattern sheet in
-[docs/KNOT-SHAPES.md](KNOT-SHAPES.md) as context; see the version 6 section of
+[docs/KNOT-SHAPES.md](KNOT-SHAPES.md) as context; see the version 7 section of
 [the style guide](perch-style.md). `--all` inventories declarations but cannot
 qualify an unseen whole-project composition. Supply a fixed task with `--task=SPEC.md`
 or an explicit `--cohort`: the separate potential-profundity judgment decides
@@ -84,6 +84,15 @@ task relevance leaves Galaxy brain advisory and does not block ordinary targets.
 reported separately from defect findings. The output retains distributions,
 context limits and secondary ranks. Run it on materially changed Bend code beside
 the relevant semantic checks. See [style targets, commands and evidence](perch-style.md).
+
+A bounded [prose transfer experiment](perch-calibration/memetic-prose-2026-09-27/README.md)
+applies the unchanged five style questions to established technical expressions,
+plain rewrites and a Knot architecture paragraph. It records recognition of
+known examples and the user's judgment that a vacuous control is also memetic. This is calibration
+evidence, not a Markdown mode for `lint:style` or a qualified documentation gate.
+The [v6 comparison](perch-calibration/memetic-value-v6-2026-09-27/README.md)
+separates memetic appeal from conceptual value while retaining other axes and
+thresholds.
 
 Scan, check and style default to 16 workers. Use `--parallel N` for semantic
 commands, `--jobs=N` for style, or `PERCH_JOBS` for either (explicit flags win).
