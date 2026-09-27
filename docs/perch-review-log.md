@@ -852,3 +852,30 @@ what a judge receives, check the file history for the request form's origin
 and calibration, not only the rubric's wording. A misread omission briefly
 shipped an uncalibrated composition contract under an unchanged rubric
 identity. Measured avoidable rework: unknown.
+
+## 2026-09-27 — Owner-worktree context repairs ported; structural census
+
+With the user's authorization, `3263f72`, `55f1d50` and `573c56e` were
+cherry-picked from the 7b60 worktree with `-x`. Main's campaign state was kept.
+The 7b60-only trial README was dropped. Review-log entries were placed at entry
+boundaries and verified by round-trip against main's log. The parser profile
+combines both repairs: `…-observer-v3+law-template-arity`. `lint:verify`: 102
+tests pass.
+
+Offline `--preflight --all` over the same 2,383 declarations:
+
+- Units that cannot take the supporting role fell from 1,801 to 723; 1,089
+  became eligible, and 204 datatypes can now be supporting.
+- Truncation rose from 362 to 448, because imported types share the unchanged
+  helper budget.
+- Remaining role limits: truncation 448, hash-addressed imports 256, one
+  retained experiment 16, intentional fixtures 3.
+
+The caps and hash-import policy are the user's decisions.
+[Census](perch-calibration/style-preflight-2026-09-27/README.md#follow-up-owner-worktree-context-repairs-ported).
+No rubric, target or threshold changed. No live review ran.
+
+Prevention: the first cherry-pick resolution inserted entries inside existing
+entries, because a conflict region can begin mid-entry and carry base lines
+from the other branch. Resolve append-only logs by section, and verify that
+removing the added sections restores the target branch byte for byte.

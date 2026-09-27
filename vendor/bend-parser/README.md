@@ -34,7 +34,7 @@ Changes to the upstream module:
 The adapter is `../../scripts/perch-bend.mjs`. Its asynchronous
 `analyzeBendSource(source)` returns Perch's `SourceAnalysis` fields, with null
 file/declaration metrics and additional `parser_metadata`. The profile is
-`bend-2.0.29-574b6d3-observer-v2+law-template-arity`. Metrics are unsupported, not estimated.
+`bend-2.0.29-574b6d3-observer-v3+law-template-arity`. Metrics are unsupported, not estimated.
 `datatype_declarations` additionally retains parsed datatype ranges for review
 context; datatypes are not counted as function/law checks.
 

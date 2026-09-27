@@ -108,8 +108,53 @@ Composition groups (preflight output files are in this directory):
   declarations prepare with complete context. Its two-file composition lacks 6
   collaborators, as the edit-locality review recorded.
 
-The largest structural lever is datatype-reference resolution (1,221 units).
-Commit `55f1d50` addresses it; its measured effect is recorded in the follow-up
-below once integrated. The context caps, the 48 KB composition bound,
-negative-fixture scope and hash-import mapping remain threshold or scope
-decisions for the user.
+The largest structural lever was datatype-reference resolution (1,221 units).
+The context caps, the 48 KB composition bound, negative-fixture scope and
+hash-import mapping remain threshold or scope decisions for the user.
+
+## Follow-up: owner-worktree context repairs ported
+
+The user authorized porting `3263f72` (coverage and recursive ignores),
+`55f1d50` (datatype-reference context) and `573c56e` (paired laws in built-in
+review) from the unmerged 7b60 worktree. They were cherry-picked with `-x`.
+
+Conflict resolutions:
+
+- Review log: each entry was placed at an entry boundary. Removing the three
+  entries returns main's log byte for byte.
+- Parser profile: `…-observer-v3+law-template-arity`, combining both changes.
+- `docs/style-campaign/state.json`: main's version is kept, because the hunk
+  targeted a 7b60-only campaign section.
+- `docs/perch-execution/role-v5-2026-09-27/README.md`: dropped. It is a 7b60
+  trial README that main never had; the ported evidence subdirectories remain.
+
+`npm run lint:verify`: 102 tests pass, plus law-rule wiring.
+
+[`project-preflight-after-ports`](project-preflight-after-ports.txt) covers
+2,390 declarations in 286 files. The 2 new files are main's `7c13f9a`
+calibration controls. Over the same 2,383 declarations:
+
+| Measure | Before | After ports |
+| --- | ---: | ---: |
+| Supporting role impossible | 1,801 | 723 |
+| Truncated (unpassable) | 362 | 448 |
+| Datatype declarations that can be supporting | 0 | 204 |
+| Composable single-file groups | 194 / 284 | 204 / 286 |
+
+1,089 declarations became eligible for the supporting role. 11 became
+role-limited, and 86 were newly truncated. None was un-truncated.
+
+The truncation rise is the expected cost: imported types now share the
+16-helper budget, and helper-limit truncations went from 309 to 365. The
+12-file context limit now truncates 36 more. Unrecorded caller or byte-limit
+truncations fell from 53 to 47.
+
+The remaining 723 role-limited units are:
+
+- 448 truncated;
+- 256 untruncated units that reference hash-addressed package imports;
+- 16 in one retained experiment's moved imports;
+- 3 in intentional unknown-name compiler fixtures.
+
+Of the 723, 448 depend on the context-cap decision and 256 on the hash-import
+decision.
