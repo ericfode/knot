@@ -5,7 +5,7 @@ Approved 2026-09-26. The active goal starts at executable enum checkpoint
 
 | Milestone | Required evidence | State |
 | --- | --- | --- |
-| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: field declarations and catalog |
+| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: structural checking and independent tree evaluation |
 | Compiler-shaped programs | Generic datatypes, dependent computation, quantities, closures/captures, local modules; generic AST walker and fueled evaluator | Pending |
 | Language/library closure | Conversion, laws/proofs/rewrites, closed templates, required pure Base execution; Knot checks the whole pinned unmodified Base with privileged capabilities inventoried | Pending |
 | Compiler components | Actual compiler components and exact transitive dependencies execute as Wasm through a narrow byte host | Pending |
@@ -30,22 +30,23 @@ with explicit paths and a post-commit status check.
 
 ## Current increment
 
-The structural declaration [checkpoint](../research/compiler-structural/README.md)
-passes 16 pinned-seed fixtures, native/Bun metadata and rejection observations,
-256/257-field bounds, five new filled laws and seven semantic mutants. The
-original source-to-Wasm gate still passes and its generated modules are unchanged.
-Field values and patterns remain outside the executable profile until their
-checker and owned storage exist.
+The structural term [checkpoint](../research/compiler-fields/README.md) adds
+constructor arguments, flat patterns, effective quantities and reconstruction
+of matched parents. The ordered match frontier is distinct from lexical IDs.
+The independent evaluator executes live fields and skips erased fields. Its
+persistent values are a semantic model; owned heap storage is still pending.
+The emitter retains the enum capability boundary after complete body checking.
 
 The support chat committed the [runtime support plan](RUNTIME-SUPPORT-PLAN.md)
 in `bc99d21`: seven bounded probes for live-field projection, owning storage,
 reusable Data lifetime, fresh handles, captures/joins, frontier ownership and
 reclamation. They are proposed and unrun. The package implementation campaign
-remains paused; no allocator or lifetime strategy is selected.
+remains paused; no allocator or lifetime strategy is selected. Follow-up
+`f4413c1` aligns the contracts with parent reconstruction, match identity and
+compact live-field slots.
 
-Next: field-pattern scope and refinement, logical live-slot projection, and the
-independent ownership/handle model. Matching fields requires an explicit binder
-order independent of lexical identity: fields replace their parent's match
-position while later parameters remain matchable. Do not use increasing lexical
-levels as that order once fields are inserted. Owned storage and real Wasm tree
-execution remain required before milestone 1 is complete.
+Next: a bounded owning storage model, transfer/drop and stale-handle rejection,
+followed by Wasm layout/lowering and sound structural descent. Qualify live-slot
+mapping and lifetime rules against GPU storage constraints in parallel with that
+runtime work. Owned storage, recursion and real Wasm tree execution remain
+required before milestone 1 is complete.

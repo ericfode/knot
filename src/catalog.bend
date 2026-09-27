@@ -190,3 +190,35 @@ def catalog(root: S.Node) -> Result<S.Error,C.Catalog>:
             S.bind(List<&2,C.Datatype>,C.Catalog,resolve_types(nodes,headers),+types =>
               S.bind(List<&2,C.Signature>,C.Catalog,collect_signatures(nodes,types,0),sigs => Done{C.Catalog{types,sigs}})))))
     case _: C.internal(C.Catalog,"book-node")
+
+def type_at(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
+  match types:
+    case Nil{}: C.internal(C.Datatype,"type-index")
+    case Con{+head,+tail}:
+      S.choose(Result<S.Error,C.Datatype>,U32.is_eq(index,0),u => Done{head},u => type_at(tail,U32.sub(index,1)))
+
+def fields_at(ctors: List<&2,C.Constructor>, +tag: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+  match ctors:
+    case Nil{}: C.internal(List<&2,C.Parameter>,"constructor-tag")
+    case Con{C.Constructor{token,+fields},+tail}:
+      S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(tag,0),u => Done{fields},u => fields_at(tail,U32.sub(tag,1)))
+
+def definition_fields(definition: C.Datatype, tag: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+  match definition:
+    case C.Datatype{token,data,ctors}: fields_at(ctors,tag)
+
+def field_signature(reference: ConstructorRef, types: List<&2,C.Datatype>) -> Result<S.Error,List<&2,C.Parameter>>:
+  match reference:
+    case ConstructorRef{type_id,+tag}:
+      S.bind(C.Datatype,List<&2,C.Parameter>,type_at(types,type_id),definition => definition_fields(definition,tag))
+
+def has_tag(tag: Maybe<&2,U32>) -> Bool:
+  match tag:
+    case None{}: False{}
+    case Some{value}: True{}
+
+def constructor_named(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{token,data,ctors},tail}:
+      Bool.or(has_tag(constructor_tag(ctors,name,0)),constructor_named(tail,name))

@@ -16,18 +16,19 @@ type Catalog is Data:
 # reuse levels. Branch and Sequence are internal traversal containers only.
 type Term is Data:
   Value{token: S.Token, type_id: U32, tag: U32}
+  Construct{token: S.Token, type_id: U32, tag: U32, fields: List<&2,Parameter>, arguments: List<&2,Term>}
   Reference{token: S.Token, level: U32, type_id: U32}
   Application{token: S.Token, index: U32, type_id: U32, arguments: List<&2,Term>}
   Let{token: S.Token, level: U32, quantity: U32, type_id: U32, value: Term, body: Term}
   Case{token: S.Token, level: U32, type_id: U32, arms: List<&2,Term>}
-  Branch{tag: U32, body: Term}
+  Branch{tag: U32, fields: List<&2,Binding>, body: Term}
   Sequence{items: List<&2,Term>}
 type Function is Data:
   Function{signature: Signature, body: Term}
 type Book is Data:
   Book{types: List<&2,Datatype>, functions: List<&2,Function>}
 type Binding is Data:
-  Binding{token: S.Token, level: U32, quantity: U32, type_id: U32, parameter: Bool, known: Maybe<&2,U32>}
+  Binding{token: S.Token, level: U32, quantity: U32, type_id: U32, parameter: Bool, known: Maybe<&2,Term>}
 type Checked is Data:
   Checked{term: Term, type_id: U32, uses: List<&2,U32>}
 

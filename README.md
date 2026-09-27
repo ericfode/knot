@@ -23,8 +23,10 @@ GPU remain subsequent milestones.
 
 The approved [longer goal](docs/SELF-HOSTING-GOAL.md) ends with a reproducible
 whole-compiler bootstrap and compiler-generated GPU execution. The first
-[structural increment](research/compiler-structural/SPEC.md) resolves and
-validates constructor field declarations; field execution remains unsupported.
+[structural increment](research/compiler-fields/README.md) checks constructor
+arguments, flat field patterns, quantities and parent reconstruction, and runs
+them in the independent Bend evaluator. Owned storage and Wasm field lowering
+remain pending.
 
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
 executable: 12 checked Bend laws, owned checkpoints and slots, and 38 actual

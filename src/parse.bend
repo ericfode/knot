@@ -9,8 +9,8 @@ type Mode is Data:
   Declaration{}
   Constructors{parent: U32, column: U32}
   Parameters{close: String}
-  Arguments{close: String}
-  Term{}
+  Arguments{close: String, pattern: Bool}
+  Term{pattern: Bool}
   Body{parent: U32}
   StartBody{parent: U32}
   BodyAt{column: U32}
@@ -22,7 +22,7 @@ type Mode is Data:
   BindingStart{quantity: U32, column: U32}
   AnnotatedBinding{token: S.Token, quantity: U32, column: U32}
   BindingTail{token: S.Token, quantity: U32, annotation: Maybe<&2,S.Token>, value: S.Node, column: U32}
-  ListTail{close: String, head: S.Node, parameters: Bool}
+  ListTail{close: String, head: S.Node, parameters: Bool, pattern: Bool}
 
 def invalid(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
   Fail{S.Invalid{"parse",code,S.here(ts)}}
@@ -154,34 +154,36 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{}},rest)))
+            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest)))
         case _: invalid(tokens,"unexpected-end")
-    case 1n+ +n Arguments{+close}:
+    case 1n+ +n Arguments{+close,+pattern}:
       match tokens:
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(run(n,Term{},tokens),arg => rest => run(n,ListTail{close,arg,False{}},rest)))
+            then(run(n,Term{pattern},tokens),arg => rest => run(n,ListTail{close,arg,False{},pattern},rest)))
         case _: invalid(tokens,"unexpected-end")
-    case 1n+ +n ListTail{+close,+head,+parameters}:
+    case 1n+ +n ListTail{+close,+head,+parameters,+pattern}:
       match tokens:
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
-            then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close}),t),more => rest => prepend(head,more,rest)),u =>
+            then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest)),u =>
             invalid(tokens,"argument-separator")))
         case _: invalid(tokens,"unexpected-end")
-    case 1n+ +n Term{}:
+    case 1n+ +n Term{+pattern}:
       match tokens:
         case Con{+name,Con{+open,+tail}}:
+          S.choose(Result<S.Error,Parsed>,Bool.and(pattern,S.matches(name,"+")),u =>
+            S.choose(Result<S.Error,Parsed>,S.identifier(open),u => Done{Parsed{S.Promotion{open},tail}},u => invalid(tokens,"pattern-binder")),u =>
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
-            then(run(n,Arguments{")"},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
+            then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}"},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+            then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
-            term_failure(tokens))
+            term_failure(tokens)))
         case _: invalid(tokens,"term")
     case 1n+ +n Body{+parent}:
       run(n,StartBody{parent},S.skip_lines(tokens))
@@ -196,12 +198,12 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+h,Con{+second,+tail}}:
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(h),column),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,"match"),u =>
-            then(run(n,Term{},Con{second,tail}),value => rest => run(n,MatchTail{h,value,S.column(h)},rest)),u =>
+            then(run(n,Term{False{}},Con{second,tail}),value => rest => run(n,MatchTail{h,value,S.column(h)},rest)),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"+"),S.matches(h,"-")),u =>
             run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),S.column(h)},Con{second,tail}),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
             run(n,BindingStart{1,S.column(h)},tokens),u =>
-            then(run(n,Term{},tokens),value => rest => body_end(value,rest))))),u =>
+            then(run(n,Term{False{}},tokens),value => rest => body_end(value,rest))))),u =>
             invalid(tokens,"body-indentation"))
         case _: invalid(tokens,"body")
     case 1n+ +n Header{+keyword,+name}:
@@ -240,7 +242,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
             run(n,AnnotatedBinding{name,quantity,column},tail),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(Con{separator,tail},"="),rhs =>
-              then(run(n,Term{},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
+              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
             invalid(tokens,"binding-name"))
         case _: invalid(tokens,"binding")
     case 1n+ +n AnnotatedBinding{+name,+quantity,+column}:
@@ -248,7 +250,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+typ,+tail}:
           S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(tail,"="),rhs =>
-              then(run(n,Term{},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest))),u =>
+              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest))),u =>
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:
@@ -261,7 +263,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(keyword,"<eof>"),U32.is_le(S.column(keyword),parent)),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
-            then(run(n,Term{},tail),pattern => rest =>
+            then(run(n,Term{True{}},tail),pattern => rest =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>
                   then(run(n,Arms{parent,S.column(keyword)},S.skip_lines(after)),more => end =>

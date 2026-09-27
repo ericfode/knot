@@ -39,6 +39,7 @@ def tree(fuel: Nat, node: S.Node) -> Result<S.Error,String>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"inspect",S.At{0,0,0,0}}}
     case 1n+ +n S.Variable{token}: Done{String.append("$",S.text(token))}
+    case 1n+ +n S.Promotion{token}: Done{String.append("+$",S.text(token))}
     case 1n+ +n S.Constructor{token,args}:
       concat([Done{S.text(token)},Done{"{"},tree(n,S.Sequence{args}),Done{"}"}])
     case 1n+ +n S.Call{token,args}:

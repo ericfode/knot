@@ -1,5 +1,9 @@
 # Structural declaration review packet
 
+Historical declaration checkpoint `0479b66`. The current structural checker and
+independent evaluator are described in [the next increment](../compiler-fields/README.md).
+Statements below about the pre-body capability gate describe that earlier checkpoint.
+
 Contract: `knot-structural-declarations-1`, pinned Bend 2.0.29,
 `574b6d39a235b539eb19a5c532993a0abb3d11ad`. This checkpoint catalogs field
 declarations. It does not execute field values or claim compiler soundness.

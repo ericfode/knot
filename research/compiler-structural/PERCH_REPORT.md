@@ -1,5 +1,9 @@
 # Targeted Perch review
 
+Historical declaration checkpoint `0479b66`. The current structural checker and
+independent evaluator are described in [the next increment](../compiler-fields/README.md).
+Statements below about the pre-body capability gate describe that earlier checkpoint.
+
 2026-09-26. Perch 0.3.5 through `npm run lint -- <target> --rules <names>`;
 model `jev-1.13.0`. The retained current-source review contains 130 relevant
 checks and 59 completed provider responses. No finding crossed its configured

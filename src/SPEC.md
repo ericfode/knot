@@ -1,4 +1,13 @@
-# Knot first compiler contract — enum profile 1
+# Knot compiler contracts — enum Wasm and structural checking
+
+The Wasm contract below remains `knot-enum-1`. The checker and independent
+evaluator additionally implement `knot-structural-terms-1`, specified in
+[the field contract](../research/compiler-fields/SPEC.md). That extension accepts
+constructor arguments and flat field binders, validates quantities and ordered
+matching, and evaluates finite live-field trees. It does not provide owned
+runtime storage. The emitter rejects every fielded book after body checking.
+Nested patterns, recursion and structured host arguments remain unsupported.
+References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
 self-hosted compiler. The implementation is Bend 2, built by Bend 2.0.29 at

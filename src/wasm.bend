@@ -2,6 +2,7 @@ import Base
 import 0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend as B
 import ./syntax.bend as S
 import ./core.bend as C
+import ./check.bend as K
 import ./wasm-bytes.bend as W
 
 type Local is Data:
@@ -104,8 +105,8 @@ def lower(fuel: Nat, mode: Mode, +functions: List<&2,C.Function>, +locals: List<
         S.bind(Code,Code,lower(n,Expression{head},functions,locals,next,cap),value =>
           after_argument(value,index => lower(n,Arguments{tail,params},functions,locals,index,cap))))
     case 1n+ +n Arguments{terms,params}: internal(Code,"argument-arity")
-    case 1n+ +n Branches{Con{C.Branch{tag,body},Nil{}},index}: lower(n,Expression{body},functions,locals,next,cap)
-    case 1n+ +n Branches{Con{C.Branch{+tag,body},+tail},+index}:
+    case 1n+ +n Branches{Con{C.Branch{tag,fields,body},Nil{}},index}: lower(n,Expression{body},functions,locals,next,cap)
+    case 1n+ +n Branches{Con{C.Branch{+tag,fields,body},+tail},+index}:
       S.bind(Code,Code,lower(n,Expression{body},functions,locals,next,cap),head =>
         S.bind(Code,Code,lower(n,Branches{tail,index},functions,locals,next,cap),rest => branch_code(head,rest,cap,index,tag)))
     case 1n+ +n Branches{terms,index}: internal(Code,"arm-node")
@@ -162,5 +163,6 @@ def module_bytes(parts: Sections, +cap: U32) -> Result<S.Error,List<&2,U32>>:
 def emit(book: C.Book, +depth: Nat, +cap: U32) -> Result<S.Error,List<&2,U32>>:
   match book:
     case C.Book{types,+functions}:
+      S.bind(Unit,List<&2,U32>,K.enum_profile(types),u =>
       S.bind(B.Builder,List<&2,U32>,W.unsigned(cap,U32.from_nat(List.length(&2,C.Function,functions))),+count =>
-        S.bind(Sections,List<&2,U32>,entries(functions,0,functions,depth,cap,Sections{count,count,count,count}),parts => module_bytes(parts,cap)))
+        S.bind(Sections,List<&2,U32>,entries(functions,0,functions,depth,cap,Sections{count,count,count,count}),parts => module_bytes(parts,cap))))

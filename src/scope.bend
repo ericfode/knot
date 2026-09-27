@@ -3,7 +3,7 @@ import ./syntax.bend as S
 import ./core.bend as C
 
 type Scope is Data:
-  Scope{bindings: List<&2,C.Binding>, next_level: U32, match_from: U32, live: Bool}
+  Scope{bindings: List<&2,C.Binding>, next_level: U32, open: List<&2,U32>, live: Bool}
 
 def contains(ids: List<&2,U32>, +id: U32) -> Bool:
   match ids:
@@ -42,9 +42,10 @@ def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
     case Scope{bindings,level,from,live}: find(bindings,name)
 
-def occurrence(known: Maybe<&2,U32>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
+def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:
-    case Some{tag}: Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
+    case Some{C.Value{origin,source_type,tag}}: Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
+    case Some{other}: C.internal(C.Checked,"compound-refinement")
     case None{}:
       S.choose(Result<S.Error,C.Checked>,Bool.and(live,U32.is_eq(q,0)),u => C.invalid(C.Checked,"erased-live",token),u =>
         Done{C.Checked{C.Reference{token,level,type_id},type_id,S.choose(List<&2,U32>,Bool.and(live,U32.is_eq(q,1)),u => [level],u => Nil{})}})
@@ -61,21 +62,52 @@ def live_scope(scope: Scope, q: U32) -> Scope:
 def extend(scope: Scope, token: S.Token, q: U32, type_id: U32) -> Scope:
   match scope:
     case Scope{bindings,+next,from,live}:
-      Scope{Con{C.Binding{token,next,q,type_id,False{},None{}},bindings},U32.add(next,1),65536,live}
+      Scope{Con{C.Binding{token,next,q,type_id,False{},None{}},bindings},U32.add(next,1),Nil{},live}
 
 def refine(bindings: List<&2,C.Binding>, +level: U32, +tag: U32) -> List<&2,C.Binding>:
   match bindings:
     case Nil{}: Nil{}
     case Con{C.Binding{+token,+id,+q,+type_id,+param,+known},tail}:
-      Con{C.Binding{token,id,q,type_id,param,S.choose(Maybe<&2,U32>,U32.is_eq(id,level),u => Some{tag},u => known)},refine(tail,level,tag)}
+      Con{C.Binding{token,id,q,type_id,param,S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{C.Value{token,type_id,tag}},u => known)},refine(tail,level,tag)}
+
+# Lexical identity is stable; match order is an independent ordered frontier.
+def after(ids: List<&2,U32>, +level: U32) -> List<&2,U32>:
+  match ids:
+    case Nil{}: Nil{}
+    case Con{head,+tail}:
+      S.choose(List<&2,U32>,U32.is_eq(head,level),u => tail,u => after(tail,level))
+
+def levels(bindings: List<&2,C.Binding>) -> List<&2,U32>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,level,q,type_id,param,known},tail}: Con{level,levels(tail)}
+
+def find_level(bindings: List<&2,C.Binding>, +level: U32) -> Result<S.Error,C.Binding>:
+  match bindings:
+    case Nil{}: C.internal(C.Binding,"binding-level")
+    case Con{+head,+tail}:
+      match head:
+        case C.Binding{token,id,q,type_id,param,known}:
+          S.choose(Result<S.Error,C.Binding>,U32.is_eq(id,level),u => Done{head},u => find_level(tail,level))
+
+def replace(bindings: List<&2,C.Binding>, +level: U32, +term: C.Term) -> List<&2,C.Binding>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,+id,q,type_id,param,known},tail}:
+      Con{C.Binding{token,id,q,type_id,param,S.choose(Maybe<&2,C.Term>,U32.is_eq(id,level),u => Some{term},u => known)},replace(tail,level,term)}
+
+def remove_fields(fields: List<&2,C.Binding>, uses: List<&2,U32>) -> List<&2,U32>:
+  match fields:
+    case Nil{}: uses
+    case Con{C.Binding{token,id,q,type_id,param,known},tail}: remove_fields(tail,remove(uses,id))
 
 def branch(scope: Scope, +level: U32, tag: U32) -> Scope:
   match scope:
-    case Scope{bindings,next,from,live}: Scope{refine(bindings,level,tag),next,U32.add(level,1),live}
+    case Scope{bindings,next,from,live}: Scope{refine(bindings,level,tag),next,after(from,level),live}
 
-def parameters(params: List<&2,C.Parameter>, +index: U32, bindings: List<&2,C.Binding>) -> Scope:
+def parameters(params: List<&2,C.Parameter>, +index: U32, +bindings: List<&2,C.Binding>) -> Scope:
   match params:
-    case Nil{}: Scope{bindings,index,0,True{}}
+    case Nil{}: Scope{bindings,index,List.reverse(&2,U32,levels(bindings)),True{}}
     case Con{C.Parameter{token,q,type_id},tail}:
       parameters(tail,U32.add(index,1),Con{C.Binding{token,index,q,type_id,True{},None{}},bindings})
 
@@ -83,7 +115,7 @@ def matchable(binding: C.Binding, +token: S.Token, scope: Scope) -> Result<S.Err
   match binding scope:
     case C.Binding{+name,+level,+q,+type_id,+param,None{}} Scope{bindings,next,from,live}:
       S.choose(Result<S.Error,C.Binding>,U32.is_eq(q,0),u => C.invalid(C.Binding,"erased-scrutinee",token),u =>
-        S.choose(Result<S.Error,C.Binding>,Bool.and(param,U32.is_ge(level,from)),u =>
+        S.choose(Result<S.Error,C.Binding>,Bool.and(param,contains(from,level)),u =>
           Done{C.Binding{name,level,q,type_id,param,None{}}},u => C.invalid(C.Binding,"unmatchable-binder",token)))
     case _ _: C.invalid(C.Binding,"already-matched",token)
 

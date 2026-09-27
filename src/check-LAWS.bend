@@ -30,7 +30,7 @@ law refined_constructor_is_fresh:
   for token: S.Token
   for type_id: U32
   for tag: U32
-  {E.occurrence(Some{tag},token,0,1,type_id,True{}) == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}} : Result<S.Error,C.Checked>}
+  {E.occurrence(Some{C.Value{token,type_id,tag}},token,0,1,type_id,True{}) == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}} : Result<S.Error,C.Checked>}
 
 law nearest_binding_wins:
   for +tail: List<&2,C.Binding>

@@ -17,6 +17,7 @@ type Token is Data:
 # appear in checked expressions; the resolver validates that invariant.
 type Node is Data:
   Variable{token: Token}
+  Promotion{token: Token}
   Constructor{token: Token, arguments: List<&2,Node>}
   Call{token: Token, arguments: List<&2,Node>}
   Binding{token: Token, quantity: U32, annotation: Maybe<&2,Token>, value: Node, body: Node}
