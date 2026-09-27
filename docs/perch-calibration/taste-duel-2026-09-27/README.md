@@ -178,3 +178,57 @@ still longer (113 lines against 52), which is part of that factor's cost.
 Files: `<task>/ablations/*.bend.snapshot`, `ablation-labels.json`,
 `page-r2.html` and `mapping-r2.json`. `build.py` now builds round 2. The
 round-1 `page.html` and `mapping.json` are kept as that round's record.
+
+## Round 2 answers (2026-09-27)
+
+[`round2-responses.json`](round2-responses.json). All twelve duels were
+answered at full strength (±2). No reason chips were used; there is one note.
+
+| Duel | Factor | Preferred |
+|---|---|---|
+| e1, e4 | stated laws (bitpath, slots) | **with laws**, both |
+| e2, e12 | invented vocabulary on identical algebra | **plain algebra**, both (consistent across the side swap) |
+| e3 | algebra vs literate (pipeline) | **algebra** |
+| e5 | long explicit names | **terse names** |
+| e6 | checked proof beside the code | **with the proof** |
+| e7 | literate with vs without its puzzle | **without the puzzle** |
+| e8 | math notation vs plain English | **notation** |
+| e9 | riddle framing | **no riddle** |
+| e10 | the same algorithm crushed to eight lines | **not crushed** |
+| e11 | literate prose volume | **a third of the prose** (note: hates "the crucial move") |
+
+**Taste profile (anchor for Knot style).** This is one rater in one session;
+use it as an anchor, not as a calibrated model.
+
+1. One generative idea absorbs every case (round 1: algebra won everywhere).
+2. The governing laws are stated explicitly, in mathematical notation.
+3. A checked proof sits beside the code it justifies.
+4. Names are terse and exact: not long and descriptive, not crushed to single
+   letters.
+5. No invented ritual vocabulary or rhythmic incantation. It lost even on
+   identical structure, and round-1 mythic lost to plain deadpan.
+6. No narrative devices. Posed puzzles, riddles and suspense phrasing ("the
+   crucial move") are rejected, and less prose is preferred to more. The
+   round-1 pipeline preference was not caused by its puzzle.
+7. No ornament (baroque) and no cryptic compression (golf).
+
+**Caveats.**
+
+- The algebra bases were seen and chosen in the lineups, so familiarity may
+  favour them in duels against their own ablations.
+- The literate duels argue against a pure familiarity effect: there the
+  changed version won both times.
+- Every result is a single judgment.
+
+**Consequences for Perch, which the user decides.**
+
+- **Memetic axis.** The v6 axis credits a "distinctive, appealing hook …
+  even when vacuous". This rater's revealed preference runs the other way on
+  invented vocabulary.
+- **Anticipation.** The level-3 text ("Inviting: open possibilities invite
+  engagement") can reward the suspense devices that were rejected.
+- **What this rater would copy.** It is the algebra register: one core,
+  stated laws, a proof beside the code, and exact terse names.
+- **Before any campaign optimizes the rubric**, the judge's agreement with
+  these answers should be measured. Every rendering here is still unseen by
+  the judge.
