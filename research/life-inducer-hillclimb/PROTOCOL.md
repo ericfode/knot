@@ -5,8 +5,10 @@ then requests **Astra low or Sol xhigh**, **30 experiments**, and a rebase onto
 main. This protocol supersedes the earlier Life experiment's author model,
 one-shot restriction and style policy only for this new experiment.
 
-Rebase baseline: main `b04a38a111128341108cb6eebea7207f46b7a0c3`, integrated
-checkout `61893ad`. The pre-rebase history is retained at
+Rebase baseline: main `f1a4364cefa3028f5beb500945fa268422c4d055`, integrated
+checkout `06cbd3b`. Main advanced during preparation; a second rebase incorporated
+its incremental-cache tooling before any author calls. The first rebase was onto
+`b04a38a` at `61893ad`. The pre-rebase history is retained at
 `codex/life-inducer-pre-rebase`. Main has no configured remote. Its other
 worktree's uncommitted changes are excluded. Historical Life artifacts are
 byte-identical. Current Perch v3, including conditional Galaxy-brain and

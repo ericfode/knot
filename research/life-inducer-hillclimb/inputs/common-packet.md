@@ -3936,6 +3936,29 @@ report aggregation. Its `total_ms` includes preflight and rankings, and excludes
 JSON serialization, receipt writes and output. The existing `elapsed_ms` retains
 its historical scope: after preflight through assessment, before rankings.
 
+`--incremental` automatically retains and reuses answers under ignored
+`.perch/`. Use `--live --all --incremental` for the current project inventory or
+select explicit files/declarations as usual. Every run prepares current source
+and helper context, then only unmatched requests reach the provider. An
+unrelated same-file change need not discard an unchanged declaration's rating.
+Reused rows contain current source/context provenance and retain the original
+answer provenance separately. Deleted or renamed declarations do not survive as
+current coverage. Low, uncertain and unavailable ratings retain their status.
+
+`--fresh` bypasses answer reuse and refreshes the automatic cache. Choose one of
+`--incremental`, `--fresh`, or `--reuse`; contradictory modes fail before review.
+Automatic cache identity includes the exact request, rubric, parser/context
+contract, configured model and endpoint. Corrupt entries are misses. Fresh,
+validated completed answers can survive a provider interruption; changed source
+or model inconsistency prevents automatic cache writes.
+
+An unchanged cached run makes zero provider requests. A moving requested model
+alias may have changed upstream; cached model IDs are recorded as unverified
+this invocation. Use `--fresh` when new inference or alias resolution is needed.
+If fresh responses conflict with reused model IDs, the run fails visibly rather
+than combining incompatible ratings. Explicit receipts predating endpoint
+identity are not silently imported into the automatic cache.
+
 `--reuse=path/to/earlier.json` reuses only rows with matching target source,
 request-state, context, parser, rubric and requested-model identities. Reused and
 fresh rows must resolve to one model. Completed answers from a failed run are
