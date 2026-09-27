@@ -1,5 +1,30 @@
 # Perch review log
 
+## 2026-09-27 — ladder: the judge's Delight is inverted against the user, memetic rewards the rejected rung
+
+Seven treatments of the time-slicing machine; the user ranked them before any
+model review (current < B < C < F; D and E over-styled for one-letter names; A
+boring; wish: F's algebra with B's vocabulary). Six rungs then reviewed once
+each as figures under rubric 7, 93 declaration requests plus tasks and
+compositions, expectations frozen first
+([record](perch-calibration/style-v7-2026-09-27/README.md#the-ladder-judge-against-user-on-the-same-six-files)).
+
+Observed: mean Delight mass A .78 > F .65 > B .63 = C .63 > D .60 > E .49, the
+reverse of the user's fun order among the kept rungs. Memetic identity: D
+highest at the lead (.47), the composition (.33) and the mean (.55); the user
+rejects D. Compression and composition anticipation/payoff put F first,
+agreeing with the user's top pick but not separating A, B and C.
+
+Judgment: **human-adjudicated model disagreement on two axes.** Delight, the
+axis passing nearly everything in every figure review, measures conventional
+smoothness rather than this reader's pleasure. The memetic rubric's welcome for
+terse vocabulary rewards the abbreviation the user names as the edge. No
+threshold, wording, sheet or manifest changed; the ladder becomes the
+development set. Prevention: rank a second, different figure's ladder with the
+user before drafting any version 8 wording, and test the wording on it held
+out. Rung G (F's algebra, B's words) is published for the user and not yet
+reviewed. Measured avoidable rework: unknown.
+
 ## 2026-09-27 — first human anchor: nothing in the corpus is over-styled, and it is a little boring
 
 The user tagged 18 of 28 sampled declarations "fine but generic", none

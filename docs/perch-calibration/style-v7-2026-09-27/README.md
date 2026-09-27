@@ -128,3 +128,50 @@ a change to the unit and context of judgment; its thresholds are the version 5
 and 6 thresholds, and it keeps version 6's independence of memetic appeal from
 conceptual value. Historical receipts keep their rubric identity and cannot be reused
 under the new hash.
+
+## The ladder: judge against user on the same six files
+
+The user ranked seven treatments of the time-slicing machine before any model
+review: current code < B < C < F, with D and E over-styled because one-letter
+names are too hard to read and A "boring"; nothing was flagged too much among
+the kept rungs, and the stated wish is F's algebra with B's human vocabulary
+([ladder](../../style-campaign/ladder/README.md), [human-anchors.json](human-anchors.json)).
+Expectations were frozen in [ladder-expectations.json](ladder-expectations.json),
+then each rung was reviewed once as its own figure with the shared task,
+jev-1.13.0, sheet and rubric unchanged
+([ladder-results.json](ladder-results.json), receipts `ladder-*.json.gz`).
+
+| Rung | User | Lead memetic / anticipation / payoff | Composition memetic / anticipation / payoff | Mean Delight mass | Mean memetic mass |
+| --- | --- | --- | --- | ---: | ---: |
+| A | boring | `run` .25 / .63 / .42 | .12 / .22 / .26 | .78 | .35 |
+| B | good, dull; beats current | `give` .18 / .36 / .35 | .21 / .27 / .22 | .63 | .39 |
+| C | good, dull; beats B | `give` .17 / .39 / .35 | .19 / .24 / .23 | .63 | .43 |
+| D | over-styled | `give` .47 / .40 / .32 | .33 / .28 / .20 | .60 | .55 |
+| E | over-styled | `g` .16 / .22 / .24 | .14 / .19 / .15 | .49 | .29 |
+| F | beats C and B | `give` .15 / .35 / .32 | .26 / .36 / .32 | .65 | .43 |
+
+Findings, in order of weight:
+
+- **Delight is inverted against the user on this ladder.** The judge's Delight
+  is highest on A, the rung the user calls boring, and falls as ideas are added
+  through B, C and F. The user's fun order runs the other way. This is the axis
+  that passed nearly every declaration in every figure review; it should now be
+  read as a measure of conventional smoothness, not of the user's pleasure.
+- **Memetic identity rewards the rung the user rejects.** D has the highest
+  lead memetic mass (.47), the highest composition memetic mass (.33) and the
+  highest mean (.55). The user's edge is exactly D's abbreviation. The rubric's
+  welcome for terse learned vocabulary, kept through versions 6 and 7, points
+  the wrong way for this reader.
+- **Compression, and composition anticipation and payoff, agree on F.** F is
+  the only rung where every definition meets compression, and its composition
+  anticipation (.36) and payoff (.32) are the highest. These are the axes that
+  track "an idea was added". They do not separate B from C from A, which the
+  user does.
+- **E is marked down by the judge as well** (Delight 2 meet, 7 uncertain, 2
+  below), so the judge finds the far edge, just one rung too late.
+
+Consequence for the framework: the human anchors now exist, and the two axes
+that were passing most broadly are the two that disagree with them. No wording
+or threshold changes here; the ladder is now a development set. A second ladder
+on a different figure, ranked by the user before review, is the held-out set
+any version 8 wording must be tested against.

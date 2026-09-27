@@ -61,3 +61,7 @@ compound, bill) inside the held/owed/kept vocabulary. The figure manifests
 `docs/style-campaign/figures/ladder-*.json` let the judge review each rung as
 its own figure after the user's ranking, so the two readings can be compared
 on the same files.
+
+Judge results for rungs A to F, set beside the user's order, are in
+[the calibration record](../../perch-calibration/style-v7-2026-09-27/README.md#the-ladder-judge-against-user-on-the-same-six-files).
+Rung G awaits the user's verdict and is not yet reviewed.
