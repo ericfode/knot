@@ -1,0 +1,59 @@
+{
+  "implementation_base": "489ad1145d1d58c74b7dcbb5adac90f46391a9dd",
+  "policy_sha256": "c7de14e38c3b57eec32ad822cfeb08bd1abc5c87ed2e5bdd649c44c1eed316ec",
+  "engine_sha256": "d6f9d2827493717a7f00fc02fa907dbc9e08f50ee1cdbf1b01d9eafcfe6199d0",
+  "expectations_sha256": "994e51bc4b7eb90e0c1eea2c9acd2d3a94c9828689cba773b7b07331fdbc3462",
+  "compiler": {
+    "version": "2.0.29",
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "compile_driver_sha256": "f6c82122b7c60ec3a3286a7ae5fe591a52295d3a9c4d590014ad66730d928b75"
+  },
+  "checks": [
+    {
+      "command": "npm run lint:verify",
+      "exit": 0,
+      "tests": 84,
+      "passed": 84,
+      "law_wiring": "passed"
+    },
+    {
+      "command": "npm run lint:rules -- --json",
+      "exit": 0
+    },
+    {
+      "command": "scripts/bend-reference <control> --check-only",
+      "controls": [
+        "D01",
+        "D02",
+        "H01",
+        "H02"
+      ],
+      "exits": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "command": "bun tests/perch-performance/compile.ts <control> <module>",
+      "controls": [
+        "D01",
+        "D02",
+        "H01",
+        "H02"
+      ],
+      "exits": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "style_file_checks": 4,
+  "semantic_file_checks": 4,
+  "semantic_checks": 80,
+  "semantic_findings": 0,
+  "historical_evidence": "D01 and life-oracle.mjs copied unchanged from 2cab333 in the original experimental checkout; original records not modified."
+}

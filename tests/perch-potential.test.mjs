@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { assessPotentialProfundity, assessStyle, potentialProfundityRequest, prepareStyleComposition,
   prepareStyleTargets, runStyleRanking } from '../scripts/perch-style.mjs';
 
-const config = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url), 'utf8'));
+const config = JSON.parse(await readFile(new URL('./perch-style/v4.json', import.meta.url), 'utf8'));
 const source = 'import Base\ndef helper(x: U32) -> U32: U32.add(x,1)\ndef solve(x: U32) -> U32: helper(x)\n';
 const contract = 'Return the successor of an unsigned word modulo its range. Preserve the input convention.';
 const sha = value => createHash('sha256').update(value).digest('hex');

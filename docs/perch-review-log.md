@@ -1,5 +1,31 @@
 # Perch review log
 
+## 2026-09-26 Pacific — expressive role and helper scale
+
+Confirmed policy mismatch: marginal contract importance was making tiny access,
+boundary and adapter helpers independently earn Contagious / Inviting / Earned.
+The user requested helpers that support the main mechanism's expressive ambition.
+Perch v5 separates expressive role from criticality, assigns supporting helpers
+Recognizable / Guided / Fitting, and retains the stronger targets for leading or
+uncertain declarations and for the whole bounded mechanism. Probability floors,
+conditional Galaxy relevance and deterministic gates remain intact.
+
+The [frozen development pair](perch-calibration/style-v5-2026-09-27/development.md)
+separates on identity and Anticipation. The fresh held-out negative still passes
+Anticipation at 67%, despite redundant work; this is a missed negative relative
+to the operator's expectation, not validation of the bar. Its memetic result is
+uncertain at 56%. A thin public wrapper is also conservatively uncertain rather
+than confidently supporting. No reroll or threshold adjustment followed.
+The policy is implemented; broad model calibration remains unestablished.
+
+[Full evidence and limits](perch-calibration/style-v5-2026-09-27/README.md): 84
+offline tests, pinned-compiler checks, independent Node/Bun behavior, 80 semantic
+checks with no findings, and four once-only style reviews. Recording role and
+bounded composition separately would have prevented the earlier helper-level
+score chasing. Future refinement needs fresh role-boundary and noisy-anticipation
+controls; these examples are now seen. Historical experiment receipts remain
+unchanged. No elapsed-effort estimate is claimed.
+
 ## 2026-09-26 Pacific — task potential and conditional Galaxy brain
 
 The user identified a mismatch between task opportunity and a universal demand

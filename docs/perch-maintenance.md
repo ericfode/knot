@@ -26,9 +26,11 @@ Native `scan` results still live in Perch's own store; read those as well.
 
 `lint:style` (`lint:rank` is an alias) uses `command: style-rank` receipts and
 [perch-style.json](../perch-style.json). Review materially changed declarations
-against all three absolute style targets: conceptual compression, high dopamine,
-and memetic identity. No alternative implementation or comparison cohort is
-required. Report below-target and uncertain units instead of hiding them behind
+against the current role-scaled targets: conceptual compression, high dopamine,
+memetic identity, Anticipation and Payoff. Verify expressive-role classification
+independently of criticality, and retain the separate leading-level composition
+check so helper exemptions cannot bypass the main mechanism. No alternative
+implementation is required. Report below-target and uncertain units instead of hiding them behind
 a clean defect-check count. Rankings remain a secondary view. Compare model,
 rubric and context identities, distributions, and human preferences recorded
 before model review. Existing matching receipts can be explicitly reused;

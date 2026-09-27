@@ -3,11 +3,13 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { compareStyleBaseline } from '../scripts/perch-style-campaign.mjs';
 
-const currentConfig = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url)));
+const currentConfig = JSON.parse(await readFile(new URL('./perch-style/v4.json', import.meta.url)));
+const roleConfig = JSON.parse(await readFile(new URL('../perch-style.json', import.meta.url)));
 const config = structuredClone(currentConfig);
 config.version = 3;
 config.criticality.style_target = config.potential_profundity.style_target;
 delete config.potential_profundity;
+delete config.style_role;
 const identity = { rubric_sha256: 'rubric', parser: 'parser' };
 const specimen = target => ({ target, path: target.split('::')[0], kind: 'bend_definition', line: 1,
   source_sha256: 'source', state_sha256: 'state', context: { truncated: false, files: [] },
@@ -76,4 +78,13 @@ test('v4 matching declaration ratings do not establish task or composition quali
   assert.equal(result.units[0].run_requirements_status, 'requires_task_and_composition_review');
   assert.equal(result.summary.matches_all_required_baseline_targets, 0);
   assert.equal(result.summary.matches_all_three_baseline_targets, 0);
+});
+
+
+test('v5 inventory retains role-adjusted declaration targets without inventing a composition pass', () => {
+  const unit = specimen('src/a.bend::a');
+  unit.answers.style_role = { probabilities: { 0: 1, 1: 0 }, score: 0, confidence: 1 };
+  const result = compareStyleBaseline([unit], inventory, baseline([unit]), roleConfig, identity);
+  assert.equal(result.units[0].matches_declaration_baseline_targets, true);
+  assert.equal(result.summary.matches_all_required_baseline_targets, 0);
 });

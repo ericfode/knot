@@ -68,8 +68,13 @@ no executable declaration for these rules and must be reported as not applicable
 
 `lint:style` (`lint:rank` is an alias) assesses existing parsed definitions, laws
 and datatypes against **Maximally big brain**, **Delightful to read — high dopamine**,
-and **Highly memetic**. No alternative implementation is required. Each unit must
-meet all three declaration targets. Supply a fixed task with `--task=SPEC.md`
+and **Highly memetic**, plus Anticipation and Payoff. No alternative implementation
+is required. A separate expressive-role judgment gives supporting helpers level 2
+targets for identity, Anticipation and Payoff; leading or uncertain declarations
+retain level 3. Compression and Delight remain level 3, relative to the actual
+obligation. The complete bounded mechanism independently needs level 3 on the
+three scaled axes. `--all` inventories declarations but cannot qualify an unseen
+whole-project composition. Supply a fixed task with `--task=SPEC.md`
 or an explicit `--cohort`: the separate potential-profundity judgment decides
 whether the combined mechanism also requires Galaxy brain. Missing or uncertain
 task relevance leaves Galaxy brain advisory and does not block ordinary targets. Below-target and uncertain ratings are

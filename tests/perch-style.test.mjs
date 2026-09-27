@@ -14,6 +14,7 @@ const config = JSON.parse(await readFile(new URL('../perch-style.json', import.m
 config.version = 3;
 config.criticality.style_target ??= config.potential_profundity?.style_target;
 delete config.potential_profundity;
+delete config.style_role;
 const targets = ['a.bend::solve', 'b.bend::solve'];
 const args = ['--live', '--json', '--cohort=Add one to an unsigned word', ...targets];
 const key = 'offline-secret-must-not-be-recorded';

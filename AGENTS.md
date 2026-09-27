@@ -89,6 +89,15 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   vocabulary is consistent and their relationships can be followed. Comments
   should explain conventions, invariants or surprising decisions. Verbosity,
   beginner familiarity, minimum line count and cleverness alone are not goals.
+- Scale memetic identity, Anticipation and Payoff by expressive role, independently
+  of contract criticality. Supporting helpers need Recognizable / Guided / Fitting
+  (level 2): reinforce the main vocabulary, prepare the next step and fulfill the
+  bounded obligation. They need no standalone hook, suspense or revelation.
+  Leading or uncertain declarations retain level 3; public visibility or a name
+  like `helper` does not decide the role. Compression and Delight remain level 3
+  relative to the actual obligation. The complete bounded mechanism independently
+  needs level 3 on the three scaled axes; an all-helper classification cannot
+  bypass that requirement. Retain the 60% probability bars and context limits.
 - Judge **potential profundity** from the fixed task/contract before inspecting
   an implementation. It determines whether a Galaxy-brain composition is a
   relevant expectation; importance, difficulty and code size are not proxies.
@@ -100,13 +109,15 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
 - Run `npm run lint:style -- --live file.bend` on materially changed Bend code;
   `file.bend::name` selects one actual parsed definition, law or datatype. A single
   existing implementation is sufficient. Do not skip style review because no
-  alternatives exist. For an explicitly requested project pass, use `--all`.
+  alternatives exist. For an explicitly requested project inventory, use `--all`,
+  then qualify explicit bounded mechanisms; inventory alone is not a full pass.
   Follow [the style guide](docs/perch-style.md) and [the ordered rubrics](perch-style.json).
   Avoid unchanged repeats; `--reuse=receipt.json` reuses only matching source,
   helper context, rubric and model identities.
 - Report each axis against its own quality target, retaining distributions,
-  uncertainty and context limits. Every declaration must meet all three targets
-  for an automatic style pass. Below-target or uncertain results require review;
+  uncertainty and context limits. Every declaration must meet its five applicable
+  targets, and the composition must meet its own targets, for an automatic style
+  pass. Below-target or uncertain results require review;
   do not report them as passes or rewrite merely to flatter the judge. Record
   concrete improvement opportunities or an evidence-backed disagreement.
   Rankings are a secondary view: ranking first does not establish that any target
@@ -138,5 +149,7 @@ creation was blocked, the user explicitly authorized doing the pilot here in
 the current checkout. This supersedes the earlier high-reasoning setting and
 worktree requirement. Follow `docs/style-campaign/scoped-pilot.md` and the current
 dispatch state. A partial style improvement does not satisfy this pilot: every changed
-or introduced declaration must meet all three unchanged targets, with independent
-gates intact. Keep the remaining component queue while the pilot is unresolved.
+or introduced declaration must meet the current role-scaled targets and required
+composition checks, with independent gates intact. Earlier campaign receipts
+retain their original rubric meaning. Keep the remaining component queue while
+the pilot is unresolved.

@@ -65,6 +65,7 @@ const reviewRubrics = (config, kind, context) => [
   // Do not manufacture a diagnostic score from a context known to be truncated.
   ...(context?.truncated ? [] : diagnosticRubrics(config)),
   config.criticality,
+  ...(config.style_role ? [config.style_role] : []),
 ];
 
 function scoreRequest(candidate, rubrics, requestedModel) {
@@ -80,7 +81,7 @@ function styleRequest(candidate, config, requestedModel) {
 function validatePotential(config) {
   const policy = config.potential_profundity;
   if (!policy) return;
-  if (!policy.id || [...config.dimensions, ...diagnosticRubrics(config), config.criticality].some(d => d?.id === policy.id)
+  if (!policy.id || [...config.dimensions, ...diagnosticRubrics(config), config.criticality, config.style_role].some(d => d?.id === policy.id)
       || !policy.title || !policy.instructions || !Array.isArray(policy.levels) || policy.levels.length !== 5
       || policy.levels.some(level => typeof level !== 'string' || !level.trim())
       || !Number.isInteger(policy.relevance_level) || policy.relevance_level < 1 || policy.relevance_level >= policy.levels.length
@@ -199,10 +200,54 @@ function validateDiagnostics(config) {
   for (const target of targets) validateStyleTarget(target, config, diagnostics);
 }
 
+function validateStyleRole(config) {
+  const policy = config.style_role;
+  if (!policy) return;
+  const dimensions = [...config.dimensions, ...diagnosticRubrics(config)];
+  if (!config.potential_profundity || !policy.id
+      || [...dimensions, config.criticality, config.potential_profundity].some(d => d.id === policy.id)
+      || !policy.title || !policy.instructions || !policy.composition_instructions
+      || !Array.isArray(policy.levels) || policy.levels.length !== 2
+      || policy.levels.some(level => typeof level !== 'string' || !level.trim())
+      || !Number.isFinite(policy.minimum_probability) || policy.minimum_probability <= .5 || policy.minimum_probability > 1) {
+    throw new Error('Expressive role needs a separate binary rubric and composition policy');
+  }
+  const scaled = ['highly_memetic', 'anticipation', 'payoff'];
+  for (const targets of [policy.supporting_targets, policy.composition_targets]) {
+    if (!Array.isArray(targets) || targets.length !== scaled.length
+        || new Set(targets.map(t => t.dimension)).size !== scaled.length
+        || targets.some(t => !scaled.includes(t.dimension))) throw new Error('Role targets must cover memetic identity, anticipation and payoff');
+    for (const target of targets) validateStyleTarget(target, config, dimensions);
+  }
+  for (const support of policy.supporting_targets) {
+    const leading = [...config.style_targets, ...config.criticality.diagnostic_targets].find(t => t.dimension === support.dimension);
+    const composition = policy.composition_targets.find(t => t.dimension === support.dimension);
+    if (!leading || support.level >= leading.level || support.minimum_probability !== leading.minimum_probability
+        || composition.level !== leading.level || composition.minimum_probability !== leading.minimum_probability) {
+      throw new Error('Role scaling changes supporting levels, preserving leading and composition probability bars');
+    }
+  }
+}
+
+export function assessStyleRole(row, config) {
+  validateStyleRole(config);
+  if (!config.style_role) return null;
+  const policy = config.style_role;
+  const answer = validateScore({ ...row.answers?.[policy.id], type: 'score' }, policy.levels.length);
+  const probability = probabilityAt(answer, 1);
+  const unknown = (row.context?.unresolved ?? []).filter(ref =>
+    ref.reason !== 'unresolved-or-builtin' || !knownBuiltins().has(ref.name));
+  const limited = !row.context || !!row.context.truncated || unknown.length > 0;
+  return { target: row.target, status: probability >= policy.minimum_probability ? 'leading'
+    : !limited && probability <= 1 - policy.minimum_probability ? 'supporting' : 'uncertain',
+    probability_leading: probability, context_limited: limited, unresolved_role_context: unknown,
+    probabilities: answer.probabilities };
+}
+
 export function diagnoseStyle(rows, config) {
   validateDiagnostics(config);
   return rows.flatMap(row => diagnosticRubrics(config).map(d => {
-    const required = criticalityFor(row, config).status !== 'noncritical'
+    const required = !!config.style_role || criticalityFor(row, config).status !== 'noncritical'
       && (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id);
     const metadata = { target: row.target, dimension: d.id, required, advisory: !required,
       context_truncated: row.context?.truncated ?? false,
@@ -250,16 +295,22 @@ export function assessStyle(rows, config) {
     }
   }
   validateDiagnostics(config);
+  validateStyleRole(config);
   return rows.flatMap(row => {
     const criticality = criticalityFor(row, config);
+    const role = assessStyleRole(row, config);
     const strict = ['critical', 'uncertain'].includes(criticality.status);
-    const diagnostics = strict ? policy.diagnostic_targets ?? [] : [];
+    const diagnostics = role || strict ? policy.diagnostic_targets ?? [] : [];
     return [...config.style_targets, ...diagnostics].map(base => {
       // Preserve v3 receipts. V4 applies Galaxy brain to a separate composition.
-      const target = !config.potential_profundity && strict && row.kind !== 'bend_datatype' && base.dimension === policy.style_target.dimension ? policy.style_target : base;
+      const support = role?.status === 'supporting' && config.style_role.supporting_targets.find(t => t.dimension === base.dimension);
+      const scaled = role && config.style_role.supporting_targets.some(t => t.dimension === base.dimension);
+      const target = support || (!config.potential_profundity && strict && row.kind !== 'bend_datatype'
+        && base.dimension === policy.style_target.dimension ? policy.style_target : base);
       const metadata = { target: row.target, dimension: target.dimension, target_level: target.level,
         minimum_probability: target.minimum_probability, criticality_status: criticality.status,
-        target_basis: target !== base || diagnostics.includes(base) ? 'criticality' : 'default',
+        target_basis: scaled ? `${role.status}_role` : target !== base || diagnostics.includes(base) ? 'criticality' : 'default',
+        ...(role ? { style_role: role.status } : {}),
         context_truncated: row.context?.truncated ?? false };
       if (diagnostics.includes(base) && row.context?.truncated) {
         return { ...metadata, probability_at_target: null, status: 'unavailable' };
@@ -545,6 +596,7 @@ export async function runStyleRanking(args, {
   let rows = [], failure = null;
   let potential = config.potential_profundity ? assessPotentialProfundity(null, config, { available: false, reason: task.reason }) : null;
   let compositionAssessment = { status: 'unavailable', reason: 'potential_not_established', probability_at_target: null };
+  let compositionTargets = config.style_role?.composition_targets ?? [];
   const auxiliaryModels = () => Object.values(auxiliary).flatMap(value => value.row?.model ? [value.row.model] : []);
   async function reviewAuxiliary(phase, candidate, rubrics) {
     const request = scoreRequest(candidate, rubrics, requestedModel), requestHash = hash(request.body);
@@ -577,20 +629,30 @@ export async function runStyleRanking(args, {
       const row = await reviewAuxiliary('potential', candidate, [config.potential_profundity]);
       potential = assessPotentialProfundity(row.answers[config.potential_profundity.id], config);
       if (potential.status === 'low') compositionAssessment = { status: 'not_required', reason: 'low_task_potential', probability_at_target: null };
-      if (potential.status === 'high') {
-        if (!composition.available) compositionAssessment = { status: 'unavailable', reason: composition.reasons.join(','), probability_at_target: null };
-        else {
-          const target = config.potential_profundity.style_target;
-          const rubric = config.dimensions.find(d => d.id === target.dimension);
-          const scoped = { ...rubric, instructions: 'Rate the COMPLETE collaborating mechanism in the supplied source group, using the contract. '
-            + 'Apply the ordered conceptual-compression levels to the composition, not to isolated helpers or an average of their scores. '
-            + 'Trace what the actual mechanism explains; no missing implementation or claimed brilliance earns credit.' };
-          const composed = await reviewAuxiliary('composition', composition.candidate, [scoped]);
+    }
+    compositionTargets = [...(config.style_role?.composition_targets ?? []),
+      ...(potential?.status === 'high' ? [config.potential_profundity.style_target] : [])];
+    if (compositionTargets.length) {
+      if (!composition.available) compositionAssessment = { status: 'unavailable', reason: composition.reasons.join(','), probability_at_target: null };
+      else {
+        const rubrics = compositionTargets.map(target => {
+          const rubric = [...config.dimensions, ...diagnosticRubrics(config)].find(d => d.id === target.dimension);
+          return { ...rubric, instructions: target.dimension === config.potential_profundity.style_target.dimension
+            ? 'Rate the COMPLETE collaborating mechanism in the supplied source group, using the contract. '
+              + 'Apply the ordered conceptual-compression levels to the composition, not to isolated helpers or an average of their scores. '
+              + 'Trace what the actual mechanism explains; no missing implementation or claimed brilliance earns credit.'
+            : `${config.style_role.composition_instructions} Apply the ${rubric.title} levels below to the entire mechanism as a leading expression.` };
+        });
+        const composed = await reviewAuxiliary('composition', composition.candidate, rubrics);
+        const assessments = compositionTargets.map(target => {
           const probability = probabilityAt(composed.answers[target.dimension], target.level);
-          compositionAssessment = { dimension: target.dimension, target_level: target.level, minimum_probability: target.minimum_probability,
+          return { dimension: target.dimension, target_level: target.level, minimum_probability: target.minimum_probability,
             probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
               : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain' };
-        }
+        });
+        compositionAssessment = config.style_role ? { assessments,
+          status: assessments.every(a => a.status === 'meets_target') ? 'meets_target'
+            : assessments.some(a => a.status === 'below_target') ? 'below_target' : 'uncertain' } : assessments[0];
       }
     }
     const models = new Set([...reused.values()].map(row => row.model));
@@ -622,17 +684,18 @@ export async function runStyleRanking(args, {
   const persisted = performance.now();
   const assessments = failure ? [] : assessStyle(rows, config);
   const criticality = failure ? [] : rows.map(row => criticalityFor(row, config));
+  const roles = failure || !config.style_role ? [] : rows.map(row => assessStyleRole(row, config));
   const diagnostics = failure ? [] : diagnoseStyle(rows, config);
   const counts = { meets_target: 0, below_target: 0, uncertain: 0, unavailable: 0 };
   const targetedDiagnostics = diagnosticRubrics(config).filter(d => (config.criticality.diagnostic_targets ?? []).some(t => t.dimension === d.id));
   const by_axis = [...config.dimensions, ...targetedDiagnostics].map(d => ({ id: d.id, title: d.title,
-    required_for: config.dimensions.includes(d) ? 'all' : 'critical_or_uncertain', ...counts }));
+    required_for: config.dimensions.includes(d) ? 'all' : config.style_role ? 'all_by_role' : 'critical_or_uncertain', ...counts }));
   const axes = new Map(by_axis.map(axis => [axis.id, axis])), needsReview = new Set(), requiredByTarget = new Map();
   for (const assessment of assessments) {
     counts[assessment.status]++;
     axes.get(assessment.dimension)[assessment.status]++;
     if (assessment.status !== 'meets_target') needsReview.add(assessment.target);
-    if (assessment.target_basis === 'criticality') {
+    if (assessment.target_basis === 'criticality' || assessment.target_basis.endsWith('_role')) {
       if (!requiredByTarget.has(assessment.target)) requiredByTarget.set(assessment.target, []);
       requiredByTarget.get(assessment.target).push(assessment);
     }
@@ -641,7 +704,7 @@ export async function runStyleRanking(args, {
   const potentialResolved = potential && ['low', 'high'].includes(potential.status);
   // User preference: only confidently high task potential adds a requirement.
   // Missing/uncertain potential stays visible as advisory context.
-  const compositionRequired = potential?.status === 'high';
+  const compositionRequired = !!config.style_role || potential?.status === 'high';
   const compositionMet = !compositionRequired || composition.available && compositionAssessment.status === 'meets_target';
   const qualified = !failure && !inventory?.unranked.length && !changed_sources.length && rows.length === candidates.length
     && meets_all === rows.length && (!config.potential_profundity || compositionMet);
@@ -663,9 +726,11 @@ export async function runStyleRanking(args, {
     style_targets: config.style_targets, style_summary: { ...counts, meets_all, needs_review: rows.length - meets_all, by_axis }, assessments,
     ...(config.potential_profundity ? { potential_profundity: { policy: config.potential_profundity, task, assessment: potential, review: auxiliary.potential ?? null },
       composition: { available: composition.available, reasons: composition.reasons, context: composition.candidate?.context ?? null,
-        required: potential.status === 'high', assessment: compositionAssessment, review: auxiliary.composition ?? null }, qualification } : {}),
+        required: compositionRequired, galaxy_required: potential.status === 'high', targets: compositionTargets,
+        assessment: compositionAssessment, review: auxiliary.composition ?? null }, qualification } : {}),
+    ...(config.style_role ? { style_role: { policy: config.style_role, assessments: roles } } : {}),
     criticality: { policy: config.criticality, assessments: criticality },
-    diagnostics: { required_for: 'critical_or_uncertain', targets: config.criticality.diagnostic_targets ?? [],
+    diagnostics: { required_for: config.style_role ? 'all_by_role' : 'critical_or_uncertain', targets: config.criticality.diagnostic_targets ?? [],
       dimensions: diagnosticRubrics(config).map(({ id, title, levels }) => ({ id, title, levels })),
       assessments: diagnostics },
     source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
@@ -701,10 +766,14 @@ export async function runStyleRanking(args, {
       stdout(`Potential profundity: ${potential.status}${potential.probability_relevant === null ? '' : ` (${Math.round(100 * potential.probability_relevant)}% relevant)`}.`);
       stdout(`Composition: ${compositionAssessment.status}${composition.available ? '' : ` [${composition.reasons.join(', ')}]`}. Overall qualification: ${qualification.status}.`);
     }
-    for (const item of criticality.filter(c => ['critical', 'uncertain'].includes(c.status))) {
+    for (const item of (config.style_role ? roles : criticality.filter(c => ['critical', 'uncertain'].includes(c.status)))) {
       const required = (requiredByTarget.get(item.target) ?? [])
         .map(a => `level ${a.target_level} on ${a.dimension}`).join(', ');
-      stdout(`Criticality ${item.status}: ${item.target} (${Math.round(100 * item.probability_critical)}% critical) requires ${required}.`);
+      stdout(config.style_role ? `Expressive role ${item.status}: ${item.target} requires ${required}.`
+        : `Criticality ${item.status}: ${item.target} (${Math.round(100 * item.probability_critical)}% critical) requires ${required}.`);
+    }
+    for (const item of compositionAssessment.assessments ?? []) {
+      stdout(`Composition ${item.dimension}: ${item.status} (${Math.round(100 * item.probability_at_target)}% at level ${item.target_level}+).`);
     }
     for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain; ${axis.unavailable} unavailable.`);
     for (const assessment of assessments.filter(a => a.status !== 'meets_target')) {
@@ -716,7 +785,7 @@ export async function runStyleRanking(args, {
     }
     for (const diagnostic of report.diagnostics.dimensions) {
       const conditionalTarget = report.diagnostics.targets.find(t => t.dimension === diagnostic.id);
-      stdout(`\n${diagnostic.title} (${conditionalTarget ? 'required for critical or uncertain declarations' : 'diagnostic; no pass target'})`);
+      stdout(`\n${diagnostic.title} (${config.style_role ? 'required at the expressive-role target' : conditionalTarget ? 'required for critical or uncertain declarations' : 'diagnostic; no pass target'})`);
       for (const row of diagnostics.filter(d => d.dimension === diagnostic.id)) {
         stdout(`${row.target}: ${row.status === 'unavailable' ? 'unavailable [truncated context]'
           : `${row.score.toFixed(2)}/${diagnostic.levels.length - 1}${row.status === 'limited_context' ? ' [limited context]' : ''}`}${row.required ? ' [required]' : ' [advisory]'}`);
