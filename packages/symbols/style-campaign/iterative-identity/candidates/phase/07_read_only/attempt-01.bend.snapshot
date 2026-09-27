@@ -1,0 +1,131 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Color is Data:
+  Red{}
+  Black{}
+
+type Trie is Data:
+  Vacant{}
+  Here{id: U32, more: Trie}
+  Fork{color: Color, char: U32, less: Trie, same: Trie, more: Trie}
+
+def Trie.black(tree: Trie) -> Trie:
+  match tree:
+    case Vacant{}: Vacant{}
+    case Here{id,more}: Here{id,Trie.black(more)}
+    case Fork{color,char,less,same,more}: Fork{Black{},char,less,same,more}
+
+def Trie.balance(color: Color, char: U32, less: Trie, same: Trie, more: Trie) -> Trie:
+  match color less more:
+    case Black{} Fork{Red{},y,Fork{Red{},x,a,xx,b},yy,c} d:
+      Fork{Red{},y,Fork{Black{},x,a,xx,b},yy,Fork{Black{},char,c,same,d}}
+    case Black{} Fork{Red{},x,a,xx,Fork{Red{},y,b,yy,c}} d:
+      Fork{Red{},y,Fork{Black{},x,a,xx,b},yy,Fork{Black{},char,c,same,d}}
+    case Black{} a Fork{Red{},z,Fork{Red{},y,b,yy,c},zz,d}:
+      Fork{Red{},y,Fork{Black{},char,a,same,b},yy,Fork{Black{},z,c,zz,d}}
+    case Black{} a Fork{Red{},y,b,yy,Fork{Red{},z,c,zz,d}}:
+      Fork{Red{},y,Fork{Black{},char,a,same,b},yy,Fork{Black{},z,c,zz,d}}
+    case _ _ _: Fork{color,char,less,same,more}
+
+def Trie.get(tree: Trie, name: String) -> Maybe<&2,U32>:
+  match tree name:
+    case Vacant{} _: None{}
+    case Here{id,more} SNil{}: Some{id}
+    case Here{id,more} SCon{char,tail}: Trie.get(more,SCon{char,tail})
+    case Fork{color,pivot,less,same,more} SNil{}: None{}
+    case Fork{color,pivot,less,same,more} SCon{Chr{+char},tail}:
+      ({\{
+        LT: Trie.get(less,SCon{Chr{char},tail});
+        EQ: Trie.get(same,tail);
+        GT: Trie.get(more,SCon{Chr{char},tail})
+      } : Cmp -> Maybe<&2,U32>})(U32.cmp(char,pivot))
+
+def Trie.insert(name: String, tree: Trie, id: U32) -> Trie:
+  match name tree:
+    case SNil{} Here{old,more}: Here{id,more}
+    case SNil{} _: Here{id,tree}
+    case SCon{Chr{char},tail} Vacant{}:
+      Fork{Red{},char,Vacant{},Trie.black(Trie.insert(tail,Vacant{},id)),Vacant{}}
+    case SCon{char,tail} Here{old,more}:
+      Here{old,Trie.insert(SCon{char,tail},more,id)}
+    case SCon{Chr{+char},tail} Fork{color,+pivot,less,same,more}:
+      ({\{
+        LT: Trie.balance(color,pivot,Trie.insert(SCon{Chr{char},tail},less,id),same,more);
+        EQ: Fork{color,pivot,less,Trie.black(Trie.insert(tail,same,id)),more};
+        GT: Trie.balance(color,pivot,less,same,Trie.insert(SCon{Chr{char},tail},more,id))
+      } : Cmp -> Trie})(U32.cmp(char,pivot))
+
+def Trie.put(tree: Trie, name: String, id: U32) -> Trie:
+  Trie.black(Trie.insert(name,tree,id))
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Trie}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),Vacant{}}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),Vacant{}}
+
+def metadata(m: Trie, r: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = r
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.limit(String,v))
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{v,+m}: (InternTable{v,m},Trie.get(m,name))
+
+def inserted(m: Trie, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{v,Trie.put(m,name,id)},Done{id})
+
+def append_name(m: Trie, +name: String,
+  pair: V.Vec<String> & U32) -> Table & Result<Error,U32>:
+  (v,id) = pair
+  inserted(m,name,id,V.Vec.push(String,v,name))
+
+def intern_found(v: V.Vec<String>, name: String, m: Trie,
+  lookup: Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  match lookup:
+    case Some{id}:
+      (InternTable{v,m},Done{id})
+    case None{}:
+      append_name(m,name,V.Vec.length(String,v))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{v,+m}:
+      intern_found(v,name,m,Trie.get(m,name))
+
+def resolved(m: Trie, pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{InvalidId{}})
+    case Done{name}:
+      (InternTable{v,m},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{v,m}:
+      resolved(m,V.Vec.get(String,v,id))

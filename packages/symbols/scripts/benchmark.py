@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-import hashlib,json,pathlib,platform,statistics,subprocess,time
+import hashlib,json,os,pathlib,platform,statistics,subprocess,time
 ROOT=pathlib.Path(__file__).resolve().parents[3]; PKG=ROOT/'packages/symbols'; BEND=ROOT/'scripts/bend-reference'
+OUT=PKG/os.environ.get('SYMBOLS_RECEIPTS_DIR','receipts/working')
+OUT.mkdir(parents=True,exist_ok=True)
+(PKG/'build').mkdir(parents=True,exist_ok=True)
 sources=[PKG/'benchmark.bend',PKG/'main.bend',ROOT/'packages/vec/main.bend']
 before={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
 rows=[]
@@ -17,5 +20,5 @@ for n in [128,256,512]:
   rows.append({'distinct_names':n,'extra_common_prefix_codepoints':length,'repetitions':16,'intern_calls':32*n,'resolve_calls':16*n,'errors':0,'seconds':times,'median_seconds':statistics.median(times)})
 assert {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}==before,'source changed during benchmark'
 receipt={'checked_inputs_sha256':before,'platform':platform.platform(),'machine':platform.machine(),'benchmark_sha256':hashlib.sha256((PKG/'benchmark.bend').read_bytes()).hexdigest(),'lane':'native CPU','measure':'wall time including process start; 3 trials, 16 complete tables per process','allocation_counts':'not instrumented','rows':rows}
-(PKG/'receipts/benchmark.json').write_text(json.dumps(receipt,indent=2)+'\n')
+(OUT/'benchmark.json').write_text(json.dumps(receipt,indent=2)+'\n')
 print(json.dumps(rows,indent=2))

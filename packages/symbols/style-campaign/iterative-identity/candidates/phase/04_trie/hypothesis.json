@@ -1,0 +1,12 @@
+{
+  "reading_hypothesis": "Expose exact strings as a ternary character language. One traversal grammar keeps the current suffix on less/more edges and consumes precisely one character on the same edge. Lookup and insertion should mirror this geometry, so the reader can recognize both the search invariant and the update path.",
+  "representation": "An owned ternary trie with a separate terminal constructor; terminal sorts before every Char, including NUL. The reverse side remains the pinned public Vec API.",
+  "risks": [
+    "The trie is unbalanced: no logarithmic or balanced-height guarantee is claimed.",
+    "Lookup/update visit one selected branch per comparison and consume a character only on equality. Work is proportional to visited nodes, bounded by character length times the maximum sibling-search height; native common-prefix measurements are required before adoption.",
+    "Every affine subtree must be returned exactly once during observation and rebuilt on exactly one insertion path.",
+    "The terminal constructor must preserve empty, NUL, proper-prefix and arbitrary Char-code distinctions without arithmetic sentinel encoding.",
+    "Replacing Base Map changes implementation/complexity documentation and requires coordinator review before integration."
+  ],
+  "fixed_inputs": "All existing proof, model, conformance, observations and benchmark sources will remain unchanged."
+}

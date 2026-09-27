@@ -38,10 +38,18 @@ that work concrete. They propose exemplar development, imitation and transfer
 before codifying a style, with owned unfinished computation as the leading
 identity hypothesis.
 
-The next increment is a bounded comparison of actual expressive forms and a
-complete transfer contract. Establish concrete reading preferences before model
-ratings; preserve independent semantic gates and the current three style
-targets. The existing scoped pilot remains unresolved and the wider campaign
+The [hill-climbing plan](../research/compiler-style/MEMETIC-HILLCLIMB.md) now
+specifies that comparison: competing directions, focused variants, reconstruction,
+transfer and owner-led propagation. Its proposed first epoch has at most nine
+substantive candidates across three rounds; it is not active and does not enlarge
+the existing pilot's attempt budget. The
+[first-family packet](../research/compiler-style/hillclimb/START-HERE.md) now selects
+owned time slicing, pins its source and gate inputs, and fixes the semantic
+transfer contract. Next prepare a general full-state comparison/transfer gate and
+reconcile the existing pilot evidence with its owner before new candidates.
+Establish concrete reading preferences before model ratings; preserve independent
+semantic gates and the three style targets. The existing scoped pilot remains
+unresolved and the wider campaign
 queue stays held. A research note or evocative phrase does not resolve the
 foundation. Do not automatically resume field-layout/emitter implementation
 because this documentation has been committed. All six milestones above remain

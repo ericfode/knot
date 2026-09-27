@@ -1,0 +1,17 @@
+{
+  "variant": "shared-binding",
+  "hypothesis": "Represent the partial bijection as immutable Binding{name,id} values indexed from both sides. Each new intern constructs one reusable binding, appends it to Vec, and commits that same value to the Map only after append succeeds. The directional Key projection now reads a real association, while crossing maps its present binding to the opposite key. This puts the name/ID relation into the stored data rather than only a query facade.",
+  "anticipated_cost": "Each binding adds a small record and stores an ID in the Vec as well as the Map; sharing may offset duplicated fields but must be measured. Generic directional signatures and callbacks may remain too much notation for the tiny primitives.",
+  "fixed_inputs": {
+    "conformance.bend": "4c1d737ce4f6f16086831796bfdabd32ffd0a856cc2c4c4854074a493b851fc7",
+    "PROOF.bend": "4b7349189631d7a9d126ea38a527e017129f43472274158dc6b6481a8f6134be",
+    "observe.bend": "89842e8685126eea5182215f85fdcca3b3668f55e118f159dd482c6a42811e52",
+    "LAWS.bend": "66fd1e504762313ef78a6c0983eeecf36d524d287cbb2eaf9e100e4304a5686f",
+    "release.bend": "fa928e0a78b1b88de072393f4dac1563de2822dae1bc4f366fc90fa0bc56eba3",
+    "protocol.bend": "b1966247f544c4f3c373b55fc785fbaaf8a987b04ac003af00ab15a97aac139d",
+    "cases.bend": "ddb31933b99d600ebd1cba79376e2abc9110e37c3f9923b8dd5755b488c1ea53",
+    "example.bend": "b64f7bbe8173e5b284f041b395ff2c88c7edeb3b5fa2e096a5d17185a2e6fe92",
+    "benchmark.bend": "a03673f2f176fa9a51ef748cb50a4d2709929e197998b08c6a669263cebc26b3",
+    "model.bend": "9c08e11a3aa5938b333b75e411853dcda4ba426fbfaa524baa444b3bbac02270"
+  }
+}

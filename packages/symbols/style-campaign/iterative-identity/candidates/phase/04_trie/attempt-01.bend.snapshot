@@ -1,0 +1,123 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Trie is Type:
+  Vacant{}
+  Here{id: U32, more: Trie}
+  Fork{char: U32, less: Trie, same: Trie, more: Trie}
+
+def Trie.path(name: String, id: U32) -> Trie:
+  match name:
+    case SNil{}: Here{id,Vacant{}}
+    case SCon{Chr{char},tail}: Fork{char,Vacant{},Trie.path(tail,id),Vacant{}}
+
+def Trie.rejoin(context: Trie -> Trie, pair: Trie & Maybe<&2,U32>) -> Trie & Maybe<&2,U32>:
+  (child,hit) = pair
+  (context(child),hit)
+
+def Trie.get(tree: Trie, name: String) -> Trie & Maybe<&2,U32>:
+  match tree name:
+    case Vacant{} _: (Vacant{},None{})
+    case Here{+id,more} SNil{}: (Here{id,more},Some{id})
+    case Here{id,more} SCon{char,tail}:
+      Trie.rejoin(child => Here{id,child},Trie.get(more,SCon{char,tail}))
+    case Fork{pivot,less,same,more} SNil{}:
+      Trie.rejoin(child => Fork{pivot,child,same,more},Trie.get(less,SNil{}))
+    case Fork{+pivot,less,same,more} SCon{Chr{+char},tail}:
+      ({\{
+        LT: Trie.rejoin(child => Fork{pivot,child,same,more},Trie.get(less,SCon{Chr{char},tail}));
+        EQ: Trie.rejoin(child => Fork{pivot,less,child,more},Trie.get(same,tail));
+        GT: Trie.rejoin(child => Fork{pivot,less,same,child},Trie.get(more,SCon{Chr{char},tail}))
+      } : Cmp -> Trie & Maybe<&2,U32>})(U32.cmp(char,pivot))
+
+def Trie.put(tree: Trie, name: String, id: U32) -> Trie:
+  match tree name:
+    case Vacant{} _: Trie.path(name,id)
+    case Here{old,more} SNil{}: Here{id,more}
+    case Here{old,more} SCon{char,tail}:
+      Here{old,Trie.put(more,SCon{char,tail},id)}
+    case Fork{pivot,less,same,more} SNil{}:
+      Fork{pivot,Trie.put(less,SNil{},id),same,more}
+    case Fork{+pivot,less,same,more} SCon{Chr{+char},tail}:
+      ({\{
+        LT: Fork{pivot,Trie.put(less,SCon{Chr{char},tail},id),same,more};
+        EQ: Fork{pivot,less,Trie.put(same,tail,id),more};
+        GT: Fork{pivot,less,same,Trie.put(more,SCon{Chr{char},tail},id)}
+      } : Cmp -> Trie})(U32.cmp(char,pivot))
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Trie}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),Vacant{}}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),Vacant{}}
+
+def metadata(m: Trie, r: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = r
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.limit(String,v))
+
+def found(v: V.Vec<String>, r: Trie & Maybe<&2,U32>) -> Table & Maybe<&2,U32>:
+  (m,id) = r
+  (InternTable{v,m},id)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{v,m}:
+      found(v,Trie.get(m,name))
+
+def inserted(m: Trie, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{v,Trie.put(m,name,id)},Done{id})
+
+def append_name(m: Trie, +name: String,
+  pair: V.Vec<String> & U32) -> Table & Result<Error,U32>:
+  (v,id) = pair
+  inserted(m,name,id,V.Vec.push(String,v,name))
+
+def intern_found(v: V.Vec<String>, name: String,
+  pair: Trie & Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  (m,lookup) = pair
+  match lookup:
+    case Some{id}:
+      (InternTable{v,m},Done{id})
+    case None{}:
+      append_name(m,name,V.Vec.length(String,v))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{v,m}:
+      intern_found(v,name,Trie.get(m,name))
+
+def resolved(m: Trie, pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{InvalidId{}})
+    case Done{name}:
+      (InternTable{v,m},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{v,m}:
+      resolved(m,V.Vec.get(String,v,id))

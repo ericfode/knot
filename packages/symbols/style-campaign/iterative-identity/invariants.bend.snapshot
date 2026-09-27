@@ -1,0 +1,119 @@
+import Base
+import ./main.bend as S
+
+type Token is Data:
+  End{}
+  Code{point: U32}
+
+type Audit is Data:
+  Checked{mask: U32, red: Bool, black_height: U32,
+    low: Maybe<&2,Token>, high: Maybe<&2,Token>, depth: U32, widest: U32, nodes: U32}
+
+# Mask bits: 1 nonblack prefix root, 2 red/red siblings, 4 unequal black
+# height, 8 nonstrict sibling order, 16 Here outside a prefix root.
+# A prefix root may have one Here wrapper; its more edge starts a black tree.
+def fault(ok: Bool, bit: U32) -> U32:
+  Bool.pick(U32,ok,0,bit)
+
+def is_red(color: S.Color) -> Bool:
+  match color:
+    case S.Red{}: True{}
+    case S.Black{}: False{}
+
+def before(a: Token, b: Token) -> Bool:
+  match a b:
+    case End{} End{}: False{}
+    case End{} Code{point}: True{}
+    case Code{point} End{}: False{}
+    case Code{x} Code{y}: U32.is_lt(x,y)
+
+def after_left(left: Maybe<&2,Token>, here: Token) -> Bool:
+  match left:
+    case None{}: True{}
+    case Some{last}: before(last,here)
+
+def before_right(here: Token, right: Maybe<&2,Token>) -> Bool:
+  match right:
+    case None{}: True{}
+    case Some{first}: before(here,first)
+
+def leaf() -> Audit:
+  Checked{0,False{},0,None{},None{},0,0,0}
+
+def combine(+red: Bool, +token: Token, left: Audit, right: Audit, same: Audit) -> Audit:
+  match left right same:
+    case Checked{lm,lr,+lh,lo,lhi,ld,lw,ln} Checked{rm,rr,rh,rlo,hi,rd,rw,rn} Checked{sm,sr,sh,slo,shi,sd,sw,sn}:
+      mask = (lm .|. rm .|. sm .|. fault(Bool.not(sr),1)
+        .|. fault(Bool.or(Bool.not(red),Bool.and(Bool.not(lr),Bool.not(rr))),2)
+        .|. fault(U32.is_eq(lh,rh),4)
+        .|. fault(Bool.and(after_left(lhi,token),before_right(token,rlo)),8) : U32)
+      +depth = U32.add(1,U32.max(ld,rd))
+      Checked{mask,red,U32.add(lh,Bool.pick(U32,red,0,1)),
+        Maybe.or(&2,Token,lo,Some{token}),Maybe.or(&2,Token,hi,Some{token}),
+        depth,U32.max(depth,U32.max(lw,U32.max(rw,sw))),U32.add(1,U32.add(ln,U32.add(rn,sn)))}
+
+def terminal(allowed: Bool, check: Audit) -> Audit:
+  match check:
+    case Checked{mask,red,h,lo,hi,d,w,n}:
+      Checked{(mask .|. fault(allowed,16) .|. fault(Bool.not(red),1)
+        .|. fault(before_right(End{},lo),8) : U32),False{},h,Some{End{}},
+        Maybe.or(&2,Token,hi,Some{End{}}),d,w,U32.add(n,1)}
+
+def audit(tree: S.Trie, allowed_end: Bool) -> Audit:
+  match tree:
+    case S.Vacant{}: leaf()
+    case S.Here{id,more}: terminal(allowed_end,audit(more,False{}))
+    case S.Fork{color,char,less,same,more}:
+      combine(is_red(color),Code{char},audit(less,False{}),audit(more,False{}),audit(same,True{}))
+
+def root_mask(check: Audit) -> U32:
+  match check:
+    case Checked{mask,red,h,lo,hi,d,w,n}: (mask .|. fault(Bool.not(red),1) : U32)
+
+def maximum_depth(check: Audit) -> U32:
+  match check:
+    case Checked{mask,red,h,lo,hi,d,w,n}: w
+
+def build(names: List<&2,String>, tree: S.Trie, +id: U32) -> S.Trie:
+  match names:
+    case Nil{}: tree
+    case Con{name,tail}: build(tail,S.Trie.put(tree,name,id),U32.add(id,1))
+
+def check(names: List<&2,String>) -> U32:
+  root_mask(audit(build(names,S.Vacant{},0),True{}))
+
+def every_prefix(todo: List<&2,String>, +prefix: List<&2,String>) -> U32:
+  match todo:
+    case Nil{}: check(prefix)
+    case Con{name,tail}:
+      +next = List.append(&2,String,prefix,[name])
+      (check(next) .|. every_prefix(tail,next) : U32)
+
+def cases(xs: List<&2,List<&2,String>>) -> U32:
+  match xs:
+    case Nil{}: 0
+    case Con{names,tail}: (every_prefix(names,[]) .|. cases(tail) : U32)
+
+def scalars(count: Nat, +start: U32, +prefix: String) -> List<&2,String>:
+  match count:
+    case 0n: []
+    case 1n+p: Con{prefix ++ SCon{Chr{start},SNil{}},scalars(p,U32.add(start,1),prefix)}
+
+def rotations() -> U32:
+  cases([["c","b","a"],["c","a","b"],["a","c","b"],["a","b","c"],
+    ["","c","b","a"],["p","pc","pb","pa"],
+    ["pc","pb","pa"],["pc","pa","pb"],["pa","pc","pb"],["pa","pb","pc"],
+    ["a","",SCon{Chr{0},SNil{}}],[SCon{Chr{0},SNil{}},"a",""]])
+
+def boundaries() -> U32:
+  every_prefix(["",SCon{Chr{0},SNil{}},SCon{Chr{0},"a"},SCon{Chr{97},SCon{Chr{0},SNil{}}},
+    "a","ab","abc","b","é","é","🪢","a","",SCon{Chr{1114111},SNil{}}],[])
+
+def shape_scaling() -> U32:
+  (check(scalars(256n,0,"")) .|. check(List.reverse(&2,String,scalars(256n,0,"")))
+    .|. check(scalars(256n,0,"shared-prefix/"))
+    .|. check(List.reverse(&2,String,scalars(256n,0,"shared-prefix/")))
+    .|. check(scalars(256n,128512,"")) : U32)
+
+def main() -> U32:
+  (rotations() .|. boundaries() .|. shape_scaling() : U32)

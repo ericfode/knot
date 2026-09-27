@@ -1,0 +1,77 @@
+{
+  "source_sha256": "8e44e7b0b147ad90cee9c049d62d44d8ba14bcbf0b7b07bc45044c24d2eacbeb",
+  "semantic_receipt": "runs/semantic-prefix06/receipt.json",
+  "performance_receipt": "runs/performance-prefix06/receipt.json",
+  "valid_scalar_commands_each_lane": 1268,
+  "lanes": [
+    "native",
+    "js"
+  ],
+  "additional_native_raw_u32_commands": 208,
+  "js_raw_u32_char_rejections": [
+    55296,
+    4294967295
+  ],
+  "all_semantic_outputs": 1,
+  "all_benchmark_failure_counts": 0,
+  "repetitions": 16,
+  "trials": 3,
+  "warmups": 1,
+  "ratios": [
+    {
+      "distinct_names": 128,
+      "order": "ascending",
+      "baseline_seconds": 0.003059209091588855,
+      "unbalanced04_seconds": 0.006758875213563442,
+      "prefix06_seconds": 0.003350708167999983,
+      "unbalanced04_over_baseline": 2.209353794138046,
+      "prefix06_over_baseline": 1.0952857642887472
+    },
+    {
+      "distinct_names": 128,
+      "order": "descending",
+      "baseline_seconds": 0.003319249954074621,
+      "unbalanced04_seconds": 0.006778332870453596,
+      "prefix06_seconds": 0.0033850001636892557,
+      "unbalanced04_over_baseline": 2.042127879562881,
+      "prefix06_over_baseline": 1.0198087551478072
+    },
+    {
+      "distinct_names": 512,
+      "order": "ascending",
+      "baseline_seconds": 0.005474125035107136,
+      "unbalanced04_seconds": 0.06492962501943111,
+      "prefix06_seconds": 0.006893999874591827,
+      "unbalanced04_over_baseline": 11.861187788554114,
+      "prefix06_over_baseline": 1.2593793218785883
+    },
+    {
+      "distinct_names": 512,
+      "order": "descending",
+      "baseline_seconds": 0.005758542101830244,
+      "unbalanced04_seconds": 0.06661529187113047,
+      "prefix06_seconds": 0.00740395812317729,
+      "unbalanced04_over_baseline": 11.568082805187453,
+      "prefix06_over_baseline": 1.2857348252822673
+    },
+    {
+      "distinct_names": 2048,
+      "order": "ascending",
+      "baseline_seconds": 0.014255041955038905,
+      "unbalanced04_seconds": 0.982454416109249,
+      "prefix06_seconds": 0.022929917089641094,
+      "unbalanced04_over_baseline": 68.91978425654291,
+      "prefix06_over_baseline": 1.608547850084424
+    },
+    {
+      "distinct_names": 2048,
+      "order": "descending",
+      "baseline_seconds": 0.0147964998614043,
+      "unbalanced04_seconds": 0.9863862078636885,
+      "prefix06_seconds": 0.02276195795275271,
+      "unbalanced04_over_baseline": 66.66348238454773,
+      "prefix06_over_baseline": 1.5383339415374704
+    }
+  ],
+  "disposition": "Semantic extra gates pass. Balanced06 removes unbalanced04 quadratic sorted-key behavior but still has measured slowdown versus baseline; coordinator must retain this tradeoff in acceptance. No overall performance or style pass is claimed."
+}

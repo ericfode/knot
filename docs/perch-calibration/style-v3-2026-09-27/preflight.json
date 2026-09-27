@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "at": "2026-09-27T03:07:39.726Z",
+  "purpose": "Bounded live integration check of rubric v3, not human taste calibration",
+  "rubric_version": 3,
+  "rubric_sha256": "54cbef848b22aba58ab494b77b96f5c75832984ac4a8dbc2e8f8dc7223b65e40",
+  "expected_requests": 3,
+  "expected_score_answers": 16,
+  "custom_rules": [
+    {
+      "name": "bend-fuel-completeness",
+      "disabled": false
+    },
+    {
+      "name": "bend-machine-arithmetic",
+      "disabled": false
+    },
+    {
+      "name": "bend-borrow-lifetime",
+      "disabled": false
+    },
+    {
+      "name": "bend-ordered-f32",
+      "disabled": false
+    },
+    {
+      "name": "bend-effect-boundary",
+      "disabled": false
+    },
+    {
+      "name": "bend-device-stack",
+      "disabled": false
+    },
+    {
+      "name": "compiler-pattern-sharing",
+      "disabled": false
+    },
+    {
+      "name": "compiler-checker-trust",
+      "disabled": false
+    },
+    {
+      "name": "compiler-cache-identity",
+      "disabled": false
+    },
+    {
+      "name": "law-domain-inhabited",
+      "disabled": false
+    },
+    {
+      "name": "law-observable-essence",
+      "disabled": false
+    },
+    {
+      "name": "law-public-contract-coverage",
+      "disabled": false
+    },
+    {
+      "name": "law-independent-model",
+      "disabled": false
+    },
+    {
+      "name": "law-state-composition",
+      "disabled": false
+    },
+    {
+      "name": "law-boundaries-and-exhaustion",
+      "disabled": false
+    },
+    {
+      "name": "law-mutation-sensitivity",
+      "disabled": false
+    },
+    {
+      "name": "law-proof-claim-integrity",
+      "disabled": false
+    },
+    {
+      "name": "package-int-map-union-observation",
+      "disabled": false
+    },
+    {
+      "name": "output-builder-linear-assembly",
+      "disabled": false
+    },
+    {
+      "name": "source-checkpoint-observation",
+      "disabled": false
+    },
+    {
+      "name": "symbols-bidirectional-preservation",
+      "disabled": false
+    },
+    {
+      "name": "term-store-memo-completion-boundary",
+      "disabled": false
+    },
+    {
+      "name": "vec-logical-state-observation",
+      "disabled": false
+    },
+    {
+      "name": "perf-growing-prefix-copy",
+      "disabled": false
+    },
+    {
+      "name": "perf-loop-invariant-work",
+      "disabled": false
+    },
+    {
+      "name": "perf-linked-list-indexing",
+      "disabled": false
+    },
+    {
+      "name": "perf-amortized-growth",
+      "disabled": false
+    }
+  ],
+  "hypotheses": [
+    "scope::alternatives combines branch resource-use sets. Its material supporting contract role should select the critical requirements; actual classification must be retained even if it disagrees.",
+    "scope::Scope represents live scope and bindings. Its material datatype role warrants Anticipation and Payoff requirements, but the bounded caller context is truncated so both must be unavailable and cannot pass.",
+    "The list-map fixture is illustrative rather than production infrastructure. Noncritical is the manual role expectation; a different model classification is evidence to inspect, not grounds to rewrite code or relabel the result.",
+    "No taste ordering or numeric target outcome is asserted for these unchanged declarations. The check verifies request coverage, returned distributions, conditional requirements, context limits and exit status."
+  ],
+  "targets": [
+    {
+      "target": "src/scope.bend::alternatives",
+      "kind": "bend_definition",
+      "source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+      "state_sha256": "afbd4b07b07fdc66bb1213e47dce41696a00c3e20f5f059ab49b1a6d95c23989",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/scope.bend",
+            "source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd"
+          },
+          {
+            "path": "src/syntax.bend",
+            "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/scope.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/syntax.bend",
+            "name": "Unit",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/scope.bend",
+            "name": "Bool",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/scope.bend",
+            "name": "Bool.or",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "src/scope.bend",
+            "name": "U32.is_eq",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      }
+    },
+    {
+      "target": "src/scope.bend::Scope",
+      "kind": "bend_datatype",
+      "source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+      "state_sha256": "a5096efe4c0be5c1664354c0c0eb92b6e49d31e6c54a4e50649f24e08fab35bf",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "src/scope.bend",
+            "source_sha256": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "src/scope.bend",
+            "name": "Scope",
+            "reason": "datatype-context-is-same-file-only; imported and transitive dependencies are not resolved"
+          }
+        ],
+        "truncated": true,
+        "limits": {
+          "callers": 4,
+          "files": 1,
+          "bytes": 48000
+        }
+      }
+    },
+    {
+      "target": "tests/perch-style/a.bend::solve",
+      "kind": "bend_definition",
+      "source_sha256": "6e839718fbda060a8fb851fe67e64bdb542b01723afb6372d6b10e092e3fb2dc",
+      "state_sha256": "97997abf2a842d8098b1a755750f3b9cc4daa206d61c1f06b23e371889a57ee4",
+      "context": {
+        "basis": "working-tree",
+        "files": [
+          {
+            "path": "tests/perch-style/a.bend",
+            "source_sha256": "6e839718fbda060a8fb851fe67e64bdb542b01723afb6372d6b10e092e3fb2dc"
+          }
+        ],
+        "unresolved": [
+          {
+            "path": "tests/perch-style/a.bend",
+            "name": "U32",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-style/a.bend",
+            "name": "U32.add",
+            "reason": "unresolved-or-builtin"
+          },
+          {
+            "path": "tests/perch-style/a.bend",
+            "name": "U32.mul",
+            "reason": "unresolved-or-builtin"
+          }
+        ],
+        "truncated": false,
+        "limits": {
+          "helpers": 16,
+          "files": 12,
+          "bytes": 48000,
+          "callers": 4
+        }
+      }
+    }
+  ]
+}

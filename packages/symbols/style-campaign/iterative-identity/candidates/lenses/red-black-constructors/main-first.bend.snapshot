@@ -1,0 +1,112 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Entry is Data:
+  Bind{name: String, id: U32}
+
+type Index is Data:
+  E{}
+  R{left: Index, entry: Entry, right: Index}
+  B{left: Index, entry: Entry, right: Index}
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Index}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),E{}}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),E{}}
+
+def metadata(m: Index, pair: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = pair
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}: metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}: metadata(m,V.Vec.limit(String,v))
+
+def compared(-R: Type, a: String, b: String, next: Cmp -> R) -> R:
+  next(Pair.snd(String & String,Cmp,String.cmp(a,b)))
+
+def Index.find(tree: Index, +name: String) -> Maybe<&2,U32>:
+  match tree:
+    case E{}: None{}
+    case R{a,Bind{key,id},b}:
+      compared(Maybe<&2,U32>,name,key,
+        \{LT: Index.find(a,name); EQ: Some{id}; GT: Index.find(b,name)})
+    case B{a,Bind{key,id},b}:
+      compared(Maybe<&2,U32>,name,key,
+        \{LT: Index.find(a,name); EQ: Some{id}; GT: Index.find(b,name)})
+
+def balance(tree: Index) -> Index:
+  match tree:
+    case B{R{R{a,x,b},y,c},z,d}: R{B{a,x,b},y,B{c,z,d}}
+    case B{R{a,x,R{b,y,c}},z,d}: R{B{a,x,b},y,B{c,z,d}}
+    case B{a,x,R{R{b,y,c},z,d}}: R{B{a,x,b},y,B{c,z,d}}
+    case B{a,x,R{b,y,R{c,z,d}}}: R{B{a,x,b},y,B{c,z,d}}
+    case _: tree
+
+def Index.insert(tree: Index, +name: String, id: U32) -> Index:
+  match tree:
+    case E{}: R{E{},Bind{name,id},E{}}
+    case R{a,Bind{+key,old},b}:
+      x = {Bind{key,old} : Entry}
+      compared(Index,name,key,
+        \{LT: R{Index.insert(a,name,id),x,b};
+          EQ: R{a,x,b};
+          GT: R{a,x,Index.insert(b,name,id)}})
+    case B{a,Bind{+key,old},b}:
+      x = {Bind{key,old} : Entry}
+      compared(Index,name,key,
+        \{LT: balance(B{Index.insert(a,name,id),x,b});
+          EQ: B{a,x,b};
+          GT: balance(B{a,x,Index.insert(b,name,id)})})
+
+def blacken(tree: Index) -> Index:
+  match tree:
+    case R{a,x,b}: B{a,x,b}
+    case _: tree
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{v,+m}: (InternTable{v,m},Index.find(m,name))
+
+def inserted(m: Index, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (v,result) = pair
+  match result:
+    case Fail{error}: (InternTable{v,m},Fail{Exhausted{}})
+    case Done{unit}: (InternTable{v,blacken(Index.insert(m,name,id))},Done{id})
+
+def append_name(m: Index, +name: String, pair: V.Vec<String> & U32) -> Table & Result<Error,U32>:
+  (v,id) = pair
+  inserted(m,name,id,V.Vec.push(String,v,name))
+
+def intern_found(v: V.Vec<String>, m: Index, name: String,
+  lookup: Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  match lookup:
+    case Some{id}: (InternTable{v,m},Done{id})
+    case None{}: append_name(m,name,V.Vec.length(String,v))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{v,+m}: intern_found(v,m,name,Index.find(m,name))
+
+def resolved(m: Index, pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (v,result) = pair
+  match result:
+    case Fail{error}: (InternTable{v,m},Fail{InvalidId{}})
+    case Done{name}: (InternTable{v,m},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{v,m}: resolved(m,V.Vec.get(String,v,id))

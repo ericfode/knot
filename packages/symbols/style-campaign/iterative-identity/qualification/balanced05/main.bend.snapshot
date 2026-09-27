@@ -1,0 +1,149 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Color is Data:
+  Red{}
+  Black{}
+
+type Trie is Type:
+  Vacant{}
+  Branch{color: Color, less: Trie, letter: Letter, more: Trie}
+
+type Letter is Type:
+  Here{id: U32}
+  Next{char: U32, same: Trie}
+
+def Trie.black(tree: Trie) -> Trie:
+  match tree:
+    case Vacant{}: Vacant{}
+    case Branch{color,less,letter,more}: Branch{Black{},less,letter,more}
+
+def Trie.balance(color: Color, less: Trie, letter: Letter, more: Trie) -> Trie:
+  match color less more:
+    case Black{} Branch{Red{},Branch{Red{},a,x,b},y,c} d:
+      Branch{Red{},Branch{Black{},a,x,b},y,Branch{Black{},c,letter,d}}
+    case Black{} Branch{Red{},a,x,Branch{Red{},b,y,c}} d:
+      Branch{Red{},Branch{Black{},a,x,b},y,Branch{Black{},c,letter,d}}
+    case Black{} a Branch{Red{},Branch{Red{},b,y,c},z,d}:
+      Branch{Red{},Branch{Black{},a,letter,b},y,Branch{Black{},c,z,d}}
+    case Black{} a Branch{Red{},b,y,Branch{Red{},c,z,d}}:
+      Branch{Red{},Branch{Black{},a,letter,b},y,Branch{Black{},c,z,d}}
+    case _ _ _: Branch{color,less,letter,more}
+
+def Trie.rejoin(context: Trie -> Trie, pair: Trie & Maybe<&2,U32>) -> Trie & Maybe<&2,U32>:
+  (child,hit) = pair
+  (context(child),hit)
+
+def Trie.get(tree: Trie, name: String) -> Trie & Maybe<&2,U32>:
+  match tree name:
+    case Vacant{} _: (Vacant{},None{})
+    case Branch{color,less,Here{+id},more} SNil{}:
+      (Branch{color,less,Here{id},more},Some{id})
+    case Branch{color,less,Here{id},more} SCon{char,tail}:
+      Trie.rejoin(child => Branch{color,less,Here{id},child},Trie.get(more,SCon{char,tail}))
+    case Branch{color,less,Next{pivot,same},more} SNil{}:
+      Trie.rejoin(child => Branch{color,child,Next{pivot,same},more},Trie.get(less,SNil{}))
+    case Branch{color,less,Next{+pivot,same},more} SCon{Chr{+char},tail}:
+      ({\{
+        LT: Trie.rejoin(child => Branch{color,child,Next{pivot,same},more},Trie.get(less,SCon{Chr{char},tail}));
+        EQ: Trie.rejoin(child => Branch{color,less,Next{pivot,child},more},Trie.get(same,tail));
+        GT: Trie.rejoin(child => Branch{color,less,Next{pivot,same},child},Trie.get(more,SCon{Chr{char},tail}))
+      } : Cmp -> Trie & Maybe<&2,U32>})(U32.cmp(char,pivot))
+
+def Trie.insert(name: String, tree: Trie, id: U32) -> Trie:
+  match name tree:
+    case SNil{} Vacant{}: Branch{Red{},Vacant{},Here{id},Vacant{}}
+    case SCon{Chr{char},tail} Vacant{}:
+      Branch{Red{},Vacant{},Next{char,Trie.black(Trie.insert(tail,Vacant{},id))},Vacant{}}
+    case SNil{} Branch{color,less,Here{old},more}:
+      Branch{color,less,Here{id},more}
+    case SCon{char,tail} Branch{color,less,Here{old},more}:
+      Trie.balance(color,less,Here{old},Trie.insert(SCon{char,tail},more,id))
+    case SNil{} Branch{color,less,Next{pivot,same},more}:
+      Trie.balance(color,Trie.insert(SNil{},less,id),Next{pivot,same},more)
+    case SCon{Chr{+char},tail} Branch{color,less,Next{+pivot,same},more}:
+      ({\{
+        LT: Trie.balance(color,Trie.insert(SCon{Chr{char},tail},less,id),Next{pivot,same},more);
+        EQ: Branch{color,less,Next{pivot,Trie.black(Trie.insert(tail,same,id))},more};
+        GT: Trie.balance(color,less,Next{pivot,same},Trie.insert(SCon{Chr{char},tail},more,id))
+      } : Cmp -> Trie})(U32.cmp(char,pivot))
+
+def Trie.put(tree: Trie, name: String, id: U32) -> Trie:
+  Trie.black(Trie.insert(name,tree,id))
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Trie}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),Vacant{}}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),Vacant{}}
+
+def metadata(m: Trie, r: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = r
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.limit(String,v))
+
+def found(v: V.Vec<String>, r: Trie & Maybe<&2,U32>) -> Table & Maybe<&2,U32>:
+  (m,id) = r
+  (InternTable{v,m},id)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  match t:
+    case InternTable{v,m}:
+      found(v,Trie.get(m,name))
+
+def inserted(m: Trie, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{v,Trie.put(m,name,id)},Done{id})
+
+def append_name(m: Trie, +name: String,
+  pair: V.Vec<String> & U32) -> Table & Result<Error,U32>:
+  (v,id) = pair
+  inserted(m,name,id,V.Vec.push(String,v,name))
+
+def intern_found(v: V.Vec<String>, name: String,
+  pair: Trie & Maybe<&2,U32>) -> Table & Result<Error,U32>:
+  (m,lookup) = pair
+  match lookup:
+    case Some{id}:
+      (InternTable{v,m},Done{id})
+    case None{}:
+      append_name(m,name,V.Vec.length(String,v))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  match t:
+    case InternTable{v,m}:
+      intern_found(v,name,Trie.get(m,name))
+
+def resolved(m: Trie, pair: V.Vec<String> & Result<V.Error,String>) -> Table & Result<Error,String>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{InvalidId{}})
+    case Done{name}:
+      (InternTable{v,m},Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  match t:
+    case InternTable{v,m}:
+      resolved(m,V.Vec.get(String,v,id))

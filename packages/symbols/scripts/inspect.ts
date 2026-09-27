@@ -5,6 +5,8 @@ import crypto from 'node:crypto';
 import * as Bend from '../../../.toolchain/bend-2.0.29-574b6d3/bend2/bend.ts';
 const root=path.resolve(import.meta.dir,'../../..');
 const pkg=path.join(root,'packages/symbols');
+const receipts=path.resolve(pkg,process.env.SYMBOLS_RECEIPTS_DIR||'receipts/working');
+fs.mkdirSync(receipts,{recursive:true});
 const entry=path.join(pkg,'release.bend');
 const base=path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2/base.bend');
 const cli=fs.readFileSync(path.join(root,'.toolchain/bend-2.0.29-574b6d3/bend2/main.ts'),'utf8');
@@ -24,5 +26,5 @@ const dependencyImports=fs.readFileSync(path.join(pkg,'main.bend'),'utf8').split
 const allowed=['release.bend','main.bend','model.bend','protocol.bend','observe.bend','cases.bend','LAWS.bend','PROOF.bend','example.bend','conformance.bend','benchmark.bend','LICENSE'].sort();
 const ready=JSON.stringify(paths)===JSON.stringify(allowed)&&dependencyImports.length===1&&/^import 0x[0-9a-f]{32}\/.+ as V$/.test(dependencyImports[0]);
 const receipt={compiler:'Bend 2.0.29',revision:'574b6d39a235b539eb19a5c532993a0abb3d11ad',holes:book.hols,entry:'release.bend',expected_hash:expected,files:manifest,dependency_imports:dependencyImports,closure_ready:ready,whole_book_unsafe:unsafe,whole_book_foreign:foreign,pkg_files_function_sha256:hash(fn),note:ready?'Only owned original sources plus MIT-0 license; pinned hub dependencies excluded by upstream closure rules.':'NOT PUBLISHABLE: dependency is still local, so exact closure includes sibling files.'};
-fs.writeFileSync(path.join(pkg,'receipts/closure.json'),JSON.stringify(receipt,null,2)+'\n');
+fs.writeFileSync(path.join(receipts,'closure.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify({holes:book.hols,expected_hash:expected,paths,closure_ready:ready,whole_book_unsafe:unsafe,foreign_count:foreign.length},null,2));

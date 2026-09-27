@@ -1,0 +1,542 @@
+{
+  "status": "passed",
+  "candidate_sha256": "8e44e7b0b147ad90cee9c049d62d44d8ba14bcbf0b7b07bc45044c24d2eacbeb",
+  "mutants": [
+    {
+      "name": "alias_ids",
+      "old": "(InternTable{v,Trie.put(m,name,id)},Done{id})",
+      "new": "(InternTable{v,Trie.put(m,name,id)},Done{0})",
+      "case": "repeat",
+      "limit": 4,
+      "classification": "semantic kill",
+      "source_sha256": "7b88a02baa38bc41db25456974cdf6f3c5c512a6db4ea664de31801d30707f99",
+      "fixture_sha256": "2185a1c396ff9ec0eb1f959562b7d2763338f6408d7c8206b84c2b688a234ec0",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.12307304097339511
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.018733999924734235
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.08889854187145829
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.1534556250553578
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/alias_ids/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.022924416000023484
+        }
+      ]
+    },
+    {
+      "name": "forget_forward",
+      "old": "Trie.put(m,name,id)",
+      "new": "Trie.put(Vacant{},name,id)",
+      "case": "repeat",
+      "limit": 4,
+      "classification": "semantic kill",
+      "source_sha256": "7d6c97792374e5cf8fb6a0a57fddc1d6083e16b5b436e9463225a0e3b3ec1459",
+      "fixture_sha256": "2185a1c396ff9ec0eb1f959562b7d2763338f6408d7c8206b84c2b688a234ec0",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.1517493340652436
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.018992374883964658
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.10946674994193017
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.15581283392384648
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/forget_forward/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.02274487493559718
+        }
+      ]
+    },
+    {
+      "name": "repeat_grows",
+      "old": "(InternTable{v,m},Done{id})",
+      "new": "append_name(m,name,V.Vec.length(String,v))",
+      "case": "repeat",
+      "limit": 4,
+      "classification": "semantic kill",
+      "source_sha256": "3da3934ace3b1aef0ac3ca10b4162170fa11421cce47e991df4b36956247cbdf",
+      "fixture_sha256": "2185a1c396ff9ec0eb1f959562b7d2763338f6408d7c8206b84c2b688a234ec0",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.16412858315743506
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.01960066705942154
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.09857791592366993
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.13890841603279114
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/repeat_grows/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.019149458967149258
+        }
+      ]
+    },
+    {
+      "name": "reverse_wrong",
+      "old": "(InternTable{v,m},Done{name})",
+      "new": "(InternTable{v,m},Done{\"wrong\"})",
+      "case": "unicode",
+      "limit": 6,
+      "classification": "semantic kill",
+      "source_sha256": "27ed6010b6d14fccfe965205059986b47b4bc797323a2f5a901aa4d9828a9a37",
+      "fixture_sha256": "eabb9033e80b9e15663e0fe903b1bc3fd4a4bc41a2b2056a3cbfb029179be92a",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.14790625008754432
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.023299500113353133
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.08967920811846852
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.13310804194770753
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/reverse_wrong/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.021642083069309592
+        }
+      ]
+    },
+    {
+      "name": "wrap_invalid",
+      "old": "V.Vec.get(String,v,id)",
+      "new": "V.Vec.get(String,v,U32.and(id,0))",
+      "case": "full",
+      "limit": 1,
+      "classification": "semantic kill",
+      "source_sha256": "388be4fd65fb2bd26a55a7152c5b53aed21ea3cbd526e8bf5c4bc4958d88fb61",
+      "fixture_sha256": "81934111008f28445e6a2dd8928609b3979c906e04a526dd36d128ddd8a6d429",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.1333877919241786
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.01950583280995488
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.08598216599784791
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.1377511250320822
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrap_invalid/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.02017337502911687
+        }
+      ]
+    },
+    {
+      "name": "exhaustion_success",
+      "old": "(InternTable{v,m},Fail{Exhausted{}})",
+      "new": "(InternTable{v,m},Done{0})",
+      "case": "full",
+      "limit": 1,
+      "classification": "semantic kill",
+      "source_sha256": "98bd4d9420b445d4d1d09a5d3a9064451217da2f765c00aab7897c7658563765",
+      "fixture_sha256": "81934111008f28445e6a2dd8928609b3979c906e04a526dd36d128ddd8a6d429",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.13661145814694464
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.017299999948590994
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.0870729589369148
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.13340925006195903
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/exhaustion_success/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.022856792202219367
+        }
+      ]
+    },
+    {
+      "name": "failure_forgets",
+      "old": "(InternTable{v,m},Fail{Exhausted{}})",
+      "new": "(InternTable{v,Vacant{}},Fail{Exhausted{}})",
+      "case": "full",
+      "limit": 1,
+      "classification": "semantic kill",
+      "source_sha256": "d778debbb4b77edb3e4707bf3c34efaaed2894765869badea1eec36c6b8a56f1",
+      "fixture_sha256": "81934111008f28445e6a2dd8928609b3979c906e04a526dd36d128ddd8a6d429",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.1553632498253137
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.018865499878302217
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.09898437513038516
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.14682554104365408
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/failure_forgets/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.02310550003312528
+        }
+      ]
+    },
+    {
+      "name": "wrong_error",
+      "old": "Fail{InvalidId{}}",
+      "new": "Fail{Exhausted{}}",
+      "case": "full",
+      "limit": 1,
+      "classification": "semantic kill",
+      "source_sha256": "b4161373a6a50d0fce788aa3709f3cd5309d2342e7f8f7962dd66bd26dfabe55",
+      "fixture_sha256": "81934111008f28445e6a2dd8928609b3979c906e04a526dd36d128ddd8a6d429",
+      "records": [
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.14660491701215506
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.js"
+          ],
+          "exit": 0,
+          "stdout": "1\n",
+          "stderr": "",
+          "elapsed_seconds": 0.019156749825924635
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": "",
+          "elapsed_seconds": 0.09669829183258116
+        },
+        {
+          "argv": [
+            "/Users/ericfode/src/knot/scripts/bend-reference",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.bend",
+            "-o",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.js"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "elapsed_seconds": 0.13394691585563123
+        },
+        {
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/packages/symbols/build/memetic-search/root/prefix06/mutants/wrong_error/test.js"
+          ],
+          "exit": 0,
+          "stdout": "0\n",
+          "stderr": "",
+          "elapsed_seconds": 0.01964962505735457
+        }
+      ]
+    }
+  ]
+}

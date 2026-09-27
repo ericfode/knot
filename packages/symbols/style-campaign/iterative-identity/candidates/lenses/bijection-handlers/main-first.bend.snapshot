@@ -1,0 +1,92 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Table is Type:
+  InternTable{names: V.Vec<String>, forward: Map<&2,Maybe<&2,U32>>}
+
+def Table.bounded(limit: U32) -> Table:
+  InternTable{V.Vec.bounded(String,limit),Map.new(&2,Maybe<&2,U32>)}
+
+def Table.new() -> Table:
+  InternTable{V.Vec.new(String),Map.new(&2,Maybe<&2,U32>)}
+
+def metadata(m: Map<&2,Maybe<&2,U32>>, r: V.Vec<String> & U32) -> Table & U32:
+  (v,n) = r
+  (InternTable{v,m},n)
+
+def Table.length(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.length(String,v))
+
+def Table.limit(t: Table) -> Table & U32:
+  match t:
+    case InternTable{v,m}:
+      metadata(m,V.Vec.limit(String,v))
+
+def inserted(m: Map<&2,Maybe<&2,U32>>, name: String, +id: U32,
+  pair: V.Vec<String> & Result<V.Error,Unit>) -> Table & Result<Error,U32>:
+  (v,result) = pair
+  match result:
+    case Fail{error}:
+      (InternTable{v,m},Fail{Exhausted{}})
+    case Done{unit}:
+      (InternTable{v,Map.set(&2,Maybe<&2,U32>,m,name,Some{id})},Done{id})
+
+def append_name(m: Map<&2,Maybe<&2,U32>>, +name: String,
+  pair: V.Vec<String> & U32) -> Table & Result<Error,U32>:
+  (v,id) = pair
+  inserted(m,name,id,V.Vec.push(String,v,name))
+
+type Side is Data:
+  Name{}
+  Id{}
+
+def opposite(side: Side) -> Side:
+  match side:
+    case Name{}: Id{}
+    case Id{}: Name{}
+
+def Key(side: Side) -> Data:
+  match side:
+    case Name{}: String
+    case Id{}: U32
+
+def cross_name(-R: Type, names: V.Vec<String>,
+  pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>,
+  missing: Table -> R, present: Table -> U32 -> R) -> R:
+  match pair:
+    case (ids,None{}): missing(InternTable{names,ids})
+    case (ids,Some{id}): present(InternTable{names,ids},id)
+
+def cross_id(-R: Type, ids: Map<&2,Maybe<&2,U32>>,
+  pair: V.Vec<String> & Result<V.Error,String>,
+  missing: Table -> R, present: Table -> String -> R) -> R:
+  match pair:
+    case (names,Fail{error}): missing(InternTable{names,ids})
+    case (names,Done{name}): present(InternTable{names,ids},name)
+
+def Table.cross(-R: Type, +side: Side, t: Table, key: Key(side),
+  missing: Table -> R, present: Table -> Key(opposite(side)) -> R) -> R:
+  match side t:
+    case Name{} InternTable{names,ids}:
+      cross_name(R,names,Map.get(Maybe<&2,U32>,None{},ids,key),missing,present)
+    case Id{} InternTable{names,ids}:
+      cross_id(R,ids,V.Vec.get(String,names,key),missing,present)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  Table.cross(Table & Maybe<&2,U32>,Name{},t,name,
+    t => (t,None{}), t => id => (t,Some{id}))
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  Table.cross(Table & Result<Error,String>,Id{},t,id,
+    t => (t,Fail{InvalidId{}}), t => name => (t,Done{name}))
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  Table.cross(Table & Result<Error,U32>,Name{},t,name,
+    \{InternTable: names => ids => append_name(ids,name,V.Vec.length(String,names))},
+    t => id => (t,Done{id}))

@@ -1,0 +1,202 @@
+[
+  {
+    "mutant": "alias_ids",
+    "property": "repeat(4)",
+    "mutation": [
+      "(InternTable{v,Trie.put(m,name,id)},Done{id})",
+      "(InternTable{v,Trie.put(m,name,id)},Done{0})"
+    ],
+    "sha256": "7b88a02baa38bc41db25456974cdf6f3c5c512a6db4ea664de31801d30707f99",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "forget_forward",
+    "property": "repeat(4)",
+    "mutation": [
+      "Trie.put(m,name,id)",
+      "Trie.put(Vacant{},name,id)"
+    ],
+    "sha256": "7d6c97792374e5cf8fb6a0a57fddc1d6083e16b5b436e9463225a0e3b3ec1459",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "repeat_grows",
+    "property": "repeat(4)",
+    "mutation": [
+      "(InternTable{v,m},Done{id})",
+      "append_name(m,name,V.Vec.length(String,v))"
+    ],
+    "sha256": "3da3934ace3b1aef0ac3ca10b4162170fa11421cce47e991df4b36956247cbdf",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "reverse_wrong",
+    "property": "unicode(6)",
+    "mutation": [
+      "(InternTable{v,m},Done{name})",
+      "(InternTable{v,m},Done{\"wrong\"})"
+    ],
+    "sha256": "27ed6010b6d14fccfe965205059986b47b4bc797323a2f5a901aa4d9828a9a37",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "wrap_invalid",
+    "property": "full(1)",
+    "mutation": [
+      "V.Vec.get(String,v,id)",
+      "V.Vec.get(String,v,U32.and(id,0))"
+    ],
+    "sha256": "388be4fd65fb2bd26a55a7152c5b53aed21ea3cbd526e8bf5c4bc4958d88fb61",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "exhaustion_success",
+    "property": "full(1)",
+    "mutation": [
+      "(InternTable{v,m},Fail{Exhausted{}})",
+      "(InternTable{v,m},Done{0})"
+    ],
+    "sha256": "98bd4d9420b445d4d1d09a5d3a9064451217da2f765c00aab7897c7658563765",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "failure_forgets",
+    "property": "full(1)",
+    "mutation": [
+      "(InternTable{v,m},Fail{Exhausted{}})",
+      "(InternTable{v,Vacant{}},Fail{Exhausted{}})"
+    ],
+    "sha256": "d778debbb4b77edb3e4707bf3c34efaaed2894765869badea1eec36c6b8a56f1",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  },
+  {
+    "mutant": "wrong_error",
+    "property": "full(1)",
+    "mutation": [
+      "Fail{InvalidId{}}",
+      "Fail{Exhausted{}}"
+    ],
+    "sha256": "b4161373a6a50d0fce788aa3709f3cd5309d2342e7f8f7962dd66bd26dfabe55",
+    "type_check": {
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    "runtime": {
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    "classification": "semantic kill"
+  }
+]

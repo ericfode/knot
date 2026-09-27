@@ -1,0 +1,69 @@
+import Base
+import ./protocol.bend as P
+import ./cases.bend as C
+
+def character(code: U32) -> String:
+  SCon{Chr{code},SNil{}}
+
+def insert(names: List<&2,String>, rest: List<&2,P.Command>) -> List<&2,P.Command>:
+  match names:
+    case Nil{}: rest
+    case Con{name,tail}: Con{P.Intern{name},insert(tail,rest)}
+
+def exercise(names: List<&2,String>, +id: U32, rest: List<&2,P.Command>) -> List<&2,P.Command>:
+  match names:
+    case Nil{}: rest
+    case Con{+name,tail}:
+      Con{P.Find{name},Con{P.Intern{name},Con{P.Resolve{id},exercise(tail,U32.add(id,1),rest)}}}
+
+def check(+names: List<&2,String>, +count: U32, +missing: String) -> Bool:
+  C.check(insert(names,exercise(names,0,
+    Con{P.Intern{missing},Con{P.Find{missing},exercise(names,0,
+      [P.Resolve{count},P.Resolve{4294967295},P.Length{},P.Limit{}])}})),count)
+
+def both(+names: List<&2,String>, +count: U32, +missing: String) -> Bool:
+  Bool.and(check(names,count,missing),check(List.reverse(&2,String,names),count,missing))
+
+def nul_prefix() -> Bool:
+  both([SCon{Chr{97},character(0)},"",SCon{Chr{0},"a"},"a",character(0),"ab","b","aa"],8,
+    SCon{Chr{97},SCon{Chr{0},"b"}})
+
+def codepoints(count: Nat, +first: U32) -> List<&2,String>:
+  match count:
+    case 0n: Nil{}
+    case 1n+p: Con{character(first),codepoints(p,U32.add(first,1))}
+
+def sorted_reverse() -> Bool:
+  both(codepoints(32n,1),32,character(33))
+
+def raw_boundaries() -> Bool:
+  both(["",character(0),character(1),character(127),character(128),character(55295),
+    character(55296),character(57343),character(57344),character(1114111),
+    character(4294967295),character(4294967294),
+    SCon{Chr{4294967295},character(0)},SCon{Chr{0},character(4294967295)}],14,
+    SCon{Chr{4294967295},character(1)})
+
+def scalar_boundaries() -> Bool:
+  both(["",character(0),character(1),character(127),character(128),character(55295),
+    character(57344),character(1114111),character(1114110),
+    SCon{Chr{1114111},character(0)},SCon{Chr{0},character(1114111)}],11,
+    SCon{Chr{1114111},character(1)})
+
+def invalid_scalar(+code: U32) -> Bool:
+  C.check([P.Intern{character(code)},P.Find{character(code)},P.Resolve{0}],1)
+
+def supplementary_prefix() -> Bool:
+  both(["🪢a","🪢","🪢ab",SCon{Chr{129698},character(0)},"🪢b","é","é"],7,"🪢aa")
+
+def prefix_order(+a: String, +b: String, +c: String) -> Bool:
+  Bool.and(check(["p",a,b,c],4,"pd"),check([a,b,c,"p"],4,"pd"))
+
+def prefix_permutations() -> Bool:
+  Bool.and(prefix_order("pax","pby","pcz"),
+  Bool.and(prefix_order("pax","pcz","pby"),
+  Bool.and(prefix_order("pby","pax","pcz"),
+  Bool.and(prefix_order("pby","pcz","pax"),
+  Bool.and(prefix_order("pcz","pax","pby"),prefix_order("pcz","pby","pax"))))))
+
+def all() -> Bool:
+  Bool.and(nul_prefix(),Bool.and(sorted_reverse(),Bool.and(scalar_boundaries(),Bool.and(supplementary_prefix(),prefix_permutations()))))

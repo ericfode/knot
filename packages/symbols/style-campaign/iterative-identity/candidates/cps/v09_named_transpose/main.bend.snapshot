@@ -1,0 +1,80 @@
+import Base
+import 0xd684886d10b431b9dce6c3b2d1ef1980/main.bend as V
+
+type Error is Data:
+  InvalidId{}
+  Exhausted{}
+
+type Face<-R: Type> is Type:
+  Names{use: V.Vec<String> -> Map<&2,Maybe<&2,U32>> -> R}
+  Ids{use: Map<&2,Maybe<&2,U32>> -> V.Vec<String> -> R}
+
+def Table() -> Type:
+  @-R: Type -> Face<R> -> R
+
+def Table.join(names: V.Vec<String>, ids: Map<&2,Maybe<&2,U32>>) -> Table:
+  R => \{
+    Names: use => use(names,ids);
+    Ids:   use => use(ids,names)}
+
+def Table.bounded(limit: U32) -> Table:
+  Table.join(V.Vec.bounded(String,limit),Map.new(&2,Maybe<&2,U32>))
+
+def Table.new() -> Table:
+  Table.join(V.Vec.new(String),Map.new(&2,Maybe<&2,U32>))
+
+def metadata(pair: V.Vec<String> & U32) -> Map<&2,Maybe<&2,U32>> -> Table & U32:
+  (names,n) = pair
+  ids => (Table.join(names,ids),n)
+
+def Table.length(t: Table) -> Table & U32:
+  t(Table & U32,Names{names => metadata(V.Vec.length(String,names))})
+
+def Table.limit(t: Table) -> Table & U32:
+  t(Table & U32,Names{names => metadata(V.Vec.limit(String,names))})
+
+def found(pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>)
+  -> V.Vec<String> -> Table & Maybe<&2,U32>:
+  (ids,id) = pair
+  names => (Table.join(names,ids),id)
+
+def Table.find(t: Table, name: String) -> Table & Maybe<&2,U32>:
+  t(Table & Maybe<&2,U32>,Ids{ids => found(Map.get(Maybe<&2,U32>,None{},ids,name))})
+
+def inserted(+name: String, +id: U32, pair: V.Vec<String> & Result<V.Error,Unit>)
+  -> Map<&2,Maybe<&2,U32>> -> Table & Result<Error,U32>:
+  (names,result) = pair
+  match result:
+    case Fail{error}:
+      ids => (Table.join(names,ids),Fail{Exhausted{}})
+    case Done{unit}:
+      ids => (Table.join(names,Map.set(&2,Maybe<&2,U32>,ids,name,Some{id})),Done{id})
+
+def append_name(+name: String, pair: V.Vec<String> & U32)
+  -> Map<&2,Maybe<&2,U32>> -> Table & Result<Error,U32>:
+  (names,id) = pair
+  inserted(name,id,V.Vec.push(String,names,name))
+
+def intern_found(+name: String, pair: Map<&2,Maybe<&2,U32>> & Maybe<&2,U32>)
+  -> V.Vec<String> -> Table & Result<Error,U32>:
+  (ids,lookup) = pair
+  match lookup:
+    case Some{id}:
+      names => (Table.join(names,ids),Done{id})
+    case None{}:
+      names => append_name(name,V.Vec.length(String,names),ids)
+
+def Table.intern(t: Table, +name: String) -> Table & Result<Error,U32>:
+  t(Table & Result<Error,U32>,Ids{ids => intern_found(name,Map.get(Maybe<&2,U32>,None{},ids,name))})
+
+def resolved(pair: V.Vec<String> & Result<V.Error,String>)
+  -> Map<&2,Maybe<&2,U32>> -> Table & Result<Error,String>:
+  (names,result) = pair
+  match result:
+    case Fail{error}:
+      ids => (Table.join(names,ids),Fail{InvalidId{}})
+    case Done{name}:
+      ids => (Table.join(names,ids),Done{name})
+
+def Table.resolve(t: Table, id: U32) -> Table & Result<Error,String>:
+  t(Table & Result<Error,String>,Names{names => resolved(V.Vec.get(String,names,id))})

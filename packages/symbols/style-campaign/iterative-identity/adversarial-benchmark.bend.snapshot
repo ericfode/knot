@@ -1,0 +1,33 @@
+import Base
+import ./main.bend as S
+import ./benchmark.bend as B
+
+def name(reverse: Bool, total: U32, index: U32) -> String:
+  match reverse:
+    case False{}: SCon{Chr{U32.add(index,1)},SNil{}}
+    case True{}: SCon{Chr{U32.sub(total,index)},SNil{}}
+
+def verify(count: Nat, +index: U32, +total: U32, +reverse: Bool,
+  table: S.Table, errors: U32) -> U32:
+  match count:
+    case 0n: errors
+    case 1n+p:
+      B.after_repeat(verify(p,U32.add(index,1),total,reverse),index,
+        name(reverse,total,index),errors,S.Table.intern(table,name(reverse,total,index)))
+
+def populate(count: Nat, +index: U32, +total: U32, +reverse: Bool,
+  done: S.Table -> U32 -> U32, table: S.Table, errors: U32) -> U32:
+  match count:
+    case 0n: done(table,errors)
+    case 1n+p:
+      B.inserted(populate(p,U32.add(index,1),total,reverse,done),index,errors,
+        S.Table.intern(table,name(reverse,total,index)))
+
+def workload(+count: Nat, +reverse: Bool) -> U32:
+  +total = U32.from_nat(count)
+  populate(count,0,total,reverse,verify(count,0,total,reverse),S.Table.bounded(total),0)
+
+def repeated(times: Nat, +count: Nat, +reverse: Bool) -> U32:
+  match times:
+    case 0n: 0
+    case 1n+p: U32.add(workload(count,reverse),repeated(p,count,reverse))

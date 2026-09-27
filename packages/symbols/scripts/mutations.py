@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """Only orchestrates Bend checks. Each mutant is type-checked before its unchanged test runs."""
-import hashlib,json,pathlib,subprocess
+import hashlib,json,os,pathlib,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[3]
 PKG=ROOT/'packages/symbols'
 BEND=ROOT/'scripts/bend-reference'
+OUT=PKG/os.environ.get('SYMBOLS_RECEIPTS_DIR','receipts/working')
+OUT.mkdir(parents=True,exist_ok=True)
 source=(PKG/'main.bend').read_text()
 mutants=[
- ('alias_ids','Some{id})},Done{id})','Some{id})},Done{0})','repeat',4),
- ('forget_forward','Map.set(&2,Maybe<&2,U32>,m,name,Some{id})','Map.set(&2,Maybe<&2,U32>,Map.new(&2,Maybe<&2,U32>),name,Some{id})','repeat',4),
+ ('alias_ids','(InternTable{v,Trie.put(m,name,id)},Done{id})','(InternTable{v,Trie.put(m,name,id)},Done{0})','repeat',4),
+ ('forget_forward','Trie.put(m,name,id)','Trie.put(Vacant{},name,id)','repeat',4),
  ('repeat_grows','(InternTable{v,m},Done{id})','append_name(m,name,V.Vec.length(String,v))','repeat',4),
  ('reverse_wrong','(InternTable{v,m},Done{name})','(InternTable{v,m},Done{"wrong"})','unicode',6),
  ('wrap_invalid','V.Vec.get(String,v,id)','V.Vec.get(String,v,U32.and(id,0))','full',1),
  ('exhaustion_success','(InternTable{v,m},Fail{Exhausted{}})','(InternTable{v,m},Done{0})','full',1),
- ('failure_forgets','(InternTable{v,m},Fail{Exhausted{}})','(InternTable{v,Map.new(&2,Maybe<&2,U32>)},Fail{Exhausted{}})','full',1),
+ ('failure_forgets','(InternTable{v,m},Fail{Exhausted{}})','(InternTable{v,Vacant{}},Fail{Exhausted{}})','full',1),
  ('wrong_error','Fail{InvalidId{}}','Fail{Exhausted{}}','full',1),
 ]
 receipts=[]
@@ -40,5 +42,5 @@ for label,old,new,case,limit in mutants:
     result=run('bun',str(dest/'test.js'))
     assert result['exit']==0 and result['stdout'].strip()=='0',(label,result)
     receipts.append({'mutant':label,'property':f'{case}({limit})','mutation':[old,new],'sha256':hashlib.sha256(mutated.encode()).hexdigest(),'type_check':checked,'baseline':baseline_run,'runtime':result,'classification':'semantic kill'})
-(PKG/'receipts/mutations.json').write_text(json.dumps(receipts,indent=2)+'\n')
+(OUT/'mutations.json').write_text(json.dumps(receipts,indent=2)+'\n')
 print(f'{len(receipts)} type-correct semantic mutants killed')

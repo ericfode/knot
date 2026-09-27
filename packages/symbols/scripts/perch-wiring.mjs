@@ -5,6 +5,8 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {main} from '../../../node_modules/@lakeday/perch/dist/cli.mjs';
 const pkg=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const receipts=path.resolve(pkg,process.env.SYMBOLS_RECEIPTS_DIR||'receipts/working');
+fs.mkdirSync(receipts,{recursive:true});
 process.chdir(path.resolve(pkg,'../..'));
 const names=['law-domain-inhabited','law-observable-essence','law-public-contract-coverage','law-independent-model','law-state-composition','law-boundaries-and-exhaustion','law-mutation-sensitivity','law-proof-claim-integrity','symbols-bidirectional-preservation'];
 let requests=[];
@@ -24,6 +26,6 @@ try {
   const json=JSON.parse(output.join('\n')); assert.equal(json.checked,selected.length); assert.equal(requests.length,1); assert.equal(Object.keys(requests[0].questions).length,selected.length);
   results.push({packet,checked:json.checked,requests:requests.length});
  }
- fs.writeFileSync(path.join(pkg,'receipts/perch-wiring.json'),JSON.stringify({mode:'offline synthetic provider; no live calibration',results},null,2)+'\n');
+ fs.writeFileSync(path.join(receipts,'perch-wiring.json'),JSON.stringify({mode:'offline synthetic provider; no live calibration',results},null,2)+'\n');
  console.log('PASS: 9 review rules and 1 dedicated rule on each of 3 controls; nonzero complete requests. Offline wiring only.');
 } finally {globalThis.fetch=real;}

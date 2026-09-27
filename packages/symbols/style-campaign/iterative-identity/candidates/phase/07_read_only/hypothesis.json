@@ -1,0 +1,11 @@
+{
+  "reading_hypothesis": "The forward trie contains only immutable scalar data and recursive scalar tries. Declare that fact as Data and let lookup return only its answer, removing ownership reconstruction from the search grammar. The Table remains affine because its reverse Vec remains owned.",
+  "quantity_choice": "Table.find and Table.intern explicitly retain +m while passing the immutable trie to read-only Trie.get; no Vec or Table is duplicated.",
+  "preserved_mechanism": "06 prefix-root Here invariant, red-black sibling rotations, insertion and blackening remain byte-for-byte unchanged.",
+  "expected_effect": "Less/same/more should read as search geometry alone; native lookup should no longer rebuild each visited path. Performance remains a measurement question.",
+  "risks": [
+    "Data permits sharing the forward value; immutable update behavior must preserve the retained old value.",
+    "Source-level Data does not itself establish native lowering or performance; coordinator measurements remain required."
+  ],
+  "fixed_inputs": "Every original non-main Bend file copied unchanged from the package; no model, laws, assertions, expected observations or rubric changes."
+}
