@@ -1,0 +1,51 @@
+{
+  "status": "semantic-mismatch",
+  "node": "v22.22.3",
+  "module_sha256": "9b2f5f00f805cdc2b2842c2c510d39524ed9fae0503c7fd87cc97837e2e4f17f",
+  "oracle_sha256": "fa36275b9b47e957442957c4fa9e86d366246f8bed6eada70bc0639479d43e9e",
+  "observations": 13621,
+  "instances": 3534,
+  "installed_boundary_states": 2,
+  "lifecycle_checks": 5,
+  "imports": [],
+  "exports": [
+    {
+      "name": "init",
+      "kind": "function"
+    },
+    {
+      "name": "put",
+      "kind": "function"
+    },
+    {
+      "name": "alloc",
+      "kind": "function"
+    },
+    {
+      "name": "take",
+      "kind": "function"
+    },
+    {
+      "name": "release",
+      "kind": "function"
+    },
+    {
+      "name": "memory",
+      "kind": "memory"
+    }
+  ],
+  "failure": {
+    "name": "AssertionError",
+    "message": "unexpected memory write",
+    "row": {
+      "id": "lifecycle",
+      "operation": "reinit",
+      "args": [
+        42,
+        2,
+        0
+      ]
+    },
+    "actualStatus": 10
+  }
+}

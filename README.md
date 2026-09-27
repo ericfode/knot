@@ -27,7 +27,10 @@ whole-compiler bootstrap and compiler-generated GPU execution. The first
 arguments, flat field patterns, quantities and parent reconstruction, and runs
 them in the independent Bend evaluator. A [bounded owning store](research/owned-store/README.md)
 now qualifies affine transfer, rejection and generation retirement on seed CPU
-backends. Runtime integration and Wasm field lowering remain pending.
+backends. A [Bend-emitted flat store](research/flat-store/README.md) executes the
+word-payload transitions in actual Wasm, with complete logical-state comparison
+against the independent Bend model. Compiler integration, general value lifetime
+and Wasm field lowering remain pending.
 
 The first [adaptive-task prototype](research/adaptive-tasks/README.md) is now
 executable: 12 checked Bend laws, owned checkpoints and slots, and 38 actual

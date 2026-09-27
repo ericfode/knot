@@ -1,0 +1,79 @@
+{
+  "status": "semantic-mismatch",
+  "node": "v22.22.3",
+  "module_sha256": "24803af1180e337850ae8d4bf7b4166b367f8c172c8eb51b7e198320f3187979",
+  "oracle_sha256": "fa36275b9b47e957442957c4fa9e86d366246f8bed6eada70bc0639479d43e9e",
+  "observations": 3,
+  "instances": 2,
+  "installed_boundary_states": 0,
+  "lifecycle_checks": 0,
+  "imports": [],
+  "exports": [
+    {
+      "name": "init",
+      "kind": "function"
+    },
+    {
+      "name": "put",
+      "kind": "function"
+    },
+    {
+      "name": "alloc",
+      "kind": "function"
+    },
+    {
+      "name": "take",
+      "kind": "function"
+    },
+    {
+      "name": "release",
+      "kind": "function"
+    },
+    {
+      "name": "memory",
+      "kind": "memory"
+    }
+  ],
+  "failure": {
+    "name": "AssertionError",
+    "message": "word mismatch\n+ actual - expected\n... Skipped lines\n\n  [\n    41,\n    1,\n    1,\n    4294967295,\n...\n    0,\n+   0,\n-   7,\n    4294967295\n  ]\n",
+    "row": {
+      "id": "1",
+      "operation": "put",
+      "args": [
+        0,
+        7
+      ],
+      "expectedStatus": 0,
+      "expectedWords": [
+        41,
+        1,
+        1,
+        4294967295,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        7,
+        4294967295
+      ]
+    },
+    "actualStatus": 0,
+    "actualWords": [
+      41,
+      1,
+      1,
+      4294967295,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      4294967295
+    ]
+  }
+}

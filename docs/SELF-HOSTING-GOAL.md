@@ -5,7 +5,7 @@ Approved 2026-09-26. The active goal starts at executable enum checkpoint
 
 | Milestone | Required evidence | State |
 | --- | --- | --- |
-| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: structural checking/evaluation and seed CPU owning-store qualification |
+| Structural programs | Fields, pattern bindings, owned storage, transfer/drop, sound first-order structural recursion; tree transformations in actual Wasm, ownership and exhaustion negatives | In progress: structural checking/evaluation, seed CPU owning store and Bend-emitted word-store transitions in real Wasm |
 | Compiler-shaped programs | Generic datatypes, dependent computation, quantities, closures/captures, local modules; generic AST walker and fueled evaluator | Pending |
 | Language/library closure | Conversion, laws/proofs/rewrites, closed templates, required pure Base execution; Knot checks the whole pinned unmodified Base with privileged capabilities inventoried | Pending |
 | Compiler components | Actual compiler components and exact transitive dependencies execute as Wasm through a narrow byte host | Pending |
@@ -50,8 +50,18 @@ allocator or lifetime strategy is selected. Follow-up
 `f4413c1` aligns the contracts with parent reconstruction, match identity and
 compact live-field slots.
 
-Next: checked flat Wasm/GPU record layout, live-field projection, handle-word
-encoding and actual execution of the storage transitions. Arena-ID allocation
+The [flat-store increment](../research/flat-store/README.md) now emits a 1,050-byte
+Wasm module from Bend. Native/Bun emitter bytes agree; each lane runs 3,534 store
+instances and compares 13,621 complete step observations against the independent
+Bend list model. Fifteen codec/encoding laws are filled, 24 literal probes and
+seven lifecycle checks pass per backend, and nine valid-module semantic mutants
+are rejected. This qualifies word-store transitions and bounded address/word
+encoding, not generic object reclamation or device execution. A discovered
+aliased-buffer assertion is repaired and distinguished by a reinit-write mutant;
+the original receipt remains qualified as historical evidence.
+
+Next: compact mixed-width field layout, live-field projection, an independently
+qualified twelve-byte locator transport and GPU storage transitions. Arena-ID allocation
 and restore require a lifetime contract; suspended roots, shared Data and partial
 joins still need separate reclamation probes. Integrate storage into field
 lowering and add sound structural descent. Recursion and real Wasm tree execution

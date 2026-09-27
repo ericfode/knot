@@ -1,0 +1,72 @@
+{
+  "status": "semantic-mismatch",
+  "node": "v22.22.3",
+  "module_sha256": "0676b0f2d15da0ec3feddfece3e3ec0b0738d74e4ccac5d73b0c519018c18499",
+  "oracle_sha256": "fa36275b9b47e957442957c4fa9e86d366246f8bed6eada70bc0639479d43e9e",
+  "observations": 0,
+  "instances": 1,
+  "installed_boundary_states": 0,
+  "lifecycle_checks": 0,
+  "imports": [],
+  "exports": [
+    {
+      "name": "init",
+      "kind": "function"
+    },
+    {
+      "name": "put",
+      "kind": "function"
+    },
+    {
+      "name": "alloc",
+      "kind": "function"
+    },
+    {
+      "name": "take",
+      "kind": "function"
+    },
+    {
+      "name": "release",
+      "kind": "function"
+    },
+    {
+      "name": "memory",
+      "kind": "memory"
+    }
+  ],
+  "failure": {
+    "name": "AssertionError",
+    "message": "word mismatch\n+ actual - expected\n\n  [\n    41,\n    0,\n    1,\n-   4294967295,\n-   4294967295,\n-   4294967295,\n    0,\n    0,\n+   0,\n+   0,\n+   0\n  ]\n",
+    "row": {
+      "id": "0",
+      "operation": "init",
+      "args": [
+        41,
+        0,
+        1
+      ],
+      "expectedStatus": 0,
+      "expectedWords": [
+        41,
+        0,
+        1,
+        4294967295,
+        4294967295,
+        4294967295,
+        0,
+        0
+      ]
+    },
+    "actualStatus": 0,
+    "actualWords": [
+      41,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
