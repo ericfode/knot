@@ -42,3 +42,22 @@ until the pair verdicts are recorded.
 
 Rung B's `Purse` type replaced `Word`, which Base reserves; the rename is the
 only compiler-driven change.
+
+## Pair verdicts, 2026-09-27
+
+Five pairs answered on the page, no ties, nothing flagged too much:
+
+| Pair | More fun to read |
+| --- | --- |
+| current code vs B | B |
+| current code vs C | C |
+| B vs C | C |
+| B vs F | F |
+| C vs F | F, "I want the algebra to show through but to keep the more human metaphor" |
+
+Order: current < B < C < F. Rung G, [G-tolls.bend](G-tolls.bend), is that
+synthesis: the affine algebra as tolls on a purse (rate, fee, interest, levy,
+compound, bill) inside the held/owed/kept vocabulary. The figure manifests
+`docs/style-campaign/figures/ladder-*.json` let the judge review each rung as
+its own figure after the user's ranking, so the two readings can be compared
+on the same files.
