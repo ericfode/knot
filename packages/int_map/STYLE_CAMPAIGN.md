@@ -1,5 +1,29 @@
 # IntMap style campaign
 
+## Follow-up edit-locality-1 — retained additive proof
+
+The user's 2026-09-27 follow-up authorizes proving the shared recurrence's lookup
+consequences while preserving runtime and all prior proofs. The
+[bounded report](campaigns/edit-locality-1/README.md) retains the preregistration,
+first parser failure, single successful diagnostic retry and complete gates.
+Two projection premises yield endpoint lookup and separated-path preservation;
+raw Branch and pruning branch discharge those premises, giving four exact public
+specializations. Eight additional laws and all 23 original laws check; runtime,
+contracts, assertions and historical receipts remain byte-identical.
+
+Keep the additive proof as a reusable explanation. Equality bookkeeping remains
+visible: the generic declarations have uncertain compression and below-target
+memetic/anticipation/payoff results. Perch's observer cannot parse imported
+template-law fills; an exact combined review copy receives supplementary ratings.
+All eight pairs are reviewed, with three meeting all five role-scaled targets.
+The expanded complete composition remains below all three expressive targets.
+Thirty-one targeted semantic checks report no findings. No complete style pass,
+further candidate, publication, or new performance comparison is claimed.
+
+Shared Perch v6, merged at `7750e5b`, incorporates the user's separate observation
+that vacuity does not preclude memetic appeal. Historical v5 scores below retain
+their original meaning; they are not reinterpreted as v6 judgments.
+
 ## Batch int-map-paths-1 — pre-registered hypothesis
 
 Recorded before candidate generation or judgment. Model: GPT-6 Astra, high

@@ -1,0 +1,138 @@
+# SPDX-License-Identifier: MIT-0
+# Mechanical review view; canonical source: locality/LAWS.bend + locality/PROOF.bend.
+import Base
+import ../../main.bend as M
+import ../../LAWS.bend as L
+import ../../PROOF.bend as Original
+
+# Rebuilding preserves both projections; the endpoint itself is unrestricted.
+law edit_here:
+  for ~join: @-T: Data -> M.IntMap<T> -> M.IntMap<T> -> M.IntMap<T>
+  for ~left: @-T: Data -> @+a: M.IntMap<T> -> @+b: M.IntMap<T> -> {M.low(T,join(T,a,b)) == a : M.IntMap<T>}
+  for ~right: @-T: Data -> @+a: M.IntMap<T> -> @+b: M.IntMap<T> -> {M.high(T,join(T,a,b)) == b : M.IntMap<T>}
+  for -V: Data
+  for +path: List<&2,Bool>
+  for +m: M.IntMap<V>
+  for +end: M.IntMap<V>
+  {M.get_path(V,path,M.edit_path(~join,V,path,m,end)) == M.value(V,end) : Maybe<&2,V>}
+
+# A first differing bit separates the edited spine from the observed subtree.
+law edit_away:
+  for ~join: @-T: Data -> M.IntMap<T> -> M.IntMap<T> -> M.IntMap<T>
+  for ~left: @-T: Data -> @+a: M.IntMap<T> -> @+b: M.IntMap<T> -> {M.low(T,join(T,a,b)) == a : M.IntMap<T>}
+  for ~right: @-T: Data -> @+a: M.IntMap<T> -> @+b: M.IntMap<T> -> {M.high(T,join(T,a,b)) == b : M.IntMap<T>}
+  for -V: Data
+  for +p: List<&2,Bool>
+  for +q: List<&2,Bool>
+  for +m: M.IntMap<V>
+  for +end: M.IntMap<V>
+  for distinct: L.separated(p,q)
+  {M.get_path(V,q,M.edit_path(~join,V,p,m,end)) == M.get_path(V,q,m) : Maybe<&2,V>}
+
+# Raw Branch projects by reduction. Pruning uses L.branch_low/L.branch_high.
+law raw_low:
+  for -V: Data
+  for +lo: M.IntMap<V>
+  for +hi: M.IntMap<V>
+  {M.low(V,M.Branch{lo,hi}) == lo : M.IntMap<V>}
+
+law raw_high:
+  for -V: Data
+  for +lo: M.IntMap<V>
+  for +hi: M.IntMap<V>
+  {M.high(V,M.Branch{lo,hi}) == hi : M.IntMap<V>}
+
+# The original public propositions, now derived from the shared recurrence.
+law set_get:
+  for -V: Data
+  for +m: M.IntMap<V>
+  for +key: U32
+  for +v: V
+  {M.IntMap.get(V,M.IntMap.set(V,m,key,v),key) == Some{v} : Maybe<&2,V>}
+
+law remove_get:
+  for -V: Data
+  for +m: M.IntMap<V>
+  for +key: U32
+  {M.IntMap.get(V,M.IntMap.remove(V,m,key),key) == None{} : Maybe<&2,V>}
+
+law set_preserves:
+  for -V: Data
+  for +m: M.IntMap<V>
+  for +key: U32
+  for +other: U32
+  for +v: V
+  for distinct: L.separated(M.bits(32n,key),M.bits(32n,other))
+  {M.IntMap.get(V,M.IntMap.set(V,m,key,v),other) == M.IntMap.get(V,m,other) : Maybe<&2,V>}
+
+law remove_preserves:
+  for -V: Data
+  for +m: M.IntMap<V>
+  for +key: U32
+  for +other: U32
+  for distinct: L.separated(M.bits(32n,key),M.bits(32n,other))
+  {M.IntMap.get(V,M.IntMap.remove(V,m,key),other) == M.IntMap.get(V,m,other) : Maybe<&2,V>}
+
+
+def edit_here(join,left,right,V,path,m,end):
+  match path:
+    case Nil{}: {==}
+    case Con{False{},+tail}:
+      +edited = M.edit_path(~join,V,tail,M.low(V,m),end)
+      %Equal.sym(M.IntMap<V>,M.low(V,join(V,edited,M.high(V,m))),edited,
+        left(V,edited,M.high(V,m))) : {M.get_path(V,tail,_) == M.value(V,end) : Maybe<&2,V>}
+      edit_here(~join,~left,~right,V,tail,M.low(V,m),end)
+    case Con{True{},+tail}:
+      +edited = M.edit_path(~join,V,tail,M.high(V,m),end)
+      %Equal.sym(M.IntMap<V>,M.high(V,join(V,M.low(V,m),edited)),edited,
+        right(V,M.low(V,m),edited)) : {M.get_path(V,tail,_) == M.value(V,end) : Maybe<&2,V>}
+      edit_here(~join,~left,~right,V,tail,M.high(V,m),end)
+
+def edit_away(join,left,right,V,p,q,m,end,distinct):
+  match p:
+    case Nil{}:
+      match distinct:
+    case Con{False{},+pt}:
+      match q:
+        case Nil{}:
+          match distinct:
+        case Con{False{},+qt}:
+          +edited = M.edit_path(~join,V,pt,M.low(V,m),end)
+          %Equal.sym(M.IntMap<V>,M.low(V,join(V,edited,M.high(V,m))),edited,
+            left(V,edited,M.high(V,m))) : {M.get_path(V,qt,_) == M.get_path(V,qt,M.low(V,m)) : Maybe<&2,V>}
+          edit_away(~join,~left,~right,V,pt,qt,M.low(V,m),end,distinct)
+        case Con{True{},qt}:
+          +edited = M.edit_path(~join,V,pt,M.low(V,m),end)
+          Equal.cong(M.IntMap<V>,Maybe<&2,V>,x => M.get_path(V,qt,x),
+            M.high(V,join(V,edited,M.high(V,m))),M.high(V,m),right(V,edited,M.high(V,m)))
+    case Con{True{},+pt}:
+      match q:
+        case Nil{}:
+          match distinct:
+        case Con{False{},qt}:
+          +edited = M.edit_path(~join,V,pt,M.high(V,m),end)
+          Equal.cong(M.IntMap<V>,Maybe<&2,V>,x => M.get_path(V,qt,x),
+            M.low(V,join(V,M.low(V,m),edited)),M.low(V,m),left(V,M.low(V,m),edited))
+        case Con{True{},+qt}:
+          +edited = M.edit_path(~join,V,pt,M.high(V,m),end)
+          %Equal.sym(M.IntMap<V>,M.high(V,join(V,M.low(V,m),edited)),edited,
+            right(V,M.low(V,m),edited)) : {M.get_path(V,qt,_) == M.get_path(V,qt,M.high(V,m)) : Maybe<&2,V>}
+          edit_away(~join,~left,~right,V,pt,qt,M.high(V,m),end,distinct)
+
+def raw_low(V,lo,hi): {==}
+def raw_high(V,lo,hi): {==}
+
+def set_get(V,m,key,v):
+  edit_here(~(T => lo => hi => M.Branch{lo,hi}),~raw_low,~raw_high,
+    V,M.bits(32n,key),m,M.Entry{key,v})
+
+def remove_get(V,m,key):
+  edit_here(~M.branch,~L.branch_low,~L.branch_high,V,M.bits(32n,key),m,M.Tip{})
+
+def set_preserves(V,m,key,other,v,distinct):
+  edit_away(~(T => lo => hi => M.Branch{lo,hi}),~raw_low,~raw_high,
+    V,M.bits(32n,key),M.bits(32n,other),m,M.Entry{key,v},distinct)
+
+def remove_preserves(V,m,key,other,distinct):
+  edit_away(~M.branch,~L.branch_low,~L.branch_high,
+    V,M.bits(32n,key),M.bits(32n,other),m,M.Tip{},distinct)

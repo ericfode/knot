@@ -676,3 +676,32 @@ memetic control. Historical inputs, labels and scores remain unchanged.
 Validation: 40 complete distributions; exact request checks; unchanged other
 axes/targets; 84 offline tests and law wiring pass. No Bend code changed. A live
 Bend-composition calibration remains outside this prose experiment's evidence.
+
+## 2026-09-27 — Imported template-law fills need observer context
+
+The additive [IntMap edit-locality proof](../packages/int_map/campaigns/edit-locality-1/README.md)
+checks under the pinned compiler, but the observer rejects its recursive `~join`
+argument. `scripts/perch-bend.mjs` supplies imported law fills with `x: 0`, so
+the body loses its template parameter context. The
+[parser receipt](../packages/int_map/campaigns/edit-locality-1/parser-observations.json)
+records eight parsed laws, zero parsed canonical proof fills, and the exact
+line15 failure. This is a confirmed observer coverage gap, not a compiler or
+proof defect. Original source-check/style preflight failures remain evidence.
+
+A mechanical combined law/fill view, with only local namespace qualification
+and import paths changed, passes the compiler and observer. Supplementary
+reviews cover its eight pairs. The first composition lacked original fixture
+collaborators; one expanded group supplies them and reuses all eight declaration
+answers plus the task answer. All six complete files fit the context bound.
+The expanded composition still falls below its three expressive targets; no
+canonical automatic style pass is claimed. Thirty-one targeted semantic checks
+have no findings. All raw distributions and source mappings are preserved.
+
+Prevention: give imported template-law fills validated signature context, or
+classify missing context as unsupported instead of reporting invalid Bend.
+Preflight that boundary before concurrent source reviews. Include complete
+declared collaborators in composition requests; preserve old answers when only
+composition context changes. A separate candidate-generation mistake placed
+local bindings before a later parameter match; the single compiler retry moved
+them beneath that match. Future proofs should preserve the pinned language's
+match-before-binding order. Measured avoidable rework: not recorded.
