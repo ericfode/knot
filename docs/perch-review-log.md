@@ -547,3 +547,28 @@ check exercises a level-5 answer and its contribution to target probability.
 and the eight-law wiring gate. These checks establish wiring, not taste
 calibration. No live style ratings were requested. Human calibration of the new
 level remains pending; earlier receipts keep their original rubric identity.
+
+## 2026-09-26 — Critical declarations require Galaxy brain
+
+The user made Galaxy brain mandatory for critical functions, laws and proofs
+and authorized another Perch value to identify them. A separate binary
+`criticality` Score now classifies each such declaration by its contract role.
+Critical or uncertain classification requires at least 60% mass on big-brain
+level 5; truncated context cannot grant the ordinary bar. Missing classifications
+fail review. Receipts preserve the distribution and effective target, including
+on reuse and campaign assessment. The other two taste axes still apply.
+
+The [bounded check](perch-calibration/criticality-2026-09-26/README.md) records
+expectations before model review and four responses from `jev-1.13.0`. The
+checker function, affine-use law and its proof classified critical at 1.00,
+0.92 and 0.80; the position formatter classified noncritical at 0.02. All three
+critical declarations failed the Galaxy-brain requirement. The command returned
+attention status rather than accepting their lower grades. Checker helper
+context was truncated and remains disclosed. No source or rubric was rewritten
+to improve these results; no classifier accuracy claim follows from four cases.
+
+`npm run lint:verify` passes 31 offline tests plus the eight-law wiring gate,
+including missing/uncertain criticality, law/proof forms, probability thresholds
+and receipt reuse. These establish enforcement independently of the model's
+taste. Future calibration needs fresh held-out human judgments; deterministic
+proof, type, quantity, backend and performance gates retain their authority.

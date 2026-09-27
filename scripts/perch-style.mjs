@@ -54,25 +54,58 @@ export function rankRows(rows, dimensions, nearTieGap) {
   });
 }
 
+const reviewRubrics = (config, kind) => kind === 'bend_datatype' ? config.dimensions : [...config.dimensions, config.criticality];
+
+function validateStyleTarget(target, config) {
+  const dimension = config.dimensions.find(d => d.id === target?.dimension);
+  if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
+      || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
+    throw new Error('Invalid style target');
+  }
+}
+
+function criticalityFor(row, config) {
+  if (row.kind === 'bend_datatype') return { target: row.target, status: 'not_applicable', probability_critical: null };
+  const policy = config.criticality;
+  const answer = validateScore({ ...row.answers?.[policy.id], type: 'score' }, policy.levels.length);
+  const probability = answer.probabilities[1] / (answer.probabilities[0] + answer.probabilities[1]);
+  // Limited context cannot establish that a declaration deserves the lower bar.
+  const status = probability >= policy.minimum_probability ? 'critical'
+    : !row.context?.truncated && probability <= 1 - policy.minimum_probability ? 'noncritical' : 'uncertain';
+  return { target: row.target, status, probability_critical: probability, context_truncated: row.context?.truncated ?? false };
+}
+
 export function assessStyle(rows, config) {
   if (!Array.isArray(config.style_targets) || config.style_targets.length !== config.dimensions.length
       || new Set(config.style_targets.map(t => t.dimension)).size !== config.dimensions.length) throw new Error('Each style dimension needs one target');
-  for (const target of config.style_targets) {
-    const dimension = config.dimensions.find(d => d.id === target?.dimension);
-    if (!dimension || !Number.isInteger(target.level) || target.level < 1 || target.level >= dimension.levels.length
-        || !Number.isFinite(target.minimum_probability) || target.minimum_probability <= 0.5 || target.minimum_probability > 1) {
-      throw new Error('Invalid style target');
-    }
+  for (const target of config.style_targets) validateStyleTarget(target, config);
+  const policy = config.criticality;
+  if (!policy?.id || config.dimensions.some(d => d.id === policy.id) || !policy.title || !policy.instructions
+      || !Array.isArray(policy.levels) || policy.levels.length !== 2 || policy.levels.some(x => typeof x !== 'string' || !x.trim())
+      || !Number.isFinite(policy.minimum_probability) || policy.minimum_probability <= 0.5 || policy.minimum_probability > 1) {
+    throw new Error('Criticality needs a separate binary Score rubric');
   }
-  return rows.flatMap(row => config.style_targets.map(target => {
-    const answer = row.answers[target.dimension];
-    const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
-    const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
-    return { target: row.target, dimension: target.dimension, target_level: target.level,
-      probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
-        : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain',
-      context_truncated: row.context?.truncated ?? false };
-  }));
+  validateStyleTarget(policy.style_target, config);
+  const ordinary = config.style_targets.find(t => t.dimension === policy.style_target.dimension);
+  if (policy.style_target.level <= ordinary.level || policy.style_target.minimum_probability < ordinary.minimum_probability) {
+    throw new Error('Criticality must require a stricter style target');
+  }
+  return rows.flatMap(row => {
+    const criticality = criticalityFor(row, config);
+    const strict = ['critical', 'uncertain'].includes(criticality.status);
+    return config.style_targets.map(base => {
+      const target = strict && base.dimension === policy.style_target.dimension ? policy.style_target : base;
+      const answer = row.answers[target.dimension];
+      const total = Object.values(answer.probabilities).reduce((a, b) => a + b, 0);
+      const probability = Object.entries(answer.probabilities).reduce((sum, [level, p]) => sum + (Number(level) >= target.level ? p : 0), 0) / total;
+      return { target: row.target, dimension: target.dimension, target_level: target.level,
+        minimum_probability: target.minimum_probability, criticality_status: criticality.status,
+        target_basis: target === base ? 'default' : 'criticality',
+        probability_at_target: probability, status: probability >= target.minimum_probability ? 'meets_target'
+          : probability <= 1 - target.minimum_probability ? 'below_target' : 'uncertain',
+        context_truncated: row.context?.truncated ?? false };
+    });
+  });
 }
 
 function datatypeContext(file, path, declaration) {
@@ -134,6 +167,7 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT) 
       const context = declaration.syntax_kind === 'bend_datatype' ? datatypeContext(file, path, declaration)
         : await file.review.forUnit(declaration.qualified_name);
       const state = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
+        path, declaration_kind: declaration.syntax_kind,
         source: bendDeclarationSource(file.source, declaration), ...context.seen };
       if (Buffer.byteLength(JSON.stringify(state)) > 60000) throw new Error(`Style context too large: ${identity}`);
       candidates.push({ target: identity, path, kind: declaration.syntax_kind,
@@ -188,12 +222,13 @@ export async function evaluateStyle(candidates, config, {
 } = {}) {
   const key = env.PERCH_API_KEY || env.TYPESAFE_API_KEY;
   if (!key) throw new Error('PERCH_API_KEY is not set');
-  const questions = Object.fromEntries(config.dimensions.map(d => [d.id,
-    { type: 'score', instructions: d.instructions, criteria: d.levels }]));
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error('Concurrency must be 1..16');
   const rows = new Array(candidates.length);
   let cursor = 0, failure = null;
   async function evaluate(candidate) {
+    const rubrics = reviewRubrics(config, candidate.kind);
+    const questions = Object.fromEntries(rubrics.map(d => [d.id,
+      { type: 'score', instructions: d.instructions, criteria: d.levels }]));
     const started = performance.now();
     transport.requests++;
     const response = await fetchImpl(env.PERCH_BASE_URL || 'https://api.typesafe.ai/v1/systemone', {
@@ -204,7 +239,7 @@ export async function evaluateStyle(candidates, config, {
     if (!response.ok) throw new Error(`Style provider HTTP ${response.status}; no ranking produced`);
     const body = await response.json().catch(() => { throw new Error('Invalid style provider JSON'); });
     if (typeof body?.model !== 'string' || !body.model) throw new Error('Missing resolved style model');
-    const answers = Object.fromEntries(config.dimensions.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
+    const answers = Object.fromEntries(rubrics.map(d => [d.id, validateScore(body.answers?.[d.id], d.levels.length)]));
     transport.responses++;
     const { state, ...metadata } = candidate;
     return { ...metadata, model: body.model, elapsed_ms: Math.round(performance.now() - started),
@@ -276,9 +311,9 @@ export async function runStyleRanking(args, {
     const saved = new Map([...(prior.rows ?? []), ...(prior.completed_rows ?? [])].map(r => [r.target, r]));
     for (const candidate of candidates) {
       const row = saved.get(candidate.target);
-      if (!row || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
+      if (!row || row.kind !== candidate.kind || row.state_sha256 !== candidate.state_sha256 || row.source_sha256 !== candidate.source_sha256
           || JSON.stringify(row.context) !== JSON.stringify(candidate.context)) continue;
-      for (const d of config.dimensions) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
+      for (const d of reviewRubrics(config, candidate.kind)) validateScore({ ...row.answers?.[d.id], type: 'score' }, d.levels.length);
       if (typeof row.model !== 'string' || !row.model) throw new Error('Missing resolved model in reused row');
       reused.set(row.target, row);
     }
@@ -298,6 +333,7 @@ export async function runStyleRanking(args, {
   if (failure) rows = [];
   const changed_sources = await changedStyleSources(candidates, root);
   const assessments = failure ? [] : assessStyle(rows, config);
+  const criticality = failure ? [] : rows.map(row => criticalityFor(row, config));
   const counts = Object.fromEntries(['meets_target', 'below_target', 'uncertain'].map(status => [status, assessments.filter(a => a.status === status).length]));
   const meets_all = rows.filter(row => assessments.filter(a => a.target === row.target).every(a => a.status === 'meets_target')).length;
   const by_axis = config.dimensions.map(d => ({ id: d.id, title: d.title,
@@ -309,6 +345,7 @@ export async function runStyleRanking(args, {
     reused_from: reuse || null, reused_units: reused.size,
     completed_rows: failure ? [...reused.values(), ...completed_rows] : [],
     style_targets: config.style_targets, style_summary: { ...counts, meets_all, needs_review: rows.length - meets_all, by_axis }, assessments,
+    criticality: { policy: config.criticality, assessments: criticality },
     source_freshness: { status: changed_sources.length ? 'changed-since-preflight' : 'current', changed_sources },
     typechecked: false, behavioral_equivalence_checked: false,
     requested_model: env.PERCH_MODEL_ID || 'jev-latest', failure,
@@ -327,6 +364,9 @@ export async function runStyleRanking(args, {
   if (args.includes('--json')) stdout(JSON.stringify(report, null, 2));
   else if (!failure) {
     stdout(`${meets_all}/${rows.length} declarations meet all ${config.dimensions.length} style targets.`);
+    for (const item of criticality.filter(c => ['critical', 'uncertain'].includes(c.status))) {
+      stdout(`Criticality ${item.status}: ${item.target} (${Math.round(100 * item.probability_critical)}% critical) requires level ${config.criticality.style_target.level} on ${config.criticality.style_target.dimension}.`);
+    }
     for (const axis of by_axis) stdout(`${axis.title}: ${axis.meets_target} meet target; ${axis.below_target} below target; ${axis.uncertain} uncertain.`);
     for (const assessment of assessments.filter(a => a.status !== 'meets_target')) {
       stdout(`${assessment.status}: ${assessment.target} / ${assessment.dimension} (${Math.round(100 * assessment.probability_at_target)}% at level ${assessment.target_level}+)${assessment.context_truncated ? ' [limited context]' : ''}`);

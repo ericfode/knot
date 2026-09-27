@@ -82,9 +82,12 @@ or assessments. This allows recovery without paying again for unchanged answers.
 ## Interpret the result
 
 [perch-style.json](../perch-style.json) contains three ordered rubrics. Big brain
-runs from 0 to 5; delight and memetic identity run from 0 to 4. A request asks all
-three typed Score questions together. Each declaration receives its own
-distributions, independent of other candidates or their order.
+runs from 0 to 5; delight and memetic identity run from 0 to 4. Functions, laws
+and proofs receive those three typed Score questions plus a separate binary
+`criticality` Score in the same request. Datatypes receive the three style
+questions. Criticality selects a requirement; it is not a fourth taste axis.
+Each declaration receives its own distributions, independent of other candidates
+or their order.
 
 Big brain level 4 rewards an unusually economical solution. Level 5, **Galaxy
 brain**, rewards a surprising reframing: apparently essential distinctions become
@@ -94,17 +97,40 @@ The new level is a user-requested taste criterion; human calibration remains
 pending. Earlier receipts retain their original rubric identity and cannot be
 reused as ratings under the expanded scale.
 
-The current target on every axis remains **level 3 or higher**. Sum the normalized
-probability mass on levels 3–5 for big brain and levels 3–4 for the other axes:
+The default target is **level 3 or higher** on every axis. Critical functions,
+laws and proofs must instead reach **Galaxy brain, level 5**, on big brain.
+The criticality rubric identifies declarations carrying a defining contract,
+core algorithm, invariant or trust boundary, including the laws that state those
+obligations and the proofs that discharge them. Size and current elegance do not
+determine importance; poorly written critical code is still critical.
+
+Criticality of at least 60% is `critical`; at most 40% is `noncritical` only when
+context is not truncated. Intermediate or context-limited judgments are
+`uncertain`. Both critical and uncertain declarations require level 5. A missing
+or malformed classification fails review rather than granting the default bar.
+Uncertain criticality can satisfy the style gate by meeting the stricter bar.
+
+For big brain, sum normalized probability mass on **level 5 alone** when the
+stricter requirement applies; otherwise use levels 3–5. Delight and memetic
+identity use levels 3–4:
 
 - At least 60%: `meets_target`.
 - At most 40%: `below_target`.
 - Between those bounds: `uncertain`.
 
-All three axes must meet the target for a declaration to pass automatically.
+All three axes must meet their applicable targets for a declaration to pass
+automatically. Receipts retain `criticality.policy`, the criticality distributions
+in `rows[].answers`, and `criticality.assessments`. Each style assessment records
+its effective `target_level`, `minimum_probability` and `target_basis`. Reuse
+validates the classification as well as the style answers; policy changes
+invalidate old receipts through the rubric hash.
+
 The 60% policy is an explicit provisional review threshold, not a calibrated
 probability of agreement with the user. Full distributions remain available;
 model confidence is distribution concentration, not correctness or taste agreement.
+A model can misclassify importance; review criticality alongside the source and
+its contract. Calibration of the new classifier remains separate from proving
+that the command enforces its selected threshold.
 A high rank alone cannot satisfy the quality bar. Even the first-ranked item can
 be below target.
 

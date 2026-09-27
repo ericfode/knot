@@ -92,6 +92,15 @@ The deterministic proof and package gate is docs/LAW-QUALITY-GATE.md.
   Follow [the style guide](docs/perch-style.md) and [the ordered rubrics](perch-style.json).
   Avoid unchanged repeats; `--reuse=receipt.json` reuses only matching source,
   helper context, rubric and model identities.
+- Critical functions, laws and proofs must meet **Galaxy brain (level 5)** on
+  conceptual compression: at least 60% probability at that level. The separate
+  Perch `criticality` judgment identifies declarations carrying a defining
+  contract, core algorithm, invariant or trust boundary, including essential
+  law statements and proof obligations. Uncertain criticality or truncated
+  context also requires level 5; a missing classification is incomplete review.
+  The other two style targets still apply. Do not call critical work style
+  complete at a lower grade or weaken its contract to obtain the grade. Historical
+  receipts retain their original policy and cannot certify the new requirement.
 - Report each axis against its own quality target, retaining distributions,
   uncertainty and context limits. Every declaration must meet all three targets
   for an automatic style pass. Below-target or uncertain results require review;
