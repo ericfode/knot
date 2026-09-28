@@ -1,0 +1,789 @@
+{
+  "suite": "compiler-generics/type-level-names",
+  "increment": "6: generics and quantity arguments (S2), review round 3",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "definition-field-later",
+      "file": "fixtures/definition-field-later.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "A generic family field names a type-level definition declared after the family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-field-earlier",
+      "file": "fixtures/definition-field-earlier.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "A generic family field names a type-level definition declared before it; main unboxes a value through the family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-monomorphic-field",
+      "file": "fixtures/definition-monomorphic-field.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "A monomorphic family field names a type-level definition declared before it; the typed-result definition routes the book to the generic checker.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-monomorphic-field-generic",
+      "file": "fixtures/definition-monomorphic-field-generic.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "The monomorphic field form in a book that also declares a generic family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-monomorphic-field-later",
+      "file": "fixtures/definition-monomorphic-field-later.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "A monomorphic family field names a type-level definition declared after it.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-parameter-forward",
+      "file": "fixtures/definition-parameter-forward.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "An earlier signature names a later type-level definition as its parameter and result type.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-argument-forward",
+      "file": "fixtures/definition-argument-forward.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "An earlier signature applies a generic family to a later type-level definition.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-nested-field",
+      "file": "fixtures/definition-nested-field.bend",
+      "class": "boundary",
+      "feature": "type-level-definition",
+      "intent": "A generic family field applies the family to a later type-level definition.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a zero-arity definition that computes a type, named as a type. A type-level definition is outside Knot's type profile, so the name is Unsupported check type-level-definition (D4) wherever it is declared; before the repair Knot reported Invalid check unknown-type because a family field or an earlier signature resolved the name before the definition's own signature was reached."
+      }
+    },
+    {
+      "name": "definition-forward-mismatch",
+      "file": "fixtures/definition-forward-mismatch.bend",
+      "class": "negative",
+      "feature": "type-level-definition",
+      "intent": "An earlier signature types a Flag value by a later type-level definition, which the seed keeps opaque.",
+      "twin": "definition-parameter-forward",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Flag\n",
+        "- observed : T\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed rejects the opaque forward type against Flag. Knot does not evaluate type-level definitions, so it reports the name Unsupported: never accepted, a precision loss against the seed's mismatch."
+      }
+    },
+    {
+      "name": "value-definition-field",
+      "file": "fixtures/value-definition-field.bend",
+      "class": "negative",
+      "feature": "type-level-definition",
+      "intent": "A family field names a definition whose value is a Flag, not a type.",
+      "twin": "definition-monomorphic-field",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Type\n",
+        "- observed : Flag\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true,
+        "justification": "The seed rejects a Flag-valued definition as a field type. Knot does not type definitions named as types, so it reports the name Unsupported: never accepted, a precision loss against the seed's kind error."
+      }
+    },
+    {
+      "name": "unknown-type-control",
+      "file": "fixtures/unknown-type-control.bend",
+      "class": "negative",
+      "feature": "type-level-definition",
+      "intent": "A family field names nothing that is declared.",
+      "twin": "definition-field-later",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a defined name\n",
+        "- observed : Missing\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-type\t",
+        "knot_expected": true,
+        "justification": "The name resolves to no type variable, family or definition, and the seed rejects it: Invalid check unknown-type, unchanged by the type-level-definition rule."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "definition-field-later",
+        "source_sha256": "d7fcdb8e3374d419aed2d8f52dbacc42454b13fbe0e0f2d1d0d95f8f5e7a5cdb",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-field-later.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-field-later.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-field-later.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-field-earlier",
+        "source_sha256": "8b90afc1dea8fec725ea3928948a37b5606014127c4a3deb57478f9155dbdb85",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-field-earlier.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-field-earlier.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-field-earlier.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-monomorphic-field",
+        "source_sha256": "45c3d638f3f50d6a26415837ee73381770458c0ce5c52eaae21dc1e4f6875a35",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-monomorphic-field-generic",
+        "source_sha256": "6317fc04b7fdc6813306863013184298f7bf86c6371413b68727de52f2ff2ac2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-generic.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-generic.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-generic.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-monomorphic-field-later",
+        "source_sha256": "3cbf86df29672ff9b8cdb7943d380b04d1090ac8d74c8927c1c360f8dcc37128",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-later.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-later.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-monomorphic-field-later.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-parameter-forward",
+        "source_sha256": "a868e87a525d042d927cbe91b969922b8b2f6dc12e595419bab00d28bc5a8df7",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-parameter-forward.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-parameter-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-parameter-forward.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-argument-forward",
+        "source_sha256": "e36b03381c5b3fbb089ac30f07674bdbe77d4f53b2936de474a44274ae431fef",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-argument-forward.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-argument-forward.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-argument-forward.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-nested-field",
+        "source_sha256": "06f491cd7d364895c5ecf6513103a73ded56cdb7df1463b2829a9290faefd9f5",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-nested-field.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-nested-field.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/type-level-names/fixtures/definition-nested-field.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "definition-forward-mismatch",
+        "source_sha256": "2a206044af72c707c80d9adce27ea597f376cc8426ea90dae5f473b534e12182",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-forward-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : T\nContext:\n- x : T\nLocation: f\n5 | def f(x: T) -> Flag:\n6>|   x\n  |   ^\n7 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/definition-forward-mismatch.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : T\nContext:\n- x : T\nLocation: f\n5 | def f(x: T) -> Flag:\n6>|   x\n  |   ^\n7 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "value-definition-field",
+        "source_sha256": "8767252973bdee51fa966a947c09e5212d7d7ceeac5e29f2d141e8a3e671c4ac",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/value-definition-field.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nLocation: W\n 8 | type W is Type:\n 9>|   W{value: one}\n   |            ^^^\n10 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/value-definition-field.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nLocation: W\n 8 | type W is Type:\n 9>|   W{value: one}\n   |            ^^^\n10 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "unknown-type-control",
+        "source_sha256": "544d8b4f7f472920fa87331b3cfc54c3d7b1e6203d4a2394b80fde521e98d5a6",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/unknown-type-control.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Missing\nContext:\n- A : Type\nLocation: Box\n5 | type Box<-A: Type> is Type:\n6>|   Box{value: Missing}\n  |              ^^^^^^^\n7 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/type-level-names/fixtures/unknown-type-control.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Missing\nContext:\n- A : Type\nLocation: Box\n5 | type Box<-A: Type> is Type:\n6>|   Box{value: Missing}\n  |              ^^^^^^^\n7 | \n"
+        },
+        "calls": []
+      }
+    ]
+  }
+}
