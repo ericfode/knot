@@ -26,6 +26,7 @@
     "hash",
     "header",
     "order",
+    "let",
     "adapters"
   ],
   "sources": {
@@ -39,6 +40,22 @@
     "header/lib/other.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "header/nbsp.bend": "e86050e5972353579ed7cda8927222024766a6b44716809bf146fb8d011a0a15",
     "header/vtab.bend": "0fd41903563391bc815ecf6c0eeb3ba4fbdd3de59032edc9e7e5b0984b91c1b0",
+    "let/base-reusable.bend": "95fe551e3f14056dda17db1d93e0ea06226d7b0539a7ee12a02915b647e9da1d",
+    "let/base-typed.bend": "a0b6fbb38329b469cfef6eb456f9e41ab7499eb6681a9950ca76f2c10087677a",
+    "let/base.bend": "49ad782398a717e766221c928505304111ed540526052731be146ae323d64ffd",
+    "let/before-base.bend": "b1f2955b709d1dd0ae25e6e999b8b2b5d1ced35a5631f1bc080f645fbe7b9724",
+    "let/lib/early.bend": "7e90d90abbb6662d84f1cb68399eedb03a9693f96b77bdd655fe3113bc336dbd",
+    "let/lib/keep-reusable.bend": "4c280b36b66eda77e758714c7ea0073c5d2e88b7b22f044269f69b6f66178165",
+    "let/lib/keep-typed.bend": "820e519a99e70107022a036a1c4f4e81cfa9dfb77a055dc85f1c966215e9b01e",
+    "let/lib/keep.bend": "a53d52f69951dd0eb88211ed827ebc6022f89aaf3f7816a8f4a6337d7c2a7ff3",
+    "let/lib/local-reusable.bend": "05a21132cfb036d298c08e2b33da7729aae9d76360353c7ecc2f9a98f73d4378",
+    "let/lib/local-typed.bend": "9193194d9e20004a00bdeeb56ee6d3f8ea7a706c61f17b0a6357845457ce9a58",
+    "let/lib/local.bend": "e31356c00b4d18436b64e5158979a548670e76099e4aefc13dd8167901630d9f",
+    "let/local-reusable.bend": "0b3c82858a83573ed86632f12ef84064002fb727734879718d055dce23137f10",
+    "let/local-typed.bend": "db149395bcea282b32c6354854a1cdc5b9d620d7805bd470cdfae61b4c6bcc15",
+    "let/local.bend": "621aedb6dfc52ab46d938b5026be9ae1706823560c6af70b8ba97c2e3f089b43",
+    "let/single-later.bend": "338376596a22d42cfb963d414629b6f974bad2853cd14df83dc2d87fe7e068e3",
+    "let/single.bend": "ab890b4d124a812350ccc9fc295f589e87d7d7e3c53968831f77154126bad587",
     "order/entry.bend": "919e42d86c9efb9dfb722dbb3cc1d10924d9594f1096a7cd0f7d68b624066d54",
     "order/lib/later.bend": "ad2c33ab3b585914ee3591dff9a5c3a7ce453f3642045f2a49b721f25f2a1fe1",
     "order/module.bend": "21160ea815e66cb0d07318878044c5d51e1658e292369202b2e9001fe2a02841",
@@ -492,6 +509,296 @@
         "code": "variable-pattern",
         "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
       }
+    },
+    {
+      "name": "let-base-ctor",
+      "finding": "let",
+      "file": "let/base.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/base.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/base.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n3 | def keep(x: Bool) -> Bool:\n4>|   True = x\n  |   ^^^^\n5 |   True\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-base-ctor-reusable",
+      "finding": "let",
+      "file": "let/base-reusable.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/base-reusable.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/base-reusable.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n3 | def keep(x: Bool) -> Bool:\n4>|   +True = x\n  |   ^^^^^^\n5 |   True\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-base-ctor-typed",
+      "finding": "let",
+      "file": "let/base-typed.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/base-typed.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/base-typed.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n3 | def keep(x: Bool) -> Bool:\n4>|   True : Bool = x\n  |   ^^^^\n5 |   True\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-local-ctor",
+      "finding": "let",
+      "file": "let/local.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/local.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/local.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   Off = x\n  |   ^^^\n7 |   Off\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-local-ctor-reusable",
+      "finding": "let",
+      "file": "let/local-reusable.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/local-reusable.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/local-reusable.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   +Off = x\n  |   ^^^^^\n7 |   Off\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-local-ctor-typed",
+      "finding": "let",
+      "file": "let/local-typed.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/local-typed.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/local-typed.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   Off : Flag = x\n  |   ^^^\n7 |   Off\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-single-ctor",
+      "finding": "let",
+      "file": "let/single.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/single.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/single.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n5 | def f(x: Flag) -> Flag:\n6>|   Off = x\n  |   ^^^\n7 |   Off\n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "let-later-ctor",
+      "finding": "let",
+      "file": "let/single-later.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/single-later.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/single-later.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "let/single-later.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "let-before-base",
+      "finding": "let",
+      "file": "let/before-base.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "let/before-base.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/let/before-base.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "let/before-base.bend",
+        "let/lib/early.bend"
+      ]
     }
   ],
   "adapter_pins": {
