@@ -103,6 +103,16 @@ Both rules satisfy D4. Only the current `Invalid` violates it.
   - If the coordinator chooses acceptance, the same round decides whether Base's
     `Empty` is selected and accepted, and whether the two codes are aligned.
 
+## Gates
+
+On the tree of `e724f1d`, `npm run -s gates` passed all 22 gates, and
+`gates:verify` ran 19 tests, OK. Because no source or fixture changed, every
+count equals round 7's. The modules gate checked 191 fixtures, 199 seed calls,
+53 mutants and 4 proof entries. The census counted 925 declarations in 44
+files, and the bootstrap corpus held 1,075 files. No receipt was rewritten.
+No Bend file changed, so there is nothing to preflight, and no style rating is
+claimed.
+
 ## Carried over
 
 - The round-7 nest reconciliation of dotted binders.
