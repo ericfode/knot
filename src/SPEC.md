@@ -420,7 +420,10 @@ is `Unsupported check nested-field-pattern`. As in the seed, a row that binds
 a matrix column with `+` (`+x`, `1n+ +p`, `SCon{c, +t}`) promotes that column
 in every row of the match, and so every field opened from it. The binder, the
 scrutinee and those fields may then be used twice, even in rows before the `+`
-row. Without a `+` row the column and its fields stay affine. `Chr{...}` patterns and broader
+row. Without a `+` row the column and its fields stay affine. A binder row
+(`x`, `_`) also names its column's unrefined value, as the seed's default
+continuation does: a `+` on a field (`Succ{+p}`) does not let a catch-all use
+the column twice. `Chr{...}` patterns and broader
 nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
 in patterns and expressions.

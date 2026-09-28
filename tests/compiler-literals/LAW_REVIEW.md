@@ -39,8 +39,8 @@ The gate compares seed results to the source evaluator and to emitted Wasm in
 both compiler lanes, then kills signed-compare, trapping-divide, masked-shift,
 merged-surrogates, offset-off-by-one, spaced-offset, invalid-u32-constructor,
 append-reversed, inferred-let-literal, kept-zero-offset,
-internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape
-and unlifted-promoted-column mutants. Mutants retain types and must produce the
+internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape,
+unlifted-promoted-column and refined-default-binder mutants. Mutants retain types and must produce the
 designated runtime disagreement or classification change; a broken compiler or
 incomplete observation is not a successful mutation test. A deliberately false
 `append_order` (expecting `[97,99,98]`) is rejected by the proof entry.

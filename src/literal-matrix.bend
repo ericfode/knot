@@ -103,10 +103,11 @@ def all_variables(rows: List<&2,Row>) -> Bool:
     case Con{Row{Con{head,patterns},body,aliases},tail}: Bool.and(variable(head),all_variables(tail))
     case _: False{}
 
+# As in the seed's default arm, a binder row names its unrefined column.
 def capture(node: S.Node, column: C.Binding, +aliases: List<&2,Alias>) -> List<&2,Alias>:
   match node column:
-    case S.Variable{+token} C.Binding{name,level,q,typ,param,known}:
-      S.choose(List<&2,Alias>,S.matches(token,"_"),u => aliases,u => Con{Alias{token,level,q},aliases})
+    case S.Variable{+token} C.Binding{name,+level,+q,typ,param,known}:
+      Con{Alias{name,level,q},S.choose(List<&2,Alias>,S.matches(token,"_"),u => aliases,u => Con{Alias{token,level,q},aliases})}
     case S.Promotion{token} C.Binding{name,level,q,typ,param,known}:
       Con{Alias{token,level,Bool.pick(U32,U32.is_eq(q,0),0,2)},aliases}
     case _ _: aliases
@@ -152,7 +153,7 @@ def words(rows: List<&2,Row>, +seen: List<&2,U32>) -> List<&2,U32>:
 
 def renamed(value: C.Binding, token: S.Token, q: U32) -> C.Binding:
   match value:
-    case C.Binding{name,level,old,typ,param,known}: C.Binding{token,level,q,typ,param,known}
+    case C.Binding{name,level,old,typ,param,known}: C.Binding{token,level,q,typ,param,None{}}
 
 def alias_scope(binding: C.Binding, scope: E.Scope) -> Result<S.Error,E.Scope>:
   match scope:
@@ -181,9 +182,6 @@ def branch(head: Plan, tail: Plan, tag: U32, bindings: List<&2,C.Binding>) -> Re
   match tail:
     case MArms{rest}: Done{MArms{Con{MBranch{tag,bindings,head},rest}}}
     case _: C.internal(Plan,"matrix-branches")
-
-def default_branch(value: Plan) -> Result<S.Error,Plan>:
-  Done{MArms{[MDefault{value}]}}
 
 def case_term(value: Plan, column: C.Binding) -> Result<S.Error,Plan>:
   match value:
@@ -232,7 +230,7 @@ def run(fuel: Nat, mode: Mode, +types: List<&2,C.Datatype>, +scope: E.Scope) -> 
           S.bind(Plan,Plan,run(n,Rows{specialize(rows,column,name,params),List.append(&2,C.Binding,introduced,columns)},types,bound),head =>
             S.bind(Plan,Plan,run(n,Constructors{rows,column,columns,ctors,U32.add(tag,1)},types,scope),tail => branch(head,tail,tag,introduced)))))
     case 1n+ +n Words{rows,column,columns,Nil{}} _:
-      S.bind(Plan,Plan,run(n,Rows{specialize_word(rows,column,None{}),columns},types,scope),default_branch)
+      S.bind(Plan,Plan,run(n,Rows{specialize_word(rows,column,None{}),columns},types,scope),v => Done{MArms{[MDefault{v}]}})
     case 1n+ +n Words{+rows,+column,+columns,Con{+word,+words}} _:
       S.bind(Plan,Plan,run(n,Rows{specialize_word(rows,column,Some{word}),columns},types,E.branch(scope,level(column),word)),head =>
         S.bind(Plan,Plan,run(n,Words{rows,column,columns,words},types,scope),tail => branch(head,tail,word,Nil{})))

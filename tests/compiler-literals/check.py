@@ -274,6 +274,9 @@ MUTANTS = [
     {'name': 'unlifted-promoted-column', 'file': 'literal-matrix.bend',
      'old': 'promote(bindings,level(head),promoted(values))', 'new': 'promote(bindings,level(head),False{})',
      'fixture': 'promoted-column', 'verdict': (2, 'Invalid\tcheck\taffine-reuse\t')},
+    {'name': 'refined-default-binder', 'file': 'literal-matrix.bend',
+     'old': 'C.Binding{token,level,q,typ,param,None{}}', 'new': 'C.Binding{token,level,q,typ,param,known}',
+     'fixture': 'affine-default-scrutinee', 'verdict': (0, 'Built\t')},
 ]
 
 
