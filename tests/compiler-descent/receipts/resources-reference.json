@@ -1,0 +1,80 @@
+{
+  "date": "2026-09-28T02:08:12.098928+00:00",
+  "status": "passed",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "inputs": {
+    "tests/compiler-descent/resource-freeze.py": "e44d27a8fa9a7474fe974d3f5fc64798c3db91979be72794427d4e94e1b06655",
+    "tests/compiler-descent/resources/later-shared-alias.bend": "668384ab2e3e89f8c8e860c8ace065c00c46eefaa925995d4edeb5c5e47e457e",
+    "tests/compiler-descent/resources/shared-alias-argument.bend": "2725499b505d02f9b10549d4879b7e051f1a6f2972db1942e41d69b2dc89c5a4",
+    "tests/compiler-descent/resources.json": "50046d339e05f21374fec8e8c7be3a0590a587ef029a4b526084bdf465180ed5"
+  },
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "observations": [
+    {
+      "name": "shared-alias-argument",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/resources/shared-alias-argument.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : spin\nContext:\n- x   : Tree\n- t0  : Tree\n- t1  : Tree\n- t2  : Tree\n- t3  : Tree\n- t4  : Tree\n- t5  : Tree\n- t6  : Tree\n- t7  : Tree\n- t8  : Tree\n- t9  : Tree\n- t10 : Tree\n- t11 : Tree\n- t12 : Tree\n- t13 : Tree\n- t14 : Tree\n- t15 : Tree\n- t16 : Tree\n- t17 : Tree\n- t18 : Tree\n- t19 : Tree\n- t20 : Tree\n- t21 : Tree\n- t22 : Tree\n- t23 : Tree\n- t24 : Tree\n- t25 : Tree\n- t26 : Tree\n- t27 : Tree\n- t28 : Tree\n- t29 : Tree\n- t30 : Tree\n- t31 : Tree\n- t32 : Tree\nLocation: spin\n40 |   +t32 : Tree = Fork{t31,t31}\n41>|   spin(t32)\n   |   ^^^^\n42 | def main() -> Flag:\n"
+    },
+    {
+      "name": "later-shared-alias",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/resources/later-shared-alias.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    }
+  ],
+  "baseline_implementation": {
+    "src/LAWS.bend": "b7755dbd1da14516ecdb7484edace511e581e4c8671a287f2d23826264502e6d",
+    "src/PROOF.bend": "b3808807d0ffdfaa14a1cebb5bf532f58836402b1e988c56d3b3c9bea9eca7c4",
+    "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
+    "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
+    "src/catalog.bend": "0b478dbbc0f07f60ade43c04dd53b9660f6410b1c5dd4d0ef191772d83986098",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "e4ffddefefb8369438cc3815c9a52eda59ed08d093778e0cb43c73fcc781cdd7",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/descent-LAWS.bend": "774195ff2c3f30c694ef85340fde4e322e9db1c05c2dfcb11f121698135f0efc",
+    "src/descent-PROOF.bend": "0f549cde7157271f8aa886d264f1cce61d573650491521e0b180872098a8a5cc",
+    "src/descent.bend": "5e9202edcb07cc56b0966f4d80b04ae430408d38a46656ed601e3a3205ba3904",
+    "src/diagnostic.bend": "5ceff091280c1a5e5cd4ca4b609c6520f76435d44ba0e75cd08688e3f0c64354",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/matrix-LAWS.bend": "70fb51eca577a0e1ba75850557bcc89cd59b537287c7a91af3d81374a8db359a",
+    "src/matrix-PROOF.bend": "0c4d094574b23a0c15581428f63175d06b1efcd9f92d8c4a643e30514115d7af",
+    "src/matrix.bend": "f343567c3269c4b5aa8ff7da1084a688a1e44e38d7f45c50f9bc07c1982a819d",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "2301b90a8787bcd413ba26a27d6360d7c05a3e102f501e39dba097923877c9f7",
+    "src/patterns.bend": "ab3004504ddb2b84905556dd151dc732844771642290c32d9fc44288a2c75a59",
+    "src/recursion-LAWS.bend": "6619665413d5e176660094dbbdeab80ce139607e512d39d0be1d78c4a471c9bf",
+    "src/recursion-PROOF.bend": "006216ebd83c0e34be2d75c84a0513b8b4f37ba98558233b097e238b529830ef",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "998f8ddafbe22408e04539499c02bd6cc290de4de5a3e58970161c1a72e43708",
+    "src/syntax.bend": "8c9bedfbc7583b6c6009ef8f2f1b1a6d9aa2a085e3f06d467f57bab8b4dfce93",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "4557219b40a35431e71de9c98ee38b96fb15fb505cf0e2f93f1100385c89672d"
+  }
+}

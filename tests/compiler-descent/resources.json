@@ -1,0 +1,24 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "basis": "Thirty-two shared constructor aliases must not force tree expansion before an immediate variable-column decision or after an earlier strict decrease. Literal observations fixed before the resource repair.",
+  "cases": [
+    {
+      "name": "shared-alias-argument",
+      "file": "tests/compiler-descent/resources/shared-alias-argument.bend",
+      "seed_args": ["--check-only"],
+      "seed": {"exit": 1, "diagnostic": "a decreasing self-call"},
+      "check": {"exit": 2, "diagnostic": "Invalid\tcheck\trecursive-call\t"},
+      "eval": {"exit": 2, "diagnostic": "Invalid\tcheck\trecursive-call\t"},
+      "compile": {"exit": 2, "diagnostic": "Invalid\tcheck\trecursive-call\t"}
+    },
+    {
+      "name": "later-shared-alias",
+      "file": "tests/compiler-descent/resources/later-shared-alias.bend",
+      "seed": {"exit": 0, "stdout": "On{}"},
+      "check": {"exit": 0, "contains": "Checked\n"},
+      "eval": {"exit": 0, "stdout": "Evaluated\t0\t1\tOn{}"},
+      "compile": {"exit": 0},
+      "wasm": {"export": "main", "arguments": [], "result": 1}
+    }
+  ]
+}

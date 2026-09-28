@@ -1,0 +1,15 @@
+{
+  "basis": "Literal total-work contract fixed before the transition-machine implementation: comparing equal two-field constructors takes six transitions (constructor, first field, first comparison, second field, second comparison, empty fields). Returning through continuation frames consumes no additional transition; every frame was pushed by a charged transition.",
+  "driver": "tests/compiler-descent/bounds.bend",
+  "cases": [
+    {
+      "name": "total-work-enough",
+      "expected": {"exit": 0, "stdout": "EQ"}
+    },
+    {
+      "name": "total-work-short",
+      "control": "total-work-enough",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    }
+  ]
+}
