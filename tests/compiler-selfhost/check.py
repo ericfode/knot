@@ -54,6 +54,9 @@ import regen  # noqa: E402  (the seed lane; shares the expectation schema)
 SEED = regen.SEED
 BUILD = '.local/compiler-selfhost/knot'
 RECEIPT = HERE / 'receipts/selfhost.json'
+# The modules loader's path query adds five seed-reported foreign-dependent CLI
+# definitions; mutants compare that exact verdict (tests/compiler-modules).
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 EXPECTATIONS = HERE / 'expectations.json'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
 SECONDS = {'build': 600 * SCALE, 'call': 120 * SCALE}
@@ -383,12 +386,14 @@ def mutants(document) -> list[dict]:
         (ROOT / directory / 'src').mkdir(parents=True)
         for source in (ROOT / 'src').glob('*.bend'):
             shutil.copy2(source, ROOT / directory / 'src' / source.name)
+        shutil.copytree(ROOT / 'src/host', ROOT / directory / 'src/host')
         target = ROOT / directory / 'src' / file
         text = target.read_text()
         require(text.count(old) == 1, (name, 'a mutation site must be unique'))
         target.write_text(text.replace(old, new))
         typecheck = run(['bun', SEED, f'{directory}/src/{phases[-1]}-cli.bend', '--check-only'], SECONDS['build'])
-        require(typecheck['exit'] == 0 and typecheck['stdout'] == 'All terms check.\n', (name, 'type-correct', typecheck))
+        verdict = HOST_CHECKS[f'{phases[-1]}-cli.bend']
+        require({k: typecheck[k] for k in verdict} == verdict, (name, 'type-correct', typecheck))
         bins, builds = {}, []
         for phase in ('check', 'eval'):
             if phase in phases:
