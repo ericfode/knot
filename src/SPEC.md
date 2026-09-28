@@ -47,7 +47,7 @@ digits, underscores or dots. Keywords cannot be identifiers.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
 - A body may end in a match on ordered function parameters or fields. Every constructor of the
-  scrutinee type must occur exactly once. Arms can contain bindings and nested
+  scrutinee type must be covered. Overlapping rows select the first match. Arms can contain bindings and nested
   matches. Constructor patterns have no fields in this profile.
   The pinned Bend parser rejects computed and local-binding scrutinees; Knot
   retains that restriction rather than accepting a different surface language.
@@ -66,8 +66,8 @@ Repeated constructor declarations, including across datatypes, are invalid. Top-
 Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
 
-Duplicate arms are outside this profile and report Unsupported: the pinned
-reference can accept overlapping nullary patterns, choosing the first match.
+Duplicate constructor rows are accepted. The first matching row supplies the
+body; shadowed row bodies are discarded before checking.
 
 Constructor fields, recursive calls, generic/dependent types, imports, literals,
 closures, wildcard patterns, laws, templates, foreign code and
