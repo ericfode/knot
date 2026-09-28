@@ -102,10 +102,13 @@ requires a recorded review. Implementation results never justify one.
   reachable Base slice is lowered. `base_names` lists what each fixture spells
   directly, not its full closure.
 - **Evaluator budget.** `nat-recursion.deep` recurses 65,536 times, and
-  `nat-literals.agrees(S65536)` compares two unary Nats of that size. Both need
-  more than the default 65,536 transitions; the maximum is 1,048,576. Nat values
-  in this suite stay at 65536 or below, because the seed itself does not finish
-  on `4294967295n`-scale unary work.
+  `nat-literals.agrees(S65536)` builds `U32.to_nat(65536)` and compares two
+  unary Nats of that size. Both need more than the default 65,536 transitions.
+  Nobody has measured whether they fit under the 1,048,576 maximum. If the
+  evaluator reports `Exhausted`, that result is inconclusive under the contract:
+  the gate must report it and must not count it as a pass, and it is no reason
+  to edit the fixture. Nat values in this suite stay at 65536 or below, because
+  the seed itself does not finish on `4294967295n`-scale unary work.
 
 ## Seed behaviour worth knowing
 
