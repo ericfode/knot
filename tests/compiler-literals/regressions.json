@@ -49,6 +49,129 @@
       }
     },
     {
+      "name": "affine-default-binder",
+      "file": "tests/compiler-literals/regressions/affine-default-binder.bend",
+      "sha256": "2f2d22b887c62afb12d5dce7b7d9b10185b62ef784ccc7c3777a88d36e517f23",
+      "finding": "promoted split binder control",
+      "covers": "`x + x` in a `case x` after `1n+ +p`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-binder.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: Nat) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: Nat) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
+      "name": "affine-default-scrutinee",
+      "file": "tests/compiler-literals/regressions/affine-default-scrutinee.bend",
+      "sha256": "7e16c0b2e1d81010e9efb707010f1775edda3f2f9ea00efe4d786912d8c44745",
+      "finding": "promoted split binder control",
+      "covers": "`v + v` in a catch-all after `Succ{+p}`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-scrutinee.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: Nat) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-scrutinee.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: Nat) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
+      "name": "affine-default-string",
+      "file": "tests/compiler-literals/regressions/affine-default-string.bend",
+      "sha256": "c3f78879a8351e6dcb8a09312d705a3e4ad3794c630f1e46e1e8eb435f75147d",
+      "finding": "promoted split binder control",
+      "covers": "`v ++ v` in a catch-all after `SCon{+c, +t}`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-string.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: String) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-default-string.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : v\n- observed : v (consumed more than once)\nLocation: default\n12 | \n13>| def default(v: String) -> Answer:\n   |             ^\n14 |   match v:\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
       "name": "affine-scrutinee",
       "file": "tests/compiler-literals/regressions/affine-scrutinee.bend",
       "sha256": "cd360ff1ba6444a5281ae30c2b6480efca77179d91979e87d4a712dfcf87b5ed",

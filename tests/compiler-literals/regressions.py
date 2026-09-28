@@ -132,6 +132,12 @@ PLAN = {
                          'string_tail', 'string_whole', 'u32_twice', 'char_same'], oracle.AGREE),
     'affine-column': ('promoted split binder control', 'case 1n+p with p used twice before a plain '
                       'case x', [], AFFINE),
+    'affine-default-scrutinee': ('promoted split binder control', '`v + v` in a catch-all after '
+                                 '`Succ{+p}`', [], AFFINE),
+    'affine-default-binder': ('promoted split binder control', '`x + x` in a `case x` after `1n+ +p`',
+                              [], AFFINE),
+    'affine-default-string': ('promoted split binder control', '`v ++ v` in a catch-all after '
+                              '`SCon{+c, +t}`', [], AFFINE),
 }
 
 
