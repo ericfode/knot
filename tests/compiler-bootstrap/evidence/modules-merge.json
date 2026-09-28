@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "about": "harness-2 acceptance: the bootstrap harness run on a scratch merge of this branch and campaign/modules. Built with git merge-tree and git archive; no branch, ref or worktree was changed.",
+  "commits": {
+    "campaign/harness-2": "388021e4f517f0b5313b645f382bc1d614bce66a",
+    "campaign/modules": "0111f13352e0fe8da3332ac68072eef35dbd2de2"
+  },
+  "merge_tree": "bfc7fa2426ad94aa31cb317582f8b2dd898f254a",
+  "command": "git merge-tree --write-tree <harness-2> <modules>; git archive <tree> | tar -x -C <scratch>; link .toolchain and node_modules; BEND_NO_TELEMETRY=1 python3 tests/compiler-bootstrap/check.py",
+  "status": "passed",
+  "verdict": {
+    "violations": [],
+    "failed_controls": [],
+    "surviving_mutants": []
+  },
+  "corpus_files": 745,
+  "argv": {
+    "e2e3.a2": [
+      "--bundle",
+      "lib",
+      "src/compile-cli.bend",
+      "generation.wasm",
+      "65536",
+      "4096",
+      "4096",
+      "4096",
+      "1048576"
+    ],
+    "e2e3.a3": [
+      "--bundle",
+      "lib",
+      "src/compile-cli.bend",
+      "generation.wasm",
+      "65536",
+      "4096",
+      "4096",
+      "4096",
+      "1048576"
+    ]
+  },
+  "contracts_identical": true,
+  "closure": [
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+    "src/syntax.bend",
+    "src/core.bend",
+    "src/lex.bend",
+    "src/parse.bend",
+    "src/catalog.bend",
+    "src/scope.bend",
+    "src/patterns.bend",
+    "src/check.bend",
+    "src/diagnostic.bend",
+    "src/imports.bend",
+    "src/qualify.bend",
+    "src/base-load.bend",
+    "src/base-pin.bend",
+    "src/host/path-identity.c",
+    "src/host/path-identity.js",
+    "src/path-host.bend",
+    "src/load.bend",
+    "src/driver.bend",
+    "lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+    "src/wasm-bytes.bend",
+    "src/wasm.bend",
+    "src/compile-cli.bend"
+  ],
+  "stages": [
+    {
+      "id": "e2e2.reference",
+      "status": "reached"
+    },
+    {
+      "id": "e2e2.compile",
+      "status": "blocked",
+      "args": [
+        "--bundle",
+        "lib",
+        "src/parse-cli.bend",
+        "generation.wasm",
+        "65536",
+        "4096",
+        "4096",
+        "4096",
+        "1048576"
+      ],
+      "blocker": {
+        "source": "knot",
+        "argv": [
+          "../c1",
+          "--bundle",
+          "lib",
+          "src/parse-cli.bend",
+          "generation.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tlex\tliteral\t1947:1948:67:22\n"
+      }
+    },
+    {
+      "id": "e2e2.self-parse",
+      "status": "not-run",
+      "prerequisite": "e2e2.compile"
+    },
+    {
+      "id": "e2e3.c1",
+      "status": "reached"
+    },
+    {
+      "id": "e2e3.a2",
+      "status": "blocked",
+      "args": [
+        "--bundle",
+        "lib",
+        "src/compile-cli.bend",
+        "generation.wasm",
+        "65536",
+        "4096",
+        "4096",
+        "4096",
+        "1048576"
+      ],
+      "blocker": {
+        "source": "knot",
+        "argv": [
+          "../c1",
+          "--bundle",
+          "lib",
+          "src/compile-cli.bend",
+          "generation.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 3,
+        "stdout": "",
+        "stderr": "Unsupported\tlex\tliteral\t1947:1948:67:22\n"
+      }
+    },
+    {
+      "id": "e2e3.a3",
+      "status": "not-run",
+      "prerequisite": "e2e3.a2"
+    },
+    {
+      "id": "e2e3.fixpoint",
+      "status": "not-run",
+      "prerequisite": "e2e3.a3"
+    },
+    {
+      "id": "e2e3.conformance",
+      "status": "not-run",
+      "prerequisite": "e2e3.a3"
+    }
+  ],
+  "tiers": {
+    "E2E-2": {
+      "reached": [
+        "e2e2.reference"
+      ],
+      "first_blocker": {
+        "stage": "e2e2.compile",
+        "source": "knot",
+        "classification": "Unsupported\tlex\tliteral\t1947:1948:67:22"
+      }
+    },
+    "E2E-3": {
+      "reached": [
+        "e2e3.c1"
+      ],
+      "first_blocker": {
+        "stage": "e2e3.a2",
+        "source": "knot",
+        "classification": "Unsupported\tlex\tliteral\t1947:1948:67:22"
+      }
+    }
+  },
+  "audit": {
+    "status": "blocked",
+    "args": [
+      "--audit-bundle",
+      "lib",
+      "src/compile-cli.bend"
+    ],
+    "tool": "seed-built src/check-cli.bend",
+    "blocker": {
+      "source": "knot",
+      "argv": [
+        "../check-cli",
+        "--audit-bundle",
+        "lib",
+        "src/compile-cli.bend"
+      ],
+      "exit": 3,
+      "stdout": "",
+      "stderr": "Unsupported\tlex\tliteral\t1947:1948:67:22\n"
+    }
+  },
+  "audit_control": {
+    "name": "audit-closure",
+    "expected": {
+      "status": "recorded",
+      "problems": [],
+      "modules": [
+        "probe/side.bend",
+        "probe/main.bend"
+      ]
+    },
+    "observed": {
+      "status": "recorded",
+      "problems": [],
+      "modules": [
+        "probe/side.bend",
+        "probe/main.bend"
+      ]
+    }
+  },
+  "seed_builds": {
+    "parse-cli": {
+      "entry": "src/parse-cli.bend",
+      "lane": "native",
+      "sandbox": "parser-bundle",
+      "sha256": "2f2944424dc6e5badc9317e708118ee93ed20358b7e9b91606860489f09b12b0"
+    },
+    "parse-cli.js": {
+      "entry": "src/parse-cli.bend",
+      "lane": "bun",
+      "sandbox": "parser-bundle",
+      "sha256": "b43b7d7df4f6a9836d4a450c7067c86a19e79abb46d234b60b77876dbb936ddd"
+    },
+    "C1": {
+      "entry": "src/compile-cli.bend",
+      "lane": "native",
+      "sandbox": "bundle",
+      "sha256": "65097d2d7d3724b42fd5af0f8c4013915f525282aa84fd2d85600b19fcccc979",
+      "repeat_sha256": "65097d2d7d3724b42fd5af0f8c4013915f525282aa84fd2d85600b19fcccc979"
+    },
+    "check-cli": {
+      "entry": "src/check-cli.bend",
+      "lane": "native",
+      "sandbox": "checker-bundle",
+      "sha256": "68db09bedbc4f2f1d08a4954e0be023a766101ca03333d1ac6e7005b5328fa2c"
+    }
+  },
+  "progress_sha256": "1769ce8c8fb54b448287e0815b123ceebb05369eaed7defb4d913b0cb1170ec4"
+}
