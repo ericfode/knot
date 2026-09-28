@@ -738,6 +738,10 @@ MUTANTS += [
     {'name': 'output-climb-ignored', 'file': 'load.bend',
      'old': 'S.choose(Result<S.Error,Unit>,I.climbs(path),u =>', 'new': 'S.choose(Result<S.Error,Unit>,False{},u =>',
      'guard': 'output-climbing', 'problem': 'exit'},
+    {'name': 'call-head-resolved-globally', 'file': 'qualify.bend',
+     'old': 'S.bind(S.Token,Qualified,local(token,names,bound),t =>\n        then(',
+     'new': 'S.bind(S.Token,Qualified,reference(token,names),t =>\n        then(',
+     'witness': 'shadow-parameter-call', 'actual': {'exit': 0}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -752,7 +756,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty',
                     'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted',
                     'output-guard-files-ignored', 'output-guard-base-ignored', 'output-guard-single-basis',
-                    'output-query-ignored', 'output-climb-ignored', 'root-bundle-contains-all'}
+                    'output-query-ignored', 'output-climb-ignored', 'root-bundle-contains-all',
+                    'call-head-resolved-globally'}
 
 
 def mutants(fixtures):
@@ -820,11 +825,12 @@ def main():
              HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
              HERE / 'review-round2.json', HERE / 'review-round3.json', HERE / 'review-round4.json',
+             HERE / 'review-round5.json',
              *sorted((ROOT / 'src/host').glob('*')),
              ROOT / 'tests/compiler-io-abi-2/expectations.json',
              *sorted((ROOT / 'tests/compiler-io-abi-2/reference').glob('*'))]
     paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3',
-                               'review-round4')
+                               'review-round4', 'review-round5')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -836,7 +842,8 @@ def main():
         review, record['review_reference'] = review_reference(manifest, 'review-round2')
         round3, record['round3_reference'] = review_reference(manifest, 'review-round3')
         round4, record['round4_reference'] = review_reference(manifest, 'review-round4')
-        review += round3 + round4
+        round5, record['round5_reference'] = review_reference(manifest, 'review-round5')
+        review += round3 + round4 + round5
         record['adapters'] = adapter_pins()
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}

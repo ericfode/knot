@@ -214,8 +214,9 @@ def visible(node: S.Node, names: Names, ctors: List<&2,String>) -> List<&2,Strin
       List.append(&2,String,prefixed(ns,constructors_in(children)),ctors)
     case _ _: ctors
 
-# A pattern contributes binders; an expression only reads its current scope.
-# The same traversal therefore handles parameters, fields and match arms.
+# A pattern contributes binders; an expression only reads its current scope,
+# a call head exactly as a variable. The same traversal therefore handles
+# parameters, fields and match arms.
 def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>, +ctors: List<&2,String>) -> Result<S.Error,Qualified>:
   match fuel node:
     case 0n _: Fail{S.Exhausted{"load",S.At{0,0,0,0}}}
@@ -230,7 +231,7 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Constructor{t,xs},binders}})))
     case 1n+ +n S.Call{token,args}:
-      S.bind(S.Token,Qualified,reference(token,names),t =>
+      S.bind(S.Token,Qualified,local(token,names,bound),t =>
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Call{t,xs},binders}})))
     case 1n+ +n S.Binding{+token,q,ann,value,+body}:

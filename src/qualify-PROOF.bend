@@ -7,6 +7,7 @@ def L.datatype_keeps_constructor_order(at): {==}
 def L.parameter_shadows_global(at): {==}
 def L.initializer_has_outer_scope(at): {==}
 def L.arm_binder_has_local_scope(at): {==}
+def L.call_head_has_local_scope(at): {==}
 def L.alias_expands_one_component(at): {==}
 def L.alias_member_cannot_be_declared(at,body): {==}
 def L.loaded_global_cannot_be_declared(at,constructors): {==}

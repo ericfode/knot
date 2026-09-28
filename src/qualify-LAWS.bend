@@ -49,6 +49,13 @@ law arm_binder_has_local_scope:
       S.Variable{S.Token{"x",at}}},Nil{}}}
     : Result<S.Error,Q.Qualified>}
 
+law call_head_has_local_scope:
+  for +at: S.At
+  {Q.walk(16n,S.Call{S.Token{"flip",at},[S.Variable{S.Token{"flip",at}}]},
+    Q.Expression{},Q.Names{"lib/m",Nil{},Nil{},["lib/m.flip"]},["flip"]) ==
+    Done{Q.Qualified{S.Call{S.Token{"flip",at},[S.Variable{S.Token{"flip",at}}]},Nil{}}}
+    : Result<S.Error,Q.Qualified>}
+
 law alias_expands_one_component:
   for +at: S.At
   {Q.qualify("",[Q.Alias{"L","lib/left"}],Q.Symbols{["lib/flag.Flag","lib/left.left"],Nil{}},S.Sequence{[

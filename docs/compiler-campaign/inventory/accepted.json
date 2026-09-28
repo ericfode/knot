@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "35e8fa419317954d054c9ad011520a99447d2e8bc4f4541ad63bd778e28fabc3",
+    "sha256": "d8f9d020a7b000a2380682fae9d9074994e836132551698f1b4839f15912cf56",
     "gates": [
       {
         "name": "frontend",
@@ -177,7 +177,7 @@
         "programs": [
           {
             "file": "tests/compiler-modules/check.py",
-            "sha256": "a1fea36328db6f710dba77458e4089b15a579813dfb65dba9211b02ece66d66e"
+            "sha256": "7f7b0eccd484dbcafbda9180304594f230cdc5e69a2fcd7f6c641ac2e93b541e"
           }
         ]
       },
@@ -194,6 +194,16 @@
             "sha256": "df158a987364e93c7f68acb8f4d09219360478601a8c3473493b4df277c1b751"
           }
         ]
+      },
+      {
+        "name": "census:test",
+        "argv": [
+          "npm",
+          "run",
+          "-s",
+          "census:test"
+        ],
+        "programs": []
       },
       {
         "name": "perch-context",
@@ -686,6 +696,11 @@
       "directory": "tests/perch-context",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "gate": "census:test",
+      "status": "no-fixture-manifest",
+      "detail": "Registered command has no source fixture directory"
     },
     {
       "gate": "lint:verify",
