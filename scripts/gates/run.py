@@ -88,6 +88,8 @@ GATES = (
          ('tests/compiler-nest/receipts/round7.json', 'tests/compiler-nest/receipts/round7-letalias.json')),
     Gate('nest-round8', ('python3', 'tests/compiler-nest/round8.py'),
          ('tests/compiler-nest/receipts/round8.json', 'tests/compiler-nest/receipts/round8-typekind.json')),
+    Gate('nest-round9', ('python3', 'tests/compiler-nest/round9.py'),
+         ('tests/compiler-nest/receipts/round9.json',)),
 )
 
 
@@ -302,7 +304,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
-    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8'):
+    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8',
+                     'nest-round9'):
         result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):

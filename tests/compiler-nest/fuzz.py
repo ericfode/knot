@@ -69,6 +69,12 @@ def programs(count=COUNT):
             body_terms += ['x', 'both(x, x)', 'both(x, v)']
         elif shape == 'pair':
             body_terms += ['left(p)', 'both(left(p), left(p))', 'left(v)']
+        # Lets of a scrutinee, a parameter and a pattern binder. A positive branch
+        # refines a matched binder to a constructor, which an unannotated let
+        # cannot infer; an annotated, an erased and a residual one can.
+        for binder in (y, 'v', 'w', 'p' if fields else 'x'):
+            body_terms += [f'\n      u = {binder}\n      u', f'\n      u : Flag = {binder}\n      u',
+                           f'\n      -u = {binder}\n      On{{}}']
         columns = ['x', y] if shape == 'multi' else ['p' if fields else 'x']
         if empty and shape == 'multi' and rng.randrange(2) == 0:
             columns.insert(rng.randrange(3), 'e')

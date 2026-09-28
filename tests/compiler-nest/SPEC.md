@@ -11,9 +11,11 @@ binders only when no constructor with that name has been declared yet. A name
 is words joined by dots, each word a letter or `_` followed by letters, digits
 or `_`; the lexer rejects any other word that opens like a name (`Invalid lex
 name`). A pattern binder, like a live let binder, is one word: a dotted name is
-a reference, so `case a.b:` is `Invalid parse pattern-binder`. Dotted
-parameters, fields, definitions and erased let names remain names, as in the
-seed.
+a reference. The seed accepts one where it rebinds a name in scope, and the
+parser does not resolve scopes, so every dotted binder (a pattern, a `+`
+promotion, a let, a typed let) is `Unsupported parse dotted-binder`, never
+Invalid. Dotted parameters, fields, definitions and erased let names remain
+names, as in the seed.
 
 A matrix is a list of columns and an ordered list of rows. A variable-only
 column aliases its lexical identity without inspecting it or closing earlier
@@ -192,6 +194,17 @@ evaluates one seeded probe call of every agreed acceptance that promotes a
 frontier, and five whole-checker witnesses pin each site: a destructured
 promoted parameter and field check, and returning the binder, a later matrix
 split and a later zero-row match are each rejected.
+
+`round9-expectations.json` freezes 73 round-9 programs and 101 seed calls before
+the repairs. The seed cannot infer a constructor, and in a positive branch it
+substitutes a matched binder by its constructor. An unannotated let of a
+refined binder (flat or in a matrix, through an alias, a nested field or an
+enclosing match; `v =`, `+v =`, `-v =`) is `Invalid check annotation-required`;
+a residual, unsplit, later or annotated binder and a call stay inferable. Every
+dotted binder, including a rebound one that the seed accepts, is `Unsupported
+parse dotted-binder`. `round9.py` checks both lanes, evaluator and Wasm
+agreement, rejection in every phase and nine mutants. `fuzz.py` draws lets of
+matched binders: 36 false acceptances before the repair, 0 after.
 
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual

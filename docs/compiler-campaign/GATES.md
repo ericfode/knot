@@ -41,9 +41,9 @@ and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
 this branch retains the main gates and appends `nest`, `nest-review`,
-`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7` and `nest-round8`. `nest-review` checks the round-2 reviewer
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8` and `nest-round9`. `nest-review` checks the round-2 reviewer
 repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
-comparison; `nest-round3` checks the round-3 repros (binder grammar, ordered
+comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
 empty binders, line-broken headers), `nest-round4` the round-4 recursion
 through rebuilt strict descendants and `nest-round6` the round-6 detached
 braces (a space, comment or line break between a constructor name and its
@@ -51,7 +51,10 @@ braces (a space, comment or line break between a constructor name and its
 let binder's quantity) with the reviewer's 1,500-program let/alias generator
 and `nest-round8` the round-8 Type-kind promotions (a `+` binder's kind is
 judged where the match frontier binds it) with the reviewer's 3,000-program
-Type-kind generator, each in both compiler lanes with its own semantic mutants.
+Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
+unannotated let of a binder that a positive branch refined to a constructor
+needs an annotation) and the dotted-binder stopgap (every dotted binder is
+Unsupported), each in both compiler lanes with its own semantic mutants.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,

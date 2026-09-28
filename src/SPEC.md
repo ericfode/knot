@@ -80,7 +80,11 @@ digits, underscores or dots. Keywords cannot be identifiers.
   binder already in context, before the scrutinee in match order, has an empty
   constructor set (an emptied residual or a zero-constructor datatype). This
   never bypasses the checking of a selected body. Pattern binders and live let
-  binders are single words; dotted names there are invalid. `_` is anonymous in row and
+  binders are single words. The seed accepts a dotted name there only where it
+  rebinds a name in scope, which the parser does not resolve, so every dotted
+  binder (a pattern, a `+` promotion, a let, a typed let) reports `Unsupported
+  parse dotted-binder`, never Invalid; an erased let's dotted name stays a name.
+  `_` is anonymous in row and
   field positions; referring to it reports `Invalid check free-name`. Names
   such as `_x` remain ordinary binders.
   All-variable columns on the latest local binder are aliases without

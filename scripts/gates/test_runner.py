@@ -291,7 +291,7 @@ class ExecutionTests(unittest.TestCase):
                               'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
                               'bootstrap', 'classification', 'nest', 'nest-review', 'io-host', 'io-abi-2',
                               'selfhost', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7',
-                              'nest-round8'}, set(names))
+                              'nest-round8', 'nest-round9'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
