@@ -131,13 +131,27 @@ def seed_observation(case, source=None):
     return run([SEED, source], 120)
 
 
+def invoke_argv(case, built, argv):
+    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8."""
+    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], argv[0], EVAL_BUDGET, *argv[1:]]
+
+
 def lanes(case, built):
     got = {'seed': observed(seed_observation(case)),
            'eval': observed(run(eval_argv(case, built), 120))}
     if 'seed_bun_stderr' in case:
-        # The seed's Bun lane cross-checks a native observation that D20 excludes.
+        # The seed's Bun lane, recorded beside a native observation; it never classifies.
         got['seed_bun'] = observed(run([SEED, case['source']], 120))
+    if 'invocations' in case:
+        # The seed runs only `main`; eval-cli is the oracle for every other invocation.
+        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i['argv']), 120))}
+                              for i in case['invocations']]
     return got
+
+
+def reviewed(invocation) -> dict:
+    """An invocation's literal review, without its observation."""
+    return {k: v for k, v in invocation.items() if k != 'eval'}
 
 
 # ------------------------------------------------------------------ registry
@@ -1316,6 +1330,8 @@ def main() -> int:
                     f"{c['name']}: literal review {c['seed_bun_stderr']!r}, Bun lane {c['seed_bun']['stderr']!r}")
         for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout'):
             require(planned[c['name']].get(key) == c.get(key), f"{c['name']}: plan.json {key} differs from the frozen row")
+        require(planned[c['name']].get('invocations') == ([reviewed(i) for i in c.get('invocations', [])] or None),
+                f"{c['name']}: plan.json invocations differ from the frozen row")
     sources = {name: (ROOT / c['source']).read_text() for name, c in cases.items()}
 
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -1334,6 +1350,7 @@ def main() -> int:
         require(fresh[name]['seed'] == case['seed'], (name, 'seed drift', fresh[name]['seed'], case['seed']))
         require(fresh[name]['eval'] == case['eval'], (name, 'eval drift', fresh[name]['eval'], case['eval']))
         require(fresh[name].get('seed_bun') == case.get('seed_bun'), (name, 'Bun lane drift', fresh[name].get('seed_bun')))
+        require(fresh[name].get('invocations') == case.get('invocations'), (name, 'invocation drift', fresh[name].get('invocations')))
         plan = json.loads((GOLDEN / f'{name}.plan.json').read_text())
         data = (GOLDEN / f'{name}.kimg').read_bytes()
         require(codec.encode(plan, digest) == data, f'{name}: committed image differs from its plan')
