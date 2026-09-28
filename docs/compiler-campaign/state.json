@@ -148,7 +148,7 @@
         "deep-call's evaluator expectation (Exhausted parse budget) came from Knot's own compile-lane diagnostic, and its Wasm Exhausted acceptance was met by the separate deep-stack fixture; verifier rated it minor (provenance label, no hidden semantic defect)"
       ],
       "fixed_by_coordinator": [
-        "run-wasm.mjs fails closed (3a162ab): a stack overflow escaping to PromiseRejectCallback exited 0 with empty stdout at --stack_size 60-75"
+        "run-wasm.mjs fails closed (3a162ab, receipts c039a78). The gates reviewer reported exit 0 with empty stdout at --stack_size 60-75; the adversarial verifier did not reproduce it, so the commit message's 'confirmed by probe' overstates the evidence. The fail-closed default is correct either way: after it, 70 gives HostFailure 5 and 80/110 give Exhausted 4."
       ],
       "disposition": "merged; deep-call is relabelled here as an observed Knot parser-budget control, not a seed or literal expectation"
     },
