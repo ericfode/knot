@@ -25,6 +25,7 @@
     "truncation",
     "hash",
     "header",
+    "order",
     "adapters"
   ],
   "sources": {
@@ -38,6 +39,9 @@
     "header/lib/other.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "header/nbsp.bend": "e86050e5972353579ed7cda8927222024766a6b44716809bf146fb8d011a0a15",
     "header/vtab.bend": "0fd41903563391bc815ecf6c0eeb3ba4fbdd3de59032edc9e7e5b0984b91c1b0",
+    "order/entry.bend": "919e42d86c9efb9dfb722dbb3cc1d10924d9594f1096a7cd0f7d68b624066d54",
+    "order/lib/later.bend": "ad2c33ab3b585914ee3591dff9a5c3a7ce453f3642045f2a49b721f25f2a1fe1",
+    "order/module.bend": "21160ea815e66cb0d07318878044c5d51e1658e292369202b2e9001fe2a02841",
     "trunc/base.bend": "df1f0eced058141cd072b1a7755ab6bd3371c95affd0088eb63faa3c732fc4b7",
     "trunc/entry.bend": "5cff46f038e9666f4cbd5518c6c194043c5b44e1f555e4c8f47cddc88f806984",
     "trunc/exact.bend": "44e4f1c6fff6b176ab78dcb0ab295f68feebacb0aa7523bed430bb67a7fa441a",
@@ -418,6 +422,75 @@
         "phase": "load",
         "code": "header-character",
         "diagnostic_prefix": "Unsupported\tload\theader-character\t"
+      }
+    },
+    {
+      "name": "later-ctor-binder",
+      "finding": "order",
+      "file": "order/entry.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "order/entry.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/order/entry.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "variable-pattern",
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
+      },
+      "plain": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "variable-pattern",
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
+      }
+    },
+    {
+      "name": "later-ctor-binder-module",
+      "finding": "order",
+      "file": "order/module.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "order/module.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/order/module.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "variable-pattern",
+        "diagnostic_prefix": "Unsupported\tcheck\tvariable-pattern\t"
       }
     }
   ],
