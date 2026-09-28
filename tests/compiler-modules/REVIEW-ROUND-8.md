@@ -61,6 +61,11 @@ reviewer's, copied unchanged, plus `sf-absurd`, a single-file form of
   `law empty_datatype` declarations and two fills
   (`nest-generics-empty-laws.txt`). The coordinator chooses the rule at that
   junction.
+- **This branch is not the conflict.** The finding expects generics' rule to
+  conflict with the round-7 edits to `catalog.bend`. But
+  `git merge-tree --write-tree HEAD campaign/generics` merges `catalog.bend`,
+  `catalog-LAWS.bend` and `catalog-PROOF.bend` without conflict
+  (`mt-generics-before.txt`). The collision is between nest and generics.
 - **Porting either rule here adds a conflict.** `catalog.bend` merges cleanly
   with nest today, and would conflict if `nonempty` were edited.
   `catalog-LAWS.bend` already conflicts with nest, where round 7 and nest each
@@ -87,12 +92,15 @@ Both rules satisfy D4. Only the current `Invalid` violates it.
 
 - Freeze `tc2`, `em-absurd`, `em-param`, `em-entry` and `em-hash` in both bundle
   lanes, and `sf-empty/{main,mid,data}` and `em-entry` in the single-file lane.
-  Each gets the obligation `match-seed` with `requires: ["empty-datatype"]`.
-  - Either rule passes it. Nest's acceptance must reproduce the seed's `Lit{}`
-    in evaluation and Wasm, and generics' rule is an Unsupported rejection.
-  - The current `Invalid` (exit 2) fails it.
+  Pin the chosen verdict exactly:
+  - Nest's acceptance: `match-seed` with `requires: []`, which demands exit 0
+    and the seed's `Lit{}` in evaluation and Wasm.
+  - Generics' rule: `knot_expected` with the prefix
+    `Unsupported\tcheck\tempty-datatype\t`.
+  - Not `match-seed` with a nonempty `requires`. The gate then accepts any
+    Unsupported code, so an unrelated one, such as `parse import`, would pass.
 - Add a bundle-lane mutant that demotes the chosen rule to `Invalid`, with
-  witness `tc2`. Either rule kills it.
+  witness `tc2`.
 - If the rule reaches this branch through main, the single-file lane matches
   main and needs no delta row. If it is applied here first, add a row under
   "single-file deltas" in `src/SPEC.md` and `tests/compiler-modules/SPEC.md`.
