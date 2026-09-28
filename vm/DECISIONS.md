@@ -132,11 +132,11 @@ follows it (§5, §10, §11) without a new image header word.
    records these outcomes: its `progress.json` and `reference.json` receipts drift
    semantically, and this increment leaves them unrefreshed as shared receipts.
    Measured by the gate runner on this branch, the parse histogram moves from 623
-   to 707 files: `Parsed` 142 to 160, `Unsupported lex literal` 171 to 191,
-   `Unsupported parse declaration-form` 169 to 208, `parameter-type` 49 to 50,
+   to 710 files: `Parsed` 142 to 160, `Unsupported lex literal` 171 to 193,
+   `Unsupported parse declaration-form` 169 to 209, `parameter-type` 49 to 50,
    `Invalid parse expected-=` 2 to 6 and `Invalid parse function-result` 8 to 10.
    Exactly these six goldens account for the new Invalid rows; the 23 goldens of
-   review round 1 all end Unsupported. **When the coordinator refreshes these
+   review round 1 and the 3 of round 2 all end Unsupported. **When the coordinator refreshes these
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
@@ -159,3 +159,15 @@ follows it (§5, §10, §11) without a new image header word.
    and the seed prints as `x => On{}`. The image and invocation are well formed,
    so under D4 this too is Unsupported, as knot-vm-1 reports it. Owner: closures,
    or merge-wave when it merges them.
+9. **A style preflight blocker: `vm/bench/sha256-64k.bend::Digest`.** The
+   offline preflight over the branch's 87 changed Bend files (`git diff
+   --name-only main...HEAD -- '*.bend'`; 207 declarations) exits 3 with one
+   structural blocker: `Digest` (a datatype, line 5, 2,277 state bytes) has a
+   truncated context (`caller-or-byte-limit`), so Anticipation and Payoff are
+   unavailable and it cannot pass automatically; its supporting role is also
+   impossible. It has existed since `6c4f284`, and round 1 reported only a
+   23-file subset. The file is hash-pinned by `bench/workloads.json` and is not
+   restructured to fit the preflight. Owner: the coordinator, who should review
+   `Digest` explicitly in the live style pass or record it as unresolved in the
+   style state. The task context is unavailable (`missing_task_context`), which is
+   advisory; the composition is available (18,837 of 48,000 bytes).

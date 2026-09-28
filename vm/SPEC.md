@@ -112,9 +112,10 @@ count), 1 live arrow (`a` domain, `b` result), 2 erased arrow (`a` domain or
 `none`, `b` result), 3 opaque (`a = b = 0`). Arrows have name `none`; every other
 type is named. Constructor rows are grouped by type in type order, tags dense
 `0..b-1` in declaration order. A field, signature or node result type may be
-`none`: a value of an erased abstract type (a generic parameter), which may be
-moved but never inspected or described (§3). Arrow types MUST NOT form a cycle
-through their domains and results.
+`none`: a position of an erased abstract type (a generic parameter), whose value
+may be moved, is inspected only by a Case that names a concrete scrutinee type
+(§3), and is never described (§8). Arrow types MUST NOT form a cycle through
+their domains and results.
 
 **Representations.** Header words 12–23 name the hash-pinned Base types; a
 familiar name is never authority. Their pinned constructors, by tag, with live field
