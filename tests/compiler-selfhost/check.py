@@ -52,6 +52,9 @@ sys.path.insert(0, str(HERE))
 import regen  # noqa: E402  (the seed lane; shares the expectation schema)
 
 SEED = regen.SEED
+# The modules host query makes the seed name its five foreign-dependent CLI
+# definitions; a mutant CLI must report exactly that frozen set.
+HOST_CHECKS = json.loads((ROOT / 'tests/compiler-modules/host-check-expectations.json').read_text())['entries']
 BUILD = '.local/compiler-selfhost/knot'
 RECEIPT = HERE / 'receipts/selfhost.json'
 EXPECTATIONS = HERE / 'expectations.json'
@@ -383,12 +386,14 @@ def mutants(document) -> list[dict]:
         (ROOT / directory / 'src').mkdir(parents=True)
         for source in (ROOT / 'src').glob('*.bend'):
             shutil.copy2(source, ROOT / directory / 'src' / source.name)
+        shutil.copytree(ROOT / 'src/host', ROOT / directory / 'src/host')
         target = ROOT / directory / 'src' / file
         text = target.read_text()
         require(text.count(old) == 1, (name, 'a mutation site must be unique'))
         target.write_text(text.replace(old, new))
         typecheck = run(['bun', SEED, f'{directory}/src/{phases[-1]}-cli.bend', '--check-only'], SECONDS['build'])
-        require(typecheck['exit'] == 0 and typecheck['stdout'] == 'All terms check.\n', (name, 'type-correct', typecheck))
+        require(typecheck['exit'] == 0 and typecheck['stdout'] == HOST_CHECKS[f'{phases[-1]}-cli.bend']['stdout'],
+                (name, 'type-correct', typecheck))
         bins, builds = {}, []
         for phase in ('check', 'eval'):
             if phase in phases:
@@ -626,6 +631,7 @@ def counts(rows, available) -> dict:
 def inputs() -> dict:
     paths = sorted((ROOT / 'src').glob('*.bend')) + [ROOT / 'src/CONTRACT.json', HERE / 'check.py',
                                                      HERE / 'regen.py', EXPECTATIONS]
+    paths += sorted((ROOT / 'src/host').glob('*')) + [ROOT / 'tests/compiler-modules/host-check-expectations.json']
     return {p.relative_to(ROOT).as_posix(): digest(p.read_bytes()) for p in paths}
 
 
