@@ -202,6 +202,17 @@ adopt them or record its own, so that lockstep compares like with like.
   operand of a Chr construction, which the reference evaluation reads. Until
   then the evaluator, vm-model and vm-core agree, but §6's wording alone
   allows a VM that does not read it.
+- **Other readings where the reference evaluation differs.** These are not
+  review findings, but lockstep needs one reading of each. They came from
+  review round 3's probes, re-run against this VM:
+  - `append` moves `b` unread, and `is_empty` reads one cell (choice 3).
+    `evaluate.py` reads both whole Strings, so a laundered non-String tail is
+    `ill-typed` there. `append-tail-unchecked` and `isempty-unchecked` finish
+    `On{}` and `False{}` here.
+  - A `Halt` message holding a surrogate. The VM refuses it as `HostFailure io
+    abi`: it treats the message as an outgoing String under §10. The
+    reference's `program` returns the Halt with its codes.
+  vm-io owns the effect path.
 
 ## Evidence (gate `vm-core`)
 
