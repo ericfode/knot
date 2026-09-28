@@ -125,7 +125,7 @@ own commit before the repair (D7):
 | Finding | Frozen | Repair | Disposition |
 | --- | --- | --- | --- |
 | [blocking] A type-level definition named in a family field (or an earlier signature) was Invalid `unknown-type` | `d8af22d`, 11 fixtures | `287a624`: the type scope binds the book's definitions, and such a name is `Unsupported check type-level-definition` wherever it is declared; law `type_level_definition`; mutant `type-level-definition-unknown` | fixed |
-| A generic constructor pattern above its datatype was Checked | `2345731`, 6 fixtures; binding variant `d3fe024`, 2 fixtures | `2e9646f`: one `visible` order predicate; a later pattern is `Invalid check unknown-constructor`; law `pattern_order`; mutant `pattern-order-forward` | fixed |
+| A generic constructor pattern above its datatype was Checked | `2345731`, 6 fixtures; binding variant `d3fe024`, 2 fixtures | `2e9646f`: one `visible` order predicate; a later pattern is `Invalid check unknown-constructor`; law `pattern_order`; mutant `pattern-order-forward`. The binding variant is rejected earlier, as `Invalid check unmatchable-binder`: the seed never lets a match scrutinize a local binder | fixed |
 | A constructor pattern above its type (f1, and f6 in a generic-routed book) was Checked | the same corpus (`later-family-unbox`, `later-enum-generic-book`) | `2e9646f` | fixed; the purely monomorphic f7 and late-mono stay with the monomorphic checker's owner (`src/SPEC.md`) |
 | Marked bare binders (`+a,`, `-a,`) were checked, evaluated and compiled | `8bac386`, 9 fixtures | `d7fba74`: only an unmarked bare binder is a quantity; a marked one is `Invalid parse parameter` at the `,`; law `marked_binder`; mutant `marked-binder-quantity` | fixed |
 | `census:test` failed 73/75 on stale literals | — | `6086dfa`: `frontend_definitions` 41→47 (six generics definitions in `parse.bend`) and the recursion Wasm evidence (the two recursive generics fixtures) | fixed; these are assertion changes and need the coordinator's confirmation |
@@ -140,20 +140,73 @@ seed lexes `&2`, the meet `<&>` and, in most lists, a closing `>` as glued
 tokens. Knot's lexer splits symbols and drops spaces, so the generic parser
 checked books with `& 2`, `< & >` or `Seq<&2,Flag >` that the seed rejects;
 main reported them Unsupported. [The spacing corpus](spacing/README.md) was
-frozen in `8b26748` (18 fixtures); the repair reports every gap inside a
-glued token as `Unsupported parse spacing`, with law `spaced_quantity` and
-mutants `quantity-gap-glued`, `meet-gap-glued` and `close-gap-glued`. The seed
-accepts a gap before the `>` of a single-argument list; Knot does not
-reproduce that position-dependent rule, and the four seed-valid forms are
-pinned Unsupported. The restated `generic_header` law now gives its parameter
-type and closing `>` touching spans. The monomorphic forms of the class,
-`On {}` and `- >`, are `Checked` on main as well and stay with the frontend's
-owner.
+frozen in `8b26748` (18 fixtures). The repair `4e73b6c` reports every gap
+inside a glued token as `Unsupported parse spacing`, with law
+`spaced_quantity` and mutants `quantity-gap-glued`, `meet-gap-glued` and
+`close-gap-glued`. The seed accepts a gap before the `>` of a single-argument
+list. Knot does not reproduce that position-dependent rule, so four seed-valid
+fixtures, and the sweep's `t3`, moved from `Checked` (end of round 2) to
+Unsupported. Main also reported them Unsupported, so this is D4-legal, but it
+is a visible demotion. The restated `generic_header` law now gives its
+parameter type and closing `>` touching spans. The monomorphic forms of the
+class, `On {}` and `- >`, are `Checked` on main as well and stay with the
+frontend's owner.
+
+`spaced_quantity` is a parser law, but it lives in `type-erasure-LAWS.bend`
+beside the other generics boundary laws. In `LAWS.bend` it would push the
+frontend-laws style composition to 48,420 bytes, over its 48,000-byte limit.
+That composition is now at 47,760 bytes, so the next change to
+`type-parse.bend` or `LAWS.bend` will create a structural blocker unless the
+group is split.
 
 Every repair keeps D4: no program that the seed accepts becomes Invalid.
 Before each repair, the native `parse` and `check` CLIs ran over every tracked
 Bend file and the review probes; after it, only the targeted probes and the
-new fixtures changed outcome.
+new fixtures changed outcome. On the final tree the round-3 sweep (214 probes)
+finds no seed-accepted program reported Invalid. Six seed-rejected probes are
+still `Checked`, and main reports every one of them `Checked` too. Four are
+the monomorphic pattern order case (f7 twice, fw-p7 and late-mono), and two
+are the monomorphic spacing forms (ws1 and ws2).
+
+**Hang guards.** The generics gate's fixed 60- and 120-second hang guards now
+scale with `KNOT_GATE_TIMEOUT_SCALE`, as in the other gates (`f07ce14`). At
+load average ~70, a direct run had passed all 138 fixtures and then timed out
+on its first mutant's seed build. That change moved the gate's program hash
+in the census (`005887b`).
+
+**Gates.** Every full run of this round is reported:
+
+| Run | Tree | Result |
+| --- | --- | --- |
+| [run 1](receipts/review-3/gates-run1.json) | `f07ce14`, 4 jobs, 1,293 s, load average about 35 to 50 | exit 1: 19 passed. `census` reported `accepted.json` stale, because `f07ce14` had moved the generics gate's program hash (fixed in `005887b`). `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend`. Generics passed in 832.71 s of its 900 s wall |
+| [run 2](receipts/review-3/gates.json) | `005887b`, 4 jobs, 732 s, load average about 26 to 37 | exit 0: 21 of 21 passed |
+
+Run 2 counts for generics are 138 fixtures, 217 seed calls, 324 evaluator and
+324 Node agreements, 600 negative phase observations, 200 preserved
+artifacts, 38 byte-identical module pairs, 10 ABI arity observations, 4 proof
+entries and 15 mutants (30 lane kills). Classification has 17 fixtures and 7
+mutants. `receipts/generics.json` is run 2's normalized receipt, and its 208
+input hashes match the committed files. Of 89 regenerated receipts, 64 are
+identical, 9 volatile-only and 16 semantic. The semantic ones are this gate's
+receipt and shared receipts whose source hashes changed; the shared ones are
+left for the coordinator. `npm run -s gates:verify` runs 18 tests OK.
+`census --check` exits 0, and `census:test` passes 75 of 75.
+
+The generics gate's wall time is the long pole under campaign load: 479.68 s
+in run 2 and 832.71 s in run 1, against the runner's 900 s default. If the
+load stays high, the coordinator should expect to need `--jobs 2` or a quieter
+host.
+
+**Style preflight (offline, 0 provider requests).** Manifest mode reports 24
+groups, 0 truncated units, 24 of 24 compositions available and 0 structural
+blockers. Changed groups (units / composition bytes): frontend-parsing
+72 / 35,157, frontend-laws 114 / 47,760, generic-type-parsing 25 / 12,312 and
+generic-erasure-laws 42 / 23,537. Targets mode over the four changed sources
+(`type-parse.bend`, `LAWS.bend`, `type-erasure-LAWS.bend`,
+`type-erasure-PROOF.bend`) reports 84 units and 13 truncated contexts. None of
+those is a new declaration; the restated `generic_header` was already
+truncated at round 0. That cross-group composition is unavailable. No style
+rating is claimed.
 
 The round-0 summaries `receipts/gates.json`,
 `receipts/gates-resource-exhaustion.json` and
