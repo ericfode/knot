@@ -20,3 +20,41 @@ law no_character_budget:
 law no_parser_budget:
   for +tokens: List<&2,S.Token>
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
+
+# Prefix classification does not validate the unconsumed suffix.
+law generic_header:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Header{S.Token{"type",at},S.Token{"Box",at}},Con{S.Token{"<",at},rest})
+    == Fail{S.Unsupported{"parse","generic-datatype",at}} : Result<S.Error,P.Parsed>}
+
+law multiple_scrutinees:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.MatchTail{S.Token{"match",at},S.Variable{S.Token{"a",at}},0},Con{S.Token{"b",at},rest})
+    == Fail{S.Unsupported{"parse","match-scrutinees",at}} : Result<S.Error,P.Parsed>}
+
+law template_binder:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Parameters{")"},Con{S.Token{"~",at},Con{S.Token{"x",at},Con{S.Token{":",at},rest}}})
+    == Fail{S.Unsupported{"parse","template-binder",at}} : Result<S.Error,P.Parsed>}
+
+law destructuring_binding:
+  for +at: S.At
+  for +fields: List<&2,S.Node>
+  for +rest: List<&2,S.Token>
+  {P.reply(S.Constructor{S.Token{"Cell",at},fields},Con{S.Token{"=",at},rest})
+    == Fail{S.Unsupported{"parse","destructuring-binding",at}} : Result<S.Error,P.Parsed>}
+
+law local_import:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Header{S.Token{"import",at},S.Token{".",at}},Con{S.Token{"/",at},rest})
+    == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
+
+law hash_import:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Header{S.Token{"import",at},S.Token{"0x77a1a37baca5d86f62241cab956a1fb1",at}},Con{S.Token{"/",at},rest})
+    == Fail{S.Unsupported{"parse","import",at}} : Result<S.Error,P.Parsed>}
