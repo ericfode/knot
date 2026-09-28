@@ -56,7 +56,7 @@ loader decodes in `serializer.decode`'s order. The validator follows the order
 of `serializer.validate`'s recursion and stops at the first defect, and the
 canonical check comes last. A refusal therefore names the reference codec's
 first defect. The gate requires this on:
-- the 61 frozen controls, counted against SPEC §4's own figure;
+- the 62 frozen controls, counted against SPEC §4's own figure;
 - 3,640 seeded single mutations of the goldens: 3,336 refused, and 304 admitted
   and run to a clean outcome.
 
@@ -129,8 +129,11 @@ adopt them or record its own, so that lockstep compares like with like.
 5. **Nat Case.** The new word n − 1 is allocated only when the selected arm is
    the Branch that binds it, not when the Default is taken.
 6. **Rendering bounds.** A visit is one rendered constructor application. A
-   Nat word n counts n + 1 visits, one per layer of its logical view. The
-   16 MiB bound applies to the tree text, after `Evaluated\ttype\ttag\t`.
+   Nat word n counts n + 1 visits, one per layer of its logical view, and is
+   spelled with its own type's Zero and Succ names. The 16 MiB bound applies
+   to the tree text, separators included, after `Evaluated\ttype\ttag\t`.
+   Both bounds are inclusive. SPEC §8 now states this reading (vm-spec
+   `0e07562`), and its four display run controls pin it.
 7. **Invocation order.** Checks run in this order:
    1. usage;
    2. the image;
@@ -170,6 +173,16 @@ adopt them or record its own, so that lockstep compares like with like.
     (heap), the outcome §5 gives an allocation beyond the maximum, because the
     text is memory the VM needs. The display bound is checked first. Text ending
     exactly at 4 GiB is printed. The `ceiling` fixtures pin both cases.
+13. **Chr reads its operand.** Completing `Chr{w}` inspects `w` as a U32
+    (§6), as Nat's Succ does, and then yields the word itself; a Big code
+    stays the same cell. A laundered non-scalar operand is `HostFailure image`
+    (`ill-typed`) there, even when the Char is never used. §6 says only that
+    Chr "yields its code word unchanged", and its Inspection list does not
+    name Construct. The reference evaluation's `construct` reads the word
+    (`word`), and vm-model froze the same reading (`5b7ea75`). Review round 3
+    found the VM storing the word unread and finishing where the reference
+    halts. The `reference` fixtures compare `chr-unchecked`, `chr-closure` and
+    the control `chr-big-code` with `evaluate.book`.
 
 ## Findings for the spec owner
 
@@ -183,8 +196,12 @@ adopt them or record its own, so that lockstep compares like with like.
   fail on images nested deeper than Python's recursion limit. `check-core.py`
   lays out its 200,000-deep image iteratively. At depth 40 that layout is
   checked equal to `serializer.encode`.
-- **Ambiguities.** Choices 5, 6 and 8 above are real ambiguities in §6–§8 and
-  need one normative reading before lockstep.
+- **Ambiguities.** Choices 5 and 8 above are real ambiguities in §6–§8 and
+  need one normative reading before lockstep. SPEC §8 has settled choice 6.
+- **Chr's inspection (choice 13).** §6's Inspection list should name the
+  operand of a Chr construction, which the reference evaluation reads. Until
+  then the evaluator, vm-model and vm-core agree, but §6's wording alone
+  allows a VM that does not read it.
 
 ## Evidence (gate `vm-core`)
 
@@ -200,16 +217,24 @@ adopt them or record its own, so that lockstep compares like with like.
   `invoke-args` and `invoke-arrow` are checked through the real host and
   through the test build's registers. Together they cover every cause of §8's
   walk.
-- **Admitted controls.** vm-spec's three admitted plan controls (a Case on a
-  `none` slot) and seven code-list controls load. They run as `fixtures.json`
-  froze them by literal review: `list-head-match` prints `True{}`, the two
-  `case-none-*` controls fail `ill-typed` after boot, and every code list
-  compares `False{}`.
-- **Run controls.** The seven that check-spec.py freezes (`run_controls`)
+- **Admitted controls.** vm-spec's six admitted plan controls and seven
+  code-list controls load. They run as `fixtures.json` froze them by literal
+  review, and vm-spec's reference evaluation (`evaluate.book`) gives each the
+  same run and `calls`:
+  - `list-head-match` prints `True{}`;
+  - the two `case-none-*` controls fail `ill-typed` after boot;
+  - `first-code`, `first-code-none-case` and `key-arms-none`, whose arms fit
+    their Case (§3), print `True{}` after 3 calls;
+  - every code list compares `False{}`.
+- **Run controls.** The eleven that check-spec.py freezes (`run_controls`)
   load, and each runs to its frozen exit, output, outcome and `calls`:
   - `arrow-through-identity` prints `On{}` after 3 calls;
   - `u32-file-alias` prints `Off{}` after 1;
-  - the five others fail `ill-typed` at §7's operand check.
+  - five others fail `ill-typed` at §7's operand check;
+  - the four display controls meet each of §8's inclusive bounds and pass it
+    by one. `display-visits-at-bound` and `display-bytes-at-bound` print
+    lines frozen by SHA-256, the latter with a 15-byte successor name. The
+    other two are `Exhausted` kind 2 (`display`).
 
   §7 puts that check before the fuel test. Each control is therefore run again
   with exactly its `calls` of fuel, to the same outcome, so an ill-typed Enter
@@ -217,6 +242,10 @@ adopt them or record its own, so that lockstep compares like with like.
   adds the gate's evidence for them. An Action's check (`nops > 1`) cannot fail,
   because an Invoke and a Program phase pass at most one operand. Its removal
   is an equivalent mutant, so no mutant is listed for it.
+- **Reference rows (choice 13).** `chr-unchecked` (review round 3's repro),
+  `chr-closure` and the control `chr-big-code`. Each frozen run is literal
+  review, and `evaluate.book` and the VM must both give it: two are
+  `ill-typed` after 2 calls, and the control prints `True{}`.
 - **[core/fixtures.json](core/fixtures.json).** Literal review, frozen before
   any run:
   - the 250,000-deep non-tail recursion, with 500,003 entries and seven yields
@@ -226,19 +255,35 @@ adopt them or record its own, so that lockstep compares like with like.
   - exact fuel boundaries, rendering and both display bounds;
   - an ill-typed flow through a `none` parameter;
   - the Unsupported foreign leaf, and the invocation errors.
-- **Ceiling.** Six Books whose bump pointer ends near 4 GiB, one run at a
+- **Ceiling.** Six Books whose bump pointer ends near 4 GiB, at most two at a
   time. Each dump pins the bump pointer, which keeps the image in its band:
   - review round 2's three images, where a worklist based in i32 arithmetic
     16 MiB above the text wrapped into the image: `On{}`;
   - `ceiling-band`, just below that wrap: `B1{B1{B0{}}}`;
   - `ceiling-top`, whose text ends exactly at 4 GiB;
   - `ceiling-over`, 16 bytes beyond it: `Exhausted` kind 2 (heap).
+
+  **Provenance.** `c9869ef` chose each plan's fill counts by measuring the
+  pre-fix VM's bump pointer, and pinned `bump` from that measurement. It
+  called the pins literal review, which they were not (review round 3). The
+  gate now derives every row before the VM runs. `ceiling_run` sums §5's cell
+  sizes over the plan:
+  - H0 from the image length;
+  - the materialized pool;
+  - an Activation per entry;
+  - Objects, Big U32 results and `append`'s block (choices 1, 4 and 5).
+
+  `ceiling_expectation` then starts the text at the bump pointer (choice 12).
+  The frozen `expect` and `dump` must equal the derivation. It agrees with all
+  six measured pins, so which side of 4 GiB `ceiling-top` and `ceiling-over`
+  land on now follows from §5 and choice 12, not from a VM. Each row's `basis`
+  records the arithmetic.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 61 frozen controls and 3,640 fuzz images,
+- **Malformed images.** As above: 62 frozen controls and 3,640 fuzz images,
   with no trap.
-- **Mutants.** Eighteen, each killed by a wrong observation in a named group:
+- **Mutants.** Twenty-six, each killed by a wrong observation in a named group:
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -252,4 +297,10 @@ adopt them or record its own, so that lockstep compares like with like.
   - a Closure or the terminal continuation entered whatever its operand
     count, and a Closure's count checked after its fuel (run controls);
   - the ordinal count checked before the walk, and an arrow parameter
-    refused as `argument-range` (Book invocations).
+    refused as `argument-range` (Book invocations);
+  - a Branch's or a Default's body required to equal its Case's type (the
+    admitted controls);
+  - a Nat's successor spelled with its zero's name, its text sized by the
+    zero's name, a Nat word costing one visit, and each display bound
+    exclusive (run controls);
+  - Chr yielding its operand unread (the reference rows).

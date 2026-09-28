@@ -84,15 +84,23 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   build confirms each exhaustion cause and audits the state after every
   transition.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
-  lowered limits, including the 250,000-deep non-tail recursion, and six
-  Books whose bump pointer ends near 4 GiB.
+  lowered limits, including the 250,000-deep non-tail recursion.
+- Three Books on Chr's operand (`reference` rows) run as literal review froze
+  them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
+  run and call count.
+- Six Books whose bump pointer ends near 4 GiB. Each row's bump pointer and
+  outcome are first derived from SPEC section 5's cell sizes over its plan,
+  independently of any VM. The pins were first measured from the pre-fix VM
+  (`c9869ef`), and the derivation agrees with them.
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
-- The 61 malformed-image controls and a seeded fuzz corpus of 3,640 mutated
+- The 62 malformed-image controls and a seeded fuzz corpus of 3,640 mutated
   goldens are refused with the reference codec's first defect, and none traps.
-  The 17 controls vm-spec admits load. Of these, 10 run as literal review froze
-  them. The 7 run controls run to the outcome and call count that
-  `check-spec.py` freezes, including on exactly that much fuel.
-- Eighteen WAT mutants are each killed by a wrong observation.
+- The 24 controls vm-spec admits load:
+  - 13 run as literal review froze them, and as the reference evaluation
+    runs them;
+  - 11 run controls run to the outcome and call count that `check-spec.py`
+    freezes, also on exactly that much fuel.
+- Twenty-six WAT mutants are each killed by a wrong observation.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.
