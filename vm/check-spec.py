@@ -66,11 +66,18 @@ def run(argv, timeout):
     except subprocess.TimeoutExpired:
         return {'exit': None, 'outcome': 'harness-timeout', 'stdout': '', 'stderr': ''}
     return {'exit': p.returncode, 'stdout': p.stdout.decode('utf-8', 'replace'),
-            'stderr': p.stderr.decode('utf-8', 'replace')}
+            'stderr': p.stderr.decode('utf-8', 'replace'), 'bytes': p.stdout}
 
 
 def observed(result):
-    return {k: result[k] for k in ('exit', 'stdout', 'stderr')}
+    """Exit and text; a stdout that is not UTF-8 (the native lane's non-scalar output) is
+    also kept exactly, as hex."""
+    row = {k: result[k] for k in ('exit', 'stdout', 'stderr')}
+    try:
+        result.get('bytes', b'').decode('utf-8')
+    except UnicodeDecodeError:
+        row['stdout_hex'] = result['bytes'].hex()
+    return row
 
 
 # ------------------------------------------------------------------ oracles
@@ -125,8 +132,12 @@ def seed_observation(case, source=None):
 
 
 def lanes(case, built):
-    return {'seed': observed(seed_observation(case)),
-            'eval': observed(run(eval_argv(case, built), 120))}
+    got = {'seed': observed(seed_observation(case)),
+           'eval': observed(run(eval_argv(case, built), 120))}
+    if 'seed_bun_stderr' in case:
+        # The seed's Bun lane cross-checks a native observation that D20 excludes.
+        got['seed_bun'] = observed(run([SEED, case['source']], 120))
+    return got
 
 
 # ------------------------------------------------------------------ registry
@@ -1140,11 +1151,21 @@ def main() -> int:
     for c in cases.values():
         require(sha((ROOT / c['source']).read_bytes()) == c['sha256'], f"frozen source {c['name']}")
         # D7: the literal review written before observation is the seed's printed value
-        # (plan.json's first reviews spelled `, ` as `,`).
-        require(c['seed_stdout'] == c['seed']['stdout'],
-                f"{c['name']}: literal review {c['seed_stdout']!r}, seed printed {c['seed']['stdout']!r}")
-        require(planned[c['name']]['seed_stdout'].replace(', ', ',') == c['seed_stdout'].replace(', ', ','),
-                f"{c['name']}: plan.json literal review differs from the frozen row")
+        # (plan.json's first reviews spelled `, ` as `,`); a stdout that is not UTF-8 is
+        # reviewed byte for byte, and the Bun cross-check by its stderr.
+        if 'seed_stdout_hex' in c:
+            require(c['seed_stdout_hex'] == c['seed'].get('stdout_hex'),
+                    f"{c['name']}: literal review {c['seed_stdout_hex']}, seed wrote {c['seed'].get('stdout_hex')}")
+        else:
+            require(c['seed_stdout'] == c['seed']['stdout'],
+                    f"{c['name']}: literal review {c['seed_stdout']!r}, seed printed {c['seed']['stdout']!r}")
+            require(planned[c['name']]['seed_stdout'].replace(', ', ',') == c['seed_stdout'].replace(', ', ','),
+                    f"{c['name']}: plan.json literal review differs from the frozen row")
+        if 'seed_bun_stderr' in c:
+            require(c['seed_bun_stderr'] == c['seed_bun']['stderr'],
+                    f"{c['name']}: literal review {c['seed_bun_stderr']!r}, Bun lane {c['seed_bun']['stderr']!r}")
+        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout'):
+            require(planned[c['name']].get(key) == c.get(key), f"{c['name']}: plan.json {key} differs from the frozen row")
     sources = {name: (ROOT / c['source']).read_text() for name, c in cases.items()}
 
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -1162,6 +1183,7 @@ def main() -> int:
     for name, case in cases.items():
         require(fresh[name]['seed'] == case['seed'], (name, 'seed drift', fresh[name]['seed'], case['seed']))
         require(fresh[name]['eval'] == case['eval'], (name, 'eval drift', fresh[name]['eval'], case['eval']))
+        require(fresh[name].get('seed_bun') == case.get('seed_bun'), (name, 'Bun lane drift', fresh[name].get('seed_bun')))
         plan = json.loads((GOLDEN / f'{name}.plan.json').read_text())
         data = (GOLDEN / f'{name}.kimg').read_bytes()
         require(codec.encode(plan, digest) == data, f'{name}: committed image differs from its plan')

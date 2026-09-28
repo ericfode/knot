@@ -842,6 +842,59 @@
         "Literal",
         "describe"
       ]
+    },
+    {
+      "name": "print-non-scalar",
+      "source": "vm/golden/print-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "eda0800a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "Construct",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "print-non-scalar-mid",
+      "source": "vm/golden/print-non-scalar-mid.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "61eda080620a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Literal",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "string-surrogate-pair",
+      "source": "vm/golden/string-surrogate-pair.bend",
+      "lane": "literals",
+      "seed_stdout": "False{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ]
+    },
+    {
+      "name": "string-beyond-unicode",
+      "source": "vm/golden/string-beyond-unicode.bend",
+      "lane": "literals",
+      "seed_stdout": "1n\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ]
     }
   ]
 }

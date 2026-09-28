@@ -1733,6 +1733,115 @@
         "stdout": "",
         "stderr": "InternalFailure\teval\tresult-tag\n"
       }
+    },
+    {
+      "name": "print-non-scalar",
+      "source": "vm/golden/print-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "eda0800a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "Construct",
+        "non-scalar output"
+      ],
+      "sha256": "24ccb1ae678a33c0bfcacc36961c177f68061d6a94f1ab1bcf73f2e8df27550d",
+      "seed": {
+        "exit": 0,
+        "stdout": "\ufffd\ufffd\ufffd\n",
+        "stderr": "",
+        "stdout_hex": "eda0800a"
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "print-non-scalar-mid",
+      "source": "vm/golden/print-non-scalar-mid.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "61eda080620a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Literal",
+        "non-scalar output"
+      ],
+      "sha256": "743b007555153ecaad8e2d4f30a90239476587264b278943459c7111c8e9600c",
+      "seed": {
+        "exit": 0,
+        "stdout": "a\ufffd\ufffd\ufffdb\n",
+        "stderr": "",
+        "stdout_hex": "61eda080620a"
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "string-surrogate-pair",
+      "source": "vm/golden/string-surrogate-pair.bend",
+      "lane": "literals",
+      "seed_stdout": "False{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ],
+      "sha256": "1e4e42975abf5f78f652176fe6a2856dcd46bc55cb8e8ef6f616cf38db4bccb2",
+      "seed": {
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tFalse{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "string-beyond-unicode",
+      "source": "vm/golden/string-beyond-unicode.bend",
+      "lane": "literals",
+      "seed_stdout": "1n\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ],
+      "sha256": "9ab0b833d9b820c514c2128a529fe5a9640e56916620450420ceef005835da8c",
+      "seed": {
+        "exit": 0,
+        "stdout": "1n\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tSucc{Zero{}}\n",
+        "stderr": ""
+      }
     }
   ]
 }
