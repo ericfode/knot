@@ -8,6 +8,804 @@
   },
   "fixtures": [
     {
+      "name": "affine-split-alias",
+      "file": "tests/compiler-literals/regressions/affine-split-alias.bend",
+      "sha256": "c2b10dc46b0c8324fb8a48ad46ee4fde5da0567e1c842ed3e787d6bde816352c",
+      "finding": "promoted split binder control",
+      "covers": "case x used twice after case 0n",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-alias.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : n\n- observed : n (consumed more than once)\nLocation: default\n12 | \n13>| def default(n: Nat) -> Answer:\n   |             ^\n14 |   match n:\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-alias.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : n\n- observed : n (consumed more than once)\nLocation: default\n12 | \n13>| def default(n: Nat) -> Answer:\n   |             ^\n14 |   match n:\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
+      "name": "affine-split-field",
+      "file": "tests/compiler-literals/regressions/affine-split-field.bend",
+      "sha256": "c54090dfad9a96aa267b8667113bb70586fca1dc042f1ee5c38e43c2ba06cc59",
+      "finding": "promoted split binder control",
+      "covers": "case 1n+p with p used twice",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-field.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : _6\n- observed : _6 (consumed more than once)\nLocation: offset\n15 |     case 0n: No{}\n16>|     case 1n: No{}\n   |          ^^\n17 |     case 1n+p: answer(Nat.is_eq(Nat.add(p, p), 2n))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-field.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : _6\n- observed : _6 (consumed more than once)\nLocation: offset\n15 |     case 0n: No{}\n16>|     case 1n: No{}\n   |          ^^\n17 |     case 1n+p: answer(Nat.is_eq(Nat.add(p, p), 2n))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
+      "name": "affine-split-tail",
+      "file": "tests/compiler-literals/regressions/affine-split-tail.bend",
+      "sha256": "c07644a84f2ff156ba17d24f7c34e8a74cd273919e1e89a34f5bc1a7ea79b3bd",
+      "finding": "promoted split binder control",
+      "covers": "case SCon{c, t} with t used twice after case \"ab\"",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-tail.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : _79\n- observed : _79 (consumed more than once)\nLocation: tail\n14 |   match s:\n15>|     case \"ab\": No{}\n   |          ^^^^\n16 |     case SCon{c, t}: answer(String.eq(String.append(t, t), \"cc\"))\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-split-tail.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : _79\n- observed : _79 (consumed more than once)\nLocation: tail\n14 |   match s:\n15>|     case \"ab\": No{}\n   |          ^^^^\n16 |     case SCon{c, t}: answer(String.eq(String.append(t, t), \"cc\"))\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
+      "name": "escape-brace",
+      "file": "tests/compiler-literals/regressions/escape-brace.bend",
+      "sha256": "34cdfb87d76fec86a819dc2ca991d583334fa2a9c1d69b14a1bfe9f3e036af0a",
+      "finding": "escape before a brace",
+      "covers": "the seven escapes before `{`, plus `\\n}`, `ab{`, `\\u{41}{` and `\\U{41}{`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Escape": [
+          "Newline",
+          "Backslash",
+          "Quote",
+          "Apostrophe",
+          "Tab",
+          "Return",
+          "Nul",
+          "Closing",
+          "Plain",
+          "Point",
+          "UpperPoint"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/escape-brace.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/escape-brace.bend"
+            ],
+            "exit": 0,
+            "stdout": "No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Newline"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Newline.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Newline{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Newline.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Backslash"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Backslash.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Backslash{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Backslash.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Quote"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Quote.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Quote{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Quote.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Apostrophe"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Apostrophe.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Apostrophe{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Apostrophe.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Tab"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Tab.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Tab{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Tab.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Return"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Return.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Return{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Return.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            6
+          ],
+          "argument_constructors": [
+            "Nul"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Nul.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Nul{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Nul.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            7
+          ],
+          "argument_constructors": [
+            "Closing"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Closing.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Closing{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Closing.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            8
+          ],
+          "argument_constructors": [
+            "Plain"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Plain.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Plain{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Plain.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            9
+          ],
+          "argument_constructors": [
+            "Point"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-Point.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.Point{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-Point.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "pair",
+          "arguments": [
+            10
+          ],
+          "argument_constructors": [
+            "UpperPoint"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-pair-UpperPoint.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.pair(F.UpperPoint{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-pair-UpperPoint.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Newline"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Newline.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Newline{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Newline.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Backslash"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Backslash.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Backslash{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Backslash.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Quote"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Quote.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Quote{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Quote.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Apostrophe"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Apostrophe.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Apostrophe{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Apostrophe.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            4
+          ],
+          "argument_constructors": [
+            "Tab"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Tab.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Tab{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Tab.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            5
+          ],
+          "argument_constructors": [
+            "Return"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Return.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Return{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Return.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            6
+          ],
+          "argument_constructors": [
+            "Nul"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Nul.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Nul{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Nul.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            7
+          ],
+          "argument_constructors": [
+            "Closing"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Closing.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Closing{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Closing.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            8
+          ],
+          "argument_constructors": [
+            "Plain"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Plain.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Plain{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Plain.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            9
+          ],
+          "argument_constructors": [
+            "Point"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-Point.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.Point{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-Point.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "decoded",
+          "arguments": [
+            10
+          ],
+          "argument_constructors": [
+            "UpperPoint"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/escape-brace-decoded-UpperPoint.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/escape-brace.bend as F\n\ndef main() -> F.Answer:\n  F.decoded(F.UpperPoint{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/escape-brace-decoded-UpperPoint.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/escape-brace.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "escape-brace-unknown",
+      "file": "tests/compiler-literals/regressions/escape-brace-unknown.bend",
+      "sha256": "30a62237f355792a76f3ebb0429b67751bbc9d99919e0b0f14e5c18cddcca630",
+      "finding": "escape before a brace",
+      "covers": "`\\q{` stays an unknown escape",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/escape-brace-unknown.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an escape (\\n \\t \\r \\0 \\\\ \\' \\\" \\u{1F600})\n- observed : '{'\nLocation:\n13 | def main() -> Answer:\n14>|   answer(Nat.is_eq(String.length(\"\\q{\"), 2n))\n   |                                     ^\n15 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/escape-brace-unknown.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : an escape (\\n \\t \\r \\0 \\\\ \\' \\\" \\u{1F600})\n- observed : '{'\nLocation:\n13 | def main() -> Answer:\n14>|   answer(Nat.is_eq(String.length(\"\\q{\"), 2n))\n   |                                     ^\n15 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tlex\tescape\t",
+        "justification": "Seed-invalid (\"an escape\"): `\\q` is no escape; a following `{` opens a code point only after `u` or `U`."
+      }
+    },
+    {
       "name": "field-pattern-offset",
       "file": "tests/compiler-literals/regressions/field-pattern-offset.bend",
       "sha256": "dbf3377e3849e0ab67dbd1eae8f30944a656ebe50cd7e913596d59f31b940eee",
@@ -1722,6 +2520,789 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
         "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "promoted-split",
+      "file": "tests/compiler-literals/regressions/promoted-split.bend",
+      "sha256": "d091335569676e4ea068440d8124da9f873b239b1f4369b489fff2b62afaa1f8",
+      "finding": "promoted split binder",
+      "covers": "`+x`, `1n+ +p` and `SCon{c, +t}` used twice over Nat and String columns that literal, offset or constructor rows split",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Size": [
+          "Empty",
+          "One",
+          "Two",
+          "Three"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/promoted-split.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/promoted-split.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literals",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literals(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literals",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literals(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literals",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literals(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_literals",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_literals(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_literals-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_offset",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_offset(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_offset",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_offset(F.One{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_offset",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_offset(F.Two{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_after_offset",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_after_offset(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_after_offset-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_default",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_default-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_default(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_default-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_default",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_default-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_default(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_default-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_default",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_default-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_default(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_default-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_default",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_default-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_default(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_default-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_first",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_first-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_first(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_first-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_first",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_first-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_first(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_first-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_first",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_first-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_first(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_first-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_first",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_first-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_first(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_first-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unlettered",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unlettered(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unlettered",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unlettered(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unlettered",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unlettered(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unlettered",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unlettered(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-nat_unlettered-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_default",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_default-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_default(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_default-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_default",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_default-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_default(F.One{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_default-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_default",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_default-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_default(F.Two{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_default-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_default",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_default-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_default(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_default-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_tail-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_tail-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_tail-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_tail-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_tail-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_tail-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-split-string_tail-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-split.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-split-string_tail-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-split.No{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {

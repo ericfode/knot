@@ -57,6 +57,14 @@ BINDER = oracle.unsupported(
     'check', 'variable-pattern',
     'Seed-valid: `0n+p` reads as the binder p, and Knot does not check a binder arm over a '
     'datatype (D4).')
+ESCAPE = invalid(
+    'lex', 'escape',
+    'Seed-invalid ("an escape"): `\\q` is no escape; a following `{` opens a code point only '
+    'after `u` or `U`.')
+AFFINE = invalid(
+    'check', 'affine-reuse',
+    'Seed-invalid ("consumed more than once"): a binder or field without `+` over a split '
+    'column is affine, so two uses are a reuse.')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -100,6 +108,17 @@ PLAN = {
     'pattern-offset-zero-on-enum': ('zero offset', 'case 0n+p on Answer is the binder p', [], BINDER),
     'field-pattern-u32': ('literal field pattern', 'case Box{3}', [], NESTED),
     'field-pattern-offset': ('literal field pattern', 'case Cell{1n+p}', [], NESTED),
+    'escape-brace': ('escape before a brace', 'the seven escapes before `{`, plus `\\n}`, `ab{`, '
+                     '`\\u{41}{` and `\\U{41}{`', ['pair', 'decoded'], oracle.AGREE),
+    'escape-brace-unknown': ('escape before a brace', '`\\q{` stays an unknown escape', [], ESCAPE),
+    'promoted-split': ('promoted split binder', '`+x`, `1n+ +p` and `SCon{c, +t}` used twice over '
+                       'Nat and String columns that literal, offset or constructor rows split',
+                       ['nat_after_literals', 'nat_after_offset', 'nat_default', 'nat_first',
+                        'nat_unlettered', 'string_default', 'string_tail'], oracle.AGREE),
+    'affine-split-alias': ('promoted split binder control', 'case x used twice after case 0n', [], AFFINE),
+    'affine-split-field': ('promoted split binder control', 'case 1n+p with p used twice', [], AFFINE),
+    'affine-split-tail': ('promoted split binder control', 'case SCon{c, t} with t used twice after '
+                          'case "ab"', [], AFFINE),
 }
 
 
