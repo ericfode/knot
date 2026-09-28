@@ -78,7 +78,75 @@ follows it (§5, §10, §11) without a new image header word.
    field makes the invocation `Unsupported invoke result-type` before any entry.
    A bound is a declared domain or budget limit and is always Exhausted; an
    Unsupported result is D4's refusal, never a bound. Of the 76 Book goldens only
-   `result-u32` falls outside the domain, so no other expectation changed.
+   `result-u32` falls outside the domain, so no other expectation changed. Three
+   goldens frozen in round 2 witness a U32 field, Char and String; a `none` field
+   and an arrow are witnessed by describe controls, because neither pinned head
+   produces a checked core for a generic result, and a closure result would add
+   another main-line `Invalid parse function-result` row (finding 5).
+9. **A Case may inspect an erased position.** Review round 2 relaxed §3's
+   scrutinee rule from "the slot's type equals the concrete scrutinee type" to
+   "the scrutinee type is concrete and the slot's type is it or `none`". Round 1's
+   rule refused S's own shape: 79 nested patterns on generic fields across 14 of
+   S's files, such as `catalog.bend`'s `case Con{+head,+tail}: match head: …` and
+   `check-cli.bend`'s `case Done{P.Parsed{value,rest}}`. The Case still inspects
+   the word against its scrutinee type (§6.1), so this admits no new unsoundness
+   beyond what `none` instantiation already allows. Neither pinned head checks a
+   `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
+   shape is witnessed by the admitted control `list-head-match` until a golden can
+   be frozen.
+10. **Non-scalar output is a divergence by contract (D20).** Review round 3 found
+   §11's reference lane and §10's IO contract in conflict: the seed's native lane
+   writes a non-scalar Char as generalized UTF-8 (`print-non-scalar`, ASCII source
+   `IO.print(SCon{Chr{55296}, SNil{}})`, bytes `ED A0 80 0A`), while `knot-io`
+   refuses it. Under D20 the VM refuses the whole String as `HostFailure io abi`
+   before the host call (§10); the golden keeps the native bytes as hex, is marked
+   `divergent-by-contract (non-scalar output)` and is never counted as agreement
+   (§11). The seed's Bun lane refuses the same output and is recorded beside it.
+   `print-non-scalar-mid` (`"a\u{D800}b"`) pins that no part of the String is
+   written. The next review found the native bytes unfit to classify: the lane
+   truncates the lead byte of a code at or above 2^21, so `Chr{67237376}`
+   (0x401F600) prints `F0 9F 98 80`, the valid UTF-8 of U+1F600, and a rule that
+   decoded those bytes owed the emoji (`print-non-scalar-wide`). Round 3 then made
+   the Bun lane the witness, but review round 4 showed that it refuses a
+   non-scalar Char where `char_new` constructs it, printed or not: it refused
+   `non-scalar-code` (native `55296\n`) and `non-scalar-unprinted` (native
+   `a\nnonempty\n`, Bun `a\n`), which print only scalars, and wrote nothing for
+   `print-non-scalar-second`, where the VM writes `a\n` first. The coordinator's
+   round-4 decision makes the program's value the classifier: the reference
+   evaluation of the plan (`evaluate.py`, §6–§10 on values) yields the Strings
+   passed to `IO.print`, and D20 applies exactly when one holds a non-scalar Char.
+   Both seed lanes are recorded observations. The native bytes must equal the
+   whole trace in the lane's own encoding, whose truncation of the lead byte from
+   2^21 was measured on 19 codes; the Bun lane's output must be a prefix of the
+   VM's. Eleven expectation controls refuse undeclared non-scalar output (the wide
+   code included), a divergence on scalar output, another class, a VM that writes
+   the non-scalar String or less than the earlier prints, the wide plan printing
+   U+1F600, a built but unprinted surrogate declared as a divergence, other native
+   bytes, Bun output beyond the VM's and a native lane without its Bun record.
+11. **Plans spell a String as its code list.** Round 3 also found the reference
+   codec lossy: plans spelled String constants as JSON text, so `json.loads`
+   merged a surrogate pair into U+1F600 and decode refused codes above U+10FFFF
+   that encode wrote. Plans and decode now use code lists, encode refuses a text
+   spelling, and seven admitted code-list controls and two goldens
+   (`string-surrogate-pair`, seed `False{}`; `string-beyond-unicode`, seed `1n`)
+   pin §2's "every u32 code, in order". No committed image changed.
+12. **Enter checks its operand count.** The next review laundered arrows through
+   `id(x: none) -> none`: `fits` lets a `none` value flow into either arrow kind,
+   so validation admits an erased closure invoked live, a live closure invoked
+   erased (its body reads a slot never filled) and a Program's `k` invoked erased
+   (`Enter(terminal, [])`), and §7 said nothing about any of them. §7 step 1 now
+   halts with `HostFailure image` (`ill-typed`) before the fuel test unless a
+   Closure takes exactly its `live_argument` operands, an Action zero or one and
+   the terminal continuation one; Program phases 1 and 2 use the same check.
+   `fits` stays loose: a generic function instantiated at an arrow type returns
+   a `none`-typed value into an arrow-typed node (§3). No golden exercises that
+   (every golden still validates when `none` never fits an arrow), so the run
+   control `arrow-through-identity`, `id(λx. x)(On{})`, is the one that kills
+   such a mutant. The same review showed that U32 and File may name one opaque
+   type; that is admitted, with an ordinary run, because the pair has no pinned
+   shape and a `none` value already delivers a U32 word to a File position,
+   where the host refuses an unknown token as `HostFailure io handle`. Seven run
+   controls freeze these runs for vm-model and vm-core.
 
 ## Findings that need an owner
 
@@ -116,12 +184,13 @@ follows it (§5, §10, §11) without a new image header word.
    The bootstrap gate enforces D4 only on `src/`, so it passes, but its corpus now
    records these outcomes: its `progress.json` and `reference.json` receipts drift
    semantically, and this increment leaves them unrefreshed as shared receipts.
-   Measured by the gate runner on this branch, the parse histogram moves from 623
-   to 707 files: `Parsed` 142 to 160, `Unsupported lex literal` 171 to 191,
-   `Unsupported parse declaration-form` 169 to 208, `parameter-type` 49 to 50,
+   Measured by the gate runner on this branch after merging main (`481bb31`)
+   against main's committed receipt, the parse histogram moves from 785 to 876
+   files: `Parsed` 144 to 162, `Unsupported lex literal` 185 to 210,
+   `Unsupported parse declaration-form` 239 to 280, `parameter-type` 57 to 58,
    `Invalid parse expected-=` 2 to 6 and `Invalid parse function-result` 8 to 10.
    Exactly these six goldens account for the new Invalid rows; the 23 goldens of
-   review round 1 all end Unsupported. **When the coordinator refreshes these
+   review round 1, the 3 of round 2 and the 4 of round 3 all end Unsupported. **When the coordinator refreshes these
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
@@ -132,14 +201,27 @@ follows it (§5, §10, §11) without a new image header word.
 7. **eval-cli reports an InternalFailure for results it cannot describe.** The
    literals `eval-cli` at `2ea222e` reports `InternalFailure eval result-tag` for a
    Book result that is, or contains, a U32, Char or String, although `check-cli`
-   reports `Checked` and the seed prints the value: golden `result-u32` (seed `5`),
-   `Box{5}` with `type Box is Data: Box{item: U32}` (seed `Box{5}`), `'a'` (seed
-   `'a'`) and `"ab"` (seed `"ab"`). SPEC §11 counts an InternalFailure as a broken
-   invariant; under D4 a result Knot cannot describe is Unsupported, which is what
-   knot-vm-1 reports (`Unsupported invoke result-type`, SPEC §8). Owner: literals.
+   reports `Checked` and the seed prints the value: goldens `result-u32` (seed
+   `5`), `result-u32-field` (`Box{5}` with `type Box is Data: Box{item: U32}`),
+   `result-char` (`'a'`) and `result-string` (`"ab"`). SPEC §11 counts an
+   InternalFailure as a broken invariant; under D4 a result Knot cannot describe
+   is Unsupported, which is what knot-vm-1 reports (`Unsupported invoke
+   result-type`, SPEC §8). Owner: literals.
 8. **eval-cli reports a HostFailure for a closure result.** The closures `eval-cli`
    at `a1d6891` reports `HostFailure invoke function-result` for
    `def main() -> Flag -> Flag: x => On{}`, which its `check-cli` reports `Checked`
    and the seed prints as `x => On{}`. The image and invocation are well formed,
    so under D4 this too is Unsupported, as knot-vm-1 reports it. Owner: closures,
    or merge-wave when it merges them.
+9. **A style preflight blocker: `vm/bench/sha256-64k.bend::Digest`.** The
+   offline preflight over the branch's 87 changed Bend files (`git diff
+   --name-only main...HEAD -- '*.bend'`; 207 declarations) exits 3 with one
+   structural blocker: `Digest` (a datatype, line 5, 2,277 state bytes) has a
+   truncated context (`caller-or-byte-limit`), so Anticipation and Payoff are
+   unavailable and it cannot pass automatically; its supporting role is also
+   impossible. It has existed since `6c4f284`, and round 1 reported only a
+   23-file subset. The file is hash-pinned by `bench/workloads.json` and is not
+   restructured to fit the preflight. Owner: the coordinator, who should review
+   `Digest` explicitly in the live style pass or record it as unresolved in the
+   style state. The task context is unavailable (`missing_task_context`), which is
+   advisory; the composition is available (18,837 of 48,000 bytes).

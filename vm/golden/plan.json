@@ -811,6 +811,385 @@
         "Invoke",
         "generic"
       ]
+    },
+    {
+      "name": "result-u32-field",
+      "source": "vm/golden/result-u32-field.bend",
+      "lane": "literals",
+      "seed_stdout": "Box{5}\n",
+      "features": [
+        "Construct",
+        "Literal",
+        "describe"
+      ]
+    },
+    {
+      "name": "result-char",
+      "source": "vm/golden/result-char.bend",
+      "lane": "literals",
+      "seed_stdout": "'a'\n",
+      "features": [
+        "Literal",
+        "describe"
+      ]
+    },
+    {
+      "name": "result-string",
+      "source": "vm/golden/result-string.bend",
+      "lane": "literals",
+      "seed_stdout": "\"ab\"\n",
+      "features": [
+        "Literal",
+        "describe"
+      ]
+    },
+    {
+      "name": "print-non-scalar",
+      "source": "vm/golden/print-non-scalar.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "eda0800a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "Construct",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "print-non-scalar-mid",
+      "source": "vm/golden/print-non-scalar-mid.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "61eda080620a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Literal",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "print-non-scalar-wide",
+      "source": "vm/golden/print-non-scalar-wide.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "\ud83d\ude00\n",
+      "seed_bun_stderr": "bend: 67237376 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "Construct",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "string-surrogate-pair",
+      "source": "vm/golden/string-surrogate-pair.bend",
+      "lane": "literals",
+      "seed_stdout": "False{}\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ]
+    },
+    {
+      "name": "string-beyond-unicode",
+      "source": "vm/golden/string-beyond-unicode.bend",
+      "lane": "literals",
+      "seed_stdout": "1n\n",
+      "features": [
+        "Literal",
+        "Intrinsic",
+        "code list"
+      ]
+    },
+    {
+      "name": "non-scalar-code",
+      "source": "vm/golden/non-scalar-code.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "55296\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "non-scalar Char"
+      ]
+    },
+    {
+      "name": "non-scalar-unprinted",
+      "source": "vm/golden/non-scalar-unprinted.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "a\nnonempty\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "non-scalar Char"
+      ]
+    },
+    {
+      "name": "print-non-scalar-second",
+      "source": "vm/golden/print-non-scalar-second.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "610aeda0800a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "a\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "non-scalar output"
+      ]
+    },
+    {
+      "name": "invoke-args",
+      "source": "vm/golden/invoke-args.bend",
+      "lane": "literals",
+      "seed_stdout": "Two{On{}, Off{}}\n",
+      "features": [
+        "Book invocation",
+        "erased parameter",
+        "Intrinsic"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}"
+        },
+        {
+          "argv": [
+            "two",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity"
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity"
+        },
+        {
+          "argv": [
+            "two",
+            "5"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "two",
+            "5",
+            "0",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "succ",
+            "0"
+          ],
+          "vm": "Succ{Zero{}}"
+        },
+        {
+          "argv": [
+            "succ",
+            "1"
+          ],
+          "vm": "HostFailure invoke structured-argument"
+        },
+        {
+          "argv": [
+            "succ",
+            "1",
+            "0"
+          ],
+          "vm": "HostFailure invoke structured-argument"
+        },
+        {
+          "argv": [
+            "succ",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "size",
+            "0"
+          ],
+          "vm": "Zero{}"
+        },
+        {
+          "argv": [
+            "size",
+            "1"
+          ],
+          "vm": "HostFailure invoke structured-argument"
+        },
+        {
+          "argv": [
+            "code",
+            "0"
+          ],
+          "vm": "HostFailure invoke structured-argument"
+        },
+        {
+          "argv": [
+            "code",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "is_zero",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "divergence": "opaque-parameter"
+        },
+        {
+          "argv": [
+            "is_zero",
+            "7"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "real",
+            "0"
+          ],
+          "vm": "Off{}",
+          "divergence": "erased-field"
+        },
+        {
+          "argv": [
+            "real",
+            "1"
+          ],
+          "vm": "On{}"
+        },
+        {
+          "argv": [
+            "real",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "text",
+            "1"
+          ],
+          "vm": "Unsupported invoke result-type"
+        },
+        {
+          "argv": [
+            "text",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "absent"
+          ],
+          "vm": "HostFailure invoke unknown-export"
+        },
+        {
+          "argv": [
+            "main",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-arity"
+        }
+      ]
+    },
+    {
+      "name": "invoke-arrow",
+      "source": "vm/golden/invoke-arrow.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Book invocation",
+        "Closure",
+        "Invoke"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "feed",
+            "1",
+            "0"
+          ],
+          "vm": "HostFailure invoke function-argument"
+        },
+        {
+          "argv": [
+            "feed",
+            "1",
+            "0",
+            "0"
+          ],
+          "vm": "HostFailure invoke function-argument"
+        },
+        {
+          "argv": [
+            "feed",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity"
+        },
+        {
+          "argv": [
+            "feed",
+            "2",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "feed"
+          ],
+          "vm": "HostFailure invoke argument-arity"
+        }
+      ]
     }
   ]
 }

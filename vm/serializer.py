@@ -5,6 +5,10 @@
 plan without sharing layout code with `encode`; `validate` checks a decoded
 plan's scope, arity and type rules. An image is canonical exactly when
 `encode(decode(image)) == image`. Nothing here parses Bend or evaluates a term.
+
+A plan spells a String constant as the list of its Chr codes, never as text: a
+JSON or Python text step would merge a surrogate pair into one code or refuse a
+code above U+10FFFF, while SPEC section 2 keeps every u32 code in order.
 """
 from __future__ import annotations
 
@@ -38,6 +42,13 @@ def opt(value):
     return NONE if value is None else value
 
 
+def u32_list(values) -> list:
+    """A constant's data: u32 words only, so a String arrives as its code list."""
+    if not isinstance(values, list) or not all(type(v) is int and 0 <= v <= 0xFFFFFFFF for v in values):
+        raise ValueError(f'constant data is not a list of u32 words: {values!r}')
+    return values
+
+
 # ---------------------------------------------------------------- encoding
 
 def encode(plan: dict, digest: bytes) -> bytes:
@@ -67,8 +78,7 @@ def encode(plan: dict, digest: bytes) -> bytes:
     sites = [0]
 
     def constant(kind: str, value) -> int:
-        data = [ord(c) for c in value] if isinstance(value, str) else (
-            list(value) if isinstance(value, list) else [value])
+        data = u32_list(value) if kind == 'String' else u32_list([value])
         key = (CONSTANT_KINDS.index(kind), tuple(data))
         return constants.setdefault(key, len(constants))
 
@@ -102,7 +112,7 @@ def encode(plan: dict, digest: bytes) -> bytes:
                 for r in rows:
                     table += [r[1], ('@', emit(r, t))]
             fallback = NONE if default is None else ('@', emit(default, t))
-            operands = [slot, scrutinee, CASE_MODES.index(mode), len(rows), *table, fallback]
+            operands = [slot, opt(scrutinee), CASE_MODES.index(mode), len(rows), *table, fallback]
         elif op == 'closure':
             _, _, live, slots, captures, body = node
             kid = emit(body)
@@ -255,7 +265,7 @@ def decode(data: bytes, digest: bytes) -> dict:
         kind = CONSTANT_KINDS[r[0]]
         if kind != 'String' and r[1] != 1:
             raise Malformed('scalar constant width')
-        constants.append((kind, ''.join(map(safe_chr, r[2:])) if kind == 'String' else r[2]))
+        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))
 
     start = {at: i for i, (at, _) in enumerate(node_records)}
     owner: dict[int, int] = {}
@@ -352,13 +362,6 @@ def decode(data: bytes, digest: bytes) -> dict:
     if representation:
         plan['representation'] = representation
     return plan
-
-
-def safe_chr(code: int) -> str:
-    # Plans spell String constants as text; codes outside Unicode keep a list form.
-    if code > 0x10FFFF:
-        raise Malformed('string code beyond plan text')
-    return chr(code)
 
 
 # ---------------------------------------------------------------- validation
@@ -522,7 +525,8 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, 'case slot beyond depth')
                 return depth
             used.add(slot)
-            if scrutinee is None or scope[slot] != scrutinee:
+            # The scrutinee type is concrete; its slot may be an erased position (SPEC section 3).
+            if scrutinee is None or scope[slot] not in (None, scrutinee):
                 fail(where, 'case scrutinee type')
             deepest = depth
             if mode == 'tags':
@@ -649,7 +653,12 @@ def main(argv):
     digest = base_digest(reg)
     if len(argv) == 3 and argv[0] == 'encode':
         plan = json.loads(Path(argv[1]).read_text())
-        Path(argv[2]).write_bytes(encode(plan, digest))
+        try:
+            image = encode(plan, digest)
+        except ValueError as refusal:
+            print(f'plan refused: {refusal}', file=sys.stderr)
+            return 1
+        Path(argv[2]).write_bytes(image)
     elif len(argv) == 2 and argv[0] == 'decode':
         print(json.dumps(decode(Path(argv[1]).read_bytes(), digest), indent=1))
     elif len(argv) == 2 and argv[0] == 'check':

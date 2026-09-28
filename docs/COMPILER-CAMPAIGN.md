@@ -15,6 +15,7 @@ Later additions the same day:
 - "You can let claude do actual work too. i just want you to use up my codex tokens as well"
 - "Please keep the focus on self hosting first"
 - "would it it make sense to make a virtualized bend first?" … "yep this is how i want to do it! make it happen"
+- "Codex is out of tokens, so start using Claude instead. I mean, yourself with workflows."
 
 ## Definition of done
 
@@ -84,6 +85,8 @@ Later additions the same day:
 | D16 | VM fuel counts calls and invokes, independent of eval.bend's transition count. Exhausted kinds are 1 (fuel), 2 (heap) and 3 (frame region). | Keeps superinstructions and later optimization possible without changing observable budgets. |
 | D17 | The host ABI becomes `knot-io-2`: `knot-io-1` plus `read_bytes`, `path_identity` (the modules loader's foreign `inspect`) and a stack-exhaustion kind. | The VM loads images as raw bytes. The loader needs symlink and case identity, per the modules review. |
 | D18 | The literals increment's Knot-emitted instruction machine (`knot-literals-wasm-1`) is superseded as the self-hosting VM. It stays in the bundle as a frozen native profile, and its opcode DSL seeds the later `vm-emit` speed track. | Enum-only ABI, no `knot_io`, no closures, no reclamation, a 32,768-instruction cap and unary Nat. |
+| D19 | The VM's linear-memory maximum is 65,536 pages (4 GiB, the wasm32 limit), declared in the image and VM contract. Exhausting the declared budget is `Exhausted` kind 2 (heap), reproducibly on every host. This replaces the 2,048-page (128 MiB) bound that the io-host increment chose and the VM design adopted. The `knot_io` host's module-memory check is raised to match. | That bound was a conservative guess, not a platform limit: Node 22.22.3 accepts a 65,536-page maximum and grows a memory to 2 GiB on this host. A declared budget keeps heap exhaustion deterministic without starving self-compilation. User question, 2026-09-27: "why is this the case 'Memory is capped at 128 MiB (2,048 pages)'". |
+| D20 | Non-scalar Chars (lone surrogates and codes above U+10FFFF) on output. The program's value decides non-scalar output, not any seed lane's behaviour. A golden is `divergent-by-contract (non-scalar output)` exactly when a String the program passes to an output effect holds a Char outside the Unicode scalar range. This is determined from the program's own semantics: the reference evaluation of its plan, or eval-cli or vm-model on the same program. The VM then follows the `knot-io` contract: it refuses that String as `HostFailure io abi` before the host call, after the earlier output, and never encodes it. Constructing a non-scalar Char is legal in the VM; only outputting one is refused. The seed lanes are observations only, and both are recorded. The Bun lane may refuse early, when the Char is constructed. The native lane prints generalized UTF-8, truncating the lead byte of a code from 2^21. Neither lane classifies. A D20 case never counts as seed agreement; a program that builds a non-scalar Char but outputs only scalars is ordinary seed agreement. | The vm-spec review found the reference lane and the IO contract in conflict. The IO contract is the one the host enforces, and a VM that encoded what the host refuses could not be conformance-tested. Review round 4 found both lanes unfit to classify: the Bun lane refuses at construction, and the native bytes are lossy from 2^21. The coordinator then made the program's value the classifier. |
 
 ## Milestone ladder
 
@@ -117,7 +120,7 @@ Parallel tracks throughout:
 ## Protocol
 
 - **One branch per increment.** Each increment gets branch `campaign/<id>` in worktree `.claude/worktrees/campaign-<id>`, created from `main`. `.toolchain` is linked to the main checkout's pinned copy.
-- **Executors.** Codex (`gpt-6-astra`, max reasoning), run with `codex exec -s workspace-write -C <worktree>`, or Claude agents. Executors commit only on their branch and never push or merge.
+- **Executors.** Claude workflows since 2026-09-27, when the Codex quota ran out. Each increment runs an implementer loop in its worktree, then the scope/gates/semantics review with adversarial verification, then fix-and-re-review rounds. Earlier increments used Codex (`gpt-6-astra`) through `codex exec -s workspace-write`. Executors commit only on their branch and never push or merge.
 - **Merge path.** The coordinator reviews each branch: diff scope, all 11 existing gates, the new gates, and targeted Perch when a key is available. It then merges to `main` and pushes.
 - **Conflicts.** Receipts that differ only in date or path are regenerated on `main` after merging.
 - **State.** Kept in [compiler-campaign/state.json](compiler-campaign/state.json).

@@ -7,7 +7,9 @@ committed image equals its plan's encoding, decodes back to that plan, passes
 the validator and agrees with the oracle checker's own core display; freezes
 the VM expectation table under the Exhausted-lane rule; checks the bench
 freeze; and requires every negative control and mutant to be rejected.
-It implements no VM and evaluates no image.
+It implements no VM. The reference evaluation of each plan (evaluate.py, on
+values, not cells) supplies a Program's own output and must reproduce every
+Book expectation and run control.
 """
 from __future__ import annotations
 
@@ -37,16 +39,23 @@ VM_FUEL = 1_000_000
 RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
 CODEC = HERE / 'serializer.py'
+EVALUATOR = HERE / 'evaluate.py'
 
 
-def load_codec(text: str | None = None):
-    module = types.ModuleType('serializer')
-    module.__file__ = str(CODEC)
-    exec(compile(text if text is not None else CODEC.read_text(), str(CODEC), 'exec'), module.__dict__)
+def load(path: Path, text: str | None = None):
+    module = types.ModuleType(path.stem)
+    module.__file__ = str(path)
+    exec(compile(text if text is not None else path.read_text(), str(path), 'exec'), module.__dict__)
     return module
 
 
+def load_codec(text: str | None = None):
+    return load(CODEC, text)
+
+
 codec = load_codec()
+reference = load(EVALUATOR)
+sys.setrecursionlimit(20_000)  # the reference evaluation recurses on the plan's nesting
 
 
 def require(condition, detail):
@@ -66,11 +75,18 @@ def run(argv, timeout):
     except subprocess.TimeoutExpired:
         return {'exit': None, 'outcome': 'harness-timeout', 'stdout': '', 'stderr': ''}
     return {'exit': p.returncode, 'stdout': p.stdout.decode('utf-8', 'replace'),
-            'stderr': p.stderr.decode('utf-8', 'replace')}
+            'stderr': p.stderr.decode('utf-8', 'replace'), 'bytes': p.stdout}
 
 
 def observed(result):
-    return {k: result[k] for k in ('exit', 'stdout', 'stderr')}
+    """Exit and text; a stdout that is not UTF-8 (the native lane's non-scalar output) is
+    also kept exactly, as hex."""
+    row = {k: result[k] for k in ('exit', 'stdout', 'stderr')}
+    try:
+        result.get('bytes', b'').decode('utf-8')
+    except UnicodeDecodeError:
+        row['stdout_hex'] = result['bytes'].hex()
+    return row
 
 
 # ------------------------------------------------------------------ oracles
@@ -124,9 +140,27 @@ def seed_observation(case, source=None):
     return run([SEED, source], 120)
 
 
+def invoke_argv(case, built, argv):
+    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8."""
+    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], argv[0], EVAL_BUDGET, *argv[1:]]
+
+
 def lanes(case, built):
-    return {'seed': observed(seed_observation(case)),
-            'eval': observed(run(eval_argv(case, built), 120))}
+    got = {'seed': observed(seed_observation(case)),
+           'eval': observed(run(eval_argv(case, built), 120))}
+    if 'seed_bun_stderr' in case:
+        # The seed's Bun lane, recorded beside a native observation; it never classifies.
+        got['seed_bun'] = observed(run([SEED, case['source']], 120))
+    if 'invocations' in case:
+        # The seed runs only `main`; eval-cli is the oracle for every other invocation.
+        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i['argv']), 120))}
+                              for i in case['invocations']]
+    return got
+
+
+def reviewed(invocation) -> dict:
+    """An invocation's literal review, without its observation."""
+    return {k: v for k, v in invocation.items() if k != 'eval'}
 
 
 # ------------------------------------------------------------------ registry
@@ -296,18 +330,23 @@ class Display:
         return ('branch', key, binders, self.term())
 
 
-def unescape(raw: str) -> str:
-    table = {'0': '\0', 'n': '\n', 't': '\t', 'r': '\r', '\\': '\\', '"': '"', "'": "'"}
+def unescape(raw: str) -> list:
+    """A displayed String literal's Chr codes; `\\u{hex}` spells any code, surrogates included."""
+    table = {'0': 0, 'n': 10, 't': 9, 'r': 13, '\\': 92, '"': 34, "'": 39}
     out, i = [], 0
     while i < len(raw):
-        if raw[i] == '\\':
+        if raw.startswith('\\u{', i):
+            end = raw.index('}', i)
+            out.append(int(raw[i + 3:end], 16))
+            i = end + 1
+        elif raw[i] == '\\':
             require(raw[i + 1] in table, f'display escape {raw[i:i + 2]!r}')
             out.append(table[raw[i + 1]])
             i += 2
         else:
-            out.append(raw[i])
+            out.append(ord(raw[i]))
             i += 1
-    return ''.join(out)
+    return out
 
 
 def erased_fields(source: str) -> dict:
@@ -323,7 +362,7 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
     lines = [l for l in text.splitlines() if l and l != 'Checked']
     plan_types, rep = plan['types'], plan.get('representation', {})
     scalar = {rep.get('U32'): 'U32', rep.get('Char'): 'Char'}
-    prim_ids = {p['name']: p['id'] for p in registry['prims']}
+    prims = {p['name']: p for p in registry['prims']}
     quantities = erased_fields(source)
     headers = []
     for line in lines:
@@ -374,7 +413,9 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
             for a in term[2]:
                 node, deepest = lower(a, scope, depth, deepest)
                 kids.append(node)
-            return ['prim', None, prim_ids[term[1]], kids], deepest
+            # Section 3: an Intrinsic's result type is the pinned representation its registry row names.
+            row = prims[term[1]]
+            return ['prim', rep.get(row['output']), row['id'], kids], deepest
         if kind == 'let':
             _, q, level, t, value, body = term
             if not q:
@@ -446,6 +487,64 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
     return functions
 
 
+PRINT = re.compile(r'import Base\n\ndef main\(\) -> IO\(Unit\):\n  IO\.print\((.*)\)\n')
+
+
+def named(node, types, functions) -> list:
+    """A subtree with each type index replaced by its type's name and each function index by
+    its function's name, so two tables can be compared."""
+    op, t = node[0], types[node[1]]['name']
+    if op in ('lit', 'value', 'ref'):
+        return [op, t, *node[2:]]
+    require(op in ('con', 'prim', 'call'), f'print argument: no named view of {op}')
+    head = functions[node[2]]['name'] if op == 'call' else node[2]
+    return [op, t, head, [named(k, types, functions) for k in node[3]]]
+
+
+def called(node, functions) -> set:
+    """Names of the functions a subtree calls, transitively."""
+    names, work = set(), [node]
+    while work:
+        n = work.pop()
+        if n[0] == 'call' and functions[n[2]]['name'] not in names:
+            names.add(functions[n[2]]['name'])
+            work.append(functions[n[2]]['body'])
+        work += n[3] if n[0] in ('con', 'prim', 'call') else []
+    return names
+
+
+def print_argument(name: str, source: str, plan: dict, strings: dict, built: dict, registry: dict) -> str | None:
+    """A Program `main = IO.print(e)` has no checked core in the pinned heads (Invalid parse
+    function-result), so `e` is checked as the Book `main() -> String`, whose type table is
+    `strings` (result-string's). Its projection, and that of every Base function it calls,
+    must equal the hand plan's argument and functions."""
+    m = PRINT.fullmatch(source)
+    if not m:
+        return None
+    path = BUILD / 'print' / f'{name}.bend'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f'import Base\n\ndef main() -> String:\n  {m[1]}\n')
+    shown = run([built['literals']['check'], '--bundle', '.', path.relative_to(ROOT)], 120)
+    require(shown['exit'] == 0, (name, 'print argument not checked', shown))
+    book = from_display(shown['stdout'], strings, '', registry)
+    require(book[-1]['name'] == 'main', f'{name}: print argument book {[f["name"] for f in book]}')
+    call = next(f for f in plan['functions'] if f['name'] == 'main')['body']
+    require(call[0] == 'call' and plan['functions'][call[2]]['name'] == 'IO.print', f'{name}: main is not IO.print(e)')
+    mine, theirs = (plan['types'], plan['functions']), (strings['types'], book)
+    require(named(call[3][0], *mine) == named(book[-1]['body'], *theirs),
+            (name, 'print argument differs from the checked core', book[-1]['body']))
+    callees = called(call[3][0], plan['functions'])
+    require(callees == {f['name'] for f in book[:-1]}, f'{name}: print argument calls {sorted(callees)}')
+
+    def signature(f, types, functions):
+        return ([types[p]['name'] for p in f['parameters']], types[f['result']]['name'], f['slots'],
+                named(f['body'], types, functions))
+    for f in book[:-1]:
+        mine_f = next(g for g in plan['functions'] if g['name'] == f['name'])
+        require(signature(mine_f, *mine) == signature(f, *theirs), (name, f['name'], 'differs from the checked core'))
+    return 'IO.print argument: checked-core'
+
+
 # ------------------------------------------------------------------ images
 
 def check_declarations(plan: dict, source: str):
@@ -504,14 +603,56 @@ def described(printed: str, quantities: dict) -> str:
     return tree
 
 
-def vm_expectation(case, plan, bounds, source) -> dict:
+NON_SCALAR = 'non-scalar output'
+
+
+def written(result) -> bytes:
+    """The bytes a lane wrote: its stdout, or the hex kept for one that is not UTF-8."""
+    return bytes.fromhex(result['stdout_hex']) if 'stdout_hex' in result else result['stdout'].encode()
+
+
+def output_expectation(case, plan, evaluator=None) -> dict:
+    """Section 11 and D20: a Program's own value classifies its output, never a seed lane.
+
+    The reference evaluation of the plan yields the Strings it passes to IO.print, in order.
+    The VM writes each as UTF-8 and refuses the first that holds a non-scalar Char as
+    `HostFailure io abi`, before its host call. The seed lanes are recorded observations:
+    the native lane must have written the whole trace in its generalized UTF-8 (which
+    truncates the lead byte of a code from 2^21), and the Bun lane, which refuses a
+    non-scalar Char where it is constructed, printed or not, a prefix of the VM's output."""
+    ev, name, seed = evaluator or reference, case['name'], case['seed']
+    require(seed['exit'] == 0, f'{name}: program seed must succeed')
+    vm, native = ev.program(plan, VM_FUEL), ev.program(plan, VM_FUEL, 'native')
+    require(native.get('exit') == 0 and native['stdout'] == written(seed),
+            f"{name}: the plan prints {native['stdout']!r} in the seed lane's encoding; the seed wrote {written(seed)!r}")
+    bun = case.get('seed_bun') if case.get('seed_lane') == 'native' else seed
+    require(bun is not None, f'{name}: a native-lane Program records its Bun lane')
+    require(vm['stdout'].startswith(bun['stdout'].encode()) and (bun['exit'] != 0 or vm.get('exit') == 0),
+            f"{name}: the Bun lane wrote {bun['stdout']!r} (exit {bun['exit']}); the VM writes {vm['stdout']!r}")
+    argv = ['IMAGE', str(VM_FUEL), '--']
+    if vm.get('cause') == 'io abi':
+        at, code = len(vm['prints']), next(c for c in vm['prints'][-1] if not ev.scalar(c))
+        require('divergence' in case, f'{name}: print {at} holds Char {code}; D20 refuses that output, '
+                                      f'so it is never seed agreement')
+        require(case['divergence'] == NON_SCALAR, f"{name}: divergence {case['divergence']!r} is not D20's")
+        require(case.get('vm_stdout', '').encode() == vm['stdout'] and 'vm_stdout' in case,
+                f"{name}: VM output {case.get('vm_stdout')!r} is not {vm['stdout']!r}, what the earlier prints write")
+        return {'argv': argv, 'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': case['vm_stdout'],
+                'basis': f'divergent-by-contract ({NON_SCALAR})',
+                'reason': f'D20: print {at} holds Char {code}; the native lane exits 0', 'eval_lane': classify(case['eval'])}
+    require(vm.get('exit') == 0, f'{name}: the reference evaluation ends {vm}')
+    require('divergence' not in case, f'{name}: a {NON_SCALAR} divergence, but every printed Char is a scalar')
+    return {'argv': argv, 'exit': 0, 'stdout': seed['stdout'], 'stderr': '', 'basis': 'seed',
+            'eval_lane': classify(case['eval'])}
+
+
+def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
     """The Exhausted-lane rule, applied to the frozen observations of one golden."""
     seed, ev = case['seed'], case['eval']
     fuel = VM_FUEL
+    require('divergence' not in case or plan['entry'] == 'program', f"{case['name']}: only a Program's output diverges")
     if plan['entry'] == 'program':
-        require(seed['exit'] == 0, 'program seed must succeed')
-        return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
-                'basis': 'seed', 'eval_lane': classify(ev)}
+        return output_expectation(case, plan, evaluator)
     main = next(f for f in plan['functions'] if f['name'] == 'main')
     why = codec.undescribable(plan, main['result'])
     if why:
@@ -545,25 +686,58 @@ def vm_expectation(case, plan, bounds, source) -> dict:
             'basis': 'seed', 'eval_lane': 'Exhausted'}
 
 
-def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) -> list:
-    """What the rule must refuse: an eval lane that disagrees with the seed, and a bound
-    that is not Exhausted or that stands in for an Unsupported result."""
+def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, evaluator=None) -> list:
+    """What the rule must refuse: an eval lane that disagrees with the seed, a bound that is
+    not Exhausted or that stands in for an Unsupported result, and a D20 classification that
+    is not the program's own output."""
     def row(label, seed, ev):
         return {'name': f'control:{label}', 'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
                 'eval': {'exit': 0, 'stdout': ev, 'stderr': ''}}
+
+    def without(name, *keys):
+        return {k: v for k, v in cases[name].items() if k not in keys}
+
+    def emoji(plan):
+        """print-non-scalar-wide's plan printing U+1F600, which its native bytes cannot tell apart."""
+        plan = json.loads(json.dumps(plan))
+        plan['functions'][1]['body'][3][0][3][0][3][0][3] = 0x1F600
+        return plan
     describe_bound = {'outcome': 'HostFailure', 'cause': 'invoke scalar-result',
                       'basis': 'round 1: a Book-describe bound, which section 11 no longer admits'}
+    unprinted, second = cases['non-scalar-unprinted'], cases['print-non-scalar-second']
     out = []
-    for label, name, case, table in [
-            ('eval-disagrees', 'value-on', row('eval-disagrees', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'), bounds),
+    for label, name, case, table, plan in [
+            ('eval-disagrees', 'value-on', row('eval-disagrees', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'), bounds, None),
             ('eval-keeps-erased-field', 'erased-construct',
-             row('eval-keeps-erased-field', 'ProofBox{Off{}, On{}}\n', 'Evaluated\t1\t0\tProofBox{Off{}}\n'), bounds),
+             row('eval-keeps-erased-field', 'ProofBox{Off{}, On{}}\n', 'Evaluated\t1\t0\tProofBox{Off{}}\n'), bounds, None),
             ('eval-nat-binds-n', 'nat-pred',
-             row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds),
-            ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}),
-            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound})]:
+             row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds, None),
+            ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}, None),
+            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}, None),
+            # D20: a declared divergence exactly where the program prints a non-scalar Char.
+            ('non-scalar-as-agreement', 'print-non-scalar', without('print-non-scalar', 'divergence', 'vm_stdout'), bounds, None),
+            ('divergence-on-scalar-output', 'foreign-print',
+             {**cases['foreign-print'], 'divergence': NON_SCALAR, 'vm_stdout': ''}, bounds, None),
+            ('divergence-other-class', 'print-non-scalar', {**cases['print-non-scalar'], 'divergence': 'other'}, bounds, None),
+            ('vm-writes-non-scalar', 'print-non-scalar-mid',
+             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds, None),
+            ('wide-code-as-agreement', 'print-non-scalar-wide',
+             without('print-non-scalar-wide', 'divergence', 'vm_stdout'), bounds, None),
+            # The native bytes of Chr{67237376} are those of U+1F600; the plan's value decides.
+            ('wide-plan-as-u1f600', 'print-non-scalar-wide', cases['print-non-scalar-wide'], bounds,
+             emoji(plans['print-non-scalar-wide'])),
+            # The Bun lane refuses a non-scalar Char where it is built, printed or not.
+            ('unprinted-as-divergence', 'non-scalar-unprinted',
+             {**unprinted, 'divergence': NON_SCALAR, 'vm_stdout': 'a\n'}, bounds, None),
+            ('second-output-from-bun', 'print-non-scalar-second', {**second, 'vm_stdout': second['seed_bun']['stdout']},
+             bounds, None),
+            ('native-other-bytes', 'print-non-scalar',
+             {**cases['print-non-scalar'], 'seed': {**cases['print-non-scalar']['seed'], 'stdout_hex': 'efbfbd0a'}}, bounds, None),
+            ('bun-beyond-vm', 'non-scalar-unprinted',
+             {**unprinted, 'seed_bun': {**unprinted['seed_bun'], 'stdout': 'b\n'}}, bounds, None),
+            ('native-without-bun-record', 'print-non-scalar-wide', without('print-non-scalar-wide', 'seed_bun'), bounds, None)]:
         try:
-            vm_expectation(case, plans[name], table, sources[name])
+            vm_expectation(case, plan or plans[name], table, sources[name], evaluator)
         except AssertionError as refusal:
             out.append({'control': f'expectation:{label}', 'refused': str(refusal)})
             continue
@@ -574,6 +748,24 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) 
 def classify(result) -> str:
     return {0: 'agree', 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted', 5: 'HostFailure',
             6: 'InternalFailure'}.get(result['exit'], 'other')
+
+
+def reproduced(name: str, plan: dict, expected: dict, evaluator=None):
+    """The reference evaluation reproduces a Book golden's expectation: its describe line, or
+    its bound's Exhausted outcome. A result section 8 cannot describe is never entered."""
+    if plan['entry'] != 'book' or expected.get('outcome') == 'Unsupported':
+        return
+    got = (evaluator or reference).book(plan, 'main', [], VM_FUEL)
+    keys = ('exit', 'stdout') if 'exit' in expected else ('outcome', 'kind', 'cause')
+    require({k: got.get(k) for k in keys} == {k: expected.get(k) for k in keys},
+            f'{name}: the reference evaluation gives {got}')
+
+
+def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
+    """A run control's outcome and call count under the reference evaluation."""
+    ev = evaluator or reference
+    got = ev.book(plan, 'main', [], VM_FUEL) if plan['entry'] == 'book' else ev.program(plan, VM_FUEL)
+    return {k: got.get(k) for k in frozen}
 
 
 # ------------------------------------------------------------------ controls and mutants
@@ -673,7 +865,8 @@ def children(w: list, at: int) -> list:
 
 
 def plan_controls(plans: dict) -> list:
-    """(label, plan, frozen validator message) for type-correct plan mutants."""
+    """(label, plan, frozen validator message) for type-correct plan mutants; a message of
+    None marks a plan the validator MUST admit."""
     def edit(name, path, value):
         plan = json.loads(json.dumps(plans[name]))
         target = plan
@@ -700,6 +893,37 @@ def plan_controls(plans: dict) -> list:
     def flag_rows(depth):
         """A tag table over a Flag at type index 1 answering its own value."""
         return [['branch', 0, depth, 0, ['value', 1, 0]], ['branch', 1, depth, 0, ['value', 1, 1]]]
+
+    def none_parameter(scrutinee):
+        """pred(x: none) cases on x at `scrutinee`; main passes it a Nat."""
+        return edits('nat-unpack', (['functions', 0, 'parameters'], [None]), (['functions', 0, 'slots'], 1),
+                     ([*body(0), 3], scrutinee), ([*body(0), 5], flag_rows(1)),
+                     (body(1), ['call', 1, 0, [['lit', 0, 'Nat', 7]]]))
+
+    def none_let(scrutinee):
+        """pred lets a none-typed call result and cases on it at `scrutinee`."""
+        return edits('nat-unpack', (['functions'], [
+            {'name': 'seven', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', 7]},
+            {'name': 'pred', 'parameters': [], 'result': 1, 'slots': 1,
+             'body': ['let', 1, 0, ['call', None, 0, []], ['case', 1, 0, scrutinee, 'tags', flag_rows(1), None]]},
+            {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, []]}]))
+
+    def answer(tag, depth):
+        return ['branch', tag, depth, 0, ['value', 0, tag]]
+    # S's shape (catalog.bend's `case Con{+head,+tail}: match head: ...`): first_on(xs: List<Flag>)
+    # matches the head bound from List's pinned `none` field at Flag. The seed prints True{}.
+    list_head_match = {
+        'entry': 'book', 'representation': {'Bool': 0, 'List': 1},
+        'types': [plans['u32-zero']['types'][0],
+                  {'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []},
+                                                                    {'name': 'Con', 'fields': [None, 1]}]},
+                  flag],
+        'functions': [
+            {'name': 'first_on', 'parameters': [1], 'result': 0, 'slots': 3,
+             'body': ['case', 0, 0, 1, 'tags', [answer(0, 1), ['branch', 1, 1, 2, [
+                 'case', 0, 1, 2, 'tags', [answer(0, 3), answer(1, 3)], None]]], None]},
+            {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
+             'body': ['call', 0, 0, [['con', 1, 1, [['value', 2, 1], ['value', 1, 0]]]]]}]}
     return [
         ('ref-beyond-depth', edit('reference', [*body(0), 2], 1), 'slot 1 beyond depth 1'),
         ('let-slot', edit('let', [*body(0), 2], 1), 'let slot 1 at depth 0'),
@@ -751,22 +975,73 @@ def plan_controls(plans: dict) -> list:
         ('program-main-unit', edit('foreign-print', ['functions', 1],
                                    {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['value', 0, 0]}),
          'main must return IO(Unit)'),
-        ('inspect-none-parameter', edits('nat-unpack', (['functions', 0, 'parameters'], [None]),
-                                         ([*body(0), 3], 1), ([*body(0), 5], flag_rows(1)),
-                                         (body(1), ['call', 1, 0, [['lit', 0, 'Nat', 7]]])),
-         'case scrutinee type'),
-        ('inspect-none-let', edits('nat-unpack', (['functions'], [
-            {'name': 'seven', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', 7]},
-            {'name': 'pred', 'parameters': [], 'result': 1, 'slots': 1,
-             'body': ['let', 1, 0, ['call', None, 0, []], ['case', 1, 0, 1, 'tags', flag_rows(1), None]]},
-            {'name': 'main', 'parameters': [], 'result': 1, 'slots': 0, 'body': ['call', 1, 1, []]}])),
-         'case scrutinee type'),
+        # A Case names a concrete scrutinee type, even when its slot is an erased position.
+        ('inspect-none-parameter', none_parameter(None), 'case scrutinee type'),
+        ('inspect-none-let', none_let(None), 'case scrutinee type'),
+        ('case-none-parameter', none_parameter(1), None),
+        ('case-none-let', none_let(1), None),
+        ('list-head-match', list_head_match, None),
         ('nat-field-type', edits('nat-unpack', (['types', 0, 'constructors', 1, 'fields'], [1]),
                                  ([*body(0), 5, 1], ['branch', 1, 1, 1, ['case', 1, 1, 1, 'tags', flag_rows(2), None]]),
                                  (['functions', 0, 'slots'], 2)),
          'Nat shape'),
         ('reference-none-view', edit('reference', [*body(0), 1], None), 'reference type'),
         ('arrow-cycle', edit('closure-id', ['types', 1, 'domain'], 1), 'arrow cycle'),
+    ]
+
+
+ILL_TYPED = {'outcome': 'HostFailure', 'cause': 'image ill-typed'}
+
+
+def run_controls(plans: dict) -> list:
+    """(label, plan, frozen run) for images the validator MUST admit and the VM MUST run to
+    the frozen outcome, by literal review of section 7: `calls` counts successful debits.
+    A generic function instantiated at an arrow type returns a `none`-typed value into an
+    arrow-typed node (section 3), so `none` fits either arrow kind, and an identity can
+    launder an arrow of the other kind into an Invoke or a Program phase, or the terminal
+    continuation into an erased Invoke; section 7's operand check refuses each Enter before
+    its debit."""
+    flag = plans['value-on']['types'][0]
+    live, erased = {'kind': 'arrow', 'domain': 0, 'result': 0}, {'kind': 'erased-arrow', 'domain': None, 'result': 0}
+    ident = {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}
+
+    def book(body):
+        return {'entry': 'book', 'types': [flag, live, erased],
+                'functions': [ident, {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': body}]}
+
+    def program(body):
+        """foreign-print's types: 4 IO.OP, 5 Unit -> IO.OP, 6 (5) -> IO.OP, 7 IO(Unit); 8 is
+        an erased arrow to IO.OP."""
+        fp = plans['foreign-print']
+        return {'entry': 'program', 'representation': fp['representation'],
+                'types': fp['types'] + [{'kind': 'erased-arrow', 'domain': None, 'result': 4}],
+                'functions': [ident, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
+    halt = ['closure', 8, 0, 0, [], ['con', 4, 1, [['lit', 1, 'U32', 0], ['value', 3, 0]]]]
+    return [
+        ('arrow-through-identity',
+         book(['invoke', 0, ['call', 1, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], [['value', 0, 1]]]),
+         {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}\n', 'calls': 3}),
+        ('erased-closure-invoked-live',
+         book(['invoke', 0, ['call', 1, 0, [['closure', 2, 0, 0, [], ['value', 0, 1]]]], [['value', 0, 0]]]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('live-closure-invoked-erased',
+         book(['invoke', 0, ['call', 2, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], []]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('terminal-invoked-erased',
+         program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], ['invoke', 4, ['call', 8, 0, [['ref', 5, 0]]], []]]]),
+         {**ILL_TYPED, 'calls': 4}),
+        # Program phases 1 and 2 enter main's value through the same check.
+        ('phase-one-live',
+         program(['call', 7, 0, [['closure', 6, 1, 1, [], ['invoke', 4, ['ref', 5, 0], [['value', 0, 0]]]]]]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('phase-two-erased', program(['closure', 7, 0, 0, [], ['call', 6, 0, [halt]]]), {**ILL_TYPED, 'calls': 3}),
+        # U32 and File, the one representation pair without a pinned shape, may name one
+        # opaque type; the run is ordinary.
+        ('u32-file-alias',
+         {'entry': 'book', 'representation': {'U32': 1, 'File': 1}, 'types': [flag, {'kind': 'opaque', 'name': 'U32'}],
+          'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
+                         'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
+         {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
     ]
 
 
@@ -794,8 +1069,50 @@ def describe_verdicts(controls: list, c=None) -> dict:
     return {label: c.undescribable({'types': types}, t) for label, types, t, _ in controls}
 
 
+# String constants that a text spelling would merge (a UTF-16 surrogate pair beside U+1F600),
+# refuse (above U+10FFFF) or cannot hold (a lone surrogate, the u32 maximum). SPEC section 2
+# keeps every u32 code in order.
+CODE_LISTS = {'surrogate-pair': [0xD83D, 0xDE00], 'u1f600': [0x1F600], 'lone-surrogate': [0xD800],
+              'u10ffff': [0x10FFFF], 'u110000': [0x110000], 'u32-max': [0xFFFFFFFF]}
+
+
+def code_controls(plans: dict) -> list:
+    """(label, plan): `String.eq(a, b)` on string-ne-order's plan with code-list literals."""
+    def eq(a, b):
+        plan = json.loads(json.dumps(plans['string-ne-order']))
+        left, right = plan['functions'][1]['body'][3]
+        left[3], right[3] = a, b
+        return plan
+    return [(f'codes:{label}', eq(codes, [0x61])) for label, codes in CODE_LISTS.items()] + [
+        ('codes:pair-beside-u1f600', eq(CODE_LISTS['surrogate-pair'], CODE_LISTS['u1f600']))]
+
+
+def round_trip(plan: dict, image: bytes, digest: bytes, c=None) -> str | None:
+    """None when `image` decodes to `plan` and survives the decode CLI's JSON text step."""
+    c = c or codec
+    decoded = c.decode(image, digest)
+    if decoded != plan:
+        return 'decodes to another plan'
+    if c.encode(json.loads(json.dumps(decoded)), digest) != image:
+        return 'the JSON text of its decoded plan re-encodes to other bytes'
+    return None
+
+
+def text_spelling(plans: dict, digest: bytes, c=None) -> str | None:
+    """None when the encoder refuses a String constant spelled as text, the lossy spelling."""
+    c = c or codec
+    plan = json.loads(json.dumps(plans['string-ne-order']))
+    plan['functions'][1]['body'][3][0][3] = 'ab'
+    try:
+        c.encode(plan, digest)
+    except ValueError:
+        return None
+    return 'a text-spelled String constant was encoded'
+
+
 # Semantic mutants of the reference codec: (name, [(old, new), ...]). Each must change a
-# committed image, a frozen refusal or a frozen describe verdict; a crash is never a kill.
+# committed image, a frozen refusal, an admitted control or a frozen describe verdict; a crash
+# is never a kill.
 CODEC_MUTANTS = [
     ('big-endian', [("b''.join(w.to_bytes(4, 'little') for w in header + body)",
                      "b''.join(w.to_bytes(4, 'big') for w in header + body)")]),
@@ -815,8 +1132,8 @@ CODEC_MUTANTS = [
                               ("for (k, d) in constants]", "for (k, d, *_) in constants]")]),
     ('nat-constant-as-u32', [("        key = (CONSTANT_KINDS.index(kind), tuple(data))",
                               "        key = (CONSTANT_KINDS.index(kind) % 1 if kind == 'Nat' else CONSTANT_KINDS.index(kind), tuple(data))")]),
-    ('string-reversed', [("        data = [ord(c) for c in value] if isinstance(value, str) else (",
-                          "        data = [ord(c) for c in value[::-1]] if isinstance(value, str) else (")]),
+    ('string-reversed', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                          "        data = u32_list(value[::-1]) if kind == 'String' else u32_list([value])")]),
     ('arrow-named', [("            types.append([kind, NONE, opt(t['domain']), opt(t['result'])])",
                       "            types.append([kind, 0, opt(t['domain']), opt(t['result'])])")]),
     ('decoder-skips-digest', [("    if bytes(b for x in w[24:32] for b in x.to_bytes(4, 'little')) != digest:\n"
@@ -848,8 +1165,10 @@ CODEC_MUTANTS = [
                                         "            if op == 'prim' and rep.get(row['output'], t) != t:")]),
     ('validator-ignores-foreign-result', [("            if op == 'foreign' and not io(t, rep.get(row['output'])):", "            if False:")]),
     ('validator-program-any-result', [("        elif main and not io(main[0]['result'], rep['Unit']):", "        elif False:")]),
-    ('validator-inspects-none', [("            if scrutinee is None or scope[slot] != scrutinee:",
-                                  "            if not fits(scrutinee, scope[slot]):")]),
+    ('validator-inspects-none', [("            if scrutinee is None or scope[slot] not in (None, scrutinee):",
+                                  "            if scope[slot] not in (None, scrutinee):")]),
+    ('validator-strict-scrutinee', [("            if scrutinee is None or scope[slot] not in (None, scrutinee):",
+                                     "            if scrutinee is None or scope[slot] != scrutinee:")]),
     ('validator-reference-wildcard', [("                if scope[node[2]] != t:", "                if not fits(scope[node[2]], t):")]),
     ('validator-shape-counts-only', [("[c['fields'] for c in types[t]['constructors']] != [\n                [pinned(n) for n in fields]",
                                       "[len(c['fields']) for c in types[t]['constructors']] != [\n                len(fields)")]),
@@ -860,10 +1179,29 @@ CODEC_MUTANTS = [
     ('describe-admits-none', [("            return f'none-typed {at}'", "            continue")]),
     ('describe-admits-arrows', [("        if kind != 'data':\n", "        if kind in ('arrow', 'erased-arrow'):\n"
                                                               "            continue\n        if kind != 'data':\n")]),
+    # A `none` value that never fits an arrow refuses a generic function instantiated at one.
+    ('validator-none-never-arrow', [("        if declared is None or actual is None or declared == actual:\n            return True\n",
+                                     "        if declared == actual:\n            return True\n"
+                                     "        if declared is None or actual is None:\n"
+                                     "            return kind(declared) not in arrows and kind(actual) not in arrows\n")]),
+    # Review round 3: a String constant is its code list at every step.
+    ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                                   "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
+                                   "if kind == 'String' else u32_list([value])")]),
+    ('encode-accepts-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                              "        data = u32_list([ord(c) for c in value] if isinstance(value, str) else value) "
+                              "if kind == 'String' else u32_list([value])")]),
+    ('decode-string-as-text', [("list(r[2:]) if kind == 'String' else r[2]", "''.join(map(chr, r[2:])) if kind == 'String' else r[2]")]),
+    ('decode-refuses-beyond-unicode', [("        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))\n",
+                                        "        if kind == 'String' and max(r[2:], default=0) > 0x10FFFF:\n"
+                                        "            raise Malformed('string code beyond plan text')\n"
+                                        "        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))\n")]),
 ]
 
 
-def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
+def codec_mutants(plans, images, controls, admitted, describing, reg, digest) -> list:
+    """`plans` and `images` include the code-list controls; a decode that differs from its
+    plan kills as surely as an encode that differs from its image."""
     source = CODEC.read_text()
     results = []
     for name, edits in CODEC_MUTANTS:
@@ -878,8 +1216,17 @@ def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
                 if mutant.encode(plan, digest) != images[case]:
                     killed_by = f'image {case} differs'
                     break
+                lost = round_trip(plan, images[case], digest, mutant)
+                if lost:
+                    killed_by = f'image {case} {lost}'
+                    break
             except Exception:
                 continue
+        if not killed_by:
+            try:
+                killed_by = text_spelling(plans, digest, mutant)
+            except Exception:
+                pass
         for label, data, reason, message in [] if killed_by else controls:
             try:
                 got = rejected(data, reg, digest, mutant)
@@ -887,6 +1234,14 @@ def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
                 continue
             if got is None or not got.startswith(reason) or message not in got:
                 killed_by = f'control {label}: {got}'
+                break
+        for label, data in [] if killed_by else admitted:
+            try:
+                got = rejected(data, reg, digest, mutant)
+            except Exception:
+                continue
+            if got is not None:
+                killed_by = f'admitted control {label}: {got}'
                 break
         if not killed_by:
             try:
@@ -900,10 +1255,70 @@ def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
     return results
 
 
+# Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
+# value or a run control, or be refused by the rule; a crash is never a kill.
+EVALUATOR_MUTANTS = [
+    ('scalar-admits-beyond-unicode', [('    return code < 0xD800 or 0xDFFF < code <= 0x10FFFF',
+                                       '    return code < 0xD800 or 0xDFFF < code')]),
+    ('scalar-admits-surrogates', [('    return code < 0xD800 or 0xDFFF < code <= 0x10FFFF', '    return code <= 0x10FFFF')]),
+    ('print-without-lf', [("        self.stdout += b''.join(map(utf8, codes)) + b'\\n'",
+                           "        self.stdout += b''.join(map(utf8, codes))")]),
+    ('native-stops-at-non-scalar', [("        if self.policy == 'vm' and not all(map(scalar, codes)):",
+                                     '        if not all(map(scalar, codes)):')]),
+    ('wide-code-clamped', [('    return bytes([(0xF0 | code >> 18) & 0xFF,',
+                            '    code = min(code, 0x10FFFF)\n    return bytes([(0xF0 | code >> 18) & 0xFF,')]),
+    ('nat-case-binds-n', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
+                           '            return (0, ()) if w == 0 else (1, (w,))')]),
+    ('string-literal-reversed', [('        for code in reversed(codes):', '        for code in codes:')]),
+    ('captures-reversed', [("            return ('closure', node, tuple(env[s] for s in node[4]))",
+                            "            return ('closure', node, tuple(env[s] for s in node[4][::-1]))")]),
+    ('closure-arity-unchecked', [("        takes = {'closure': lambda: len(operands) == f[1][2],",
+                                  "        takes = {'closure': lambda: True,")]),
+    ('erased-entry-free', [("        self.debit()\n        if kind == 'closure':",
+                            "        if operands or kind != 'closure':\n            self.debit()\n        if kind == 'closure':")]),
+    ('u32-sub-saturates', [('lambda: (x - y) & WORD,', 'lambda: max(x - y, 0),')]),
+]
+
+
+def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
+    """Each mutant re-derives every golden expectation, Book value and run control."""
+    source = EVALUATOR.read_text()
+    results = []
+    for name, edits in EVALUATOR_MUTANTS:
+        text = source
+        for old, new in edits:
+            require(text.count(old) == 1, f'evaluator mutant {name} is not uniquely located')
+            text = text.replace(old, new)
+        mutant, killed_by = load(EVALUATOR, text), None
+        for case_name, case in cases.items():
+            try:
+                got = vm_expectation(case, plans[case_name], bounds, sources[case_name], mutant)
+                reproduced(case_name, plans[case_name], got, mutant)
+            except AssertionError as refusal:
+                killed_by = f'{case_name}: {refusal}'
+            except Exception:
+                continue
+            else:
+                killed_by = None if got == table[case_name] else f'{case_name}: expectation {got}'
+            if killed_by:
+                break
+        for label, plan, frozen in [] if killed_by else runs:
+            try:
+                got = ran(plan, frozen, mutant)
+            except Exception:
+                continue
+            killed_by = None if got == frozen else f'run control {label}: {got}'
+            if killed_by:
+                break
+        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None, 'by': killed_by})
+    return results
+
+
 SOURCE_MUTANTS = [
     ('case-on', 'flip(On{})', 'flip(Off{})'),
     ('u32-wrap', 'U32.add(4294967295,1)', 'U32.add(4294967295,2)'),
     ('closure-capture-on', 'capture(On{})', 'capture(Off{})'),
+    ('string-surrogate-pair', '"\\u{1f600}"', '"\\u{d83d}\\u{de00}"'),
 ]
 
 
@@ -1032,11 +1447,23 @@ def main() -> int:
     for c in cases.values():
         require(sha((ROOT / c['source']).read_bytes()) == c['sha256'], f"frozen source {c['name']}")
         # D7: the literal review written before observation is the seed's printed value
-        # (plan.json's first reviews spelled `, ` as `,`).
-        require(c['seed_stdout'] == c['seed']['stdout'],
-                f"{c['name']}: literal review {c['seed_stdout']!r}, seed printed {c['seed']['stdout']!r}")
-        require(planned[c['name']]['seed_stdout'].replace(', ', ',') == c['seed_stdout'].replace(', ', ','),
-                f"{c['name']}: plan.json literal review differs from the frozen row")
+        # (plan.json's first reviews spelled `, ` as `,`); a stdout that is not UTF-8 is
+        # reviewed byte for byte, and the Bun cross-check by its stderr.
+        if 'seed_stdout_hex' in c:
+            require(c['seed_stdout_hex'] == c['seed'].get('stdout_hex'),
+                    f"{c['name']}: literal review {c['seed_stdout_hex']}, seed wrote {c['seed'].get('stdout_hex')}")
+        else:
+            require(c['seed_stdout'] == c['seed']['stdout'],
+                    f"{c['name']}: literal review {c['seed_stdout']!r}, seed printed {c['seed']['stdout']!r}")
+            require(planned[c['name']]['seed_stdout'].replace(', ', ',') == c['seed_stdout'].replace(', ', ','),
+                    f"{c['name']}: plan.json literal review differs from the frozen row")
+        if 'seed_bun_stderr' in c:
+            require(c['seed_bun_stderr'] == c['seed_bun']['stderr'],
+                    f"{c['name']}: literal review {c['seed_bun_stderr']!r}, Bun lane {c['seed_bun']['stderr']!r}")
+        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout'):
+            require(planned[c['name']].get(key) == c.get(key), f"{c['name']}: plan.json {key} differs from the frozen row")
+        require(planned[c['name']].get('invocations') == ([reviewed(i) for i in c.get('invocations', [])] or None),
+                f"{c['name']}: plan.json invocations differ from the frozen row")
     sources = {name: (ROOT / c['source']).read_text() for name, c in cases.items()}
 
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -1054,6 +1481,8 @@ def main() -> int:
     for name, case in cases.items():
         require(fresh[name]['seed'] == case['seed'], (name, 'seed drift', fresh[name]['seed'], case['seed']))
         require(fresh[name]['eval'] == case['eval'], (name, 'eval drift', fresh[name]['eval'], case['eval']))
+        require(fresh[name].get('seed_bun') == case.get('seed_bun'), (name, 'Bun lane drift', fresh[name].get('seed_bun')))
+        require(fresh[name].get('invocations') == case.get('invocations'), (name, 'invocation drift', fresh[name].get('invocations')))
         plan = json.loads((GOLDEN / f'{name}.plan.json').read_text())
         data = (GOLDEN / f'{name}.kimg').read_bytes()
         require(codec.encode(plan, digest) == data, f'{name}: committed image differs from its plan')
@@ -1070,15 +1499,27 @@ def main() -> int:
             require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
             view = f"unavailable: {shown['stderr'].strip()}"
         table[name] = vm_expectation(case, plan, bounds, sources[name])
+        reproduced(name, plan, table[name])
         plans[name], images[name] = plan, data
         fixtures.append({'name': name, 'lane': case['lane'], 'seed_lane': case.get('seed_lane', 'bun'),
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
                          'plan_matches': view, 'seed': classify(case['seed']), 'eval': classify(case['eval']),
                          'vm': table[name]})
 
+    strings = plans['result-string']
+    for row in fixtures:
+        argument = print_argument(row['name'], sources[row['name']], plans[row['name']], strings, built, reg)
+        if argument:
+            row['plan_matches'] += f'; {argument}'
+
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
                         'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
-                        'A Book result outside section 8\'s describe domain is Unsupported, never a bound.',
+                        'A Book result outside section 8\'s describe domain is Unsupported, never a bound. '
+                        'A Program\'s own value classifies its output: where the reference evaluation of its plan '
+                        'passes IO.print a String holding a non-scalar Char, the VM writes the earlier prints and '
+                        'refuses that one as D20\'s HostFailure io abi, divergent by contract, never agreement; '
+                        'otherwise the VM owes the seed\'s output. The seed lanes are observations and never '
+                        'classify it.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
@@ -1093,32 +1534,57 @@ def main() -> int:
     abstract = [n for p in plans.values() for n in walk(p) if n[0] not in ('branch', 'default') and n[1] is None]
     require(abstract, 'a none-typed node')
 
+    planned = plan_controls(plans)
     controls = byte_controls(images, digest) + [
-        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
+        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
+    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
     boundaries = expectation_controls(cases, plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
         boundaries.append({'control': label, 'refused': got})
+    for label, data in admitted:
+        require(rejected(data, reg, digest) is None, f'admitted control {label}: {rejected(data, reg, digest)}')
+    runs = {}
+    for label, plan, frozen in run_controls(plans):
+        data = codec.encode(plan, digest)
+        require(rejected(data, reg, digest) is None, f'run control {label}: {rejected(data, reg, digest)}')
+        require(codec.decode(data, digest) == plan, f'run control {label}: decodes to another plan')
+        admitted.append((f'run:{label}', data))
+        require(ran(plan, frozen) == frozen, f'run control {label}: the reference evaluation gives {ran(plan, frozen)}')
+        runs[label] = {**frozen, 'image_sha256': sha(data)}
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
         require(verdicts[label] == verdict, f'describe control {label}: {verdicts[label]!r}, frozen {verdict!r}')
+    coded = dict(code_controls(plans))
+    for label, plan in coded.items():
+        data = codec.encode(plan, digest)
+        require(rejected(data, reg, digest) is None, f'code-list control {label}: {rejected(data, reg, digest)}')
+        require(round_trip(plan, data, digest) is None, f'code-list control {label}: {round_trip(plan, data, digest)}')
+        admitted.append((label, data))
+    require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
-    mutants = codec_mutants(plans, images, controls, describing, reg, digest) + source_mutants(cases, built)
+    mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
+                            controls, admitted, describing, reg, digest) + source_mutants(cases, built) + \
+        evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, describe=verdicts, mutants=mutants,
+    record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
+                  admitted=[label for label, _ in admitted], runs=runs, describe=verdicts, mutants=mutants,
+                  code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
                             'none_typed_nodes': len(abstract)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
-          f"{len(verdicts)} describe controls, {len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
+          f"{len(verdicts)} describe controls, "
+          f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
 
