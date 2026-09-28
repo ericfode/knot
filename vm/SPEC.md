@@ -180,7 +180,7 @@ passed, stored in a field or capture and returned, but never inspected.
   `none` on either side fits any type, arrows of one kind fit when their domains
   and results fit, and any other type fits only itself. Fit is instantiation of
   an erased parameter, so validation does not establish type soundness under
-  generics; §6.1 checks every inspected word at run time.
+  generics; the VM inspects every word it reads (§6).
 - **Let** binds slot = current depth; its value runs at that depth, its body one
   deeper. **Reference** and **Case** read a slot below the current depth.
 - **Case mode 0 (tags)**: a dense table over the scrutinee type's constructors,
@@ -229,8 +229,8 @@ stack. The validator checks every function, reachable or not:
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls.
 Validation establishes these rules, not type soundness: a `none`-typed value may
-be instantiated at any type (§3), so the run-time checks of §6.1, §7 and §8
-refuse the rest as `HostFailure image` (`ill-typed`).
+be instantiated at any type (§3), so the VM's inspection (§6) and entry check
+(§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
 Other version-1 limits: at most 1,048,576 records per table, live arity at most
 4,096, `slots` at most 65,536. These are resource limits, not source rules.
 
@@ -363,17 +363,21 @@ to its post-state. No row runs user code or a second host effect.
 - Foreign: allocate an Action that takes the operands. Return it.
 - Application: `Enter(function, operands)`.
 
+**Inspection.** A `none`-typed value may be instantiated at any type (§3), so the
+validator cannot exclude every ill-typed word. Every word the VM inspects is
+therefore first checked against the type it is read at: a Case scrutinee (§6.1),
+every word a prim reads (String cells included), every word §8 renders, every
+Action operand §10 converts, and the final IO.OP (§8). An algebraic type admits an
+immediate naming one of its nullary constructors, or an Object (class 0) whose
+`type` is that type and whose tag names a constructor with fields; Nat, U32 and
+Char admit an immediate or a Big cell (class 2), and File an immediate. A mismatch
+halts with `HostFailure image` (`ill-typed`) before the step changes any state;
+no read leaves a cell.
+
 ### 6.1 Case selection
 
-The scrutinee is borrowed from its slot. Its word is first checked against the
-scrutinee type, because a `none`-typed value may be instantiated at any type (§3):
-an algebraic type admits an immediate naming one of its nullary constructors, or
-an Object (class 0) whose `type` is that type and whose tag names a constructor
-with fields; Nat, U32 and Char admit an immediate or a Big cell (class 2). Every
-word a prim reads is checked the same way against the pinned representation it
-expects, String cells included. A mismatch halts with `HostFailure image`
-(`ill-typed`) before the step changes any state; no read leaves a cell. For an
-Object, the tag and fields come from its payload; for an immediate of an
+The scrutinee is borrowed from its slot and inspected (§6). For an Object, the
+tag and fields come from its payload; for an immediate of an
 algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
 word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
 its own code word. In key mode, the scalar's value is compared with the keys;
@@ -451,7 +455,7 @@ reports `InternalFailure eval result-tag` for any U32, Char or String result, so
 the VM reports `HostFailure invoke scalar-result` for one anywhere in the tree
 (§11's Book-describe bound; golden `result-u32`);
 a closure is `function-result` and an untyped (`none`) immediate is
-`abstract-result`. Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
+`abstract-result`. Every rendered word is inspected (§6). Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
 of text; hitting either is `Exhausted` kind 2 (`display`), never a truncated
 value. The result is dropped after printing.
 
@@ -560,11 +564,12 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
 7 modules `inspect`. Each row's `output` names the representation `X` of its
 `IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
-comes from its pinned declaration). Applying an Action converts its operands, calls the host,
-builds the exact pinned Base Result, pair and handle view, and enters `k`.
-Outgoing Strings must be Unicode scalars and are encoded as canonical UTF-8, with
-no surrogate merging or replacement. Incoming text follows the host's replacement
-decoding, BOM kept, one Chr per scalar. Raw input bytes become U32 elements 0..255.
+comes from its pinned declaration). Applying an Action inspects (§6) and converts
+its operands, calls the host, builds the exact pinned Base Result, pair and handle
+view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
+canonical UTF-8, with no surrogate merging or replacement. Incoming text follows
+the host's replacement decoding, BOM kept, one Chr per scalar. Raw input bytes
+become U32 elements 0..255.
 A byte-list write scans the **whole** list first, computes `invalid |= e >> 8`,
 copies low bytes and passes the flag; a nonzero flag is errno 22 before any write.
 
