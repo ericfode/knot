@@ -89,7 +89,7 @@ with the reference evaluation's call count; the bounded soundness sweep, every
 single-word mutation of every golden refused exactly when the reference codec
 refuses it, for the same reason, and otherwise run soundly; `vm/PROOF.bend`
 printing `All terms check.`; and 24 model mutants killed by a wrong observation,
-never a crash, five of them also refuted by a law of `vm/PROOF.bend`. It writes
+never a crash, seven of them also refuted by a law of `vm/PROOF.bend`. It writes
 only `vm/receipts/model.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not

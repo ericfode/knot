@@ -25,7 +25,7 @@ seed's native lane and requires:
   and every admitted mutation runs soundly;
 - vm/PROOF.bend to print 'All terms check.';
 - every model mutant killed by a wrong observation of those checks, never by a
-  crash or a timeout, and five of them also refuted by a law of PROOF.bend.
+  crash or a timeout, and seven of them also refuted by a law of PROOF.bend.
 It writes only vm/receipts/model.json.
 """
 from __future__ import annotations
@@ -617,7 +617,8 @@ MUTANTS = [
 
 
 # Mutants whose PROOF.bend must also fail, at a law and not by a crash.
-LAW_MUTANTS = ('rc-under-count', 'tail-keeps-caller', 'arm-selection', 'nat-bound', 'remainder-by-zero')
+LAW_MUTANTS = ('rc-under-count', 'tail-keeps-caller', 'arm-selection', 'nat-bound', 'remainder-by-zero',
+               'char-tag', 'key-bound')
 
 
 def law_kill(tree: Path) -> str | None:

@@ -24,3 +24,5 @@ def L.closure_captures_runs(): {==}
 def L.recursion_map_runs(): {==}
 def L.string_append_mortal_runs(): {==}
 def L.foreign_print_runs(): {==}
+def L.char_case_selects_chr(): {==}
+def L.key_max_selected(): {==}

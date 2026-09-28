@@ -203,3 +203,23 @@ law string_append_mortal_runs:
 
 law foreign_print_runs:
   {ran(foreign_print()) == Summary{M.Emitted{},True{},0,[M.text("vm")]} : Summary}
+
+# ---------------------------------------------------------------- Case on Char and the key 0xffffffff
+
+# `name(c: Char) -> Flag` over [U32, Char, Flag], applied by main to the Char
+# code `c`: check-model's char-pick and char-key-max plans, encoded here.
+def char_book(+name: String, body: W.Node, +slots: U32, +c: U32) -> W.Plan:
+  +o = W.none()
+  W.Plan{0,
+    [W.Opaque{M.text("U32")},
+     W.Algebraic{M.text("Char"),[W.Constructor{M.text("Chr"),[0]}]},
+     W.Algebraic{M.text("Flag"),[W.Constructor{M.text("Off"),[]},W.Constructor{M.text("On"),[]}]}],
+    [W.Function{M.text(name),[1],2,slots,body},
+     W.Function{M.text("main"),[],2,0,W.Application{2,0,[W.Literal{1,W.Constant{2,[c]}}]}}],
+    [o,0,1,o,o,o,o,o,o,o,o,o]}
+
+law char_case_selects_chr:
+  {ran(E.encode(char_book("pick",W.Case{2,0,1,0,[Some{W.Branch{0,1,1,W.Value{2,1}}}],None{}},2,65))) == described(2,1,"On{}") : Summary}
+
+law key_max_selected:
+  {ran(E.encode(char_book("top",W.Case{2,0,1,1,[Some{W.Branch{4294967295,1,0,W.Value{2,1}}}],Some{W.Default{W.Value{2,0}}}},1,4294967295))) == described(2,1,"On{}") : Summary}

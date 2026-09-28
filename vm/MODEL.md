@@ -45,7 +45,7 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 23 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 25 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
@@ -54,7 +54,10 @@ on transitions: a harness limit, never VM exhaustion.
   Exhausted, a finished machine is final, tail position, the Nat bounds, `x/0`,
   `x%0` and shifts by 32 or more;
 - one audited run per fixture image (a Book per node family and a Program): its
-  answer, the RC audit at every transition and zero live mortal cells after it.
+  answer, the RC audit at every transition and zero live mortal cells after it;
+- two audited runs of plans encoded in the law: a tags-mode Case on Char selects
+  Chr for the code of 'A', and a key-mode Case on Char admits and selects the
+  key 0xffffffff.
 
 These are bounded computed equations, not a refinement proof. The gate
 evaluates the same predicates natively on more images: the audit on every
@@ -90,4 +93,4 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   arm` rather than reading a wrapped offset.
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
-  about 100 s, most of it in the five audited runs.
+  about 105 s, most of it in the seven audited runs.
