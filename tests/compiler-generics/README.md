@@ -144,6 +144,32 @@ gives 15 fixtures and 26 calls, and `dispatch-boundaries/regen.py` gives
 frontend gate pass on the edited manifest, with the same output as before the
 edit. `census --check` exits 0.
 
+**Gates.** This section reports every full run of the round. Each run's
+snapshot matches its commit's files exactly:
+
+| Run | Tree | Result |
+| --- | --- | --- |
+| [run 1](receipts/review-4/gates-run1.json) | `379137f`, 4 jobs, 776 s, load average about 21 to 35 | exit 1: 20 of 21 passed. `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend` (`tests/compiler-bootstrap/check.py:1411`) |
+| [run 2](receipts/review-4/gates.json) | `d0a9eae`, 4 jobs, 625 s, load average about 19 to 27 | exit 0: 21 of 21 passed |
+
+`bootstrap` is the gate that keeps hitting this host error. Its `ENV`
+(`tests/compiler-bootstrap/check.py:94`) removes `CC` on purpose, because its
+receipt records `'CC': None`. So the runner's resolved clang (`90b4052`) never
+reaches its seed builds, which still probe the `/usr/bin/clang` shim. That
+belongs to the bootstrap owner, not to this increment.
+
+Run 2 records these generics counts: 138 fixtures, 217 seed calls, 324
+evaluator and 324 Node agreements, 600 negative phase observations, 200
+preserved artifacts, 38 byte-identical module pairs, 10 ABI arity
+observations, 4 proof entries and 15 mutants (30 lane kills). These equal
+round 3's counts. Classification has 17 fixtures and 7 mutants. Of 89
+regenerated receipts, 64 are identical, 10 volatile-only (this gate's
+committed `receipts/generics.json` among them, so it stays current) and 15
+semantic. The semantic ones are shared receipts whose source hashes changed;
+they are left for the coordinator. `npm run -s gates:verify` runs 18 tests OK.
+
+No Bend source changed in this round, so there is no new style preflight.
+
 ## Review round 3
 
 The branch merges main `90b4052` (`90feb09`: gate runner `CC`/`SDKROOT`; census
