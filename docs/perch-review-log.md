@@ -1141,3 +1141,28 @@ Prevention:
 - When a law's proof grows a module past the 48 KB composition bound, give it
   its own LAWS/PROOF pair and manifest group. Import that pair from the gated
   proof entry, so the existing gate still checks it.
+
+## 2026-09-28 — nest review round 6: detached constructor brace accepted
+
+Confirmed:
+- Knot accepted a space, comment or line break between a constructor name and
+  its `{`, which the seed rejects in patterns and bodies. The flat, body and
+  outer-pattern forms were already accepted on main. The round-3 header join
+  turned the line-break form into a regression and carried the gap into
+  nested and multi-scrutinee rows, which main had reported Unsupported. The
+  round-5 probes observed the defect, but REVIEW-5.md did not disposition it.
+
+See the [round-6 dispositions](../tests/compiler-nest/receipts/REVIEW-6.md).
+One offset predicate (`S.touches`) closes every position; the header join keeps
+offsets, so it can no longer bridge the gap.
+
+Prevention:
+- Before a change that joins, drops or reorders layout tokens lands, freeze
+  seed controls across the joined boundary for each token pair: pairs whose
+  spacing the seed distinguishes (a name and its `{`) and pairs whose spacing
+  it ignores (`f (x)`, `+ v`).
+- Adjacency is a property of offsets, not of neighbouring tokens. State it as
+  a predicate over spans, so that a later token rewrite cannot erase it.
+- Give each layout-sensitive token pair a spaced, commented and line-broken
+  fuzz atom, and disposition every probe observation in the round's report,
+  including observations outside the round's finding.
