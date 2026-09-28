@@ -3,7 +3,7 @@ import ./syntax.bend as S
 import ./core.bend as C
 import ./lex.bend as L
 import ./parse.bend as P
-import ./check.bend as K
+import ./check-dispatch.bend as K
 import ./diagnostic.bend as D
 
 type Limits is Data:

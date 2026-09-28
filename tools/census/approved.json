@@ -688,8 +688,8 @@
           "file": "src/core.bend"
         },
         {
-          "module": "./check.bend",
-          "file": "src/check.bend"
+          "module": "./check-dispatch.bend",
+          "file": "src/check-dispatch.bend"
         },
         {
           "module": "./checked-display.bend",
@@ -1119,10 +1119,6 @@
         {
           "module": "./patterns.bend",
           "file": "src/patterns.bend"
-        },
-        {
-          "module": "./generics.bend",
-          "file": "src/generics.bend"
         }
       ],
       "declarations": {
@@ -1542,31 +1538,6 @@
           "patterns.nested",
           "patterns.variable",
           "patterns.wildcard",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/check.bend::unbound:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "literals.string",
-          "matches",
-          "patterns.variable",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/check.bend::term_name:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "literals.u32",
-          "matches",
-          "patterns.variable",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
@@ -2231,8 +2202,8 @@
           "file": "src/parse.bend"
         },
         {
-          "module": "./check.bend",
-          "file": "src/check.bend"
+          "module": "./check-dispatch.bend",
+          "file": "src/check-dispatch.bend"
         },
         {
           "module": "./diagnostic.bend",
@@ -4997,6 +4968,38 @@
           "quantities.affine",
           "quantities.arguments",
           "types.base"
+        ],
+        "src/scope.bend::unbound:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "types.base",
+          "types.type"
+        ],
+        "src/scope.bend::term_name:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "quantities.reusable",
+          "types.base",
+          "types.type"
         ],
         "src/scope.bend::occurrence:definition": [
           "calls",
@@ -8487,31 +8490,6 @@
           "quantities.reusable",
           "types.base"
         ],
-        "src/generics.bend::unbound:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "literals.string",
-          "matches",
-          "patterns.variable",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/generics.bend::term_name:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "literals.u32",
-          "matches",
-          "patterns.variable",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
         "src/generics.bend::run:definition": [
           "bindings",
           "calls",
@@ -9980,6 +9958,51 @@
           "patterns.variable",
           "quantities.affine",
           "recursion"
+        ]
+      }
+    },
+    "src/check-dispatch.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./check.bend",
+          "file": "src/check.bend"
+        },
+        {
+          "module": "./generics.bend",
+          "file": "src/generics.bend"
+        }
+      ],
+      "declarations": {
+        "src/check-dispatch.bend::check:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
         ]
       }
     }

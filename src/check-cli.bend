@@ -4,7 +4,7 @@ import ./lex.bend as L
 import ./parse.bend as P
 import ./diagnostic.bend as D
 import ./core.bend as C
-import ./check.bend as K
+import ./check-dispatch.bend as K
 import ./checked-display.bend as V
 
 def show_tree(result: Result<S.Error,String>) -> IO(Unit):

@@ -4,7 +4,6 @@ import ./core.bend as C
 import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
-import ./generics.bend as J
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -172,21 +171,11 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{P.value(token,type_id,tag,params,args),type_id,uses}}
     case _: C.internal(C.Checked,"refined-arguments")
 
-def unbound(found: Result<S.Error,G.TypeRef>, token: S.Token, error: S.Error) -> Result<S.Error,C.Binding>:
-  match found:
-    case Done{reference}: C.unsupported(C.Binding,"type-level-term",token)
-    case Fail{ignored}: Fail{error}
-
-def term_name(found: Result<S.Error,C.Binding>, types: List<&2,C.Datatype>, +token: S.Token) -> Result<S.Error,C.Binding>:
-  match found:
-    case Done{binding}: Done{binding}
-    case Fail{error}: unbound(G.find_type(types,token,0),token,error)
-
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} C.Catalog{types,sigs} _:
-      S.bind(C.Binding,C.Checked,term_name(E.lookup(scope,token),types,token),binding =>
+      S.bind(C.Binding,C.Checked,E.term_name(C.Binding,G.TypeRef,E.lookup(scope,token),token,name => G.find_type(types,name,0)),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>
@@ -289,6 +278,5 @@ def check(depth: Nat, root: S.Node) -> Result<S.Error,C.Book>:
   match depth root:
     case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n S.Sequence{+nodes}:
-      S.choose(Result<S.Error,C.Book>,J.required(nodes),u => J.check(1n+n,nodes),u =>
-        S.bind(C.Catalog,C.Book,G.catalog(S.Sequence{nodes}),catalog => resolved(catalog,nodes,1n+n)))
+      S.bind(C.Catalog,C.Book,G.catalog(S.Sequence{nodes}),catalog => resolved(catalog,nodes,1n+n))
     case _ _: C.internal(C.Book,"root-node")

@@ -327,23 +327,13 @@ def rebuilt(value: Checked, token: S.Token, +typ: T.Expr, tag: U32, params: List
     case Checked{C.Sequence{args},ignored,uses}: Done{Checked{C.Construct{token,R.type_id(typ),tag,params,args},typ,uses}}
     case _: C.internal(Checked,"generic-rebuild-result")
 
-def unbound(found: Result<S.Error,G.Named>, token: S.Token, error: S.Error) -> Result<S.Error,Binding>:
-  match found:
-    case Done{reference}: C.unsupported(Binding,"type-level-term",token)
-    case Fail{ignored}: Fail{error}
-
-def term_name(found: Result<S.Error,Binding>, families: List<&2,G.Family>, +token: S.Token) -> Result<S.Error,Binding>:
-  match found:
-    case Done{binding}: Done{binding}
-    case Fail{error}: unbound(G.family_named(families,token,0),token,error)
-
 # Types are checked in their own environment; only their erased projection
 # crosses into the runtime IR. All recursive checker work spends depth.
 def run(fuel: Nat, mode: Mode, +catalog: G.Catalog, +current: U32, +env: Environment) -> Result<S.Error,Checked>:
   match fuel mode catalog env:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} G.Catalog{families,sigs} _:
-      S.bind(Binding,Checked,term_name(lookup(env,token),families,token),binding =>
+      S.bind(Binding,Checked,E.term_name(Binding,G.Named,lookup(env,token),token,name => G.family_named(families,name,0)),binding =>
         S.bind(Checked,Checked,occurrence(binding,token,env,term => typ => run(n,Rebuild{term,typ},catalog,current,env)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} G.Catalog{+families,sigs} _:
       S.bind(G.ConstructorRef,Checked,G.constructor_named(families,token,0),+reference =>

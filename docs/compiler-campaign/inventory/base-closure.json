@@ -7744,7 +7744,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 523,
+          "declarations": 522,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -9094,6 +9094,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check-dispatch.check",
+            "file": "src/check-dispatch.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "src/check.check",
+              "src/core.Book",
+              "src/core.internal",
+              "src/generics.check",
+              "src/generics.required",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -9313,7 +9337,7 @@
           {
             "key": "src/check.check",
             "file": "src/check.bend",
-            "via": "src/driver.source",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9326,13 +9350,10 @@
               "src/check.resolved",
               "src/core.Book",
               "src/core.internal",
-              "src/generics.check",
-              "src/generics.required",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -9857,6 +9878,7 @@
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
+              "src/catalog.find_type",
               "src/check.Mode",
               "src/check.annotation",
               "src/check.arm_body",
@@ -9872,7 +9894,6 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.rebuilt",
-              "src/check.term_name",
               "src/check.variable",
               "src/core.Catalog",
               "src/core.Checked",
@@ -9888,49 +9909,12 @@
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.term_name",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/catalog.find_type",
-              "src/check.unbound",
-              "src/core.Binding",
-              "src/core.Datatype",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.unbound",
-            "file": "src/check.bend",
-            "via": "src/check.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "String",
-              "src/catalog.TypeRef",
-              "src/core.Binding",
-              "src/core.unsupported",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -10287,7 +10271,7 @@
           {
             "key": "src/core.internal",
             "file": "src/core.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10608,7 +10592,7 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
+              "src/check-dispatch.check",
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.checked",
@@ -12408,7 +12392,7 @@
           {
             "key": "src/generics.check",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13346,7 +13330,7 @@
           {
             "key": "src/generics.required",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13408,6 +13392,7 @@
               "src/generic-catalog.Parameter",
               "src/generic-catalog.constructor_named",
               "src/generic-catalog.expression",
+              "src/generic-catalog.family_named",
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
@@ -13443,7 +13428,7 @@
               "src/generics.scrutinee",
               "src/generics.static_argument",
               "src/generics.static_result",
-              "src/generics.term_name",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -13549,26 +13534,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/generics.term_name",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/generic-catalog.Family",
-              "src/generic-catalog.family_named",
-              "src/generics.Binding",
-              "src/generics.unbound",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/generics.typed_parameters",
             "file": "src/generics.bend",
             "via": "src/generics.required",
@@ -13579,24 +13544,6 @@
               "Bool",
               "List",
               "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/generics.unbound",
-            "file": "src/generics.bend",
-            "via": "src/generics.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "String",
-              "src/core.unsupported",
-              "src/generic-catalog.Named",
-              "src/generics.Binding",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -14548,7 +14495,7 @@
           {
             "key": "src/patterns.quantity",
             "file": "src/patterns.bend",
-            "via": "src/patterns.fields",
+            "via": "src/generics.fields",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14624,7 +14571,7 @@
           {
             "key": "src/scope.contains",
             "file": "src/scope.bend",
-            "via": "src/scope.sequential",
+            "via": "src/generics.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15008,6 +14955,39 @@
             ]
           },
           {
+            "key": "src/scope.term_name",
+            "file": "src/scope.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "src/scope.unbound",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "datatype"
+            ]
+          },
+          {
+            "key": "src/scope.unbound",
+            "file": "src/scope.bend",
+            "via": "src/scope.term_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
             "via": "src/syntax.identifier_text",
@@ -15192,7 +15172,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -17470,7 +17450,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/generic-catalog.parameter_value",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -17695,7 +17675,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 523,
+          "declarations": 522,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -19045,6 +19025,30 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check-dispatch.check",
+            "file": "src/check-dispatch.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "src/check.check",
+              "src/core.Book",
+              "src/core.internal",
+              "src/generics.check",
+              "src/generics.required",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -19264,7 +19268,7 @@
           {
             "key": "src/check.check",
             "file": "src/check.bend",
-            "via": "src/driver.source",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19277,13 +19281,10 @@
               "src/check.resolved",
               "src/core.Book",
               "src/core.internal",
-              "src/generics.check",
-              "src/generics.required",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -19808,6 +19809,7 @@
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
+              "src/catalog.find_type",
               "src/check.Mode",
               "src/check.annotation",
               "src/check.arm_body",
@@ -19823,7 +19825,6 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.rebuilt",
-              "src/check.term_name",
               "src/check.variable",
               "src/core.Catalog",
               "src/core.Checked",
@@ -19839,49 +19840,12 @@
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.term_name",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/catalog.find_type",
-              "src/check.unbound",
-              "src/core.Binding",
-              "src/core.Datatype",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.unbound",
-            "file": "src/check.bend",
-            "via": "src/check.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "String",
-              "src/catalog.TypeRef",
-              "src/core.Binding",
-              "src/core.unsupported",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -20238,7 +20202,7 @@
           {
             "key": "src/core.internal",
             "file": "src/core.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20559,7 +20523,7 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
+              "src/check-dispatch.check",
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.checked",
@@ -22359,7 +22323,7 @@
           {
             "key": "src/generics.check",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23297,7 +23261,7 @@
           {
             "key": "src/generics.required",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23359,6 +23323,7 @@
               "src/generic-catalog.Parameter",
               "src/generic-catalog.constructor_named",
               "src/generic-catalog.expression",
+              "src/generic-catalog.family_named",
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
@@ -23394,7 +23359,7 @@
               "src/generics.scrutinee",
               "src/generics.static_argument",
               "src/generics.static_result",
-              "src/generics.term_name",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -23500,26 +23465,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/generics.term_name",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/generic-catalog.Family",
-              "src/generic-catalog.family_named",
-              "src/generics.Binding",
-              "src/generics.unbound",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/generics.typed_parameters",
             "file": "src/generics.bend",
             "via": "src/generics.required",
@@ -23530,24 +23475,6 @@
               "Bool",
               "List",
               "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/generics.unbound",
-            "file": "src/generics.bend",
-            "via": "src/generics.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "String",
-              "src/core.unsupported",
-              "src/generic-catalog.Named",
-              "src/generics.Binding",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -24499,7 +24426,7 @@
           {
             "key": "src/patterns.quantity",
             "file": "src/patterns.bend",
-            "via": "src/patterns.fields",
+            "via": "src/generics.fields",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24575,7 +24502,7 @@
           {
             "key": "src/scope.contains",
             "file": "src/scope.bend",
-            "via": "src/scope.sequential",
+            "via": "src/generics.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24959,6 +24886,39 @@
             ]
           },
           {
+            "key": "src/scope.term_name",
+            "file": "src/scope.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "src/scope.unbound",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "datatype"
+            ]
+          },
+          {
+            "key": "src/scope.unbound",
+            "file": "src/scope.bend",
+            "via": "src/scope.term_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
             "via": "src/syntax.identifier_text",
@@ -25143,7 +25103,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -27421,7 +27381,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/generic-catalog.parameter_value",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -27646,7 +27606,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 454,
+          "declarations": 453,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -28472,6 +28432,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check-dispatch.check",
+            "file": "src/check-dispatch.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/check.check",
+              "src/core.internal",
+              "src/generics.check",
+              "src/generics.required",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -28617,7 +28593,7 @@
           {
             "key": "src/check.check",
             "file": "src/check.bend",
-            "via": "src/driver.source",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28625,10 +28601,7 @@
               "src/catalog.catalog",
               "src/check.resolved",
               "src/core.internal",
-              "src/generics.check",
-              "src/generics.required",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -28955,6 +28928,7 @@
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
+              "src/catalog.find_type",
               "src/check.annotation",
               "src/check.arm_body",
               "src/check.arm_scope",
@@ -28969,7 +28943,6 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.rebuilt",
-              "src/check.term_name",
               "src/check.variable",
               "src/core.exhausted",
               "src/core.internal",
@@ -28980,33 +28953,9 @@
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
+              "src/scope.term_name",
               "src/syntax.bind",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.term_name",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/catalog.find_type",
-              "src/check.unbound"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.unbound",
-            "file": "src/check.bend",
-            "via": "src/check.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.unsupported"
             ],
             "dynamic_calls": []
           },
@@ -29176,7 +29125,7 @@
           {
             "key": "src/core.internal",
             "file": "src/core.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29373,7 +29322,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/check.check",
+              "src/check-dispatch.check",
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
@@ -30502,7 +30451,7 @@
           {
             "key": "src/generics.check",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31082,7 +31031,7 @@
           {
             "key": "src/generics.required",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31124,6 +31073,7 @@
               "src/core.unsupported",
               "src/generic-catalog.constructor_named",
               "src/generic-catalog.expression",
+              "src/generic-catalog.family_named",
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
@@ -31156,7 +31106,7 @@
               "src/generics.scrutinee",
               "src/generics.static_argument",
               "src/generics.static_result",
-              "src/generics.term_name",
+              "src/scope.term_name",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -31229,19 +31179,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/generics.term_name",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/generic-catalog.family_named",
-              "src/generics.unbound"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/generics.typed_parameters",
             "file": "src/generics.bend",
             "via": "src/generics.required",
@@ -31249,18 +31186,6 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/generics.unbound",
-            "file": "src/generics.bend",
-            "via": "src/generics.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.unsupported"
-            ],
             "dynamic_calls": []
           },
           {
@@ -31849,7 +31774,7 @@
           {
             "key": "src/patterns.quantity",
             "file": "src/patterns.bend",
-            "via": "src/patterns.fields",
+            "via": "src/generics.fields",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31912,7 +31837,7 @@
           {
             "key": "src/scope.contains",
             "file": "src/scope.bend",
-            "via": "src/scope.sequential",
+            "via": "src/generics.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32180,6 +32105,32 @@
             "dynamic_calls": [
               "value"
             ]
+          },
+          {
+            "key": "src/scope.term_name",
+            "file": "src/scope.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/scope.unbound"
+            ],
+            "dynamic_calls": [
+              "datatype"
+            ]
+          },
+          {
+            "key": "src/scope.unbound",
+            "file": "src/scope.bend",
+            "via": "src/scope.term_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.unsupported"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/syntax.alpha",
@@ -33870,7 +33821,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/generic-catalog.parameter_value",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -34041,7 +33992,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 561,
+          "declarations": 560,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -35473,6 +35424,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check-dispatch.check",
+            "file": "src/check-dispatch.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "Result",
+              "src/check.check",
+              "src/core.Book",
+              "src/core.internal",
+              "src/generics.check",
+              "src/generics.required",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.annotation",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -35691,7 +35664,7 @@
           {
             "key": "src/check.check",
             "file": "src/check.bend",
-            "via": "src/driver.source",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -35703,13 +35676,10 @@
               "src/core.Book",
               "src/core.Catalog",
               "src/core.internal",
-              "src/generics.check",
-              "src/generics.required",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -36220,9 +36190,11 @@
               "U32.is_eq",
               "src/catalog.ConstructorRef",
               "src/catalog.FunctionRef",
+              "src/catalog.TypeRef",
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
+              "src/catalog.find_type",
               "src/check.Mode",
               "src/check.annotation",
               "src/check.arm_body",
@@ -36238,7 +36210,6 @@
               "src/check.prepend_argument",
               "src/check.prepend_arm",
               "src/check.rebuilt",
-              "src/check.term_name",
               "src/check.variable",
               "src/core.Binding",
               "src/core.Catalog",
@@ -36256,47 +36227,12 @@
               "src/scope.live_scope",
               "src/scope.lookup",
               "src/scope.scrutinee",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.term_name",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "src/catalog.find_type",
-              "src/check.unbound",
-              "src/core.Binding",
-              "src/core.Datatype",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.unbound",
-            "file": "src/check.bend",
-            "via": "src/check.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "src/catalog.TypeRef",
-              "src/core.Binding",
-              "src/core.unsupported",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -36653,7 +36589,7 @@
           {
             "key": "src/core.internal",
             "file": "src/core.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -36977,7 +36913,7 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
+              "src/check-dispatch.check",
               "src/core.Book",
               "src/driver.Limits",
               "src/driver.checked",
@@ -38752,7 +38688,7 @@
           {
             "key": "src/generics.check",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -39676,7 +39612,7 @@
           {
             "key": "src/generics.required",
             "file": "src/generics.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -39737,10 +39673,12 @@
               "src/generic-catalog.Catalog",
               "src/generic-catalog.ConstructorRef",
               "src/generic-catalog.FunctionRef",
+              "src/generic-catalog.Named",
               "src/generic-catalog.Parameter",
               "src/generic-catalog.Typed",
               "src/generic-catalog.constructor_named",
               "src/generic-catalog.expression",
+              "src/generic-catalog.family_named",
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
@@ -39778,7 +39716,7 @@
               "src/generics.scrutinee",
               "src/generics.static_argument",
               "src/generics.static_result",
-              "src/generics.term_name",
+              "src/scope.term_name",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -39880,25 +39818,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/generics.term_name",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "src/generic-catalog.Family",
-              "src/generic-catalog.family_named",
-              "src/generics.Binding",
-              "src/generics.unbound",
-              "src/syntax.Error",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/generics.typed_parameters",
             "file": "src/generics.bend",
             "via": "src/generics.required",
@@ -39909,23 +39828,6 @@
               "Bool",
               "List",
               "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/generics.unbound",
-            "file": "src/generics.bend",
-            "via": "src/generics.term_name",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Result",
-              "src/core.unsupported",
-              "src/generic-catalog.Named",
-              "src/generics.Binding",
-              "src/syntax.Error",
-              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -40855,7 +40757,7 @@
           {
             "key": "src/patterns.quantity",
             "file": "src/patterns.bend",
-            "via": "src/patterns.fields",
+            "via": "src/generics.fields",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40931,7 +40833,7 @@
           {
             "key": "src/scope.contains",
             "file": "src/scope.bend",
-            "via": "src/scope.sequential",
+            "via": "src/generics.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -41308,6 +41210,38 @@
             ]
           },
           {
+            "key": "src/scope.term_name",
+            "file": "src/scope.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "src/scope.unbound",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": [
+              "datatype"
+            ]
+          },
+          {
+            "key": "src/scope.unbound",
+            "file": "src/scope.bend",
+            "via": "src/scope.term_name",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/syntax.alpha",
             "file": "src/syntax.bend",
             "via": "src/syntax.identifier_text",
@@ -41491,7 +41425,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/check.check",
+            "via": "src/check-dispatch.check",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -43885,7 +43819,7 @@
           {
             "key": "U32.is_ne",
             "file": "Base",
-            "via": "src/scope.live_scope",
+            "via": "src/generic-catalog.parameter_value",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
