@@ -27,7 +27,10 @@
     "a4/main.bend": "887f120cab4dfa47c3624b8b2854309e4ae230935ee602dbfde736824d003a7b",
     "a5/Bool.bend": "ec144b73e7bb3bf64860c1d4ad68eebe777c0ae1ee4b001ffd6edf6c900fe3af",
     "a5/main.bend": "f36e1eb2ca9d645f8d0c9f27d4ecb313a337ae05aa98f622a3ef2d85150d1c5e",
+    "g2-promoted/main.bend": "6b814e1517010651a0e81e1df8f02bbfa73bd95e93ea2d9974130af1c27f5a9b",
     "g2/main.bend": "2a9327d3ef4b635923c7a2a4f34f009ee86149a43455a5c6e1c2673f9fdbdd71",
+    "g3-promoted/lib/m.bend": "8e07f7ef5a7672a1aba2a57c35e99e347959f919b1772cc0667b294896b4ae5f",
+    "g3-promoted/main.bend": "e6f6c155effe4f83d23836a9c94e976d716a732b92229b08b19a690b280e8274",
     "g3/lib/m.bend": "b48ec9b36a486d27c3e513a13986c09bf255ce0eb4a14268e898908eaf2dd051",
     "g3/main.bend": "9936a129dbad1a07a6a6a011aadf08ea88e3e485d5ccb0381ac8c1c057f3957f",
     "identity/case.bend": "6c29441b5ded2ae0488413bd625b70425c6c337cbfbf8f2aa30f1408682d71ae",
@@ -350,6 +353,66 @@
         "code": "foreign-definition",
         "diagnostic_prefix": "Unsupported\tcheck\tforeign-definition\t"
       }
+    },
+    {
+      "name": "base-promoted-ctor-binder",
+      "file": "g2-promoted/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "g2-promoted/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g2-promoted/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{+True}: True\n   |              ^^^^^\n13 | \n"
+        }
+      ]
+    },
+    {
+      "name": "local-promoted-ctor-binder",
+      "file": "g3-promoted/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "g3-promoted/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{+Off}: Off\n   |              ^^^^\n11 | \n"
+        }
+      ]
     }
   ]
 }
