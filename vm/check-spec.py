@@ -139,9 +139,12 @@ def seed_observation(case, source=None):
     return run([SEED, source], 120)
 
 
-def invoke_argv(case, built, argv):
-    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8."""
-    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], argv[0], EVAL_BUDGET, *argv[1:]]
+def invoke_argv(case, built, invocation):
+    """eval-cli asked for `FN BUDGET ORDINALS...`, the Book invocation of SPEC section 8. A row
+    that names a `fuel` word passes it as the budget: the word the VM reads as FUEL."""
+    name, *ordinals = invocation['argv']
+    return [built[case['lane']]['eval'], *lane_prefix(case), case['source'], name,
+            invocation.get('fuel', EVAL_BUDGET), *ordinals]
 
 
 def lanes(case, built):
@@ -152,7 +155,7 @@ def lanes(case, built):
         got['seed_bun'] = observed(run([SEED, case['source']], 120))
     if 'invocations' in case:
         # The seed runs only `main`; eval-cli is the oracle for every other invocation.
-        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i['argv']), 120))}
+        got['invocations'] = [{**reviewed(i), 'eval': observed(run(invoke_argv(case, built, i), 120))}
                               for i in case['invocations']]
     return got
 

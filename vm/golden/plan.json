@@ -1190,6 +1190,161 @@
           "vm": "HostFailure invoke argument-arity"
         }
       ]
+    },
+    {
+      "name": "nat-case-big",
+      "source": "vm/golden/nat-case-big.bend",
+      "lane": "literals",
+      "seed_stdout": "True{}\n",
+      "features": [
+        "Case",
+        "Branch",
+        "Literal",
+        "Intrinsic",
+        "bound",
+        "ownership"
+      ],
+      "seed_lane": "native"
+    },
+    {
+      "name": "invoke-words",
+      "source": "vm/golden/invoke-words.bend",
+      "lane": "literals",
+      "seed_stdout": "Two{On{}, Off{}}\n",
+      "features": [
+        "Book invocation",
+        "argument words"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "absent",
+            "x"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "absent"
+          ],
+          "fuel": "x",
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "9",
+            "x"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "01",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}"
+        },
+        {
+          "argv": [
+            "two",
+            "000000000001",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}"
+        },
+        {
+          "argv": [
+            "two",
+            "4294967295",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range"
+        },
+        {
+          "argv": [
+            "two",
+            "4294967296",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "4294967297",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "+1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "-1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            " 1",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            ""
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "\u0661",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "1_0",
+            "0"
+          ],
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "fuel": "4294967296",
+          "vm": "HostFailure arguments expected-u32"
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "fuel": "0001048576",
+          "vm": "Two{On{},Off{}}"
+        }
+      ]
     }
   ]
 }
