@@ -19,6 +19,7 @@ type Mode is Data:
   TypeKind{name: S.Token}
   FunctionTail{token: S.Token, parameters: S.Node}
   MatchTail{token: S.Token, value: S.Node, column: U32}
+  RowTail{token: S.Token, pattern: S.Node, parent: U32, column: U32}
   BindingStart{quantity: U32, column: U32}
   AnnotatedBinding{token: S.Token, quantity: U32, column: U32}
   BindingTail{token: S.Token, quantity: U32, annotation: Maybe<&2,S.Token>, value: S.Node, column: U32}
@@ -71,6 +72,12 @@ def wrap_function(token: S.Token, params: S.Node, result: S.Token,
   match params:
     case S.Sequence{items}: Done{Parsed{S.Function{token,items,result,body},rest}}
     case _: Fail{S.Internal{"parse","expected-parameters"}}
+
+# A singleton keeps the original parser observation; further columns append.
+def columns(head: S.Node, +tail: S.Node) -> S.Node:
+  match head:
+    case S.Sequence{items}: S.Sequence{List.append(&2,S.Node,items,[tail])}
+    case _: S.Sequence{[head,tail]}
 
 def wrap_match(token: S.Token, value: S.Node, arms: S.Node,
   rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -265,7 +272,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       Fail{S.Internal{"parse","declaration-mode"}}
     case 1n+ +n MatchTail{+token,+value,+column}:
       S.choose(Result<S.Error,Parsed>,scrutinee(tokens),u =>
-        unsupported(tokens,"match-scrutinees"),u =>
+        then(run(n,Term{False{}},tokens),more => rest =>
+          run(n,MatchTail{token,columns(value,more),column},rest)),u =>
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),arms =>
         then(run(n,Arms{column,0},S.skip_lines(arms)),items => rest => wrap_match(token,value,items,rest))))
     case 1n+ +n BindingStart{+quantity,+column}:
@@ -290,17 +298,27 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
         then(run(n,BodyAt{column},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
+    case 1n+ +n RowTail{+keyword,+pattern,+parent,+column}:
+      S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(tokens),starts(tokens,"+")),u =>
+        then(run(n,Term{True{}},tokens),more => rest =>
+          run(n,RowTail{keyword,columns(pattern,more),parent,column},rest)),u =>
+        S.bind(List<&2,S.Token>,Parsed,expect(tokens,":"),body =>
+          then(run(n,Body{S.column(keyword)},body),value => after =>
+            then(run(n,Arms{parent,column},S.skip_lines(after)),more => end =>
+              prepend(S.Arm{keyword,pattern,value},more,end)))))
     case 1n+ +n Arms{+parent,+column}:
       match tokens:
         case Con{+keyword,+tail}:
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(keyword,"<eof>"),U32.is_le(S.column(keyword),parent)),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
-            then(run(n,Term{True{}},tail),pattern => rest =>
+            then(run(n,Term{True{}},tail),+pattern => +rest =>
+              S.choose(Result<S.Error,Parsed>,Bool.or(scrutinee(rest),starts(rest,"+")),u =>
+                run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
                 then(run(n,Body{S.column(keyword)},body),value => after =>
                   then(run(n,Arms{parent,S.column(keyword)},S.skip_lines(after)),more => end =>
-                    prepend(S.Arm{keyword,pattern,value},more,end))))),u =>
+                    prepend(S.Arm{keyword,pattern,value},more,end)))))),u =>
             unsupported(tokens,"pattern-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
 

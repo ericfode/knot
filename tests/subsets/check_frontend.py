@@ -292,7 +292,7 @@ def main():
               f"and four semantic mutants; "
               f"{len(record['classification']['fixtures'])} classification fixtures in two lanes, "
               f"{len(record['classification']['mutants'])} classification mutants, "
-              f"{len(record['classification']['downstream'])} downstream rejection observations")
+              f"{len(record['classification']['downstream'])} downstream observations")
     except Exception as error:
         record['status'] = 'failed'
         record['failure'] = str(error)

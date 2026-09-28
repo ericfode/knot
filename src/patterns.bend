@@ -36,7 +36,7 @@ def fields(nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, +parent: U3
     case Nil{} Nil{}: Done{Fields{scope,Nil{},Nil{}}}
     case Con{node,+tail} Con{C.Parameter{name,+q,+type_id},+rest}:
       binder(node,+token => mark =>
-        S.choose(Result<S.Error,Fields>,G.constructor_named(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>
+        S.choose(Result<S.Error,Fields>,G.constructor_before(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>
           +actual = quantity(q,parent,mark)
           S.bind(C.Datatype,Fields,G.type_at(types,type_id),definition =>
             S.bind(Unit,Fields,G.quantity(token,actual,definition),u =>

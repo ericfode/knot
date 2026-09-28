@@ -1,0 +1,581 @@
+{
+  "schema": 1,
+  "increment": "nest",
+  "base": "6f132ea",
+  "branch": "campaign/nest",
+  "status": "verified bounded implementation; not complete frozen conformance or style qualification",
+  "commands": [
+    {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+      "exit": 0,
+      "gates": 15,
+      "summary": "all-gates.json"
+    },
+    {
+      "command": "npm run -s gates:verify",
+      "exit": 0,
+      "tests": 18
+    },
+    {
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-nest/check.py",
+      "exit": 0,
+      "receipt": "nest.json"
+    },
+    {
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-nest/regen.py",
+      "exit": 0,
+      "result": "no differences; 40 fixtures, 174 entry calls; also rerun by the gate"
+    },
+    {
+      "command": "BEND_NO_TELEMETRY=1 bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/matrix-PROOF.bend",
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "scope": "13 filled matrix laws and the inherited complete proof chain"
+    },
+    {
+      "command": "npm run census:approve",
+      "exit": 0,
+      "summary": "\n> census:approve\n> node tools/census/approve.mjs\n\nnew src/catalog-LAWS.bend::empty_datatype:law: calls,constructors,dependent,equality,fields,generics,laws,quantities.arguments,quantities.reusable,types.base\nnew src/catalog-PROOF.bend::L.empty_datatype:law_fill: calls,constructors,dependent,equality,fields,generics,proofs,quantities.arguments,quantities.reusable,types.base\nnew src/catalog.bend::start:definition: constructors,fields,matches,patterns.nested,patterns.variable,quantities.affine,types.base\nnew src/catalog.bend::prior_constructor:definition: calls,constructors,fields,generics,matches,patterns.nested,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,recursion,types.base\nnew src/catalog.bend::constructor_before:definition: calls,constructors,fields,generics,matches,patterns.nested,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,recursion,types.base\nnew src/catalog.bend::pattern_constructor:definition: calls,captures,generics,lambdas,literals.string,literals.u32,quantities.affine,quantities.arguments,quantities.reusable,types.base\nnew src/catalog.bend::datatype:definition: constructors,fields,generics,quantities.affine,quantities.arguments,quantities.reusable,types.base\ngone src/catalog.bend::nonempty:definition\nimport src/check.bend: ./matrix.bend -> src/matrix.bend\nwiden src/LAWS.bend::multiple_scrutinees:law: +literals.list\nNEW FILE src/matrix-LAWS.bend: 22 declarations\nNEW FILE src/matrix-PROOF.bend: 13 declarations\nNEW FILE src/matrix.bend: 30 declarations\nnew src/parse.bend::columns:definition: calls,constructors,fields,literals.list,matches,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,quantities.reusable\nwiden src/wasm.bend::lower:definition: +literals.list\n"
+    },
+    {
+      "command": "npm run -s census",
+      "exit": 0,
+      "purpose": "Regenerate checked inventories after approval"
+    },
+    {
+      "command": "node scripts/perch-style.mjs --preflight <17 changed/new Bend files> --task=tests/compiler-nest/SPEC.md --output=tests/compiler-nest/receipts/style-preflight.json",
+      "exit": 3,
+      "provider_requests": 0,
+      "status": "attention; structural context blockers, no model ratings"
+    }
+  ],
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3",
+    "wasm2wat": "1.0.41"
+  },
+  "gates": [
+    {
+      "name": "frontend",
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "completion_lines": [
+        "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream observations"
+      ],
+      "stdout_sha256": "99dda22e40d34f6f868a4da56eb1092359cde9a99f101f0aced49c270bc3da39",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "checker",
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "completion_lines": [
+        "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-nest/.local/gates/run-5k9zl1i3/worktree/tests/compiler-checker/receipts/checker.json"
+      ],
+      "stdout_sha256": "48af9f5bb6dc0c7b3738394713605fc53510e736ee09cc364a9b76f6d4b583be",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "structural",
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "completion_lines": [
+        "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-nest/.local/gates/run-5k9zl1i3/worktree/tests/compiler-structural/receipts/catalog.json"
+      ],
+      "stdout_sha256": "0eef4364f51debae6b1cf56ddd52dc0326ac70e8afb2dad8b82617bc8fefd57e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fields",
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "completion_lines": [
+        "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-nest/.local/gates/run-5k9zl1i3/worktree/tests/compiler-fields/receipts/fields.json"
+      ],
+      "stdout_sha256": "6c50bd2ef49e43ab17710684237fdfab08e11d2d046ac5d4d6ffcf1bcdb76571",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "wasm",
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 62
+      },
+      "completion_lines": [
+        "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 62 rejection pairs, 44 boundary observations, 7 semantic mutants. /Users/ericfode/src/knot/.claude/worktrees/campaign-nest/.local/gates/run-5k9zl1i3/worktree/tests/compiler-wasm/receipts/wasm.json"
+      ],
+      "stdout_sha256": "4a5237355f04fe0f65c0c753b53f171800fe3bd4c046a5338cdacd726ee9e3e5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "wasm-trust",
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "completion_lines": [],
+      "stdout_sha256": "6d9dc6c392c45498e0dcccc4fb254580d2cce11f7583e1ded13875dfca06a1fb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fields-trust",
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "completion_lines": [],
+      "stdout_sha256": "8efb6de4486477312611698c57e763dbe27919737cde4a9a6f4dd1ffceda8a8d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "structural-trust",
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "completion_lines": [],
+      "stdout_sha256": "0198e16b68519a9fc6fcbc644adb9bdd8dd8bca1549435222be80810508938b7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "owned-store",
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "completion_lines": [],
+      "stdout_sha256": "63867712b416f598aabfa79ebb7d43e4e0322caf88ae9d3053b6f68ed69955f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "flat-store",
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "completion_lines": [],
+      "stdout_sha256": "250fb0c47c1f0dc6e9b90ef158b57729808551437fc46c6af8cfada4171d37b1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "recursion",
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "completion_lines": [
+        "Recursion gate passed: 19 seed fixtures, 114 native/Bun phase observations, 4 fuel probes, 3 semantic mutants"
+      ],
+      "stdout_sha256": "a94b5cdd58e587f6e25bee0a08c095784b6de8d2ef8126e52063c66458d19cc5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fields-wasm",
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "completion_lines": [
+        "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. /Users/ericfode/src/knot/.claude/worktrees/campaign-nest/.local/gates/run-5k9zl1i3/worktree/tests/compiler-fields-wasm/receipts/fields-wasm.json"
+      ],
+      "stdout_sha256": "82d39ffcb9a0ad22aceafa13f748f6d60ad36ba8b8b99d9aa3432b4a82faa4bd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "census",
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "classes": 40,
+        "declarations": 497,
+        "files": 33
+      },
+      "completion_lines": [],
+      "stdout_sha256": "1c424b91ec6828881a9f0af05cf5eb4424e25a663af8ab4164a0b60e1687d696",
+      "stderr_sha256": "9566f5858973dccdbbdcb518aa967bfd2ebbe475cae2a6723eec9bf5c4cd189a"
+    },
+    {
+      "name": "lint:verify",
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "law_rules": 8,
+        "tests": 127
+      },
+      "completion_lines": [
+        "# tests 127",
+        "# pass 127",
+        "# fail 0",
+        "PASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present."
+      ],
+      "stdout_sha256": "ed2e997f03f588b9adb5be3610f3e26c0237874d947b812b030dfcf58f7737a1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "nest",
+      "command": [
+        "python3",
+        "tests/compiler-nest/check.py"
+      ],
+      "status": "passed",
+      "exit_code": 0,
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 38,
+        "mutants": 6
+      },
+      "completion_lines": [
+        "Nest gate passed within stated scope: 40 seed fixtures, 174 seed calls; 38/40 frozen outcomes, 2 UNMET; 386 evaluator values, 386 Wasm values, 24 boundary observations, 100 enum hashes, 6 mutants / 12 semantic kills"
+      ],
+      "stdout_sha256": "961623b7072e9cd2eb264334043e45d74832def0e4b85e13d265365cf3eaedac",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "nest_counts": {
+    "seed_fixtures": 40,
+    "seed_entry_calls": 174,
+    "matched_frozen_outcomes": 38,
+    "unmet_frozen_outcomes": 2,
+    "check_observations": 76,
+    "unmet_phase_observations": 12,
+    "accepted_books": 25,
+    "evaluation_values": 386,
+    "wasm_values": 386,
+    "rejected_phase_observations": 78,
+    "boundary_observations": 24,
+    "enum_hash_checks": 100,
+    "mutants": 6,
+    "semantic_kills": 12
+  },
+  "qualification": {
+    "complete": false,
+    "limits": "The gate monitors two authorized conservative recursion outcomes; neither is counted as frozen conformance."
+  },
+  "unmet": [
+    {
+      "name": "rec-swapped-args",
+      "frozen_outcome": "Invalid",
+      "actual": {
+        "native": "Unsupported\tcheck\trecursive-call\t250:254:13:17",
+        "bun": "Unsupported\tcheck\trecursive-call\t250:254:13:17"
+      },
+      "disposition": "unmet: seed rejects; complete decreasing-call rule is not implemented"
+    },
+    {
+      "name": "rec-alias",
+      "frozen_outcome": "Invalid",
+      "actual": {
+        "native": "Unsupported\tcheck\trecursive-call\t227:232:13:12",
+        "bun": "Unsupported\tcheck\trecursive-call\t227:232:13:12"
+      },
+      "disposition": "unmet: seed rejects; complete decreasing-call rule is not implemented"
+    }
+  ],
+  "style": {
+    "summary": {
+      "units": 288,
+      "files": 17,
+      "unranked_files": 0,
+      "empty_files": 0,
+      "truncated_units": 28,
+      "truncated_by_limit": {
+        "caller-or-byte-limit": 6,
+        "context-file-limit": 9,
+        "context-helper-limit": 13
+      },
+      "supporting_role_impossible": 51,
+      "role_gap_units_by_reason": {
+        "context-file-limit": 9,
+        "context-helper-limit": 13,
+        "nonlocal-import": 28,
+        "truncated-context": 28
+      },
+      "max_state_bytes": 38802,
+      "composition_available": false,
+      "composition_reasons": [
+        "unresolved_composition_context",
+        "composition_byte_limit"
+      ]
+    },
+    "structural_blockers": 29,
+    "provider_requests": 0,
+    "compression": "unrated",
+    "delight": "unrated",
+    "memetic": "unrated",
+    "anticipation": "unrated",
+    "payoff": "unrated",
+    "composition": {
+      "available": false,
+      "reasons": [
+        "unresolved_composition_context",
+        "composition_byte_limit"
+      ],
+      "source_bytes": 128390,
+      "byte_limit": 48000,
+      "unresolved_by_reason": {
+        "nonlocal-import": 78
+      }
+    }
+  },
+  "earlier_failures": [
+    {
+      "stage": "mutant construction",
+      "kind": "erased-field mutation violated the compiler implementation affine check",
+      "disposition": "not a semantic kill; replaced with type-correct unerase helper; final mutant typechecks and yields wrong acceptance in both lanes"
+    },
+    {
+      "stage": "first full runner",
+      "run": ".local/gates/run-z8bnvww7",
+      "status": "failed",
+      "gate": "lint:verify",
+      "counts": {
+        "pass": 126,
+        "fail": 1
+      },
+      "diagnostic": "checking: src/check.bend needs src/matrix.bend",
+      "disposition": "closed all affected manifest import lists, including the new proof family; unchanged test passes in the final full runner"
+    }
+  ],
+  "proof_boundary": "Universal stable-selection and helper laws; concrete complete-lowering normalizations. No general end-to-end compiler, exhaustiveness, quantity or descent preservation theorem.",
+  "receipts": {
+    "own": [
+      "nest.json",
+      "style-preflight.json",
+      "all-gates.json",
+      "verification.json"
+    ],
+    "shared_existing": "Not refreshed or committed; full runner regenerated them only in its exported scratch tree.",
+    "drift": {
+      "identical": 63,
+      "semantic": 11,
+      "volatile-only": 7
+    }
+  },
+  "source_sha256": {
+    "src/LAWS.bend": "b7755dbd1da14516ecdb7484edace511e581e4c8671a287f2d23826264502e6d",
+    "src/PROOF.bend": "b3808807d0ffdfaa14a1cebb5bf532f58836402b1e988c56d3b3c9bea9eca7c4",
+    "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
+    "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
+    "src/catalog.bend": "0b478dbbc0f07f60ade43c04dd53b9660f6410b1c5dd4d0ef191772d83986098",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "2c39850e49a82268748541fea1f5074ee99f4cec774448cdfc5a05d0746b96ee",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "5ceff091280c1a5e5cd4ca4b609c6520f76435d44ba0e75cd08688e3f0c64354",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/matrix-LAWS.bend": "872942aaf3936e939f50caea516c4305824a737aac7c7791d38e1b6f87bf8d76",
+    "src/matrix-PROOF.bend": "3a6d3c19fce3e6f2fb562bbf964198e8411d4d2b4cfc4e41d2233200991ccdc9",
+    "src/matrix.bend": "23f7e79793b4a864ca1b55f218d1b056922ae0d7ec9696b97bca8b553713a0f5",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "2301b90a8787bcd413ba26a27d6360d7c05a3e102f501e39dba097923877c9f7",
+    "src/patterns.bend": "379a8e4d95d860bd8e9bedd30f2193143ebaef290b82db19db74d5cfe5de98c9",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "8c9bedfbc7583b6c6009ef8f2f1b1a6d9aa2a085e3f06d467f57bab8b4dfce93",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "4557219b40a35431e71de9c98ee38b96fb15fb505cf0e2f93f1100385c89672d",
+    "src/SPEC.md": "5e791a617985d99d26a725203d4f60b62080e8ea6916734cd356c55ce8aaf4a1",
+    "src/CONTRACT.json": "a8003b0a3b6f673dda1a3b022641475944193df2b31a846dc05a2f570d674ed0",
+    "tests/compiler-nest/check.py": "b0fc9e5f895a2ae18a7ce7234ce6def1df23fe0af25c3f852780dd49cef3b5d7",
+    "tests/compiler-nest/regen.py": "c561615d5652d50f632abd6c05044733a0866148c96337033557c19bdfac2249",
+    "tests/compiler-nest/control-expectations.json": "735e26a99e12688693f3fd52fcbe1b9f62e620f651a22a37161ff6c9fe516871",
+    "tests/compiler-nest/expectations.json": "54e06f3528cf2bb5d8ab0346d13eaea17342519e00ccd4c9c9f77d61b83b5f23",
+    "tests/compiler-nest/FIXTURES.md": "1ebb3864b11c76bf99b19dbbb37662081e3f35b05bcebc6f83436cca31e20df4",
+    "tests/compiler-nest/SPEC.md": "7580fb8bce562c8912e958f0ef36de579de0d219c3a96f523ce3d4a9129a25f1",
+    "tests/compiler-nest/fixtures/affine-nested-promote.bend": "0756a9f3fb6894982c1d74e4d26a66cfe6149bf5ed2ab2d0336bf41ac4858136",
+    "tests/compiler-nest/fixtures/affine-nested-reuse.bend": "ed65d95b35c9a1e24c5a3022b65ef814a4638b94035c11f5da4b35d1a3f5772c",
+    "tests/compiler-nest/fixtures/bare-constructor-binder.bend": "fb292ccb492a15dbfa6e278e2620c2464e518381852f9d9cb39abef38a02d1c1",
+    "tests/compiler-nest/fixtures/closure-parameter.bend": "6db0b8219315266611f5248f83a82cba2e84e64b294a48de0ff015c666882439",
+    "tests/compiler-nest/fixtures/empty-match.bend": "b06e433e14c2b038d148880cb027c3173df3178babe43ba1c95d5d6c93b883e4",
+    "tests/compiler-nest/fixtures/empty-type.bend": "44381662138908f069c0b14f11f698672a6a41f74d84112d1e2ce492a8131861",
+    "tests/compiler-nest/fixtures/erased-nested-ignore.bend": "998a13b3ee4b64ebd7e7247209d2c91c7f4b58220d82ca143993852ae1093744",
+    "tests/compiler-nest/fixtures/erased-nested-inspect.bend": "3acfa326cc2e5703673442310fca6efa33265b84d0a4b9a7dba5d94bcc3c3df3",
+    "tests/compiler-nest/fixtures/erased-nested-live-use.bend": "507c1864a06ed8da21ce5de2804ca650e6a906ee1de5c979b0320be75b8f9bc0",
+    "tests/compiler-nest/fixtures/first-match-duplicate-arm.bend": "3cb531f3b7cbfd051c7a849942d8a457ccda24c491aa12ea50267403959b0817",
+    "tests/compiler-nest/fixtures/first-match-multi-swapped.bend": "46b1e01d64fcbc27917b50c01f0f49d05d863cd01b5d0ffbfd30192d6d1a5b11",
+    "tests/compiler-nest/fixtures/first-match-multi.bend": "0d87018a5b6e580f2daebd1d5695c5d31b2e8f8ee9c2f8480166e05f1aa98ecf",
+    "tests/compiler-nest/fixtures/first-match-nested-swapped.bend": "a0c5fa5d5c7a75ba4237a792d6d5253388ab719269196864b14e7a216ce3e738",
+    "tests/compiler-nest/fixtures/first-match-nested.bend": "58c27b451e78b214bb9d81f9e7258b02f126f58796b57d29d8cd101d321589de",
+    "tests/compiler-nest/fixtures/forward-bare-binder.bend": "b28bfa5db05dbc3fddbde0de2c663941a371d785dc90f5074226ab746366c688",
+    "tests/compiler-nest/fixtures/forward-constructor-pattern.bend": "388d82705a9b1ec0e3dd058e141e861eacd574c406dee5aa0d40e890cef214d7",
+    "tests/compiler-nest/fixtures/generic-box-pattern.bend": "c2ea8e02e8f28cc2b51954636b90d1ee61f4c748ef7208de256d7f9ec8f33d3a",
+    "tests/compiler-nest/fixtures/multi-ctor-column-reorder.bend": "89728a89a46c729a7ca332e12d919182ed8355510c9f5be51319fbd14faffc2e",
+    "tests/compiler-nest/fixtures/multi-missing.bend": "0225066d456d60778e44e1488df495f9f24b8be6bfccd06f92f7e66669488955",
+    "tests/compiler-nest/fixtures/multi-shadow-binder.bend": "04c22aea4bb91b6144dba7ca3128c61519f79bd001266f5e9ef5d0497b8ec53f",
+    "tests/compiler-nest/fixtures/multi-table.bend": "3636ff1315167013ed078c80e41ef4f02116166a88c23dae4b90f91167b72651",
+    "tests/compiler-nest/fixtures/multi-three.bend": "8067932796153ad8741938fcff63defbd56fa57edef3f5420ec81dea228ea1fc",
+    "tests/compiler-nest/fixtures/multi-var-column-reorder.bend": "72af470203ad1bbfaa690a5bc66347715dfa28b4362ba9793f0884a66a5bcaf5",
+    "tests/compiler-nest/fixtures/nested-alias-reconstruct.bend": "74120fbee5d28519043b910315ac59b5054f3bbf4432227718dca01320ea9103",
+    "tests/compiler-nest/fixtures/nested-missing.bend": "462e94a89ba4bf2aa29db1d332238f0b28a459f2ee25e2c6f809810342268ba0",
+    "tests/compiler-nest/fixtures/nested-pair.bend": "05928a05d0bd1252977d30987f2a07c0d89c72421dcb87f665ba98f7cb01fc7b",
+    "tests/compiler-nest/fixtures/nested-sum.bend": "9f40b85072f4765a39797a9a16a62c1b450af3a9ba3396667b0312646f46c65e",
+    "tests/compiler-nest/fixtures/rec-alias.bend": "798708f5ad868629e15d900f919e85a07b3575ba727946db6c826dcf073722dd",
+    "tests/compiler-nest/fixtures/rec-even-nested.bend": "c73c9b62d87b0678144819e161f35346dbb15664a804c16e123f169a4564f7fd",
+    "tests/compiler-nest/fixtures/rec-list-nested.bend": "095c39a2139e02ffee6eabe4ea6c008282c4cda16ca1f663cae28a8f25fa866d",
+    "tests/compiler-nest/fixtures/rec-multi-descent.bend": "30bf7707b4eb0fea2555b150bf9c43697101d2f247173db174349bf5cbd610ec",
+    "tests/compiler-nest/fixtures/rec-swapped-args.bend": "1747f6f375d529421c0b30440dbc9e8286c67ea5783c550d648e083daf6939ea",
+    "tests/compiler-nest/fixtures/unreachable-after-wildcard.bend": "d974b6ef7e83b44ef433eca82a8ce0335017a36a18aaa20f651e13297379679e",
+    "tests/compiler-nest/fixtures/unreachable-free-name.bend": "b1c0c5caa3b7c184c21b23637b0643deba6403f43a01739fd06dbfbfa90d038a",
+    "tests/compiler-nest/fixtures/unreachable-pattern-type.bend": "e1445c18476b3bed02c029d4fbf534e4f60960fcaae5805b1ebe56d9f0397bf5",
+    "tests/compiler-nest/fixtures/unreachable-type-error.bend": "4657a2fe7ea9c933f27fa024bb04b910a0773674157902201a66cb52533c0fb0",
+    "tests/compiler-nest/fixtures/variable-affine-overuse.bend": "3803a762da47ee0ae355d67a466a1bacfd2ab5118dd65e9359ff33a8cdf34c90",
+    "tests/compiler-nest/fixtures/variable-rebind.bend": "a3003519a167d5a494b8103e7b8556887bfe7bccccefe89ac70be23562ace682",
+    "tests/compiler-nest/fixtures/variable-reusable.bend": "35543cb533696d78b605fdbcb01258ff9ef7f9cfaadf31aaef132df1ae381d3a",
+    "tests/compiler-nest/fixtures/wildcard-default.bend": "a19a8a916f74acc240734f3f57d6cc76382733638225539ca85bd5bfb7eaf5a9",
+    "tests/compiler-nest/controls/matrix-work.bend": "43999b7f6b73c394fbfe20d88f259dc8c5e4246708b55c2f74219cd627ebb6f5",
+    "tests/compiler-nest/controls/nested-alias-affine.bend": "63f027e14ac1ce27ab0748cad69357b887d9be310b5a4cb5f0c04392c81e9cc3",
+    "tests/compiler-nest/controls/tree-arena.bend": "0f03ff2c01a559805fc426aa42debe59e63b53962de70020ab2e6cda915111b7",
+    "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7",
+    "tests/compiler-fields-wasm/enum-baseline.json": "73468f8804864370a5430e8a8a5ca73be09df6581d06751905c78697bf0ccb03",
+    "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
+    "docs/compiler-campaign/manifest.json": "62ba44d4c8c18fac26473e142bd2841cde8df90f59ca6fb45b91a3e9a455d2bd",
+    "scripts/gates/run.py": "3046ba2f5394994f6084ae9508da0ea83f42474d8c91e053f509110270c43c6b",
+    "tools/census/approved.json": "7ca011c17ef97c06f87666e1a9a159f9327ae79b08f7ec196c66ea34fd89d1c2",
+    "docs/compiler-campaign/inventory/implementation.json": "efd84611a8708285f023f8366096a9404ea810f98fd971f3e397e3378977620b",
+    "docs/compiler-campaign/inventory/base-closure.json": "f1fb1030ec2820102ed7461fe5363c8f6a3b4413d870c038b58ac2f26e790d97",
+    "docs/compiler-campaign/inventory/accepted.json": "9d514e6b0c63b1088677a05cf0f0fe60ea00aca7ca8f950caf394993f82a1a6c",
+    "docs/compiler-campaign/inventory/hosts.json": "d0dd89b0c60f415ac0c2281f489e1277f857423c8d071f231c6b0717b773960f",
+    "research/compiler-fields/SPEC.md": "6282a40d4f838576f3d1e6f1ea231d9890031bb00796d2ee2b2b98792057a56b",
+    "tests/subsets/check_frontend.py": "db70cbd978889ad7d931d8c965887fb25be94089420a2effe4558aeda60e576e"
+  },
+  "frozen_fixture_preservation": "git diff 6f132ea -- tests/compiler-nest/FIXTURES.md tests/compiler-nest/expectations.json tests/compiler-nest/fixtures tests/compiler-nest/regen.py is empty",
+  "next": [
+    "Implement and prove the seed complete decreasing-call rule; preserve second-descent acceptance and reconcile the two unmet fixtures.",
+    "Coordinator runs targeted live semantic/style review and reviews bounded proof claims.",
+    "Universal full-tree preservation and reducing conservative matrix work exhaustion remain separate improvements."
+  ]
+}

@@ -36,4 +36,4 @@ law field_capability_is_not_acceptance:
 law empty_datatype:
   for +name: S.Token
   for +data: Bool
-  {G.nonempty(Nil{},name,data) == Done{C.Datatype{name,data,Nil{}}} : Result<S.Error,C.Datatype>}
+  {G.datatype(Nil{},name,data) == Done{C.Datatype{name,data,Nil{}}} : Result<S.Error,C.Datatype>}

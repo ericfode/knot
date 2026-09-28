@@ -4,6 +4,7 @@ import ./core.bend as C
 import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
+import ./matrix.bend as M
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -98,7 +99,7 @@ def pattern_arity(+reference: G.ConstructorRef, args: List<&2,S.Node>, +token: S
 def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.ConstructorRef>:
   match node:
     case S.Constructor{+token,+args}:
-      S.bind(G.ConstructorRef,G.ConstructorRef,G.find_constructor(types,token,0),+reference =>
+      S.bind(G.ConstructorRef,G.ConstructorRef,G.pattern_constructor(types,token),+reference =>
         S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params => pattern_arity(reference,args,token,params)))
     case S.Variable{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Promotion{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
@@ -191,10 +192,19 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))
-    case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{types,sigs} _:
-      S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
-        match_body(binding,token,arms,types,scope,wanted,level =>
-          run(n,Arms{arms,token,level,wanted},catalog,current,scope)))
+    case 1n+ +n Expression{S.Match{+token,+value,+arms},+wanted} C.Catalog{+types,sigs} _:
+      S.choose(Result<S.Error,C.Checked>,M.flat(value,arms),u =>
+        S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
+          match_body(binding,token,arms,types,scope,wanted,level =>
+            run(n,Arms{arms,token,level,wanted},catalog,current,scope))),u =>
+        S.bind(S.Node,C.Checked,M.start(n,token,value,arms,types),node =>
+          run(n,Expression{node,wanted},catalog,current,scope)))
+    case 1n+ +n Expression{S.Matrix{token,columns,rows,work},+wanted} C.Catalog{types,sigs} _:
+      S.bind(S.Node,C.Checked,M.step(token,columns,rows,work,types,scope),node =>
+        run(n,Expression{node,wanted},catalog,current,scope))
+    case 1n+ +n Expression{S.Alias{token,level,mark,+body},+wanted} C.Catalog{types,sigs} _:
+      S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark,types),bound =>
+        run(n,Expression{body,wanted},catalog,current,bound))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
     case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}

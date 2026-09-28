@@ -3,7 +3,7 @@
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
 [the field contract](../research/compiler-fields/SPEC.md). That extension accepts
-constructor arguments and nested constructor patterns, validates quantities and ordered
+constructor arguments and pattern matrices, validates quantities and ordered
 matching, and evaluates finite live-field trees. It does not provide owned
 runtime storage. The default emitter rejects every fielded book after body
 checking. The separately selected `knot-fields-wasm-1` profile below lowers those
@@ -13,8 +13,11 @@ The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
 adds structural self-calls to checking and evaluation: the first checked argument
 must be a reference to a field of parameter 0, directly or through further
 matches. Other self-calls report `Unsupported check recursive-call`; forward
-and mutual calls retain their existing classification. Structured host arguments remain unsupported. Recursive Wasm lowering is not
-yet a qualified capability of `knot-fields-wasm-1`.
+and mutual calls retain their existing classification. The
+[pattern-matrix gate](../tests/compiler-nest/SPEC.md) executes nested-pattern
+structural recursion in `knot-fields-wasm-1`. Structured host arguments remain
+unsupported. Its two seed-rejected recursion fixtures retain conservative
+Unsupported outcomes and are explicitly unmet.
 References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
@@ -35,7 +38,8 @@ digits, underscores or dots. Keywords cannot be identifiers.
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
   parameter must have a `Data` type. Dropping an affine parameter is allowed.
 - Variables, constructor applications and fully applied top-level calls.
-  Datatypes/constructors may be declared after their uses. A function must be
+  Datatypes and constructor expressions may precede their declarations.
+  Constructor patterns resolve at their source declaration event. A function must be
   defined before its live calls, following the pinned reference's declaration
   events. Forward live calls are invalid even when the graph is acyclic.
 - Sequential local bindings `x = value`, `+x = value`, and `-x = value`.
@@ -45,16 +49,20 @@ digits, underscores or dots. Keywords cannot be identifiers.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
-- A body may end in a match on ordered function parameters or fields. Every constructor of the
-  scrutinee type must be covered. Overlapping rows select the first match. Arms can contain bindings and nested
-  matches. Constructor patterns have no fields in this profile.
-  The pinned Bend parser rejects computed and local-binding scrutinees; Knot
-  retains that restriction rather than accepting a different surface language.
-  Matches follow parameter order: after matching a parameter, earlier parameters
-  cannot be matched. A local binding closes all outer parameters to further
-  matching. Already matched parameters cannot be matched again. Inside an arm,
-  uses of its matched parameter become the known nullary constructor; this may
-  construct several fresh values without reusing the consumed affine value.
+- A body may end in a match on function parameters or bound fields. Rows contain
+  constructor, wildcard or variable patterns, with nested constructor fields in
+  the structural profile. The first matching row wins, including duplicate rows;
+  every constructor combination must be covered. Empty datatypes admit zero
+  rows. Unreachable bodies are discarded before checking, but source patterns
+  still constrain their columns and undergo name/arity validation.
+  Computed and local-binding scrutinees remain invalid at the pinned seed.
+  Constructor columns follow binder order and close earlier parameters.
+  Variable-only columns leave that frontier open, so they may be reordered.
+  Local bindings close the outer frontier; matched constructors cannot be
+  inspected again. A matched parent is rebuilt from its known constructor and
+  field identities. Rebuilding an affine parent spends its remaining live field
+  obligations. Row aliases share those identities, even through nested patterns;
+  later row binders shadow earlier names without capturing other columns.
 - In the enum subprofile, live calls form an acyclic graph. Erased arguments may
   contain forward calls; no enum self-call can meet the field-descent rule.
   Every function is checked, including unused
@@ -62,7 +70,8 @@ digits, underscores or dots. Keywords cannot be identifiers.
 
 Constructor names must be unique across the book in this first profile.
 A zero-constructor datatype permits an exhaustive zero-row match and has no
-valid host ordinal. Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
+valid host ordinal. Repeated constructor declarations, including across
+datatypes, are invalid. Top-level type/function names share a namespace.
 Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
 
@@ -71,11 +80,12 @@ body; shadowed row bodies are discarded before checking. Nested patterns
 expand into single-constructor decisions; field binders retain their lexical
 identities, declared quantities and reconstruction obligations.
 
-Constructor fields, recursive calls, generic/dependent types, imports, literals,
-closures, wildcard patterns, laws, templates, foreign code and
-effects remain explicitly unsupported. This restriction leaves recursive trees
-and field-bound variables outstanding for the broader S1 stage. A recognized
-unsupported form makes no claim about the validity of its remaining contents.
+Generic/dependent types, imports, literals, closures, destructuring local
+bindings, laws, templates, foreign code and effects remain explicitly
+unsupported. The default enum emitter rejects fielded books after checking;
+selecting the fields profile enables their checked runtime representation.
+Self-calls beyond the first-parameter field-descent rule remain Unsupported.
+A recognized unsupported form makes no claim about its remaining contents.
 
 The parser recognizes these out-of-profile prefixes before applying the narrower
 enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
@@ -146,11 +156,11 @@ consulted 2026-09-26. Only the stated MVP subset is used.
 
 ## Fielded Wasm profile: `knot-fields-wasm-1`
 
-This profile accepts the same completely checked acyclic books as
-`knot-structural-terms-1`: monomorphic constructor fields, nested patterns,
+This profile accepts completely checked books from
+`knot-structural-terms-1` and first-parameter structural recursion: monomorphic constructor fields, nested patterns,
 parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
-checker bypass. Recursion, imports and the other unsupported
-forms remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
+checker bypass. Imports and forms beyond the stated structural and matrix
+contracts remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
 a checked book, as does the original `wasm.emit` entry. `emit` still selects
 `Enum{}`; `check.enum_profile` and its existing capability law remain unchanged.
 
@@ -170,7 +180,8 @@ A module containing a fielded datatype adds memory and global sections:
 `[1,3,5,6,7,10]`. Memory has exactly one page (65,536 bytes, min=max=1). The
 mutable i32 bump starts at zero; zero is a valid cell address. The appended,
 unexported allocator checks `size > 65536 - bump` before advancing the bump.
-That guard contains the profile's sole `unreachable`. An allocation ending at
+That guard traps with `unreachable`. Empty matches also emit `unreachable`,
+but their scrutinee has no domain-valid runtime value. An allocation ending at
 65,536 succeeds; an allocation beyond the remaining space traps before writing.
 Cells stay immutable after initialization, so reusable Data may share addresses.
 There is no memory growth, free, reset, reclamation, generation tracking or
@@ -205,7 +216,7 @@ Run its output with `node scripts/run-wasm.mjs --profile=knot-fields-wasm-1 modu
 export [live-ordinals...]`. Profile selection asserts that the module came from
 the corresponding checked Knot emitter; it is not a verifier for arbitrary
 Wasm. During export invocation, a call-stack `RangeError` reports
-`Exhausted<TAB>wasm<TAB>call-stack` (exit 4). In the fields profile, the arena's
+`Exhausted<TAB>wasm<TAB>call-stack` (exit 4). For domain-valid calls in the fields profile, the arena's
 `unreachable` reports `Exhausted<TAB>wasm<TAB>arena-overflow` (exit 4). Other traps,
 invalid modules, file failures, unknown exports and malformed host arguments
 remain HostFailure (exit 5). Node startup failures occur before this adapter can
@@ -239,8 +250,11 @@ are recursion-depth bounds, not total work counters. Overrides permit checker
 depth 0 through 4,096 and source budgets 0 through 65,536. The catalog allows
 256 types, 256 functions, 256 constructors per type, 256 fields per constructor and 256 parameters per
 function; lexical levels are limited to 4,096 per branch scope. Exceeding any
-of these bounds is exhaustion. Catalog passes and environment/set scans are
-structural list traversals bounded by these limits and the source cap. Lookup
+of these bounds is exhaustion. Each expanded source match has 4096 matrix steps; constructor splits divide
+the remaining quota among their branches. This conservative work cap bounds
+pattern-tree expansion separately from checker depth. Catalog passes and
+environment/set scans are structural list traversals bounded by the catalog
+limits and source cap. Lookup
 and affine-set merging are deliberately simple linear/quadratic algorithms.
 No performance claim or general checker-soundness proof is made.
 

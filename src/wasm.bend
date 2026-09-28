@@ -174,6 +174,7 @@ def lower(fuel: Nat, mode: Mode, +heap: List<&2,U32>, +functions: List<&2,C.Func
         S.bind(Code,Code,lower(n,Expression{head},heap,functions,locals,next,cap),initial =>
           after_initializer(initial,cap,+index => lower(n,Cell{tail,params,Con{index,slots},tag},heap,functions,locals,U32.add(index,1),cap))))
     case 1n+ +n Cell{terms,params,slots,tag}: internal(Code,"field-arity")
+    case 1n+n Branches{Nil{},index,pointer}: code(W.bytes(cap,[0]),next)
     case 1n+ +n Branches{Con{head,Nil{}},index,pointer}:
       lower(n,Arm{head,pointer},heap,functions,locals,next,cap)
     case 1n+ +n Branches{Con{C.Branch{+tag,+fields,+body},+tail},+index,+pointer}:

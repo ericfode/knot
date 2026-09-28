@@ -15,6 +15,7 @@ type Token is Data:
 
 # The parser has a single recursive tree. Declaration/sequence variants never
 # appear in checked expressions; the resolver validates that invariant.
+# Matrix and Alias are internal lowering states, never parsed source forms.
 type Node is Data:
   Variable{token: Token}
   Promotion{token: Token}
@@ -23,6 +24,8 @@ type Node is Data:
   Binding{token: Token, quantity: U32, annotation: Maybe<&2,Token>, value: Node, body: Node}
   Match{token: Token, value: Node, arms: List<&2,Node>}
   Arm{token: Token, pattern: Node, body: Node}
+  Matrix{token: Token, columns: List<&2,Node>, rows: List<&2,Node>, work: U32}
+  Alias{token: Token, level: U32, mark: U32, body: Node}
   Parameter{token: Token, quantity: U32, type_name: Token}
   Datatype{token: Token, reusable: Bool, constructors: List<&2,Node>}
   Function{token: Token, parameters: List<&2,Node>, result: Token, body: Node}

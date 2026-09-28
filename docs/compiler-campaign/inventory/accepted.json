@@ -12,13 +12,13 @@
       "manifest": "tests/subsets/frontend-cases.json",
       "manifest_sha256": "34e1c5cb0f68b2d3c5a8c0f35c0cfd5eca22169d5339b4a7369ae31c33c8ff2e",
       "gate": "tests/subsets/check_frontend.py",
-      "gate_sha256": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9",
+      "gate_sha256": "db70cbd978889ad7d931d8c965887fb25be94089420a2effe4558aeda60e576e",
       "fixtures": 14
     },
     {
       "suite": "checker",
       "manifest": "tests/compiler-checker/cases.json",
-      "manifest_sha256": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
+      "manifest_sha256": "e1fd6041028b5d2d9406ad1736bf0c359493d588f0ac3ea7a6b2f27be810a836",
       "gate": "tests/compiler-checker/check.py",
       "gate_sha256": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
       "fixtures": 49
@@ -34,7 +34,7 @@
     {
       "suite": "fields",
       "manifest": "tests/compiler-fields/cases.json",
-      "manifest_sha256": "e01efe8b37004ff02e655586c2427484a798cc0b61ad5c3359135726be6612ac",
+      "manifest_sha256": "621d7eadda3b5b8d07ca4230669dad25fa7f5104d9d4a4094efd7e30800d3a09",
       "gate": "tests/compiler-fields/check.py",
       "gate_sha256": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
       "fixtures": 40
@@ -226,6 +226,7 @@
             "checker:tests/compiler-checker/fixtures/branch-maximum.bend",
             "checker:tests/compiler-checker/fixtures/data-argument.bend",
             "checker:tests/compiler-checker/fixtures/data-promote.bend",
+            "checker:tests/compiler-checker/fixtures/duplicate-arm.bend",
             "checker:tests/compiler-checker/fixtures/duplicate-parameters.bend",
             "checker:tests/compiler-checker/fixtures/erased-affine-copy.bend",
             "checker:tests/compiler-checker/fixtures/erased-binding.bend",
@@ -244,7 +245,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -293,7 +296,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -506,6 +511,7 @@
             "checker:tests/compiler-checker/fixtures/branch-maximum.bend",
             "checker:tests/compiler-checker/fixtures/data-argument.bend",
             "checker:tests/compiler-checker/fixtures/data-promote.bend",
+            "checker:tests/compiler-checker/fixtures/duplicate-arm.bend",
             "checker:tests/compiler-checker/fixtures/duplicate-parameters.bend",
             "checker:tests/compiler-checker/fixtures/erased-affine-copy.bend",
             "checker:tests/compiler-checker/fixtures/erased-binding.bend",
@@ -525,7 +531,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -575,7 +583,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -727,7 +737,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -752,7 +764,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1268,6 +1282,7 @@
             "checker:tests/subsets/s1/nested-match.bend",
             "checker:tests/subsets/s1/shadowing.bend",
             "checker:tests/compiler-checker/fixtures/branch-maximum.bend",
+            "checker:tests/compiler-checker/fixtures/duplicate-arm.bend",
             "checker:tests/compiler-checker/fixtures/matched-duplicate.bend",
             "checker:tests/compiler-checker/fixtures/matched-return.bend",
             "checker:tests/compiler-checker/fixtures/renamed.bend",
@@ -1281,7 +1296,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1314,7 +1331,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1390,12 +1409,18 @@
           "evidence": []
         },
         "check": {
-          "status": "no-positive-fixture-evidence",
-          "evidence": []
+          "status": "observed-in-successful-fixtures",
+          "evidence": [
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend"
+          ]
         },
         "eval": {
-          "status": "no-positive-fixture-evidence",
-          "evidence": []
+          "status": "observed-in-successful-fixtures",
+          "evidence": [
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend"
+          ]
         },
         "wasm": {
           "status": "no-positive-fixture-evidence",
@@ -1434,6 +1459,7 @@
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1461,6 +1487,7 @@
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1577,6 +1604,7 @@
             "checker:tests/compiler-checker/fixtures/branch-maximum.bend",
             "checker:tests/compiler-checker/fixtures/data-argument.bend",
             "checker:tests/compiler-checker/fixtures/data-promote.bend",
+            "checker:tests/compiler-checker/fixtures/duplicate-arm.bend",
             "checker:tests/compiler-checker/fixtures/duplicate-parameters.bend",
             "checker:tests/compiler-checker/fixtures/erased-affine-copy.bend",
             "checker:tests/compiler-checker/fixtures/erased-binding.bend",
@@ -1595,7 +1623,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -1642,7 +1672,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -2018,7 +2050,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -2047,7 +2081,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -2112,6 +2148,7 @@
             "checker:tests/subsets/s1/nested-match.bend",
             "checker:tests/subsets/s1/shadowing.bend",
             "checker:tests/compiler-checker/fixtures/branch-maximum.bend",
+            "checker:tests/compiler-checker/fixtures/duplicate-arm.bend",
             "checker:tests/compiler-checker/fixtures/duplicate-parameters.bend",
             "checker:tests/compiler-checker/fixtures/erased-affine-copy.bend",
             "checker:tests/compiler-checker/fixtures/erased-binding.bend",
@@ -2130,7 +2167,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -2175,7 +2214,9 @@
             "fields:tests/compiler-fields/fixtures/field-then-parent-refinement.bend",
             "fields:tests/compiler-fields/fixtures/mixed-live-order.bend",
             "fields:tests/compiler-fields/fixtures/multi-constructor.bend",
+            "fields:tests/compiler-fields/fixtures/nested-pattern.bend",
             "fields:tests/compiler-fields/fixtures/nested-reconstruction.bend",
+            "fields:tests/compiler-fields/fixtures/nested-single-pattern.bend",
             "fields:tests/compiler-fields/fixtures/open.bend",
             "fields:tests/compiler-fields/fixtures/owned-field-drop.bend",
             "fields:tests/compiler-fields/fixtures/promote-field.bend",
@@ -3196,10 +3237,10 @@
       },
       "stages": {
         "check": {
-          "outcome": "Unsupported",
+          "outcome": "Checked",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+            "exit": 0,
+            "stdout": "Checked\nf(1:0)->0=case $0 [0=>v0.1;1=>v0.1]\nmain()->0=call0(v0.0)"
           }
         }
       },
@@ -5546,24 +5587,24 @@
       },
       "stages": {
         "check": {
-          "outcome": "Unsupported",
+          "outcome": "Checked",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+            "exit": 0,
+            "contains": "Checked\n"
           }
         },
         "eval": {
-          "outcome": "Unsupported",
+          "outcome": "Evaluated",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+            "exit": 0,
+            "stdout": "Evaluated\t0\t0\tOff{}"
           }
         },
         "compile": {
           "outcome": "Unsupported",
           "expectation": {
             "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tduplicate-arm\t"
+            "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
           }
         }
       },
@@ -5637,24 +5678,24 @@
       },
       "stages": {
         "check": {
-          "outcome": "Unsupported",
+          "outcome": "Checked",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+            "exit": 0,
+            "contains": "Checked\n"
           }
         },
         "eval": {
-          "outcome": "Unsupported",
+          "outcome": "Evaluated",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tOn{}"
           }
         },
         "compile": {
           "outcome": "Unsupported",
           "expectation": {
             "exit": 3,
-            "diagnostic": "Unsupported\tcheck\tnested-field-pattern\t"
+            "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
           }
         }
       },
