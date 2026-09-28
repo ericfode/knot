@@ -305,7 +305,12 @@ adopt them or record its own, so that lockstep compares like with like.
     the Case's Scope does not fit, so the predecessor is never made (bump
     H0 + 48); or the Scope is pushed and the predecessor's Big is `Exhausted`
     kind 2 (top F0 + 36). The heap row's bump is also where §5's model
-    (`ceiling_run`) stops under that heap.
+    (`ceiling_run`) stops under that heap. Unlike the rows above, these were
+    not frozen untouched: a draft left out the cells' 2 header words, and a
+    run of the pre-fix VM before commit exposed it. They were rederived from
+    §5's cell rule and §6's 3-word frames; `ceiling_run` checks the heap row's
+    bump, while both `top` values and the frames row's bump rest on that
+    hand derivation (80bd5cf).
 - **Ceiling.** Ten images whose bump pointer ends near or exactly at 4 GiB, at
   most two at a time. Each dump pins the bump pointer, which keeps the image in
   its band:
@@ -342,9 +347,12 @@ adopt them or record its own, so that lockstep compares like with like.
   The first six rows skipped the one point where the pre-fix VM and the
   derivation disagreed, a heap ending exactly at 2^32 (review round 4). Three
   round-4 rows sit on it and the fourth is their control; all four took their
-  fill counts from the model alone, before any VM ran them. The reference evaluation (`evaluate.program`)
-  completes `ceiling-program-top`'s plan, with every fill shortened to 3, with
-  exit 0 and no output. So each row's outcome, on either side of 4 GiB and at
+  fill counts from the model alone, before any VM ran them. The reference
+  evaluation (`evaluate.program`) completes `ceiling-program-top`'s plan with
+  every Nat literal of `main` (each `dbl` depth and both fill counts) set to 3,
+  with exit 0 and no output after 56 calls. That check was run by hand
+  (d4d33cc, and again in review round 4); the gate does not repeat it. So
+  each row's outcome, on either side of 4 GiB and at
   it, follows from §5 and choice 12, not from a VM. Each row's `basis` records
   the arithmetic.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
