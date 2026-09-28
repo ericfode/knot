@@ -45,6 +45,8 @@ PLAN = {
     'u32-constructor-word': ('u32 constructor', 'U32{Word.zero(32n)} without a pattern', [], WORD),
     'string-long-primitives': ('long strings', 'String.length, append (both sides) and eq at 39999-40001 Chars',
                                ['length', 'append_left', 'append_right', 'equal'], oracle.AGREE),
+    'string-doubling': ('long strings', 'String.append doubling to 131072 Chars; length, reverse and eq',
+                        ['length', 'mirrored'], oracle.AGREE),
 }
 
 

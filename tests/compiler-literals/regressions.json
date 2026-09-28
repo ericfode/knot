@@ -433,6 +433,163 @@
       }
     },
     {
+      "name": "string-doubling",
+      "file": "tests/compiler-literals/regressions/string-doubling.bend",
+      "sha256": "277813faf7345e869d64c403daa2832001f4ee66647c5ecb28e92259d6bec761",
+      "finding": "long strings",
+      "covers": "String.append doubling to 131072 Chars; length, reverse and eq",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Depth": [
+          "Low",
+          "High"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/string-doubling.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/string-doubling.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "length",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/string-doubling-length-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/string-doubling.bend as F\n\ndef main() -> F.Answer:\n  F.length(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/string-doubling-length-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/string-doubling.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "length",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/string-doubling-length-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/string-doubling.bend as F\n\ndef main() -> F.Answer:\n  F.length(F.High{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/string-doubling-length-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/string-doubling.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mirrored",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Low"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/string-doubling-mirrored-Low.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/string-doubling.bend as F\n\ndef main() -> F.Answer:\n  F.mirrored(F.Low{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/string-doubling-mirrored-Low.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/string-doubling.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mirrored",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "High"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/string-doubling-mirrored-High.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/string-doubling.bend as F\n\ndef main() -> F.Answer:\n  F.mirrored(F.High{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/string-doubling-mirrored-High.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/string-doubling.No{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
       "name": "string-long-primitives",
       "file": "tests/compiler-literals/regressions/string-long-primitives.bend",
       "sha256": "434f246a5653336a6071cb98030f4af3b274facb9f306afb82d9a69ba5e11c31",
