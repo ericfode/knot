@@ -14,7 +14,8 @@ structural recursion follows its separate descent contract.
 
 A pattern field receives the product of declaration quantity and scrutinee
 quantity. A `+` pattern mark may promote quantity 1 over Data to quantity 2;
-quantity 0 stays erased. Field names may shadow parameters or earlier fields.
+quantity 0 stays erased. Field names may shadow parameters or earlier fields. A single row may descend
+through several single-constructor datatypes before binding a field.
 Global constructor names cannot be used as bare field binders. Each occurrence
 uses its lexical identity, not its display name.
 

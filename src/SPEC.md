@@ -66,7 +66,9 @@ Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
 
 Duplicate constructor rows are accepted. The first matching row supplies the
-body; shadowed row bodies are discarded before checking.
+body; shadowed row bodies are discarded before checking. Nested patterns
+expand into single-constructor decisions; field binders retain their lexical
+identities, declared quantities and reconstruction obligations.
 
 Constructor fields, recursive calls, generic/dependent types, imports, literals,
 closures, wildcard patterns, laws, templates, foreign code and
@@ -144,7 +146,7 @@ consulted 2026-09-26. Only the stated MVP subset is used.
 ## Fielded Wasm profile: `knot-fields-wasm-1`
 
 This profile accepts the same completely checked acyclic books as
-`knot-structural-terms-1`: monomorphic constructor fields, flat field patterns,
+`knot-structural-terms-1`: monomorphic constructor fields, nested patterns,
 parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
 checker bypass. Recursion, imports and the other unsupported
 forms remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
