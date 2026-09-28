@@ -904,14 +904,20 @@ def primitive_tasks(+cx: Context, +op: String, +id: U32, +t: U32, +site: String,
             u => [Expect{Bool.or(is_none(nth(reps,output)),Bool.not(U32.is_eq(t,nth(reps,output)))),at_where(site,String.append("prim result is not the pinned ",rep_name(output)))}],
             u => [Expect{Bool.not(is_io(types,nth(reps,10),t,nth(reps,output))),at_where(site,String.concat(["foreign result is not IO(",rep_name(output),")"]))}]))}
 
-def strictly_below(xs: List<&2,U32>, +bound: U32, +floor: U32, +started: Bool) -> Bool:
+# Each word above the one before it. Keys span every u32, 0xffffffff included
+# (SPEC §2); only captures are bounded, by the depth they are taken at.
+def ascending(xs: List<&2,U32>, +floor: U32, +started: Bool) -> Bool:
   match xs:
     case Nil{}: True{}
-    case Con{+x,rest}:
-      Bool.and(Bool.and(U32.is_lt(x,bound),Bool.or(Bool.not(started),U32.is_gt(x,floor))),strictly_below(rest,bound,x,True{}))
+    case Con{+x,rest}: Bool.and(Bool.or(Bool.not(started),U32.is_gt(x,floor)),ascending(rest,x,True{}))
 
 def increasing(xs: List<&2,U32>) -> Bool:
-  strictly_below(xs,none(),0,False{})
+  ascending(xs,0,False{})
+
+def below(xs: List<&2,U32>, +bound: U32) -> Bool:
+  match xs:
+    case Nil{}: True{}
+    case Con{+x,rest}: Bool.and(U32.is_lt(x,bound),below(rest,bound))
 
 def scoped(caps: List<&2,U32>, +scope: List<&2,U32>) -> List<&2,U32>:
   match caps:
@@ -1100,7 +1106,7 @@ def expand(+cx: Context, node: Node, +scope: List<&2,U32>, +depth: U32, +site: S
       +inner = List.append(&2,U32,scoped(caps,scope),Bool.pick(List<&2,U32>,U32.is_eq(live,1),[domain(types,t)],Nil{}))
       [type_index(types,t,site),
        Expect{Bool.not(Bool.or(Bool.and(U32.is_eq(arrow,1),U32.is_eq(live,1)),Bool.and(U32.is_eq(arrow,2),U32.is_eq(live,0)))),at_where(site,"closure arrow")},
-       Expect{Bool.not(strictly_below(caps,depth,0,False{})),at_where(site,"captures must increase strictly below depth")},
+       Expect{Bool.not(Bool.and(increasing(caps),below(caps,depth))),at_where(site,"captures must increase strictly below depth")},
        Nested{body,inner,String.append(site,"/closure"),slots,site,
          covers(U32.to_nat(count(U32,caps)),uses(U32.to_nat(none()),[body]),0),fit(types,codomain(types,t),type_of(body))}]
     case Context{+types,+functions,+reps} Invoke{+t,+f,+xs}:
@@ -1886,9 +1892,13 @@ def scalar(+heap: Heap, +w: U32) -> U32:
 def word_of(+heap: Heap, +v: U32) -> Result<Stop,Cell>:
   choose(Result<Stop,Cell>,boxed(v),u => alloc(heap,2,[v]),u => Done{Cell{heap,immediate(v)}})
 
+# §6.1's tag of an inspected word: Nat's logical view (Zero or Succ), Char's
+# one constructor Chr whatever its code, an immediate's value, or an Object's
+# payload tag.
 def tag_of(+code: Code, +heap: Heap, +t: U32, +w: U32) -> U32:
   choose(U32,is_rep(code,t,0),u => Bool.pick(U32,U32.is_eq(scalar(heap,w),0),0,1),u =>
-    choose(U32,U32.is_eq(U32.and(w,1),1),u => U32.shrn(w,1n),u => load_word(heap,w,3)))
+  choose(U32,is_rep(code,t,2),u => 0,u =>
+    choose(U32,U32.is_eq(U32.and(w,1),1),u => U32.shrn(w,1n),u => load_word(heap,w,3))))
 
 # ---------------------------------------------------------------- primitives
 
@@ -2130,14 +2140,22 @@ def selected_fields(+code: Code, +heap: Heap, +t: U32, +w: U32, +f: U32) -> Resu
   choose(Result<Stop,Fields>,is_rep(code,t,2),u => bind(Heap,Fields,dup(heap,w),heap => Done{Fields{heap,[w]}}),u =>
     bind(Heap,Fields,dups(fields,heap),heap => Done{Fields{heap,fields}})))
 
-def entered_arm(+code: Code, +arm: U32, +t: U32, +w: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
-  +f = operand(code,arm,2)
+# A Branch binding f fields enters its body in a new Scope.
+def branch_entered(+code: Code, +arm: U32, +f: U32, +t: U32, +w: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
   +act = act_of(stack)
-  choose(Result<Stop,Next>,Bool.or(U32.is_eq(code_word(code,U32.add(arm,1)),2),U32.is_eq(f,0)),
-    u => to(Eval{choose(U32,U32.is_eq(code_word(code,U32.add(arm,1)),2),u => operand(code,arm,0),u => operand(code,arm,3))},stack,heap),
+  choose(Result<Stop,Next>,U32.is_eq(f,0),u => to(Eval{operand(code,arm,3)},stack,heap),
     u => with_fields(Next,selected_fields(code,heap,t,w,f),+heap => words =>
            then_stack(Next,pushed(stack,Scope{depth_of(heap,act)}),stack =>
              to(Eval{operand(code,arm,3)},stack,deepened(binds(words,heap,act,depth_of(heap,act)),act,U32.add(depth_of(heap,act),f))))))
+
+# The selected arm is a Default or a Branch. An absent arm (`none`) or any
+# other record means the validator admitted a Case it should not have: the
+# machine stops as Internal instead of reading a wrapped offset.
+def entered_arm(+code: Code, +arm: U32, +t: U32, +w: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
+  +op = choose(U32,is_none(arm),u => none(),u => code_word(code,U32.add(arm,1)))
+  choose(Result<Stop,Next>,U32.is_eq(op,2),u => to(Eval{operand(code,arm,0)},stack,heap),u =>
+  choose(Result<Stop,Next>,U32.is_eq(op,9),u => branch_entered(code,arm,operand(code,arm,2),t,w,stack,heap),u =>
+    Fail{Internal{"case arm"}}))
 
 def selected(+code: Code, +node: U32, +stack: Stack, +heap: Heap) -> Result<Stop,Next>:
   +t = operand(code,node,1)

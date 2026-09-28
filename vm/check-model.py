@@ -548,6 +548,23 @@ MUTANTS = [
      'unused captures are admitted'),
     ('inspection', [('  choose(Result<Stop,A>,admits(code,heap,t,w),next,u => ill_typed(A))',
                      '  choose(Result<Stop,A>,True{},next,u => ill_typed(A))')], 'words are read without inspection'),
+    # Review fix round 1: each is killed by the control that witnessed its defect.
+    ('char-tag', [('  choose(U32,is_rep(code,t,2),u => 0,u =>\n', '  choose(U32,False{},u => 0,u =>\n')],
+     'a Char dispatches on its code, not on Chr'),
+    ('key-bound', [('Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,Node,fallback))',
+                    'Expect{Bool.or(Bool.not(Bool.and(increasing(keys_of(rows)),below(keys_of(rows),none()))),Maybe.is_none(&2,Node,fallback))')],
+     'the key 0xffffffff is refused'),
+    ('none-slot', [('Bool.not(Bool.or(is_none(held),U32.is_eq(held,scrutinee)))', 'Bool.not(U32.is_eq(held,scrutinee))')],
+     'a Case on a none-typed slot is refused'),
+    ('debit-refunded', [('    case Fail{stop}: Done{halted(m,stop)}', '    case Fail{stop}: Fail{stop}')],
+     'a target that stops the machine refunds its entry'),
+    ('non-scalar-printed', [('choose(Result<Stop,Machine>,Bool.not(is_scalar_text(scalars_of(line,heap))),u => Fail{Refused{"io","abi"}},u =>',
+                             'choose(Result<Stop,Machine>,False{},u => Fail{Refused{"io","abi"}},u =>')],
+     'a non-scalar Char is printed (D20)'),
+    ('enter-arity', [('u => U32.is_eq(count(U32,ops),choose(U32,is_none(node),u => 1,u => operand(code,node,1))),',
+                      'u => U32.is_le(count(U32,ops),1),')], 'a closure takes either operand count'),
+    ('calls-uncounted', [('Meter{U32.sub(fuel,1),U32.add(calls,1),', 'Meter{U32.sub(fuel,1),calls,')],
+     'an entry is not counted'),
 ]
 
 

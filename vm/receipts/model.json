@@ -1,9 +1,9 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T10:49:00+00:00",
+ "date": "2026-09-28T10:53:44+00:00",
  "status": "passed",
  "sources": {
-  "model.bend": "46ad2c17e7b27403c3d78c49f95a328dc98a06a21f23af89b154852274770e5d",
+  "model.bend": "9786260376f7256c6ad0b40649f2368db9024dcf5cdbcacac59ddaacb388bbbc",
   "model-cli.bend": "7cda62a2fa27fe44a05c30395f7bc2baacd2a82ea2249740d1c7a22deece9dbe",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "318f1276ea395ae0403b5c5bb75d12938c14d3029f4128918dbe4bb12d163f00",
@@ -20,6 +20,16 @@
  "registry": {
   "prims": 39,
   "foreign": 8
+ },
+ "seed": {
+  "char-pick": "On{}",
+  "char-pick-big": "On{}",
+  "char-match": "True{}",
+  "key-max": "On{}",
+  "key-max-miss": "Off{}",
+  "key-below-max": "On{}",
+  "char-key-max": "On{}",
+  "char-key-max-miss": "Off{}"
  },
  "goldens": {
   "value-off": {
@@ -528,6 +538,38 @@
   "run:u32-file-alias": {
    "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
    "calls": 1
+  },
+  "model:char-pick": {
+   "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:char-pick-big": {
+   "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:char-match": {
+   "outcome": "audit\tpassed\t20\tDescribed\t0\t3",
+   "calls": 3
+  },
+  "model:key-max": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:key-max-miss": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:key-below-max": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:char-key-max": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "calls": 2
+  },
+  "model:char-key-max-miss": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t2",
+   "calls": 2
   }
  },
  "audit": {
@@ -1675,7 +1717,7 @@
     "admitted:codes:u10ffff",
     "admitted:codes:u110000"
    ],
-   "kills": 89,
+   "kills": 97,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1686,14 +1728,14 @@
    "by": [
     "admitted:plan:list-head-match",
     "admitted:run:u32-file-alias",
+    "admitted:model:char-pick",
+    "admitted:model:char-pick-big",
+    "admitted:model:char-match",
     "audit:let",
     "audit:shadow",
-    "audit:unpack",
-    "audit:second",
-    "audit:erased-field",
-    "audit:nat-unpack"
+    "audit:unpack"
    ],
-   "kills": 13,
+   "kills": 16,
    "law": null,
    "crashes": 0
   },
@@ -1711,7 +1753,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 21,
+   "kills": 24,
    "law": "recursion_map_runs",
    "crashes": 0
   },
@@ -1729,7 +1771,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 166,
+   "kills": 174,
    "law": null,
    "crashes": 0
   },
@@ -1847,6 +1889,108 @@
     "admitted:plan:case-none-let"
    ],
    "kills": 3,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "char-tag",
+   "breaks": "a Char dispatches on its code, not on Chr",
+   "killed": true,
+   "by": [
+    "admitted:model:char-pick",
+    "admitted:model:char-match"
+   ],
+   "kills": 2,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "key-bound",
+   "breaks": "the key 0xffffffff is refused",
+   "killed": true,
+   "by": [
+    "admitted:model:key-max",
+    "admitted:model:key-max-miss",
+    "admitted:model:char-key-max",
+    "admitted:model:char-key-max-miss"
+   ],
+   "kills": 4,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "none-slot",
+   "breaks": "a Case on a none-typed slot is refused",
+   "killed": true,
+   "by": [
+    "admitted:plan:case-none-parameter",
+    "admitted:plan:case-none-let",
+    "admitted:plan:list-head-match"
+   ],
+   "kills": 3,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "debit-refunded",
+   "breaks": "a target that stops the machine refunds its entry",
+   "killed": true,
+   "by": [
+    "audit:print-non-scalar",
+    "audit:print-non-scalar-mid",
+    "audit:print-non-scalar-wide",
+    "audit:print-non-scalar-second"
+   ],
+   "kills": 4,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "non-scalar-printed",
+   "breaks": "a non-scalar Char is printed (D20)",
+   "killed": true,
+   "by": [
+    "goldens:print-non-scalar",
+    "goldens:print-non-scalar-mid",
+    "goldens:print-non-scalar-wide",
+    "goldens:print-non-scalar-second",
+    "audit:print-non-scalar",
+    "audit:print-non-scalar-mid",
+    "audit:print-non-scalar-wide",
+    "audit:print-non-scalar-second"
+   ],
+   "kills": 8,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "enter-arity",
+   "breaks": "a closure takes either operand count",
+   "killed": true,
+   "by": [
+    "admitted:run:live-closure-invoked-erased",
+    "admitted:run:terminal-invoked-erased",
+    "admitted:run:phase-one-live"
+   ],
+   "kills": 3,
+   "law": null,
+   "crashes": 2
+  },
+  {
+   "mutant": "calls-uncounted",
+   "breaks": "an entry is not counted",
+   "killed": true,
+   "by": [
+    "admitted:plan:case-none-parameter",
+    "admitted:plan:case-none-let",
+    "admitted:plan:list-head-match",
+    "admitted:codes:surrogate-pair",
+    "admitted:codes:u1f600",
+    "admitted:codes:lone-surrogate",
+    "admitted:codes:u10ffff",
+    "admitted:codes:u110000"
+   ],
+   "kills": 112,
    "law": null,
    "crashes": 0
   }
