@@ -11,6 +11,7 @@ Later additions the same day:
 - "update the goal to include the gpu and cpu backends"
 - "an extension to bends syntax that allows for unicode symbols but do that last … after we are self hosting"
 - "you can delegate to codex too"
+- "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
 
 ## Definition of done
 
@@ -26,6 +27,11 @@ Later additions the same day:
    - Semantic: targeted rules on every changed Bend file, with nonzero coverage and no unresolved confirmed findings.
    - Style (rubric v8): each mechanism in the [compiler manifest](compiler-campaign/manifest.json) meets its declaration and composition targets. `npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json` reports each group and overall qualification; a filtered `--group=NAME` run qualifies only that selection. The [offline baseline](compiler-campaign/perch-baseline.md) records structural blockers, not ratings or a pass. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
 7. **Unicode syntax extension (after self-hosting).** Unicode symbols in identifiers and operators, as a Knot dialect with a desugaring to plain Bend.
+8. **Metaprogramming library (last milestone).** Bend programs generate and run Bend code from Bend. The library is built on the self-hosted compiler used as a library, not on the upstream seed.
+   - **Code as data.** A typed syntax and core representation, with builders and quotation, that generated programs are written in.
+   - **Checking before running.** The same checker validates generated code before it runs. It never runs unchecked code. Invalid and Unsupported results come back as values.
+   - **Running.** Generated code runs in-process through the evaluator, and through emitted Wasm that the host instantiates.
+   - **Conformance.** Generated code agrees with the same program written by hand and run through the pinned reference.
 
 ## Decision record (coordinator, 2026-09-27, under the user's explicit instructions above)
 
@@ -63,6 +69,7 @@ Increments are bounded at 1 to 3 agent-days each. Each has deterministic gates f
 | 12 | GPU: device runtime probes (R4 to R7) in parallel from now, then records emission, host bundle and generated device runs. | gpu |
 | 13 | Native C backend. | cpu |
 | 14 | Unicode syntax dialect. | language |
+| 15 | Metaprogramming library: code as data (typed syntax and core terms with builders and quotation), then `check`, `eval` and `compile` as library functions, then `run` of generated code in-process and as host-instantiated Wasm. Each result is differentially checked against the same program written by hand. | language/runtime |
 
 Parallel tracks throughout:
 
