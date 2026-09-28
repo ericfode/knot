@@ -217,16 +217,19 @@
   },
   "generics": {
     "profile": "knot-generics-1",
+    "contract": "research/compiler-generics/SPEC.md",
     "stage": "S2 subset; not full dependent computation",
     "catalog": "src/generic-catalog.bend",
     "checker": "src/generics.bend",
     "type_algebra": "src/types.bend",
     "erasure": "src/type-erasure.bend",
+    "dispatch": "src/check-dispatch.bend: a book with generic syntax takes the generic checker; every other book keeps the monomorphic checker",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-generics/check.py",
     "frozen_expectations": "tests/compiler-generics/expectations.json",
     "supplemental_expectations": "tests/compiler-generics/supplemental/expectations.json",
     "boundary_expectations": "tests/compiler-generics/boundaries/expectations.json",
     "dispatch_expectations": "tests/compiler-generics/dispatch-boundaries/expectations.json",
+    "bare_family_expectations": "tests/compiler-generics/bare-families/expectations.json",
     "abi_expectations": "tests/compiler-generics/abi-expectations.json",
     "evidence": "tests/compiler-generics/receipts/generics.json",
     "proof_entries": [
@@ -249,8 +252,9 @@
       "meet": "0 < 1 < 2; literal minimum, 2 identity, 0 absorber; remaining symbolic syntax stays invariant",
       "kind_fits": "Data fits all supported kinds; Kind(&0) and Kind(&1) have the same single-use demand",
       "datatype_arguments": "invariant",
-      "short_form": "all leading quantities default to &1 after the family definition",
-      "plus_prefix": "all leading quantities become &2, including explicit argument positions"
+      "short_form": "inside an explicit Name<..> after the family definition, all omitted leading quantities default to &1",
+      "plus_prefix": "all leading quantities become &2, including explicit argument positions",
+      "bare_name": "a bare family name instantiates only a parameterless family; otherwise Invalid check type-arity"
     },
     "runtime": {
       "backend": "knot-fields-wasm-1",

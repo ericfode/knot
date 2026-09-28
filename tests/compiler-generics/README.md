@@ -3,15 +3,17 @@
 `knot-generics-1` checks erased type/quantity parameters, nested nominal
 applications, invariant phantom parameters, `Kind(q)` meets, compact quantity
 forms, generic fields and first-live-parameter descent. It projects checked
-terms into the existing evaluator and fielded Wasm backend. The original
-monomorphic path and its fixed assertions remain in place.
+terms into the existing evaluator and fielded Wasm backend. The contract is
+[research/compiler-generics/SPEC.md](../../research/compiler-generics/SPEC.md).
+`src/check-dispatch.bend` sends a book with generic syntax to this checker;
+the original monomorphic path and its fixed assertions remain in place for
+every other book.
 
-Integration is blocked by the unchanged frontend classification pin at
-`tests/subsets/classification-cases.json`: it requires a valid generic header
-to report `Unsupported parse generic-datatype`, while this increment accepts
-that header. The corresponding old `generic-invalid` mutation anchor is also
-obsolete. Neither assertion has been changed. The coordinator must reconcile
-this explicit capability transition before an all-green integration claim.
+The frontend's generic-header pin was superseded under the coordinator's
+review-round-1 authorization (`5eea108`). Main's classify-2 pins for `Name<...>`
+in parameter, return and binding types conflict with the same capability, and
+two of its laws fail on the generic parser. They are unchanged here; see
+[Review round 1](#review-round-1) for the proposed supersession.
 
 The mechanism is a type-expression algebra with rigid binder indices. A single
 sequential substitution list instantiates later parameter domains and results.
@@ -33,7 +35,8 @@ body, with erased arguments absent from its live signature.
 | Compact reusable binder | 1 | 4 | Frozen before implementation in `629c51f` |
 | Kind and representation boundaries | 15 | 26 | Seed probes and literal Unsupported boundaries |
 | Local type-value and dispatch boundaries | 9 | 9 | Fixed before their corresponding boundary repairs |
-| Total | 66 | 165 | 43 seed-valid programs and 23 seed rejections |
+| [Bare family names](bare-families/README.md) | 7 | 3 | Frozen in `0c4eb10` before the arity repair |
+| Total | 73 | 168 | 44 seed-valid programs and 29 seed rejections |
 
 The original `closure-apply` and `template-twice` pins remain. Optional
 `match-erased-type` and `alias-type` remain Unsupported. Five independent literal
@@ -45,6 +48,7 @@ ABI controls inspect erased parameter counts without invoking generic exports.
 | Erased argument kept live | `unbox` ABI | Two live arguments instead of one |
 | Wrong quantity meet | `meet-not-reusable` | Accepts an invalid reusable quantity |
 | Missing arity check | `type-arity` | Accepts excess type arguments |
+| Bare quantity default | `bare-family-parameter` | Accepts a bare all-quantity family name |
 
 Each mutant is seed-typechecked and exercised in native and Bun lanes. A parser
 failure, host/internal error, exhausted budget or invalid Wasm cannot count as
@@ -81,12 +85,78 @@ descent remain Unsupported. This increment covers only the documented S2 subset.
 The legacy structural catalog
 observer remains monomorphic and reports Unsupported for generic declarations.
 
-The next integration step must reconcile the frontend classification pin,
-compose this checker with the parallel modules/pattern/descent work, and run
-live Perch semantic and style review. No package, runtime IR, evaluator or Wasm
-emitter implementation changes are part of this increment.
+The next integration step must settle the classify-2 supersession below,
+compose this checker with the parallel modules/pattern/descent work (which
+extends `generics.bend`; see the dual checker path in
+[COMPILER-CAMPAIGN.md](../../docs/COMPILER-CAMPAIGN.md)), and run live Perch
+semantic and style review. No package, runtime IR, evaluator or Wasm emitter
+implementation changes are part of this increment.
 
-## Final verification
+## Review round 1
+
+The branch merges main (`cac8dd2`) and fixes the confirmed findings:
+
+- the authorized `generic` pin supersession (`5eea108`);
+- bare family names (`0c4eb10` expectations, `feeea07` repair and mutant);
+- the dispatch moved to `src/check-dispatch.bend`, shared `term_name`, the
+  generics contract in its own task file and the manifest closures (`5f86882`);
+- the dual checker path recorded with its convergence plan (`52c9e8a`).
+
+**Blocker.** Main's classify-2 pins `Name<...>` in parameter, return and binding
+types as Unsupported. The generic parser accepts them, so six classification
+cases, three classification-gate mutants and the laws `return_type_application`
+and `binding_type_application` conflict. Because every proof entry chains
+through `src/PROOF.bend`, the committed tree's `npm run -s gates` stops nine
+gates at their proof step:
+
+| Run | Result |
+| --- | --- |
+| Committed tree, 4 jobs (161 s) | exit 1: 9 passed (census, lint:verify, owned-store, flat-store, perch-context, io-host, io-abi-2, bootstrap, selfhost); frontend, checker, structural, fields, wasm, recursion, fields-wasm, classification and generics failed at their proof entry; 3 trust gates blocked |
+| Proposed supersession applied, 4 jobs (271 s) | exit 0: 21 of 21 passed |
+| Proposed supersession applied, `--jobs 1` (854 s, load about 15) | exit 0: 21 of 21 passed |
+
+Runner summaries: [committed tree](receipts/review-1/gates-tree.json),
+[proposal, 4 jobs](receipts/review-1/gates-proposal.json) and
+[proposal, 1 job](receipts/review-1/gates-proposal-jobs1.json).
+
+The proposal (not committed; it changes classify-2 assertions and needs the
+coordinator's authorization) gives the three seed-accepted application cases
+phase expectations like `generic`, pins the after-prefix twins at
+`Unsupported parse type-expression`, retires the three classification-gate
+mutants with their anchors, restates `return_type_application` as the
+typed-result transition and retires `binding_type_application`.
+[CLASSIFICATION.md](../subsets/CLASSIFICATION.md) lists the derivations.
+
+With the proposal applied, the generics gate reports 73 fixtures, 168 seed
+calls, 284 evaluator and 284 Node agreements, 270 negative phase observations,
+90 preserved artifacts, 28 byte-identical module pairs, 10 ABI arity
+observations, 3 proof entries and 5 mutants killed in both lanes. The frontend
+reports 30 classification fixtures in two lanes, 7 classification mutants and
+180 downstream phase observations. `npm run -s gates:verify` passes 18 tests.
+
+**Build cost.** Linking the second checker roughly doubles the generated code.
+Sequential seed builds at load about 7 (main `cc9f2fd` → branch):
+
+| CLI | Generated C (bytes) | Native build, real s |
+| --- | ---: | ---: |
+| parse | 1,240,306 → 1,838,731 | 2.8 → 3.8 |
+| check | 2,497,614 → 4,824,594 | 5.5 → 11.2 |
+| eval | 2,760,021 → 5,071,593 | 5.6 → 11.0 |
+| compile | 3,413,614 → 5,733,438 | 7.2 → 11.9 |
+
+Under main's default `KNOT_GATE_TIMEOUT_SCALE=4` the default four-job run
+passes. The convergence plan (one checker) is the lever that removes the
+duplicate code; no budget was changed.
+
+**Style preflight (offline, 0 provider requests).** Full manifest: 24 groups,
+1,196 units, 0 truncated units, 24 of 24 compositions available, 0 structural
+blockers (main: 17 groups, 957 units, 0 blockers). The seven generic groups use
+the 3,731-byte generics contract as their task. Targets mode over this round's
+seven changed sources reports 227 declarations, 58 truncated contexts and an
+unavailable 158,052-byte composition; the per-group manifest run is the
+qualifying form. No style rating is claimed.
+
+## Round 0 verification (`f39ba7e`)
 
 The [scratch-run summary](receipts/gates.json) records **14 of 15 gates passed**;
 `npm run -s gates` exits 1 on the retained frontend pin. Before that failure,

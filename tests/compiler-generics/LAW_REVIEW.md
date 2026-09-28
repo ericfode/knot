@@ -23,6 +23,7 @@ nullary constructors, while preserving live signatures and field order.
 | The marker adds no live signature slot | `marker_retains_live_signature` | ABI arities and native/Bun module identity |
 | Erased evaluation steps commute | `erased_argument_commutes`, `erased_field_commutes`, `erased_pattern_commutes` | Independent seed/evaluator/Wasm calls, erased-value fixtures |
 | Arity is checked before substitution | Catalog application dispatch | Extra type argument negative; missing-arity-check mutant |
+| A bare family name has no arguments | `bare` resolves only a parameterless family; quantity defaults need `Name<..>` | Six seed-rejected bare-family fixtures; bare-quantity-default mutant |
 | Unsupported forms never bypass checking | Parser/catalog/term boundaries | Closure/template pins, live type values, type-variable application and constructor-local type fixtures |
 
 `src/types-PROOF.bend` fills all 12 algebra laws. The substitution proof is an
@@ -40,14 +41,17 @@ host failures, internal errors, exhaustion and invalid Wasm are not semantic
 kills. Literal ABI expectations precede that mutant and inspect exports without
 invoking a generic or cell-valued host signature.
 
-The old frontend classification gate still pins generic headers to Unsupported.
-It is retained unchanged, so the requested new acceptance conflicts with that
-assertion. This is an integration blocker, separate from generic differential
-agreement. Live semantic and style review remain coordinator-owned. Offline
-preflight supplies context coverage and blockers only; there are no conceptual
-compression, Delight, memetic identity, Anticipation or Payoff ratings yet.
+The frontend's generic-header pin was superseded under the coordinator's
+review-round-1 authorization (phase expectations from the seed reference). The
+classify-2 type-application pins and two of its laws conflict the same way; a
+proposed supersession awaits authorization. Live semantic and style review
+remain coordinator-owned. Offline preflight supplies context coverage and
+blockers only; there are no conceptual compression, Delight, memetic identity,
+Anticipation or Payoff ratings yet.
 
 The dispatch boundary corpus fixes local type/quantity forms before repairing
 their diagnostics. Both checker paths preserve lexical shadowing, recognize a
-global datatype only after lexical lookup fails, and reject local type-level
-normalization as Unsupported. Empty type-argument lists are seed-invalid.
+global datatype only after lexical lookup fails (one shared `scope.bend` rule,
+`term_name`), and reject local type-level normalization as Unsupported.
+`check-dispatch.bend` chooses the path per book. Empty type-argument lists
+are seed-invalid.

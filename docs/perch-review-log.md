@@ -1078,3 +1078,26 @@ conflict is retained as an integration blocker.
 Prevention: pair every erasure path with live/erased static-value controls, and
 exercise each new syntax node in both generic and monomorphic books. A passing
 capability corpus does not establish correct behavior at its dispatch boundary.
+
+## 2026-09-28 — Generics review round 1: a silent default and a pin collision
+
+The coordinator's review confirmed a missed defect: a bare family name whose
+parameters were all leading quantities was silently instantiated at `&1`
+(`x: Bit` for `type Bit<a> is Kind(a)`), which the seed rejects. The round-0
+corpus had no all-quantity family, so no fixture reached the short-form branch
+with zero written arguments. Six seed-rejected [bare-family fixtures](../tests/compiler-generics/bare-families/README.md)
+were frozen before the repair; a fifth generics mutant restores the default.
+
+Merging main then collided with classify-2, which had pinned `Name<...>` in
+parameter, return and binding types as Unsupported while generics was in
+flight. Two of its laws fail on the generic parser, and every proof entry
+chains through `src/PROOF.bend`, so nine gates stopped at their proof step.
+The coordinator's authorization covered only the generic-header pin; the
+proposed supersession is recorded in the [generics README](../tests/compiler-generics/README.md#review-round-1).
+
+Prevention: for every defaulting branch, add a zero-argument control at each
+syntactic position that reaches it. When an increment pins a form as
+Unsupported that an in-flight increment will accept, name that owner and a
+supersession path in the pin itself, and keep the classification law out of
+the shared proof chain or state it as a transition that the later increment
+can restate.
