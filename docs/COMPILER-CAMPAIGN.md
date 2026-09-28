@@ -14,13 +14,41 @@ Later additions the same day:
 - "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
 - "You can let claude do actual work too. i just want you to use up my codex tokens as well"
 - "Please keep the focus on self hosting first"
+- "would it it make sense to make a virtualized bend first?" … "yep this is how i want to do it! make it happen"
+- "Codex is out of tokens, so start using Claude instead. I mean, yourself with workflows."
 
 ## Definition of done
 
-1. **Self-hosting.** Knot compiles its own complete source bundle, including the Base slice it reaches. The seed builds C1; C1 emits the Wasm compiler A2; A2 compiles the same frozen bundle to A3.
-   - A2 and A3 are byte-identical.
-   - Both generations pass the conformance corpus against the pinned reference Bend (2.0.29, `574b6d3`).
-   - The upstream fallback is used only by the seed step.
+1. **Self-hosting (VM-first route, D14).** Knot compiles its complete source bundle S to a `knot-image-1` image. S is `src/compile-cli.bend` and its imports, including the frozen native-profile emitters, the reachable slice of the hash-pinned Base, and the bytes package.
+   - **The image is encoded, not lowered:** the checked core, erased and resolved.
+     - There is one node per core form.
+     - Levels become frame slots and functions become table indices.
+     - Intrinsics and foreign leaves become hash-pinned identities.
+     - It is serialized as little-endian 32-bit words.
+   - **One small virtual machine, `knot-vm-1`, runs images.**
+     - `vm/vm.wat` is assembled by the pinned wabt `wat2wasm`, a build tool outside the trusted runtime, into `vm/vm.wasm`. Its sha256 is pinned in `src/CONTRACT.json`.
+     - Its semantics are fixed by the Bend model `vm/model.bend` and its laws.
+   - **The host is `knot-io-2`:** `knot-io-1` plus `read_bytes`, `path_identity` (the modules loader's foreign `inspect`) and a stack-exhaustion kind.
+   - Every step uses the same frozen bundle.
+   - **The chain:**
+     - The seed builds C1. `C1 --profile=knot-image-1 src/compile-cli.bend` emits image I2.
+     - `vm.wasm` runs I2 as A2. A2 emits image I3 of the same bundle.
+   - **Fixpoint.** I2 and I3 are byte-identical (equal sha256). A4 is built only to investigate instability, never to mask it.
+   - **Conformance.** Both generations pass the conformance corpus against the pinned reference Bend (2.0.29, `574b6d3`).
+     - Their image outputs are byte-identical to C1's, and running those images on the VM agrees with the reference.
+     - Their native-profile outputs (`knot-enum-1`, `knot-fields-wasm-1`, `knot-literals-wasm-1`) are byte-identical to C1's.
+   - **Trusted runtime.** The upstream fallback is used only by the seed step. The VM and the `knot_io` host are the whole trusted runtime. Each has an independent model and differential tests:
+     - VM ⇔ model after every transition on small images;
+     - VM ⇔ `src/eval.bend` ⇔ seed on the values of every frozen suite, where Exhausted excuses a lane only under a documented bound;
+     - mutants killed by named gates.
+   - **Names.** C1 means "compiler, generation 1": the upstream seed builds Knot's own Bend source into a runnable compiler. It is not the C language, and not the `knot-c-1` backend.
+   - **C1 lane.** C1 is built with the seed's native lane (the seed compiles through clang). The seed's Bun lane is only a cross-check. Its known fault (`List.length` overflows the stack at about 32,000 elements) makes it inconclusive on compiler-sized inputs, so it is recorded as Exhausted there, not as a disagreement.
+   - **Native Wasm codegen.** Direct emission of Wasm from core is now the speed track. It covers `knot-enum-1`, `knot-fields-wasm-1`, `knot-literals-wasm-1`, closures' defunctionalization and owned storage. It is no longer the self-hosting route.
+   - **Later speed-track milestones:**
+     - `vm.wasm` emitted from Knot's Bend source, with its bytes brought into the fixpoint;
+     - a native fixpoint A2ⁿ = A3ⁿ, qualified byte for byte against the VM-hosted compiler.
+   - **Names.** C1 means "compiler, generation 1": the upstream seed builds Knot's own Bend source into a runnable compiler. It is not the C language, and not the `knot-c-1` backend. C1 is built with the seed's native lane; the seed's Bun lane is only a cross-check, which is inconclusive (Exhausted) on compiler-sized inputs.
+   - Design and increments: [VM-DESIGN.md](compiler-campaign/VM-DESIGN.md).
 2. **CPU backends.** Wasm is primary: the compiler itself runs as Wasm, and programs run under Node and Bun. A native C backend follows self-hosting and is the speed reference against upstream Bend's native output.
 3. **GPU backend.** Compiler-generated WebGPU/WGSL execution of Bend programs on the real device, using the adaptive continuation-task model. Results agree with the independent evaluator and the CPU backends.
 4. **Optimization passes.** A core IR with semantics-preserving passes, each checked by differential conformance: inlining, case-of-known-constructor, constant folding, dead-code elimination, tail calls to loops, and more.
@@ -52,6 +80,12 @@ Later additions the same day:
 | D11 | D6 revised. The native C backend starts now, in parallel on the current core IR, and grows with each accepted profile. It no longer waits for self-hosting. | The user asked for maximal parallel use of Codex and of Claude implementers. The C emitter shares only core terms, so its conflicts are small. |
 | D12 | Host effects before the IO ABI lands. A reachable IO or host-effect declaration checks successfully. Evaluation of a pure entry agrees with the seed. Compilation reports `Unsupported compile host-effect` (exit 3) and emits no artifact. | This follows `docs/BEND-SUBSET-STAGES.md` (build rejects a missing capability before emission) over the baseslice suite's check-phase pin. The coordinator reconciles that pin when baseslice is implemented. |
 | D13 | Self-hosting has priority over every other track, at the user's direction. New increments, reviews and merge work go first to the self-hosting path: literals, generics, closures, the descent rule, modules, the Base slice, surface sugar, the IO host and its lowering, owned Wasm storage, the frontend as Wasm (E2E-2) and the fixpoint (E2E-3). The C backend, GPU emission and optimizer branches wait for review and merge until the self-hosting queue is clear. Their finished work is preserved on their branches. | User, 2026-09-27: "Please keep the focus on self hosting first". |
+| D14 | The self-hosting route is VM-first ("virtualized Bend"). Knot compiles to a serialized image that one small Wasm VM executes; the fixpoint is image I2 = image I3. Every language feature then needs only frontend, checker and core support, and the VM, written once, supplies the heap, closures, primitives, stack discipline and IO. Native Wasm codegen continues as the speed track under D13's priority. The VM gets a Bend model with laws, differential tests against `src/eval.bend` and the seed, and mutants. | User, 2026-09-27: "would it it make sense to make a virtualized bend first?" then "yep this is how i want to do it! make it happen". |
+| D15 | Nat is a 32-bit word in the VM; a Nat above 2^32-1 is Exhausted. Nat literals are already capped there. | VM design synthesis. eval.bend's unary Nat (bounded at 2^20) and the seed (about 2^48) differ, so the Exhausted-lane rule in VM-DESIGN.md governs differential comparisons. |
+| D16 | VM fuel counts calls and invokes, independent of eval.bend's transition count. Exhausted kinds are 1 (fuel), 2 (heap) and 3 (frame region). | Keeps superinstructions and later optimization possible without changing observable budgets. |
+| D17 | The host ABI becomes `knot-io-2`: `knot-io-1` plus `read_bytes`, `path_identity` (the modules loader's foreign `inspect`) and a stack-exhaustion kind. | The VM loads images as raw bytes. The loader needs symlink and case identity, per the modules review. |
+| D18 | The literals increment's Knot-emitted instruction machine (`knot-literals-wasm-1`) is superseded as the self-hosting VM. It stays in the bundle as a frozen native profile, and its opcode DSL seeds the later `vm-emit` speed track. | Enum-only ABI, no `knot_io`, no closures, no reclamation, a 32,768-instruction cap and unary Nat. |
+| D19 | The VM's linear-memory maximum is 65,536 pages (4 GiB, the wasm32 limit), declared in the image and VM contract. Exhausting the declared budget is `Exhausted` kind 2 (heap), reproducibly on every host. This replaces the 2,048-page (128 MiB) bound that the io-host increment chose and the VM design adopted. The `knot_io` host's module-memory check is raised to match. | That bound was a conservative guess, not a platform limit: Node 22.22.3 accepts a 65,536-page maximum and grows a memory to 2 GiB on this host. A declared budget keeps heap exhaustion deterministic without starving self-compilation. User question, 2026-09-27: "why is this the case 'Memory is capped at 128 MiB (2,048 pages)'". |
 
 ## Milestone ladder
 
@@ -85,7 +119,7 @@ Parallel tracks throughout:
 ## Protocol
 
 - **One branch per increment.** Each increment gets branch `campaign/<id>` in worktree `.claude/worktrees/campaign-<id>`, created from `main`. `.toolchain` is linked to the main checkout's pinned copy.
-- **Executors.** Codex (`gpt-6-astra`, max reasoning), run with `codex exec -s workspace-write -C <worktree>`, or Claude agents. Executors commit only on their branch and never push or merge.
+- **Executors.** Claude workflows since 2026-09-27, when the Codex quota ran out. Each increment runs an implementer loop in its worktree, then the scope/gates/semantics review with adversarial verification, then fix-and-re-review rounds. Earlier increments used Codex (`gpt-6-astra`) through `codex exec -s workspace-write`. Executors commit only on their branch and never push or merge.
 - **Merge path.** The coordinator reviews each branch: diff scope, all 11 existing gates, the new gates, and targeted Perch when a key is available. It then merges to `main` and pushes.
 - **Conflicts.** Receipts that differ only in date or path are regenerated on `main` after merging.
 - **State.** Kept in [compiler-campaign/state.json](compiler-campaign/state.json).

@@ -72,6 +72,12 @@ GATES = (
          ('tests/compiler-nest/receipts/nest.json',)),
     Gate('nest-review', ('python3', 'tests/compiler-nest/review.py'),
          ('tests/compiler-nest/receipts/review.json',)),
+    Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
+         ('tests/compiler-io/receipts/host.json',)),
+    Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
+         ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
+    Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
+         ('tests/compiler-selfhost/receipts/selfhost.json',)),
 )
 
 
@@ -81,7 +87,7 @@ def git(root: Path, *args: str) -> bytes:
 
 def excluded(name: str) -> bool:
     parts = Path(name).parts
-    return (any(p == '.env' or p.startswith('.env.') or p == '.git' for p in parts)
+    return (any(p.lower() == '.env' or p.lower().startswith('.env.') or p == '.git' for p in parts)
             or parts[0] in ('.toolchain', 'node_modules', '.local', 'build'))
 
 
@@ -232,12 +238,27 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
             raise ValueError('Bootstrap receipt violates its stage verdict')
         result.update(corpus=record['corpus']['files'], stages=len(stages),
                       reached=sum(s['status'] == 'reached' for s in stages))
+    if gate.name == 'selfhost':
+        status = record['counts']['status']
+        if status['fail'] or not status['pass'] or record['seed']['reproduced'] is not True:
+            raise ValueError('Selfhost receipt violates its verdict')
+        result.update(cases=len(record['cases']), passed=status['pass'], blocked=status['blocked'],
+                      d4_gaps=len(record['counts']['d4_gaps']), judge_mutants=len(record['judge_mutants']))
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
     if gate.name in ('nest', 'nest-review'):
         result.update(record['counts'])
+    if gate.name == 'io-host':
+        for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
+            result[key] = record[key]
+        result['review'] = record['review_counts']
+    if gate.name == 'io-abi-2':
+        for key in ('read_observations', 'reference_observations', 'seed_observations', 'seed_exhausted',
+                    'mutants_killed', 'case_mode'):
+            result[key] = record[key]
+        result['parity'] = len(record['parity'])
     return result
 
 

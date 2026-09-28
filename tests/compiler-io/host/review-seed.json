@@ -1,0 +1,160 @@
+{
+  "status": "pass",
+  "authority": "Literal review and fresh seed runs before host repair",
+  "seed": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "fixture_sha256": "5eabc41ec5245b5e7d87e4d6b5f18112677bcfda82def88020b43b6d08834876",
+  "expectations_sha256": "eebdc753183a70415e8f5904debd5851c29c5c29fa16c279e71aa8c7432dd5cf",
+  "original_expectations_sha256": "118c922f459aa2b968cd69ed886eca3e305349d56f61c1e45a92423d22047806",
+  "runs": [
+    {
+      "name": "file",
+      "lane": "interpreter",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done hello\n\n",
+        "stderr": "",
+        "files": {
+          "file.txt": "hello\n"
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "file",
+      "lane": "native",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done hello\n\n",
+        "stderr": "",
+        "files": {
+          "file.txt": "hello\n"
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "file",
+      "lane": "js",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done hello\n\n",
+        "stderr": "",
+        "files": {
+          "file.txt": "hello\n"
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "empty-file",
+      "lane": "interpreter",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done \n",
+        "stderr": "",
+        "files": {
+          "empty.txt": ""
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "empty-file",
+      "lane": "native",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done \n",
+        "stderr": "",
+        "files": {
+          "empty.txt": ""
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "empty-file",
+      "lane": "js",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Done \n",
+        "stderr": "",
+        "files": {
+          "empty.txt": ""
+        },
+        "directories": []
+      }
+    },
+    {
+      "name": "directory",
+      "lane": "interpreter",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": [
+          "dir"
+        ]
+      }
+    },
+    {
+      "name": "directory",
+      "lane": "native",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": [
+          "dir"
+        ]
+      }
+    },
+    {
+      "name": "directory",
+      "lane": "js",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": [
+          "dir"
+        ]
+      }
+    },
+    {
+      "name": "dot-directory",
+      "lane": "interpreter",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": []
+      }
+    },
+    {
+      "name": "dot-directory",
+      "lane": "native",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": []
+      }
+    },
+    {
+      "name": "dot-directory",
+      "lane": "js",
+      "observed": {
+        "exit": 0,
+        "stdout": "write Done\nread Fail 21 Is a directory\n",
+        "stderr": "",
+        "files": {},
+        "directories": []
+      }
+    }
+  ]
+}

@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "c940a432b10a27198e692dbe17387074f6f07028b09e4aa6e9ea3d0aa470d5fd",
+    "sha256": "e8d2a870884e121e8305e80b6539f38c3781bfa4fa5ceb91bccd802c0eef2f55",
     "gates": [
       {
         "name": "frontend",
@@ -214,7 +214,7 @@
         "programs": [
           {
             "file": "tests/compiler-bootstrap/check.py",
-            "sha256": "f46ffe6bfff4aa51321e3372549723fdcc5def6c9754a8ce233e66952bc47cd4"
+            "sha256": "c1507662a6f30eabd6e661932264ed9515effa3b27461dcec9611802d6cd76d4"
           }
         ]
       },
@@ -254,6 +254,47 @@
           {
             "file": "tests/compiler-nest/review.py",
             "sha256": "a017b7974c6b1a3c25906b21a85c02f11faddfc469164639caf31dbb18c58dba"
+          }
+        ]
+      },
+      {
+        "name": "io-host",
+        "argv": [
+          "python3",
+          "-B",
+          "tests/compiler-io/host-check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-io/host-check.py",
+            "sha256": "21df9ba4a3930d6ee755a1467240623a4ca16452e884a9d0aee7312d905cf746"
+          }
+        ]
+      },
+      {
+        "name": "io-abi-2",
+        "argv": [
+          "python3",
+          "-B",
+          "tests/compiler-io-abi-2/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-io-abi-2/check.py",
+            "sha256": "649980e394f53f7beb27ffc0ce24b8560fb9b93fc2c456a295cf50a08d6f266d"
+          }
+        ]
+      },
+      {
+        "name": "selfhost",
+        "argv": [
+          "python3",
+          "tests/compiler-selfhost/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-selfhost/check.py",
+            "sha256": "902de6e3e354b328ec2d9e31814ae9b1cf62035e7b2d273a63e80ce6d1c7a08b"
           }
         ]
       }
@@ -421,7 +462,27 @@
           "sha256": "118c922f459aa2b968cd69ed886eca3e305349d56f61c1e45a92423d22047806"
         }
       ],
-      "gates": [],
+      "gates": [
+        "io-host"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "suite": "tests/compiler-io-abi-2",
+      "directory": "tests/compiler-io-abi-2",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-io-abi-2/expectations.json",
+          "sha256": "73fe3bb65077c1846a7afd51b207e9cdc60b8cce1ebded682e9279a378d452dd"
+        }
+      ],
+      "gates": [
+        "io-abi-2"
+      ],
       "fixtures": 0,
       "detail": "No reviewed adapter for this suite path"
     },
@@ -459,6 +520,22 @@
       "fixtures": 40
     },
     {
+      "suite": "tests/compiler-poly",
+      "directory": "tests/compiler-poly",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-poly/expectations.json",
+          "sha256": "dd23ff5c4d9aecbe049fea86cc5e403b01efe63bfadef85b330159766e42901a"
+        }
+      ],
+      "gates": [],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "recursion",
       "directory": "tests/compiler-recursion",
       "status": "recognized",
@@ -474,6 +551,24 @@
         "recursion"
       ],
       "fixtures": 19
+    },
+    {
+      "suite": "tests/compiler-selfhost",
+      "directory": "tests/compiler-selfhost",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-selfhost/expectations.json",
+          "sha256": "e06dd5dc1e9d034e5eb43beff6cd72d1fa6384bf01d9fd9149addc5e87131dff"
+        }
+      ],
+      "gates": [
+        "selfhost"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
     },
     {
       "suite": "catalog",
@@ -578,6 +673,21 @@
   "reports": [
     {
       "directory": "tests/compiler-io",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-io-abi-2",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-poly",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-selfhost",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },

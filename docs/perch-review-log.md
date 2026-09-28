@@ -1058,3 +1058,20 @@ quantified laws from normalization witnesses by name and recorded obligations.
 The repair gate adds the reviewer fixtures, seven semantic mutants and a fixed
 3,000-program seed comparison. Earlier failures remain evidence. Offline
 preflight reports context blockers; no provider result or style pass is claimed.
+
+## 2026-09-27 — IO host review 2: sandbox aliases, empty effects and oracle faults
+
+The coordinator's three confirmed findings against `6051e37` are repaired;
+see the [verification record](../tests/compiler-io/REVIEW-2.md). The original
+controls missed case-folded secret paths on APFS and the empty-payload branch
+of writes on read-only handles. The seed's JS memory-fault stream could also
+reach expectation freezing despite representing lane exhaustion.
+
+Prevention: fix path-spelling by mode and empty/nonempty/invalid-payload
+controls before host implementation, and reject reference-lane fault markers
+before either expectation-writing pass. Keep native as the compiler-sized
+oracle under D14. Four literal empty-write cases were witnessed in all three
+seed lanes before repair; 21 dummy-only path controls and 14 oracle controls
+now supplement the original suite. The three restored-defect mutants are
+killed without infrastructure failures. Original expectations are unchanged;
+live Perch review remains with the coordinator.
