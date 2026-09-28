@@ -134,7 +134,9 @@
     "fixtures/self-import.bend": "383d9313f72c325ce0b005fcd5f05123630b03832a35795daca90ff61abe4fb8",
     "fixtures/transitive-chain.bend": "e4f6cec4652c77b3309def70212b8fedc8adc81b674c8e04e1c91177a2dbc899",
     "fixtures/two-aliases-one-file.bend": "9a1967d76033c879030e0e6b2332c5221cae929b05e76a8105329e69732acfcf",
-    "fixtures/parent-relative-path.bend": "da14666c681055ba05fc8865e9632193ad3cda0cedbe26ce19820118d188e37b"
+    "fixtures/parent-relative-path.bend": "da14666c681055ba05fc8865e9632193ad3cda0cedbe26ce19820118d188e37b",
+    "fixtures/lib/broken.bend": "7d4bb9fe16b972d0884c420bb15c6df19e71284df6b43bcfa4da30744937e6d8",
+    "fixtures/unused-invalid-module.bend": "c6e306a111791a2c37d706032dd08f373b7e9adec6fd0c0e22c7a9e28c25ded3"
   },
   "fixtures": [
     {
@@ -1670,6 +1672,38 @@
           "stderr": "",
           "constructor": "Lit",
           "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/unused-invalid-module.bend",
+      "feature": "complete-user-module-checking",
+      "kind": "negative",
+      "summary": "An imported user module has an unused ill-typed definition; even an unreferenced imported module must be checked completely.",
+      "modules": [
+        "fixtures/lib/broken.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Invalid",
+        "exit": 2
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/unused-invalid-module.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/unused-invalid-module.bend",
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : lib/broken.Value\n- observed : lib/broken.Other\nLocation: lib/broken.unused\n7 | def unused() -> Value:\n8>|   Wrong{}\n  |   ^^^^^^^\n9 | \n"
         }
       ]
     }
