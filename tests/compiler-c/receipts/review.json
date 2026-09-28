@@ -1,0 +1,267 @@
+{
+  "review": {
+    "date": "2026-09-28T01:41:59.091069+00:00",
+    "scope": "Read-only bounded review of C emitter, separate compiler entry, host adapter, and gate; no tracked edits.",
+    "source_reviewed": {
+      "src/c.bend": "89492ef26f3934b5dc1f22d44d8740040f2b0cc5e7409a2fc51995b5ad524f49",
+      "src/c-LAWS.bend": "fca09632d52bbe238ee8515b7df40aef714e93c17bb42e9d3608b3d6bc8dcaa9",
+      "src/c-PROOF.bend": "81b33a212a43c24148c6ef03c07e5ceae096150ab3bad846738f4a65eb5ceabf",
+      "tests/compiler-c/compile.bend": "fff8a8249524b74aee744f597a43b2bd04388d8625270578fd78e0aa47f475d8",
+      "scripts/run-c.py": "9618debe04b204537d11f64ea98d4bc2402d4aeae5ba8f4543180cf9397f1011",
+      "tests/compiler-c/SPEC.md": "8147c489a0123ff8760c4ead51ff32888873132b7f1efbe23a39d6876582b884"
+    },
+    "emitter_binary": {
+      "path": ".local/compiler-c/gate/c",
+      "sha256": "dd3e9fc57a9524ac14fd4efeb1f131af65b258edeb05f4af900493c6ed5241c3",
+      "provenance": "Existing native gate compiler supplied by parent; review did not rebuild or mutate it."
+    },
+    "cc_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "findings": [
+      {
+        "classification": "confirmed gate-coverage gap; owner repair delegated",
+        "location": "tests/compiler-c/check.py original lines 18 and 374-415",
+        "detail": "Gate compiles/runs generated artifacts directly. It never invokes scripts/run-c.py and originally omitted that adapter from record.inputs, so an adapter regression can escape the gate. Parent delegated adapter success/unknown-export/missing-file/bad-C probes and hashing to gate owner. This review has not yet verified that follow-up."
+      },
+      {
+        "classification": "future-profile integration risk; not current defect",
+        "location": "src/c.bend:209",
+        "detail": "Expression fallback reports Internal expression-node. All current remaining Term forms are internal Branch/Sequence traversal containers, so this is correct for current checked core. Every subsequently added source expression form must receive explicit lowering or Unsupported classification when merged; generic fallback cannot be left to misclassify new supported core forms."
+      }
+    ],
+    "current_emitter_defects": "No concrete current semantic or UB defect found in the bounded review. This is not a general correctness proof.",
+    "inspected_invariants": [
+      "Arguments are staged left to right before cell allocation or any tail parameter write.",
+      "Tail rebinding preserves erased parameter indices and assigns every live parameter before goto.",
+      "All types with any declared fields are boxed, including erased-only and tag-only constructors.",
+      "Erased arguments, lets, and pattern fields produce no computation/slot.",
+      "Live stores and loads use declaration-order offsets and union members selected by resolved field type.",
+      "Array and stack guards precede emitted writes/body work under their state invariants.",
+      "Input dispatch validates names, live arity and per-type enum ordinal bounds."
+    ],
+    "corpus_static_audit": {
+      "compiler_wasm": "All 25 fixture entries and 90 frozen calls appear unchanged.",
+      "compiler_fields_wasm": "All 8 fixture entries and 32 frozen calls appear unchanged.",
+      "compiler_recursion": "11 accepted originals have byte-preserved source prefixes with appended enum observers; 8 rejected originals are covered by original/rejection phases."
+    },
+    "probes": [
+      {
+        "name": "wide-match",
+        "source": ".local/c-backend/review/wide-match.bend",
+        "source_sha256": "818c63b3f1f71973f7900136cdcb75a7ea46d0705299f472f35df8332be5962a",
+        "c_source": ".local/c-backend/review/wide-match.c",
+        "c_sha256": "c7e72f86a31fc7c57433d71080aff3096629039dde4b603af830f20cf41ddb63",
+        "binary": ".local/c-backend/review/wide-match",
+        "binary_sha256": "754c174a11936461f725f1a14b99bdacbc79d91695e675443a1073567f383ccf",
+        "expected_seed": "On{}",
+        "seed_observed": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "emitter_observed": {
+          "exit": 0,
+          "stdout": "Built\t19498\n",
+          "stderr": ""
+        },
+        "cc_observed": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "runtime_observed": {
+          "exit": 0,
+          "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":0}\n",
+          "stderr": ""
+        },
+        "commands": {
+          "seed": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match.bend"
+          ],
+          "emit": [
+            ".local/compiler-c/gate/c",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match.bend",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match.c"
+          ],
+          "cc": [
+            "cc",
+            "-O2",
+            "-std=c99",
+            "-Wall",
+            "-Werror",
+            "-fwrapv",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match.c",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match"
+          ],
+          "run": [
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-match",
+            "main"
+          ]
+        },
+        "command_hash_basis": "sha256 of compact JSON argv array",
+        "command_sha256": {
+          "seed": "49107d19bef1741b169e5bfdca6dd99ff6807142a517dad7d33ac70f1f510396",
+          "emit": "b6be3f5b443cd87ee37649200573c2a04d5e345e31e34f7316bdd0d099100681",
+          "cc": "cbe1f6d7b5a9c9cbaef09f466451fb8564094f59d2ac9b08a9caf41bcb04c454",
+          "run": "808f7987f7f6b28228752f2809055061a4fc9d4810b9baaf9d3111b2358b6512"
+        },
+        "note": "Wide exhaustive tag branching; final tag selected. wide-wide requires existing permitted frontend budget overrides."
+      },
+      {
+        "name": "wide-wide",
+        "source": ".local/c-backend/review/wide-wide.bend",
+        "source_sha256": "f74f444c2b072a7fe70c8826376c7c404f9cc2f4f6e1b1846e3d18422d8d8fbc",
+        "c_source": ".local/c-backend/review/wide-wide.c",
+        "c_sha256": "1e8e80caaa5e2e442b1fd3ef8494577376965c9b10c36e7469809b1e87925eef",
+        "binary": ".local/c-backend/review/wide-wide",
+        "binary_sha256": "d66d16fb4002ac65c4c25bc60bd4db29e8101ab70f68886a0fce62440d5be54c",
+        "expected_seed": "On{}",
+        "seed_observed": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "emitter_observed": {
+          "exit": 0,
+          "stdout": "Built\t35396\n",
+          "stderr": ""
+        },
+        "cc_observed": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "runtime_observed": {
+          "exit": 0,
+          "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":0}\n",
+          "stderr": ""
+        },
+        "commands": {
+          "seed": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide.bend"
+          ],
+          "emit": [
+            ".local/compiler-c/gate/c",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide.bend",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide.c",
+            "65536",
+            "4096",
+            "4096",
+            "4096",
+            "4194304"
+          ],
+          "cc": [
+            "cc",
+            "-O2",
+            "-std=c99",
+            "-Wall",
+            "-Werror",
+            "-fwrapv",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide.c",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide"
+          ],
+          "run": [
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/wide-wide",
+            "main"
+          ]
+        },
+        "command_hash_basis": "sha256 of compact JSON argv array",
+        "command_sha256": {
+          "seed": "ff8afdfe5a3f406ed73a3f2654aca4c03ea91c815645222e8f2f09db6800b273",
+          "emit": "26661ebb0dda2c9f6e69a8e98dc358649f6c80df0f1416f20d8a36f8da818d6a",
+          "cc": "5a79dfb130b7d2df1e8b57af453590c4cea845a36e46311dcec15f6cafc1887b",
+          "run": "314bb3e7adb34d298f9d4b559f0821d8f36a1f65333570a036928748c4f24cf9"
+        },
+        "note": "Wide exhaustive tag branching; final tag selected. wide-wide requires existing permitted frontend budget overrides."
+      },
+      {
+        "name": "default-depth",
+        "source": ".local/c-backend/review/default-depth.bend",
+        "source_sha256": "ab3579d16f7f71b65c5ee9580f7a5ceaa354cad167362cbb0da556e1e8602637",
+        "c_source": ".local/c-backend/review/default-depth.c",
+        "c_sha256": "31cc17e3f9b73d10d64addddb6137663a406f04131ce73dbc9a84def62f4dfc6",
+        "binary": ".local/c-backend/review/default-depth",
+        "binary_sha256": "7c4dc34dd3c6b8f3fe6b8ae3ee13d58e3af6475f24a449ec147586a8e5907ad7",
+        "expected_seed": "Off{}",
+        "seed_observed": {
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "emitter_observed": {
+          "exit": 0,
+          "stdout": "Built\t37603\n",
+          "stderr": ""
+        },
+        "cc_observed": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "runtime_observed": {
+          "exit": 4,
+          "stdout": "",
+          "stderr": "Exhausted\tc\tcall-stack\n"
+        },
+        "commands": {
+          "seed": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth.bend"
+          ],
+          "emit": [
+            ".local/compiler-c/gate/c",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth.bend",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth.c",
+            "65536",
+            "4096",
+            "4096",
+            "4096",
+            "4194304"
+          ],
+          "cc": [
+            "cc",
+            "-O2",
+            "-std=c99",
+            "-Wall",
+            "-Werror",
+            "-fwrapv",
+            "-fsanitize=address,undefined",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth.c",
+            "-o",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth"
+          ],
+          "run": [
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/c-backend/review/default-depth",
+            "main"
+          ]
+        },
+        "command_hash_basis": "sha256 of compact JSON argv array",
+        "command_sha256": {
+          "seed": "41de44417fab73b9ae509226be174a73b0db23b2c4f508618d56542a404729e1",
+          "emit": "fb451d0be5ba4c0e70f6282325fab1509e0733256525a63aafe70a1da2466bea",
+          "cc": "7b2ba87e7f229e5b0ee294f88851c5b4bd5691c126d00735318da04f7758f23e",
+          "run": "681b403cf86efad010d4127b82083c5775dc8aac6dde72f9bcca568f0d26c63b"
+        },
+        "note": "Default C depth limit 256; default stack charge budget 1048576; normal main-thread stack; ASan+UBSan enabled."
+      }
+    ],
+    "proof_boundary": "Eight helper equations are appropriately bounded; no general compiler-refinement, memory-safety, or physical-stack-bound theorem established. The conservative frame-charge and depth probes qualify the recorded normal main-thread host contract only; reduced OS stacks and other compilers/flags require separate evidence.",
+    "constraints": "BEND_NO_TELEMETRY=1; Bun invoked with --no-env-file; no network, .env reads, paid/live Perch, source edits, or tracked receipt changes by reviewer."
+  },
+  "review_report_sha256": "983b62a6c1de869133351425bc076ad1550852ce63b5850d2491bc957984a476",
+  "retained_probe_sources": {
+    "wide-match": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n  T64{}\n  T65{}\n  T66{}\n  T67{}\n  T68{}\n  T69{}\n  T70{}\n  T71{}\n  T72{}\n  T73{}\n  T74{}\n  T75{}\n  T76{}\n  T77{}\n  T78{}\n  T79{}\n  T80{}\n  T81{}\n  T82{}\n  T83{}\n  T84{}\n  T85{}\n  T86{}\n  T87{}\n  T88{}\n  T89{}\n  T90{}\n  T91{}\n  T92{}\n  T93{}\n  T94{}\n  T95{}\n  T96{}\n  T97{}\n  T98{}\n  T99{}\n  T100{}\n  T101{}\n  T102{}\n  T103{}\n  T104{}\n  T105{}\n  T106{}\n  T107{}\n  T108{}\n  T109{}\n  T110{}\n  T111{}\n  T112{}\n  T113{}\n  T114{}\n  T115{}\n  T116{}\n  T117{}\n  T118{}\n  T119{}\n  T120{}\n  T121{}\n  T122{}\n  T123{}\n  T124{}\n  T125{}\n  T126{}\n  T127{}\n  T128{}\n  T129{}\n  T130{}\n  T131{}\n  T132{}\n  T133{}\n  T134{}\n  T135{}\n  T136{}\n  T137{}\n  T138{}\n  T139{}\n  T140{}\n  T141{}\n  T142{}\n  T143{}\n  T144{}\n  T145{}\n  T146{}\n  T147{}\n  T148{}\n  T149{}\n  T150{}\n  T151{}\n  T152{}\n  T153{}\n  T154{}\n  T155{}\n  T156{}\n  T157{}\n  T158{}\n  T159{}\n  T160{}\n  T161{}\n  T162{}\n  T163{}\n  T164{}\n  T165{}\n  T166{}\n  T167{}\n  T168{}\n  T169{}\n  T170{}\n  T171{}\n  T172{}\n  T173{}\n  T174{}\n  T175{}\n  T176{}\n  T177{}\n  T178{}\n  T179{}\n  T180{}\n  T181{}\n  T182{}\n  T183{}\n  T184{}\n  T185{}\n  T186{}\n  T187{}\n  T188{}\n  T189{}\n  T190{}\n  T191{}\n  T192{}\n  T193{}\n  T194{}\n  T195{}\n  T196{}\n  T197{}\n  T198{}\n  T199{}\n  T200{}\n  T201{}\n  T202{}\n  T203{}\n  T204{}\n  T205{}\n  T206{}\n  T207{}\n  T208{}\n  T209{}\n  T210{}\n  T211{}\n  T212{}\n  T213{}\n  T214{}\n  T215{}\n  T216{}\n  T217{}\n  T218{}\n  T219{}\n  T220{}\n  T221{}\n  T222{}\n  T223{}\n  T224{}\n  T225{}\n  T226{}\n  T227{}\n  T228{}\n  T229{}\n  T230{}\n  T231{}\n  T232{}\n  T233{}\n  T234{}\n  T235{}\n  T236{}\n  T237{}\n  T238{}\n  T239{}\n  T240{}\n  T241{}\n  T242{}\n  T243{}\n  T244{}\n  T245{}\n  T246{}\n  T247{}\n  T248{}\n  T249{}\n  T250{}\n  T251{}\n  T252{}\n  T253{}\n  T254{}\n  T255{}\n\ntype Flag is Type:\n  Off{}\n  On{}\n\ndef wide(x: Tag,y: Flag) -> Flag:\n  match x:\n    case T0{}: Off{}\n    case T1{}: Off{}\n    case T2{}: Off{}\n    case T3{}: Off{}\n    case T4{}: Off{}\n    case T5{}: Off{}\n    case T6{}: Off{}\n    case T7{}: Off{}\n    case T8{}: Off{}\n    case T9{}: Off{}\n    case T10{}: Off{}\n    case T11{}: Off{}\n    case T12{}: Off{}\n    case T13{}: Off{}\n    case T14{}: Off{}\n    case T15{}: Off{}\n    case T16{}: Off{}\n    case T17{}: Off{}\n    case T18{}: Off{}\n    case T19{}: Off{}\n    case T20{}: Off{}\n    case T21{}: Off{}\n    case T22{}: Off{}\n    case T23{}: Off{}\n    case T24{}: Off{}\n    case T25{}: Off{}\n    case T26{}: Off{}\n    case T27{}: Off{}\n    case T28{}: Off{}\n    case T29{}: Off{}\n    case T30{}: Off{}\n    case T31{}: Off{}\n    case T32{}: Off{}\n    case T33{}: Off{}\n    case T34{}: Off{}\n    case T35{}: Off{}\n    case T36{}: Off{}\n    case T37{}: Off{}\n    case T38{}: Off{}\n    case T39{}: Off{}\n    case T40{}: Off{}\n    case T41{}: Off{}\n    case T42{}: Off{}\n    case T43{}: Off{}\n    case T44{}: Off{}\n    case T45{}: Off{}\n    case T46{}: Off{}\n    case T47{}: Off{}\n    case T48{}: Off{}\n    case T49{}: Off{}\n    case T50{}: Off{}\n    case T51{}: Off{}\n    case T52{}: Off{}\n    case T53{}: Off{}\n    case T54{}: Off{}\n    case T55{}: Off{}\n    case T56{}: Off{}\n    case T57{}: Off{}\n    case T58{}: Off{}\n    case T59{}: Off{}\n    case T60{}: Off{}\n    case T61{}: Off{}\n    case T62{}: Off{}\n    case T63{}: Off{}\n    case T64{}: Off{}\n    case T65{}: Off{}\n    case T66{}: Off{}\n    case T67{}: Off{}\n    case T68{}: Off{}\n    case T69{}: Off{}\n    case T70{}: Off{}\n    case T71{}: Off{}\n    case T72{}: Off{}\n    case T73{}: Off{}\n    case T74{}: Off{}\n    case T75{}: Off{}\n    case T76{}: Off{}\n    case T77{}: Off{}\n    case T78{}: Off{}\n    case T79{}: Off{}\n    case T80{}: Off{}\n    case T81{}: Off{}\n    case T82{}: Off{}\n    case T83{}: Off{}\n    case T84{}: Off{}\n    case T85{}: Off{}\n    case T86{}: Off{}\n    case T87{}: Off{}\n    case T88{}: Off{}\n    case T89{}: Off{}\n    case T90{}: Off{}\n    case T91{}: Off{}\n    case T92{}: Off{}\n    case T93{}: Off{}\n    case T94{}: Off{}\n    case T95{}: Off{}\n    case T96{}: Off{}\n    case T97{}: Off{}\n    case T98{}: Off{}\n    case T99{}: Off{}\n    case T100{}: Off{}\n    case T101{}: Off{}\n    case T102{}: Off{}\n    case T103{}: Off{}\n    case T104{}: Off{}\n    case T105{}: Off{}\n    case T106{}: Off{}\n    case T107{}: Off{}\n    case T108{}: Off{}\n    case T109{}: Off{}\n    case T110{}: Off{}\n    case T111{}: Off{}\n    case T112{}: Off{}\n    case T113{}: Off{}\n    case T114{}: Off{}\n    case T115{}: Off{}\n    case T116{}: Off{}\n    case T117{}: Off{}\n    case T118{}: Off{}\n    case T119{}: Off{}\n    case T120{}: Off{}\n    case T121{}: Off{}\n    case T122{}: Off{}\n    case T123{}: Off{}\n    case T124{}: Off{}\n    case T125{}: Off{}\n    case T126{}: Off{}\n    case T127{}: Off{}\n    case T128{}: Off{}\n    case T129{}: Off{}\n    case T130{}: Off{}\n    case T131{}: Off{}\n    case T132{}: Off{}\n    case T133{}: Off{}\n    case T134{}: Off{}\n    case T135{}: Off{}\n    case T136{}: Off{}\n    case T137{}: Off{}\n    case T138{}: Off{}\n    case T139{}: Off{}\n    case T140{}: Off{}\n    case T141{}: Off{}\n    case T142{}: Off{}\n    case T143{}: Off{}\n    case T144{}: Off{}\n    case T145{}: Off{}\n    case T146{}: Off{}\n    case T147{}: Off{}\n    case T148{}: Off{}\n    case T149{}: Off{}\n    case T150{}: Off{}\n    case T151{}: Off{}\n    case T152{}: Off{}\n    case T153{}: Off{}\n    case T154{}: Off{}\n    case T155{}: Off{}\n    case T156{}: Off{}\n    case T157{}: Off{}\n    case T158{}: Off{}\n    case T159{}: Off{}\n    case T160{}: Off{}\n    case T161{}: Off{}\n    case T162{}: Off{}\n    case T163{}: Off{}\n    case T164{}: Off{}\n    case T165{}: Off{}\n    case T166{}: Off{}\n    case T167{}: Off{}\n    case T168{}: Off{}\n    case T169{}: Off{}\n    case T170{}: Off{}\n    case T171{}: Off{}\n    case T172{}: Off{}\n    case T173{}: Off{}\n    case T174{}: Off{}\n    case T175{}: Off{}\n    case T176{}: Off{}\n    case T177{}: Off{}\n    case T178{}: Off{}\n    case T179{}: Off{}\n    case T180{}: Off{}\n    case T181{}: Off{}\n    case T182{}: Off{}\n    case T183{}: Off{}\n    case T184{}: Off{}\n    case T185{}: Off{}\n    case T186{}: Off{}\n    case T187{}: Off{}\n    case T188{}: Off{}\n    case T189{}: Off{}\n    case T190{}: Off{}\n    case T191{}: Off{}\n    case T192{}: Off{}\n    case T193{}: Off{}\n    case T194{}: Off{}\n    case T195{}: Off{}\n    case T196{}: Off{}\n    case T197{}: Off{}\n    case T198{}: Off{}\n    case T199{}: Off{}\n    case T200{}: Off{}\n    case T201{}: Off{}\n    case T202{}: Off{}\n    case T203{}: Off{}\n    case T204{}: Off{}\n    case T205{}: Off{}\n    case T206{}: Off{}\n    case T207{}: Off{}\n    case T208{}: Off{}\n    case T209{}: Off{}\n    case T210{}: Off{}\n    case T211{}: Off{}\n    case T212{}: Off{}\n    case T213{}: Off{}\n    case T214{}: Off{}\n    case T215{}: Off{}\n    case T216{}: Off{}\n    case T217{}: Off{}\n    case T218{}: Off{}\n    case T219{}: Off{}\n    case T220{}: Off{}\n    case T221{}: Off{}\n    case T222{}: Off{}\n    case T223{}: Off{}\n    case T224{}: Off{}\n    case T225{}: Off{}\n    case T226{}: Off{}\n    case T227{}: Off{}\n    case T228{}: Off{}\n    case T229{}: Off{}\n    case T230{}: Off{}\n    case T231{}: Off{}\n    case T232{}: Off{}\n    case T233{}: Off{}\n    case T234{}: Off{}\n    case T235{}: Off{}\n    case T236{}: Off{}\n    case T237{}: Off{}\n    case T238{}: Off{}\n    case T239{}: Off{}\n    case T240{}: Off{}\n    case T241{}: Off{}\n    case T242{}: Off{}\n    case T243{}: Off{}\n    case T244{}: Off{}\n    case T245{}: Off{}\n    case T246{}: Off{}\n    case T247{}: Off{}\n    case T248{}: Off{}\n    case T249{}: Off{}\n    case T250{}: Off{}\n    case T251{}: Off{}\n    case T252{}: Off{}\n    case T253{}: Off{}\n    case T254{}: Off{}\n    case T255{}:\n      match y:\n        case Off{}: Off{}\n        case On{}: On{}\n\ndef main() -> Flag:\n  wide(T255{},On{})\n",
+    "wide-wide": "type Tag is Type:\n  T0{}\n  T1{}\n  T2{}\n  T3{}\n  T4{}\n  T5{}\n  T6{}\n  T7{}\n  T8{}\n  T9{}\n  T10{}\n  T11{}\n  T12{}\n  T13{}\n  T14{}\n  T15{}\n  T16{}\n  T17{}\n  T18{}\n  T19{}\n  T20{}\n  T21{}\n  T22{}\n  T23{}\n  T24{}\n  T25{}\n  T26{}\n  T27{}\n  T28{}\n  T29{}\n  T30{}\n  T31{}\n  T32{}\n  T33{}\n  T34{}\n  T35{}\n  T36{}\n  T37{}\n  T38{}\n  T39{}\n  T40{}\n  T41{}\n  T42{}\n  T43{}\n  T44{}\n  T45{}\n  T46{}\n  T47{}\n  T48{}\n  T49{}\n  T50{}\n  T51{}\n  T52{}\n  T53{}\n  T54{}\n  T55{}\n  T56{}\n  T57{}\n  T58{}\n  T59{}\n  T60{}\n  T61{}\n  T62{}\n  T63{}\n  T64{}\n  T65{}\n  T66{}\n  T67{}\n  T68{}\n  T69{}\n  T70{}\n  T71{}\n  T72{}\n  T73{}\n  T74{}\n  T75{}\n  T76{}\n  T77{}\n  T78{}\n  T79{}\n  T80{}\n  T81{}\n  T82{}\n  T83{}\n  T84{}\n  T85{}\n  T86{}\n  T87{}\n  T88{}\n  T89{}\n  T90{}\n  T91{}\n  T92{}\n  T93{}\n  T94{}\n  T95{}\n  T96{}\n  T97{}\n  T98{}\n  T99{}\n  T100{}\n  T101{}\n  T102{}\n  T103{}\n  T104{}\n  T105{}\n  T106{}\n  T107{}\n  T108{}\n  T109{}\n  T110{}\n  T111{}\n  T112{}\n  T113{}\n  T114{}\n  T115{}\n  T116{}\n  T117{}\n  T118{}\n  T119{}\n  T120{}\n  T121{}\n  T122{}\n  T123{}\n  T124{}\n  T125{}\n  T126{}\n  T127{}\n  T128{}\n  T129{}\n  T130{}\n  T131{}\n  T132{}\n  T133{}\n  T134{}\n  T135{}\n  T136{}\n  T137{}\n  T138{}\n  T139{}\n  T140{}\n  T141{}\n  T142{}\n  T143{}\n  T144{}\n  T145{}\n  T146{}\n  T147{}\n  T148{}\n  T149{}\n  T150{}\n  T151{}\n  T152{}\n  T153{}\n  T154{}\n  T155{}\n  T156{}\n  T157{}\n  T158{}\n  T159{}\n  T160{}\n  T161{}\n  T162{}\n  T163{}\n  T164{}\n  T165{}\n  T166{}\n  T167{}\n  T168{}\n  T169{}\n  T170{}\n  T171{}\n  T172{}\n  T173{}\n  T174{}\n  T175{}\n  T176{}\n  T177{}\n  T178{}\n  T179{}\n  T180{}\n  T181{}\n  T182{}\n  T183{}\n  T184{}\n  T185{}\n  T186{}\n  T187{}\n  T188{}\n  T189{}\n  T190{}\n  T191{}\n  T192{}\n  T193{}\n  T194{}\n  T195{}\n  T196{}\n  T197{}\n  T198{}\n  T199{}\n  T200{}\n  T201{}\n  T202{}\n  T203{}\n  T204{}\n  T205{}\n  T206{}\n  T207{}\n  T208{}\n  T209{}\n  T210{}\n  T211{}\n  T212{}\n  T213{}\n  T214{}\n  T215{}\n  T216{}\n  T217{}\n  T218{}\n  T219{}\n  T220{}\n  T221{}\n  T222{}\n  T223{}\n  T224{}\n  T225{}\n  T226{}\n  T227{}\n  T228{}\n  T229{}\n  T230{}\n  T231{}\n  T232{}\n  T233{}\n  T234{}\n  T235{}\n  T236{}\n  T237{}\n  T238{}\n  T239{}\n  T240{}\n  T241{}\n  T242{}\n  T243{}\n  T244{}\n  T245{}\n  T246{}\n  T247{}\n  T248{}\n  T249{}\n  T250{}\n  T251{}\n  T252{}\n  T253{}\n  T254{}\n  T255{}\n\ntype Flag is Type:\n  Off{}\n  On{}\n\ndef wide(x: Tag,y: Tag) -> Flag:\n  match x:\n    case T0{}: Off{}\n    case T1{}: Off{}\n    case T2{}: Off{}\n    case T3{}: Off{}\n    case T4{}: Off{}\n    case T5{}: Off{}\n    case T6{}: Off{}\n    case T7{}: Off{}\n    case T8{}: Off{}\n    case T9{}: Off{}\n    case T10{}: Off{}\n    case T11{}: Off{}\n    case T12{}: Off{}\n    case T13{}: Off{}\n    case T14{}: Off{}\n    case T15{}: Off{}\n    case T16{}: Off{}\n    case T17{}: Off{}\n    case T18{}: Off{}\n    case T19{}: Off{}\n    case T20{}: Off{}\n    case T21{}: Off{}\n    case T22{}: Off{}\n    case T23{}: Off{}\n    case T24{}: Off{}\n    case T25{}: Off{}\n    case T26{}: Off{}\n    case T27{}: Off{}\n    case T28{}: Off{}\n    case T29{}: Off{}\n    case T30{}: Off{}\n    case T31{}: Off{}\n    case T32{}: Off{}\n    case T33{}: Off{}\n    case T34{}: Off{}\n    case T35{}: Off{}\n    case T36{}: Off{}\n    case T37{}: Off{}\n    case T38{}: Off{}\n    case T39{}: Off{}\n    case T40{}: Off{}\n    case T41{}: Off{}\n    case T42{}: Off{}\n    case T43{}: Off{}\n    case T44{}: Off{}\n    case T45{}: Off{}\n    case T46{}: Off{}\n    case T47{}: Off{}\n    case T48{}: Off{}\n    case T49{}: Off{}\n    case T50{}: Off{}\n    case T51{}: Off{}\n    case T52{}: Off{}\n    case T53{}: Off{}\n    case T54{}: Off{}\n    case T55{}: Off{}\n    case T56{}: Off{}\n    case T57{}: Off{}\n    case T58{}: Off{}\n    case T59{}: Off{}\n    case T60{}: Off{}\n    case T61{}: Off{}\n    case T62{}: Off{}\n    case T63{}: Off{}\n    case T64{}: Off{}\n    case T65{}: Off{}\n    case T66{}: Off{}\n    case T67{}: Off{}\n    case T68{}: Off{}\n    case T69{}: Off{}\n    case T70{}: Off{}\n    case T71{}: Off{}\n    case T72{}: Off{}\n    case T73{}: Off{}\n    case T74{}: Off{}\n    case T75{}: Off{}\n    case T76{}: Off{}\n    case T77{}: Off{}\n    case T78{}: Off{}\n    case T79{}: Off{}\n    case T80{}: Off{}\n    case T81{}: Off{}\n    case T82{}: Off{}\n    case T83{}: Off{}\n    case T84{}: Off{}\n    case T85{}: Off{}\n    case T86{}: Off{}\n    case T87{}: Off{}\n    case T88{}: Off{}\n    case T89{}: Off{}\n    case T90{}: Off{}\n    case T91{}: Off{}\n    case T92{}: Off{}\n    case T93{}: Off{}\n    case T94{}: Off{}\n    case T95{}: Off{}\n    case T96{}: Off{}\n    case T97{}: Off{}\n    case T98{}: Off{}\n    case T99{}: Off{}\n    case T100{}: Off{}\n    case T101{}: Off{}\n    case T102{}: Off{}\n    case T103{}: Off{}\n    case T104{}: Off{}\n    case T105{}: Off{}\n    case T106{}: Off{}\n    case T107{}: Off{}\n    case T108{}: Off{}\n    case T109{}: Off{}\n    case T110{}: Off{}\n    case T111{}: Off{}\n    case T112{}: Off{}\n    case T113{}: Off{}\n    case T114{}: Off{}\n    case T115{}: Off{}\n    case T116{}: Off{}\n    case T117{}: Off{}\n    case T118{}: Off{}\n    case T119{}: Off{}\n    case T120{}: Off{}\n    case T121{}: Off{}\n    case T122{}: Off{}\n    case T123{}: Off{}\n    case T124{}: Off{}\n    case T125{}: Off{}\n    case T126{}: Off{}\n    case T127{}: Off{}\n    case T128{}: Off{}\n    case T129{}: Off{}\n    case T130{}: Off{}\n    case T131{}: Off{}\n    case T132{}: Off{}\n    case T133{}: Off{}\n    case T134{}: Off{}\n    case T135{}: Off{}\n    case T136{}: Off{}\n    case T137{}: Off{}\n    case T138{}: Off{}\n    case T139{}: Off{}\n    case T140{}: Off{}\n    case T141{}: Off{}\n    case T142{}: Off{}\n    case T143{}: Off{}\n    case T144{}: Off{}\n    case T145{}: Off{}\n    case T146{}: Off{}\n    case T147{}: Off{}\n    case T148{}: Off{}\n    case T149{}: Off{}\n    case T150{}: Off{}\n    case T151{}: Off{}\n    case T152{}: Off{}\n    case T153{}: Off{}\n    case T154{}: Off{}\n    case T155{}: Off{}\n    case T156{}: Off{}\n    case T157{}: Off{}\n    case T158{}: Off{}\n    case T159{}: Off{}\n    case T160{}: Off{}\n    case T161{}: Off{}\n    case T162{}: Off{}\n    case T163{}: Off{}\n    case T164{}: Off{}\n    case T165{}: Off{}\n    case T166{}: Off{}\n    case T167{}: Off{}\n    case T168{}: Off{}\n    case T169{}: Off{}\n    case T170{}: Off{}\n    case T171{}: Off{}\n    case T172{}: Off{}\n    case T173{}: Off{}\n    case T174{}: Off{}\n    case T175{}: Off{}\n    case T176{}: Off{}\n    case T177{}: Off{}\n    case T178{}: Off{}\n    case T179{}: Off{}\n    case T180{}: Off{}\n    case T181{}: Off{}\n    case T182{}: Off{}\n    case T183{}: Off{}\n    case T184{}: Off{}\n    case T185{}: Off{}\n    case T186{}: Off{}\n    case T187{}: Off{}\n    case T188{}: Off{}\n    case T189{}: Off{}\n    case T190{}: Off{}\n    case T191{}: Off{}\n    case T192{}: Off{}\n    case T193{}: Off{}\n    case T194{}: Off{}\n    case T195{}: Off{}\n    case T196{}: Off{}\n    case T197{}: Off{}\n    case T198{}: Off{}\n    case T199{}: Off{}\n    case T200{}: Off{}\n    case T201{}: Off{}\n    case T202{}: Off{}\n    case T203{}: Off{}\n    case T204{}: Off{}\n    case T205{}: Off{}\n    case T206{}: Off{}\n    case T207{}: Off{}\n    case T208{}: Off{}\n    case T209{}: Off{}\n    case T210{}: Off{}\n    case T211{}: Off{}\n    case T212{}: Off{}\n    case T213{}: Off{}\n    case T214{}: Off{}\n    case T215{}: Off{}\n    case T216{}: Off{}\n    case T217{}: Off{}\n    case T218{}: Off{}\n    case T219{}: Off{}\n    case T220{}: Off{}\n    case T221{}: Off{}\n    case T222{}: Off{}\n    case T223{}: Off{}\n    case T224{}: Off{}\n    case T225{}: Off{}\n    case T226{}: Off{}\n    case T227{}: Off{}\n    case T228{}: Off{}\n    case T229{}: Off{}\n    case T230{}: Off{}\n    case T231{}: Off{}\n    case T232{}: Off{}\n    case T233{}: Off{}\n    case T234{}: Off{}\n    case T235{}: Off{}\n    case T236{}: Off{}\n    case T237{}: Off{}\n    case T238{}: Off{}\n    case T239{}: Off{}\n    case T240{}: Off{}\n    case T241{}: Off{}\n    case T242{}: Off{}\n    case T243{}: Off{}\n    case T244{}: Off{}\n    case T245{}: Off{}\n    case T246{}: Off{}\n    case T247{}: Off{}\n    case T248{}: Off{}\n    case T249{}: Off{}\n    case T250{}: Off{}\n    case T251{}: Off{}\n    case T252{}: Off{}\n    case T253{}: Off{}\n    case T254{}: Off{}\n    case T255{}:\n      match y:\n        case T0{}: Off{}\n        case T1{}: Off{}\n        case T2{}: Off{}\n        case T3{}: Off{}\n        case T4{}: Off{}\n        case T5{}: Off{}\n        case T6{}: Off{}\n        case T7{}: Off{}\n        case T8{}: Off{}\n        case T9{}: Off{}\n        case T10{}: Off{}\n        case T11{}: Off{}\n        case T12{}: Off{}\n        case T13{}: Off{}\n        case T14{}: Off{}\n        case T15{}: Off{}\n        case T16{}: Off{}\n        case T17{}: Off{}\n        case T18{}: Off{}\n        case T19{}: Off{}\n        case T20{}: Off{}\n        case T21{}: Off{}\n        case T22{}: Off{}\n        case T23{}: Off{}\n        case T24{}: Off{}\n        case T25{}: Off{}\n        case T26{}: Off{}\n        case T27{}: Off{}\n        case T28{}: Off{}\n        case T29{}: Off{}\n        case T30{}: Off{}\n        case T31{}: Off{}\n        case T32{}: Off{}\n        case T33{}: Off{}\n        case T34{}: Off{}\n        case T35{}: Off{}\n        case T36{}: Off{}\n        case T37{}: Off{}\n        case T38{}: Off{}\n        case T39{}: Off{}\n        case T40{}: Off{}\n        case T41{}: Off{}\n        case T42{}: Off{}\n        case T43{}: Off{}\n        case T44{}: Off{}\n        case T45{}: Off{}\n        case T46{}: Off{}\n        case T47{}: Off{}\n        case T48{}: Off{}\n        case T49{}: Off{}\n        case T50{}: Off{}\n        case T51{}: Off{}\n        case T52{}: Off{}\n        case T53{}: Off{}\n        case T54{}: Off{}\n        case T55{}: Off{}\n        case T56{}: Off{}\n        case T57{}: Off{}\n        case T58{}: Off{}\n        case T59{}: Off{}\n        case T60{}: Off{}\n        case T61{}: Off{}\n        case T62{}: Off{}\n        case T63{}: Off{}\n        case T64{}: Off{}\n        case T65{}: Off{}\n        case T66{}: Off{}\n        case T67{}: Off{}\n        case T68{}: Off{}\n        case T69{}: Off{}\n        case T70{}: Off{}\n        case T71{}: Off{}\n        case T72{}: Off{}\n        case T73{}: Off{}\n        case T74{}: Off{}\n        case T75{}: Off{}\n        case T76{}: Off{}\n        case T77{}: Off{}\n        case T78{}: Off{}\n        case T79{}: Off{}\n        case T80{}: Off{}\n        case T81{}: Off{}\n        case T82{}: Off{}\n        case T83{}: Off{}\n        case T84{}: Off{}\n        case T85{}: Off{}\n        case T86{}: Off{}\n        case T87{}: Off{}\n        case T88{}: Off{}\n        case T89{}: Off{}\n        case T90{}: Off{}\n        case T91{}: Off{}\n        case T92{}: Off{}\n        case T93{}: Off{}\n        case T94{}: Off{}\n        case T95{}: Off{}\n        case T96{}: Off{}\n        case T97{}: Off{}\n        case T98{}: Off{}\n        case T99{}: Off{}\n        case T100{}: Off{}\n        case T101{}: Off{}\n        case T102{}: Off{}\n        case T103{}: Off{}\n        case T104{}: Off{}\n        case T105{}: Off{}\n        case T106{}: Off{}\n        case T107{}: Off{}\n        case T108{}: Off{}\n        case T109{}: Off{}\n        case T110{}: Off{}\n        case T111{}: Off{}\n        case T112{}: Off{}\n        case T113{}: Off{}\n        case T114{}: Off{}\n        case T115{}: Off{}\n        case T116{}: Off{}\n        case T117{}: Off{}\n        case T118{}: Off{}\n        case T119{}: Off{}\n        case T120{}: Off{}\n        case T121{}: Off{}\n        case T122{}: Off{}\n        case T123{}: Off{}\n        case T124{}: Off{}\n        case T125{}: Off{}\n        case T126{}: Off{}\n        case T127{}: Off{}\n        case T128{}: Off{}\n        case T129{}: Off{}\n        case T130{}: Off{}\n        case T131{}: Off{}\n        case T132{}: Off{}\n        case T133{}: Off{}\n        case T134{}: Off{}\n        case T135{}: Off{}\n        case T136{}: Off{}\n        case T137{}: Off{}\n        case T138{}: Off{}\n        case T139{}: Off{}\n        case T140{}: Off{}\n        case T141{}: Off{}\n        case T142{}: Off{}\n        case T143{}: Off{}\n        case T144{}: Off{}\n        case T145{}: Off{}\n        case T146{}: Off{}\n        case T147{}: Off{}\n        case T148{}: Off{}\n        case T149{}: Off{}\n        case T150{}: Off{}\n        case T151{}: Off{}\n        case T152{}: Off{}\n        case T153{}: Off{}\n        case T154{}: Off{}\n        case T155{}: Off{}\n        case T156{}: Off{}\n        case T157{}: Off{}\n        case T158{}: Off{}\n        case T159{}: Off{}\n        case T160{}: Off{}\n        case T161{}: Off{}\n        case T162{}: Off{}\n        case T163{}: Off{}\n        case T164{}: Off{}\n        case T165{}: Off{}\n        case T166{}: Off{}\n        case T167{}: Off{}\n        case T168{}: Off{}\n        case T169{}: Off{}\n        case T170{}: Off{}\n        case T171{}: Off{}\n        case T172{}: Off{}\n        case T173{}: Off{}\n        case T174{}: Off{}\n        case T175{}: Off{}\n        case T176{}: Off{}\n        case T177{}: Off{}\n        case T178{}: Off{}\n        case T179{}: Off{}\n        case T180{}: Off{}\n        case T181{}: Off{}\n        case T182{}: Off{}\n        case T183{}: Off{}\n        case T184{}: Off{}\n        case T185{}: Off{}\n        case T186{}: Off{}\n        case T187{}: Off{}\n        case T188{}: Off{}\n        case T189{}: Off{}\n        case T190{}: Off{}\n        case T191{}: Off{}\n        case T192{}: Off{}\n        case T193{}: Off{}\n        case T194{}: Off{}\n        case T195{}: Off{}\n        case T196{}: Off{}\n        case T197{}: Off{}\n        case T198{}: Off{}\n        case T199{}: Off{}\n        case T200{}: Off{}\n        case T201{}: Off{}\n        case T202{}: Off{}\n        case T203{}: Off{}\n        case T204{}: Off{}\n        case T205{}: Off{}\n        case T206{}: Off{}\n        case T207{}: Off{}\n        case T208{}: Off{}\n        case T209{}: Off{}\n        case T210{}: Off{}\n        case T211{}: Off{}\n        case T212{}: Off{}\n        case T213{}: Off{}\n        case T214{}: Off{}\n        case T215{}: Off{}\n        case T216{}: Off{}\n        case T217{}: Off{}\n        case T218{}: Off{}\n        case T219{}: Off{}\n        case T220{}: Off{}\n        case T221{}: Off{}\n        case T222{}: Off{}\n        case T223{}: Off{}\n        case T224{}: Off{}\n        case T225{}: Off{}\n        case T226{}: Off{}\n        case T227{}: Off{}\n        case T228{}: Off{}\n        case T229{}: Off{}\n        case T230{}: Off{}\n        case T231{}: Off{}\n        case T232{}: Off{}\n        case T233{}: Off{}\n        case T234{}: Off{}\n        case T235{}: Off{}\n        case T236{}: Off{}\n        case T237{}: Off{}\n        case T238{}: Off{}\n        case T239{}: Off{}\n        case T240{}: Off{}\n        case T241{}: Off{}\n        case T242{}: Off{}\n        case T243{}: Off{}\n        case T244{}: Off{}\n        case T245{}: Off{}\n        case T246{}: Off{}\n        case T247{}: Off{}\n        case T248{}: Off{}\n        case T249{}: Off{}\n        case T250{}: Off{}\n        case T251{}: Off{}\n        case T252{}: Off{}\n        case T253{}: Off{}\n        case T254{}: Off{}\n        case T255{}: On{}\n\ndef main() -> Flag:\n  wide(T255{},T255{})\n",
+    "default-depth": "type Peano is Data:\n  Zero{}\n  Succ{pred: Peano}\ntype Flag is Data:\n  Off{}\n  On{}\ndef copy(n: Peano) -> Peano:\n  match n:\n    case Zero{}: Zero{}\n    case Succ{p}: Succ{copy(p)}\ndef parity(n: Peano, a: Flag, b: Flag) -> Flag:\n  match n:\n    case Zero{}: a\n    case Succ{p}: parity(p,b,a)\ndef input() -> Peano:\n  Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Succ{Zero{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\ndef main() -> Flag:\n  parity(copy(input()),Off{},On{})\n"
+  },
+  "integration_note": "The adapter gap is addressed by hashed scripts/run-c.py and four fixed probes in host-expectations.json. The final C gate must pass before handoff. Future core expressions require explicit lowering or Unsupported during integration."
+}

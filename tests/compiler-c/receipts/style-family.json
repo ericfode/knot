@@ -1,0 +1,2489 @@
+{
+  "schema": 1,
+  "command": "style-preflight",
+  "mode": "manifest",
+  "manifest": {
+    "path": "docs/compiler-campaign/manifest.json",
+    "sha256": "c89acb101c579a1cd7e9e6951b812ef42f4e4337ff00db3519f217cc109c99ec",
+    "groups": [
+      "syntax-core",
+      "frontend-lexing",
+      "frontend-parsing",
+      "diagnostics",
+      "catalog",
+      "scope-patterns",
+      "checking",
+      "evaluation",
+      "wasm-codec",
+      "wasm-emission",
+      "driver-pipeline",
+      "frontend-laws",
+      "checker-laws",
+      "runtime-laws",
+      "catalog-laws",
+      "fields-laws",
+      "recursion-laws",
+      "c-backend",
+      "c-laws"
+    ],
+    "selected_groups": [
+      "c-backend"
+    ],
+    "scope": "selected-group"
+  },
+  "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+  "rubric_version": 8,
+  "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+  "preflight_snapshot": {
+    "requested_paths": 4,
+    "parse_calls": 4
+  },
+  "source_snapshot": [
+    {
+      "path": "docs/compiler-campaign/manifest.json",
+      "source_sha256": "c89acb101c579a1cd7e9e6951b812ef42f4e4337ff00db3519f217cc109c99ec"
+    },
+    {
+      "path": "perch-style.json",
+      "source_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693"
+    },
+    {
+      "path": "src/c.bend",
+      "source_sha256": "89492ef26f3934b5dc1f22d44d8740040f2b0cc5e7409a2fc51995b5ad524f49"
+    },
+    {
+      "path": "src/core.bend",
+      "source_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
+    },
+    {
+      "path": "src/syntax.bend",
+      "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+    },
+    {
+      "path": "src/wasm-bytes.bend",
+      "source_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
+    },
+    {
+      "path": "tests/compiler-c/SPEC.md",
+      "source_sha256": "8147c489a0123ff8760c4ead51ff32888873132b7f1efbe23a39d6876582b884"
+    }
+  ],
+  "summary": {
+    "groups": 1,
+    "groups_completed": 1,
+    "units": 107,
+    "files": 4,
+    "truncated_units": 23,
+    "supporting_role_impossible": 47,
+    "compositions_available": 0
+  },
+  "structural_blockers": 24,
+  "provider_requests": 0,
+  "provider_responses": 0,
+  "source_freshness": {
+    "status": "current",
+    "changed_sources": []
+  },
+  "groups": [
+    {
+      "name": "c-backend",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/wasm-bytes.bend",
+        "src/c.bend"
+      ],
+      "notes": "Typed C99 lowering from checked core, explicit destinations, simultaneous tail rebinding, bounded cells and stack. ByteOutput remains an external dependency.",
+      "schema": 1,
+      "command": "style-preflight",
+      "mode": "targets",
+      "provider_requests": 0,
+      "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+      "rubric_version": 8,
+      "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+      "task": {
+        "origin": "task-file",
+        "path": "tests/compiler-c/SPEC.md",
+        "sha256": "8147c489a0123ff8760c4ead51ff32888873132b7f1efbe23a39d6876582b884",
+        "bytes": 3089,
+        "available": true,
+        "reason": null
+      },
+      "summary": {
+        "units": 107,
+        "files": 4,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 23,
+        "truncated_by_limit": {
+          "caller-or-byte-limit": 8,
+          "context-file-limit": 13,
+          "context-helper-limit": 2
+        },
+        "supporting_role_impossible": 47,
+        "role_gap_units_by_reason": {
+          "context-file-limit": 13,
+          "context-helper-limit": 2,
+          "nonlocal-import": 28,
+          "truncated-context": 23
+        },
+        "max_state_bytes": 32637,
+        "composition_available": false,
+        "composition_reasons": [
+          "unresolved_composition_context"
+        ]
+      },
+      "structural_blockers": 24,
+      "inventory": null,
+      "composition": {
+        "required": "always",
+        "available": false,
+        "reasons": [
+          "unresolved_composition_context"
+        ],
+        "selected_files": [
+          "src/syntax.bend",
+          "src/core.bend",
+          "src/wasm-bytes.bend",
+          "src/c.bend"
+        ],
+        "context_files": 4,
+        "source_bytes": 29683,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {
+          "nonlocal-import": 49
+        },
+        "unresolved": [
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Error",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.fragment",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.compose",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.length",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/wasm-bytes.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.empty",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.finish",
+            "reason": "nonlocal-import"
+          },
+          {
+            "path": "src/c.bend",
+            "name": "B.Builder",
+            "reason": "nonlocal-import"
+          }
+        ]
+      },
+      "file_groups": null,
+      "units": [
+        {
+          "target": "src/syntax.bend::At",
+          "kind": "bend_datatype",
+          "line": 3,
+          "state_bytes": 5178,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Error",
+          "kind": "bend_datatype",
+          "line": 6,
+          "state_bytes": 5188,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Token",
+          "kind": "bend_datatype",
+          "line": 13,
+          "state_bytes": 5534,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Node",
+          "kind": "bend_datatype",
+          "line": 18,
+          "state_bytes": 5162,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::text",
+          "kind": "bend_definition",
+          "line": 31,
+          "state_bytes": 5379,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::at",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 5254,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::column",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 5103,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::line",
+          "kind": "bend_definition",
+          "line": 43,
+          "state_bytes": 5100,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::here",
+          "kind": "bend_definition",
+          "line": 47,
+          "state_bytes": 5328,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::matches",
+          "kind": "bend_definition",
+          "line": 52,
+          "state_bytes": 5663,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::alpha",
+          "kind": "bend_definition",
+          "line": 55,
+          "state_bytes": 5971,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::digit",
+          "kind": "bend_definition",
+          "line": 60,
+          "state_bytes": 5482,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::word",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 5877,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::reserved",
+          "kind": "bend_definition",
+          "line": 66,
+          "state_bytes": 5986,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::choose",
+          "kind": "bend_definition",
+          "line": 76,
+          "state_bytes": 5448,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::bind",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 5266,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::identifier_text",
+          "kind": "bend_definition",
+          "line": 86,
+          "state_bytes": 6915,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::identifier",
+          "kind": "bend_definition",
+          "line": 91,
+          "state_bytes": 7058,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::skip_lines",
+          "kind": "bend_definition",
+          "line": 94,
+          "state_bytes": 6045,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/core.bend::Constructor",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 5926,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Datatype",
+          "kind": "bend_datatype",
+          "line": 6,
+          "state_bytes": 5998,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Parameter",
+          "kind": "bend_datatype",
+          "line": 8,
+          "state_bytes": 5854,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Signature",
+          "kind": "bend_datatype",
+          "line": 10,
+          "state_bytes": 5924,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Catalog",
+          "kind": "bend_datatype",
+          "line": 12,
+          "state_bytes": 5996,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Term",
+          "kind": "bend_datatype",
+          "line": 17,
+          "state_bytes": 6069,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Function",
+          "kind": "bend_datatype",
+          "line": 26,
+          "state_bytes": 6069,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Book",
+          "kind": "bend_datatype",
+          "line": 28,
+          "state_bytes": 6069,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Binding",
+          "kind": "bend_datatype",
+          "line": 30,
+          "state_bytes": 6069,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::Checked",
+          "kind": "bend_datatype",
+          "line": 32,
+          "state_bytes": 6069,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/core.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/core.bend::invalid",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 7766,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/core.bend::unsupported",
+          "kind": "bend_definition",
+          "line": 37,
+          "state_bytes": 7778,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/core.bend::exhausted",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 7679,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/core.bend::internal",
+          "kind": "bend_definition",
+          "line": 41,
+          "state_bytes": 6633,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/wasm-bytes.bend::checked",
+          "kind": "bend_definition",
+          "line": 6,
+          "state_bytes": 5105,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::bytes",
+          "kind": "bend_definition",
+          "line": 12,
+          "state_bytes": 6192,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::join",
+          "kind": "bend_definition",
+          "line": 15,
+          "state_bytes": 5367,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::concat",
+          "kind": "bend_definition",
+          "line": 18,
+          "state_bytes": 7315,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::groups",
+          "kind": "bend_definition",
+          "line": 27,
+          "state_bytes": 7815,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/wasm-bytes.bend::unsigned",
+          "kind": "bend_definition",
+          "line": 34,
+          "state_bytes": 8487,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::positive_signed",
+          "kind": "bend_definition",
+          "line": 37,
+          "state_bytes": 8501,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::chars",
+          "kind": "bend_definition",
+          "line": 41,
+          "state_bytes": 4241,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/wasm-bytes.bend::sized",
+          "kind": "bend_definition",
+          "line": 46,
+          "state_bytes": 9711,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.length",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::name",
+          "kind": "bend_definition",
+          "line": 49,
+          "state_bytes": 9889,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.length",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/wasm-bytes.bend::section",
+          "kind": "bend_definition",
+          "line": 52,
+          "state_bytes": 9490,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.length",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::Local",
+          "kind": "bend_datatype",
+          "line": 7,
+          "state_bytes": 6479,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::Slot",
+          "kind": "bend_datatype",
+          "line": 9,
+          "state_bytes": 6836,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::Context",
+          "kind": "bend_datatype",
+          "line": 11,
+          "state_bytes": 5927,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "C.Function",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::Code",
+          "kind": "bend_datatype",
+          "line": 13,
+          "state_bytes": 5985,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::Destination",
+          "kind": "bend_datatype",
+          "line": 15,
+          "state_bytes": 6480,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::Action",
+          "kind": "bend_datatype",
+          "line": 18,
+          "state_bytes": 5649,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::Mode",
+          "kind": "bend_datatype",
+          "line": 21,
+          "state_bytes": 9797,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "C.Term",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "C.Parameter",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "C.Binding",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::internal",
+          "kind": "bend_definition",
+          "line": 27,
+          "state_bytes": 7693,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::exhausted",
+          "kind": "bend_definition",
+          "line": 30,
+          "state_bytes": 10827,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::fielded",
+          "kind": "bend_definition",
+          "line": 33,
+          "state_bytes": 6611,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::heap_types",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 9588,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::member",
+          "kind": "bend_definition",
+          "line": 45,
+          "state_bytes": 5688,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::boxed",
+          "kind": "bend_definition",
+          "line": 50,
+          "state_bytes": 13098,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::ctype",
+          "kind": "bend_definition",
+          "line": 54,
+          "state_bytes": 9968,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::projection",
+          "kind": "bend_definition",
+          "line": 57,
+          "state_bytes": 13114,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::variable",
+          "kind": "bend_definition",
+          "line": 60,
+          "state_bytes": 10641,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::parameter",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 6265,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::function_name",
+          "kind": "bend_definition",
+          "line": 66,
+          "state_bytes": 7687,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::text",
+          "kind": "bend_definition",
+          "line": 69,
+          "state_bytes": 9202,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::code",
+          "kind": "bend_definition",
+          "line": 72,
+          "state_bytes": 8955,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::prepend",
+          "kind": "bend_definition",
+          "line": 75,
+          "state_bytes": 8873,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::prefixed",
+          "kind": "bend_definition",
+          "line": 79,
+          "state_bytes": 14146,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::after",
+          "kind": "bend_definition",
+          "line": 82,
+          "state_bytes": 13091,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::deliver",
+          "kind": "bend_definition",
+          "line": 86,
+          "state_bytes": 11376,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::lookup",
+          "kind": "bend_definition",
+          "line": 91,
+          "state_bytes": 12262,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::signature",
+          "kind": "bend_definition",
+          "line": 99,
+          "state_bytes": 9846,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::callee",
+          "kind": "bend_definition",
+          "line": 105,
+          "state_bytes": 14957,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::parameters",
+          "kind": "bend_definition",
+          "line": 109,
+          "state_bytes": 10446,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::actuals",
+          "kind": "bend_definition",
+          "line": 116,
+          "state_bytes": 6538,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::stores",
+          "kind": "bend_definition",
+          "line": 122,
+          "state_bytes": 9454,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::allocate",
+          "kind": "bend_definition",
+          "line": 128,
+          "state_bytes": 19361,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::tail_call",
+          "kind": "bend_definition",
+          "line": 133,
+          "state_bytes": 8346,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::live_rebind",
+          "kind": "bend_definition",
+          "line": 139,
+          "state_bytes": 8695,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::rebind",
+          "kind": "bend_definition",
+          "line": 145,
+          "state_bytes": 9757,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::rebound",
+          "kind": "bend_definition",
+          "line": 155,
+          "state_bytes": 12531,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::applied",
+          "kind": "bend_definition",
+          "line": 159,
+          "state_bytes": 22527,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::declared",
+          "kind": "bend_definition",
+          "line": 167,
+          "state_bytes": 13299,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::referenced",
+          "kind": "bend_definition",
+          "line": 170,
+          "state_bytes": 14084,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::call_parameters",
+          "kind": "bend_definition",
+          "line": 174,
+          "state_bytes": 11131,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::matched",
+          "kind": "bend_definition",
+          "line": 178,
+          "state_bytes": 13373,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::branch_code",
+          "kind": "bend_definition",
+          "line": 182,
+          "state_bytes": 14840,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::lower",
+          "kind": "bend_definition",
+          "line": 189,
+          "state_bytes": 27058,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::formal_list",
+          "kind": "bend_definition",
+          "line": 231,
+          "state_bytes": 9026,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::formals",
+          "kind": "bend_definition",
+          "line": 237,
+          "state_bytes": 9339,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::ignored",
+          "kind": "bend_definition",
+          "line": 242,
+          "state_bytes": 6259,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::prototype",
+          "kind": "bend_definition",
+          "line": 247,
+          "state_bytes": 13319,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::definition",
+          "kind": "bend_definition",
+          "line": 252,
+          "state_bytes": 16586,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::definitions",
+          "kind": "bend_definition",
+          "line": 260,
+          "state_bytes": 28711,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "checked",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "formals",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "rebind",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::prototypes",
+          "kind": "bend_definition",
+          "line": 270,
+          "state_bytes": 16132,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::enum_parameters",
+          "kind": "bend_definition",
+          "line": 276,
+          "state_bytes": 8645,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::exported",
+          "kind": "bend_definition",
+          "line": 282,
+          "state_bytes": 9677,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::ordinal_count",
+          "kind": "bend_definition",
+          "line": 286,
+          "state_bytes": 8798,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::domains",
+          "kind": "bend_definition",
+          "line": 292,
+          "state_bytes": 9475,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::local_slots",
+          "kind": "bend_definition",
+          "line": 298,
+          "state_bytes": 5818,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::export_name",
+          "kind": "bend_definition",
+          "line": 303,
+          "state_bytes": 6319,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::wrapper",
+          "kind": "bend_definition",
+          "line": 306,
+          "state_bytes": 14852,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::wrappers",
+          "kind": "bend_definition",
+          "line": 312,
+          "state_bytes": 19545,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::host_actuals",
+          "kind": "bend_definition",
+          "line": 319,
+          "state_bytes": 6208,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::dispatch",
+          "kind": "bend_definition",
+          "line": 325,
+          "state_bytes": 10332,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::dispatches",
+          "kind": "bend_definition",
+          "line": 332,
+          "state_bytes": 16904,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            }
+          ]
+        },
+        {
+          "target": "src/c.bend::runtime",
+          "kind": "bend_definition",
+          "line": 339,
+          "state_bytes": 7411,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::shim",
+          "kind": "bend_definition",
+          "line": 342,
+          "state_bytes": 7194,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/c.bend::emit",
+          "kind": "bend_definition",
+          "line": 347,
+          "state_bytes": 32637,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/c.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.finish",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Builder",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "B.empty",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.compose",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.fragment",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "matched",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "internal",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "applied",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "branch_code",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "projection",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "C.Parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "ignored",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "enum_parameters",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "export_name",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "domains",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "actuals",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "local_slots",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "S.text",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "host_actuals",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/core.bend",
+              "name": "Parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/core.bend",
+              "name": "Binding",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/wasm-bytes.bend",
+              "name": "B.Error",
+              "reason": "nonlocal-import"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "formal_list",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "C.Binding",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "member",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "stores",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "signature",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/c.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            }
+          ]
+        }
+      ],
+      "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+    }
+  ],
+  "note": "Qualification covers exactly the selected manifest groups, each with its own declaration and composition obligations. Shared declarations count once per group. Local collaborators retain the existing bounded context and closure checks. Structural preflight is not a style rating or semantic acceptance."
+}

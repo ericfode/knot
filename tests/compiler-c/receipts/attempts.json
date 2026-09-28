@@ -1,0 +1,26 @@
+{
+  "attempts": [
+    {
+      "classification": "Host sanitizer configuration failure; no semantic observation",
+      "diagnostic": "AddressSanitizer: detect_leaks is not supported on this platform.",
+      "repair": "Disable unsupported leak detection; retain address and undefined sanitizers and halt_on_error."
+    },
+    {
+      "date": "2026-09-28T01:34:36.024493+00:00",
+      "classification": "C compiler failure; not a semantic kill",
+      "gate_status": "incomplete",
+      "gate_source_sha256": "86bdcf7af0e986d8da00001ac2c2c28d3dcd58694d3b15f01ea0fbd6379442ba",
+      "mutant": "tail-skips-rebind",
+      "completed_before_failure": {
+        "fixtures": 46,
+        "recursion_originals": 19,
+        "rejects": 80,
+        "boundaries": 17,
+        "host_boundaries": 14,
+        "mutants": 3
+      },
+      "failure": "AssertionError({'argv': ['cc', '-O2', '-std=c99', '-Wall', '-Werror', '-fwrapv', '-DKNOT_SOURCE_BYTES=5330', '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-skips-rebind/native.c', '-o', '/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-skips-rebind/native'], 'exit': 1, 'stdout': '', 'stderr': \"/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-skips-rebind/native.c:67:4: error: explicitly assigning value of variable of type 'uint32_t' (aka 'unsigned int') to itself [-Werror,-Wself-assign]\\n   67 | p1 = p1;\\n      | ~~ ^ ~~\\n1 error generated.\\n\"})",
+      "repair": "Omit the level-1 assignment instead of emitting p1 = p1. Keep -Wall -Werror and the frozen result assertion."
+    }
+  ]
+}

@@ -214,5 +214,72 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "c": {
+    "profile": "knot-c-1",
+    "source_profiles": [
+      "knot-enum-1",
+      "knot-structural-terms-1",
+      "knot-structural-recursion-1"
+    ],
+    "entry": "tests/compiler-c/compile.bend",
+    "emitter": "src/c.bend::emit(checked_book, depth, bytes)",
+    "host": "python3 scripts/run-c.py source.c export [live-ordinals...]",
+    "compiler_flags": [
+      "-O2",
+      "-std=c99",
+      "-Wall",
+      "-Werror",
+      "-fwrapv"
+    ],
+    "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "defaults": {
+      "characters": 65536,
+      "parser_depth": 512,
+      "checker_depth": 512,
+      "emitter_depth": 4096,
+      "output_bytes": 4194304
+    },
+    "maximum_output_bytes": 16777216,
+    "representation": {
+      "enum": "uint32_t ordinal",
+      "fielded": "knot_slot pointer to tag then live fields in declaration order",
+      "slot": "union of uint32_t tag and knot_slot pointer; native pointer width, no pointer truncation",
+      "erased": "no slot or evaluation",
+      "arena_slots": 16384,
+      "wasm_logical_bytes": 65536,
+      "native_arena_bytes": "16384 * sizeof(knot_slot)"
+    },
+    "recursion": {
+      "tail_self": "save all arguments then rebind all live parameters and goto body",
+      "other_calls": "C stack guarded by depth and conservative frame charge",
+      "depth_limit": 256,
+      "charged_stack_bytes": 1048576,
+      "frame_charge": "64 + 32 * (temporary slots + live parameters)"
+    },
+    "exports": "knot_export_<function-index> wrappers only for enum signatures; knot_invoke dispatches exact source names and validates live arity and per-type ordinal domains",
+    "runtime_host_contract": "C99 library, recorded main-thread host stack; no arbitrarily reduced OS stack, concurrency or structured host calls",
+    "arena_lifetime": "No reclamation or automatic reset; knot_reset starts a new execution and invalidates every old pointer",
+    "runtime_configuration": [
+      "KNOT_ARENA_SLOTS",
+      "KNOT_DEPTH_LIMIT",
+      "KNOT_STACK_BYTES",
+      "KNOT_NO_MAIN",
+      "KNOT_SOURCE_BYTES"
+    ],
+    "runtime_exhaustion": {
+      "arena": "Exhausted<TAB>c<TAB>arena-overflow, exit4",
+      "stack": "Exhausted<TAB>c<TAB>call-stack, exit4"
+    },
+    "output_policy": "Complete checked bounded byte construction before opening output; separate tail-count writer avoids seed Bun stack growth proportional to C text size",
+    "proof_entry": "src/c-PROOF.bend",
+    "proof_laws": 8,
+    "proof_boundary": "Helper equations for representation, erasure, destination, rebinding and emitter fuel; no general compiler or memory refinement theorem",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-c/check.py",
+    "evidence": "tests/compiler-c/receipts/c.json",
+    "frozen_expectations": "tests/compiler-c/receipts/reference.json",
+    "benchmark": "bench/README-c.md",
+    "owned_storage_reclamation": false,
+    "default_clis_changed": false
   }
 }

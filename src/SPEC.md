@@ -1,4 +1,4 @@
-# Knot compiler contracts — enum and fielded Wasm
+# Knot compiler contracts — enum and fielded Wasm, native C
 
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
@@ -216,6 +216,66 @@ Its frozen seed observations, enum hashes, five checked helper/erasure laws,
 instruction whitelist, persistent-instance arena boundaries and four
 type-correct semantic mutants are independent evidence, not a general compiler
 correctness or memory-refinement theorem. See its [report and limits](../tests/compiler-fields-wasm/README.md).
+
+## Native C profile: `knot-c-1`
+
+The separate entry `tests/compiler-c/compile.bend` lowers the same completely
+checked core to deterministic C99. It covers enum, fielded and first-parameter
+structural recursion programs; the default CLIs and their capability checks
+remain unchanged. It uses no evaluator output during emission. Full checking
+precedes lowering, including erased expressions and unused declarations.
+
+Enums use `uint32_t` ordinals. Fielded datatypes use pointers to immutable
+`[tag][live fields]` cells, with the same declaration order and erasure contract
+as fielded Wasm. A native slot is a union of `uint32_t` and a cell pointer, so
+pointers retain their width and loads/stores respect C aliasing rules. The arena
+has 16,384 logical slots, equal to Wasm's 65,536 bytes of 4-byte words. Its
+physical size is `16384 * sizeof(knot_slot)` (131,072 bytes on this host).
+Erased-only constructors still allocate a tag. Allocation tests remaining slots
+before advancing the bump; exact fits succeed. Cells have execution lifetime.
+`knot_reset()` invalidates all prior cells and starts a new execution; it is not
+reclamation and does not qualify R3/R7. The runtime is single-threaded.
+
+Lowering has two destinations: save a value, or return it. A self-call to the
+return destination saves arguments in order, rebinds every live parameter, then
+jumps to the body. This preserves simultaneous transfer even for permutations.
+A call in a value-producing position retains its continuation on the C stack.
+Calls are guarded by depth (256) and conservative charged frame bytes
+(1,048,576 total, `64 + 32 * (temporary slots + live parameters)` per frame).
+Tail self-loops retain one frame. These are conservative resource budgets on the
+recorded main-thread host stack, not a C-standard proof of OS stack bounds or a
+promise under arbitrarily reduced stack limits. Arena/stack exhaustion prints
+`Exhausted<TAB>c<TAB>arena-overflow` / `call-stack` and exits 4.
+
+Every enum-signatured function has a `knot_export_<function-index>` C wrapper.
+`knot_invoke(name, argc, args)` dispatches the exact source name and checks live
+arity and each parameter's declared ordinal domain. Structured functions are
+for compiled callers; there is no structured host ABI. The main shim takes
+`export [ordinal ...]` and prints the same JSON fields as `run-wasm.mjs`.
+Malformed host input exits 5; internal lowering failures retain exit 6.
+`KNOT_NO_MAIN` permits a harness to include the translation unit. Other compile
+macros configure arena slots, depth, charged stack bytes and the reported
+`KNOT_SOURCE_BYTES`; the host adapter supplies the C artifact's byte count.
+
+Run `python3 scripts/run-c.py program.c export [ordinal ...]`. It uses the
+system `cc -O2 -std=c99 -Wall -Werror -fwrapv` and the C99 library only. The
+adapter compiles and invokes; it implements no Bend semantics. The C entry has
+the existing source/parser/checker/emitter-depth defaults, a 4 MiB output default
+and a 16 MiB output maximum. All bytes are checked before opening the output.
+Its byte-count loop is tail-recursive because large C text overflowed the Bun
+seed's stack through the default writer's non-tail `List.length`.
+
+The [fixed contract](../tests/compiler-c/SPEC.md) and
+[frozen expectations](../tests/compiler-c/receipts/reference.json) precede the
+implementation observations. The [C gate](../tests/compiler-c/check.py) covers
+all three current corpora, including checked full-tree observers for recursive
+structured results, native/Bun emission equality, sanitizer executions,
+exhaustion and four type-correct semantic mutants. Eight filled
+[C laws](c-LAWS.bend) establish helper/erasure/control equations; they do not
+prove general C refinement or memory safety. The independent executions supply
+separate corpus evidence. The [benchmark lane](../bench/README-c.md) records
+C, Node Wasm and upstream native costs, with reset/instance costs made explicit.
+Live semantic and rubric-v8 review remains the coordinator's acceptance gate.
 
 ## Outcomes and budgets
 

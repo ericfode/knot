@@ -1,0 +1,37 @@
+{
+  "basis": "Literal host-adapter contract fixed before adding these probes. Pair direct(Off,On) is the unchanged frozen source expectation. Host file and C compiler failures are distinct from source-language rejection.",
+  "cases": [
+    {
+      "name": "adapter-success",
+      "source": "pair",
+      "export": "direct",
+      "arguments": [0, 1],
+      "exit": 0,
+      "result": 0
+    },
+    {
+      "name": "adapter-missing-export",
+      "source": "pair",
+      "export": "absent",
+      "arguments": [],
+      "exit": 5,
+      "diagnostic": "HostFailure\tc\tunknown-export"
+    },
+    {
+      "name": "adapter-missing-file",
+      "source": "absent",
+      "export": "main",
+      "arguments": [],
+      "exit": 5,
+      "diagnostic": "HostFailure\tc-host\t"
+    },
+    {
+      "name": "adapter-malformed-c",
+      "source": "malformed",
+      "export": "main",
+      "arguments": [],
+      "exit": 5,
+      "diagnostic": "HostFailure\tc-compile\t"
+    }
+  ]
+}

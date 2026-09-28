@@ -1,0 +1,1172 @@
+{
+  "schema": 1,
+  "profile": "knot-c-1",
+  "base_commit": "fa31fec064ba0993ed31205fd4b4fdc00df5d761",
+  "commands": {
+    "gates": {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+      "exit": 0,
+      "report_sha256": "4e4f56f398e4a41dda9e02959370fec104cd3c3930a6b5ea82b7c170b999c69a"
+    },
+    "gates_verify": {
+      "command": "npm run -s gates:verify",
+      "exit": 0,
+      "tests": 18,
+      "stdout_stderr": "test_all_registered_gates_and_required_edges (test_runner.ExecutionTests.test_all_registered_gates_and_required_edges) ... ok\ntest_dependency_order_parallelism_and_blocked_consumer (test_runner.ExecutionTests.test_dependency_order_parallelism_and_blocked_consumer) ... independent: passed (0.03s)\nproducer: passed (0.03s)\nfailure: failed (0.03s)\nconsumer: passed (0.03s)\nok\ntest_failure_and_timeout_classifications (test_runner.ExecutionTests.test_failure_and_timeout_classifications) ... ok\ntest_nonzero_lint_without_completion_is_not_a_pass (test_runner.ExecutionTests.test_nonzero_lint_without_completion_is_not_a_pass) ... ok\ntest_gzip_digest_edge_requires_matching_bytes (test_runner.ReceiptTests.test_gzip_digest_edge_requires_matching_bytes) ... ok\ntest_gzip_headers_and_payload (test_runner.ReceiptTests.test_gzip_headers_and_payload) ... ok\ntest_literal_classifications (test_runner.ReceiptTests.test_literal_classifications) ... ok\ntest_semantic_diff_points_to_missing_null_and_hash (test_runner.ReceiptTests.test_semantic_diff_points_to_missing_null_and_hash) ... ok\ntest_trust_paths_and_idempotence (test_runner.ReceiptTests.test_trust_paths_and_idempotence) ... ok\ntest_unknown_dates_and_path_suffixes_remain_semantic (test_runner.ReceiptTests.test_unknown_dates_and_path_suffixes_remain_semantic) ... ok\ntest_exit_and_dependency_mutants_run_but_violate_controls (test_runner.SemanticMutantTests.test_exit_and_dependency_mutants_run_but_violate_controls) ... ok\ntest_parseable_mutants_are_killed_by_unchanged_literal_expectations (test_runner.SemanticMutantTests.test_parseable_mutants_are_killed_by_unchanged_literal_expectations) ... ok\ntest_export_preserves_working_copy_and_never_reads_env (test_runner.WorkspaceTests.test_export_preserves_working_copy_and_never_reads_env) ... ok\ntest_failure_blocks_cli_refresh_and_does_not_reuse_old_receipt (test_runner.WorkspaceTests.test_failure_blocks_cli_refresh_and_does_not_reuse_old_receipt) ... ok\ntest_full_run_semantic_drift_is_read_only_and_repeatable (test_runner.WorkspaceTests.test_full_run_semantic_drift_is_read_only_and_repeatable) ... ok\ntest_internal_link_is_relocated_and_external_link_rejected (test_runner.WorkspaceTests.test_internal_link_is_relocated_and_external_link_rejected) ... ok\ntest_malformed_receipt_retains_process_evidence (test_runner.WorkspaceTests.test_malformed_receipt_retains_process_evidence) ... ok\ntest_refresh_is_explicit_and_checks_snapshot (test_runner.WorkspaceTests.test_refresh_is_explicit_and_checks_snapshot) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 1.756s\n\nOK\n",
+      "sha256": "f70cc435b3d4f899978fc3f0e95875dc40a42066bc68ae411038b152c96e1c09"
+    }
+  },
+  "runner_report": {
+    "normalized": {
+      "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+      "gates": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {
+            "boundaries": 24,
+            "fixtures": 14,
+            "lane_observations": 28,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "frontend",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {
+            "bound_observations": 16,
+            "bounds": 2,
+            "budgets": 10,
+            "fixtures": 49,
+            "lane_observations": 98,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "checker",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 504,
+            "files": 33
+          },
+          "exit_code": 0,
+          "name": "census",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-c/check.py"
+          ],
+          "counts": {
+            "boundary_probes": 17,
+            "byte_identical_c": 57,
+            "byte_identical_wasm": 46,
+            "c_observations": 286,
+            "checked_laws": 8,
+            "evaluator_observations": 286,
+            "host_adapter_probes": 4,
+            "host_boundary_probes": 18,
+            "mutants": 4,
+            "original_recursion_c_builds": 22,
+            "original_recursion_phase_observations": 76,
+            "original_recursion_reference": 19,
+            "programs": 46,
+            "reference_calls": 143,
+            "rejection_pairs": 80,
+            "sanitizer_observations": 143,
+            "wasm_observations": 286
+          },
+          "exit_code": 0,
+          "name": "c-backend",
+          "status": "passed"
+        }
+      ],
+      "receipt_counts": {
+        "identical": 63,
+        "semantic": 8,
+        "volatile-only": 10
+      },
+      "receipts": [
+        {
+          "after_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
+          "before_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
+          "classification": "volatile-only",
+          "path": "research/compiler-fields/receipts/trust.json"
+        },
+        {
+          "after_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
+          "before_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
+          "classification": "volatile-only",
+          "path": "research/compiler-structural/receipts/trust.json"
+        },
+        {
+          "after_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
+          "before_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
+          "classification": "volatile-only",
+          "path": "research/compiler-wasm/receipts/trust.json"
+        },
+        {
+          "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+          "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+          "classification": "volatile-only",
+          "path": "research/flat-store/receipts/bun-oracle.txt.gz"
+        },
+        {
+          "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+          "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/bun-wasm.json"
+        },
+        {
+          "after_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+          "before_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+          "classification": "volatile-only",
+          "path": "research/flat-store/receipts/gate.json"
+        },
+        {
+          "after_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+          "before_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-accept-padding.json"
+        },
+        {
+          "after_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+          "before_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-erase-allocated-payload.json"
+        },
+        {
+          "after_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+          "before_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-ignore-arena.json"
+        },
+        {
+          "after_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+          "before_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-lose-free-tail.json"
+        },
+        {
+          "after_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+          "before_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-overwrite-on-rejection.json"
+        },
+        {
+          "after_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+          "before_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-reuse-generation.json"
+        },
+        {
+          "after_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+          "before_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-wrap-at-ceiling.json"
+        },
+        {
+          "after_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+          "before_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-write-on-reinit.json"
+        },
+        {
+          "after_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+          "before_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/mutant-zero-sentinel.json"
+        },
+        {
+          "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+          "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+          "classification": "volatile-only",
+          "path": "research/flat-store/receipts/native-oracle.txt.gz"
+        },
+        {
+          "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+          "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/native-wasm.json"
+        },
+        {
+          "after_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+          "before_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/native.wasm"
+        },
+        {
+          "after_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+          "before_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+          "classification": "identical",
+          "path": "research/flat-store/receipts/store.wat"
+        },
+        {
+          "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+          "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+          "classification": "volatile-only",
+          "path": "research/owned-store/receipts/bun.txt.gz"
+        },
+        {
+          "after_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+          "before_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+          "classification": "volatile-only",
+          "path": "research/owned-store/receipts/gate.json"
+        },
+        {
+          "after_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+          "before_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+          "classification": "volatile-only",
+          "path": "research/owned-store/receipts/inputs.json.gz"
+        },
+        {
+          "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+          "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+          "classification": "volatile-only",
+          "path": "research/owned-store/receipts/native.txt.gz"
+        },
+        {
+          "after_sha256": "3552548a6e69316d14e74acb72e4542feb5e38385d4d454cdab5dee3fd05405a",
+          "before_sha256": null,
+          "changed_fields": [
+            "/"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-c/receipts/c.json"
+        },
+        {
+          "after_sha256": "82a0853abe4d011fe8aecb67b7bc3bbaa5f655aa2c55b8c6bda3a71bf8209d59",
+          "before_sha256": "f1287e8ef0e084f95e22c5ec7fb5aa4d796362f829e2afcd8422a1ab521ff0ce",
+          "changed_fields": [
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-checker/receipts/checker.json"
+        },
+        {
+          "after_sha256": "b53524c16a89c320d35630f10bd375df39402f608d60279f38b96675ce1f9fd0",
+          "before_sha256": "56c618bf2752b1e4a641db5dcf48acfb23d8ada3c3fa6533e3e3d677b89ad7f4",
+          "changed_fields": [
+            "/inputs/src~1CONTRACT.json",
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+        },
+        {
+          "after_sha256": "60607376ef7cc7cb113ef8e4fab5818bc75b13bfdc5fd638e22a966365180ed4",
+          "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
+          "changed_fields": [
+            "/inputs/src~1CONTRACT.json",
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-fields/receipts/fields.json"
+        },
+        {
+          "after_sha256": "85c21f9d5e5ee22dc62e59d14720b9e378aefe61d718ed120985adcdd13741a2",
+          "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
+          "changed_fields": [
+            "/inputs/src~1CONTRACT.json",
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-recursion/receipts/recursion.json"
+        },
+        {
+          "after_sha256": "ac3424f163f776ca54ba994d0bffb633307d50f63119a96dadb262e4384f1c08",
+          "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
+          "changed_fields": [
+            "/inputs/src~1CONTRACT.json",
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-structural/receipts/catalog.json"
+        },
+        {
+          "after_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+          "before_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/argument-order.wasm"
+        },
+        {
+          "after_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+          "before_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/argument-order.wat"
+        },
+        {
+          "after_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+          "before_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/branch-locals.wasm"
+        },
+        {
+          "after_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+          "before_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/branch-locals.wat"
+        },
+        {
+          "after_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+          "before_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/branch-maximum.wasm"
+        },
+        {
+          "after_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+          "before_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/branch-maximum.wat"
+        },
+        {
+          "after_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+          "before_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-argument.wasm"
+        },
+        {
+          "after_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+          "before_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-argument.wat"
+        },
+        {
+          "after_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+          "before_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-promote.wasm"
+        },
+        {
+          "after_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+          "before_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-promote.wat"
+        },
+        {
+          "after_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+          "before_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-reuse.wasm"
+        },
+        {
+          "after_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+          "before_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/data-reuse.wat"
+        },
+        {
+          "after_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+          "before_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/duplicate-parameters.wasm"
+        },
+        {
+          "after_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+          "before_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/duplicate-parameters.wat"
+        },
+        {
+          "after_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+          "before_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-affine-copy.wasm"
+        },
+        {
+          "after_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+          "before_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-affine-copy.wat"
+        },
+        {
+          "after_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+          "before_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-binding.wasm"
+        },
+        {
+          "after_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+          "before_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-binding.wat"
+        },
+        {
+          "after_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+          "before_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-cost.wasm"
+        },
+        {
+          "after_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+          "before_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-cost.wat"
+        },
+        {
+          "after_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+          "before_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-forward-call.wasm"
+        },
+        {
+          "after_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+          "before_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-forward-call.wat"
+        },
+        {
+          "after_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+          "before_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-forward.wasm"
+        },
+        {
+          "after_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+          "before_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/erased-forward.wat"
+        },
+        {
+          "after_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+          "before_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/flag.wasm"
+        },
+        {
+          "after_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+          "before_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/flag.wat"
+        },
+        {
+          "after_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+          "before_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/forward-type.wasm"
+        },
+        {
+          "after_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+          "before_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/forward-type.wat"
+        },
+        {
+          "after_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+          "before_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-function-index.wasm"
+        },
+        {
+          "after_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+          "before_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-function-index.wat"
+        },
+        {
+          "after_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+          "before_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-local-index.wasm"
+        },
+        {
+          "after_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+          "before_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-local-index.wat"
+        },
+        {
+          "after_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+          "before_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-tags.wasm"
+        },
+        {
+          "after_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+          "before_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/high-tags.wat"
+        },
+        {
+          "after_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+          "before_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/matched-duplicate.wasm"
+        },
+        {
+          "after_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+          "before_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/matched-duplicate.wat"
+        },
+        {
+          "after_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+          "before_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/matched-return.wasm"
+        },
+        {
+          "after_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+          "before_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/matched-return.wat"
+        },
+        {
+          "after_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+          "before_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/mixed-types.wasm"
+        },
+        {
+          "after_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+          "before_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/mixed-types.wat"
+        },
+        {
+          "after_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+          "before_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/nested-match.wasm"
+        },
+        {
+          "after_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+          "before_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/nested-match.wat"
+        },
+        {
+          "after_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+          "before_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/renamed.wasm"
+        },
+        {
+          "after_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+          "before_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/renamed.wat"
+        },
+        {
+          "after_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+          "before_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/reordered-arms.wasm"
+        },
+        {
+          "after_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+          "before_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/reordered-arms.wat"
+        },
+        {
+          "after_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+          "before_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/shadowing.wasm"
+        },
+        {
+          "after_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+          "before_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/shadowing.wat"
+        },
+        {
+          "after_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+          "before_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/three-colors.wasm"
+        },
+        {
+          "after_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+          "before_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+          "classification": "identical",
+          "path": "tests/compiler-wasm/generated/three-colors.wat"
+        },
+        {
+          "after_sha256": "7744aa26bc3932acb47271e2236de8cb659eb56f91d6f7fbddfd1ab195197339",
+          "before_sha256": "5e509615699d7154f0dac4007f37716360172f1280b0ab916532b4858eacf2b6",
+          "changed_fields": [
+            "/inputs/src~1CONTRACT.json",
+            "/inputs/src~1SPEC.md",
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/compiler-wasm/receipts/wasm.json"
+        },
+        {
+          "after_sha256": "108700ed2d34c13e8376cb9deb6d7362558a4518f19f51bdb91966ed156dc333",
+          "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
+          "changed_fields": [
+            "/inputs/src~1c-LAWS.bend",
+            "/inputs/src~1c-PROOF.bend",
+            "/inputs/src~1c.bend"
+          ],
+          "classification": "semantic",
+          "path": "tests/subsets/receipts/frontend.json"
+        }
+      ],
+      "snapshot_sha256": "d8e6750dbfc298b3872c72acae889ea727a73990ffe3892087e3fec6ac0b445b",
+      "status": "passed"
+    },
+    "run": {
+      "directory": "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c",
+      "gates": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {
+            "boundaries": 24,
+            "fixtures": 14,
+            "lane_observations": 28,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "frontend",
+          "seconds": 106.894316,
+          "status": "passed",
+          "stderr": "frontend.stderr",
+          "stdout": "frontend.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {
+            "bound_observations": 16,
+            "bounds": 2,
+            "budgets": 10,
+            "fixtures": 49,
+            "lane_observations": 98,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "checker",
+          "seconds": 51.817595,
+          "status": "passed",
+          "stderr": "checker.stderr",
+          "stdout": "checker.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "seconds": 62.444752,
+          "status": "passed",
+          "stderr": "structural.stderr",
+          "stdout": "structural.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "seconds": 104.099274,
+          "status": "passed",
+          "stderr": "fields.stderr",
+          "stdout": "fields.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "seconds": 72.942554,
+          "status": "passed",
+          "stderr": "wasm.stderr",
+          "stdout": "wasm.stdout"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "seconds": 0.360817,
+          "status": "passed",
+          "stderr": "wasm-trust.stderr",
+          "stdout": "wasm-trust.stdout"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "seconds": 0.860499,
+          "status": "passed",
+          "stderr": "fields-trust.stderr",
+          "stdout": "fields-trust.stdout"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "seconds": 0.311735,
+          "status": "passed",
+          "stderr": "structural-trust.stderr",
+          "stdout": "structural-trust.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "seconds": 12.138622,
+          "status": "passed",
+          "stderr": "owned-store.stderr",
+          "stdout": "owned-store.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "seconds": 34.968168,
+          "status": "passed",
+          "stderr": "flat-store.stderr",
+          "stdout": "flat-store.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "seconds": 54.007835,
+          "status": "passed",
+          "stderr": "recursion.stderr",
+          "stdout": "recursion.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "seconds": 98.928526,
+          "status": "passed",
+          "stderr": "fields-wasm.stderr",
+          "stdout": "fields-wasm.stdout"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 504,
+            "files": 33
+          },
+          "exit_code": 0,
+          "name": "census",
+          "seconds": 0.760016,
+          "status": "passed",
+          "stderr": "census.stderr",
+          "stdout": "census.stdout"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "seconds": 10.240343,
+          "status": "passed",
+          "stderr": "lint-verify.stderr",
+          "stdout": "lint-verify.stdout"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-c/check.py"
+          ],
+          "counts": {
+            "boundary_probes": 17,
+            "byte_identical_c": 57,
+            "byte_identical_wasm": 46,
+            "c_observations": 286,
+            "checked_laws": 8,
+            "evaluator_observations": 286,
+            "host_adapter_probes": 4,
+            "host_boundary_probes": 18,
+            "mutants": 4,
+            "original_recursion_c_builds": 22,
+            "original_recursion_phase_observations": 76,
+            "original_recursion_reference": 19,
+            "programs": 46,
+            "reference_calls": 143,
+            "rejection_pairs": 80,
+            "sanitizer_observations": 143,
+            "wasm_observations": 286
+          },
+          "exit_code": 0,
+          "name": "c-backend",
+          "seconds": 325.732466,
+          "status": "passed",
+          "stderr": "c-backend.stderr",
+          "stdout": "c-backend.stdout"
+        }
+      ],
+      "jobs": 4,
+      "started_at": "2026-09-28T01:44:43.161624+00:00",
+      "timeout_seconds": 900,
+      "total_seconds": 453.665139
+    },
+    "schema": 1
+  },
+  "gate_stdout": {
+    "frontend": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream rejection observations\n",
+    "checker": "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-checker/receipts/checker.json\n",
+    "structural": "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-structural/receipts/catalog.json\n",
+    "fields": "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-fields/receipts/fields.json\n",
+    "wasm": "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-wasm/receipts/wasm.json\n",
+    "wasm-trust": "[\n  {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/runtime-PROOF.bend\",\n    files: 18,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }\n]\n",
+    "fields-trust": "[\n  {\n    entry: \"src/fields-PROOF.bend\",\n    files: 22,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }, {\n    entry: \"src/check-cli.bend\",\n    files: 12,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }\n]\n",
+    "structural-trust": "[\n  {\n    entry: \"src/catalog-PROOF.bend\",\n    files: 20,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }, {\n    entry: \"tests/compiler-structural/observe.bend\",\n    files: 8,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }\n] [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ]\n",
+    "owned-store": "{\"status\": \"pass\", \"case_count\": 3532, \"literal_witnesses\": 15}\n",
+    "flat-store": "{\"status\": \"pass\", \"module_bytes\": 1050, \"module_sha256\": \"0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4\"}\n",
+    "recursion": "Recursion gate passed: 19 seed fixtures, 114 native/Bun phase observations, 4 fuel probes, 3 semantic mutants\n",
+    "fields-wasm": "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-fields-wasm/receipts/fields-wasm.json\n",
+    "census": "{\n  \"status\": \"current\",\n  \"compiler\": {\n    \"files\": 33,\n    \"declarations\": 504,\n    \"unique_declarations\": 440,\n    \"definitions\": 331,\n    \"classes\": 40\n  },\n  \"frontend_files\": {\n    \"files\": 3,\n    \"declarations\": 49,\n    \"unique_declarations\": 49,\n    \"definitions\": 41,\n    \"classes\": 30\n  },\n  \"packages\": {\n    \"files\": 8,\n    \"declarations\": 225,\n    \"unique_declarations\": 225,\n    \"definitions\": 201,\n    \"classes\": 34\n  },\n  \"published_imports\": {\n    \"files\": 2,\n    \"declarations\": 53,\n    \"unique_declarations\": 53,\n    \"definitions\": 48,\n    \"classes\": 26\n  },\n  \"base\": {\n    \"files\": 1,\n    \"declarations\": 495,\n    \"unique_declarations\": 466,\n    \"definitions\": 321,\n    \"classes\": 45\n  },\n  \"base_closures\": {\n    \"frontend\": {\n      \"js\": {\n        \"declarations\": 87,\n        \"base\": 39,\n        \"base_intrinsics\": 9,\n        \"foreign\": 0\n      },\n      \"native\": {\n        \"declarations\": 87,\n        \"base\": 39,\n        \"base_intrinsics\": 8,\n        \"foreign\": 0\n      }\n    },\n    \"compiler\": {\n      \"js\": {\n        \"declarations\": 328,\n        \"base\": 72,\n        \"base_intrinsics\": 20,\n        \"foreign\": 6\n      },\n      \"native\": {\n        \"declarations\": 328,\n        \"base\": 72,\n        \"base_intrinsics\": 19,\n        \"foreign\": 6\n      }\n    }\n  }\n}\n",
+    "lint:verify": "TAP version 13\n# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-a848e2b90b00d9c6).\n# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-a848e2b90b00d9c6).\n# Subtest: pinned installation is repeatable and refuses unknown bundle contents\nok 1 - pinned installation is repeatable and refuses unknown bundle contents\n  ---\n  duration_ms: 1275.404041\n  type: 'test'\n  ...\n# Subtest: file checks run real method rules per working-copy declaration with relevant helper and law context\nok 2 - file checks run real method rules per working-copy declaration with relevant helper and law context\n  ---\n  duration_ms: 3247.684833\n  type: 'test'\n  ...\n# Subtest: working-copy helper traversal is bounded and reports context limits\nok 3 - working-copy helper traversal is bounded and reports context limits\n  ---\n  duration_ms: 27.075917\n  type: 'test'\n  ...\n# Subtest: datatype context resolves supplied local types without turning them into callees\nok 4 - datatype context resolves supplied local types without turning them into callees\n  ---\n  duration_ms: 21.938958\n  type: 'test'\n  ...\n# Subtest: explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles\nok 5 - explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles\n  ---\n  duration_ms: 174.962333\n  type: 'test'\n  ...\n# Subtest: missing imports and missing datatype declarations remain explicit; malformed imported types reject\nok 6 - missing imports and missing datatype declarations remain explicit; malformed imported types reject\n  ---\n  duration_ms: 125.913167\n  type: 'test'\n  ...\n# Subtest: parsed generic datatype context preserves AST spans and existing function graph references\nok 7 - parsed generic datatype context preserves AST spans and existing function graph references\n  ---\n  duration_ms: 29.544708\n  type: 'test'\n  ...\n# Subtest: datatype dependency file, helper and byte caps stay fail closed\nok 8 - datatype dependency file, helper and byte caps stay fail closed\n  ---\n  duration_ms: 154.573458\n  type: 'test'\n  ...\n# Subtest: direct datatype style context retains one-file cap and composition checks explicit type dependencies\nok 9 - direct datatype style context retains one-file cap and composition checks explicit type dependencies\n  ---\n  duration_ms: 156.457625\n  type: 'test'\n  ...\n# Subtest: real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request\nok 10 - real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request\n  ---\n  duration_ms: 1237.746334\n  type: 'test'\n  ...\n# Subtest: scan parser coverage follows configured selection while retaining required imports and caller context\nok 11 - scan parser coverage follows configured selection while retaining required imports and caller context\n  ---\n  duration_ms: 1238.377167\n  type: 'test'\n  ...\n# Subtest: parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures\nok 12 - parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures\n  ---\n  duration_ms: 693.158625\n  type: 'test'\n  ...\n# Subtest: built-in proof requests include the selected working-copy law once and change identity with it\nok 13 - built-in proof requests include the selected working-copy law once and change identity with it\n  ---\n  duration_ms: 372.516291\n  type: 'test'\n  ...\n# Subtest: paired-law omission and missing imports remain explicit without changing selection budgets\nok 14 - paired-law omission and missing imports remain explicit without changing selection budgets\n  ---\n  duration_ms: 91.25225\n  type: 'test'\n  ...\n# Subtest: paired laws stay inside every built-in token budget, chunk and retry preparation\nok 15 - paired laws stay inside every built-in token budget, chunk and retry preparation\n  ---\n  duration_ms: 205.280625\n  type: 'test'\n  ...\n# Subtest: actual pinned parser, provenance, and Base source are available without the toolchain\nok 16 - actual pinned parser, provenance, and Base source are available without the toolchain\n  ---\n  duration_ms: 1.202375\n  type: 'test'\n  ...\n# Subtest: multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls\nok 17 - multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls\n  ---\n  duration_ms: 95.713417\n  type: 'test'\n  ...\n# Subtest: static call/value distinction includes zero-argument calls and excludes bound dynamic calls\nok 18 - static call/value distinction includes zero-argument calls and excludes bound dynamic calls\n  ---\n  duration_ms: 101.948459\n  type: 'test'\n  ...\n# Subtest: law and local fill have one target, separate law range, and no intervening declaration leakage\nok 19 - law and local fill have one target, separate law range, and no intervening declaration leakage\n  ---\n  duration_ms: 48.179292\n  type: 'test'\n  ...\n# Subtest: UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia\nok 20 - UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia\n  ---\n  duration_ms: 11.613917\n  type: 'test'\n  ...\n# Subtest: imported laws, constructor patterns, template calls parse with honest dependency diagnostics\nok 21 - imported laws, constructor patterns, template calls parse with honest dependency diagnostics\n  ---\n  duration_ms: 165.392667\n  type: 'test'\n  ...\n# Subtest: imported template-law fills pass ~ arguments recursively; local law arity stays checked\nok 22 - imported template-law fills pass ~ arguments recursively; local law arity stays checked\n  ---\n  duration_ms: 125.696208\n  type: 'test'\n  ...\n# Subtest: dependency-context failure differs from malformed local syntax\nok 23 - dependency-context failure differs from malformed local syntax\n  ---\n  duration_ms: 101.389916\n  type: 'test'\n  ...\n# Subtest: malformed Bend is rejected with no successful partial declaration list\nok 24 - malformed Bend is rejected with no successful partial declaration list\n  ---\n  duration_ms: 180.681458\n  type: 'test'\n  ...\n# Subtest: analysis does not load imports, foreign code, network, or caches\nok 25 - analysis does not load imports, foreign code, network, or caches\n  ---\n  duration_ms: 28.45425\n  type: 'test'\n  ...\n# Subtest: every current nonignored package and research Bend source parses with bounded, exact source ranges\nok 26 - every current nonignored package and research Bend source parses with bounded, exact source ranges\n  ---\n  duration_ms: 3491.453667\n  type: 'test'\n  ...\n# Subtest: incremental scans reuse exact answers and parser blobs across commits, including dependent contexts\nok 27 - incremental scans reuse exact answers and parser blobs across commits, including dependent contexts\n  ---\n  duration_ms: 4163.385541\n  type: 'test'\n  ...\n# Subtest: renamed method rules cannot carry an answer under the old question name\nok 28 - renamed method rules cannot carry an answer under the old question name\n  ---\n  duration_ms: 595.365292\n  type: 'test'\n  ...\n# Subtest: renamed and deleted files, and failed dependent rereads, do not retain stale successful units\nok 29 - renamed and deleted files, and failed dependent rereads, do not retain stale successful units\n  ---\n  duration_ms: 1559.883333\n  type: 'test'\n  ...\n# Subtest: search reuse includes actual helper context, rule kind, threshold and an empty selection\nok 30 - search reuse includes actual helper context, rule kind, threshold and an empty selection\n  ---\n  duration_ms: 1294.521\n  type: 'test'\n  ...\n# Subtest: parser cache corruption is a miss; transient failures never become persistent cache entries\nok 31 - parser cache corruption is a miss; transient failures never become persistent cache entries\n  ---\n  duration_ms: 500.308542\n  type: 'test'\n  ...\n# Subtest: task request is source-blind and exact production request precedes all source judgments\nok 32 - task request is source-blind and exact production request precedes all source judgments\n  ---\n  duration_ms: 231.290083\n  type: 'test'\n  ...\n# Subtest: high potential requires one complete composition Galaxy score, never individual helper novelty\nok 33 - high potential requires one complete composition Galaxy score, never individual helper novelty\n  ---\n  duration_ms: 263.661125\n  type: 'test'\n  ...\n# Subtest: low potential retains baseline standards and makes no composition provider call\nok 34 - low potential retains baseline standards and makes no composition provider call\n  ---\n  duration_ms: 133.363292\n  type: 'test'\n  ...\n# Subtest: missing and uncertain potential stay explicitly advisory without blocking baseline success\nok 35 - missing and uncertain potential stay explicitly advisory without blocking baseline success\n  ---\n  duration_ms: 39.4085\n  type: 'test'\n  ...\n# Subtest: composition failure cannot borrow passing declaration scores; raw family distribution remains visible\nok 36 - composition failure cannot borrow passing declaration scores; raw family distribution remains visible\n  ---\n  duration_ms: 18.673417\n  type: 'test'\n  ...\n# Subtest: full selected files and known collaborator files determine composition scope and identity\nok 37 - full selected files and known collaborator files determine composition scope and identity\n  ---\n  duration_ms: 429.666\n  type: 'test'\n  ...\n# Subtest: unknown references or bounded full-source overflow withhold composition qualification\nok 38 - unknown references or bounded full-source overflow withhold composition qualification\n  ---\n  duration_ms: 62.306083\n  type: 'test'\n  ...\n# Subtest: task precedence, task byte limit and default generic cohort never establish low potential\nok 39 - task precedence, task byte limit and default generic cohort never establish low potential\n  ---\n  duration_ms: 29.323292\n  type: 'test'\n  ...\n# Subtest: warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity\nok 40 - warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity\n  ---\n  duration_ms: 241.279916\n  type: 'test'\n  ...\n# Subtest: explicit v4 receipt reuse preserves both extra judgments and validates changed task input\nok 41 - explicit v4 receipt reuse preserves both extra judgments and validates changed task input\n  ---\n  duration_ms: 182.762708\n  type: 'test'\n  ...\n# Subtest: task or collaborator edits during review prevent qualification and cache publication\nok 42 - task or collaborator edits during review prevent qualification and cache publication\n  ---\n  duration_ms: 24.791542\n  type: 'test'\n  ...\n# Subtest: provider failure and model mismatch stop further phases and retain request identity\nok 43 - provider failure and model mismatch stop further phases and retain request identity\n  ---\n  duration_ms: 33.110792\n  type: 'test'\n  ...\n# Subtest: project inventory never substitutes an implicit whole-project composition claim\nok 44 - project inventory never substitutes an implicit whole-project composition claim\n  ---\n  duration_ms: 1893.308458\n  type: 'test'\n  ...\n# Subtest: configuration and score validation preserve criticality independence and exact uncertainty\nok 45 - configuration and score validation preserve criticality independence and exact uncertainty\n  ---\n  duration_ms: 0.221916\n  type: 'test'\n  ...\n# Subtest: all source rules select actual Bend declarations; packet rules keep file scope\nok 46 - all source rules select actual Bend declarations; packet rules keep file scope\n  ---\n  duration_ms: 2665.182416\n  type: 'test'\n  ...\n# Subtest: campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass\nok 47 - campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass\n  ---\n  duration_ms: 1.156959\n  type: 'test'\n  ...\n# Subtest: only matching source, context, parser and rubric can carry a baseline target result\nok 48 - only matching source, context, parser and rubric can carry a baseline target result\n  ---\n  duration_ms: 1.502\n  type: 'test'\n  ...\n# Subtest: failed or empty baselines cannot make a campaign look covered\nok 49 - failed or empty baselines cannot make a campaign look covered\n  ---\n  duration_ms: 0.356083\n  type: 'test'\n  ...\n# Subtest: a matching critical baseline still needs Galaxy brain under the historical v3 policy\nok 50 - a matching critical baseline still needs Galaxy brain under the historical v3 policy\n  ---\n  duration_ms: 3.297917\n  type: 'test'\n  ...\n# Subtest: v4 matching declaration ratings do not establish task or composition qualification\nok 51 - v4 matching declaration ratings do not establish task or composition qualification\n  ---\n  duration_ms: 0.212375\n  type: 'test'\n  ...\n# Subtest: v5 inventory retains role-adjusted declaration targets without inventing a composition pass\nok 52 - v5 inventory retains role-adjusted declaration targets without inventing a composition pass\n  ---\n  duration_ms: 0.192417\n  type: 'test'\n  ...\n# Subtest: semantic mutant killed: lexical-order\nok 53 - semantic mutant killed: lexical-order\n  ---\n  duration_ms: 933.015833\n  type: 'test'\n  ...\n# Subtest: semantic mutant killed: any-group-qualifies\nok 54 - semantic mutant killed: any-group-qualifies\n  ---\n  duration_ms: 939.7755\n  type: 'test'\n  ...\n# Subtest: semantic mutant killed: filtered-is-complete\nok 55 - semantic mutant killed: filtered-is-complete\n  ---\n  duration_ms: 341.060417\n  type: 'test'\n  ...\n# Subtest: semantic mutant killed: ignore-final-freshness\nok 56 - semantic mutant killed: ignore-final-freshness\n  ---\n  duration_ms: 610.661916\n  type: 'test'\n  ...\n# Subtest: compiler manifest covers all source files and closes every local import\nok 57 - compiler manifest covers all source files and closes every local import\n  ---\n  duration_ms: 1579.625791\n  type: 'test'\n  ...\n# Subtest: legacy target and inventory bytes stay pinned without a manifest\nok 58 - legacy target and inventory bytes stay pinned without a manifest\n  ---\n  duration_ms: 2263.040917\n  type: 'test'\n  ...\n# Subtest: manifest preflight reports each group and never loads environment or calls a provider\nok 59 - manifest preflight reports each group and never loads environment or calls a provider\n  ---\n  duration_ms: 111.540083\n  type: 'test'\n  ...\n# Subtest: direct preflight entry stays offline even when manifest flags request live review\nok 60 - direct preflight entry stays offline even when manifest flags request live review\n  ---\n  duration_ms: 117.102334\n  type: 'test'\n  ...\n# Subtest: manifest composition follows reading order then collaborators; declaration requests stay identical\nok 61 - manifest composition follows reading order then collaborators; declaration requests stay identical\n  ---\n  duration_ms: 105.153\n  type: 'test'\n  ...\n# Subtest: manifest qualification requires every group; passing declarations cannot replace a composition\nok 62 - manifest qualification requires every group; passing declarations cannot replace a composition\n  ---\n  duration_ms: 205.542875\n  type: 'test'\n  ...\n# Subtest: filtered qualification cannot claim the entire manifest\nok 63 - filtered qualification cannot claim the entire manifest\n  ---\n  duration_ms: 29.637417\n  type: 'test'\n  ...\n# Subtest: later groups cannot hide stale earlier sources\nok 64 - later groups cannot hide stale earlier sources\n  ---\n  duration_ms: 54.563667\n  type: 'test'\n  ...\n# Subtest: manifest rejects ambiguous selections and malformed schema before any requests\nok 65 - manifest rejects ambiguous selections and malformed schema before any requests\n  ---\n  duration_ms: 20.392292\n  type: 'test'\n  ...\n# Subtest: manifest paths cannot escape the workspace or alias duplicate source files\nok 66 - manifest paths cannot escape the workspace or alias duplicate source files\n  ---\n  duration_ms: 55.44325\n  type: 'test'\n  ...\n# Subtest: all selected groups prepare before requests, with a total declaration limit\nok 67 - all selected groups prepare before requests, with a total declaration limit\n  ---\n  duration_ms: 123.207667\n  type: 'test'\n  ...\n# Subtest: preflight retains per-group truncation, unresolved imports and composition byte bounds\nok 68 - preflight retains per-group truncation, unresolved imports and composition byte bounds\n  ---\n  duration_ms: 41.557084\n  type: 'test'\n  ...\n# Subtest: notes stay metadata, tasks are group-specific and overlong tasks remain advisory\nok 69 - notes stay metadata, tasks are group-specific and overlong tasks remain advisory\n  ---\n  duration_ms: 110.140041\n  type: 'test'\n  ...\n# Subtest: manifest and task changes invalidate overall qualification\nok 70 - manifest and task changes invalidate overall qualification\n  ---\n  duration_ms: 38.943625\n  type: 'test'\n  ...\n# Subtest: different resolved models across groups cannot qualify\nok 71 - different resolved models across groups cannot qualify\n  ---\n  duration_ms: 66.170959\n  type: 'test'\n  ...\n# Subtest: provider failure stops new groups and persists one aggregate receipt with partial evidence\nok 72 - provider failure stops new groups and persists one aggregate receipt with partial evidence\n  ---\n  duration_ms: 44.053125\n  type: 'test'\n  ...\n# Subtest: pre-dispatch failure in a later group retains earlier evidence\nok 73 - pre-dispatch failure in a later group retains earlier evidence\n  ---\n  duration_ms: 94.449375\n  type: 'test'\n  ...\n# Subtest: manifest reuse preserves exact requests and invalidates composition reading order only\nok 74 - manifest reuse preserves exact requests and invalidates composition reading order only\n  ---\n  duration_ms: 161.892708\n  type: 'test'\n  ...\n# Subtest: manifest incremental answers remain partitioned by exact task and composition requests\nok 75 - manifest incremental answers remain partitioned by exact task and composition requests\n  ---\n  duration_ms: 254.315958\n  type: 'test'\n  ...\n# Subtest: output collisions fail before requests and offline output is reproducible\nok 76 - output collisions fail before requests and offline output is reproducible\n  ---\n  duration_ms: 71.034041\n  type: 'test'\n  ...\n# Subtest: complete context and composition are structurally unblocked, with no provider or receipt\nok 77 - complete context and composition are structurally unblocked, with no provider or receipt\n  ---\n  duration_ms: 309.321375\n  type: 'test'\n  ...\n# Subtest: a truncated caller context is reported as unpassable and forbids the supporting role\nok 78 - a truncated caller context is reported as unpassable and forbids the supporting role\n  ---\n  duration_ms: 24.401\n  type: 'test'\n  ...\n# Subtest: an unresolvable collaborator makes composition unavailable and names the reason\nok 79 - an unresolvable collaborator makes composition unavailable and names the reason\n  ---\n  duration_ms: 78.686959\n  type: 'test'\n  ...\n# Subtest: project preflight lists unranked files and single-file groups without ratings\nok 80 - project preflight lists unranked files and single-file groups without ratings\n  ---\n  duration_ms: 2061.350792\n  type: 'test'\n  ...\n# Subtest: project preflight, like a live --all run, cannot qualify without an explicit composition group\nok 81 - project preflight, like a live --all run, cannot qualify without an explicit composition group\n  ---\n  duration_ms: 76.471583\n  type: 'test'\n  ...\n# Subtest: task handling and empty inventories match the live run\nok 82 - task handling and empty inventories match the live run\n  ---\n  duration_ms: 110.270208\n  type: 'test'\n  ...\n# Subtest: preflight refuses live mode, unknown options and existing output\nok 83 - preflight refuses live mode, unknown options and existing output\n  ---\n  duration_ms: 3.469875\n  type: 'test'\n  ...\n# Subtest: supporting roles scale only three axes, independently of criticality\nok 84 - supporting roles scale only three axes, independently of criticality\n  ---\n  duration_ms: 1.733708\n  type: 'test'\n  ...\n# Subtest: leading and uncertain roles keep level3; truncation cannot establish a supporting exemption\nok 85 - leading and uncertain roles keep level3; truncation cannot establish a supporting exemption\n  ---\n  duration_ms: 159.182667\n  type: 'test'\n  ...\n# Subtest: a helper named helper can be leading; public names do not override the classifier\nok 86 - a helper named helper can be leading; public names do not override the classifier\n  ---\n  duration_ms: 0.125583\n  type: 'test'\n  ...\n# Subtest: missing task keeps potential advisory but always requires whole-composition three-axis evidence\nok 87 - missing task keeps potential advisory but always requires whole-composition three-axis evidence\n  ---\n  duration_ms: 224.238458\n  type: 'test'\n  ...\n# Subtest: composition questions keep the generic form unless per-axis composition wording is configured\nok 88 - composition questions keep the generic form unless per-axis composition wording is configured\n  ---\n  duration_ms: 117.524917\n  type: 'test'\n  ...\n# Subtest: all-support declaration success cannot bypass a weak whole composition\nok 89 - all-support declaration success cannot bypass a weak whole composition\n  ---\n  duration_ms: 158.653791\n  type: 'test'\n  ...\n# Subtest: low potential still grades composition; high potential adds only the Galaxy question\nok 90 - low potential still grades composition; high potential adds only the Galaxy question\n  ---\n  duration_ms: 168.194583\n  type: 'test'\n  ...\n# Subtest: whole-project inventory remains explicit attention without a bounded composition group\nok 91 - whole-project inventory remains explicit attention without a bounded composition group\n  ---\n  duration_ms: 2099.496416\n  type: 'test'\n  ...\n# Subtest: role and composition judgments reuse exact requests; contribution policy changes invalidate cache\nok 92 - role and composition judgments reuse exact requests; contribution policy changes invalidate cache\n  ---\n  duration_ms: 61.123625\n  type: 'test'\n  ...\n# Subtest: rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls\nok 93 - rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls\n  ---\n  duration_ms: 792.89525\n  type: 'test'\n  ...\n# Subtest: one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars\nok 94 - one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars\n  ---\n  duration_ms: 62.352833\n  type: 'test'\n  ...\n# Subtest: diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output\nok 95 - diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output\n  ---\n  duration_ms: 226.082166\n  type: 'test'\n  ...\n# Subtest: truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score\nok 96 - truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score\n  ---\n  duration_ms: 153.863708\n  type: 'test'\n  ...\n# Subtest: critical and uncertain declarations need both anticipation and payoff with their own target probability\nok 97 - critical and uncertain declarations need both anticipation and payoff with their own target probability\n  ---\n  duration_ms: 47.336416\n  type: 'test'\n  ...\n# Subtest: invalid diagnostic configurations are rejected before any provider request\nok 98 - invalid diagnostic configurations are rejected before any provider request\n  ---\n  duration_ms: 3.168583\n  type: 'test'\n  ...\n# Subtest: partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking\nok 99 - partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking\n  ---\n  duration_ms: 55.003291\n  type: 'test'\n  ...\n# Subtest: a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar\nok 100 - a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar\n  ---\n  duration_ms: 194.201125\n  type: 'test'\n  ...\n# Subtest: all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar\nok 101 - all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar\n  ---\n  duration_ms: 421.34975\n  type: 'test'\n  ...\n# Subtest: uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass\nok 102 - uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass\n  ---\n  duration_ms: 5.102167\n  type: 'test'\n  ...\n# Subtest: whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs\nok 103 - whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs\n  ---\n  duration_ms: 1963.038083\n  type: 'test'\n  ...\n# Subtest: command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation\nok 104 - command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation\n  ---\n  duration_ms: 206.725792\n  type: 'test'\n  ...\n# Subtest: snapshot loads remain inside the workspace and do not discover unrelated sources\nok 105 - snapshot loads remain inside the workspace and do not discover unrelated sources\n  ---\n  duration_ms: 18.0875\n  type: 'test'\n  ...\n# Subtest: explicit reuse avoids paid repeats and invalidates when helper context changes\nok 106 - explicit reuse avoids paid repeats and invalidates when helper context changes\n  ---\n  duration_ms: 241.35775\n  type: 'test'\n  ...\n# Subtest: concurrent responses preserve target attribution and changes during review are disclosed\nok 107 - concurrent responses preserve target attribution and changes during review are disclosed\n  ---\n  duration_ms: 56.267208\n  type: 'test'\n  ...\n# Subtest: missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings\nok 108 - missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings\n  ---\n  duration_ms: 369.325375\n  type: 'test'\n  ...\n# Subtest: default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results\nok 109 - default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results\n  ---\n  duration_ms: 87.686417\n  type: 'test'\n  ...\n# Subtest: concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse\nok 110 - concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse\n  ---\n  duration_ms: 40.261042\n  type: 'test'\n  ...\n# Subtest: jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests\nok 111 - jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests\n  ---\n  duration_ms: 152.249875\n  type: 'test'\n  ...\n# Subtest: a changed provider model stops queued work and cannot be mixed with explicitly reused answers\nok 112 - a changed provider model stops queued work and cannot be mixed with explicitly reused answers\n  ---\n  duration_ms: 91.106917\n  type: 'test'\n  ...\n# Subtest: ties share a rank, near ties remain visible, and existing output is rejected before requests\nok 113 - ties share a rank, near ties remain visible, and existing output is rejected before requests\n  ---\n  duration_ms: 2.616084\n  type: 'test'\n  ...\n# Subtest: incremental keeps full current coverage with zero warm requests and honest cached-model provenance\nok 114 - incremental keeps full current coverage with zero warm requests and honest cached-model provenance\n  ---\n  duration_ms: 81.051333\n  type: 'test'\n  ...\n# Subtest: isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents\nok 115 - isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents\n  ---\n  duration_ms: 75.614875\n  type: 'test'\n  ...\n# Subtest: rubric, requested model and effective endpoint changes invalidate incremental answers\nok 116 - rubric, requested model and effective endpoint changes invalidate incremental answers\n  ---\n  duration_ms: 459.964167\n  type: 'test'\n  ...\n# Subtest: incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage\nok 117 - incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage\n  ---\n  duration_ms: 164.869\n  type: 'test'\n  ...\n# Subtest: interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses\nok 118 - interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses\n  ---\n  duration_ms: 123.094792\n  type: 'test'\n  ...\n# Subtest: source-stale and model-drift runs do not seed the persistent cache or claim a clean result\nok 119 - source-stale and model-drift runs do not seed the persistent cache or claim a clean result\n  ---\n  duration_ms: 108.092916\n  type: 'test'\n  ...\n# Subtest: fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests\nok 120 - fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests\n  ---\n  duration_ms: 198.593167\n  type: 'test'\n  ...\n# Subtest: concurrent cache publication leaves complete independently validated records\nok 121 - concurrent cache publication leaves complete independently validated records\n  ---\n  duration_ms: 69.600333\n  type: 'test'\n  ...\n# Subtest: actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes\nok 122 - actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes\n  ---\n  duration_ms: 3737.791625\n  type: 'test'\n  ...\n# Subtest: incremental scan receipts distinguish reused coverage from a fresh provider review\nok 123 - incremental scan receipts distinguish reused coverage from a fresh provider review\n  ---\n  duration_ms: 664.311417\n  type: 'test'\n  ...\n# Subtest: bounded workers refill, preserve order and drain when a task fails\nok 124 - bounded workers refill, preserve order and drain when a task fails\n  ---\n  duration_ms: 7.527833\n  type: 'test'\n  ...\n# Subtest: token memoization is exact under mutation, Unicode and bounded eviction\nok 125 - token memoization is exact under mutation, Unicode and bounded eviction\n  ---\n  duration_ms: 0.614584\n  type: 'test'\n  ...\n# Subtest: provider semaphore bounds nested fan-out and drains arbitrary rejections\nok 126 - provider semaphore bounds nested fan-out and drains arbitrary rejections\n  ---\n  duration_ms: 4.428584\n  type: 'test'\n  ...\n# Subtest: scan checkpoint accounts only for serialized rows when workers finish during append\nok 127 - scan checkpoint accounts only for serialized rows when workers finish during append\n  ---\n  duration_ms: 5.024167\n  type: 'test'\n  ...\n1..127\n# tests 127\n# suites 0\n# pass 127\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 9185.891667\nPASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present.\nNo provider contacted. This verifies wiring, not model accuracy or law completeness.\n",
+    "c-backend": "C gate passed: programs=46, reference_calls=143, original_recursion_reference=19, evaluator_observations=286, wasm_observations=286, c_observations=286, sanitizer_observations=143, byte_identical_c=57, byte_identical_wasm=46, original_recursion_phase_observations=76, original_recursion_c_builds=22, rejection_pairs=80, boundary_probes=17, host_boundary_probes=18, host_adapter_probes=4, mutants=4, checked_laws=8. /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/worktree/tests/compiler-c/receipts/c.json\n"
+  },
+  "runner_stderr": "checker: passed (51.82s)\nstructural: passed (62.44s)\nstructural-trust: passed (0.31s)\nowned-store: passed (12.14s)\nfields: passed (104.10s)\nfields-trust: passed (0.86s)\nfrontend: passed (106.89s)\nflat-store: passed (34.97s)\ncensus: passed (0.76s)\nlint:verify: passed (10.24s)\nwasm: passed (72.94s)\nwasm-trust: passed (0.36s)\nrecursion: passed (54.01s)\nfields-wasm: passed (98.93s)\nc-backend: passed (325.73s)\nSummary: /Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/gates/run-5i6yto9c/summary.json\n",
+  "direct_c_gate": {
+    "path": "tests/compiler-c/receipts/c.json",
+    "sha256": "f8d335e7e1423cf8cb5a0cb652295b2d5d8da3d063c3668fbc038588ccb90cba",
+    "status": "passed",
+    "counts": {
+      "programs": 46,
+      "reference_calls": 143,
+      "original_recursion_reference": 19,
+      "evaluator_observations": 286,
+      "wasm_observations": 286,
+      "c_observations": 286,
+      "sanitizer_observations": 143,
+      "byte_identical_c": 57,
+      "byte_identical_wasm": 46,
+      "original_recursion_phase_observations": 76,
+      "original_recursion_c_builds": 22,
+      "rejection_pairs": 80,
+      "boundary_probes": 17,
+      "host_boundary_probes": 18,
+      "host_adapter_probes": 4,
+      "mutants": 4,
+      "checked_laws": 8
+    },
+    "all_input_hashes_match": true,
+    "input_count": 142,
+    "proof": {
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/src/c-PROOF.bend"
+      ],
+      "exit": 0,
+      "stdout": "All terms check.\n",
+      "stderr": ""
+    }
+  },
+  "receipt_drift_review": "63 identical, 10 volatile-only, 8 semantic. One semantic receipt is the new C gate; seven existing receipts differ only in hashes for new C files and amended SPEC/CONTRACT. Existing outcomes and assertions are unchanged. No existing gate receipts are refreshed in this increment.",
+  "limits": "Execution evidence for this exact snapshot. Final report documents integration requirements and offline style blockers; live Perch remains the coordinator gate."
+}

@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-28T01:41:33.360240+00:00",
+  "seedCommit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "fixture": "tests/compiler-fields-wasm/fixtures/pair.bend",
+  "fixture_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+  "controls": [
+    {
+      "name": "pair-no-base",
+      "source": "import ../../../tests/compiler-fields-wasm/fixtures/pair.bend as F\n\ndef main() -> F.Flag:\n  F.main()\n",
+      "source_sha256": "f91a5f49eb2e0c72dd1266f520fd08f6ce5481664df4605fcf0bb709f8819a9d",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-probe/pair-no-base.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-probe/pair-no-base"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error: a build needs import Base\n"
+    },
+    {
+      "name": "pair-base-alias",
+      "source": "import Base as B\nimport ../../../tests/compiler-fields-wasm/fixtures/pair.bend as F\n\ndef main() -> F.Flag:\n  F.main()\n",
+      "source_sha256": "c2dda943449d70a6f04de82df7b6f0f9bf0308de8d90f658bd45563f8e782fbd",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-probe/pair-base-alias.bend",
+        "-o",
+        "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-probe/pair-base-alias"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : an import of a .bend file\n- observed : 'Base'\nLocation:\n1>| import Base as B\n  |        ^\n2 | import ../../../tests/compiler-fields-wasm/fixtures/pair.bend as F\n"
+    }
+  ],
+  "interpretation": "These controls do not rename or change the fixture. Native emission requires the unaliased Base import; the benchmark records duplicate-name collisions with Base as an unavailable upstream-native reference.",
+  "first_call_native_c_emission": {
+    "programs": 46,
+    "emitted": 32,
+    "unavailable": [
+      {
+        "case": "fields-wasm-pair",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/fields-wasm-pair.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/fields-wasm-pair.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Pair)\n- observed : 'Pair'\nLocation:\n3 |   On{}\n4>| type Pair is Type:\n  |      ^^^^\n5 |   Pair{left: Flag, right: Flag}\n"
+      },
+      {
+        "case": "fields-wasm-peano",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/fields-wasm-peano.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/fields-wasm-peano.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n4 | type Peano is Type:\n5>|   Zero{}\n  |   ^^^^\n6 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-even",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-even.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-even.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-add",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-add.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-add.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-length",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-length.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-length.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-direct",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-direct.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-direct.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-first-parameter",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-first-parameter.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-first-parameter.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-ordered-calls",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-ordered-calls.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-ordered-calls.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-shadow-field",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-shadow-field.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-shadow-field.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-after-let",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-after-let.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-after-let.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-deep",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-deep.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-deep.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "recursion-deep-input",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-deep-input.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/recursion-deep-input.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "tail-rebind",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/tail-rebind.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/tail-rebind.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      },
+      {
+        "case": "deep-recursion",
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/deep-recursion.bend",
+          "-o",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/bench/c-upstream-availability/deep-recursion.c"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh constructor name (duplicate declaration: Zero)\n- observed : 'Zero'\nLocation:\n1 | type Peano is Data:\n2>|   Zero{}\n  |   ^^^^\n3 |   Succ{pred: Peano}\n"
+      }
+    ],
+    "available": [
+      "wasm-data-reuse",
+      "wasm-erased-forward",
+      "wasm-flag",
+      "wasm-forward-type",
+      "wasm-nested-match",
+      "wasm-shadowing",
+      "wasm-branch-maximum",
+      "wasm-data-argument",
+      "wasm-data-promote",
+      "wasm-duplicate-parameters",
+      "wasm-erased-affine-copy",
+      "wasm-erased-binding",
+      "wasm-erased-forward-call",
+      "wasm-matched-duplicate",
+      "wasm-matched-return",
+      "wasm-renamed",
+      "wasm-reordered-arms",
+      "wasm-three-colors",
+      "wasm-mixed-types",
+      "wasm-branch-locals",
+      "wasm-erased-cost",
+      "wasm-argument-order",
+      "wasm-high-tags",
+      "wasm-high-function-index",
+      "wasm-high-local-index",
+      "fields-wasm-nested",
+      "fields-wasm-aliasing",
+      "fields-wasm-erased",
+      "fields-wasm-arena-overflow",
+      "fields-wasm-deep-call",
+      "fields-wasm-deep-stack",
+      "recursion-mirror"
+    ]
+  }
+}

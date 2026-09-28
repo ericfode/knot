@@ -121,10 +121,10 @@
   },
   "totals": {
     "compiler": {
-      "files": 30,
-      "declarations": 425,
-      "unique_declarations": 369,
-      "definitions": 275,
+      "files": 33,
+      "declarations": 504,
+      "unique_declarations": 440,
+      "definitions": 331,
       "classes": 40
     },
     "frontend_files": {
@@ -35592,6 +35592,5149 @@
             "types": [
               "Nil",
               "packages/vec/main.Buffer"
+            ],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/c-LAWS.bend",
+      "sha256": "fca09632d52bbe238ee8515b7df40aef714e93c17bb42e9d3608b3d6bc8dcaa9",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./c.bend",
+          "alias": "E",
+          "file": "src/c.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "imports.base",
+        "imports.local",
+        "laws",
+        "literals.list",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "types.base"
+      ],
+      "declarations": [
+        {
+          "id": "src/c-LAWS.bend::erased_constructor_has_a_cell:law",
+          "name": "erased_constructor_has_a_cell",
+          "key": "src/c-LAWS.erased_constructor_has_a_cell",
+          "kind": "law",
+          "lines": [
+            6,
+            11
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Nil",
+            "True",
+            "U32",
+            "src/c.fielded",
+            "src/core.Constructor",
+            "src/core.Parameter",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "U32",
+            "src/c.fielded",
+            "src/core.Constructor",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::saved_calls_keep_their_continuation:law",
+          "name": "saved_calls_keep_their_continuation",
+          "key": "src/c-LAWS.saved_calls_keep_their_continuation",
+          "kind": "law",
+          "lines": [
+            13,
+            17
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.Save",
+            "src/c.tail_call"
+          ],
+          "type_references": [
+            "Bool",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.tail_call"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::erased_argument_has_no_code_or_slot:law",
+          "name": "erased_argument_has_no_code_or_slot",
+          "key": "src/c-LAWS.erased_argument_has_no_code_or_slot",
+          "kind": "law",
+          "lines": [
+            19,
+            32
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nat",
+            "Result",
+            "Succ",
+            "U32",
+            "src/c.Action",
+            "src/c.Arguments",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Slot",
+            "src/c.lower",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Action",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Slot",
+            "src/c.lower",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::erased_binding_has_no_initializer:law",
+          "name": "erased_binding_has_no_initializer",
+          "key": "src/c-LAWS.erased_binding_has_no_initializer",
+          "kind": "law",
+          "lines": [
+            34,
+            46
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Result",
+            "Succ",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Expression",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Let",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::erased_pattern_preserves_offset:law",
+          "name": "erased_pattern_preserves_offset",
+          "key": "src/c-LAWS.erased_pattern_preserves_offset",
+          "kind": "law",
+          "lines": [
+            48,
+            64
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Maybe",
+            "Nat",
+            "Result",
+            "String",
+            "Succ",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.Unpack",
+            "src/c.lower",
+            "src/core.Binding",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Maybe",
+            "Nat",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Binding",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::erased_parameter_preserves_saved_arguments:law",
+          "name": "erased_parameter_preserves_saved_arguments",
+          "key": "src/c-LAWS.erased_parameter_preserves_saved_arguments",
+          "kind": "law",
+          "lines": [
+            66,
+            72
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "U32.add",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "U32.add",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::two_parameters_rebind_before_loop:law",
+          "name": "two_parameters_rebind_before_loop",
+          "key": "src/c-LAWS.two_parameters_rebind_before_loop",
+          "kind": "law",
+          "lines": [
+            74,
+            77
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "U32",
+            "src/c.rebind",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-LAWS.bend::zero_depth_is_exhausted:law",
+          "name": "zero_depth_is_exhausted",
+          "key": "src/c-LAWS.zero_depth_is_exhausted",
+          "kind": "law",
+          "lines": [
+            79,
+            85
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/c.lower",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/c.lower",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/c-PROOF.bend",
+      "sha256": "81b33a212a43c24148c6ef03c07e5ceae096150ab3bad846738f4a65eb5ceabf",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./c-LAWS.bend",
+          "alias": "L",
+          "file": "src/c-LAWS.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "imports.base",
+        "imports.local",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "proofs",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "types.base"
+      ],
+      "declarations": [
+        {
+          "id": "src/c-PROOF.bend::L.erased_constructor_has_a_cell:law_fill",
+          "name": "L.erased_constructor_has_a_cell",
+          "key": "src/c-LAWS.erased_constructor_has_a_cell",
+          "kind": "law_fill",
+          "lines": [
+            4,
+            4
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Nil",
+            "True",
+            "U32",
+            "src/c.fielded",
+            "src/core.Constructor",
+            "src/core.Parameter",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "U32",
+            "src/c.fielded",
+            "src/core.Constructor",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.saved_calls_keep_their_continuation:law_fill",
+          "name": "L.saved_calls_keep_their_continuation",
+          "key": "src/c-LAWS.saved_calls_keep_their_continuation",
+          "kind": "law_fill",
+          "lines": [
+            5,
+            5
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "proofs",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.Save",
+            "src/c.tail_call"
+          ],
+          "type_references": [
+            "Bool",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.tail_call"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.erased_argument_has_no_code_or_slot:law_fill",
+          "name": "L.erased_argument_has_no_code_or_slot",
+          "key": "src/c-LAWS.erased_argument_has_no_code_or_slot",
+          "kind": "law_fill",
+          "lines": [
+            6,
+            6
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nat",
+            "Result",
+            "Succ",
+            "U32",
+            "src/c.Action",
+            "src/c.Arguments",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Slot",
+            "src/c.lower",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Action",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Slot",
+            "src/c.lower",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.erased_binding_has_no_initializer:law_fill",
+          "name": "L.erased_binding_has_no_initializer",
+          "key": "src/c-LAWS.erased_binding_has_no_initializer",
+          "kind": "law_fill",
+          "lines": [
+            7,
+            7
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Result",
+            "Succ",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Expression",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Let",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.erased_pattern_preserves_offset:law_fill",
+          "name": "L.erased_pattern_preserves_offset",
+          "key": "src/c-LAWS.erased_pattern_preserves_offset",
+          "kind": "law_fill",
+          "lines": [
+            8,
+            8
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Maybe",
+            "Nat",
+            "Result",
+            "String",
+            "Succ",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.Unpack",
+            "src/c.lower",
+            "src/core.Binding",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Maybe",
+            "Nat",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.lower",
+            "src/core.Binding",
+            "src/core.Term",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.erased_parameter_preserves_saved_arguments:law_fill",
+          "name": "L.erased_parameter_preserves_saved_arguments",
+          "key": "src/c-LAWS.erased_parameter_preserves_saved_arguments",
+          "kind": "law_fill",
+          "lines": [
+            9,
+            9
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "U32.add",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "U32.add",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.two_parameters_rebind_before_loop:law_fill",
+          "name": "L.two_parameters_rebind_before_loop",
+          "key": "src/c-LAWS.two_parameters_rebind_before_loop",
+          "kind": "law_fill",
+          "lines": [
+            10,
+            10
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Slot",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "U32",
+            "src/c.rebind",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c-PROOF.bend::L.zero_depth_is_exhausted:law_fill",
+          "name": "L.zero_depth_is_exhausted",
+          "key": "src/c-LAWS.zero_depth_is_exhausted",
+          "kind": "law_fill",
+          "lines": [
+            11,
+            11
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/c.lower",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/c.lower",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/c.bend",
+      "sha256": "89492ef26f3934b5dc1f22d44d8740040f2b0cc5e7409a2fc51995b5ad524f49",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "alias": "B",
+          "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+          "feature": "imports.package"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./wasm-bytes.bend",
+          "alias": "W",
+          "file": "src/wasm-bytes.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "annotations",
+        "bindings",
+        "calls",
+        "calls.variable",
+        "captures",
+        "constructors",
+        "dependent",
+        "fields",
+        "generics",
+        "higher-order",
+        "imports.base",
+        "imports.local",
+        "imports.package",
+        "lambdas",
+        "literals.list",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "matches",
+        "matches.multi",
+        "patterns.nested",
+        "patterns.variable",
+        "patterns.wildcard",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.erased",
+        "quantities.reusable",
+        "recursion",
+        "types.base",
+        "types.data",
+        "types.type"
+      ],
+      "declarations": [
+        {
+          "id": "src/c.bend::Local:datatype",
+          "name": "Local",
+          "key": "src/c.Local",
+          "kind": "datatype",
+          "lines": [
+            7,
+            8
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "String",
+            "U32",
+            "src/c.Local"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/c.Local"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Slot:datatype",
+          "name": "Slot",
+          "key": "src/c.Slot",
+          "kind": "datatype",
+          "lines": [
+            9,
+            10
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "String",
+            "U32",
+            "src/c.Slot"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/c.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Context:datatype",
+          "name": "Context",
+          "key": "src/c.Context",
+          "kind": "datatype",
+          "lines": [
+            11,
+            12
+          ],
+          "features": [
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/c.Context",
+            "src/core.Function"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/c.Context",
+            "src/core.Function"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Code:datatype",
+          "name": "Code",
+          "key": "src/c.Code",
+          "kind": "datatype",
+          "lines": [
+            13,
+            14
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "U32",
+            "src/c.Code"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "U32",
+            "src/c.Code"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Destination:datatype",
+          "name": "Destination",
+          "key": "src/c.Destination",
+          "kind": "datatype",
+          "lines": [
+            15,
+            17
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "String",
+            "src/c.Destination"
+          ],
+          "type_references": [
+            "String",
+            "src/c.Destination"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Action:datatype",
+          "name": "Action",
+          "key": "src/c.Action",
+          "kind": "datatype",
+          "lines": [
+            18,
+            20
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "U32",
+            "src/c.Action",
+            "src/c.Destination"
+          ],
+          "type_references": [
+            "U32",
+            "src/c.Action",
+            "src/c.Destination"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::Mode:datatype",
+          "name": "Mode",
+          "key": "src/c.Mode",
+          "kind": "datatype",
+          "lines": [
+            21,
+            25
+          ],
+          "features": [
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "List",
+            "String",
+            "U32",
+            "src/c.Action",
+            "src/c.Destination",
+            "src/c.Mode",
+            "src/c.Slot",
+            "src/core.Binding",
+            "src/core.Parameter",
+            "src/core.Term"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32",
+            "src/c.Action",
+            "src/c.Destination",
+            "src/c.Mode",
+            "src/c.Slot",
+            "src/core.Binding",
+            "src/core.Parameter",
+            "src/core.Term"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::internal:definition",
+          "name": "internal",
+          "key": "src/c.internal",
+          "kind": "definition",
+          "lines": [
+            27,
+            28
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "String",
+            "src/syntax.Error",
+            "src/syntax.Internal"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "src/syntax.Internal"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::exhausted:definition",
+          "name": "exhausted",
+          "key": "src/c.exhausted",
+          "kind": "definition",
+          "lines": [
+            30,
+            31
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "Result",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Exhausted"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::fielded:definition",
+          "name": "fielded",
+          "key": "src/c.fielded",
+          "kind": "definition",
+          "lines": [
+            33,
+            37
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/c.fielded",
+            "src/core.Constructor"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/core.Constructor"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.fielded"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil",
+              "True",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::heap_types:definition",
+          "name": "heap_types",
+          "key": "src/c.heap_types",
+          "kind": "definition",
+          "lines": [
+            39,
+            43
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/c.fielded",
+            "src/c.heap_types",
+            "src/core.Datatype",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Datatype"
+          ],
+          "captures": [
+            {
+              "offset": 1597,
+              "names": [
+                "index",
+                "tail"
+              ]
+            },
+            {
+              "offset": 1647,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/c.fielded",
+              "src/c.heap_types",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Datatype"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::member:definition",
+          "name": "member",
+          "key": "src/c.member",
+          "kind": "definition",
+          "lines": [
+            45,
+            48
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.or",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "U32",
+            "U32.is_eq",
+            "src/c.member"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.or",
+              "U32.is_eq",
+              "src/c.member"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::boxed:definition",
+          "name": "boxed",
+          "key": "src/c.boxed",
+          "kind": "definition",
+          "lines": [
+            50,
+            52
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "U32",
+            "src/c.Context",
+            "src/c.member"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/c.Context"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.member"
+            ],
+            "types": [
+              "src/c.Context"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::ctype:definition",
+          "name": "ctype",
+          "key": "src/c.ctype",
+          "kind": "definition",
+          "lines": [
+            54,
+            55
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.boxed"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/c.Context"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "src/c.boxed"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::projection:definition",
+          "name": "projection",
+          "key": "src/c.projection",
+          "kind": "definition",
+          "lines": [
+            57,
+            58
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.boxed"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/c.Context"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "src/c.boxed"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::variable:definition",
+          "name": "variable",
+          "key": "src/c.variable",
+          "kind": "definition",
+          "lines": [
+            60,
+            61
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "String.append",
+            "U32",
+            "U32.show"
+          ],
+          "type_references": [
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.append",
+              "U32.show"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::parameter:definition",
+          "name": "parameter",
+          "key": "src/c.parameter",
+          "kind": "definition",
+          "lines": [
+            63,
+            64
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "String.append",
+            "U32",
+            "U32.show"
+          ],
+          "type_references": [
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.append",
+              "U32.show"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::function_name:definition",
+          "name": "function_name",
+          "key": "src/c.function_name",
+          "kind": "definition",
+          "lines": [
+            66,
+            67
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "String.append",
+            "U32",
+            "U32.show"
+          ],
+          "type_references": [
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.append",
+              "U32.show"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::text:definition",
+          "name": "text",
+          "key": "src/c.text",
+          "kind": "definition",
+          "lines": [
+            69,
+            70
+          ],
+          "features": [
+            "calls",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "String",
+            "U32",
+            "src/syntax.Error",
+            "src/wasm-bytes.bytes",
+            "src/wasm-bytes.chars"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "String",
+            "U32",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.chars"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::code:definition",
+          "name": "code",
+          "key": "src/c.code",
+          "kind": "definition",
+          "lines": [
+            72,
+            73
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Done",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 2663,
+              "names": [
+                "next"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Done",
+              "src/c.Code"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::prepend:definition",
+          "name": "prepend",
+          "key": "src/c.prepend",
+          "kind": "definition",
+          "lines": [
+            75,
+            77
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "src/c.Code",
+            "src/c.code",
+            "src/syntax.Error",
+            "src/wasm-bytes.join"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "src/c.Code",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.code",
+              "src/wasm-bytes.join"
+            ],
+            "types": [
+              "src/c.Code"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::prefixed:definition",
+          "name": "prefixed",
+          "key": "src/c.prefixed",
+          "kind": "definition",
+          "lines": [
+            79,
+            80
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/c.prepend",
+            "src/c.text",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 2965,
+              "names": [
+                "body"
+              ]
+            },
+            {
+              "offset": 2997,
+              "names": [
+                "bytes"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/c.prepend",
+              "src/c.text",
+              "src/syntax.bind"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::after:definition",
+          "name": "after",
+          "key": "src/c.after",
+          "kind": "definition",
+          "lines": [
+            82,
+            84
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.prepend",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3188,
+              "names": [
+                "bytes"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/c.prepend",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "src/c.Code"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/c.bend::deliver:definition",
+          "name": "deliver",
+          "key": "src/c.deliver",
+          "kind": "definition",
+          "lines": [
+            86,
+            89
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "String",
+            "String.concat",
+            "src/c.Destination",
+            "src/c.Return",
+            "src/c.Save"
+          ],
+          "type_references": [
+            "String",
+            "src/c.Destination"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Return",
+              "src/c.Save"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::lookup:definition",
+          "name": "lookup",
+          "key": "src/c.lookup",
+          "kind": "definition",
+          "lines": [
+            91,
+            97
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "src/c.Local",
+            "src/c.internal",
+            "src/c.lookup",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Local",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3751,
+              "names": [
+                "head"
+              ]
+            },
+            {
+              "offset": 3767,
+              "names": [
+                "level",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/c.internal",
+              "src/c.lookup",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/c.Local"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::signature:definition",
+          "name": "signature",
+          "key": "src/c.signature",
+          "kind": "definition",
+          "lines": [
+            99,
+            103
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "U32.sub",
+            "src/c.internal",
+            "src/c.signature",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 4063,
+              "names": [
+                "sig"
+              ]
+            },
+            {
+              "offset": 4078,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "U32.sub",
+              "src/c.internal",
+              "src/c.signature",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Function"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::callee:definition",
+          "name": "callee",
+          "key": "src/c.callee",
+          "kind": "definition",
+          "lines": [
+            105,
+            107
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/c.signature",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.signature"
+            ],
+            "types": [
+              "src/c.Context"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::parameters:definition",
+          "name": "parameters",
+          "key": "src/c.parameters",
+          "kind": "definition",
+          "lines": [
+            109,
+            114
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/c.Local",
+            "src/c.parameter",
+            "src/c.parameters",
+            "src/core.Parameter",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/c.Local",
+            "src/core.Parameter"
+          ],
+          "captures": [
+            {
+              "offset": 4486,
+              "names": [
+                "level",
+                "tail"
+              ]
+            },
+            {
+              "offset": 4525,
+              "names": [
+                "level",
+                "tail",
+                "type_id"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/c.parameter",
+              "src/c.parameters",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/c.Local",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::actuals:definition",
+          "name": "actuals",
+          "key": "src/c.actuals",
+          "kind": "definition",
+          "lines": [
+            116,
+            120
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "src/c.Slot",
+            "src/c.actuals"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/c.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.actuals"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::stores:definition",
+          "name": "stores",
+          "key": "src/c.stores",
+          "kind": "definition",
+          "lines": [
+            122,
+            126
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32",
+            "U32.add",
+            "U32.show",
+            "src/c.Context",
+            "src/c.Slot",
+            "src/c.projection",
+            "src/c.stores"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/c.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "U32.add",
+              "U32.show",
+              "src/c.projection",
+              "src/c.stores"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/c.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::allocate:definition",
+          "name": "allocate",
+          "key": "src/c.allocate",
+          "kind": "definition",
+          "lines": [
+            128,
+            131
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.length",
+            "Nil",
+            "Result",
+            "String.concat",
+            "U32",
+            "U32.add",
+            "U32.from_nat",
+            "U32.is_lt",
+            "U32.show",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Slot",
+            "src/c.code",
+            "src/c.deliver",
+            "src/c.exhausted",
+            "src/c.stores",
+            "src/c.text",
+            "src/c.variable",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 5330,
+              "names": [
+                "cap",
+                "context",
+                "destination",
+                "next",
+                "slots",
+                "tag"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.length",
+              "String.concat",
+              "U32.add",
+              "U32.from_nat",
+              "U32.is_lt",
+              "U32.show",
+              "src/c.code",
+              "src/c.deliver",
+              "src/c.exhausted",
+              "src/c.stores",
+              "src/c.text",
+              "src/c.variable",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::tail_call:definition",
+          "name": "tail_call",
+          "key": "src/c.tail_call",
+          "kind": "definition",
+          "lines": [
+            133,
+            136
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "U32",
+            "U32.is_eq",
+            "src/c.Context",
+            "src/c.Destination",
+            "src/c.Return",
+            "src/c.Save"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/c.Context",
+            "src/c.Destination"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.is_eq"
+            ],
+            "types": [
+              "False",
+              "src/c.Context",
+              "src/c.Return",
+              "src/c.Save"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::live_rebind:definition",
+          "name": "live_rebind",
+          "key": "src/c.live_rebind",
+          "kind": "definition",
+          "lines": [
+            139,
+            143
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "String",
+            "String.concat",
+            "U32",
+            "src/c.Slot",
+            "src/c.internal",
+            "src/c.parameter",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 6216,
+              "names": [
+                "level",
+                "name"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.internal",
+              "src/c.parameter",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/c.Slot"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/c.bend::rebind:definition",
+          "name": "rebind",
+          "key": "src/c.rebind",
+          "kind": "definition",
+          "lines": [
+            145,
+            153
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "String",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/c.Slot",
+            "src/c.internal",
+            "src/c.live_rebind",
+            "src/c.rebind",
+            "src/core.Parameter",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Slot",
+            "src/core.Parameter",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 6651,
+              "names": [
+                "level",
+                "slots",
+                "tail"
+              ]
+            },
+            {
+              "offset": 6692,
+              "names": [
+                "level",
+                "slots",
+                "tail"
+              ]
+            },
+            {
+              "offset": 6729,
+              "names": [
+                "level",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/c.internal",
+              "src/c.live_rebind",
+              "src/c.rebind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::rebound:definition",
+          "name": "rebound",
+          "key": "src/c.rebound",
+          "kind": "definition",
+          "lines": [
+            155,
+            157
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/c.Slot",
+            "src/c.code",
+            "src/c.rebind",
+            "src/c.text",
+            "src/core.Signature",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Slot",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 6973,
+              "names": [
+                "cap",
+                "next"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/c.code",
+              "src/c.rebind",
+              "src/c.text",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "U32",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::applied:definition",
+          "name": "applied",
+          "key": "src/c.applied",
+          "kind": "definition",
+          "lines": [
+            159,
+            165
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "Result",
+            "String.concat",
+            "U32",
+            "src/c.Action",
+            "src/c.Call",
+            "src/c.Cell",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Slot",
+            "src/c.actuals",
+            "src/c.allocate",
+            "src/c.callee",
+            "src/c.code",
+            "src/c.deliver",
+            "src/c.function_name",
+            "src/c.rebound",
+            "src/c.tail_call",
+            "src/c.text",
+            "src/core.Signature",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/c.Action",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 7327,
+              "names": [
+                "cap",
+                "context",
+                "index",
+                "next",
+                "slots"
+              ]
+            },
+            {
+              "offset": 7386,
+              "names": [
+                "cap",
+                "next",
+                "slots"
+              ]
+            },
+            {
+              "offset": 7422,
+              "names": [
+                "cap",
+                "destination",
+                "index",
+                "next",
+                "slots"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.actuals",
+              "src/c.allocate",
+              "src/c.callee",
+              "src/c.code",
+              "src/c.deliver",
+              "src/c.function_name",
+              "src/c.rebound",
+              "src/c.tail_call",
+              "src/c.text",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Call",
+              "src/c.Cell"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::declared:definition",
+          "name": "declared",
+          "key": "src/c.declared",
+          "kind": "definition",
+          "lines": [
+            167,
+            168
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32",
+            "src/c.Context",
+            "src/c.ctype",
+            "src/c.variable"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/c.Context"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.ctype",
+              "src/c.variable"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::referenced:definition",
+          "name": "referenced",
+          "key": "src/c.referenced",
+          "kind": "definition",
+          "lines": [
+            170,
+            172
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/c.code",
+            "src/c.deliver",
+            "src/c.text",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Destination",
+            "src/c.Local",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.code",
+              "src/c.deliver",
+              "src/c.text"
+            ],
+            "types": [
+              "src/c.Local"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::call_parameters:definition",
+          "name": "call_parameters",
+          "key": "src/c.call_parameters",
+          "kind": "definition",
+          "lines": [
+            174,
+            176
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "src/c.Code",
+            "src/core.Parameter",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/c.Code",
+            "src/core.Parameter",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/core.Signature"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/c.bend::matched:definition",
+          "name": "matched",
+          "key": "src/c.matched",
+          "kind": "definition",
+          "lines": [
+            178,
+            180
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Result",
+            "String",
+            "String.append",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.boxed",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "String.append",
+              "src/c.boxed"
+            ],
+            "types": [
+              "String",
+              "src/c.Local"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/c.bend::branch_code:definition",
+          "name": "branch_code",
+          "key": "src/c.branch_code",
+          "kind": "definition",
+          "lines": [
+            182,
+            185
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "String",
+            "String.concat",
+            "U32",
+            "U32.is_ge",
+            "U32.show",
+            "src/c.Code",
+            "src/c.code",
+            "src/c.text",
+            "src/syntax.Error",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "U32",
+            "src/c.Code",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "String.concat",
+              "U32.is_ge",
+              "U32.show",
+              "src/c.code",
+              "src/c.text",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/c.Code"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::lower:definition",
+          "name": "lower",
+          "key": "src/c.lower",
+          "kind": "definition",
+          "lines": [
+            189,
+            229
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.reverse",
+            "Nat",
+            "Nil",
+            "Result",
+            "String.concat",
+            "Succ",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "U32.is_lt",
+            "U32.show",
+            "Zero",
+            "src/c.Arguments",
+            "src/c.Branches",
+            "src/c.Call",
+            "src/c.Cell",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Expression",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/c.Save",
+            "src/c.Slot",
+            "src/c.Unpack",
+            "src/c.after",
+            "src/c.allocate",
+            "src/c.applied",
+            "src/c.boxed",
+            "src/c.branch_code",
+            "src/c.call_parameters",
+            "src/c.callee",
+            "src/c.code",
+            "src/c.declared",
+            "src/c.deliver",
+            "src/c.exhausted",
+            "src/c.internal",
+            "src/c.lookup",
+            "src/c.lower",
+            "src/c.matched",
+            "src/c.prefixed",
+            "src/c.projection",
+            "src/c.referenced",
+            "src/c.text",
+            "src/c.variable",
+            "src/core.Application",
+            "src/core.Binding",
+            "src/core.Branch",
+            "src/core.Case",
+            "src/core.Construct",
+            "src/core.Let",
+            "src/core.Parameter",
+            "src/core.Reference",
+            "src/core.Signature",
+            "src/core.Value",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.Mode",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 9118,
+              "names": [
+                "cap",
+                "context",
+                "destination",
+                "next",
+                "tag"
+              ]
+            },
+            {
+              "offset": 9172,
+              "names": [
+                "cap",
+                "destination",
+                "next",
+                "tag"
+              ]
+            },
+            {
+              "offset": 9527,
+              "names": [
+                "cap",
+                "destination",
+                "next"
+              ]
+            },
+            {
+              "offset": 9712,
+              "names": [
+                "args",
+                "cap",
+                "context",
+                "destination",
+                "index",
+                "locals",
+                "n",
+                "next"
+              ]
+            },
+            {
+              "offset": 9739,
+              "names": [
+                "args",
+                "cap",
+                "context",
+                "destination",
+                "index",
+                "locals",
+                "n",
+                "next"
+              ]
+            },
+            {
+              "offset": 9982,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next"
+              ]
+            },
+            {
+              "offset": 10049,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "type_id",
+                "value"
+              ]
+            },
+            {
+              "offset": 10113,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "type_id",
+                "value"
+              ]
+            },
+            {
+              "offset": 10272,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 10309,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 10569,
+              "names": [
+                "arms",
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next"
+              ]
+            },
+            {
+              "offset": 10600,
+              "names": [
+                "arms",
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next"
+              ]
+            },
+            {
+              "offset": 10611,
+              "names": [
+                "arms",
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next",
+                "pointer"
+              ]
+            },
+            {
+              "offset": 11053,
+              "names": [
+                "action",
+                "cap",
+                "context",
+                "locals",
+                "n",
+                "next",
+                "params",
+                "slots",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11127,
+              "names": [
+                "action",
+                "cap",
+                "context",
+                "head",
+                "locals",
+                "n",
+                "next",
+                "params",
+                "slots",
+                "tail",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 11191,
+              "names": [
+                "action",
+                "cap",
+                "context",
+                "head",
+                "locals",
+                "n",
+                "next",
+                "params",
+                "slots",
+                "tail",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 11349,
+              "names": [
+                "action",
+                "cap",
+                "context",
+                "locals",
+                "n",
+                "next",
+                "params",
+                "slots",
+                "tail",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 11386,
+              "names": [
+                "action",
+                "cap",
+                "context",
+                "locals",
+                "n",
+                "next",
+                "params",
+                "slots",
+                "tail",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 11974,
+              "names": [
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next",
+                "pointer",
+                "tag",
+                "tail",
+                "value"
+              ]
+            },
+            {
+              "offset": 12081,
+              "names": [
+                "cap",
+                "left",
+                "tag",
+                "value"
+              ]
+            },
+            {
+              "offset": 12509,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "locals",
+                "n",
+                "next",
+                "offset",
+                "pointer",
+                "tail"
+              ]
+            },
+            {
+              "offset": 12592,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "offset",
+                "pointer",
+                "tail",
+                "type_id"
+              ]
+            },
+            {
+              "offset": 12656,
+              "names": [
+                "body",
+                "cap",
+                "context",
+                "destination",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "offset",
+                "pointer",
+                "tail",
+                "type_id"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.reverse",
+              "String.concat",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_lt",
+              "U32.show",
+              "src/c.after",
+              "src/c.allocate",
+              "src/c.applied",
+              "src/c.boxed",
+              "src/c.branch_code",
+              "src/c.call_parameters",
+              "src/c.callee",
+              "src/c.code",
+              "src/c.declared",
+              "src/c.deliver",
+              "src/c.exhausted",
+              "src/c.internal",
+              "src/c.lookup",
+              "src/c.lower",
+              "src/c.matched",
+              "src/c.prefixed",
+              "src/c.projection",
+              "src/c.referenced",
+              "src/c.text",
+              "src/c.variable",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "Succ",
+              "U32",
+              "Zero",
+              "src/c.Arguments",
+              "src/c.Branches",
+              "src/c.Call",
+              "src/c.Cell",
+              "src/c.Expression",
+              "src/c.Local",
+              "src/c.Save",
+              "src/c.Slot",
+              "src/c.Unpack",
+              "src/core.Application",
+              "src/core.Binding",
+              "src/core.Branch",
+              "src/core.Case",
+              "src/core.Construct",
+              "src/core.Let",
+              "src/core.Parameter",
+              "src/core.Reference",
+              "src/core.Value"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::formal_list:definition",
+          "name": "formal_list",
+          "key": "src/c.formal_list",
+          "kind": "definition",
+          "lines": [
+            231,
+            235
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.append",
+            "String.concat",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.ctype",
+            "src/c.formal_list"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/c.Context",
+            "src/c.Local"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.append",
+              "String.concat",
+              "src/c.ctype",
+              "src/c.formal_list"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Local"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::formals:definition",
+          "name": "formals",
+          "key": "src/c.formals",
+          "kind": "definition",
+          "lines": [
+            237,
+            240
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.formal_list"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/c.Context",
+            "src/c.Local"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.formal_list"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::ignored:definition",
+          "name": "ignored",
+          "key": "src/c.ignored",
+          "kind": "definition",
+          "lines": [
+            242,
+            245
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "src/c.Local",
+            "src/c.ignored"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/c.Local"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.ignored"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Local"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::prototype:definition",
+          "name": "prototype",
+          "key": "src/c.prototype",
+          "kind": "definition",
+          "lines": [
+            247,
+            250
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "String",
+            "String.concat",
+            "src/c.Context",
+            "src/c.ctype",
+            "src/c.formals",
+            "src/c.parameters",
+            "src/core.Signature"
+          ],
+          "type_references": [
+            "String",
+            "src/c.Context",
+            "src/core.Signature"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.ctype",
+              "src/c.formals",
+              "src/c.parameters"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::definition:definition",
+          "name": "definition",
+          "key": "src/c.definition",
+          "kind": "definition",
+          "lines": [
+            252,
+            258
+          ],
+          "features": [
+            "bindings",
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Con",
+            "Done",
+            "List.length",
+            "Nil",
+            "Result",
+            "String.concat",
+            "U32",
+            "U32.add",
+            "U32.from_nat",
+            "U32.mul",
+            "U32.show",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Local",
+            "src/c.ctype",
+            "src/c.function_name",
+            "src/c.ignored",
+            "src/c.parameters",
+            "src/c.prototype",
+            "src/c.text",
+            "src/core.Signature",
+            "src/syntax.Error",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "Result",
+            "U32",
+            "src/c.Code",
+            "src/c.Context",
+            "src/core.Signature",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "List.length",
+              "String.concat",
+              "U32.add",
+              "U32.from_nat",
+              "U32.mul",
+              "U32.show",
+              "src/c.ctype",
+              "src/c.function_name",
+              "src/c.ignored",
+              "src/c.parameters",
+              "src/c.prototype",
+              "src/c.text",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/c.Code",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::definitions:definition",
+          "name": "definitions",
+          "key": "src/c.definitions",
+          "kind": "definition",
+          "lines": [
+            260,
+            268
+          ],
+          "features": [
+            "annotations",
+            "bindings",
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+            "Con",
+            "Done",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/c.Code",
+            "src/c.Context",
+            "src/c.Expression",
+            "src/c.Return",
+            "src/c.definition",
+            "src/c.definitions",
+            "src/c.lower",
+            "src/c.parameters",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 15111,
+              "names": [
+                "all",
+                "cap",
+                "context",
+                "depth",
+                "heap",
+                "index",
+                "sig",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "U32.add",
+              "src/c.definition",
+              "src/c.definitions",
+              "src/c.lower",
+              "src/c.parameters",
+              "src/syntax.bind",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "src/c.Context",
+              "src/c.Expression",
+              "src/c.Return",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::prototypes:definition",
+          "name": "prototypes",
+          "key": "src/c.prototypes",
+          "kind": "definition",
+          "lines": [
+            270,
+            274
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "String.append",
+            "U32",
+            "U32.add",
+            "src/c.Context",
+            "src/c.function_name",
+            "src/c.prototype",
+            "src/c.prototypes",
+            "src/c.text",
+            "src/core.Function",
+            "src/syntax.Error",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "List",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "String.append",
+              "U32.add",
+              "src/c.function_name",
+              "src/c.prototype",
+              "src/c.prototypes",
+              "src/c.text",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Function"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::enum_parameters:definition",
+          "name": "enum_parameters",
+          "key": "src/c.enum_parameters",
+          "kind": "definition",
+          "lines": [
+            276,
+            280
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Bool.not",
+            "Bool.or",
+            "Con",
+            "List",
+            "Nil",
+            "True",
+            "U32.is_eq",
+            "src/c.Context",
+            "src/c.boxed",
+            "src/c.enum_parameters",
+            "src/core.Parameter"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/c.Context",
+            "src/core.Parameter"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "Bool.not",
+              "Bool.or",
+              "U32.is_eq",
+              "src/c.boxed",
+              "src/c.enum_parameters"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "True",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::exported:definition",
+          "name": "exported",
+          "key": "src/c.exported",
+          "kind": "definition",
+          "lines": [
+            282,
+            284
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Bool.not",
+            "src/c.Context",
+            "src/c.boxed",
+            "src/c.enum_parameters",
+            "src/core.Signature"
+          ],
+          "type_references": [
+            "Bool",
+            "src/c.Context",
+            "src/core.Signature"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "Bool.not",
+              "src/c.boxed",
+              "src/c.enum_parameters"
+            ],
+            "types": [
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::ordinal_count:definition",
+          "name": "ordinal_count",
+          "key": "src/c.ordinal_count",
+          "kind": "definition",
+          "lines": [
+            286,
+            290
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.length",
+            "Nil",
+            "U32",
+            "U32.from_nat",
+            "U32.is_eq",
+            "U32.sub",
+            "src/c.ordinal_count",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Datatype"
+          ],
+          "captures": [
+            {
+              "offset": 16260,
+              "names": [
+                "constructors"
+              ]
+            },
+            {
+              "offset": 16322,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.length",
+              "U32.from_nat",
+              "U32.is_eq",
+              "U32.sub",
+              "src/c.ordinal_count",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Datatype"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::domains:definition",
+          "name": "domains",
+          "key": "src/c.domains",
+          "kind": "definition",
+          "lines": [
+            292,
+            296
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32.show",
+            "src/c.Local",
+            "src/c.domains",
+            "src/c.ordinal_count",
+            "src/core.Datatype"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "src/c.Local",
+            "src/core.Datatype"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "U32.show",
+              "src/c.domains",
+              "src/c.ordinal_count"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/c.Local"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::local_slots:definition",
+          "name": "local_slots",
+          "key": "src/c.local_slots",
+          "kind": "definition",
+          "lines": [
+            298,
+            301
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "src/c.Local",
+            "src/c.Slot",
+            "src/c.local_slots"
+          ],
+          "type_references": [
+            "List",
+            "src/c.Local",
+            "src/c.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/c.local_slots"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/c.Local",
+              "src/c.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::export_name:definition",
+          "name": "export_name",
+          "key": "src/c.export_name",
+          "kind": "definition",
+          "lines": [
+            303,
+            304
+          ],
+          "features": [
+            "calls",
+            "literals.string",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "String.append",
+            "U32",
+            "U32.show"
+          ],
+          "type_references": [
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.append",
+              "U32.show"
+            ],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::wrapper:definition",
+          "name": "wrapper",
+          "key": "src/c.wrapper",
+          "kind": "definition",
+          "lines": [
+            306,
+            310
+          ],
+          "features": [
+            "bindings",
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32",
+            "src/c.Context",
+            "src/c.actuals",
+            "src/c.domains",
+            "src/c.export_name",
+            "src/c.function_name",
+            "src/c.local_slots",
+            "src/c.parameters",
+            "src/c.prototype",
+            "src/core.Datatype",
+            "src/core.Signature"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32",
+            "src/c.Context",
+            "src/core.Datatype",
+            "src/core.Signature"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "src/c.actuals",
+              "src/c.domains",
+              "src/c.export_name",
+              "src/c.function_name",
+              "src/c.local_slots",
+              "src/c.parameters",
+              "src/c.prototype"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::wrappers:definition",
+          "name": "wrappers",
+          "key": "src/c.wrappers",
+          "kind": "definition",
+          "lines": [
+            312,
+            317
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/c.Context",
+            "src/c.exported",
+            "src/c.text",
+            "src/c.wrapper",
+            "src/c.wrappers",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/syntax.Error",
+            "src/syntax.choose",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "List",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 17641,
+              "names": [
+                "cap",
+                "context",
+                "index",
+                "sig",
+                "types"
+              ]
+            },
+            {
+              "offset": 17689,
+              "names": [
+                "cap"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "U32.add",
+              "src/c.exported",
+              "src/c.text",
+              "src/c.wrapper",
+              "src/c.wrappers",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "src/core.Function"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::host_actuals:definition",
+          "name": "host_actuals",
+          "key": "src/c.host_actuals",
+          "kind": "definition",
+          "lines": [
+            319,
+            323
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32",
+            "U32.add",
+            "U32.show",
+            "src/c.Local",
+            "src/c.host_actuals"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32",
+            "src/c.Local"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "U32.add",
+              "U32.show",
+              "src/c.host_actuals"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::dispatch:definition",
+          "name": "dispatch",
+          "key": "src/c.dispatch",
+          "kind": "definition",
+          "lines": [
+            325,
+            330
+          ],
+          "features": [
+            "bindings",
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List.length",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32",
+            "U32.from_nat",
+            "U32.show",
+            "src/c.Local",
+            "src/c.export_name",
+            "src/c.host_actuals",
+            "src/c.parameters",
+            "src/core.Signature",
+            "src/syntax.text"
+          ],
+          "type_references": [
+            "String",
+            "U32",
+            "src/core.Signature"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "List.length",
+              "String.concat",
+              "U32.from_nat",
+              "U32.show",
+              "src/c.export_name",
+              "src/c.host_actuals",
+              "src/c.parameters",
+              "src/syntax.text"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::dispatches:definition",
+          "name": "dispatches",
+          "key": "src/c.dispatches",
+          "kind": "definition",
+          "lines": [
+            332,
+            337
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/c.Context",
+            "src/c.dispatch",
+            "src/c.dispatches",
+            "src/c.exported",
+            "src/c.text",
+            "src/core.Function",
+            "src/syntax.Error",
+            "src/syntax.choose",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "List",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 18758,
+              "names": [
+                "cap",
+                "index",
+                "sig"
+              ]
+            },
+            {
+              "offset": 18793,
+              "names": [
+                "cap"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "U32.add",
+              "src/c.dispatch",
+              "src/c.dispatches",
+              "src/c.exported",
+              "src/c.text",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "src/core.Function"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::runtime:definition",
+          "name": "runtime",
+          "key": "src/c.runtime",
+          "kind": "definition",
+          "lines": [
+            339,
+            340
+          ],
+          "features": [
+            "literals.string",
+            "types.base"
+          ],
+          "references": [
+            "String"
+          ],
+          "type_references": [
+            "String"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::shim:definition",
+          "name": "shim",
+          "key": "src/c.shim",
+          "kind": "definition",
+          "lines": [
+            342,
+            343
+          ],
+          "features": [
+            "literals.string",
+            "types.base"
+          ],
+          "references": [
+            "String"
+          ],
+          "type_references": [
+            "String"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "String"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/c.bend::emit:definition",
+          "name": "emit",
+          "key": "src/c.emit",
+          "kind": "definition",
+          "lines": [
+            347,
+            354
+          ],
+          "features": [
+            "annotations",
+            "bindings",
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+            "0xc409b77d3230ca33374caf6b0993f0cb/bytes.finish",
+            "Con",
+            "Done",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/c.definitions",
+            "src/c.dispatches",
+            "src/c.heap_types",
+            "src/c.prototypes",
+            "src/c.runtime",
+            "src/c.shim",
+            "src/c.text",
+            "src/c.wrappers",
+            "src/core.Book",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/wasm-bytes.concat"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/c.Context",
+            "src/core.Book",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.finish",
+              "src/c.definitions",
+              "src/c.dispatches",
+              "src/c.heap_types",
+              "src/c.prototypes",
+              "src/c.runtime",
+              "src/c.shim",
+              "src/c.text",
+              "src/c.wrappers",
+              "src/syntax.bind",
+              "src/wasm-bytes.concat"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/c.Context",
+              "src/core.Book"
             ],
             "dynamic_calls": []
           }

@@ -1,0 +1,2397 @@
+{
+  "profile": "knot-c-1",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "expectation_basis": "Existing corpus literals are fixed unchanged. Recursion observers append exhaustive literal full-tree checks to byte-preserved originals; independent seed observations are frozen before C backend implementation. Tail rebind is literal argument permutation; deep recursion is a 64-node copy followed by parity. Exhaustion is a separate outcome, never disagreement relabeled as rejection.",
+  "cases": [
+    {
+      "name": "wasm-data-reuse",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/data-reuse.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "reuse",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.reuse(F.Off{})"
+        },
+        {
+          "export": "reuse",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.reuse(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-erased-forward",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/erased-forward.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "take",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.take(F.Off{},F.Off{})"
+        },
+        {
+          "export": "take",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.take(F.Off{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-flag",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/flag.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.flip(F.Off{})"
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.flip(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-forward-type",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/forward-type.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-nested-match",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/nested-match.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "both",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.both(F.Off{},F.Off{})"
+        },
+        {
+          "export": "both",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.both(F.Off{},F.On{})"
+        },
+        {
+          "export": "both",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.both(F.On{},F.Off{})"
+        },
+        {
+          "export": "both",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.both(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-shadowing",
+      "suite": "compiler-wasm",
+      "file": "tests/subsets/s1/shadowing.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "shadow",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.shadow(F.Off{})"
+        },
+        {
+          "export": "shadow",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.shadow(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-branch-maximum",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/branch-maximum.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.Off{},F.On{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.On{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-data-argument",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/data-argument.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-data-promote",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/data-promote.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-duplicate-parameters",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/duplicate-parameters.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.Off{},F.On{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.On{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-erased-affine-copy",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/erased-affine-copy.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-erased-binding",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/erased-binding.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-erased-forward-call",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/erased-forward-call.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-matched-duplicate",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/matched-duplicate.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-matched-return",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/matched-return.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-renamed",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/renamed.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "toggle",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.toggle(F.Off{})"
+        },
+        {
+          "export": "toggle",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.toggle(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-reordered-arms",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-checker/fixtures/reordered-arms.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.flip(F.Off{})"
+        },
+        {
+          "export": "flip",
+          "arguments": [
+            1
+          ],
+          "tag": 0,
+          "seed": "F.flip(F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-three-colors",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/three-colors.bend",
+      "type": "Color",
+      "type_id": 0,
+      "constructors": [
+        "Red",
+        "Green",
+        "Blue"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 2,
+          "seed": "F.main()"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.cycle(F.Red{})"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            1
+          ],
+          "tag": 2,
+          "seed": "F.cycle(F.Green{})"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            2
+          ],
+          "tag": 0,
+          "seed": "F.cycle(F.Blue{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-mixed-types",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/mixed-types.bend",
+      "type": "Color",
+      "type_id": 1,
+      "constructors": [
+        "Red",
+        "Green",
+        "Blue"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.choose(F.Off{},F.Off{},F.Red{})"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 2,
+          "seed": "F.choose(F.Off{},F.On{},F.Red{})"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.choose(F.Off{},F.Off{},F.Green{})"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 2,
+          "seed": "F.choose(F.Off{},F.On{},F.Green{})"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            0,
+            2
+          ],
+          "tag": 2,
+          "seed": "F.choose(F.Off{},F.Off{},F.Blue{})"
+        },
+        {
+          "export": "choose",
+          "arguments": [
+            1,
+            2
+          ],
+          "tag": 2,
+          "seed": "F.choose(F.Off{},F.On{},F.Blue{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-branch-locals",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/branch-locals.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.f(F.Off{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.Off{},F.On{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{},F.Off{})"
+        },
+        {
+          "export": "f",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.f(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-erased-cost",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/erased-cost.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-argument-order",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/argument-order.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.first(F.Off{},F.On{},F.Off{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.second(F.Off{},F.Off{},F.Off{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.first(F.Off{},F.On{},F.On{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.second(F.Off{},F.Off{},F.On{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.first(F.On{},F.On{},F.Off{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.second(F.On{},F.Off{},F.Off{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.first(F.On{},F.On{},F.On{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.second(F.On{},F.Off{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "wasm-high-tags",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/high-tags.bend",
+      "type": "Tag",
+      "type_id": 0,
+      "constructors": [
+        "T0",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17",
+        "T18",
+        "T19",
+        "T20",
+        "T21",
+        "T22",
+        "T23",
+        "T24",
+        "T25",
+        "T26",
+        "T27",
+        "T28",
+        "T29",
+        "T30",
+        "T31",
+        "T32",
+        "T33",
+        "T34",
+        "T35",
+        "T36",
+        "T37",
+        "T38",
+        "T39",
+        "T40",
+        "T41",
+        "T42",
+        "T43",
+        "T44",
+        "T45",
+        "T46",
+        "T47",
+        "T48",
+        "T49",
+        "T50",
+        "T51",
+        "T52",
+        "T53",
+        "T54",
+        "T55",
+        "T56",
+        "T57",
+        "T58",
+        "T59",
+        "T60",
+        "T61",
+        "T62",
+        "T63",
+        "T64",
+        "T65",
+        "T66",
+        "T67",
+        "T68",
+        "T69",
+        "T70",
+        "T71",
+        "T72",
+        "T73",
+        "T74",
+        "T75",
+        "T76",
+        "T77",
+        "T78",
+        "T79",
+        "T80",
+        "T81",
+        "T82",
+        "T83",
+        "T84",
+        "T85",
+        "T86",
+        "T87",
+        "T88",
+        "T89",
+        "T90",
+        "T91",
+        "T92",
+        "T93",
+        "T94",
+        "T95",
+        "T96",
+        "T97",
+        "T98",
+        "T99",
+        "T100",
+        "T101",
+        "T102",
+        "T103",
+        "T104",
+        "T105",
+        "T106",
+        "T107",
+        "T108",
+        "T109",
+        "T110",
+        "T111",
+        "T112",
+        "T113",
+        "T114",
+        "T115",
+        "T116",
+        "T117",
+        "T118",
+        "T119",
+        "T120",
+        "T121",
+        "T122",
+        "T123",
+        "T124",
+        "T125",
+        "T126",
+        "T127",
+        "T128",
+        "T129",
+        "T130",
+        "T131",
+        "T132",
+        "T133",
+        "T134",
+        "T135",
+        "T136",
+        "T137",
+        "T138",
+        "T139",
+        "T140",
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T149",
+        "T150",
+        "T151",
+        "T152",
+        "T153",
+        "T154",
+        "T155",
+        "T156",
+        "T157",
+        "T158",
+        "T159",
+        "T160",
+        "T161",
+        "T162",
+        "T163",
+        "T164",
+        "T165",
+        "T166",
+        "T167",
+        "T168",
+        "T169",
+        "T170",
+        "T171",
+        "T172",
+        "T173",
+        "T174",
+        "T175",
+        "T176",
+        "T177",
+        "T178",
+        "T179",
+        "T180",
+        "T181",
+        "T182",
+        "T183",
+        "T184",
+        "T185",
+        "T186",
+        "T187",
+        "T188",
+        "T189",
+        "T190",
+        "T191",
+        "T192",
+        "T193",
+        "T194",
+        "T195",
+        "T196",
+        "T197",
+        "T198",
+        "T199",
+        "T200",
+        "T201",
+        "T202",
+        "T203",
+        "T204",
+        "T205",
+        "T206",
+        "T207",
+        "T208",
+        "T209",
+        "T210",
+        "T211",
+        "T212",
+        "T213",
+        "T214",
+        "T215",
+        "T216",
+        "T217",
+        "T218",
+        "T219",
+        "T220",
+        "T221",
+        "T222",
+        "T223",
+        "T224",
+        "T225",
+        "T226",
+        "T227",
+        "T228",
+        "T229",
+        "T230",
+        "T231",
+        "T232",
+        "T233",
+        "T234",
+        "T235",
+        "T236",
+        "T237",
+        "T238",
+        "T239",
+        "T240",
+        "T241",
+        "T242",
+        "T243",
+        "T244",
+        "T245",
+        "T246",
+        "T247",
+        "T248",
+        "T249",
+        "T250",
+        "T251",
+        "T252",
+        "T253",
+        "T254",
+        "T255"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 255,
+          "seed": "F.main()"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            0
+          ],
+          "tag": 0,
+          "seed": "F.identity(F.T0{})"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            63
+          ],
+          "tag": 63,
+          "seed": "F.identity(F.T63{})"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            64
+          ],
+          "tag": 64,
+          "seed": "F.identity(F.T64{})"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            127
+          ],
+          "tag": 127,
+          "seed": "F.identity(F.T127{})"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            128
+          ],
+          "tag": 128,
+          "seed": "F.identity(F.T128{})"
+        },
+        {
+          "export": "identity",
+          "arguments": [
+            255
+          ],
+          "tag": 255,
+          "seed": "F.identity(F.T255{})"
+        },
+        {
+          "export": "signed_edge",
+          "arguments": [],
+          "tag": 64,
+          "seed": "F.signed_edge()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-high-function-index",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/high-function-index.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "f128",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.f128()"
+        }
+      ]
+    },
+    {
+      "name": "wasm-high-local-index",
+      "suite": "compiler-wasm",
+      "file": "tests/compiler-wasm/fixtures/high-local-index.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "pick",
+          "arguments": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.pick(F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.On{})"
+        },
+        {
+          "export": "pick",
+          "arguments": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.pick(F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.Off{})"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-pair",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/pair.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.On{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.Off{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.Off{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.On{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-peano",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/peano.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "zero",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.zero()"
+        },
+        {
+          "export": "two",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.two()"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-nested",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/nested.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-aliasing",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/aliasing.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-erased",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/erased.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        },
+        {
+          "export": "empty",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.empty()"
+        },
+        {
+          "export": "ghost",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.ghost()"
+        }
+      ]
+    },
+    {
+      "name": "fields-wasm-arena-overflow",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ],
+      "wasm_exhausted": "Exhausted\twasm\tarena-overflow",
+      "c_exhausted": "Exhausted\tc\tarena-overflow"
+    },
+    {
+      "name": "fields-wasm-deep-call",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/deep-call.bend",
+      "type_id": 0,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ],
+      "compile_budgets": [
+        65536,
+        4096,
+        4096,
+        4096,
+        1048576
+      ],
+      "eval_exhausted": "Exhausted\tparse\tbudget",
+      "purpose": "Original narrow call chain: parser-budget exhaustion control; runs on Node with its normal stack."
+    },
+    {
+      "name": "fields-wasm-deep-stack",
+      "suite": "compiler-fields-wasm",
+      "file": "tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+      "type_id": 0,
+      "type": "F",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "purpose": "160 acyclic frames with 48 live parameters; normal reference and evaluator result On; constrained Node invocation Exhausted.",
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-even",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-even.bend",
+      "original_file": "tests/compiler-recursion/fixtures/even.bend",
+      "original_prefix_bytes": 506,
+      "type": "CObservation",
+      "type_id": 3,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-add",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-add.bend",
+      "original_file": "tests/compiler-recursion/fixtures/add.bend",
+      "original_prefix_bytes": 411,
+      "type": "CObservation",
+      "type_id": 2,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-mirror",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-mirror.bend",
+      "original_file": "tests/compiler-recursion/fixtures/mirror.bend",
+      "original_prefix_bytes": 322,
+      "type": "CObservation",
+      "type_id": 2,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-length",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-length.bend",
+      "original_file": "tests/compiler-recursion/fixtures/length.bend",
+      "original_prefix_bytes": 412,
+      "type": "CObservation",
+      "type_id": 4,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-direct",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-direct.bend",
+      "original_file": "tests/compiler-recursion/fixtures/direct.bend",
+      "original_prefix_bytes": 178,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-first-parameter",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-first-parameter.bend",
+      "original_file": "tests/compiler-recursion/fixtures/first-parameter.bend",
+      "original_prefix_bytes": 197,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-ordered-calls",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-ordered-calls.bend",
+      "original_file": "tests/compiler-recursion/fixtures/ordered-calls.bend",
+      "original_prefix_bytes": 151,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-shadow-field",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-shadow-field.bend",
+      "original_file": "tests/compiler-recursion/fixtures/shadow-field.bend",
+      "original_prefix_bytes": 178,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-after-let",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-after-let.bend",
+      "original_file": "tests/compiler-recursion/fixtures/after-let.bend",
+      "original_prefix_bytes": 214,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-deep",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-deep.bend",
+      "original_file": "tests/compiler-recursion/fixtures/deep.bend",
+      "original_prefix_bytes": 582,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "recursion-deep-input",
+      "suite": "compiler-recursion",
+      "file": "tests/compiler-c/fixtures/recursion-deep-input.bend",
+      "original_file": "tests/compiler-recursion/fixtures/deep-input.bend",
+      "original_prefix_bytes": 579,
+      "type": "CObservation",
+      "type_id": 1,
+      "constructors": [
+        "CNo",
+        "CYes"
+      ],
+      "calls": [
+        {
+          "export": "c_observe",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.c_observe()"
+        }
+      ]
+    },
+    {
+      "name": "tail-rebind",
+      "suite": "compiler-c",
+      "file": "tests/compiler-c/fixtures/tail-rebind.bend",
+      "type_id": 1,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "odd",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.odd(F.Off{},F.Off{})"
+        },
+        {
+          "export": "odd",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.odd(F.Off{},F.On{})"
+        },
+        {
+          "export": "odd",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.odd(F.On{},F.Off{})"
+        },
+        {
+          "export": "odd",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.odd(F.On{},F.On{})"
+        },
+        {
+          "export": "even",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.even(F.Off{},F.Off{})"
+        },
+        {
+          "export": "even",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.even(F.Off{},F.On{})"
+        },
+        {
+          "export": "even",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.even(F.On{},F.Off{})"
+        },
+        {
+          "export": "even",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.even(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "deep-recursion",
+      "suite": "compiler-c",
+      "file": "tests/compiler-c/fixtures/deep-recursion.bend",
+      "type_id": 1,
+      "type": "Flag",
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        }
+      ]
+    }
+  ],
+  "recursion_originals": "tests/compiler-recursion/cases.json",
+  "rejections": [
+    {
+      "name": "same-parameter",
+      "file": "tests/compiler-recursion/fixtures/same-parameter.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "other-parameter",
+      "file": "tests/compiler-recursion/fixtures/other-parameter.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "rebuilt-parent",
+      "file": "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "rebuilt-constructor",
+      "file": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "computed",
+      "file": "tests/compiler-recursion/fixtures/computed.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "shadow-let",
+      "file": "tests/compiler-recursion/fixtures/shadow-let.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "mutual",
+      "file": "tests/compiler-recursion/fixtures/mutual.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 1,
+        "diagnostic": "a filled definition"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      }
+    },
+    {
+      "name": "second-descent",
+      "file": "tests/compiler-recursion/fixtures/second-descent.bend",
+      "reference_args": [
+        "--check-only"
+      ],
+      "reference": {
+        "exit": 0,
+        "stdout": "All terms check."
+      },
+      "check": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    }
+  ],
+  "probes": {
+    "arena": {
+      "case": "fields-wasm-arena-overflow",
+      "export": "f0",
+      "arguments": [],
+      "successful_calls": 8192,
+      "overflow_call": 8193,
+      "diagnostic": "Exhausted\tc\tarena-overflow"
+    },
+    "deep-recursion": {
+      "case": "deep-recursion",
+      "export": "main",
+      "arguments": [],
+      "depth_limit": 32,
+      "diagnostic": "Exhausted\tc\tcall-stack"
+    },
+    "tail-stack": {
+      "case": "recursion-deep",
+      "export": "c_observe",
+      "arguments": [],
+      "depth_limit": 8,
+      "result": 1
+    }
+  },
+  "checker_rejections": "tests/compiler-checker/cases.json"
+}

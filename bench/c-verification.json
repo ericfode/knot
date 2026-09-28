@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "provenance": "Retained command outputs recorded after completion. No benchmark or verification command was rerun to produce this receipt.",
+  "recordedAt": "2026-09-28T01:58:17.557208+00:00",
+  "inputHashPolicy": "SHA-256 hashes computed at receipt recording. All listed executable harness inputs match the successful benchmark fingerprint; the full raw benchmark receipt also matches its retained hash.",
+  "gitCommit": "fa31fec064ba0993ed31205fd4b4fdc00df5d761",
+  "tools": {
+    "node": "v22.22.3",
+    "cc": {
+      "command": "cc",
+      "version": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+    }
+  },
+  "inputHashes": {
+    "bench/c-tests.mjs": "dece0a13d16bbefb7a968e7a6d3260b5825b6a935da2315e9ec18f9431d0deb8",
+    "bench/c-native-worker.c": "412bf68ea201f8c7de5dedf5e489d5f1965cae3d9bc9e6a5c48fb800fbef8b6b",
+    "bench/c-wasm-worker.mjs": "6e6e1129d8f17622dee2a7bad2a18574cdda5480cda277acd481bf229e49fea5",
+    "bench/c-run.mjs": "f001604d7a91740c16e68f16c17e377ac851214012fcc09b49dbac6046cdbe13",
+    "bench/lib/stats.mjs": "aac7db4532b7f6c8493534a21bf7bbe6c2d00653b896e614268be6bdde3ef6e9",
+    "bench/lib/system.mjs": "1d820e80aac83f4ec4befaf39b321c3921460f06bfb3b4a4c7ddcb9865b78270",
+    "bench/lib/suite.mjs": "b0860d860ccac5348de61855ce30a84ed1325efc3693a930d5e82c6dbeade18b",
+    "bench/c-first.json": "479565252c7a8ebf9c1a8c7399f582ede36d1d91556a145bb766a57d7f4b5866"
+  },
+  "benchmark": {
+    "receipt": "bench/c-first.json",
+    "rawReceipt": {
+      "path": ".local/bench/results/c-full-final.json",
+      "sha256": "df39394b5af7ada821687b629eae2e14a7a209a846eee854c947d0d4d1ed7a3f",
+      "retention": "Ignored full command/output observations; this receipt retains every raw metric sample and fingerprint."
+    }
+  },
+  "checks": [
+    {
+      "name": "benchmark-workers",
+      "command": "node --test bench/c-tests.mjs",
+      "argv": [
+        "node",
+        "--test",
+        "bench/c-tests.mjs"
+      ],
+      "outputRetainedAt": "2026-09-28T01:54:10.734490Z",
+      "exit": 0,
+      "counts": {
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "stdout": "TAP version 13\n# Subtest: Wasm worker resets instance lifetime and checks every timed call\nok 1 - Wasm worker resets instance lifetime and checks every timed call\n  ---\n  duration_ms: 20.802\n  type: 'test'\n  ...\n# Subtest: Wasm worker refuses a wrong result\nok 2 - Wasm worker refuses a wrong result\n  ---\n  duration_ms: 1.799792\n  type: 'test'\n  ...\n# Subtest: Wasm worker refuses an unknown export and wrong arity\nok 3 - Wasm worker refuses an unknown export and wrong arity\n  ---\n  duration_ms: 2.230041\n  type: 'test'\n  ...\n# Subtest: process guard distinguishes results from a successful exit alone\nok 4 - process guard distinguishes results from a successful exit alone\n  ---\n  duration_ms: 1.688125\n  type: 'test'\n  ...\n# Subtest: native worker resets each invocation and retains all timing samples\nok 5 - native worker resets each invocation and retains all timing samples\n  ---\n  duration_ms: 215.852042\n  type: 'test'\n  ...\n# Subtest: native worker rejects wrong results and zero iterations\nok 6 - native worker rejects wrong results and zero iterations\n  ---\n  duration_ms: 56.525917\n  type: 'test'\n  ...\n1..6\n# tests 6\n# suites 0\n# pass 6\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 918.75275\n"
+    },
+    {
+      "name": "metric-and-bootstrap-recomputation",
+      "command": "node --input-type=module -",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-"
+      ],
+      "stdin": "import assert from 'node:assert/strict';\nimport { readFileSync } from 'node:fs';\nimport { summarize, compareSamples } from './bench/lib/stats.mjs';\nconst receipt = JSON.parse(readFileSync('bench/c-first.json','utf8'));\nassert.equal(receipt.status,'passed');\nassert.equal(receipt.cases.length,46);\nassert.equal(receipt.cases.reduce((n,c) => n+c.calls.length,0),143);\nlet metrics = 0, comparisons = 0;\nfunction walk(value) {\n  if (!value || typeof value !== 'object') return;\n  if (value.unit && Array.isArray(value.samples)) {\n    const checked = summarize(value.samples);\n    for (const key of Object.keys(checked)) assert.equal(value[key],checked[key]);\n    metrics++;\n  }\n  for (const child of Object.values(value)) walk(child);\n}\nwalk(receipt);\nfor (const c of receipt.cases) {\n  assert.deepEqual(c.compilation.comparison,compareSamples(c.compilation.wasm.emission.samples,c.compilation.c.total.samples));\n  comparisons++;\n  for (const call of c.calls) {\n    const {c:native,wasm,upstream} = call.lanes;\n    if (!call.comparisons) continue;\n    assert.deepEqual(call.comparisons.cOverWasmFreshLifetime,compareSamples(wasm.freshLifetime.samples,native.freshLifetime.samples));\n    assert.deepEqual(call.comparisons.cOverWasmProcess,compareSamples(wasm.process.metric.samples,native.process.metric.samples));\n    comparisons+=2;\n    if (upstream.status==='passed') {\n      assert.deepEqual(call.comparisons.cOverUpstreamProcess,compareSamples(upstream.process.metric.samples,native.process.metric.samples));\n      comparisons++;\n    }\n  }\n}\nconsole.log(JSON.stringify({metricSummariesVerified:metrics,bootstrapComparisonsVerified:comparisons}));\n",
+      "outputRetainedAt": "2026-09-28T01:54:37.709402Z",
+      "exit": 0,
+      "counts": {
+        "metricSummariesVerified": 1066,
+        "bootstrapComparisonsVerified": 440
+      },
+      "stdout": "{\"metricSummariesVerified\":1066,\"bootstrapComparisonsVerified\":440}\n"
+    },
+    {
+      "name": "tracked-diff-whitespace",
+      "command": "git diff --check",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "scope": "Tracked working-tree diff at execution time; untracked files are outside this Git command.",
+      "outputRetainedAt": "2026-09-28T01:54:10.734490Z",
+      "exit": 0,
+      "stdout": ""
+    }
+  ]
+}

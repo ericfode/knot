@@ -1,0 +1,3853 @@
+{
+  "date": "2026-09-28T01:25:24.193683+00:00",
+  "status": "passed",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "frozen_inputs": {
+    "tests/compiler-c/cases.json": "6d69817c3892013f94334543e75b29d2d62005eb9763fd326e8debad471bbcb9",
+    "tests/compiler-c/fixtures/deep-recursion.bend": "15d89cd046f026d410ced78e134a7613352e854fcaffff621552d15ef47320a6",
+    "tests/compiler-c/fixtures/recursion-add.bend": "e731fbefea9be9a00cbc6f91580ce31ed01834e4de7839b3b94f665476b57096",
+    "tests/compiler-c/fixtures/recursion-after-let.bend": "121cecc527f216793806e85233131d7f322ca6874e5eebbcd8401e74023a89cc",
+    "tests/compiler-c/fixtures/recursion-deep-input.bend": "d140f2c2f02905f3174a91866db32aa6ed99e98a53099b47d98279b8a13c31fb",
+    "tests/compiler-c/fixtures/recursion-deep.bend": "0a1f8221beb40ca88698c9f5fd9f9731b34e1b514348af1dcf5a08205a007938",
+    "tests/compiler-c/fixtures/recursion-direct.bend": "6bc965eda9143fbc40de9c84c1e54c299296fae96a04e7549b48d9ef20417dda",
+    "tests/compiler-c/fixtures/recursion-even.bend": "97bc8fcb017e2a87c6e3de2d00069bc163f075036292ae364ce8399a0b896a1b",
+    "tests/compiler-c/fixtures/recursion-first-parameter.bend": "5c14e01eb7322915c9f8000b9d19bcbd903b90d0b7a9715378547c7992c6b4a2",
+    "tests/compiler-c/fixtures/recursion-length.bend": "265fca87c0c638322ca1499de747148482b94aeb2a20d19966c7198fee2d9704",
+    "tests/compiler-c/fixtures/recursion-mirror.bend": "9023f5287ae8f7e4bcf8f3408903e912d669677724af07cc2bcca35b8e227778",
+    "tests/compiler-c/fixtures/recursion-ordered-calls.bend": "2b929d5ae357b816d751e23e1bb65b694fca690b1ef3fb567249a43d02d67310",
+    "tests/compiler-c/fixtures/recursion-shadow-field.bend": "4861d9c01ee3dc7a1f10818d375ebf152cbe0ac06a0fb00c1b801c637c451234",
+    "tests/compiler-c/fixtures/tail-rebind.bend": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+    "tests/compiler-checker/fixtures/branch-maximum.bend": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+    "tests/compiler-checker/fixtures/data-argument.bend": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+    "tests/compiler-checker/fixtures/data-promote.bend": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+    "tests/compiler-checker/fixtures/duplicate-parameters.bend": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+    "tests/compiler-checker/fixtures/erased-affine-copy.bend": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+    "tests/compiler-checker/fixtures/erased-binding.bend": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895",
+    "tests/compiler-checker/fixtures/erased-forward-call.bend": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce",
+    "tests/compiler-checker/fixtures/matched-duplicate.bend": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+    "tests/compiler-checker/fixtures/matched-return.bend": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+    "tests/compiler-checker/fixtures/renamed.bend": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+    "tests/compiler-checker/fixtures/reordered-arms.bend": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+    "tests/compiler-fields-wasm/cases.json": "d4accfb0d29337a0324af58f8bd8b2db979dadc4ff6ff08fd58cf539d024acc9",
+    "tests/compiler-fields-wasm/fixtures/aliasing.bend": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+    "tests/compiler-fields-wasm/fixtures/arena-overflow.bend": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569",
+    "tests/compiler-fields-wasm/fixtures/deep-call.bend": "30ecb9719a3dc1a0793cfd94e20a130b4b0a1176756227fbba855ef52c8ce1cc",
+    "tests/compiler-fields-wasm/fixtures/deep-stack.bend": "bfb5dbb7eeda23ad0a20b32c3c37cf23bd413450d9949998d104944e05ca525f",
+    "tests/compiler-fields-wasm/fixtures/erased.bend": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+    "tests/compiler-fields-wasm/fixtures/nested.bend": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+    "tests/compiler-fields-wasm/fixtures/pair.bend": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+    "tests/compiler-fields-wasm/fixtures/peano.bend": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+    "tests/compiler-recursion/cases.json": "774029cc4dcc2b5f3cb907aa43f16fcbf524537a6c9db943375b7fd3350ebb47",
+    "tests/compiler-recursion/fixtures/add.bend": "e123fed65190aa4460bbd21ad82de0f6d6cf79cf2c3747e9a3fa34f0a93fbd24",
+    "tests/compiler-recursion/fixtures/after-let.bend": "f68a22f6b50a4ee80f220848bdbf5fba5f0791897cb8bd050f30bd2b898c5f5e",
+    "tests/compiler-recursion/fixtures/computed.bend": "6bdd0c955058cd9e63c6e7c918a71a45237208ef61f8f7ea9fdc4eb095a39eda",
+    "tests/compiler-recursion/fixtures/deep-input.bend": "33ed66442b3db562d311df09b31fa43d1458791775a49edd409a954ee3dcf998",
+    "tests/compiler-recursion/fixtures/deep.bend": "2881538c3abb517f2eb82c052a90bffa88f3bb201648205beea70b2df6ee76df",
+    "tests/compiler-recursion/fixtures/direct.bend": "0fc28a947a1dbd42f57231cd285ddb19c7314683841f825a02b254b2e18fea02",
+    "tests/compiler-recursion/fixtures/even.bend": "3511007717f5bb8f5e12514a7e133984b2665fc3cd54d390d7ecf9febb73ab41",
+    "tests/compiler-recursion/fixtures/first-parameter.bend": "ad32451581720603e9d75c00498f884c5fd73e9ac2aac3efb4d7a41fd3ea6e96",
+    "tests/compiler-recursion/fixtures/length.bend": "2a473085fead71d45116ab59f33b10f059f7d25b00790dd52031a901b675ccc4",
+    "tests/compiler-recursion/fixtures/mirror.bend": "78c9177fba5e9462326025b09781204a4b7b89786fc7b19f692b85858b3d09fb",
+    "tests/compiler-recursion/fixtures/mutual.bend": "db229b6b80a0175af909d13dd4dfb6a7b2172aba03cb0494219c0c282144b1a4",
+    "tests/compiler-recursion/fixtures/ordered-calls.bend": "4bfa2844b2bce35465b1e1c2e47792fbd78cdab01e61dd1786aab753e790b1a3",
+    "tests/compiler-recursion/fixtures/other-parameter.bend": "c5252c14ba1f2dc4ad12c496321fe247d279c19434e9162c6d1d6340976c42e5",
+    "tests/compiler-recursion/fixtures/rebuilt-constructor.bend": "7ba3e48f12a5c309e3ed215ccded13e7e4dd0126c594d0d7ea125bbd0c1edeb5",
+    "tests/compiler-recursion/fixtures/rebuilt-parent.bend": "7f9ee29b2ce6e2f8fc607fc1a6aff54035f54475d312e0da7928ab8de6e3bcaa",
+    "tests/compiler-recursion/fixtures/same-parameter.bend": "3aa67d0b3ccb3d9d545404959036d2eaa0871f63cb17700a638eead095fb2e4c",
+    "tests/compiler-recursion/fixtures/second-descent.bend": "c80d1224a2d05935d2614029f169f74ed6bc00c0b640f1d6a852f4f7d996d6d6",
+    "tests/compiler-recursion/fixtures/shadow-field.bend": "2f016ad017775613d7cfd2d0dab6b68930de1a2f27b42eab938d8ae92008c41c",
+    "tests/compiler-recursion/fixtures/shadow-let.bend": "568cdf41693687228d467d2cd1c9329b697d2f0b3fd6b41f6b816b67b4d3cb2e",
+    "tests/compiler-wasm/cases.json": "bd3e3f19d0cf82d17077232e5cb54f8f4120e9c6d1d93faa91174cded2b9290d",
+    "tests/compiler-wasm/fixtures/argument-order.bend": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+    "tests/compiler-wasm/fixtures/branch-locals.bend": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+    "tests/compiler-wasm/fixtures/erased-cost.bend": "2b922e02325ae9884e8120956d32be8e7629deac3fe9cb94ba67c44e17c6d983",
+    "tests/compiler-wasm/fixtures/high-function-index.bend": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace",
+    "tests/compiler-wasm/fixtures/high-local-index.bend": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+    "tests/compiler-wasm/fixtures/high-tags.bend": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+    "tests/compiler-wasm/fixtures/mixed-types.bend": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+    "tests/compiler-wasm/fixtures/three-colors.bend": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+    "tests/subsets/s1/data-reuse.bend": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+    "tests/subsets/s1/erased-forward.bend": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+    "tests/subsets/s1/flag.bend": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+    "tests/subsets/s1/forward-type.bend": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+    "tests/subsets/s1/nested-match.bend": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+    "tests/subsets/s1/shadowing.bend": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340"
+  },
+  "observations": [
+    {
+      "case": "wasm-data-reuse",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-reuse-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/data-reuse.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-reuse",
+      "call": {
+        "export": "reuse",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.reuse(F.Off{})"
+      },
+      "source_sha256": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-reuse-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/data-reuse.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-reuse",
+      "call": {
+        "export": "reuse",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.reuse(F.On{})"
+      },
+      "source_sha256": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-reuse-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/data-reuse.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-forward",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-forward-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/erased-forward.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-forward",
+      "call": {
+        "export": "take",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.take(F.Off{},F.Off{})"
+      },
+      "source_sha256": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-forward-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/erased-forward.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-forward",
+      "call": {
+        "export": "take",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.take(F.Off{},F.On{})"
+      },
+      "source_sha256": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-forward-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/erased-forward.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-flag",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-flag-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/flag.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-flag",
+      "call": {
+        "export": "flip",
+        "arguments": [
+          0
+        ],
+        "tag": 1,
+        "seed": "F.flip(F.Off{})"
+      },
+      "source_sha256": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-flag-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/flag.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-flag",
+      "call": {
+        "export": "flip",
+        "arguments": [
+          1
+        ],
+        "tag": 0,
+        "seed": "F.flip(F.On{})"
+      },
+      "source_sha256": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-flag-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/flag.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-forward-type",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-forward-type-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/forward-type.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-nested-match",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-nested-match-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/nested-match.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-nested-match",
+      "call": {
+        "export": "both",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.both(F.Off{},F.Off{})"
+      },
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-nested-match-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/nested-match.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-nested-match",
+      "call": {
+        "export": "both",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 0,
+        "seed": "F.both(F.Off{},F.On{})"
+      },
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-nested-match-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/nested-match.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-nested-match",
+      "call": {
+        "export": "both",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.both(F.On{},F.Off{})"
+      },
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-nested-match-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/nested-match.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-nested-match",
+      "call": {
+        "export": "both",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.both(F.On{},F.On{})"
+      },
+      "source_sha256": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-nested-match-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/nested-match.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-shadowing",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-shadowing-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/shadowing.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-shadowing",
+      "call": {
+        "export": "shadow",
+        "arguments": [
+          0
+        ],
+        "tag": 1,
+        "seed": "F.shadow(F.Off{})"
+      },
+      "source_sha256": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-shadowing-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/shadowing.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-shadowing",
+      "call": {
+        "export": "shadow",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.shadow(F.On{})"
+      },
+      "source_sha256": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-shadowing-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/subsets/s1/shadowing.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-maximum",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-maximum-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/branch-maximum.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-maximum",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{},F.Off{})"
+      },
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-maximum-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/branch-maximum.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-maximum",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.Off{},F.On{})"
+      },
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-maximum-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/branch-maximum.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-maximum",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.On{},F.Off{})"
+      },
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-maximum-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/branch-maximum.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-maximum",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{},F.On{})"
+      },
+      "source_sha256": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-maximum-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/branch-maximum.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-argument",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-argument-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-argument.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-argument",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{})"
+      },
+      "source_sha256": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-argument-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-argument.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-argument",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{})"
+      },
+      "source_sha256": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-argument-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-argument.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-promote",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-promote-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-promote.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-promote",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{})"
+      },
+      "source_sha256": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-promote-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-promote.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-data-promote",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{})"
+      },
+      "source_sha256": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-data-promote-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/data-promote.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-duplicate-parameters",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-duplicate-parameters-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/duplicate-parameters.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-duplicate-parameters",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{},F.Off{})"
+      },
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-duplicate-parameters-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/duplicate-parameters.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-duplicate-parameters",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.Off{},F.On{})"
+      },
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-duplicate-parameters-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/duplicate-parameters.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-duplicate-parameters",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.On{},F.Off{})"
+      },
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-duplicate-parameters-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/duplicate-parameters.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-duplicate-parameters",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{},F.On{})"
+      },
+      "source_sha256": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-duplicate-parameters-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/duplicate-parameters.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-affine-copy",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-affine-copy-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/erased-affine-copy.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-affine-copy",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{})"
+      },
+      "source_sha256": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-affine-copy-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/erased-affine-copy.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-affine-copy",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{})"
+      },
+      "source_sha256": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-affine-copy-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/erased-affine-copy.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-binding",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-binding-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/erased-binding.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-forward-call",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-forward-call-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/erased-forward-call.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-duplicate",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-duplicate-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-duplicate.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-duplicate",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{})"
+      },
+      "source_sha256": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-duplicate-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-duplicate.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-duplicate",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{})"
+      },
+      "source_sha256": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-duplicate-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-duplicate.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-return",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-return-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-return.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-return",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{})"
+      },
+      "source_sha256": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-return-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-return.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-matched-return",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{})"
+      },
+      "source_sha256": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-matched-return-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/matched-return.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-renamed",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-renamed-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/renamed.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-renamed",
+      "call": {
+        "export": "toggle",
+        "arguments": [
+          0
+        ],
+        "tag": 1,
+        "seed": "F.toggle(F.Off{})"
+      },
+      "source_sha256": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-renamed-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/renamed.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-renamed",
+      "call": {
+        "export": "toggle",
+        "arguments": [
+          1
+        ],
+        "tag": 0,
+        "seed": "F.toggle(F.On{})"
+      },
+      "source_sha256": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-renamed-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/renamed.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-reordered-arms",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-reordered-arms-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/reordered-arms.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-reordered-arms",
+      "call": {
+        "export": "flip",
+        "arguments": [
+          0
+        ],
+        "tag": 1,
+        "seed": "F.flip(F.Off{})"
+      },
+      "source_sha256": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-reordered-arms-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/reordered-arms.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-reordered-arms",
+      "call": {
+        "export": "flip",
+        "arguments": [
+          1
+        ],
+        "tag": 0,
+        "seed": "F.flip(F.On{})"
+      },
+      "source_sha256": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-reordered-arms-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-checker/fixtures/reordered-arms.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-three-colors",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 2,
+        "seed": "F.main()"
+      },
+      "source_sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-three-colors-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/three-colors.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-three-colors",
+      "call": {
+        "export": "cycle",
+        "arguments": [
+          0
+        ],
+        "tag": 1,
+        "seed": "F.cycle(F.Red{})"
+      },
+      "source_sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-three-colors-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/three-colors.Green{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-three-colors",
+      "call": {
+        "export": "cycle",
+        "arguments": [
+          1
+        ],
+        "tag": 2,
+        "seed": "F.cycle(F.Green{})"
+      },
+      "source_sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-three-colors-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/three-colors.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-three-colors",
+      "call": {
+        "export": "cycle",
+        "arguments": [
+          2
+        ],
+        "tag": 0,
+        "seed": "F.cycle(F.Blue{})"
+      },
+      "source_sha256": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-three-colors-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/three-colors.Red{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Green{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.choose(F.Off{},F.Off{},F.Red{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Red{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 2,
+        "seed": "F.choose(F.Off{},F.On{},F.Red{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.choose(F.Off{},F.Off{},F.Green{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Green{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 2,
+        "seed": "F.choose(F.Off{},F.On{},F.Green{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          0,
+          2
+        ],
+        "tag": 2,
+        "seed": "F.choose(F.Off{},F.Off{},F.Blue{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-mixed-types",
+      "call": {
+        "export": "choose",
+        "arguments": [
+          1,
+          2
+        ],
+        "tag": 2,
+        "seed": "F.choose(F.Off{},F.On{},F.Blue{})"
+      },
+      "source_sha256": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-mixed-types-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/mixed-types.Blue{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-locals",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.main()"
+      },
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-locals-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/branch-locals.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-locals",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.f(F.Off{},F.Off{})"
+      },
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-locals-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/branch-locals.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-locals",
+      "call": {
+        "export": "f",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.Off{},F.On{})"
+      },
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-locals-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/branch-locals.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-locals",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{},F.Off{})"
+      },
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-locals-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/branch-locals.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-branch-locals",
+      "call": {
+        "export": "f",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.f(F.On{},F.On{})"
+      },
+      "source_sha256": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-branch-locals-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/branch-locals.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-erased-cost",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "2b922e02325ae9884e8120956d32be8e7629deac3fe9cb94ba67c44e17c6d983",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-erased-cost-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/erased-cost.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.main()"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "first",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.first(F.Off{},F.On{},F.Off{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "second",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.second(F.Off{},F.Off{},F.Off{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "first",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 0,
+        "seed": "F.first(F.Off{},F.On{},F.On{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "second",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.second(F.Off{},F.Off{},F.On{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "first",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.first(F.On{},F.On{},F.Off{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "second",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.second(F.On{},F.Off{},F.Off{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "first",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.first(F.On{},F.On{},F.On{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-7.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-argument-order",
+      "call": {
+        "export": "second",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.second(F.On{},F.Off{},F.On{})"
+      },
+      "source_sha256": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-argument-order-reference-8.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/argument-order.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 255,
+        "seed": "F.main()"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T255{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          0
+        ],
+        "tag": 0,
+        "seed": "F.identity(F.T0{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T0{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          63
+        ],
+        "tag": 63,
+        "seed": "F.identity(F.T63{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T63{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          64
+        ],
+        "tag": 64,
+        "seed": "F.identity(F.T64{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T64{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          127
+        ],
+        "tag": 127,
+        "seed": "F.identity(F.T127{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T127{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          128
+        ],
+        "tag": 128,
+        "seed": "F.identity(F.T128{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T128{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "identity",
+        "arguments": [
+          255
+        ],
+        "tag": 255,
+        "seed": "F.identity(F.T255{})"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T255{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-tags",
+      "call": {
+        "export": "signed_edge",
+        "arguments": [],
+        "tag": 64,
+        "seed": "F.signed_edge()"
+      },
+      "source_sha256": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-tags-reference-7.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-tags.T64{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-function-index",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-function-index-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-function-index.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-function-index",
+      "call": {
+        "export": "f128",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.f128()"
+      },
+      "source_sha256": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-function-index-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-function-index.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-local-index",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-local-index-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-local-index.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-local-index",
+      "call": {
+        "export": "pick",
+        "arguments": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.pick(F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.Off{},F.On{})"
+      },
+      "source_sha256": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-local-index-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-local-index.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "wasm-high-local-index",
+      "call": {
+        "export": "pick",
+        "arguments": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.pick(F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.On{},F.Off{})"
+      },
+      "source_sha256": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/wasm-high-local-index-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-wasm/fixtures/high-local-index.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "direct",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.direct(F.Off{},F.Off{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "direct",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 0,
+        "seed": "F.direct(F.Off{},F.On{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "direct",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.direct(F.On{},F.Off{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "direct",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.direct(F.On{},F.On{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "swapped",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.swapped(F.Off{},F.Off{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "swapped",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.swapped(F.Off{},F.On{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "swapped",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.swapped(F.On{},F.Off{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-7.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-pair",
+      "call": {
+        "export": "swapped",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.swapped(F.On{},F.On{})"
+      },
+      "source_sha256": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-pair-reference-8.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-peano",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-peano-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-peano",
+      "call": {
+        "export": "zero",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.zero()"
+      },
+      "source_sha256": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-peano-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-peano",
+      "call": {
+        "export": "two",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.two()"
+      },
+      "source_sha256": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-peano-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-nested",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-nested-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-nested",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.Off{},F.Off{})"
+      },
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-nested-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-nested",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.Off{},F.On{})"
+      },
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-nested-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-nested",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.On{},F.Off{})"
+      },
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-nested-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-nested",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.On{},F.On{})"
+      },
+      "source_sha256": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-nested-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-aliasing",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.main()"
+      },
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-aliasing-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-aliasing",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.Off{},F.Off{})"
+      },
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-aliasing-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-aliasing",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.Off{},F.On{})"
+      },
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-aliasing-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-aliasing",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.On{},F.Off{})"
+      },
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-aliasing-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-aliasing",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.On{},F.On{})"
+      },
+      "source_sha256": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-aliasing-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.Off{},F.Off{})"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.Off{},F.On{})"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.observe(F.On{},F.Off{})"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "observe",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.observe(F.On{},F.On{})"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "empty",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.empty()"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-erased",
+      "call": {
+        "export": "ghost",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.ghost()"
+      },
+      "source_sha256": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-erased-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-arena-overflow",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-arena-overflow-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/arena-overflow.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-deep-call",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "30ecb9719a3dc1a0793cfd94e20a130b4b0a1176756227fbba855ef52c8ce1cc",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-deep-call-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/deep-call.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "fields-wasm-deep-stack",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "bfb5dbb7eeda23ad0a20b32c3c37cf23bd413450d9949998d104944e05ca525f",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/fields-wasm-deep-stack-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-fields-wasm/fixtures/deep-stack.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-even",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "97bc8fcb017e2a87c6e3de2d00069bc163f075036292ae364ce8399a0b896a1b",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-even-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-even.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-add",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "e731fbefea9be9a00cbc6f91580ce31ed01834e4de7839b3b94f665476b57096",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-add-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-add.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-mirror",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "9023f5287ae8f7e4bcf8f3408903e912d669677724af07cc2bcca35b8e227778",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-mirror-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-mirror.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-length",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "265fca87c0c638322ca1499de747148482b94aeb2a20d19966c7198fee2d9704",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-length-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-length.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-direct",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "6bc965eda9143fbc40de9c84c1e54c299296fae96a04e7549b48d9ef20417dda",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-direct-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-direct.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-first-parameter",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "5c14e01eb7322915c9f8000b9d19bcbd903b90d0b7a9715378547c7992c6b4a2",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-first-parameter-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-first-parameter.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-ordered-calls",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "2b929d5ae357b816d751e23e1bb65b694fca690b1ef3fb567249a43d02d67310",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-ordered-calls-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-ordered-calls.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-shadow-field",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "4861d9c01ee3dc7a1f10818d375ebf152cbe0ac06a0fb00c1b801c637c451234",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-shadow-field-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-shadow-field.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-after-let",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "121cecc527f216793806e85233131d7f322ca6874e5eebbcd8401e74023a89cc",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-after-let-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-after-let.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-deep",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "0a1f8221beb40ca88698c9f5fd9f9731b34e1b514348af1dcf5a08205a007938",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-deep-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-deep.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "recursion-deep-input",
+      "call": {
+        "export": "c_observe",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.c_observe()"
+      },
+      "source_sha256": "d140f2c2f02905f3174a91866db32aa6ed99e98a53099b47d98279b8a13c31fb",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/recursion-deep-input-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/recursion-deep-input.CYes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 1,
+        "seed": "F.main()"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "odd",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.odd(F.Off{},F.Off{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-1.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "odd",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.odd(F.Off{},F.On{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-2.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "odd",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.odd(F.On{},F.Off{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-3.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "odd",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.odd(F.On{},F.On{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-4.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "even",
+        "arguments": [
+          0,
+          0
+        ],
+        "tag": 0,
+        "seed": "F.even(F.Off{},F.Off{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-5.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "even",
+        "arguments": [
+          0,
+          1
+        ],
+        "tag": 0,
+        "seed": "F.even(F.Off{},F.On{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-6.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.Off{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "even",
+        "arguments": [
+          1,
+          0
+        ],
+        "tag": 1,
+        "seed": "F.even(F.On{},F.Off{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-7.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "tail-rebind",
+      "call": {
+        "export": "even",
+        "arguments": [
+          1,
+          1
+        ],
+        "tag": 1,
+        "seed": "F.even(F.On{},F.On{})"
+      },
+      "source_sha256": "52a7c469ec40cfc2b0517c5224db6a0550dc3fb5efe4cc1050bce5292d0a7826",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/tail-rebind-reference-8.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/tail-rebind.On{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "deep-recursion",
+      "call": {
+        "export": "main",
+        "arguments": [],
+        "tag": 0,
+        "seed": "F.main()"
+      },
+      "source_sha256": "15d89cd046f026d410ced78e134a7613352e854fcaffff621552d15ef47320a6",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.local/compiler-c/gate/deep-recursion-reference-0.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../../tests/compiler-c/fixtures/deep-recursion.Off{}\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "recursion_originals": [
+    {
+      "case": "even",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/even.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{On{}, Off{}, On{}, Off{}, On{}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "add",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/add.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{0n, 3n, 3n, 5n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "mirror",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/mirror.bend"
+        ],
+        "exit": 0,
+        "stdout": "Fork{Fork{Leaf{Off{}}, Leaf{On{}}}, Leaf{Off{}}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "length",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/length.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{0n, 3n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "direct",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/direct.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/first-parameter.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "ordered-calls",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/ordered-calls.bend"
+        ],
+        "exit": 0,
+        "stdout": "1n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "shadow-field",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/shadow-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "after-let",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/after-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "deep",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/deep.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "deep-input",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/deep-input.bend"
+        ],
+        "exit": 0,
+        "stdout": "64n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "same-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/same-parameter.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\nLocation: f\n4 | def f(n: Peano) -> Peano:\n5>|   f(n)\n  |   ^\n6 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "other-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/other-parameter.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\n- p : Peano\nLocation: f\n6 |     case Zero{}: n\n7>|     case Succ{p}: f(p,Zero{})\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "rebuilt-parent",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(n)\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "rebuilt-constructor",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(Succ{p})\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "computed",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/computed.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n 8 |     case Zero{}: Zero{}\n 9>|     case Succ{p}: f(g(p))\n   |                   ^\n10 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "shadow-let",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/shadow-let.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\n- p : Peano\nLocation: f\n 8 |       p : Peano = Succ{p}\n 9>|       f(p)\n   |       ^\n10 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "mutual",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/mutual.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : g\nContext:\n- n : Peano\nLocation: f\n4 | def f(n: Peano) -> Peano:\n5>|   g(n)\n  |   ^\n6 | def g(n: Peano) -> Peano:\n"
+      }
+    },
+    {
+      "case": "second-descent",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-c-backend/tests/compiler-recursion/fixtures/second-descent.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

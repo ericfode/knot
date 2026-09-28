@@ -267,6 +267,30 @@
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "c-backend",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/wasm-bytes.bend",
+        "src/c.bend"
+      ],
+      "task": "tests/compiler-c/SPEC.md",
+      "notes": "Typed C99 lowering from checked core, explicit destinations, simultaneous tail rebinding, bounded cells and stack. ByteOutput remains an external dependency."
+    },
+    {
+      "name": "c-laws",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/wasm-bytes.bend",
+        "src/c.bend",
+        "src/c-LAWS.bend",
+        "src/c-PROOF.bend"
+      ],
+      "task": "tests/compiler-c/SPEC.md",
+      "notes": "Eight filled representation, erasure, destination, rebinding and fuel laws. These helper laws are not general C refinement."
     }
   ]
 }
