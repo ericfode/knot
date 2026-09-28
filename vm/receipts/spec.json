@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T05:56:15.100932+00:00",
+ "date": "2026-09-28T07:13:55.186968+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "6fb5ebca477da4225f6974e9e0df07e55a80931a6a874363b7db79fbeb8cfd68",
-  "vm/SPEC.md": "775b305468384b9e8ec07490db7b51716e2d159635be1d9b3e3ab584923842ac",
+  "vm/DECISIONS.md": "d93d77de1ea015a6504751d503268ff8453e7e6c72f2958c883554e85e9ec1c3",
+  "vm/SPEC.md": "62e8be5ac99176eeb33a59b31bed499df195a64d85810e1d25259b42b4e2224a",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "3e4e0060d26798c3804c524a113b6f5ce99991c0ba932f24902e03465c9c2db4",
-  "vm/golden/bounds.json": "bcea68aedcf90425f71795788d997b7f79c230440dcbc67f4b7515987647d319",
+  "vm/check-spec.py": "c7d2bb239de4ebfe2c38d7beef7789e2c8f903e1e7cb8bc542e08934ba818048",
+  "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
   "vm/golden/case-char.plan.json": "4e518be75be5ab174377eba9b932ce7defef2bd45f13f51f4c09eea1d5135268",
@@ -258,13 +258,13 @@
   "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/vm-expected.json": "a1bc701b19fb1830d9949136a5893cd9d1d23f1ddc2dc6a1205be5ae9699b443",
+  "vm/golden/vm-expected.json": "8fe0fbcdac09aea45a2def523e9e8549798666206fcdea8f63456ac543afdb96",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
   "vm/oracles/manifest.json": "99d769399af7220e6fb6cc76b8bd15f8051716ded4694b371728bd4e096b15e8",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "4ebfcb4b5d1549bf3e572c06510cfa485d1b57b64e9e8689d009ddf9ca39344a"
+  "vm/serializer.py": "e8027445177303179fa7850fdc6c48dde2f0e7607cffe91a4798ac13828c65f0"
  },
  "registry": {
   "prims": 41,
@@ -2303,10 +2303,10 @@
      "main",
      "1000000"
     ],
-    "outcome": "HostFailure",
-    "cause": "invoke scalar-result",
-    "basis": "bound",
-    "reason": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO.",
+    "outcome": "Unsupported",
+    "cause": "invoke result-type",
+    "basis": "describe-domain",
+    "reason": "section 8: opaque U32 as the result",
     "eval_lane": "InternalFailure"
    }
   },
@@ -2351,6 +2351,14 @@
   {
    "control": "expectation:eval-nat-binds-n",
    "refused": "control:eval-nat-binds-n: eval-cli prints 'Succ{Succ{Succ{Zero{}}}}', the seed 'Succ{Succ{Zero{}}}'"
+  },
+  {
+   "control": "expectation:bound-not-exhausted",
+   "refused": "value-on: a bound is Exhausted with a kind, a cause and a basis"
+  },
+  {
+   "control": "expectation:bound-for-unsupported",
+   "refused": "result-u32: a bound cannot stand in for Unsupported"
   },
   {
    "control": "truncated",
@@ -2605,6 +2613,17 @@
    "refused": "bench measurement vm/bench/parse-cli.json differs from its pin"
   }
  ],
+ "describe": {
+  "flag": null,
+  "nat": null,
+  "erased-field": null,
+  "u32": "opaque U32 as the result",
+  "u32-field": "opaque U32 as field 0 of Box",
+  "char": "opaque U32 as field 0 of Chr",
+  "string": "opaque U32 as field 0 of Chr",
+  "list-of-flags": "none-typed field 0 of Con",
+  "arrow": "arrow type as the result"
+ },
  "mutants": [
   {
    "mutant": "big-endian",
@@ -2755,6 +2774,26 @@
    "mutant": "validator-shape-counts-only",
    "killed": true,
    "by": "control plan:nat-field-type: None"
+  },
+  {
+   "mutant": "describe-root-only",
+   "killed": true,
+   "by": "describe control u32-field: None"
+  },
+  {
+   "mutant": "describe-admits-scalar-leaves",
+   "killed": true,
+   "by": "describe control u32-field: None"
+  },
+  {
+   "mutant": "describe-admits-none",
+   "killed": true,
+   "by": "describe control list-of-flags: None"
+  },
+  {
+   "mutant": "describe-admits-arrows",
+   "killed": true,
+   "by": "describe control arrow: None"
   },
   {
    "mutant": "source:case-on",

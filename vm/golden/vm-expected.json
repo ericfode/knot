@@ -1,5 +1,5 @@
 {
- "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed.",
+ "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound.",
  "fuel": 1000000,
  "bounds": {
   "nat-range": {
@@ -16,11 +16,6 @@
    "kind": 2,
    "cause": "NatRange",
    "basis": "D15: Nat.mul(65536n,65536n) is 2^32, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 before the product is narrowed, never wrap to 0."
-  },
-  "result-u32": {
-   "outcome": "HostFailure",
-   "cause": "invoke scalar-result",
-   "basis": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO."
   }
  },
  "cases": {
@@ -945,10 +940,10 @@
     "main",
     "1000000"
    ],
-   "outcome": "HostFailure",
-   "cause": "invoke scalar-result",
-   "basis": "bound",
-   "reason": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO.",
+   "outcome": "Unsupported",
+   "cause": "invoke result-type",
+   "basis": "describe-domain",
+   "reason": "section 8: opaque U32 as the result",
    "eval_lane": "InternalFailure"
   },
   "io-bind": {
