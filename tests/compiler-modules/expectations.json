@@ -133,7 +133,8 @@
     "fixtures/same-bare-names.bend": "9a14fd5fda5787b5e99d7feaa93c11f37c688ef21e78ba55ece784cbf047565d",
     "fixtures/self-import.bend": "383d9313f72c325ce0b005fcd5f05123630b03832a35795daca90ff61abe4fb8",
     "fixtures/transitive-chain.bend": "e4f6cec4652c77b3309def70212b8fedc8adc81b674c8e04e1c91177a2dbc899",
-    "fixtures/two-aliases-one-file.bend": "9a1967d76033c879030e0e6b2332c5221cae929b05e76a8105329e69732acfcf"
+    "fixtures/two-aliases-one-file.bend": "9a1967d76033c879030e0e6b2332c5221cae929b05e76a8105329e69732acfcf",
+    "fixtures/parent-relative-path.bend": "da14666c681055ba05fc8865e9632193ad3cda0cedbe26ce19820118d188e37b"
   },
   "fixtures": [
     {
@@ -1634,6 +1635,39 @@
           "exit": 0,
           "stdout": "Lit{}\n",
           "stderr": "All terms check, but 1 def relies on unsafe or foreign code:\n- tick\n",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "fixtures/parent-relative-path.bend",
+      "feature": "relative-paths",
+      "kind": "positive",
+      "summary": "A parent-relative import resolves against the importing file and canonicalizes ../fixtures/lib/flag.bend to lib/flag.",
+      "modules": [
+        "fixtures/lib/flag.bend"
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fixtures/parent-relative-path.bend",
+          "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/parent-relative-path.bend",
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
           "constructor": "Lit",
           "tag": 1
         }
