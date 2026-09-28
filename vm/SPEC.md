@@ -582,7 +582,9 @@ lane and requires:
 - all 48 refusals of §4 with their frozen reasons;
 - 21 codec mutants and 3 source mutants killed through a changed image, a changed
   refusal or a changed observation, never a crash;
-- the bench sources and baselines unchanged.
+- the bench sources, guards and recorded outputs unchanged, and `baselines.json`
+  and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
+  re-measurement is refused until a reviewed commit re-pins it (two controls).
 
 [bench/](bench/README.md) freezes Peano, lexer-shaped CPS closure churn, Char-list
 String building with `String.eq` scans, List build and fold, 250,000-deep non-tail

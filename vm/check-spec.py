@@ -804,19 +804,26 @@ def source_mutants(cases, built) -> list:
 
 # ------------------------------------------------------------------ bench freeze
 
-def check_bench(built: dict, registry: dict) -> dict:
-    """The speed freeze: sources unchanged, baselines recorded against those exact sources."""
-    manifest = json.loads((HERE / 'bench/workloads.json').read_text())
-    baselines = json.loads((HERE / 'bench/baselines.json').read_text())
+def committed(path: str) -> bytes:
+    return (ROOT / path).read_bytes()
+
+
+def check_bench(built: dict, read=committed) -> dict:
+    """The speed freeze: sources and seed-native measurements unchanged, the measurements
+    recorded against those exact sources."""
+    manifest = json.loads(read('vm/bench/workloads.json'))
+    for path, digest in manifest['measurements']['sha256'].items():
+        require(sha(read(path)) == digest, f'bench measurement {path} differs from its pin')
+    baselines = json.loads(read('vm/bench/baselines.json'))
     require([w['name'] for w in manifest['workloads']] == list(baselines['workloads']), 'bench workload set')
     for w in manifest['workloads']:
-        require(sha((ROOT / w['source']).read_bytes()) == w['sha256'], f"bench source {w['name']}")
+        require(sha(read(w['source'])) == w['sha256'], f"bench source {w['name']}")
         row = baselines['workloads'][w['name']]
         require(row['source_sha256'] == w['sha256'], f"bench baseline source {w['name']}")
         require(row['stdout'] == w['expected_stdout'] == 'True{}\n' and row['exit'] == 0, f"bench output {w['name']}")
         require(len(row['samples']) == row['repeat'] >= 3 and row['summary']['instructions']['median'] > 0,
                 f"bench samples {w['name']}")
-    parse = json.loads((HERE / 'bench/parse-cli.json').read_text())
+    parse = json.loads(read('vm/bench/parse-cli.json'))
     snapshot = built['literals']['files']
     library = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser()
     for f in parse['files']:
@@ -830,7 +837,26 @@ def check_bench(built: dict, registry: dict) -> dict:
         require(sha(data) == f['sha256'], f"parse-cli corpus {f['path']}")
         require(f['summary']['instructions']['median'] > 0, f"parse-cli count {f['path']}")
     require(parse['commit'] == built['literals']['commit'], 'parse-cli subject commit')
-    return {'workloads': len(manifest['workloads']), 'parse_cli_files': len(parse['files'])}
+    return {'workloads': len(manifest['workloads']), 'parse_cli_files': len(parse['files']),
+            'measurements': manifest['measurements']['sha256']}
+
+
+def bench_controls(built: dict) -> list:
+    """A re-measurement must not pass as the frozen baseline."""
+    out = []
+    for path, field in [('vm/bench/baselines.json', 'workloads'), ('vm/bench/parse-cli.json', 'files')]:
+        data = json.loads(committed(path))
+        rows = data[field]
+        row = rows[next(iter(rows))] if isinstance(rows, dict) else rows[0]
+        row['summary']['instructions']['median'] += 1
+        remeasured = (json.dumps(data, indent=1) + '\n').encode()
+        try:
+            check_bench(built, lambda p: remeasured if p == path else committed(p))
+        except AssertionError as refusal:
+            out.append({'control': f'bench:remeasured-{Path(path).stem}', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'bench control {path} was admitted')
+    return out
 
 
 # ------------------------------------------------------------------ main
@@ -955,7 +981,8 @@ def main() -> int:
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
-    record['bench'] = check_bench(built, reg)
+    record['bench'] = check_bench(built)
+    boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries, mutants=mutants,
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values())})

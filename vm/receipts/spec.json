@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T05:35:04.387772+00:00",
+ "date": "2026-09-28T05:36:09.881170+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -8,8 +8,8 @@
  },
  "inputs": {
   "vm/DECISIONS.md": "a19e9402cedddb5c93c82bf2ced1423c0fbf03a305e36a5779c36f6a8f6d1967",
-  "vm/SPEC.md": "1e4dac46bbfc6185df091b59b2285d329119bd259984722d10614416fe71abb3",
-  "vm/bench/README.md": "ff53c7df2ba0fa4416aeaae39d3fb62a71ed18f39ca2d96e205a632dc28329ae",
+  "vm/SPEC.md": "6fca7ff98fd0b234785e9272f43fe6ff9fb0fc2575645a8ad09a0414520559c6",
+  "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
   "vm/bench/deep-recursion.bend": "94009c1e623804a352eec236c4da4e5f13464cc7cec8afab8f5b05b92575df3a",
@@ -19,8 +19,8 @@
   "vm/bench/run.py": "ed30fdd7dfa747e1509c6d26da2c47e7df66aa97a3679effd2a3f7b200c59d04",
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
-  "vm/bench/workloads.json": "060a1b3b55a10072b6dcf27e90aaa99338243baa5f22e9ec790d2b03081425a7",
-  "vm/check-spec.py": "08630345745c5e7f4e7ea69db4b06531d58b2beec929f8989c5d275c6ff7a5ab",
+  "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
+  "vm/check-spec.py": "86acdc3e6cbcb93bd643c05002b09bb308d55f4603b1edacee62bb64a761dcce",
   "vm/golden/bounds.json": "3b010e3f6898cfdb942d9ce612b22225b19301223fd28cd72d467b923eb2c5af",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
@@ -205,7 +205,11 @@
  },
  "bench": {
   "workloads": 6,
-  "parse_cli_files": 34
+  "parse_cli_files": 34,
+  "measurements": {
+   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
+   "vm/bench/parse-cli.json": "8dadd489f593485bbd1c97fd446757f52664a32719fd4c9b14f313d2ea782b17"
+  }
  },
  "fixtures": [
   {
@@ -1850,6 +1854,14 @@
   {
    "control": "plan:representation-shape",
    "refused": "HostFailure image: validator: representation: Bool shape"
+  },
+  {
+   "control": "bench:remeasured-baselines",
+   "refused": "bench measurement vm/bench/baselines.json differs from its pin"
+  },
+  {
+   "control": "bench:remeasured-parse-cli",
+   "refused": "bench measurement vm/bench/parse-cli.json differs from its pin"
   }
  ],
  "mutants": [

@@ -8,14 +8,17 @@ index of the pinned Bool. Sources do not change; a
 new size is a new workload.
 
 ```sh
-BEND_NO_TELEMETRY=1 python3 vm/bench/run.py --repeat 5   # rewrites baselines.json and parse-cli.json
+BEND_NO_TELEMETRY=1 python3 vm/bench/run.py --repeat 5   # rewrites baselines.json and parse-cli.json; re-pin to adopt
 ```
 
 `run.py` builds each source with the pinned seed's native lane
 (`scripts/bend-reference SOURCE -o BINARY`, clang), runs it under `/usr/bin/time -l`,
 checks stdout, and records retired instructions, cycles, user and system CPU, wall
-time and peak RSS for every run. The gate (`vm/check-spec.py`) checks only that the
-sources, guards and recorded outputs still match; timings are never thresholds.
+time and peak RSS for every run. The gate (`vm/check-spec.py`) checks that the
+sources, guards and recorded outputs still match, and that `baselines.json` and
+`parse-cli.json` equal the sha256 digests pinned under `measurements` in
+[workloads.json](workloads.json). A re-measurement therefore fails the gate until a
+reviewed commit re-pins it. Timings are never thresholds.
 
 ## Baselines
 

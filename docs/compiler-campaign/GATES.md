@@ -49,8 +49,9 @@ and eval-cli on 55 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table, 48 refused malformed-image controls,
-21 codec mutants and 3 source mutants, and the bench freeze. It writes only
-`vm/receipts/spec.json`.
+21 codec mutants and 3 source mutants, and the bench freeze: sources, guards,
+outputs and the seed-native measurements pinned by digest in
+`vm/bench/workloads.json`. It writes only `vm/receipts/spec.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
