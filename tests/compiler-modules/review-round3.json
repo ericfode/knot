@@ -27,9 +27,14 @@
     "header",
     "order",
     "let",
+    "fields",
     "adapters"
   ],
   "sources": {
+    "fields/arm.bend": "b03f948fc37eda5d8e1bc96953184067626a7889f653580039b6367911a82283",
+    "fields/cross.bend": "adc1ad83eeddb0d7ef4efcd94285b3e9310080098e9c93f84d2364d923b76419",
+    "fields/later.bend": "04698d97989b6f927dc29c6d37a4363db3c221d4edc8dc95a9e1541115156f80",
+    "fields/lib/box.bend": "00b02bc8e9fb35c5297acf99fdb5154a6cbc2c09869c88af69eb3006899fc0b7",
     "hash/alias-comment.bend": "55281d0ff70fcf3b7bf9c3a9875a27b6c9a022f269d7a762621168a5305833f5",
     "hash/glued-base.bend": "65408a469c8fd81a1c695606969e6892ac351ef45fd81a48b8721ef3f8b376c8",
     "hash/glued-empty.bend": "34c5f4fb5526a7ee594f5b76ccb1e582f531cb106aaf9b868a24e422c993559e",
@@ -799,6 +804,112 @@
         "let/before-base.bend",
         "let/lib/early.bend"
       ]
+    },
+    {
+      "name": "field-later-ctor",
+      "finding": "fields",
+      "file": "fields/later.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fields/later.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/fields/later.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields"
+        ]
+      },
+      "loaded_files": [
+        "fields/later.bend"
+      ],
+      "plain": {
+        "obligation": "match-seed"
+      }
+    },
+    {
+      "name": "field-cross-module-ctor",
+      "finding": "fields",
+      "file": "fields/cross.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fields/cross.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/fields/cross.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": [
+          "fields"
+        ]
+      },
+      "loaded_files": [
+        "fields/cross.bend",
+        "fields/lib/box.bend"
+      ]
+    },
+    {
+      "name": "arm-earlier-ctor",
+      "finding": "fields",
+      "file": "fields/arm.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "fields/arm.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/fields/arm.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n6 |   match x:\n7>|     case Off: On{}\n  |          ^^^\n8 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      },
+      "plain": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
     }
   ],
   "adapter_pins": {
@@ -874,5 +985,19 @@
       }
     ],
     "reproduction": "At 0111f13 no gate reads host_query_sha256; the census exception pins only src/path-host.bend, and the modules gate input digest compares a run with itself."
+  },
+  "late_freeze": {
+    "findings": [
+      "fields"
+    ],
+    "reason": "Field and arm binder variants of the binder-order finding, frozen after the qualify and single-file let repairs (4d5fc75) and before the checker repair.",
+    "implementation": {
+      "src/load.bend": "d4055f56a6ad7c7917cfcc254d03bad689f4180b6141b486d6ebeba8a3412728",
+      "src/imports.bend": "842f8208049e3a9a0e2a15210f5544cdd07bc6e0d9c32ce9a62a39f9bc3cc779",
+      "src/qualify.bend": "6ea932f227dfe8fc299246f7e05d53de1944a866708cf4a1d205f66cf44cb62a",
+      "src/check.bend": "c30c31e7214547749831adf821162f0c06fe317a8f48c953da65c94e526c0d14",
+      "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+      "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
+    }
   }
 }
