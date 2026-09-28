@@ -5730,9 +5730,9 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 567,
-          "base": 95,
-          "base_intrinsics": 26,
+          "declarations": 573,
+          "base": 93,
+          "base_intrinsics": 27,
           "foreign": 7
         },
         "entries": [
@@ -6084,25 +6084,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "Char.is_space",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.and",
-              "Bool.or",
-              "Char",
-              "U32",
-              "U32.is_eq",
-              "U32.is_ge",
-              "U32.is_le"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "Char.to_u32",
             "file": "Base",
             "via": "src/wasm-bytes.chars",
@@ -6129,6 +6110,19 @@
             "key": "Cmp.is_eq",
             "file": "Base",
             "via": "String.eq.fin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Cmp.is_le",
+            "file": "Base",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6311,7 +6305,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6336,7 +6330,7 @@
           {
             "key": "List.is_empty",
             "file": "Base",
-            "via": "src/imports.valid_parts",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6432,7 +6426,7 @@
           {
             "key": "Nat.cmp",
             "file": "Base",
-            "via": "Nat.is_eq",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -6454,6 +6448,33 @@
               "Cmp.is_eq",
               "Nat",
               "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.is_le",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp.is_le",
+              "Nat",
+              "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.sub",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Nat"
             ],
             "dynamic_calls": []
           },
@@ -7939,25 +7960,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.constructor_named",
-            "file": "src/catalog.bend",
-            "via": "src/patterns.fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.or",
-              "List",
-              "U32",
-              "src/catalog.constructor_tag",
-              "src/catalog.has_tag",
-              "src/core.Datatype",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.constructor_next",
             "file": "src/catalog.bend",
             "via": "src/catalog.find_constructor",
@@ -8270,20 +8272,6 @@
             "dependencies": [
               "U32",
               "src/core.Signature"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/catalog.has_tag",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.constructor_named",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Maybe",
-              "U32"
             ],
             "dynamic_calls": []
           },
@@ -9914,6 +9902,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/driver.check_file",
+            "file": "src/driver.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "U32.to_nat",
+              "src/check.check",
+              "src/core.Book",
+              "src/qualify.rebinds",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/driver.checked",
             "file": "src/driver.bend",
             "via": "src/driver.loaded",
@@ -10124,9 +10133,9 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
               "src/core.Book",
               "src/driver.Limits",
+              "src/driver.check_file",
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
@@ -10145,6 +10154,34 @@
             "dependencies": [
               "String",
               "src/imports.Import"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.aliased",
+            "file": "src/imports.bend",
+            "via": "src/imports.import_words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char",
+              "Result",
+              "String",
+              "String.contains",
+              "String.eq",
+              "String.starts_with",
+              "U32",
+              "src/imports.Import",
+              "src/imports.first",
+              "src/imports.plain",
+              "src/imports.split",
+              "src/imports.valid",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -10321,13 +10358,12 @@
               "Bool",
               "Bool.and",
               "Bool.not",
-              "Char",
               "List",
+              "List.is_empty",
               "List.reverse",
               "Result",
               "String",
               "String.eq",
-              "String.trim",
               "U32",
               "U32.add",
               "src/imports.Header",
@@ -10337,8 +10373,8 @@
               "src/imports.first",
               "src/imports.foreign",
               "src/imports.import_words",
+              "src/imports.printable",
               "src/imports.push_import",
-              "src/imports.split",
               "src/imports.words",
               "src/syntax.At",
               "src/syntax.Error",
@@ -10366,21 +10402,19 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool",
-              "Bool.and",
+              "Bool.or",
               "Char",
               "List",
+              "List.is_empty",
               "Result",
               "String",
               "String.contains",
               "String.eq",
-              "String.starts_with",
               "U32",
               "src/imports.Import",
+              "src/imports.aliased",
               "src/imports.first",
-              "src/imports.plain",
               "src/imports.split",
-              "src/imports.valid",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -10523,7 +10557,7 @@
           {
             "key": "src/imports.plain",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10534,6 +10568,27 @@
               "String",
               "src/imports.word_tail",
               "src/syntax.alpha"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.printable",
+            "file": "src/imports.bend",
+            "via": "src/imports.header_lines",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "U32.is_ge",
+              "U32.is_le",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -10563,6 +10618,22 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/imports.pushed",
+            "file": "src/imports.bend",
+            "via": "src/imports.words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String",
+              "String.is_empty",
+              "String.reverse",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/imports.relative",
@@ -10714,7 +10785,7 @@
           {
             "key": "src/imports.valid",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10797,15 +10868,16 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "Bool.or",
               "Char",
               "Char.is_eq",
               "List",
               "List.reverse",
               "String",
-              "String.append",
-              "String.eq",
+              "String.is_empty",
               "U32",
+              "src/imports.pushed",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -11867,6 +11939,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.width",
+            "file": "src/load.bend",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "U32",
+              "U32.is_lt",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/load.within",
             "file": "src/load.bend",
             "via": "src/load.step_source",
@@ -11875,8 +11962,13 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Char.to_u32",
               "Nat",
-              "String"
+              "Nat.is_le",
+              "Nat.sub",
+              "String",
+              "src/load.width",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -12498,7 +12590,6 @@
               "Result",
               "String",
               "U32",
-              "src/catalog.constructor_named",
               "src/catalog.quantity",
               "src/catalog.type_at",
               "src/core.Datatype",
@@ -12513,8 +12604,7 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -12675,6 +12765,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/qualify.binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/qualify.field_binders",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.constructor_token",
             "file": "src/qualify.bend",
             "via": "src/qualify.walk_in",
@@ -12714,7 +12819,7 @@
           {
             "key": "src/qualify.constructors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.ctors_in",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12729,7 +12834,7 @@
           {
             "key": "src/qualify.contains",
             "file": "src/qualify.bend",
-            "via": "src/qualify.fresh",
+            "via": "src/qualify.variables",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12760,7 +12865,7 @@
           {
             "key": "src/qualify.ctors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.ctor_names",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12856,6 +12961,20 @@
               "String",
               "src/qualify.Names",
               "src/qualify.known"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.field_binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.binders",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -13081,7 +13200,7 @@
           {
             "key": "src/qualify.prefix",
             "file": "src/qualify.bend",
-            "via": "src/qualify.prefixed",
+            "via": "src/qualify.fresh",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13097,7 +13216,7 @@
           {
             "key": "src/qualify.prefixed",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13159,11 +13278,34 @@
               "src/qualify.Names",
               "src/qualify.Position",
               "src/qualify.Symbols",
-              "src/qualify.ctors_in",
               "src/qualify.declarations",
-              "src/qualify.prefixed",
               "src/qualify.result",
               "src/qualify.walk_in",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.rebinds",
+            "file": "src/qualify.bend",
+            "via": "src/driver.check_file",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/qualify.binders",
+              "src/qualify.constructors_in",
+              "src/qualify.variables",
+              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -13343,6 +13485,45 @@
             ]
           },
           {
+            "key": "src/qualify.variables",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/qualify.contains",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.visible",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.walk_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "String",
+              "src/qualify.Names",
+              "src/qualify.constructors_in",
+              "src/qualify.prefixed",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.walk_in",
             "file": "src/qualify.bend",
             "via": "src/qualify.qualify",
@@ -13373,6 +13554,7 @@
               "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
+              "src/qualify.visible",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -15378,7 +15560,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/qualify.prefix",
+            "via": "src/imports.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15480,63 +15662,6 @@
               "Bool",
               "String",
               "String.starts_with"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim",
-            "file": "Base",
-            "via": "src/imports.header_lines",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.trim_end",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_end",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.reverse",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Char.is_space",
-              "String",
-              "String.trim_start.if"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start.if",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Char",
-              "String",
-              "String.trim_start"
             ],
             "dynamic_calls": []
           },
@@ -15954,9 +16079,9 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 567,
-          "base": 95,
-          "base_intrinsics": 24,
+          "declarations": 573,
+          "base": 93,
+          "base_intrinsics": 25,
           "foreign": 7
         },
         "entries": [
@@ -16308,25 +16433,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "Char.is_space",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.and",
-              "Bool.or",
-              "Char",
-              "U32",
-              "U32.is_eq",
-              "U32.is_ge",
-              "U32.is_le"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "Char.to_u32",
             "file": "Base",
             "via": "src/wasm-bytes.chars",
@@ -16353,6 +16459,19 @@
             "key": "Cmp.is_eq",
             "file": "Base",
             "via": "String.eq.fin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Cmp.is_le",
+            "file": "Base",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16535,7 +16654,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16560,7 +16679,7 @@
           {
             "key": "List.is_empty",
             "file": "Base",
-            "via": "src/imports.valid_parts",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16656,7 +16775,7 @@
           {
             "key": "Nat.cmp",
             "file": "Base",
-            "via": "Nat.is_eq",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -16678,6 +16797,33 @@
               "Cmp.is_eq",
               "Nat",
               "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.is_le",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp.is_le",
+              "Nat",
+              "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.sub",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Nat"
             ],
             "dynamic_calls": []
           },
@@ -18163,25 +18309,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.constructor_named",
-            "file": "src/catalog.bend",
-            "via": "src/patterns.fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.or",
-              "List",
-              "U32",
-              "src/catalog.constructor_tag",
-              "src/catalog.has_tag",
-              "src/core.Datatype",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.constructor_next",
             "file": "src/catalog.bend",
             "via": "src/catalog.find_constructor",
@@ -18494,20 +18621,6 @@
             "dependencies": [
               "U32",
               "src/core.Signature"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/catalog.has_tag",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.constructor_named",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Maybe",
-              "U32"
             ],
             "dynamic_calls": []
           },
@@ -20138,6 +20251,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/driver.check_file",
+            "file": "src/driver.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "U32.to_nat",
+              "src/check.check",
+              "src/core.Book",
+              "src/qualify.rebinds",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/driver.checked",
             "file": "src/driver.bend",
             "via": "src/driver.loaded",
@@ -20348,9 +20482,9 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
               "src/core.Book",
               "src/driver.Limits",
+              "src/driver.check_file",
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
@@ -20369,6 +20503,34 @@
             "dependencies": [
               "String",
               "src/imports.Import"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.aliased",
+            "file": "src/imports.bend",
+            "via": "src/imports.import_words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char",
+              "Result",
+              "String",
+              "String.contains",
+              "String.eq",
+              "String.starts_with",
+              "U32",
+              "src/imports.Import",
+              "src/imports.first",
+              "src/imports.plain",
+              "src/imports.split",
+              "src/imports.valid",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -20545,13 +20707,12 @@
               "Bool",
               "Bool.and",
               "Bool.not",
-              "Char",
               "List",
+              "List.is_empty",
               "List.reverse",
               "Result",
               "String",
               "String.eq",
-              "String.trim",
               "U32",
               "U32.add",
               "src/imports.Header",
@@ -20561,8 +20722,8 @@
               "src/imports.first",
               "src/imports.foreign",
               "src/imports.import_words",
+              "src/imports.printable",
               "src/imports.push_import",
-              "src/imports.split",
               "src/imports.words",
               "src/syntax.At",
               "src/syntax.Error",
@@ -20590,21 +20751,19 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool",
-              "Bool.and",
+              "Bool.or",
               "Char",
               "List",
+              "List.is_empty",
               "Result",
               "String",
               "String.contains",
               "String.eq",
-              "String.starts_with",
               "U32",
               "src/imports.Import",
+              "src/imports.aliased",
               "src/imports.first",
-              "src/imports.plain",
               "src/imports.split",
-              "src/imports.valid",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -20747,7 +20906,7 @@
           {
             "key": "src/imports.plain",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20758,6 +20917,27 @@
               "String",
               "src/imports.word_tail",
               "src/syntax.alpha"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.printable",
+            "file": "src/imports.bend",
+            "via": "src/imports.header_lines",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq",
+              "U32.is_ge",
+              "U32.is_le",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -20787,6 +20967,22 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/imports.pushed",
+            "file": "src/imports.bend",
+            "via": "src/imports.words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String",
+              "String.is_empty",
+              "String.reverse",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/imports.relative",
@@ -20938,7 +21134,7 @@
           {
             "key": "src/imports.valid",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21021,15 +21217,16 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "Bool.or",
               "Char",
               "Char.is_eq",
               "List",
               "List.reverse",
               "String",
-              "String.append",
-              "String.eq",
+              "String.is_empty",
               "U32",
+              "src/imports.pushed",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -22091,6 +22288,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.width",
+            "file": "src/load.bend",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "U32",
+              "U32.is_lt",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/load.within",
             "file": "src/load.bend",
             "via": "src/load.step_source",
@@ -22099,8 +22311,13 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Char.to_u32",
               "Nat",
-              "String"
+              "Nat.is_le",
+              "Nat.sub",
+              "String",
+              "src/load.width",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -22722,7 +22939,6 @@
               "Result",
               "String",
               "U32",
-              "src/catalog.constructor_named",
               "src/catalog.quantity",
               "src/catalog.type_at",
               "src/core.Datatype",
@@ -22737,8 +22953,7 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -22899,6 +23114,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/qualify.binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/qualify.field_binders",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.constructor_token",
             "file": "src/qualify.bend",
             "via": "src/qualify.walk_in",
@@ -22938,7 +23168,7 @@
           {
             "key": "src/qualify.constructors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.ctors_in",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22953,7 +23183,7 @@
           {
             "key": "src/qualify.contains",
             "file": "src/qualify.bend",
-            "via": "src/qualify.fresh",
+            "via": "src/qualify.variables",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22984,7 +23214,7 @@
           {
             "key": "src/qualify.ctors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.ctor_names",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23080,6 +23310,20 @@
               "String",
               "src/qualify.Names",
               "src/qualify.known"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.field_binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.binders",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -23305,7 +23549,7 @@
           {
             "key": "src/qualify.prefix",
             "file": "src/qualify.bend",
-            "via": "src/qualify.prefixed",
+            "via": "src/qualify.fresh",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23321,7 +23565,7 @@
           {
             "key": "src/qualify.prefixed",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23383,11 +23627,34 @@
               "src/qualify.Names",
               "src/qualify.Position",
               "src/qualify.Symbols",
-              "src/qualify.ctors_in",
               "src/qualify.declarations",
-              "src/qualify.prefixed",
               "src/qualify.result",
               "src/qualify.walk_in",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.rebinds",
+            "file": "src/qualify.bend",
+            "via": "src/driver.check_file",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/qualify.binders",
+              "src/qualify.constructors_in",
+              "src/qualify.variables",
+              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -23567,6 +23834,45 @@
             ]
           },
           {
+            "key": "src/qualify.variables",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/qualify.contains",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.visible",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.walk_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "String",
+              "src/qualify.Names",
+              "src/qualify.constructors_in",
+              "src/qualify.prefixed",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.walk_in",
             "file": "src/qualify.bend",
             "via": "src/qualify.qualify",
@@ -23597,6 +23903,7 @@
               "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
+              "src/qualify.visible",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -25602,7 +25909,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/qualify.prefix",
+            "via": "src/imports.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25704,63 +26011,6 @@
               "Bool",
               "String",
               "String.starts_with"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim",
-            "file": "Base",
-            "via": "src/imports.header_lines",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.trim_end",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_end",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.reverse",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Char.is_space",
-              "String",
-              "String.trim_start.if"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start.if",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Char",
-              "String",
-              "String.trim_start"
             ],
             "dynamic_calls": []
           },
@@ -26178,9 +26428,9 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 497,
-          "base": 81,
-          "base_intrinsics": 26,
+          "declarations": 503,
+          "base": 79,
+          "base_intrinsics": 27,
           "foreign": 7
         },
         "entries": [
@@ -26405,22 +26655,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "Char.is_space",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.and",
-              "Bool.or",
-              "U32.is_eq",
-              "U32.is_ge",
-              "U32.is_le"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "Char.to_u32",
             "file": "Base",
             "via": "src/wasm-bytes.chars",
@@ -26434,6 +26668,16 @@
             "key": "Cmp.is_eq",
             "file": "Base",
             "via": "String.eq.fin",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Cmp.is_le",
+            "file": "Base",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26526,7 +26770,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26548,7 +26792,7 @@
           {
             "key": "List.is_empty",
             "file": "Base",
-            "via": "src/imports.valid_parts",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26610,7 +26854,7 @@
           {
             "key": "Nat.cmp",
             "file": "Base",
-            "via": "Nat.is_eq",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -26628,6 +26872,29 @@
               "Cmp.is_eq",
               "Nat.cmp"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.is_le",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Cmp.is_le",
+              "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.sub",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -27680,20 +27947,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.constructor_named",
-            "file": "src/catalog.bend",
-            "via": "src/patterns.fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.or",
-              "src/catalog.constructor_tag",
-              "src/catalog.has_tag"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.constructor_next",
             "file": "src/catalog.bend",
             "via": "src/catalog.find_constructor",
@@ -27892,16 +28145,6 @@
               "src/syntax.choose",
               "src/syntax.text"
             ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/catalog.has_tag",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.constructor_named",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -28885,6 +29128,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/driver.check_file",
+            "file": "src/driver.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.to_nat",
+              "src/check.check",
+              "src/qualify.rebinds",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/driver.checked",
             "file": "src/driver.bend",
             "via": "src/driver.loaded",
@@ -29019,7 +29277,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/check.check",
+              "src/driver.check_file",
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
@@ -29036,6 +29294,26 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.aliased",
+            "file": "src/imports.bend",
+            "via": "src/imports.import_words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "String.contains",
+              "String.eq",
+              "String.starts_with",
+              "src/imports.first",
+              "src/imports.plain",
+              "src/imports.split",
+              "src/imports.valid",
+              "src/syntax.choose"
+            ],
             "dynamic_calls": []
           },
           {
@@ -29167,17 +29445,17 @@
             "dependencies": [
               "Bool.and",
               "Bool.not",
+              "List.is_empty",
               "List.reverse",
               "String.eq",
-              "String.trim",
               "U32.add",
               "src/imports.alias",
               "src/imports.body_lines",
               "src/imports.first",
               "src/imports.foreign",
               "src/imports.import_words",
+              "src/imports.printable",
               "src/imports.push_import",
-              "src/imports.split",
               "src/imports.words",
               "src/syntax.choose"
             ],
@@ -29191,14 +29469,13 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.and",
+              "Bool.or",
+              "List.is_empty",
               "String.contains",
               "String.eq",
-              "String.starts_with",
+              "src/imports.aliased",
               "src/imports.first",
-              "src/imports.plain",
               "src/imports.split",
-              "src/imports.valid",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -29316,7 +29593,7 @@
           {
             "key": "src/imports.plain",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29325,6 +29602,24 @@
               "Char.to_u32",
               "src/imports.word_tail",
               "src/syntax.alpha"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.printable",
+            "file": "src/imports.bend",
+            "via": "src/imports.header_lines",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.or",
+              "Char.to_u32",
+              "U32.is_eq",
+              "U32.is_ge",
+              "U32.is_le",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -29346,6 +29641,20 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/imports.pushed",
+            "file": "src/imports.bend",
+            "via": "src/imports.words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.is_empty",
+              "String.reverse",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/imports.relative",
@@ -29460,7 +29769,7 @@
           {
             "key": "src/imports.valid",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -29530,11 +29839,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "Bool.or",
               "Char.is_eq",
               "List.reverse",
-              "String.append",
-              "String.eq",
+              "String.is_empty",
+              "src/imports.pushed",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -30170,13 +30480,32 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.width",
+            "file": "src/load.bend",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_lt",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/load.within",
             "file": "src/load.bend",
             "via": "src/load.step_source",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
-            "dependencies": [],
+            "dependencies": [
+              "Char.to_u32",
+              "Nat.is_le",
+              "Nat.sub",
+              "src/load.width",
+              "src/syntax.choose"
+            ],
             "dynamic_calls": []
           },
           {
@@ -30574,7 +30903,6 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/catalog.constructor_named",
               "src/catalog.quantity",
               "src/catalog.type_at",
               "src/core.invalid",
@@ -30582,8 +30910,7 @@
               "src/patterns.binder",
               "src/patterns.prepend",
               "src/patterns.quantity",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -30679,6 +31006,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/qualify.binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/qualify.field_binders"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.constructor_token",
             "file": "src/qualify.bend",
             "via": "src/qualify.walk_in",
@@ -30707,7 +31046,7 @@
           {
             "key": "src/qualify.constructors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.ctors_in",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30719,7 +31058,7 @@
           {
             "key": "src/qualify.contains",
             "file": "src/qualify.bend",
-            "via": "src/qualify.fresh",
+            "via": "src/qualify.variables",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30744,7 +31083,7 @@
           {
             "key": "src/qualify.ctors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.ctor_names",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30819,6 +31158,16 @@
               "Bool.pick",
               "src/qualify.known"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.field_binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.binders",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -30961,7 +31310,7 @@
           {
             "key": "src/qualify.prefix",
             "file": "src/qualify.bend",
-            "via": "src/qualify.prefixed",
+            "via": "src/qualify.fresh",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30975,7 +31324,7 @@
           {
             "key": "src/qualify.prefixed",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31007,11 +31356,25 @@
             "dependencies": [
               "List.append",
               "U32.to_nat",
-              "src/qualify.ctors_in",
               "src/qualify.declarations",
-              "src/qualify.prefixed",
               "src/qualify.result",
               "src/qualify.walk_in",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.rebinds",
+            "file": "src/qualify.bend",
+            "via": "src/driver.check_file",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List.append",
+              "src/qualify.binders",
+              "src/qualify.constructors_in",
+              "src/qualify.variables",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -31135,6 +31498,35 @@
             ]
           },
           {
+            "key": "src/qualify.variables",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/qualify.contains",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.visible",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.walk_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List.append",
+              "src/qualify.constructors_in",
+              "src/qualify.prefixed"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.walk_in",
             "file": "src/qualify.bend",
             "via": "src/qualify.qualify",
@@ -31156,6 +31548,7 @@
               "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
+              "src/qualify.visible",
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.text"
@@ -32539,7 +32932,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/qualify.prefix",
+            "via": "src/imports.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32624,57 +33017,6 @@
             "unsafe": false,
             "dependencies": [
               "String.starts_with"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim",
-            "file": "Base",
-            "via": "src/imports.header_lines",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String.trim_end",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_end",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String.reverse",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Char.is_space",
-              "String.trim_start.if"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start.if",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String.trim_start"
             ],
             "dynamic_calls": []
           },
@@ -33002,9 +33344,9 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 609,
-          "base": 137,
-          "base_intrinsics": 30,
+          "declarations": 614,
+          "base": 134,
+          "base_intrinsics": 31,
           "foreign": 7
         },
         "entries": [
@@ -33384,24 +33726,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "Char.is_space",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.and",
-              "Bool.or",
-              "Char",
-              "U32.is_eq",
-              "U32.is_ge",
-              "U32.is_le"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "Char.to_u32",
             "file": "Base",
             "via": "src/wasm-bytes.chars",
@@ -33662,7 +33986,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33687,7 +34011,7 @@
           {
             "key": "List.is_empty",
             "file": "Base",
-            "via": "src/imports.valid_parts",
+            "via": "src/imports.header_lines",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33783,7 +34107,7 @@
           {
             "key": "Nat.cmp",
             "file": "Base",
-            "via": "Nat.is_eq",
+            "via": "Nat.is_le",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -33817,6 +34141,33 @@
               "Cmp.is_eq",
               "Nat",
               "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.is_le",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Cmp.is_le",
+              "Nat",
+              "Nat.cmp"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "Nat.sub",
+            "file": "Base",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "Nat"
             ],
             "dynamic_calls": []
           },
@@ -35289,24 +35640,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.constructor_named",
-            "file": "src/catalog.bend",
-            "via": "src/patterns.fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Bool.or",
-              "List",
-              "src/catalog.constructor_tag",
-              "src/catalog.has_tag",
-              "src/core.Datatype",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.constructor_next",
             "file": "src/catalog.bend",
             "via": "src/catalog.find_constructor",
@@ -35613,20 +35946,6 @@
             "dependencies": [
               "U32",
               "src/core.Signature"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/catalog.has_tag",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.constructor_named",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Maybe",
-              "U32"
             ],
             "dynamic_calls": []
           },
@@ -37239,6 +37558,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/driver.check_file",
+            "file": "src/driver.bend",
+            "via": "src/driver.source",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/check.check",
+              "src/core.Book",
+              "src/qualify.rebinds",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/driver.checked",
             "file": "src/driver.bend",
             "via": "src/driver.loaded",
@@ -37452,9 +37792,9 @@
               "List",
               "String",
               "Unit",
-              "src/check.check",
               "src/core.Book",
               "src/driver.Limits",
+              "src/driver.check_file",
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
@@ -37475,6 +37815,33 @@
             "dependencies": [
               "String",
               "src/imports.Import"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.aliased",
+            "file": "src/imports.bend",
+            "via": "src/imports.import_words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Char",
+              "Result",
+              "String",
+              "String.contains",
+              "String.eq",
+              "String.starts_with",
+              "src/imports.Import",
+              "src/imports.first",
+              "src/imports.plain",
+              "src/imports.split",
+              "src/imports.valid",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -37647,13 +38014,12 @@
               "Bool",
               "Bool.and",
               "Bool.not",
-              "Char",
               "List",
+              "List.is_empty",
               "List.reverse",
               "Result",
               "String",
               "String.eq",
-              "String.trim",
               "U32",
               "U32.add",
               "src/imports.Header",
@@ -37663,8 +38029,8 @@
               "src/imports.first",
               "src/imports.foreign",
               "src/imports.import_words",
+              "src/imports.printable",
               "src/imports.push_import",
-              "src/imports.split",
               "src/imports.words",
               "src/syntax.At",
               "src/syntax.Error",
@@ -37692,20 +38058,18 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool",
-              "Bool.and",
+              "Bool.or",
               "Char",
               "List",
+              "List.is_empty",
               "Result",
               "String",
               "String.contains",
               "String.eq",
-              "String.starts_with",
               "src/imports.Import",
+              "src/imports.aliased",
               "src/imports.first",
-              "src/imports.plain",
               "src/imports.split",
-              "src/imports.valid",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.choose"
@@ -37846,7 +38210,7 @@
           {
             "key": "src/imports.plain",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -37857,6 +38221,26 @@
               "String",
               "src/imports.word_tail",
               "src/syntax.alpha"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.printable",
+            "file": "src/imports.bend",
+            "via": "src/imports.header_lines",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq",
+              "U32.is_ge",
+              "U32.is_le",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -37885,6 +38269,22 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/imports.pushed",
+            "file": "src/imports.bend",
+            "via": "src/imports.words",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "String",
+              "String.is_empty",
+              "String.reverse",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/imports.relative",
@@ -38034,7 +38434,7 @@
           {
             "key": "src/imports.valid",
             "file": "src/imports.bend",
-            "via": "src/imports.import_words",
+            "via": "src/imports.aliased",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38114,14 +38514,15 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "Bool.or",
               "Char",
               "Char.is_eq",
               "List",
               "List.reverse",
               "String",
-              "String.append",
-              "String.eq",
+              "String.is_empty",
+              "src/imports.pushed",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -39177,6 +39578,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/load.width",
+            "file": "src/load.bend",
+            "via": "src/load.within",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Nat",
+              "U32",
+              "U32.is_lt",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/load.within",
             "file": "src/load.bend",
             "via": "src/load.step_source",
@@ -39185,8 +39601,13 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
+              "Char.to_u32",
               "Nat",
-              "String"
+              "Nat.is_le",
+              "Nat.sub",
+              "String",
+              "src/load.width",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -39797,7 +40218,6 @@
               "Result",
               "U32",
               "Unit",
-              "src/catalog.constructor_named",
               "src/catalog.quantity",
               "src/catalog.type_at",
               "src/core.Datatype",
@@ -39812,8 +40232,7 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -39974,6 +40393,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/qualify.binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/qualify.field_binders",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.constructor_token",
             "file": "src/qualify.bend",
             "via": "src/qualify.walk_in",
@@ -40013,7 +40447,7 @@
           {
             "key": "src/qualify.constructors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.ctors_in",
+            "via": "src/qualify.rebinds",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40028,7 +40462,7 @@
           {
             "key": "src/qualify.contains",
             "file": "src/qualify.bend",
-            "via": "src/qualify.fresh",
+            "via": "src/qualify.variables",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40059,7 +40493,7 @@
           {
             "key": "src/qualify.ctors_in",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.ctor_names",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40155,6 +40589,20 @@
               "String",
               "src/qualify.Names",
               "src/qualify.known"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.field_binders",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.binders",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -40380,7 +40828,7 @@
           {
             "key": "src/qualify.prefix",
             "file": "src/qualify.bend",
-            "via": "src/qualify.prefixed",
+            "via": "src/qualify.fresh",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40396,7 +40844,7 @@
           {
             "key": "src/qualify.prefixed",
             "file": "src/qualify.bend",
-            "via": "src/qualify.qualify",
+            "via": "src/qualify.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40457,11 +40905,33 @@
               "src/qualify.Position",
               "src/qualify.Qualified",
               "src/qualify.Symbols",
-              "src/qualify.ctors_in",
               "src/qualify.declarations",
-              "src/qualify.prefixed",
               "src/qualify.result",
               "src/qualify.walk_in",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.rebinds",
+            "file": "src/qualify.bend",
+            "via": "src/driver.check_file",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "Nat",
+              "Result",
+              "String",
+              "Unit",
+              "src/qualify.binders",
+              "src/qualify.constructors_in",
+              "src/qualify.variables",
+              "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -40640,6 +41110,45 @@
             ]
           },
           {
+            "key": "src/qualify.variables",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.rebinds",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "Unit",
+              "src/qualify.contains",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/qualify.visible",
+            "file": "src/qualify.bend",
+            "via": "src/qualify.walk_in",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.append",
+              "String",
+              "src/qualify.Names",
+              "src/qualify.constructors_in",
+              "src/qualify.prefixed",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/qualify.walk_in",
             "file": "src/qualify.bend",
             "via": "src/qualify.qualify",
@@ -40669,6 +41178,7 @@
               "src/qualify.reference",
               "src/qualify.sequence",
               "src/qualify.then",
+              "src/qualify.visible",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.Node",
@@ -42664,7 +43174,7 @@
           {
             "key": "String.is_empty",
             "file": "Base",
-            "via": "src/qualify.prefix",
+            "via": "src/imports.words",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -42766,63 +43276,6 @@
               "Bool",
               "String",
               "String.starts_with"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim",
-            "file": "Base",
-            "via": "src/imports.header_lines",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.trim_end",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_end",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "String",
-              "String.reverse",
-              "String.trim_start"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start",
-            "file": "Base",
-            "via": "String.trim",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Char.is_space",
-              "String",
-              "String.trim_start.if"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "String.trim_start.if",
-            "file": "Base",
-            "via": "String.trim_start",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "Char",
-              "String",
-              "String.trim_start"
             ],
             "dynamic_calls": []
           },

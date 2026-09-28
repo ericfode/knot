@@ -4656,46 +4656,46 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 567,
-        "compiler": 458,
+        "declarations": 573,
+        "compiler": 466,
         "packages": 14,
-        "base": 95,
-        "check": 200,
-        "wasm": 182,
+        "base": 93,
+        "check": 197,
+        "wasm": 179,
         "covered_by_requirements": {
-          "check": 550,
-          "wasm": 550
+          "check": 557,
+          "wasm": 557
         }
       },
       "missing": {
         "check": [
           {
             "feature": "lambdas",
-            "declarations": 184
+            "declarations": 192
           },
           {
             "feature": "captures",
-            "declarations": 179
+            "declarations": 187
           },
           {
             "feature": "literals.string",
-            "declarations": 163
+            "declarations": 166
           },
           {
             "feature": "patterns.nested",
-            "declarations": 100
+            "declarations": 101
           },
           {
             "feature": "patterns.wildcard",
-            "declarations": 76
-          },
-          {
-            "feature": "matches.multi",
-            "declarations": 56
+            "declarations": 78
           },
           {
             "feature": "literals.nat",
-            "declarations": 55
+            "declarations": 58
+          },
+          {
+            "feature": "matches.multi",
+            "declarations": 58
           },
           {
             "feature": "higher-order",
@@ -4731,11 +4731,11 @@
           },
           {
             "feature": "laws",
-            "declarations": 7
+            "declarations": 6
           },
           {
             "feature": "proofs",
-            "declarations": 6
+            "declarations": 5
           },
           {
             "feature": "templates",
@@ -4749,35 +4749,35 @@
         "wasm": [
           {
             "feature": "lambdas",
-            "declarations": 184
+            "declarations": 192
           },
           {
             "feature": "captures",
-            "declarations": 179
+            "declarations": 187
           },
           {
             "feature": "literals.string",
-            "declarations": 163
+            "declarations": 166
           },
           {
             "feature": "recursion",
-            "declarations": 123
+            "declarations": 127
           },
           {
             "feature": "patterns.nested",
-            "declarations": 100
+            "declarations": 101
           },
           {
             "feature": "patterns.wildcard",
-            "declarations": 76
-          },
-          {
-            "feature": "matches.multi",
-            "declarations": 56
+            "declarations": 78
           },
           {
             "feature": "literals.nat",
-            "declarations": 55
+            "declarations": 58
+          },
+          {
+            "feature": "matches.multi",
+            "declarations": 58
           },
           {
             "feature": "higher-order",
@@ -4813,11 +4813,11 @@
           },
           {
             "feature": "laws",
-            "declarations": 7
+            "declarations": 6
           },
           {
             "feature": "proofs",
-            "declarations": 6
+            "declarations": 5
           },
           {
             "feature": "templates",
@@ -4837,11 +4837,11 @@
           },
           {
             "feature": "laws",
-            "declarations": 7
+            "declarations": 6
           },
           {
             "feature": "proofs",
-            "declarations": 6
+            "declarations": 5
           },
           {
             "feature": "templates",
@@ -4855,11 +4855,11 @@
           },
           {
             "feature": "laws",
-            "declarations": 7
+            "declarations": 6
           },
           {
             "feature": "proofs",
-            "declarations": 6
+            "declarations": 5
           },
           {
             "feature": "templates",
@@ -5470,31 +5470,6 @@
           }
         },
         {
-          "key": "Char.is_space",
-          "file": "Base",
-          "origin": "base",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "literals.u32",
-            "matches",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.reusable",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
           "key": "Char.to_u32",
           "file": "Base",
           "origin": "base",
@@ -5536,6 +5511,26 @@
         },
         {
           "key": "Cmp.is_eq",
+          "file": "Base",
+          "origin": "base",
+          "boundary": "source",
+          "features": [
+            "constructors",
+            "matches",
+            "quantities.affine",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "Cmp.is_le",
           "file": "Base",
           "origin": "base",
           "boundary": "source",
@@ -6315,6 +6310,58 @@
           }
         },
         {
+          "key": "Nat.is_le",
+          "file": "Base",
+          "origin": "base",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "quantities.affine",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "Nat.sub",
+          "file": "Base",
+          "origin": "base",
+          "boundary": "intrinsic",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.nat",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "literals.nat",
+              "matches.multi"
+            ],
+            "wasm": [
+              "literals.nat",
+              "matches.multi",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "Pair",
           "file": "Base",
           "origin": "base",
@@ -6954,104 +7001,6 @@
           "features": [
             "calls",
             "constructors",
-            "matches",
-            "quantities.affine",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "String.trim",
-          "file": "Base",
-          "origin": "base",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "quantities.affine",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "String.trim_end",
-          "file": "Base",
-          "origin": "base",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "quantities.affine",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "String.trim_start",
-          "file": "Base",
-          "origin": "base",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "laws",
-            "matches",
-            "patterns.variable",
-            "proofs",
-            "quantities.affine",
-            "quantities.reusable",
-            "types.base"
-          ],
-          "missing": {
-            "check": [
-              "laws",
-              "proofs"
-            ],
-            "wasm": [
-              "laws",
-              "proofs"
-            ]
-          },
-          "missing_requirements": {
-            "check": [
-              "laws",
-              "proofs"
-            ],
-            "wasm": [
-              "laws",
-              "proofs"
-            ]
-          }
-        },
-        {
-          "key": "String.trim_start.if",
-          "file": "Base",
-          "origin": "base",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
             "matches",
             "quantities.affine",
             "types.base"
@@ -10650,42 +10599,6 @@
           }
         },
         {
-          "key": "src/catalog.constructor_named",
-          "file": "src/catalog.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "literals.u32",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "quantities.reusable",
-            "recursion",
-            "types.base"
-          ],
-          "missing": {
-            "check": [
-              "patterns.nested"
-            ],
-            "wasm": [
-              "patterns.nested",
-              "recursion"
-            ]
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
           "key": "src/catalog.constructor_next",
           "file": "src/catalog.bend",
           "origin": "compiler",
@@ -11195,32 +11108,6 @@
               "literals.string",
               "recursion"
             ]
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
-          "key": "src/catalog.has_tag",
-          "file": "src/catalog.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "constructors",
-            "fields",
-            "generics",
-            "imports.base",
-            "imports.local",
-            "matches",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
           },
           "missing_requirements": {
             "check": [],
@@ -14167,6 +14054,44 @@
           }
         },
         {
+          "key": "src/driver.check_file",
+          "file": "src/driver.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.nat"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.nat"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/driver.checked",
           "file": "src/driver.bend",
           "origin": "compiler",
@@ -14645,6 +14570,46 @@
           }
         },
         {
+          "key": "src/imports.aliased",
+          "file": "src/imports.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.char",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.char",
+              "literals.string"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.char",
+              "literals.string"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/imports.body_lines",
           "file": "src/imports.bend",
           "origin": "compiler",
@@ -14942,7 +14907,6 @@
             "imports.base",
             "imports.local",
             "lambdas",
-            "literals.char",
             "literals.string",
             "literals.u32",
             "matches",
@@ -14957,13 +14921,11 @@
             "check": [
               "captures",
               "lambdas",
-              "literals.char",
               "literals.string"
             ],
             "wasm": [
               "captures",
               "lambdas",
-              "literals.char",
               "literals.string",
               "recursion"
             ]
@@ -15320,6 +15282,44 @@
           }
         },
         {
+          "key": "src/imports.printable",
+          "file": "src/imports.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "bindings",
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/imports.push_import",
           "file": "src/imports.bend",
           "origin": "compiler",
@@ -15358,6 +15358,40 @@
               "higher-order",
               "lambdas",
               "literals.string"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/imports.pushed",
+          "file": "src/imports.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas"
             ]
           },
           "missing_requirements": {
@@ -17601,35 +17635,68 @@
           }
         },
         {
-          "key": "src/load.within",
+          "key": "src/load.width",
           "file": "src/load.bend",
           "origin": "compiler",
           "boundary": "source",
           "features": [
             "calls",
+            "captures",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.nat",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.nat"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.nat"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/load.within",
+          "file": "src/load.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "bindings",
+            "calls",
+            "captures",
             "constructors",
             "fields",
             "imports.base",
             "imports.local",
-            "literals.nat",
+            "lambdas",
             "matches",
-            "matches.multi",
             "patterns.variable",
-            "patterns.wildcard",
             "quantities.affine",
+            "quantities.reusable",
             "recursion",
             "types.base"
           ],
           "missing": {
             "check": [
-              "literals.nat",
-              "matches.multi",
-              "patterns.wildcard"
+              "captures",
+              "lambdas"
             ],
             "wasm": [
-              "literals.nat",
-              "matches.multi",
-              "patterns.wildcard",
+              "captures",
+              "lambdas",
               "recursion"
             ]
           },
@@ -19118,6 +19185,39 @@
           }
         },
         {
+          "key": "src/qualify.binders",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.list",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "patterns.wildcard"
+            ],
+            "wasm": [
+              "patterns.wildcard"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/qualify.constructor_token",
           "file": "src/qualify.bend",
           "origin": "compiler",
@@ -19472,6 +19572,40 @@
           "missing": {
             "check": [],
             "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/qualify.field_binders",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "patterns.nested"
+            ],
+            "wasm": [
+              "patterns.nested",
+              "recursion"
+            ]
           },
           "missing_requirements": {
             "check": [],
@@ -19954,6 +20088,61 @@
           }
         },
         {
+          "key": "src/qualify.rebinds",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.nat",
+              "literals.string",
+              "matches.multi",
+              "patterns.nested",
+              "patterns.wildcard"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.nat",
+              "literals.string",
+              "matches.multi",
+              "patterns.nested",
+              "patterns.wildcard",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/qualify.reference",
           "file": "src/qualify.bend",
           "origin": "compiler",
@@ -20246,6 +20435,82 @@
               "calls.variable",
               "higher-order",
               "patterns.nested"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/qualify.variables",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas",
+              "literals.string"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas",
+              "literals.string",
+              "recursion"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/qualify.visible",
+          "file": "src/qualify.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "matches.multi",
+              "patterns.wildcard"
+            ],
+            "wasm": [
+              "matches.multi",
+              "patterns.wildcard"
             ]
           },
           "missing_requirements": {
@@ -26285,8 +26550,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "2577660256e9800dcaeed52a56e8beedb17db30ab0d400f0e935abe6cb8a6f67",
-    "docs/compiler-campaign/inventory/base-closure.json": "263457a89e2291f80611567a2d24295378187acb1b3e07e8a2e560ce531cf04d",
-    "docs/compiler-campaign/inventory/accepted.json": "bd893e51ca03ece707226af74c0f9164111a0727e4830d015664c881ea765908"
+    "docs/compiler-campaign/inventory/implementation.json": "53857407c5394ac0352293ee17d8787ecb8de72b95d680a3bc537046254012c6",
+    "docs/compiler-campaign/inventory/base-closure.json": "b644078c5510da938d0188677dc9b5062a98b20fd2110796bc2c30e856c2758b",
+    "docs/compiler-campaign/inventory/accepted.json": "7a09f7e2a8ae9ebe927d0140e2771926b8548b4dc29873619916e1fd6592774c"
   }
 }
