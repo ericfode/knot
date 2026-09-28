@@ -4,6 +4,121 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 4
+
+The coordinator's review of `f3a81fa` (literals review fix round 3 in the
+coordinator's numbering) confirmed one major finding and settled two
+questions: the modules-owner sign-off is granted, and merging with
+`campaign/modules` and `main` stays deferred (nest, then modules, then
+literals). No history was rewritten.
+
+| Commit | Content |
+| --- | --- |
+| `60a4795` | Freeze: five result books, 61 seed calls, each with the display Knot must print |
+| `d050416` | Sign-off on the literals amendment in `CONTRACT.json` and the modules SPEC |
+| `16a35cd` | Primitive results display as the seed's literals; gate wiring, three mutants, four laws |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] U32 and Char results render as constructor tags: wrong output with exit 0, or InternalFailure on seed-valid books | Fixed in `16a35cd`. U32 and Char are scalar `Value{type_id,bits}` terms, and the display read the bits as a constructor index. `shape` in `eval.bend` now asks the value's datatype first. An installed primitive shows the seed's literal, which reads back as the value (`300`, `3n`, `'a'`, `"a\n"`), inside records too. Other data keeps the `Name{a,b}` frame that the fields and recursion suites pin. `quoted` in `primitive-eval.bend` inverts the reader's escape table and follows the seed's quote rule and raw/escaped ranges. | `results.json` (5 books, 61 calls) covers `main -> U32`, `main -> Char`, String, Nat and records with U32, Char, Nat, String, enum, Bool and nested fields. All 122 displays (both lanes) match exactly. The reviewer's `p13_render`/`p12_ret` calls now print `0`, `'\0'`, `'\u{1}'`, `""`, `"\0"`, `Box{0,'\0'}`, `Box{1,'a'}`, `300`, `"hi"`, `3n` and `'a'`. The law `primitive_fields_display_as_literals` fails on the pre-fix evaluator with `InternalFailure eval result-tag`. Mutants: constructor-tag-display, quote-blind-escape and raw-delete. |
+| Modules-owner sign-off | Recorded in `d050416`, as decided by the coordinator. | `module_loading.literals_amendment` reads "approved by the coordinator, 2026-09-28". |
+
+Before the fix, reproduced at `f3a81fa` (native and Bun lanes agree):
+`u0` printed `Evaluated\t0\t0\t#U32{}`, `c0` `Chr{}`, `sn` `SCon{Chr{},SNil{}}`,
+`b0` `Box{#U32{},Chr{}}`. `c1`, `b1`, `ru`, `rs`, `rc` and `main -> U32` gave
+`InternalFailure\teval\tresult-tag` (exit 6).
+
+The second `Evaluated` column is a U32 or Char value's bits and otherwise the
+constructor tag; `src/SPEC.md` and `CONTRACT.json` (`literals.result_display`)
+now say so. The law count is 32: the three proof entries hold 20, 7 and 5
+laws. `CONTRACT.json` said 27 and the gate recorded 28 before this round.
+
+### Differential sweeps
+
+Seed display against both Knot evaluator lanes on generated books, at
+`16a35cd`. A record's seed text is compared after replacing `, ` with `,`;
+no generated leaf contains `, `.
+
+| Sweep | Books | Lane observations | Mismatches |
+| --- | ---: | ---: | ---: |
+| 726 codes in Strings (0-299, both sides of 0x7f, 0x80, 0x9f, the surrogate edges, U+FFFD-U+10000, U+10FFFE-U+110001, U32 max, 300 random scalars, 100 random U32) | 12 | 24 | 0 |
+| The same 726 codes as Char fields of 16-field records | 46 | 92 | 0 |
+| 160 U32 values (edges and random) and 36 Nat values up to 3000n as record fields | 13 | 26 | 0 |
+
+Scripts are in the executor scratchpad (`impl-literals/r4/sweep*.py`).
+
+All 13 `src/*PROOF.bend` entries print `All terms check.`.
+
+### Gates on the round-4 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `16a35cd` passed all 20
+registered gates (exit 0) in 722.9 seconds with 4 workers. Load average was
+14.6 at the start and 23.9 at the end (run directory `run-iiu07bcz`).
+`npm run -s gates:verify` passed 18 tests. Counts are copied from the runner;
+categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1132; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=819; mutants=9; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| literals | agree eval observations=886; agree fixtures=34; artifact preservation probes=106; boundary probes=8; byte identity pairs=34; check observations=174; compile observations=174; eval observations=992; execution lanes=2; fixtures=87; invalid fixtures=38; mutant eval observations=6; mutant verdict observations=9; mutant wasm observations=5; no artifact probes=106; proof entries=3; proof laws=32; reference calls=454; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=18; trust audits=68; unsupported fixtures=15; wasm observations=886 |
+
+Receipt drift: identical=64; semantic=16; volatile-only=7. The 15 semantic
+drifts in shared receipts are source-hash and derived-code changes, left for
+the coordinator; they are the same 15 as in rounds 2 and 3. The literals
+receipt was copied from the run's normalized output after every recorded
+input hash was checked against the tree.
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers, with no truncated units. Group sizes grew in evaluation
+  (39498/48000), literal-source-machine (41708), runtime-laws (34490),
+  literal-primitives (17746) and literal-algebra-laws (25905).
+  literal-types.bend, and so literal-patterns (47995/48000), is unchanged.
+- Per changed file (`--preflight FILE`), the blocker counts equal those at
+  `f3a81fa`: eval.bend 8 (the same truncated `Frame`, `State`, `Value`,
+  `host`, `internal`, `invoke`, `run`, `step`), primitive-eval.bend 0,
+  literal-LAWS.bend 0, literal-PROOF.bend 1, literal-core-LAWS.bend 4,
+  literal-core-PROOF.bend 1. A first draft put `literal` in
+  primitive-eval.bend, which gave `Datum` a fifth same-file user and
+  truncated its unit (caller limit 4); `literal` moved to eval.bend.
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
+### Known limits
+
+- Records keep Knot's `Name{a,b}` frame: the seed separates fields with
+  `, `, qualifies an imported book's constructors and shows erased fields.
+  Lists, tuples and other seed sugar are shown structurally
+  (`Con{1,Nil{}}`, not `[1]`). Only primitive leaves are seed-exact.
+- The Node Wasm host observes enum results only. A Char-returning export
+  would come back as an in-range ordinal (97 for `'a'`), so result books
+  make no Wasm call.
+- Host arguments stay enum ordinals. A U32 parameter accepts only ordinal 0
+  (its one installed constructor) and reports `HostFailure invoke
+  argument-range` otherwise (the reviewer's `p14_args` probe); a Nat or
+  String parameter reports `structured-argument` for a nonzero ordinal.
+- A String result longer than the 65,536-character display cap is
+  `Exhausted inspect`; a longer build first exhausts the transition budget.
+
 ## Review round 3
 
 The coordinator's review of `070a091` confirmed three findings: two blocking

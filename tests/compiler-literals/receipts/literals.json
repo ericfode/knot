@@ -684,7 +684,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "61fc1faf33a44112c43fc03600f01cf0cc8b0985711ddca445e56d3313b826d5"
+      "sha256": "40d8f06c99b8b19f3dccf014c168a874c63d04e90d3191fa3c53fe6cec93436c"
     },
     {
       "lane": "native",
@@ -738,7 +738,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "6c6f3e59c557c764abeac6057480ac725bce103c4cbae6fc928c3fb5558208a2"
+      "sha256": "83554e0a1f23fc13efbb307c3fcc4bad95179aa3209addb600bf8a1295a28ebd"
     },
     {
       "lane": "bun",
@@ -771,14 +771,18 @@
     "execution_lanes": 2,
     "fixtures": 87,
     "invalid_fixtures": 38,
-    "mutant_eval_observations": 3,
+    "mutant_eval_observations": 6,
     "mutant_verdict_observations": 9,
     "mutant_wasm_observations": 5,
     "no_artifact_probes": 106,
     "proof_entries": 3,
-    "proof_laws": 28,
+    "proof_laws": 32,
     "reference_calls": 454,
-    "semantic_mutants": 15,
+    "result_byte_identity_pairs": 5,
+    "result_calls": 61,
+    "result_display_observations": 122,
+    "result_fixtures": 5,
+    "semantic_mutants": 18,
     "trust_audits": 68,
     "unsupported_fixtures": 15,
     "wasm_observations": 886
@@ -82681,10 +82685,10 @@
   ],
   "inputs": {
     "scripts/run-wasm.mjs": "e83f1bc5c97caed7106f794921fe073aabd824cb702d9cf6de2df1e234522117",
-    "src/CONTRACT.json": "65475dabbd5cdd8b0e09ff7c01079d00decd74811176107a5079db378b6cb039",
+    "src/CONTRACT.json": "e9c96233ec02c085aa877e7337a1b9a66af28008dc43b6703ec1f1cbf971c3a0",
     "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
     "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
-    "src/SPEC.md": "57152bf5d3a3609e5b3c9132ea0f628f335432d48ede4ee8387c887c71f28dd9",
+    "src/SPEC.md": "489bd678687f3c89de0a27ed86e6a229d91699796fb290e9f20de9dc82b91f72",
     "src/base-load-LAWS.bend": "bc474ba56a21d9bba54c413d6543325e6596f2ae7469b426adcf02af0810a009",
     "src/base-load-PROOF.bend": "ee43281f8668b287cab6b7eb415f748533392fe98e40c30c94433529c55031df",
     "src/base-load.bend": "e871b4f942500c0c5e767e72417599b07112b33c5da2743f150a0cadf3cffcab",
@@ -82704,19 +82708,19 @@
     "src/diagnostic.bend": "0140e78e64871ea5211e519b0435123d0785c088b4596a7867dc0604a08abd32",
     "src/driver.bend": "d05153a12e645f6c52838b443873154ddece45351c5fcac6c33241f96de9adce",
     "src/eval-cli.bend": "f839345cf6f9459905e813b535c32875cbc38e396a5d3ab2fed500e42267e94b",
-    "src/eval.bend": "e5f7879114f33e54b76a95d7011b45b2571e79e254d979fb94c4a7e9b615e43f",
+    "src/eval.bend": "ec23013d576af51d687cff600dacbe725c4674797434c6d8fd8b9ed0708558e3",
     "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
     "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
     "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
     "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2",
     "src/imports.bend": "830dbdf122e0af757229052ae066c96f61da0167d13302f126cd95d850efb3e2",
     "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
-    "src/literal-LAWS.bend": "2681105946a433a85343447089600e898efe79389b68bce1e16ace503ce6e815",
-    "src/literal-PROOF.bend": "342842465ea894aa5ab8c3ec95e701ebe7cf72f4c3b91099b2808ea57556e508",
+    "src/literal-LAWS.bend": "f025d9bdad664893236ca744b6ac548a0af0e715c6a434280fb2649b4e82f94b",
+    "src/literal-PROOF.bend": "4fa4ee46addd71b5b5b48a4959920fc2e93eaa3eef1c23085e6ebff49bc3fa38",
     "src/literal-base.bend": "d7ceb9e4c9be90fc726c83eaf9786e19e348f8d3819208065f232b47256a9290",
     "src/literal-check.bend": "776696bc5b1d0b2b6cff8050ee11d3e6c5e6bb8ee0cfdb5e5367c90328640610",
-    "src/literal-core-LAWS.bend": "c7a7c999ffae0541f5d4d77588925def26bfe98e98996c62cffd6d9119e0154b",
-    "src/literal-core-PROOF.bend": "d18d2ce4dce495a8c8b83160589f48cc19a9cb8a901f06a644089e85b72e9c7b",
+    "src/literal-core-LAWS.bend": "aa431abdf8eeae87157e63da892ce3dcefb15910357b06be3ff4a863a97351f4",
+    "src/literal-core-PROOF.bend": "7d8652d9baa110e11019df5d2164fe6a63dae3c98e4cfbf8e0332412adfe4804",
     "src/literal-lex.bend": "7d984b2fd366c582336689359251e144f370e0253a8bab728574ebc6b86896b1",
     "src/literal-matrix-LAWS.bend": "30386f554a2102f39a100c7b0bb7f9c610f7bd67783f3c8aeb9f2031c9dcec8e",
     "src/literal-matrix-PROOF.bend": "a85e761553556127fd1f6c385076c9df7107f78fd81ffd5145ca42b3ce6df536",
@@ -82735,7 +82739,7 @@
     "src/parse.bend": "c46e37eb2838f780e0c347ea6e2a74219d6e7098515ca6be04f29792c2c9292d",
     "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
     "src/patterns.bend": "f87fa8d6dd9ba416fd8dc7e7ccb6d90617522e6a17039106ba24739576092066",
-    "src/primitive-eval.bend": "9ca441339c3c15aacece90cf41f1e57882ad8187d388f991486aa51ea5568d63",
+    "src/primitive-eval.bend": "38cbf74f3933332d66529abf752de44b50baa8639e6f80d17efc273aa188be0e",
     "src/primitive-op.bend": "1d4df1e7ad163619b61f5d62082c3681e0b95e3e6e56b27b001194a7f0ddde76",
     "src/primitive-wasm.bend": "7bfdba3f01f065bcd93fb392bcab5d2837c5db12a8d4549b9b73628d6f20303c",
     "src/primitive.bend": "c8accc564240eeb0efe3acbf4ec27b245b4e50fb391369b00599ed6bce7e8cca",
@@ -82751,7 +82755,7 @@
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
     "tests/compiler-literals/FIXTURES.md": "6c2521b11817173339ca16ce7c4c82e2b47470cf5e24eb8a6f98e8bd17361274",
-    "tests/compiler-literals/check.py": "d3d213cf0a547e97cfdefe4d075f1f33ca0fd8f84e9ee1bb95a68e4c4e488893",
+    "tests/compiler-literals/check.py": "ddd1ce894dfbcd83d371af1f692e92c540c2b5f7a65761b03e6b38f0674ff0de",
     "tests/compiler-literals/expectations.json": "93f46e9f7abe944ccc8a1246410bdfabd0b2f4e8ae2243aa8bd12d6368ee1bd9",
     "tests/compiler-literals/fixtures/char-bad-escape.bend": "635cf183ec3f9adc142af658a902a80bd950a64a070a0eb4c60c572690e9023d",
     "tests/compiler-literals/fixtures/char-empty.bend": "7d29c371620476c901c3bd15308e4fc7e563793f11172f5cf72d47ad1ea1da9f",
@@ -82842,6 +82846,13 @@
     "tests/compiler-literals/regressions/u32-constructor-pattern.bend": "d391cbe3459ec4d20812ebca1004a6bcebe9bbda6edf46d5bc3c204a6d99c06a",
     "tests/compiler-literals/regressions/u32-constructor-rebuild.bend": "fd46ac245006fc9296f1f593175902950f27a0f2ab4cf3384cb871ae5412450e",
     "tests/compiler-literals/regressions/u32-constructor-word.bend": "e77a3006e8d420fb5958e716a9a5a7918338af8063a7886c4e0a424a076b1d3b",
+    "tests/compiler-literals/results.json": "f4c170bee15e64cc26b2aea529d54081d8bcb6f2edef481308f681cff04078aa",
+    "tests/compiler-literals/results.py": "34a18f6dc1e7870c022d222a9b74d2b4479a6cdc956cd36432386d9a6e422f0c",
+    "tests/compiler-literals/results/result-char.bend": "6efe808c31dad1d1c151539d7f4778298212a8e21f0d8a458671cf4464842c7a",
+    "tests/compiler-literals/results/result-nat.bend": "489f3226deb48b9c8589fc282ee1021942a1bccacf931c37be7aebc5c06fd06c",
+    "tests/compiler-literals/results/result-record.bend": "c4b1a5fee109659e88ee91a000aa195624eda7e068cf8fdc2251300bddb732fb",
+    "tests/compiler-literals/results/result-string.bend": "5c0dae544fa4b51b6e33872783369675fd855edcc0a8f8f2a01cd550910bf38d",
+    "tests/compiler-literals/results/result-u32.bend": "ab1bc5dcc98cfcdf64eebb902c51e0b7b91f4d068d48b136c7acdf9a05d97b6a",
     "tests/compiler-literals/supplemental.json": "7ec8438b8194fdfc5055f190bcdb4da8a9d3d467e2df2b809652a500a27a5d8b",
     "tests/compiler-literals/supplemental.py": "8891cdbd151b5d40b0ed13df4ee2287800368698ee8c2e2f95e56b16d20db859",
     "tests/compiler-literals/supplemental/bootstrap-helpers.bend": "e7aa9faf08edb3538b46ff136f977dfe553c274c70f6d896adc21d8356c726dc",
@@ -83399,7 +83410,7 @@
       "name": "append-reversed",
       "new": "onto(a,b)",
       "old": "onto(onto(a,Nil{}),b)",
-      "sha256": "a5882dbced2c2f20ea922beb40bfa89d45ad4fcc1e7070a2e3a13eb8d19abb40",
+      "sha256": "ff71b185cd61bbddec61f69d00b7c1d39079f988167ceff07fc563f5f1f830be",
       "typecheck": {
         "argv": [
           "bun",
@@ -83784,6 +83795,177 @@
         0,
         "Built\t"
       ]
+    },
+    {
+      "arguments": [
+        0
+      ],
+      "eval": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/constructor-tag-display/eval.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/results/result-char.bend",
+          "sample",
+          "1048576",
+          "0"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "Evaluated\t1\t0\tChr{}\n"
+      },
+      "eval_build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/constructor-tag-display/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/constructor-tag-display/eval.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_display": "'\\0'",
+      "export": "sample",
+      "file": "eval.bend",
+      "fixture": "result-char",
+      "killed": true,
+      "lane": "eval",
+      "name": "constructor-tag-display",
+      "new": "shape(None{},definition,value)",
+      "old": "shape(L.kind(definition),definition,value)",
+      "sha256": "a964e036155e4ac482de05cd763947bb14a9c23ac6b069f6bfe2e52230151d1f",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/constructor-tag-display/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "wrong_display": "Chr{}"
+    },
+    {
+      "arguments": [
+        4
+      ],
+      "eval": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/quote-blind-escape/eval.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/results/result-char.bend",
+          "sample",
+          "1048576",
+          "4"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "Evaluated\t1\t34\t'\\\"'\n"
+      },
+      "eval_build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/quote-blind-escape/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/quote-blind-escape/eval.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_display": "'\"'",
+      "export": "sample",
+      "file": "primitive-eval.bend",
+      "fixture": "result-char",
+      "killed": true,
+      "lane": "eval",
+      "name": "quote-blind-escape",
+      "new": "S.choose(Maybe<&2,Char>,Bool.or(U32.is_eq(code,34),U32.is_eq(code,39)),",
+      "old": "S.choose(Maybe<&2,Char>,U32.is_eq(code,mark),",
+      "sha256": "b78abf6c08e6e22223694f1792a2d899ae9fbb9fc39061ff4b0d45a296f7615c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/quote-blind-escape/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "wrong_display": "'\\\"'"
+    },
+    {
+      "arguments": [
+        12
+      ],
+      "eval": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-literals/gate/mutants/raw-delete/eval.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-literals/results/result-char.bend",
+          "sample",
+          "1048576",
+          "12"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "Evaluated\t1\t127\t''\n"
+      },
+      "eval_build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/raw-delete/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-literals/gate/mutants/raw-delete/eval.js"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "expected_display": "'\\u{7f}'",
+      "export": "sample",
+      "file": "primitive-eval.bend",
+      "fixture": "result-char",
+      "killed": true,
+      "lane": "eval",
+      "name": "raw-delete",
+      "new": "U32.is_ge(code,32)",
+      "old": "Bool.and(U32.is_ge(code,32),U32.is_ne(code,127))",
+      "sha256": "9e10f3f4c31b070750f09f51fdd28b07720ced7b164e7037acc30ff3b0d2bde4",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-literals/gate/mutants/raw-delete/eval-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "wrong_display": "''"
     }
   ],
   "proofs": [
@@ -83850,6 +84032,3091 @@
     "stderr": "",
     "stdout": "literals regressions match the seed: 46 fixtures, 167 calls\n"
   },
+  "result_verification": {
+    "argv": [
+      "python3",
+      "$ROOT/tests/compiler-literals/results.py"
+    ],
+    "exit": 0,
+    "outcome": "success",
+    "stderr": "",
+    "stdout": "literals results match the seed: 5 fixtures, 61 calls\n"
+  },
+  "results": [
+    {
+      "byte_identical": true,
+      "expected": {
+        "outcome": "display"
+      },
+      "file": "tests/compiler-literals/results/result-char.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-char.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nU32.add(1:0,1:0)->0=U32.add($0:0;$1:0)\nChar.from_u32(1:0)->1=Char.from_u32($0:0)\nsample(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.97;3=>v1.39;4=>v1.34;5=>v1.92;6=>v1.10;7=>v1.9;8=>v1.13;9=>v1.31;10=>v1.32;11=>v1.126;12=>v1.127;13=>v1.128;14=>v1.159;15=>v1.233;16=>v1.55295;17=>v1.55357;18=>v1.57343;19=>v1.57344;20=>v1.65534;21=>v1.128512;22=>v1.1114111;23=>v1.1114112;24=>v1.4294967295;25=>call1(call0(v0.64;v0.1));26=>call1(v0.10)]\nmain()->1=call2(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-char.bend",
+              "$ROOT/.local/compiler-literals/gate/result-char-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t4250\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "'\\u{1}'",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\t'\\u{1}'\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "'\\0'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t0\t'\\0'\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "'\\u{1}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\t'\\u{1}'\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "'a'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t97\t'a'\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "'\\''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t39\t'\\''\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "'\"'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t34\t'\"'\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "'\\\\'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t92\t'\\\\'\n"
+              }
+            },
+            {
+              "arguments": [
+                6
+              ],
+              "expected_display": "'\\n'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "6"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t10\t'\\n'\n"
+              }
+            },
+            {
+              "arguments": [
+                7
+              ],
+              "expected_display": "'\\t'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "7"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t9\t'\\t'\n"
+              }
+            },
+            {
+              "arguments": [
+                8
+              ],
+              "expected_display": "'\\r'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "8"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t13\t'\\r'\n"
+              }
+            },
+            {
+              "arguments": [
+                9
+              ],
+              "expected_display": "'\\u{1f}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "9"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t31\t'\\u{1f}'\n"
+              }
+            },
+            {
+              "arguments": [
+                10
+              ],
+              "expected_display": "' '",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "10"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t32\t' '\n"
+              }
+            },
+            {
+              "arguments": [
+                11
+              ],
+              "expected_display": "'~'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "11"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t126\t'~'\n"
+              }
+            },
+            {
+              "arguments": [
+                12
+              ],
+              "expected_display": "'\\u{7f}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "12"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t127\t'\\u{7f}'\n"
+              }
+            },
+            {
+              "arguments": [
+                13
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "13"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t128\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                14
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "14"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t159\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                15
+              ],
+              "expected_display": "'é'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "15"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t233\t'é'\n"
+              }
+            },
+            {
+              "arguments": [
+                16
+              ],
+              "expected_display": "'퟿'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "16"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t55295\t'퟿'\n"
+              }
+            },
+            {
+              "arguments": [
+                17
+              ],
+              "expected_display": "'\\u{d83d}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "17"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t55357\t'\\u{d83d}'\n"
+              }
+            },
+            {
+              "arguments": [
+                18
+              ],
+              "expected_display": "'\\u{dfff}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "18"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t57343\t'\\u{dfff}'\n"
+              }
+            },
+            {
+              "arguments": [
+                19
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "19"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t57344\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                20
+              ],
+              "expected_display": "'￾'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "20"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t65534\t'￾'\n"
+              }
+            },
+            {
+              "arguments": [
+                21
+              ],
+              "expected_display": "'😀'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "21"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t128512\t'😀'\n"
+              }
+            },
+            {
+              "arguments": [
+                22
+              ],
+              "expected_display": "'􏿿'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "22"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1114111\t'􏿿'\n"
+              }
+            },
+            {
+              "arguments": [
+                23
+              ],
+              "expected_display": "'\\u{110000}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "23"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1114112\t'\\u{110000}'\n"
+              }
+            },
+            {
+              "arguments": [
+                24
+              ],
+              "expected_display": "'\\u{ffffffff}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "24"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t'\\u{ffffffff}'\n"
+              }
+            },
+            {
+              "arguments": [
+                25
+              ],
+              "expected_display": "'A'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "25"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t65\t'A'\n"
+              }
+            },
+            {
+              "arguments": [
+                26
+              ],
+              "expected_display": "'\\n'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "26"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t10\t'\\n'\n"
+              }
+            }
+          ],
+          "sha256": "223c8f5975adba800002bdf786af4393a308ac8428c46f38e57486507e6cefba"
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-char.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nU32.add(1:0,1:0)->0=U32.add($0:0;$1:0)\nChar.from_u32(1:0)->1=Char.from_u32($0:0)\nsample(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.97;3=>v1.39;4=>v1.34;5=>v1.92;6=>v1.10;7=>v1.9;8=>v1.13;9=>v1.31;10=>v1.32;11=>v1.126;12=>v1.127;13=>v1.128;14=>v1.159;15=>v1.233;16=>v1.55295;17=>v1.55357;18=>v1.57343;19=>v1.57344;20=>v1.65534;21=>v1.128512;22=>v1.1114111;23=>v1.1114112;24=>v1.4294967295;25=>call1(call0(v0.64;v0.1));26=>call1(v0.10)]\nmain()->1=call2(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-char.bend",
+              "$ROOT/.local/compiler-literals/gate/result-char-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t4250\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "'\\u{1}'",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\t'\\u{1}'\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "'\\0'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t0\t'\\0'\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "'\\u{1}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\t'\\u{1}'\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "'a'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t97\t'a'\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "'\\''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t39\t'\\''\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "'\"'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t34\t'\"'\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "'\\\\'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t92\t'\\\\'\n"
+              }
+            },
+            {
+              "arguments": [
+                6
+              ],
+              "expected_display": "'\\n'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "6"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t10\t'\\n'\n"
+              }
+            },
+            {
+              "arguments": [
+                7
+              ],
+              "expected_display": "'\\t'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "7"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t9\t'\\t'\n"
+              }
+            },
+            {
+              "arguments": [
+                8
+              ],
+              "expected_display": "'\\r'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "8"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t13\t'\\r'\n"
+              }
+            },
+            {
+              "arguments": [
+                9
+              ],
+              "expected_display": "'\\u{1f}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "9"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t31\t'\\u{1f}'\n"
+              }
+            },
+            {
+              "arguments": [
+                10
+              ],
+              "expected_display": "' '",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "10"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t32\t' '\n"
+              }
+            },
+            {
+              "arguments": [
+                11
+              ],
+              "expected_display": "'~'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "11"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t126\t'~'\n"
+              }
+            },
+            {
+              "arguments": [
+                12
+              ],
+              "expected_display": "'\\u{7f}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "12"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t127\t'\\u{7f}'\n"
+              }
+            },
+            {
+              "arguments": [
+                13
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "13"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t128\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                14
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "14"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t159\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                15
+              ],
+              "expected_display": "'é'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "15"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t233\t'é'\n"
+              }
+            },
+            {
+              "arguments": [
+                16
+              ],
+              "expected_display": "'퟿'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "16"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t55295\t'퟿'\n"
+              }
+            },
+            {
+              "arguments": [
+                17
+              ],
+              "expected_display": "'\\u{d83d}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "17"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t55357\t'\\u{d83d}'\n"
+              }
+            },
+            {
+              "arguments": [
+                18
+              ],
+              "expected_display": "'\\u{dfff}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "18"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t57343\t'\\u{dfff}'\n"
+              }
+            },
+            {
+              "arguments": [
+                19
+              ],
+              "expected_display": "''",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "19"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t57344\t''\n"
+              }
+            },
+            {
+              "arguments": [
+                20
+              ],
+              "expected_display": "'￾'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "20"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t65534\t'￾'\n"
+              }
+            },
+            {
+              "arguments": [
+                21
+              ],
+              "expected_display": "'😀'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "21"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t128512\t'😀'\n"
+              }
+            },
+            {
+              "arguments": [
+                22
+              ],
+              "expected_display": "'􏿿'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "22"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1114111\t'􏿿'\n"
+              }
+            },
+            {
+              "arguments": [
+                23
+              ],
+              "expected_display": "'\\u{110000}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "23"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1114112\t'\\u{110000}'\n"
+              }
+            },
+            {
+              "arguments": [
+                24
+              ],
+              "expected_display": "'\\u{ffffffff}'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "24"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t'\\u{ffffffff}'\n"
+              }
+            },
+            {
+              "arguments": [
+                25
+              ],
+              "expected_display": "'A'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "25"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t65\t'A'\n"
+              }
+            },
+            {
+              "arguments": [
+                26
+              ],
+              "expected_display": "'\\n'",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-char.bend",
+                  "sample",
+                  "1048576",
+                  "26"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t10\t'\\n'\n"
+              }
+            }
+          ],
+          "sha256": "223c8f5975adba800002bdf786af4393a308ac8428c46f38e57486507e6cefba"
+        }
+      },
+      "name": "result-char",
+      "reference_calls": 28,
+      "wasm_calls": "not observable: enum-only host boundary"
+    },
+    {
+      "byte_identical": true,
+      "expected": {
+        "outcome": "display"
+      },
+      "file": "tests/compiler-literals/results/result-nat.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-nat.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nNat.add(1:0,1:0)->0=Nat.add($0:0;$1:0)\nNat.sub(1:0,1:0)->0=Nat.sub($0:0;$1:0)\nU32.to_nat(1:1)->0=U32.to_nat($0:1)\nsample(1:2)->0=case $0 [0=>0n;1=>3n;2=>call0(2n;3n);3=>call1(2n;5n);4=>call2(v1.300);5=>256n]\nmain()->0=call3(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-nat.bend",
+              "$ROOT/.local/compiler-literals/gate/result-nat-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t3123\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "3n",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t3n\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "0n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\t0n\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "3n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t3n\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "5n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t5n\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "0n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\t0n\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "300n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t300n\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "256n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t256n\n"
+              }
+            }
+          ],
+          "sha256": "9acb12bc227792a69007087108bf9667ff4b2d94df3417fba5cde2cde335f879"
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-nat.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nNat.add(1:0,1:0)->0=Nat.add($0:0;$1:0)\nNat.sub(1:0,1:0)->0=Nat.sub($0:0;$1:0)\nU32.to_nat(1:1)->0=U32.to_nat($0:1)\nsample(1:2)->0=case $0 [0=>0n;1=>3n;2=>call0(2n;3n);3=>call1(2n;5n);4=>call2(v1.300);5=>256n]\nmain()->0=call3(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-nat.bend",
+              "$ROOT/.local/compiler-literals/gate/result-nat-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t3123\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "3n",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t3n\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "0n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\t0n\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "3n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t3n\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "5n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t5n\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "0n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\t0n\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "300n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t300n\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "256n",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-nat.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\t256n\n"
+              }
+            }
+          ],
+          "sha256": "9acb12bc227792a69007087108bf9667ff4b2d94df3417fba5cde2cde335f879"
+        }
+      },
+      "name": "result-nat",
+      "reference_calls": 7,
+      "wasm_calls": "not observable: enum-only host boundary"
+    },
+    {
+      "byte_identical": true,
+      "expected": {
+        "outcome": "display"
+      },
+      "file": "tests/compiler-literals/results/result-record.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-record.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nzeroes()->6=v6.0{v2.0;v3.0}\nmix()->7=v7.0{3n;\"a, b{}\";v5.1;v0.1;v6.0{v2.4294967295;v3.39};v6.0{v2.0;v3.34}}\nmain()->6=v6.0{v2.1;v3.97}\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-record.bend",
+              "$ROOT/.local/compiler-literals/gate/result-record-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t2817\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "Box{1,'a'}",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t6\t0\tBox{1,'a'}\n"
+              }
+            },
+            {
+              "arguments": [],
+              "expected_display": "Box{0,'\\0'}",
+              "export": "zeroes",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "zeroes",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t6\t0\tBox{0,'\\0'}\n"
+              }
+            },
+            {
+              "arguments": [],
+              "expected_display": "Mix{3n,\"a, b{}\",Right{},True{},Box{4294967295,'\\''},Box{0,'\"'}}",
+              "export": "mix",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "mix",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t7\t0\tMix{3n,\"a, b{}\",Right{},True{},Box{4294967295,'\\''},Box{0,'\"'}}\n"
+              }
+            }
+          ],
+          "sha256": "3f761088cf94b9f38a81d157c8b237b9acd664aba57ce3c8101a0ef54339b1a5"
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-record.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nzeroes()->6=v6.0{v2.0;v3.0}\nmix()->7=v7.0{3n;\"a, b{}\";v5.1;v0.1;v6.0{v2.4294967295;v3.39};v6.0{v2.0;v3.34}}\nmain()->6=v6.0{v2.1;v3.97}\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-record.bend",
+              "$ROOT/.local/compiler-literals/gate/result-record-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t2817\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "Box{1,'a'}",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t6\t0\tBox{1,'a'}\n"
+              }
+            },
+            {
+              "arguments": [],
+              "expected_display": "Box{0,'\\0'}",
+              "export": "zeroes",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "zeroes",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t6\t0\tBox{0,'\\0'}\n"
+              }
+            },
+            {
+              "arguments": [],
+              "expected_display": "Mix{3n,\"a, b{}\",Right{},True{},Box{4294967295,'\\''},Box{0,'\"'}}",
+              "export": "mix",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-record.bend",
+                  "mix",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t7\t0\tMix{3n,\"a, b{}\",Right{},True{},Box{4294967295,'\\''},Box{0,'\"'}}\n"
+              }
+            }
+          ],
+          "sha256": "3f761088cf94b9f38a81d157c8b237b9acd664aba57ce3c8101a0ef54339b1a5"
+        }
+      },
+      "name": "result-record",
+      "reference_calls": 3,
+      "wasm_calls": "not observable: enum-only host boundary"
+    },
+    {
+      "byte_identical": true,
+      "expected": {
+        "outcome": "display"
+      },
+      "file": "tests/compiler-literals/results/result-string.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-string.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nString.append(1:3,1:3)->3=String.append($0:3;$1:3)\nString.reverse(1:3)->3=String.reverse($0:3)\nNat.show(1:0)->3=Nat.show($0:0)\nU32.show(1:1)->3=U32.show($0:1)\nsample(1:4)->3=case $0 [0=>\"\";1=>\"\\0\";2=>\"hi\";3=>\"\\0\\t\\n\\r\\\\\";4=>\"'\\\"\";5=>\"a, b{}\";6=>\"\\u{1}\\u{1f}\\u{7f}\";7=>\"\\u{80}\\u{9f}\\u{fffe}\\u{10ffff}\";8=>\"\\u{d83d}\\u{de00}\";9=>call0(\"\\u{d83d}\";\"\\u{de00}\");10=>call1(\"\\u{de00}\\u{d83d}\");11=>\"a\\u{110000}\";12=>\"\\u{1f600}\";13=>call3(v1.300);14=>call2(12n);15=>call0(\"a\\n\";\"b\")]\nmain()->3=call4(v4.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-string.bend",
+              "$ROOT/.local/compiler-literals/gate/result-string-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t4533\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "\"\\0\"",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\"\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "\"\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t0\t\"\"\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "\"\\0\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\"\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "\"hi\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"hi\"\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "\"\\0\\t\\n\\r\\\\\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\\t\\n\\r\\\\\"\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "\"'\\\"\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"'\\\"\"\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "\"a, b{}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a, b{}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                6
+              ],
+              "expected_display": "\"\\u{1}\\u{1f}\\u{7f}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "6"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{1}\\u{1f}\\u{7f}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                7
+              ],
+              "expected_display": "\"￾􏿿\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "7"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"￾􏿿\"\n"
+              }
+            },
+            {
+              "arguments": [
+                8
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "8"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                9
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "9"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                10
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "10"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                11
+              ],
+              "expected_display": "\"a\\u{110000}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "11"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a\\u{110000}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                12
+              ],
+              "expected_display": "\"😀\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "12"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"😀\"\n"
+              }
+            },
+            {
+              "arguments": [
+                13
+              ],
+              "expected_display": "\"300\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "13"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"300\"\n"
+              }
+            },
+            {
+              "arguments": [
+                14
+              ],
+              "expected_display": "\"12\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "14"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"12\"\n"
+              }
+            },
+            {
+              "arguments": [
+                15
+              ],
+              "expected_display": "\"a\\nb\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "15"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a\\nb\"\n"
+              }
+            }
+          ],
+          "sha256": "13c13ebcf7bc3632bebfa957d1a88c9f400da5b84b1326cbb77b6e20fd581355"
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-string.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nString.append(1:3,1:3)->3=String.append($0:3;$1:3)\nString.reverse(1:3)->3=String.reverse($0:3)\nNat.show(1:0)->3=Nat.show($0:0)\nU32.show(1:1)->3=U32.show($0:1)\nsample(1:4)->3=case $0 [0=>\"\";1=>\"\\0\";2=>\"hi\";3=>\"\\0\\t\\n\\r\\\\\";4=>\"'\\\"\";5=>\"a, b{}\";6=>\"\\u{1}\\u{1f}\\u{7f}\";7=>\"\\u{80}\\u{9f}\\u{fffe}\\u{10ffff}\";8=>\"\\u{d83d}\\u{de00}\";9=>call0(\"\\u{d83d}\";\"\\u{de00}\");10=>call1(\"\\u{de00}\\u{d83d}\");11=>\"a\\u{110000}\";12=>\"\\u{1f600}\";13=>call3(v1.300);14=>call2(12n);15=>call0(\"a\\n\";\"b\")]\nmain()->3=call4(v4.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-string.bend",
+              "$ROOT/.local/compiler-literals/gate/result-string-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t4533\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "\"\\0\"",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\"\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "\"\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t0\t\"\"\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "\"\\0\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\"\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "\"hi\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"hi\"\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "\"\\0\\t\\n\\r\\\\\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\0\\t\\n\\r\\\\\"\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "\"'\\\"\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"'\\\"\"\n"
+              }
+            },
+            {
+              "arguments": [
+                5
+              ],
+              "expected_display": "\"a, b{}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "5"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a, b{}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                6
+              ],
+              "expected_display": "\"\\u{1}\\u{1f}\\u{7f}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "6"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{1}\\u{1f}\\u{7f}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                7
+              ],
+              "expected_display": "\"￾􏿿\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "7"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"￾􏿿\"\n"
+              }
+            },
+            {
+              "arguments": [
+                8
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "8"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                9
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "9"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                10
+              ],
+              "expected_display": "\"\\u{d83d}\\u{de00}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "10"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"\\u{d83d}\\u{de00}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                11
+              ],
+              "expected_display": "\"a\\u{110000}\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "11"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a\\u{110000}\"\n"
+              }
+            },
+            {
+              "arguments": [
+                12
+              ],
+              "expected_display": "\"😀\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "12"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"😀\"\n"
+              }
+            },
+            {
+              "arguments": [
+                13
+              ],
+              "expected_display": "\"300\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "13"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"300\"\n"
+              }
+            },
+            {
+              "arguments": [
+                14
+              ],
+              "expected_display": "\"12\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "14"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"12\"\n"
+              }
+            },
+            {
+              "arguments": [
+                15
+              ],
+              "expected_display": "\"a\\nb\"",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-string.bend",
+                  "sample",
+                  "1048576",
+                  "15"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t3\t1\t\"a\\nb\"\n"
+              }
+            }
+          ],
+          "sha256": "13c13ebcf7bc3632bebfa957d1a88c9f400da5b84b1326cbb77b6e20fd581355"
+        }
+      },
+      "name": "result-string",
+      "reference_calls": 17,
+      "wasm_calls": "not observable: enum-only host boundary"
+    },
+    {
+      "byte_identical": true,
+      "expected": {
+        "outcome": "display"
+      },
+      "file": "tests/compiler-literals/results/result-u32.bend",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-u32.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nU32.sub(1:1,1:1)->1=U32.sub($0:1;$1:1)\nU32.shln(1:1,1:0)->1=U32.shln($0:1;$1:0)\nsample(1:2)->1=case $0 [0=>v1.0;1=>v1.300;2=>v1.4294967295;3=>call0(v1.0;v1.1);4=>call1(v1.1;31n)]\nmain()->1=call2(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-literals/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-u32.bend",
+              "$ROOT/.local/compiler-literals/gate/result-u32-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t2954\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "300",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t300\t300\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "0",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t0\t0\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "300",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t300\t300\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "4294967295",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t4294967295\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "4294967295",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t4294967295\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "2147483648",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-literals/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t2147483648\t2147483648\n"
+              }
+            }
+          ],
+          "sha256": "4c7113287cf77e5d8c93e9c17f7e1b4592777c23ab381f7d7d17f52557d042c7"
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-u32.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nU32.sub(1:1,1:1)->1=U32.sub($0:1;$1:1)\nU32.shln(1:1,1:0)->1=U32.shln($0:1;$1:0)\nsample(1:2)->1=case $0 [0=>v1.0;1=>v1.300;2=>v1.4294967295;3=>call0(v1.0;v1.1);4=>call1(v1.1;31n)]\nmain()->1=call2(v2.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-literals/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-literals/results/result-u32.bend",
+              "$ROOT/.local/compiler-literals/gate/result-u32-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t2954\n"
+          },
+          "displays": [
+            {
+              "arguments": [],
+              "expected_display": "300",
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t300\t300\n"
+              }
+            },
+            {
+              "arguments": [
+                0
+              ],
+              "expected_display": "0",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t0\t0\n"
+              }
+            },
+            {
+              "arguments": [
+                1
+              ],
+              "expected_display": "300",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t300\t300\n"
+              }
+            },
+            {
+              "arguments": [
+                2
+              ],
+              "expected_display": "4294967295",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "2"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t4294967295\n"
+              }
+            },
+            {
+              "arguments": [
+                3
+              ],
+              "expected_display": "4294967295",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "3"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t4294967295\t4294967295\n"
+              }
+            },
+            {
+              "arguments": [
+                4
+              ],
+              "expected_display": "2147483648",
+              "export": "sample",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-literals/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-literals/results/result-u32.bend",
+                  "sample",
+                  "1048576",
+                  "4"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t1\t2147483648\t2147483648\n"
+              }
+            }
+          ],
+          "sha256": "4c7113287cf77e5d8c93e9c17f7e1b4592777c23ab381f7d7d17f52557d042c7"
+        }
+      },
+      "name": "result-u32",
+      "reference_calls": 6,
+      "wasm_calls": "not observable: enum-only host boundary"
+    }
+  ],
   "seed": {
     "bun": "1.3.14",
     "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
