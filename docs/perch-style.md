@@ -182,6 +182,10 @@ bodies, with their matching law statement resolved separately. An unused proof
 entry retains its imports and hash even when none of its heads is required.
 Every omitted implementation is marked `interface-only` / `body omitted`.
 The judge must not infer implementations or proof execution from these heads.
+The legacy composition instruction, including its prohibition on inferring a
+potential verdict, previous scores or missing implementation, is retained
+verbatim before this interface warning. Definition heads end at the offset
+reported by the parser after consuming the body colon, not a separate lexer.
 
 Composition bytes count the UTF-8 text actually supplied: all complete selected
 sources plus interface text, including its markers and hashes. The bound stays
@@ -201,32 +205,39 @@ these as `context-helper-interface`, `context-caller-interface`,
 context. Required text that cannot fit retains `context-byte-limit` and a
 truncation marker; qualification is withheld as before.
 
-Hash imports resolve **offline** from the repository's `packages/` and an
-explicit `--package-store=DIR`. A store may contain hash-named directories with
+Hash imports resolve **offline** from the repository's `packages/`, followed by
+`--package-store=DIR` if supplied, otherwise `BEND_LIB` if set, otherwise
+`~/.bend/lib`, matching the seed's default. A store may contain hash-named directories with
 complete package members, or package directories whose `RELEASE.json` has a
 `closure` inventory of paths and SHA-256 digests. The resolver hashes actual
 member bytes, sorts `sha256(file) path\n` by path, hashes the concatenation and
 requires the first 32 hex digits to match the imported identity. All members,
 including unused ones and licenses, are verified. Traversal, symlinks, duplicate
 members, environment-file members and imports outside verified membership are
-rejected. Failure reasons remain unresolved; no network, home-cache discovery,
-package installation or package-source fallback is performed. Every verified
-member and the release inventory participate in freshness checks.
+rejected. Failure reasons remain unresolved; no network or package installation
+is performed. Every verified member participates in freshness checks. Release
+metadata locates a candidate; verified member bytes establish its identity.
+Headers, representations, file lists, provenance and all request hashes use
+`0x<hash>/<member>`. Filesystem locations stay inside the local snapshot reader;
+moving the store or checkout does not change review bytes or request identity.
+Bare relative imports participate in local manifest closure. Other hash lengths
+remain explicit `unsupported-package-identity`, and named/absolute imports
+remain unresolved.
 
 The current repository OutputBuilder source has advanced past its publication.
-Its `bytes.bend` correctly fails the published digest. Supply the already
-installed, unmodified local release explicitly:
+Its `bytes.bend` correctly fails the published digest. The default installed
+store supplies the unmodified local release only after verification:
 
 ```sh
 BEND_NO_TELEMETRY=1 node scripts/perch-style.mjs --preflight \
   --manifest=docs/compiler-campaign/manifest.json \
-  --package-store="$HOME/.bend/lib" --output=.local/compiler-context.json.gz
+  --output=.local/compiler-context.json.gz
 # Same context policy on a bounded explicit target:
 BEND_NO_TELEMETRY=1 node scripts/perch-style.mjs --preflight \
-  --context=interfaces-v1 --package-store="$HOME/.bend/lib" src/core.bend
+  --context=interfaces-v1 src/core.bend
 ```
 
-Without that store the published dependency stays unresolved; the resolver
+Without any verified candidate the published dependency stays unresolved; the resolver
 does not reinterpret current package source as the old release. Other style
 invocations keep legacy assembly unless `--context=interfaces-v1` is explicit.
 The [context contract and controls](../tests/perch-context/CONTRACT.md) qualify

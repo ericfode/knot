@@ -131,7 +131,8 @@ and overflow helper/caller signatures. Its manifest still selects every compiler
 file in full somewhere and closes each local import inventory. The 48,000-byte
 source cap, rubric v8 and all targets remain unchanged. Use
 `--context=interfaces-v1` for explicit style targets and
-`--package-store=DIR` for an existing immutable hash package store. The compiler
+`--package-store=DIR` to override the default `BEND_LIB` (or `~/.bend/lib`)
+candidate store. Every candidate still needs the seed's publish-hash check. The compiler
 manifest selects the policy itself. Semantic `lint` and legacy style invocations
 retain their established context contract and controls. No package is fetched.
 

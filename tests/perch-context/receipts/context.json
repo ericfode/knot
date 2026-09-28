@@ -1,6 +1,8 @@
 {
   "status": "pass",
   "context_policy": "interfaces-v1",
+  "seed_signature_fixture": "All terms check.",
+  "identical_preflight_runs": 2,
   "fixtures": [
     "versioned compiler manifest selects every source and declaration in full somewhere",
     "manifest interface policy preserves complete selected text and remains wholly offline",
@@ -12,6 +14,9 @@
     "encoded-state budget demotes bodies while keeping task and selected source intact",
     "local symlink cycles canonicalize and external symlinks remain unresolved",
     "missing published packages and missing law contracts stay explicit",
+    "default package store follows BEND_LIB or home and still verifies all bytes",
+    "bare relative imports close locally while long hash imports remain explicitly unsupported",
+    "apostrophe parameter types and body punctuation cannot crash manifest preflight",
     "datatype closure follows imports beyond one file and terminates cycles",
     "datatype byte exhaustion retains an explicit truncation marker",
     "published hash uses actual sorted closure bytes in explicit and repository stores",
@@ -24,20 +29,33 @@
     "helper and caller overflow is explicitly summarized with signature closure",
     "composition preserves full selection and supplies external collaborators as interfaces",
     "composition exact UTF-8 bound fits; one byte over is unavailable and marked",
-    "unused proof-entry chains stay interfaces with no proof body"
+    "unused proof-entry chains stay interfaces with no proof body",
+    "parser-delimited heads preserve chars and dependent binders without body text",
+    "interface heads parse back with holes and retain every declaration name",
+    "interface instruction retains the complete legacy anti-anchoring clause",
+    "dependent signature dependencies enter the interface closure",
+    "package identity and composition state are independent of checkout and store location",
+    "package provenance is the verified membership in either store layout",
+    "default candidate store verifies BEND_LIB without an explicit option"
   ],
   "mutants": [
     "summary-leaks-body",
     "unverified-package-accepted",
     "truncation-marker-dropped",
-    "group-silently-over-bound"
+    "group-silently-over-bound",
+    "store-path-in-identity",
+    "anti-anchoring-omitted",
+    "binder-colon-truncates-head",
+    "default-store-omitted"
   ],
-  "tests": 27,
+  "tests": 41,
   "compiler_preflight": {
     "unavailable_compositions": 0,
     "over_bound_groups": 0,
     "unresolved_composition_references": 0,
     "truncated_declarations": 0,
+    "role_limited_declarations": 0,
+    "structural_blockers": 0,
     "uncovered_declarations": 0,
     "provider_requests": 0
   },
@@ -94,7 +112,8 @@
             "bytes": 2000,
             "context_sha256": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973"
           }
-        ]
+        ],
+        "state_sha256": "0a181497f378cb44281fbdbc57cc6cc72208478c62c79a3df27af5dcc3df12bf"
       }
     },
     {
@@ -139,7 +158,8 @@
             "bytes": 3956,
             "context_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
           }
-        ]
+        ],
+        "state_sha256": "2497b34701da3a3b1a3e5d41ebea397cf2253aa1b42b3d8c1f96cd5ee5a01bcc"
       }
     },
     {
@@ -184,7 +204,8 @@
             "bytes": 16498,
             "context_sha256": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df"
           }
-        ]
+        ],
+        "state_sha256": "f9000e232a4409957116315ef0291f9e82980ed9da6f8ed11e9a3391ee4f5eda"
       }
     },
     {
@@ -243,7 +264,8 @@
             "bytes": 2762,
             "context_sha256": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a"
           }
-        ]
+        ],
+        "state_sha256": "b8411e2d505415e451b958f707f16844258098ee280df9388c59379eb2697a05"
       }
     },
     {
@@ -295,7 +317,8 @@
             "bytes": 12688,
             "context_sha256": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0"
           }
-        ]
+        ],
+        "state_sha256": "0f043b37956a680218a1eb4dea916716940065ad1e3452ca3ea1634baf7d7b07"
       }
     },
     {
@@ -361,7 +384,8 @@
             "bytes": 4306,
             "context_sha256": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f"
           }
-        ]
+        ],
+        "state_sha256": "0cb6f4d45c1c0b59eecbb6d1a60b9d3d2a9c52323cec616d9e8374185aa80f90"
       }
     },
     {
@@ -434,7 +458,8 @@
             "bytes": 18751,
             "context_sha256": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2"
           }
-        ]
+        ],
+        "state_sha256": "b74061646af5e927d275bb4aed71eabf98ba8e96a0bf530b8bfa626dae5613e2"
       }
     },
     {
@@ -486,7 +511,8 @@
             "bytes": 12907,
             "context_sha256": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091"
           }
-        ]
+        ],
+        "state_sha256": "6e8547874f7d0e2c37a54a41efb9cc7084052f9523fb1c34400e7bf269e0383c"
       }
     },
     {
@@ -500,7 +526,7 @@
         "truncated_by_limit": {},
         "supporting_role_impossible": 0,
         "role_gap_units_by_reason": {},
-        "max_state_bytes": 11579,
+        "max_state_bytes": 11033,
         "composition_available": true,
         "composition_reasons": []
       },
@@ -513,7 +539,7 @@
           "src/wasm-bytes.bend"
         ],
         "context_files": 14,
-        "source_bytes": 6343,
+        "source_bytes": 6317,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -532,12 +558,13 @@
             "context_sha256": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 734,
-            "context_sha256": "0b7137534f4c646d95986bbdc8997670d3f19ae55bef40c4c1cd4727667b6690"
+            "bytes": 708,
+            "context_sha256": "902b8e18d8794fa2004e60d20b242b4e9dc440e8e8f4c3e72219498883a6b203"
           }
-        ]
+        ],
+        "state_sha256": "aa2e1a8b05f7cbde7b8c50793480dca31bba8111f4d3da6c4d5472949be41b28"
       }
     },
     {
@@ -551,7 +578,7 @@
         "truncated_by_limit": {},
         "supporting_role_impossible": 0,
         "role_gap_units_by_reason": {},
-        "max_state_bytes": 39013,
+        "max_state_bytes": 38337,
         "composition_available": true,
         "composition_reasons": []
       },
@@ -566,7 +593,7 @@
           "src/wasm.bend"
         ],
         "context_files": 20,
-        "source_bytes": 27393,
+        "source_bytes": 27367,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -597,10 +624,10 @@
             "context_sha256": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 806,
-            "context_sha256": "f131cf8dfc70660f6dcf96d3256fc34a635f95afab6e102b5ab64a2fa0ae375c"
+            "bytes": 780,
+            "context_sha256": "84597e6e023eee068013f8c21a37347f76e949f7c4324b1fce1c37c6f57fb713"
           },
           {
             "path": "src/catalog.bend",
@@ -626,7 +653,8 @@
             "bytes": 327,
             "context_sha256": "c5f29bc6909b25eb25281c18b4350803be91c306db14f4b401b822dec21376a6"
           }
-        ]
+        ],
+        "state_sha256": "6167aaf373cb3d0958153e5882ba469fd8dfe01f2bfc9260476c77ad0fe78c63"
       }
     },
     {
@@ -656,7 +684,7 @@
           "src/compile-cli.bend"
         ],
         "context_files": 30,
-        "source_bytes": 23245,
+        "source_bytes": 23219,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -693,10 +721,10 @@
             "context_sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 419,
-            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+            "bytes": 393,
+            "context_sha256": "ea17b6d13a5fc52e9ea58ee336913b0d0d58af7330075d2ee445764f7767fe64"
           },
           {
             "path": "src/catalog.bend",
@@ -776,7 +804,8 @@
             "bytes": 1153,
             "context_sha256": "9b8dec499e790fe042d1ace1d309c6b144cec32185936a2a2389525d3248e549"
           }
-        ]
+        ],
+        "state_sha256": "0f715decce0951d2be60760860c27ae7bee237f5515cabc56592126779e14faa"
       }
     },
     {
@@ -842,7 +871,8 @@
             "bytes": 527,
             "context_sha256": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638"
           }
-        ]
+        ],
+        "state_sha256": "a9185ccaa0a71c5b8065825408d26dec928b8a50f823a7fd9e59aa0f260c8064"
       }
     },
     {
@@ -948,7 +978,8 @@
             "bytes": 1438,
             "context_sha256": "3b5c586a1cd0db15dc635f9bbb9a5f9eba4762dd57baf1ab96e053561bfdda63"
           }
-        ]
+        ],
+        "state_sha256": "d0b0691aaab83a54ee6af08aec3b5c006973ffbebd739ee3f7a6363f16e8aba8"
       }
     },
     {
@@ -977,7 +1008,7 @@
           "src/runtime-PROOF.bend"
         ],
         "context_files": 28,
-        "source_bytes": 25065,
+        "source_bytes": 25039,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -1008,10 +1039,10 @@
             "context_sha256": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 734,
-            "context_sha256": "0b7137534f4c646d95986bbdc8997670d3f19ae55bef40c4c1cd4727667b6690"
+            "bytes": 708,
+            "context_sha256": "902b8e18d8794fa2004e60d20b242b4e9dc440e8e8f4c3e72219498883a6b203"
           },
           {
             "path": "src/LAWS.bend",
@@ -1085,7 +1116,8 @@
             "bytes": 1388,
             "context_sha256": "d8df774ab22f2438bf7ba92e8eb5cb54239aea56d8cf5d7179f9b456e307954c"
           }
-        ]
+        ],
+        "state_sha256": "cc02f82711df06f9eb3ae30ac6baee0cd0a60593df5b1c06c9402a5b5739287a"
       }
     },
     {
@@ -1113,7 +1145,7 @@
           "src/catalog-PROOF.bend"
         ],
         "context_files": 30,
-        "source_bytes": 24026,
+        "source_bytes": 24000,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -1138,10 +1170,10 @@
             "context_sha256": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 419,
-            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+            "bytes": 393,
+            "context_sha256": "ea17b6d13a5fc52e9ea58ee336913b0d0d58af7330075d2ee445764f7767fe64"
           },
           {
             "path": "src/LAWS.bend",
@@ -1233,7 +1265,8 @@
             "bytes": 236,
             "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
           }
-        ]
+        ],
+        "state_sha256": "97d3e802970ceaa586c5ae2896719c8e22d80c91ff29d89c375d875174740481"
       }
     },
     {
@@ -1261,7 +1294,7 @@
           "src/fields-PROOF.bend"
         ],
         "context_files": 32,
-        "source_bytes": 19579,
+        "source_bytes": 19553,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -1286,10 +1319,10 @@
             "context_sha256": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 419,
-            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+            "bytes": 393,
+            "context_sha256": "ea17b6d13a5fc52e9ea58ee336913b0d0d58af7330075d2ee445764f7767fe64"
           },
           {
             "path": "src/LAWS.bend",
@@ -1393,7 +1426,8 @@
             "bytes": 236,
             "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
           }
-        ]
+        ],
+        "state_sha256": "648a5177c00d1fed45e761b99f64b7ec79b669c986c54973cf99e8ca2658f887"
       }
     },
     {
@@ -1420,7 +1454,7 @@
           "src/recursion-PROOF.bend"
         ],
         "context_files": 34,
-        "source_bytes": 17267,
+        "source_bytes": 17241,
         "byte_limit": 48000,
         "unresolved_by_reason": {},
         "unresolved": [],
@@ -1439,10 +1473,10 @@
             "context_sha256": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae"
           },
           {
-            "path": "/Users/ericfode/.bend/lib/0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
+            "path": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
             "representation": "interface",
-            "bytes": 419,
-            "context_sha256": "2143ec18853e0eafc292ae545197d7aceb521353effa00ad1deb31b06bfda95f"
+            "bytes": 393,
+            "context_sha256": "ea17b6d13a5fc52e9ea58ee336913b0d0d58af7330075d2ee445764f7767fe64"
           },
           {
             "path": "src/LAWS.bend",
@@ -1564,20 +1598,25 @@
             "bytes": 236,
             "context_sha256": "7b1cf5fd2324a33fca49660b95b54d334fc1e41eb05278301f914b9eb4a3f02a"
           }
-        ]
+        ],
+        "state_sha256": "e5858814fe4bfd75f4034c8c4800a16fbf68f8dcdf30460219c262ee66e4650e"
       }
     }
   ],
   "inputs": {
-    "tests/perch-context.test.mjs": "5f5ab5908ca35dccf2f07ce2f0930216eec9bfb1b5373094230b2cef7de22230",
-    "tests/perch-context-integration.test.mjs": "cfbc126d6f851d86c29cccd17b1111e9973b39316cf598dcb8dacf6c778ed5f8",
-    "tests/perch-context-mutants.test.mjs": "76de1303327de1979baf5bd5aef5246c158357280d7841c7e9c3935f3d64a7c5",
-    "tests/perch-context/CONTRACT.md": "3d49787a93b668a570304037c4984f89915aabd172b2183a72363295bc7ed651",
-    "tests/perch-context/expectations.json": "5388d9bc1d6ed183042ade3f49aa4e58395f598dea45e05aa1a60862e032b099",
-    "tests/perch-context/check.py": "851a0248dcfe01811f3f7f3cee99ba7bef44f0e8750a57ccd5df875332297aec",
-    "scripts/perch-style.mjs": "de9559f86e80bae8844cf8fc81f62fa9e656fa1697dd1951a7a08894345ec61f",
-    "scripts/perch-bend-context.mjs": "d1968e24a167e2f818d7e28fe1eee296054dddeb19db98cb0c89e4fab8c9c935",
-    "scripts/perch-context-interfaces.mjs": "0b26b1cf178f78fd6cb5af96529f8d22fe91696de7cb32c2cd0e4332bd1de18e",
+    "tests/perch-context.test.mjs": "a6443576c8c61a4b615818df89a3ad307be8176bf6f413f3f5a7ddc4dcae360d",
+    "tests/perch-context-integration.test.mjs": "ff7ca21368beaa11c9d0de69958066da30d184860c0d2ea009213f17511b51ab",
+    "tests/perch-context-mutants.test.mjs": "de3f7b8e6cf756eafd46b4c0ac0a10021902e0d8f79c9ae962b6f2eaea55e32a",
+    "tests/perch-context/CONTRACT.md": "9f9ed95813fa146f5a25ae2ca4f842be6a65d3d1be3054cdfab54161ed2cdb30",
+    "tests/perch-context/expectations.json": "ac88fc763a3eb95929e72227cb68c191b068703c64864518acf75fc4a62ac51b",
+    "tests/perch-context/review-expectations.json": "06bba9ae39894cfcaaf0cba44b3c829b3faa4344ccb33a31b796fd9e7d0511ee",
+    "tests/perch-context/fixtures/signatures.bend": "1298f9f2ea019c70c9b5ab5e1f9729381671ac3f1c3a4c3147c290a8457aca16",
+    "tests/perch-context/check.py": "9c2199dd7dbce69e792bb4ce52ebc6e19a34325cca4a0755e85b87ff9759ed2d",
+    "scripts/perch-style.mjs": "e52d0a4dac2958e93825c8dd236cba71ec694399f9d450e592eaa0a3186e977f",
+    "scripts/perch-bend-context.mjs": "0858899b02dd657ab3a0d82d630cd7c08d39fa2277223ec3816a3b8c6dd02a61",
+    "scripts/perch-context-interfaces.mjs": "dd4153156575e81cd5c30ef02142783b42aebcbe3debcdadf2509d23080d498c",
+    "scripts/perch-bend.mjs": "2b68a1aad0485870d16f531dcb919a6c0e4a35b62a3e55678fab5a218ca5ceef",
+    "vendor/bend-parser/bend.mts": "34064e6eeea3e61243a0f8c2833c2cdcf2108edc108462a819662e26a8456145",
     "docs/compiler-campaign/manifest.json": "cc311239670ce84e7111df80ff590a1aa6d74493d826021495479080ccb212db",
     "perch-style.json": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693"
   }

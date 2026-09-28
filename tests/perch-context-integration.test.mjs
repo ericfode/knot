@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { mkdtemp, mkdir, readFile, readdir, realpath, writeFile, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -80,7 +81,7 @@ test('explicit package store works outside workspace and pins all members for fr
   const candidates = await prepareStyleTargets(['main.bend'], null, config, root, snapshot);
   assert.deepEqual(await changedStyleSources(candidates, root), []);
   await writeFile(join(store, id, 'LICENSE'), 'tampered unused member\n');
-  assert.deepEqual(await changedStyleSources(candidates, root), [join(store, id, 'LICENSE')]);
+  assert.deepEqual(await changedStyleSources(candidates, root), [`${id}/LICENSE`]);
   const broken = await preflight(root, ['--context=interfaces-v1', `--package-store=${store}`, 'main.bend']);
   assert.equal(broken.code, 3);
   assert.ok(broken.report.composition.unresolved.some(r => r.reason === 'package-hash-mismatch'));
@@ -144,4 +145,53 @@ test('missing published packages and missing law contracts stay explicit', async
   const missing = await preflight(root, ['--context=interfaces-v1', 'main.bend']);
   assert.equal(missing.code, 3);
   assert.ok(missing.report.composition.unresolved.some(r => r.reason === 'package-not-found'));
+});
+
+test('default package store follows BEND_LIB or home and still verifies all bytes', async t => {
+  const id = '0x' + sha(`${sha(body)} lib.bend\n`).slice(0, 32);
+  const store = await fixture(t, { [`${id}/lib.bend`]: body });
+  const home = await fixture(t, { [`.bend/lib/${id}/lib.bend`]: body });
+  const root = await fixture(t, { 'main.bend': `import Base\nimport ${id}/lib.bend as L\ndef main(x: U32) -> U32: L.next(x)\n` });
+  const script = `import { runStylePreflight } from ${JSON.stringify(new URL('../scripts/perch-style.mjs', import.meta.url).href)};
+    const code = await runStylePreflight(['--context=interfaces-v1', 'main.bend', '--json'], { root: process.cwd() });
+    process.stderr.write(String(code));`;
+  for (const useEnv of [true, false]) {
+    const env = { ...process.env, HOME: home, BEND_NO_TELEMETRY: '1' };
+    delete env.NODE_TEST_CONTEXT;
+    if (useEnv) env.BEND_LIB = store; else delete env.BEND_LIB;
+    const report = JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e', script],
+      { cwd: root, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }));
+    assert.equal(report.structural_blockers, 0);
+    assert.equal(report.composition.available, true);
+    const path = useEnv ? join(store, id, 'lib.bend') : join(home, '.bend/lib', id, 'lib.bend');
+    await writeFile(path, body + '# tampered\n');
+    const broken = JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e', script],
+      { cwd: root, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }));
+    assert.equal(broken.composition.available, false);
+    assert.ok(broken.composition.unresolved.some(r => r.reason === 'package-hash-mismatch'));
+  }
+});
+test('bare relative imports close locally while long hash imports remain explicitly unsupported', async t => {
+  const root = await fixture(t, { ...sources,
+    'main.bend': sources['main.bend'].replace('./lib.bend', 'lib.bend'), 'manifest.json': JSON.stringify(manifest) });
+  assert.equal((await preflight(root, ['--manifest=manifest.json'])).code, 0);
+  await writeFile(join(root, 'manifest.json'), JSON.stringify({ ...manifest, groups: [
+    { name: 'caller', files: ['main.bend'] }, manifest.groups[1],
+  ] }));
+  await assert.rejects(preflight(root, ['--manifest=manifest.json']), /local import closure/);
+  const long = '0x' + '1'.repeat(64) + '/lib.bend';
+  await writeFile(join(root, 'main.bend'), sources['main.bend'].replace('./lib.bend', long));
+  const result = await preflight(root, ['--manifest=manifest.json']);
+  assert.equal(result.code, 3);
+  assert.ok(result.report.groups[0].composition.unresolved.some(r => r.reason === 'unsupported-package-identity'));
+});
+test('apostrophe parameter types and body punctuation cannot crash manifest preflight', async t => {
+  const lib = await readFile(new URL('./perch-context/fixtures/signatures.bend', import.meta.url), 'utf8');
+  const root = await fixture(t, { 'lib.bend': lib,
+    'main.bend': "import Base\nimport ./lib.bend as L\ndef main() -> U32: L.parameter(L.classify(':'))\n",
+    'manifest.json': JSON.stringify(manifest) });
+  const result = await preflight(root, ['--manifest=manifest.json']);
+  assert.equal(result.code, 0);
+  assert.equal(result.report.structural_blockers, 0);
+  assert.equal(result.report.summary.supporting_role_impossible, 0);
 });

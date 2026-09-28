@@ -995,3 +995,48 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Perch context review round 2: portable identities and parser heads
+
+Coordinator/adversarial findings against `6796108` were confirmed. The package
+header used the store's absolute path; byte counts and hashes therefore varied
+under the gate runner. The committed receipt came from a direct run, so the
+first verification record understated semantic drift. The interface composition
+also omitted the legacy anti-anchoring sentence. The signature scanner confused
+the seed-valid apostrophe character and dependent/existential binder colons;
+current compiler sources did not exercise either defect. The default preflight
+omitted the seed's installed store. Bare local paths bypassed manifest closure.
+
+The [fixed review expectations](../tests/perch-context/review-expectations.json)
+and new signature fixture preceded the repairs. Eight targeted regressions
+failed before implementation; the fixture passed the pinned seed with
+`All terms check.`. Repairs use import identities everywhere, keep filesystem
+handles outside review data, preserve the entire legacy instruction, obtain
+body endpoints from the parser, and use the verified `BEND_LIB`/home default.
+Other hash lengths remain explicitly unsupported. Release metadata locates a
+candidate; only its verified package membership enters provenance.
+
+Prevention: use parser offsets instead of a second lexer; parse generated heads
+back with holes and compare declaration names; move identical packages between
+different stores/checkouts and compare complete candidates; compare consecutive
+runner receipts, including source byte counts and state hashes. Retain the
+anti-anchoring clause as a literal control. Assert the 475-to-zero role result.
+The standing oracle covers 32 files and 411 definition/law heads, including the
+adversarial fixture; it does not assert proof acceptance for generated holes.
+
+The first full review-round run found stale census parser/tool hashes and an
+existing mutation site's spelling changed by the freshness refactor. Regenerate
+the census metadata and preserve that original mutation site; no compiler-gate
+assertion or census approval policy changes. A direct lint attempt also hit the
+sandbox's unwritable global parser-cache lock; use the gate runner's private
+offline cache. See the [verification record](compiler-campaign/perch-context-verification.md)
+for final gate counts, receipt reproducibility and the corrected limits.
+
+Final evidence: 15/15 gates in both successful full runs, 168 lint controls,
+eight law-rule wiring checks and 18 runner controls. Their complete normalized
+objects and all 81 normalized receipt files match; the context receipt is
+identical to the direct run. Overall drift: 64 identical, 17 volatile-only,
+zero semantic. An intervening loaded-host run exhausted three native-build
+budgets; it remains a failed run. A one-worker retry passed without changing
+any limit. All 33 context controls and eight semantic mutants pass, and the
+literal manifest command has zero blockers and no provider requests.

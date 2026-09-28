@@ -2,7 +2,7 @@
 // referenced local Bend imports are read, always from the current working tree.
 import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { dirname, isAbsolute, posix, relative, resolve, sep } from 'node:path';
 import { analyzeBendSource } from './perch-bend.mjs';
 import { INTERFACE_CONTEXT, createPackageStore, createInterfaceReview } from './perch-context-interfaces.mjs';
 
@@ -13,6 +13,13 @@ const within = (root, path) => {
   const rel = relative(root, path);
   return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
 };
+
+// The parser validates spelling. Classification must also recognize bare local
+// paths and every syntactically valid hash length before applying store policy.
+export const bendImportKind = module => module === 'Base' ? 'builtin'
+  : /^0x[0-9a-f]+\//.test(module) ? 'package'
+  : module.includes('@') ? 'named'
+  : isAbsolute(module) ? 'absolute' : 'local';
 
 /** Explicit files only; each real source is read and parsed once for this command. */
 export async function createBendSourceSnapshot(root, { contextPolicy = null, packageStore = null } = {}) {
@@ -28,20 +35,26 @@ export async function createBendSourceSnapshot(root, { contextPolicy = null, pac
     root: realRoot,
     contextPolicy,
     get stats() { return { requested_paths: paths.size, parse_calls: parseCalls }; },
+    async readCurrent(path) {
+      return packages.has(path) ? store.readCurrent(path) : readFile(resolve(realRoot, path));
+    },
     async resolveImport(from, module) {
-      if (module.startsWith('0x') && store) {
+      const kind = bendImportKind(module);
+      if (kind === 'package' && store) {
         const found = await store.resolve(module);
         if (found.reason) return found;
-        for (const member of found.members.values()) packages.set(resolve(realRoot, member.path), { ...member,
+        for (const member of found.members.values()) packages.set(member.path, { ...member,
           package_hash: found.package_hash, package_provenance: found.provenance, members: found.members });
         return { path: found.path };
       }
-      if (!module.startsWith('./') && !module.startsWith('../')) return { reason: 'nonlocal-import' };
-      const absolute = resolve(realRoot, dirname(from), module), owner = packages.get(resolve(realRoot, from));
+      if (kind !== 'local' || !store && !module.startsWith('./') && !module.startsWith('../')) return { reason: 'nonlocal-import' };
+      const owner = packages.get(from);
       if (owner) {
-        const member = [...owner.members.values()].find(m => resolve(realRoot, m.path) === absolute);
-        return member && absolute.endsWith('.bend') ? { path: member.path } : { reason: 'package-member-not-found' };
+        const path = posix.normalize(posix.join(posix.dirname(from), module));
+        const member = [...owner.members.values()].find(m => m.path === path);
+        return member && path.endsWith('.bend') ? { path } : { reason: 'package-member-not-found' };
       }
+      const absolute = resolve(realRoot, dirname(from), module);
       if (!within(realRoot, absolute) || !absolute.endsWith('.bend')) return { reason: 'outside-workspace' };
       try {
         const actual = await realpath(absolute);
@@ -49,17 +62,17 @@ export async function createBendSourceSnapshot(root, { contextPolicy = null, pac
       } catch (e) { return { reason: `unavailable-local-import:${e.code ?? 'read-error'}` }; }
     },
     async load(path) {
-      const absolute = resolve(realRoot, path);
-      if (packages.has(absolute)) {
-        if (!paths.has(absolute)) paths.set(absolute, (async () => {
-          const member = packages.get(absolute);
+      if (packages.has(path)) {
+        if (!paths.has(path)) paths.set(path, (async () => {
+          const member = packages.get(path);
           parseCalls++;
           const analysis = await analyzeBendSource(member.source);
           return Object.freeze({ source: member.source, source_sha256: member.source_sha256, analysis,
             package_hash: member.package_hash, package_provenance: member.package_provenance });
         })());
-        return paths.get(absolute);
+        return paths.get(path);
       }
+      const absolute = resolve(realRoot, path);
       if (!within(realRoot, absolute)) throw outside();
       if (!paths.has(absolute)) paths.set(absolute, (async () => {
         let actual;

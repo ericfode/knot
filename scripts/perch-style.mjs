@@ -7,7 +7,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { BEND_PARSER_PROFILE } from './perch-bend.mjs';
-import { bendDeclarationSource, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
+import { bendDeclarationSource, bendImportKind, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
 import { INTERFACE_CONTEXT, fitInterfaceContext, prepareInterfaceComposition } from './perch-context-interfaces.mjs';
 import { DEFAULT_PERCH_JOBS as DEFAULT_CONCURRENCY, MAX_PERCH_JOBS as MAX_CONCURRENCY, mapConcurrent } from './perch-throughput.mjs';
 import { createStyleAnswerCache, styleEndpoint } from './perch-style-cache.mjs';
@@ -17,6 +17,8 @@ import baseSource from '../vendor/bend-parser/base-source.mjs';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PREFLIGHT_CONCURRENCY = 32;
 const hash = value => createHash('sha256').update(value).digest('hex');
+// Local read handles stay outside serialized candidates and request identities.
+const sourceSnapshots = new WeakMap();
 const DEFAULT_SCOPE = 'Existing project code. Rate each declaration against its own purpose and supplied contract. No alternative implementation is required. Judge the quality of its representation and reading experience, not the difficulty of an unrelated task.';
 const inside = (root, path) => {
   const rel = relative(root, path);
@@ -407,6 +409,7 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT, 
     }
   }
   if (!candidates.length) throw new Error('Ranking needs at least one parsed unit');
+  sourceSnapshots.set(candidates, snapshot);
   return candidates;
 }
 
@@ -442,7 +445,7 @@ export async function prepareStyleInventory(cohort, config, root = ROOT, snapsho
   return { candidates, inventory: { discovered_files: paths, empty_files, unranked } };
 }
 
-export async function changedStyleSources(candidates, root = ROOT) {
+export async function changedStyleSources(candidates, root = ROOT, snapshot = sourceSnapshots.get(candidates)) {
   const files = new Map();
   const remember = (path, expected) => {
     if (files.has(path) && files.get(path) !== expected) throw new Error(`Source changed during style preflight: ${path}`);
@@ -456,7 +459,7 @@ export async function changedStyleSources(candidates, root = ROOT) {
   }
   const changed = [];
   for (const [path, expected] of files) {
-    const actual = await readFile(resolve(root, path)).then(hash).catch(() => null);
+    const actual = await (snapshot ? snapshot.readCurrent(path) : readFile(resolve(root, path))).then(hash).catch(() => null);
     if (actual !== expected) changed.push(path);
   }
   return changed;
@@ -470,7 +473,8 @@ function compositionPreflight(prepared) {
   return { available: prepared.available, reasons: prepared.reasons, selected_files: context.selected_files,
     context_files: context.files.length, source_bytes: context.source_bytes, byte_limit: context.limits.bytes,
     unresolved_by_reason: tally(context.unresolved.map(ref => ref.reason)), unresolved: context.unresolved,
-    ...(context.profile ? { context_policy: context.profile, representations: context.representations } : {}) };
+    ...(context.profile ? { context_policy: context.profile, representations: context.representations,
+      state_sha256: prepared.candidate.state_sha256 } : {}) };
 }
 
 async function readStyleReport(path) {
@@ -595,8 +599,7 @@ async function runStyleManifest(args, {
     if (manifest.contextPolicy === INTERFACE_CONTEXT) {
       for (const path of group.files) {
         const file = await snapshot.load(path);
-        for (const ref of file.analysis.references.filter(r => r.kind === 'import'
-          && (r.module.startsWith('./') || r.module.startsWith('../')))) {
+        for (const ref of file.analysis.references.filter(r => r.kind === 'import' && bendImportKind(r.module) === 'local')) {
           const dependency = await snapshot.resolveImport(path, ref.module);
           if (!group.files.includes(dependency.path)) throw new Error(`Manifest local import closure: ${group.name}: ${path} needs ${ref.module}`);
         }
@@ -615,6 +618,7 @@ async function runStyleManifest(args, {
     ...prepared.flatMap(({ selection }) => [...selection.candidates,
       ...selection.composition.candidate.context.files.map(file => fileIdentity(file.path, file.source_sha256)),
       ...(selection.task.path ? [fileIdentity(selection.task.path, selection.task.sha256)] : [])])];
+  sourceSnapshots.set(watched, snapshot);
   const sourceFiles = new Map(watched.flatMap(candidate => [candidate, ...candidate.context.files])
     .map(file => [file.path, file.source_sha256]));
   const preflightChanged = await changedStyleSources(watched, root);
@@ -919,7 +923,7 @@ export async function runStyleRanking(args, {
   if (!candidates.length) throw new Error('No rankable parsed declarations');
   const composition = selection?.composition ?? (config.potential_profundity && !all ? await prepareStyleComposition(candidates, taskAvailable ? taskText : null, config, root, sourceSnapshot)
     : { available: false, reasons: ['explicit_selected_group_required'], candidate: null });
-  const preflightChanged = await changedStyleSources(candidates, root);
+  const preflightChanged = await changedStyleSources(candidates, root, sourceSnapshot);
   if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
   if (loadEnv) {
     try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -1039,7 +1043,7 @@ export async function runStyleRanking(args, {
   if (failure) rows = [];
   const evaluated = performance.now();
   const compositionFiles = (composition.candidate?.context.files ?? []).map(file => ({ ...file, context: { files: [] } }));
-  const changed_sources = await changedStyleSources([...candidates, ...compositionFiles], root);
+  const changed_sources = await changedStyleSources([...candidates, ...compositionFiles], root, sourceSnapshot);
   if (taskPath !== undefined && await readFile(resolve(root, taskPath)).then(hash).catch(() => null) !== task.sha256) changed_sources.push(taskPath);
   const freshnessChecked = performance.now();
   const resolvedModels = new Set([...reused.values(), ...completed_rows.values()].map(row => row.model));

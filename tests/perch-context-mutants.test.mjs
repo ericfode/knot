@@ -9,13 +9,23 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const original = await readFile(new URL('../scripts/perch-context-interfaces.mjs', import.meta.url), 'utf8');
 const mutants = [
   { name: 'summary-leaks-body', witness: 'definition interfaces keep nested',
-    from: 'const head = text.slice(0, end);', to: 'const head = text;' },
+    from: "const head = Buffer.from(text).subarray(0, end).toString('utf8');", to: 'const head = text;' },
   { name: 'unverified-package-accepted', witness: 'tampered unused package member',
     from: "if (actualHash !== id) throw failure('package-hash-mismatch');", to: 'void actualHash;' },
   { name: 'truncation-marker-dropped', witness: 'datatype byte exhaustion',
     from: "if (reason === 'context-byte-limit') truncated = true;", to: "if (reason === 'context-byte-limit') truncated = false;" },
   { name: 'group-silently-over-bound', witness: 'composition exact UTF-8 bound',
     from: 'const over = bytes > config.potential_profundity.max_composition_bytes;', to: 'const over = false;' },
+  { name: 'store-path-in-identity', witness: 'package identity and composition state',
+    from: 'const path = `${id}/${row.path}`;', to: 'const path = actual;' },
+  { name: 'anti-anchoring-omitted', witness: 'interface instruction retains',
+    from: ' Do not infer a potential verdict, previous scores or missing implementation.', to: '' },
+  { name: 'binder-colon-truncates-head', witness: 'dependent signature dependencies',
+    from: 'const end = declaration.body_start?.byte - declaration.location.start.byte;',
+    to: "const end = text.indexOf(':', text.indexOf('->')) + 1;" },
+  { name: 'default-store-omitted', witness: 'default candidate store verifies',
+    from: "resolve(root, explicitStore ?? process.env.BEND_LIB ?? resolve(homedir(), '.bend/lib'))",
+    to: "resolve(root, explicitStore ?? 'no-default-store')" },
 ];
 for (const mutant of mutants) test(`semantic mutant killed: ${mutant.name}`, async t => {
   assert.equal(original.split(mutant.from).length, 2, 'exactly one mutation site');

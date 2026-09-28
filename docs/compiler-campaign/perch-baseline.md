@@ -1,8 +1,9 @@
 # Compiler Perch structural baseline
 
-## Context enablement, 2026-09-27
+## Context enablement, review round 2, 2026-09-27
 
-Branch `campaign/perch-context`, compiler base `3a162ab`. The new
+Branch `campaign/perch-context`, compiler base `3a162ab`; current main
+`fa31fec` merged as `f4eb462` before the review repairs. The
 [`interfaces-v1` context rule](../perch-style.md#interface-context-rule-interfaces-v1)
 leaves all `src/*.bend`, rubric v8, its targets and the 48,000-byte cap unchanged.
 The [before receipt](perch-context-before.json.gz) and
@@ -31,18 +32,26 @@ context assembly only; they establish no style pass or semantic acceptance.
 export BEND_NO_TELEMETRY=1
 node scripts/perch-style.mjs --preflight \
   --manifest=docs/compiler-campaign/manifest.json \
-  --package-store="$HOME/.bend/lib" --output=.local/compiler-context-next.json.gz
+  --output=.local/compiler-context-next.json.gz
 ```
 
-Choose a fresh output path. The explicit existing package store is necessary on
-this checkout: `packages/output_builder/bytes.bend` has changed since publication
-and correctly fails its release digest. Its installed immutable 12-file closure
-verifies to `0xc409b77d3230ca33374caf6b0993f0cb`. No package was downloaded,
-installed, copied into the repository, or substituted without verification.
-Without a verified store, this dependency remains unresolved with
-`package-member-hash-mismatch`; zero unresolved imports is conditional on the
-explicit verified store in the command above. Gate `perch-context` supplies the
-gate runner's private frozen copy of that same installed store.
+Choose a fresh output path. Candidates are `packages/`, followed by an explicit
+`--package-store` if supplied, otherwise `BEND_LIB` if set, otherwise
+`~/.bend/lib`. The current repository OutputBuilder source fails its release
+digest; the default installed immutable 12-file closure verifies to
+`0xc409b77d3230ca33374caf6b0993f0cb`. No package was downloaded or edited.
+An absent or tampered store still produces an explicit unresolved result.
+
+Package members now use `0x<hash>/<member>` in all supplied text, representations,
+provenance and request identities. Filesystem locations are private local read
+handles. The earlier after receipt embedded the home store path; review round 2
+replaces it and the comparison with portable receipts. Seven compositions lose
+26 host-prefix bytes each; the published `bytes.bend` interface is now 708 bytes.
+A two-location control checks both declaration and composition source bytes and
+state hashes. The gate runs the literal command twice and requires byte identity.
+The legacy anti-anchoring instruction is preserved verbatim, then extended with
+the interface warning. Parser-provided body offsets retain dependent return
+types and character literals without leaking bodies.
 
 ### Before and after by group
 
@@ -62,15 +71,15 @@ and raw receipt. Each group now has zero unresolved composition references.
 | `scope-patterns` | 99 → 99 | 16 → 0 | 16 → 0 | 29,152 → 29,152 | Available → Available |
 | `checking` | 134 → 134 | 22 → 0 | 22 → 0 | 47,903 → 47,903 | Available → Available |
 | `evaluation` | 63 → 63 | 16 → 0 | 16 → 0 | 18,063 → 18,063 | Available → Available |
-| `wasm-codec` | 30 → 30 | 1 → 0 | 10 → 0 | 5,609 → 6,343 | Unavailable → Available |
-| `wasm-emission` | 190 → 89 | 30 → 0 | 62 → 0 | 67,507 → 27,393 | Unavailable → Available |
-| `driver-pipeline` | 313 → 51 | 73 → 0 | 105 → 0 | 119,433 → 23,245 | Unavailable → Available |
+| `wasm-codec` | 30 → 30 | 1 → 0 | 10 → 0 | 5,609 → 6,317 | Unavailable → Available |
+| `wasm-emission` | 190 → 89 | 30 → 0 | 62 → 0 | 67,507 → 27,367 | Unavailable → Available |
+| `driver-pipeline` | 313 → 51 | 73 → 0 | 105 → 0 | 119,433 → 23,219 | Unavailable → Available |
 | `frontend-laws` | 69 → 69 | 6 → 0 | 6 → 0 | 26,496 → 26,496 | Available → Available |
 | `checker-laws` | 198 → 38 | 28 → 0 | 28 → 0 | 73,388 → 15,547 | Unavailable → Available |
-| `runtime-laws` | 253 → 55 | 33 → 0 | 42 → 0 | 90,852 → 25,065 | Unavailable → Available |
-| `catalog-laws` | 263 → 42 | 33 → 0 | 42 → 0 | 92,594 → 24,026 | Unavailable → Available |
-| `fields-laws` | 285 → 32 | 33 → 0 | 42 → 0 | 96,194 → 19,579 | Unavailable → Available |
-| `recursion-laws` | 317 → 32 | 33 → 0 | 42 → 0 | 102,139 → 17,267 | Unavailable → Available |
+| `runtime-laws` | 253 → 55 | 33 → 0 | 42 → 0 | 90,852 → 25,039 | Unavailable → Available |
+| `catalog-laws` | 263 → 42 | 33 → 0 | 42 → 0 | 92,594 → 24,000 | Unavailable → Available |
+| `fields-laws` | 285 → 32 | 33 → 0 | 42 → 0 | 96,194 → 19,553 | Unavailable → Available |
+| `recursion-laws` | 317 → 32 | 33 → 0 | 42 → 0 | 102,139 → 17,241 | Unavailable → Available |
 
 ### Context classification and limits
 
@@ -90,8 +99,8 @@ largest group (`checking`) is 47,903 bytes; an additional 98 bytes would exceed
 the cap, so later changes may require another explicit group boundary.
 
 The new [verification record](perch-context-verification.md) gives exact gate
-counts, the four killed mutants and the fixed controls. The next increment can
-run live semantic/style qualification with this context policy and verified
+counts, the eight killed mutants and the fixed controls. The next increment can
+run live semantic/style qualification with this context policy and the verified default
 package store. A context change invalidates prior request identities; legacy
 invocations deliberately keep their historical policy and controls.
 
@@ -99,11 +108,13 @@ invocations deliberately keep their historical policy and controls.
 
 - `docs/compiler-campaign/manifest.json` SHA-256: `cc311239670ce84e7111df80ff590a1aa6d74493d826021495479080ccb212db`.
 - `perch-style.json` SHA-256: `b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693`.
-- `scripts/perch-style.mjs` SHA-256: `de9559f86e80bae8844cf8fc81f62fa9e656fa1697dd1951a7a08894345ec61f`.
-- `scripts/perch-bend-context.mjs` SHA-256: `d1968e24a167e2f818d7e28fe1eee296054dddeb19db98cb0c89e4fab8c9c935`.
-- `scripts/perch-context-interfaces.mjs` SHA-256: `0b26b1cf178f78fd6cb5af96529f8d22fe91696de7cb32c2cd0e4332bd1de18e`.
+- `scripts/perch-style.mjs` SHA-256: `e52d0a4dac2958e93825c8dd236cba71ec694399f9d450e592eaa0a3186e977f`.
+- `scripts/perch-bend-context.mjs` SHA-256: `0858899b02dd657ab3a0d82d630cd7c08d39fa2277223ec3816a3b8c6dd02a61`.
+- `scripts/perch-context-interfaces.mjs` SHA-256: `dd4153156575e81cd5c30ef02142783b42aebcbe3debcdadf2509d23080d498c`.
+- `scripts/perch-bend.mjs` SHA-256: `2b68a1aad0485870d16f531dcb919a6c0e4a35b62a3e55678fab5a218ca5ceef`.
+- `vendor/bend-parser/bend.mts` SHA-256: `34064e6eeea3e61243a0f8c2833c2cdcf2108edc108462a819662e26a8456145`.
 - `docs/compiler-campaign/perch-context-before.json.gz` SHA-256: `3841bdffd6c8f37e3f5d132fe4d11f74597aa971b4ba516cb163e72e0964928f`.
-- `docs/compiler-campaign/perch-context-after.json.gz` SHA-256: `76f210beae0f5dd92a9e9eaa5ce6ada3c72b47767c8313bc72178df4392ca633`.
+- `docs/compiler-campaign/perch-context-after.json.gz` SHA-256: `aa347ab719b4b9341814bef70e7762b8237ab1cde721b72530aad29ec19f6364`.
 
 ## Historical baseline: campaign/perch-manifest
 

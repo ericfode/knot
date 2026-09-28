@@ -20,14 +20,16 @@ npm run gates -- --jobs 2 --keep-scratch
 
 Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
-requires the fourteen gates registered by the recursion, fields-wasm and census
-merge and unique names, so a new increment only appends its own gate; `census` runs `tools/census/census.mjs
+requires the existing gates by name (including `perch-context`) and unique names,
+so a new increment appends its gate and required name; `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
-The Perch context increment adds gate 15, `perch-context`: 23 literal context
-controls, four semantic mutants, and the full offline compiler-manifest
-preflight with the runner's frozen local package store. It writes only its own
+The Perch context increment adds gate 15, `perch-context`: 33 literal context
+controls, eight semantic mutants, one complete seed signature check, and two
+byte-identical offline compiler-manifest preflights. The literal command uses
+the runner's frozen `BEND_LIB` by default. Package identities and request hashes
+are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider
 requests and retains the pinned rubric and composition-byte cap.
 

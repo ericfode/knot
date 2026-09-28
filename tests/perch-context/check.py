@@ -12,6 +12,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 EXPECT = json.loads((HERE / 'expectations.json').read_text())
+REVIEW = json.loads((HERE / 'review-expectations.json').read_text())
 TESTS = ('tests/perch-context.test.mjs', 'tests/perch-context-integration.test.mjs',
          'tests/perch-context-mutants.test.mjs')
 
@@ -30,6 +31,9 @@ def run(argv):
 
 def main():
     assert digest(ROOT / 'perch-style.json') == EXPECT['rubric_sha256'], 'Rubric identity changed'
+    seed = run(['bun', '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts',
+                'tests/perch-context/fixtures/signatures.bend'])
+    assert seed.strip() == 'All terms check.', seed
     output = run(['node', '--test', *TESTS])
     names = re.findall(r'^# Subtest: (.+)$', output, re.M)
     mutants = [name.removeprefix('semantic mutant killed: ') for name in names
@@ -42,11 +46,18 @@ def main():
     scratch = ROOT / '.local/perch-context'
     scratch.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='preflight-', dir=scratch) as temp:
-        receipt = Path(temp) / 'preflight.json.gz'
-        store = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).resolve()
-        run(['node', 'scripts/perch-style.mjs', '--preflight',
-             '--manifest=docs/compiler-campaign/manifest.json', f'--package-store={store}', f'--output={receipt}'])
-        report = json.loads(gzip.decompress(receipt.read_bytes()))
+        reports = []
+        for index in range(2):
+            receipt = Path(temp) / f'preflight-{index}.json.gz'
+            run(['node', 'scripts/perch-style.mjs', '--preflight',
+                 '--manifest=docs/compiler-campaign/manifest.json', f'--output={receipt}'])
+            reports.append(receipt.read_bytes())
+        assert reports[0] == reports[1], 'Unchanged preflights must be byte-identical'
+        report = json.loads(gzip.decompress(reports[0]))
+    before = json.loads(gzip.decompress((ROOT / 'docs/compiler-campaign/perch-context-before.json.gz').read_bytes()))
+    assert before['summary']['supporting_role_impossible'] == REVIEW['role_limited_before']
+    assert report['summary']['supporting_role_impossible'] == REVIEW['role_limited_after']
+    assert report['structural_blockers'] == REVIEW['literal_command_blockers']
     groups = report['groups']
     inventory = json.loads(run(['node', '--input-type=module', '-e', '''
 import { readFile, readdir } from 'node:fs/promises';
@@ -65,15 +76,20 @@ console.log(JSON.stringify(expected.sort()));
         'over_bound_groups': sum(g['composition']['source_bytes'] > EXPECT['composition_byte_limit'] for g in groups),
         'unresolved_composition_references': sum(len(g['composition']['unresolved']) for g in groups),
         'truncated_declarations': report['summary']['truncated_units'],
+        'role_limited_declarations': report['summary']['supporting_role_impossible'],
+        'structural_blockers': report['structural_blockers'],
         'uncovered_declarations': len(set(inventory) - covered),
         'provider_requests': report['provider_requests'],
     }
     assert covered == set(inventory), 'Preflight must cover exactly every current compiler declaration'
     assert actual == EXPECT['compiler_preflight'], actual
     inputs = (*TESTS, 'tests/perch-context/CONTRACT.md', 'tests/perch-context/expectations.json',
+              'tests/perch-context/review-expectations.json', 'tests/perch-context/fixtures/signatures.bend',
               'tests/perch-context/check.py', 'scripts/perch-style.mjs', 'scripts/perch-bend-context.mjs',
-              'scripts/perch-context-interfaces.mjs', 'docs/compiler-campaign/manifest.json', 'perch-style.json')
+              'scripts/perch-context-interfaces.mjs', 'scripts/perch-bend.mjs', 'vendor/bend-parser/bend.mts',
+              'docs/compiler-campaign/manifest.json', 'perch-style.json')
     record = {'status': 'pass', 'context_policy': EXPECT['context_policy'],
+              'seed_signature_fixture': seed.strip(), 'identical_preflight_runs': 2,
               'fixtures': fixtures, 'mutants': mutants, 'tests': len(names), 'compiler_preflight': actual,
               'summary': report['summary'], 'distinct_declarations': len({u['target'] for g in groups for u in g['units']}),
               'groups': [{'name': g['name'], 'summary': g['summary'], 'composition': g['composition']} for g in groups],
@@ -82,7 +98,8 @@ console.log(JSON.stringify(expected.sort()));
     path.parent.mkdir(exist_ok=True)
     path.write_text(json.dumps(record, indent=2) + '\n')
     print(f"PASS: {len(fixtures)} context controls; {len(mutants)} semantic mutants killed; "
-          f"{len(groups)} compositions; {record['distinct_declarations']} distinct declarations; 0 blockers; 0 provider requests")
+          f"{len(groups)} compositions; {record['distinct_declarations']} distinct declarations; "
+          '2 byte-identical preflights; role-limited 475 -> 0; 0 blockers; 0 provider requests')
 
 
 if __name__ == '__main__':
