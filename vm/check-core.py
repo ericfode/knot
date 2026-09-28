@@ -603,8 +603,8 @@ MUTANTS = [
      [('(i32.eq (i32.and (local.get $c) (i32.const 0xfffff800)) (i32.const 0xd800))', '(i32.const 0)')], 'goldens'),
     # review round 2: describe near 4 GiB
     ('display-reservation', 'describe demands its whole 16 MiB text window below 4 GiB',
-     [('(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (local.get $upto)))',
-       '(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (i64.add (local.get $upto) (i64.const 0x1000000))))')],
+     [('(local.set $end (i64.add (global.get $out) (local.get $upto)))',
+       '(local.set $end (i64.add (global.get $out) (i64.add (local.get $upto) (i64.const 0x1000000))))')],
      'ceiling'),
     # vm-spec 94bc3d5: section 7's operand check and section 8's invocation walk
     ('closure-operand-count', 'a Closure is entered whatever its operand count',
@@ -652,6 +652,30 @@ MUTANTS = [
     # review round 3: Chr reads its operand as the reference evaluation's construct does
     ('chr-operand-unchecked', "Chr yields its operand's word without reading it",
      [('            (drop (call $num (i32.load (local.get $ops))))\n', '')], 'reference'),
+    # review round 4: a cell or an append block may end exactly at 4 GiB (section 5). These three
+    # readings change the outcome at the rows whose heap ends exactly at 4 GiB; `top-trap` below
+    # restores the old trap itself
+    ('top-cell-exhausted', 'a cell ending exactly at 4 GiB is Exhausted',
+     [('(local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n'
+       '    (if (i64.gt_u (local.get $end) (global.get $HL))',
+       '(local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))\n'
+       '    (if (i64.ge_u (local.get $end) (global.get $HL))')], 'full-heap'),
+    ('top-block-exhausted', 'an append block ending exactly at 4 GiB is Exhausted',
+     [('(local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n'
+       '    (if (i64.gt_u (local.get $end) (global.get $HL))',
+       '(local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))\n'
+       '    (if (i64.ge_u (local.get $end) (global.get $HL))')], 'full-heap'),
+    ('bump-wraps', 'the bump pointer wraps to 0 when a cell ends at 4 GiB (a 32-bit bump pointer)',
+     [('    (global.set $bump (local.get $end))\n    (local.get $p))',
+       '    (global.set $bump (i64.extend_i32_u (i32.wrap_i64 (local.get $end))))\n    (local.get $p))')],
+     'full-heap'),
+    # the pre-fix VM itself: both guards restored. Its defect is the trap, so group `trap` kills
+    # it only when every row ending exactly at 4 GiB traps and every other ceiling row stays right
+    ('top-trap', 'a cell or an append block ending exactly at 4 GiB traps (the pre-fix VM)',
+     [('(i64.extend_i32_u (local.get $bytes))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))',
+       '(i64.extend_i32_u (local.get $bytes))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))'),
+      ('(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))',
+       '(i64.const 5))))\n    (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))\n    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))')], 'trap'),
 ]
 
 
@@ -944,8 +968,9 @@ def main() -> int:
                            'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE, 'images': len(corpus),
                                     'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally}}
 
-    # mutants: a changed observation in their group, never a crash. Runs use the test
-    # build, so a golden also compares the VM's own outcome registers.
+    # mutants: a changed observation in their group, never a crash, except group `trap`, whose
+    # defect is a trap where section 5 gives an outcome. Runs use the test build, so a golden
+    # also compares the VM's own outcome registers.
     source = (HERE / 'vm.wat').read_text()
     goldens_jobs = [{'id': f'golden:{n}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')}, 'argv': golden_argv(n),
                      'want': expected_run(expected['cases'][n]), 'dump': expected_dump(expected['cases'][n])}
@@ -964,9 +989,12 @@ def main() -> int:
                  'want': r['want'], 'dump': r['dump']} for r in run_rows]
     ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
                            for j, r in zip(ceiling_jobs, ceiling)]
+    full_heap = [j for j in ceiling_mutant_jobs if j['dump']['bump'] == 1 << 32]
+    require(len(full_heap) == 3, f'three ceiling rows fill the heap to exactly 4 GiB: {[j["id"] for j in full_heap]}')
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
+              'full-heap': full_heap, 'trap': ceiling_mutant_jobs,
               'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs}
 
     def observed_wrong(job, out):
@@ -988,12 +1016,19 @@ def main() -> int:
             continue
         wasm.write_bytes(build.assemble(build.test_source(text)))
         batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm)} for j in groups[group]]
-        if group == 'ceiling':  # about 4 GiB each: one process per run
+        if group in ('ceiling', 'full-heap', 'trap'):  # about 4 GiB each: one process per run
             out = {k: v for part in pool(lambda j: harness([j]), batch, workers=2) for k, v in part.items()}
         else:
             out = harness(batch)
-        wrong = [j['id'] for j in groups[group] if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
         crashed = [j['id'] for j in groups[group] if not clean(out[j['id']])]
+        if group == 'trap':  # the frozen outcome is never a trap, so a trap is the wrong observation
+            wrong = [j['id'] for j in full_heap if out[j['id']]['status'] == 'Trap']
+            right = [j['id'] for j in groups[group] if j not in full_heap
+                     and clean(out[j['id']]) and not observed_wrong(j, out[j['id']])]
+            require(len(wrong) == len(full_heap) and len(right) == len(groups[group]) - len(full_heap),
+                    f'mutant {name}: traps {wrong}, right {right}')
+        else:
+            wrong = [j['id'] for j in groups[group] if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
         require(wrong, f'mutant {name} survives group {group} (crashes: {crashed[:5]})')
         killed.append({'mutant': name, 'breaks': breaks, 'group': group, 'killed_by': wrong[:5],
                        'wrong_observations': len(wrong), 'crashes': len(crashed)})

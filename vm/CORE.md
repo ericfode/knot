@@ -160,14 +160,26 @@ adopt them or record its own, so that lockstep compares like with like.
      control.
 9. **A `Halt` result.** Its message is converted to UTF-8 before the result
    is dropped.
-10. **4 GiB.** A cell ending exactly at 4 GiB would wrap the i32 bump pointer.
-    It traps (HostFailure) instead; no host grows memory that far.
-11. **Output before D20's check.** `$utf8out` grows memory by 4 bytes per Char
-    for the whole String, then scans and encodes. A String whose encoding cannot
-    fit fails at that growth (a trap, as in 10) before the scan, even if it
-    holds a non-scalar Char. §10 does not order the two, and the growth is not
-    bounded by the heap limit. vm-io, which owns the effect path, should settle
-    both.
+10. **4 GiB.** A cell or an `append` block may end exactly at 4 GiB: §5 stops
+    only a cell that would end beyond the maximum. The bump pointer is 64-bit,
+    so it reaches 2^32 without wrapping; every cell's own address stays below
+    4 GiB. The heap is then full: any later cell, and describe's text
+    (choice 12), is `Exhausted` kind 2 (heap), and a Program that allocates
+    nothing more completes. Review round 4 found the VM trapping
+    (`HostFailure io trap`) at such a cell, with a reason here that no host grows
+    memory that far. `ceiling-top` refutes that reason: its run grows memory to
+    all 65,536 pages. The trap came from the i32 bump pointer.
+11. **Output before D20's check (open, vm-io).** `$utf8out` grows memory by 4
+    bytes per Char for the whole String, then scans and encodes. Growth past
+    4 GiB fails in `memory.grow`, which traps (`HostFailure io trap`). So a
+    `print` or `Halt` message whose 4-byte bound crosses 4 GiB traps before the
+    scan, even when its UTF-8 would fit and even if it holds a non-scalar Char.
+    Since choice 10 this includes every nonempty String at a bump pointer of
+    exactly 2^32; an empty one needs no memory. §10 orders neither the
+    growth nor the scan, and the growth is not bounded by the heap limit. §11
+    fails a trap where the outcome is a budget, so vm-io, which owns the effect
+    path, must turn this into `Exhausted` kind 2 (heap), as describe does
+    (choice 12), and order it against D20's check.
 12. **Describe at 4 GiB.** Describe's text starts at the bump pointer and has
     no reserved window. Text ending beyond 4 GiB stops with `Exhausted` kind 2
     (heap), the outcome §5 gives an allocation beyond the maximum, because the
@@ -266,35 +278,54 @@ adopt them or record its own, so that lockstep compares like with like.
   - exact fuel boundaries, rendering and both display bounds;
   - an ill-typed flow through a `none` parameter;
   - the Unsupported foreign leaf, and the invocation errors.
-- **Ceiling.** Six Books whose bump pointer ends near 4 GiB, at most two at a
-  time. Each dump pins the bump pointer, which keeps the image in its band:
+- **Ceiling.** Ten images whose bump pointer ends near or exactly at 4 GiB, at
+  most two at a time. Each dump pins the bump pointer, which keeps the image in
+  its band:
   - review round 2's three images, where a worklist based in i32 arithmetic
     16 MiB above the text wrapped into the image: `On{}`;
   - `ceiling-band`, just below that wrap: `B1{B1{B0{}}}`;
   - `ceiling-top`, whose text ends exactly at 4 GiB;
-  - `ceiling-over`, 16 bytes beyond it: `Exhausted` kind 2 (heap).
+  - `ceiling-over`, 16 bytes beyond it: `Exhausted` kind 2 (heap);
+  - review round 4's `ceiling-top32`, whose last Object ends exactly at
+    4 GiB (bump 2^32), and describe's text then cannot fit: `Exhausted` kind 2
+    (heap). Its control `ceiling-cell-over`, 16 bytes higher, stops at the
+    Object itself, with the bump pointer unchanged;
+  - `ceiling-append-top`, whose `append` block ends exactly at 4 GiB:
+    `Exhausted` kind 2 (heap) at describe;
+  - `ceiling-program-top`, a Program whose `Emit{Unit}` ends exactly at
+    4 GiB: exit 0, no output, `Completed`.
 
-  **Provenance.** `c9869ef` chose each plan's fill counts by measuring the
-  pre-fix VM's bump pointer, and pinned `bump` from that measurement. It
-  called the pins literal review, which they were not (review round 3). The
-  gate now derives every row before the VM runs. `ceiling_run` sums §5's cell
-  sizes over the plan:
+  **Provenance.** `c9869ef` chose the first six plans' fill counts by
+  measuring the pre-fix VM's bump pointer, and pinned `bump` from that
+  measurement. It called the pins literal review, which they were not (review
+  round 3). The gate now derives every row before the VM runs. `ceiling_run`
+  sums §5's cell sizes over the plan:
   - H0 from the image length;
-  - the materialized pool;
-  - an Activation per entry;
-  - Objects, Big U32 results and `append`'s block (choices 1, 4 and 5).
+  - the materialized pool, then a Program's terminal continuation;
+  - an Activation per entry, a function's or a Closure node's;
+  - Objects, Closures, Big U32 results, `append`'s block and the terminal
+    `Emit` (choices 1, 4 and 5).
 
-  `ceiling_expectation` then starts the text at the bump pointer (choice 12).
-  The frozen `expect` and `dump` must equal the derivation. It agrees with all
-  six measured pins, so which side of 4 GiB `ceiling-top` and `ceiling-over`
-  land on now follows from §5 and choice 12, not from a VM. Each row's `basis`
-  records the arithmetic.
+  A cell that would end beyond 4 GiB stops the model with `Exhausted` kind 2
+  (heap) and the bump pointer unchanged; one ending exactly there is
+  allocated. `ceiling_expectation` then completes a Program at its `Emit`, or
+  starts a Book's text at the bump pointer (choice 12). The frozen `expect` and
+  `dump` must equal the derivation, which agrees with all six measured pins.
+  The first six rows skipped the one point where the pre-fix VM and the
+  derivation disagreed, a heap ending exactly at 2^32 (review round 4). Three
+  round-4 rows sit on it and the fourth is their control; all four took their
+  fill counts from the model alone, before any VM ran them. The reference evaluation (`evaluate.program`)
+  completes `ceiling-program-top`'s plan, with every fill shortened to 3, with
+  exit 0 and no output. So each row's outcome, on either side of 4 GiB and at
+  it, follows from §5 and choice 12, not from a VM. Each row's `basis` records
+  the arithmetic.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
 - **Malformed images.** As above: 62 frozen controls and 3,640 fuzz images,
   with no trap.
-- **Mutants.** Twenty-six, each killed by a wrong observation in a named group:
+- **Mutants.** Thirty, each killed by a wrong observation in a named group
+  (one by a trap, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -314,4 +345,10 @@ adopt them or record its own, so that lockstep compares like with like.
   - a Nat's successor spelled with its zero's name, its text sized by the
     zero's name, a Nat word costing one visit, and each display bound
     exclusive (run controls);
-  - Chr yielding its operand unread (the reference rows).
+  - Chr yielding its operand unread (the reference rows);
+  - a cell, or an `append` block, ending exactly at 4 GiB taken as
+    `Exhausted`, and a bump pointer that wraps to 0 there (the three ceiling
+    rows at exactly 4 GiB);
+  - the pre-fix VM's trap restored at both (`top-trap`, group `trap`). Its
+    defect is the trap, so it is killed by a trap, but only when all three
+    rows at exactly 4 GiB trap and the other seven ceiling rows stay right.

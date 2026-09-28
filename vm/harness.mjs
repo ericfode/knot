@@ -17,14 +17,19 @@ class Stop extends Error {
   constructor(status, exit) { super(status); Object.assign(this, {status, exit}); }
 }
 
+// `bump` and `HL` are 64-bit (a heap may end exactly at 4 GiB): their high words follow.
 const REGISTERS = ['mode', 'node', 'val', 'tgt', 'tfn', 'ops', 'nops', 'act', 'top', 'F0', 'FL', 'H0', 'bump',
-  'fuel', 'calls', 'quantum', 'outcome', 'kind', 'cause', 'W', 'terminal', 'yields', 'HL'];
+  'fuel', 'calls', 'quantum', 'outcome', 'kind', 'cause', 'W', 'terminal', 'yields', 'HL', 'bump_high', 'HL_high'];
 const OUTCOMES = [null, 'Completed', 'Halted', 'HostFailure', 'Unsupported', 'Exhausted', 'InternalFailure'];
 const strict = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true});
 
 export function registers(x) {
   const at = x.vm_dump(), v = new DataView(x.memory.buffer);
   const r = Object.fromEntries(REGISTERS.map((k, i) => [k, v.getUint32(at + 4 * i, true)]));
+  for (const k of ['bump', 'HL']) {
+    r[k] += 2 ** 32 * r[`${k}_high`];
+    delete r[`${k}_high`];
+  }
   const bytes = new Uint8Array(x.memory.buffer);
   let end = r.cause;
   while (r.cause && bytes[end]) end++;

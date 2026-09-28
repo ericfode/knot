@@ -344,11 +344,13 @@
   (global $calls (mut i32) (i32.const 0))
   (global $quantum (mut i32) (i32.const 0))
   (global $terminal (mut i32) (i32.const 0))
-  ;; memory map (§5): frame region [F0, FL), heap [H0, HL) with bump
+  ;; memory map (§5): frame region [F0, FL), heap [H0, HL) with bump. A cell may
+  ;; end exactly at 4 GiB, so the bump pointer is 64-bit; it stays a multiple of
+  ;; 16 (H0 is 64 KiB-aligned and every cell is 16 * 2^k bytes).
   (global $F0 (mut i32) (i32.const 0))
   (global $FL (mut i32) (i32.const 0))
   (global $H0 (mut i32) (i32.const 0))
-  (global $bump (mut i32) (i32.const 0))
+  (global $bump (mut i64) (i64.const 0))
   (global $HL (mut i64) (i64.const 0x100000000))
   (global $frameBytes (mut i32) (i32.const 0x1000000))
   ;; knot_alloc's cursor for host transfers
@@ -651,7 +653,7 @@
                              (i32.const 0xffff0000)))
     (global.set $FL (i32.add (global.get $F0) (global.get $frameBytes)))
     (global.set $H0 (i32.add (global.get $F0) (i32.const 0x1000000)))
-    (global.set $bump (global.get $H0))
+    (global.set $bump (i64.extend_i32_u (global.get $H0)))
     (global.set $HL (select (i64.const 0x100000000)
                             (i64.add (i64.extend_i32_u (global.get $H0)) (global.get $heapBytes))
                             (i64.gt_u (i64.add (i64.extend_i32_u (global.get $H0)) (global.get $heapBytes))
@@ -1784,24 +1786,23 @@
     (i32.store offset=4096 (i32.shl (local.get $i) (i32.const 2)) (local.get $v)))
 
   ;; A cell of 2 + payload words takes the smallest power of two not below
-  ;; max(4, 2 + payload) words, from the bump pointer, zeroed, rc = 1.
+  ;; max(4, 2 + payload) words, from the bump pointer, zeroed, rc = 1. It may end
+  ;; exactly at HL; its own address is then still below 4 GiB.
   (func $alloc (param $payload i32) (param $class i32) (result i32)
     (local $words i32) (local $bytes i32) (local $p i32) (local $end i64)
     (local.set $words (i32.add (local.get $payload) (i32.const 2)))
     (local.set $bytes (if (result i32) (i32.le_u (local.get $words) (i32.const 4))
       (then (i32.const 16))
       (else (i32.shl (i32.const 4) (i32.sub (i32.const 32) (i32.clz (i32.sub (local.get $words) (i32.const 1))))))))
-    (local.set $p (global.get $bump))
-    (local.set $end (i64.add (i64.extend_i32_u (local.get $p)) (i64.extend_i32_u (local.get $bytes))))
+    (local.set $end (i64.add (global.get $bump) (i64.extend_i32_u (local.get $bytes))))
     (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
-    ;; a cell ending exactly at 4 GiB would wrap the bump pointer; no host grows that far
-    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))
     (if (i64.gt_u (local.get $end) (i64.shl (i64.extend_i32_u (memory.size)) (i64.const 16)))
       (then (call $grow (local.get $end))))
+    (local.set $p (i32.wrap_i64 (global.get $bump)))
     (memory.fill (local.get $p) (i32.const 0) (local.get $bytes))
     (i32.store (local.get $p) (i32.const 1))
     (i32.store offset=4 (local.get $p) (i32.or (i32.shl (local.get $payload) (i32.const 3)) (local.get $class)))
-    (global.set $bump (i32.wrap_i64 (local.get $end)))
+    (global.set $bump (local.get $end))
     (local.get $p))
 
   ;; canonical boxing: below 2^31 immediate, else a Big cell
@@ -1912,11 +1913,10 @@
     (local $n i32) (local $base i32) (local $end i64) (local $c i32)
     (local.set $n (call $slen (local.get $a)))
     (if (i32.eqz (local.get $n)) (then (return (local.get $b))))
-    (local.set $base (global.get $bump))
-    (local.set $end (i64.add (i64.extend_i32_u (local.get $base)) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))
+    (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))
     (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
-    (if (i64.ge_u (local.get $end) (i64.const 0x100000000)) (then unreachable))
     (call $grow (local.get $end))
+    (local.set $base (i32.wrap_i64 (global.get $bump)))
     (memory.fill (local.get $base) (i32.const 0) (i32.shl (local.get $n) (i32.const 5)))
     (local.set $c (i32.add (local.get $base) (i32.shl (i32.sub (local.get $n) (i32.const 1)) (i32.const 5))))
     (block $done
@@ -1933,7 +1933,7 @@
         (i32.store offset=20 (local.get $c) (i32.sub (local.get $c) (i32.const 32)))
         (local.set $c (i32.sub (local.get $c) (i32.const 32)))
         (br $next)))
-    (global.set $bump (i32.wrap_i64 (local.get $end)))
+    (global.set $bump (local.get $end))
     (i32.add (local.get $base) (i32.shl (i32.sub (local.get $n) (i32.const 1)) (i32.const 5))))
 
   ;; reverse(a) allocates from a's first character
@@ -2303,16 +2303,17 @@
   (func $perform (param $x i32) (result i32)
     (local $n i32)
     (if (i32.ne (i32.load offset=8 (local.get $x)) (i32.const 1)) (then (call $internal)))
-    (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (call $align8 (global.get $bump))))
-    (call $io_print (call $align8 (global.get $bump)) (local.get $n))
+    (local.set $n (call $utf8out (i32.load offset=12 (local.get $x)) (global.get $bump)))
+    (call $io_print (i32.wrap_i64 (global.get $bump)) (local.get $n))
     (i32.const 1))
 
-  ;; a String as canonical UTF-8 at `dst`; only Unicode scalars cross (§10)
-  (func $utf8out (param $s i32) (param $dst i32) (result i32)
+  ;; a String as canonical UTF-8 at `dst`, its length; only Unicode scalars cross
+  ;; (§10). Growth covers 4 bytes per Char before any store (CORE.md choice 11).
+  (func $utf8out (param $s i32) (param $dst i64) (result i32)
     (local $o i32) (local $c i32)
-    (call $grow (i64.add (i64.extend_i32_u (local.get $dst))
+    (call $grow (i64.add (local.get $dst)
                          (i64.shl (i64.extend_i32_u (call $slen (local.get $s))) (i64.const 2))))
-    (local.set $o (local.get $dst))
+    (local.set $o (i32.wrap_i64 (local.get $dst)))
     (block $done
       (loop $next
         (br_if $done (i32.eq (local.get $s) (i32.const 1)))
@@ -2341,7 +2342,7 @@
                 (local.set $o (i32.add (local.get $o) (i32.const 4)))))))))
         (local.set $s (i32.load offset=20 (local.get $s)))
         (br $next)))
-    (i32.sub (local.get $o) (local.get $dst)))
+    (i32.sub (local.get $o) (i32.wrap_i64 (local.get $dst))))
 
   ;; ---------------------------------------------------------------- dispatch (§6, §7)
   ;; One br_table over Eval opcodes 0-12, Return frame kinds 13-19, Enter 20
@@ -2515,7 +2516,7 @@
 
   ;; §8 Program phase 3: Emit completes, Halt calls die
   (func $finish (param $x i32)
-    (local $code i32) (local $n i32) (local $dst i32)
+    (local $code i32) (local $n i32)
     (if (i32.or (i32.or (i32.and (local.get $x) (i32.const 1)) (i32.eqz (local.get $x)))
           (i32.or (i32.and (i32.load offset=4 (local.get $x)) (i32.const 7))
                   (i32.ne (i32.load offset=8 (local.get $x)) (global.get $rIoop))))
@@ -2527,13 +2528,12 @@
         (global.set $mode (i32.const 3))
         (return)))
     (local.set $code (call $num (i32.load offset=16 (local.get $x))))
-    (local.set $dst (call $align8 (global.get $bump)))
-    (local.set $n (call $utf8out (i32.load offset=20 (local.get $x)) (local.get $dst)))
+    (local.set $n (call $utf8out (i32.load offset=20 (local.get $x)) (global.get $bump)))
     (call $drop (local.get $x))
     (global.set $oc (i32.const 2))
     (global.set $okind (local.get $code))
     (global.set $mode (i32.const 3))
-    (call $io_die (local.get $code) (local.get $dst) (local.get $n))
+    (call $io_die (local.get $code) (i32.wrap_i64 (global.get $bump)) (local.get $n))
     unreachable)
 
   ;; ---------------------------------------------------------------- describe (§8)
@@ -2546,23 +2546,22 @@
   ;; Exhausted kind 2 (display); text ending beyond 4 GiB is Exhausted kind 2
   ;; (heap). Text addresses are summed in 64 bits.
   (global $resT (mut i32) (i32.const 0))
-  (global $out (mut i32) (i32.const 0))
+  (global $out (mut i64) (i64.const 0))
   (global $len (mut i32) (i32.const 0))
   (global $cap (mut i32) (i32.const 0))
 
   ;; n more bytes of text, within the display cap and 4 GiB: their address
   (func $room (param $n i64) (result i32)
-    (local $at i32) (local $upto i64) (local $end i64)
-    (local.set $at (i32.add (global.get $out) (global.get $len)))
+    (local $upto i64) (local $end i64)
     (local.set $upto (i64.add (i64.extend_i32_u (global.get $len)) (local.get $n)))
     (if (i64.gt_u (local.get $upto) (i64.extend_i32_u (global.get $cap)))
       (then (call $exhaust (i32.const 2) (global.get $R_display))))
-    (local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (local.get $upto)))
+    (local.set $end (i64.add (global.get $out) (local.get $upto)))
     (if (i64.gt_u (local.get $end) (i64.const 0x100000000))
       (then (call $exhaust (i32.const 2) (global.get $R_heap))))
     (call $grow (local.get $end))
     (global.set $len (i32.wrap_i64 (local.get $upto)))
-    (local.get $at))
+    (i32.wrap_i64 (i64.sub (local.get $end) (local.get $n))))
 
   (func $emit (param $src i32) (param $n i32)
     (memory.copy (call $room (i64.extend_i32_u (local.get $n))) (local.get $src) (local.get $n)))
@@ -2592,7 +2591,7 @@
     (local $base i32) (local $sp i32) (local $visits i32) (local $w i32) (local $t i32)
     (local $rec i32) (local $name i32) (local $j i32) (local $v i32) (local $at i32)
     (local $zero i32) (local $succ i32)
-    (global.set $out (call $align8 (global.get $bump)))
+    (global.set $out (global.get $bump))
     (global.set $len (i32.const 0))
     (global.set $cap (i32.const -1))
     (call $emit (i32.const 352) (i32.const 10))
@@ -2670,7 +2669,7 @@
     (call $drop (local.get $x))
     (global.set $oc (i32.const 1))
     (global.set $mode (i32.const 3))
-    (call $io_print (global.get $out) (global.get $len)))
+    (call $io_print (i32.wrap_i64 (global.get $out)) (global.get $len)))
 
   ;; ---------------------------------------------------------------- entry (§8)
   ;; argument i as an unsigned decimal, or -1
@@ -2953,7 +2952,7 @@
   ;;TEST   (i32.store (i32.const 3956) (global.get $F0))
   ;;TEST   (i32.store (i32.const 3960) (global.get $FL))
   ;;TEST   (i32.store (i32.const 3964) (global.get $H0))
-  ;;TEST   (i32.store (i32.const 3968) (global.get $bump))
+  ;;TEST   (i32.store (i32.const 3968) (i32.wrap_i64 (global.get $bump)))
   ;;TEST   (i32.store (i32.const 3972) (global.get $fuel))
   ;;TEST   (i32.store (i32.const 3976) (global.get $calls))
   ;;TEST   (i32.store (i32.const 3980) (global.get $quantum))
@@ -2964,5 +2963,7 @@
   ;;TEST   (i32.store (i32.const 4000) (global.get $terminal))
   ;;TEST   (i32.store (i32.const 4004) (global.get $yields))
   ;;TEST   (i32.store (i32.const 4008) (i32.wrap_i64 (global.get $HL)))
+  ;;TEST   (i32.store (i32.const 4012) (i32.wrap_i64 (i64.shr_u (global.get $bump) (i64.const 32))))
+  ;;TEST   (i32.store (i32.const 4016) (i32.wrap_i64 (i64.shr_u (global.get $HL) (i64.const 32))))
   ;;TEST   (i32.const 3920))
 )

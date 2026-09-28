@@ -88,10 +88,14 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - Three Books on Chr's operand (`reference` rows) run as literal review froze
   them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
   run and call count.
-- Six Books whose bump pointer ends near 4 GiB. Each row's bump pointer and
-  outcome are first derived from SPEC section 5's cell sizes over its plan,
-  independently of any VM. The pins were first measured from the pre-fix VM
-  (`c9869ef`), and the derivation agrees with them.
+- Ten images (nine Books and a Program) whose bump pointer ends near or
+  exactly at 4 GiB. Each row's bump pointer and outcome are first derived from
+  SPEC section 5's cell sizes over its plan, independently of any VM. The first
+  six pins were measured from the pre-fix VM (`c9869ef`), and the derivation
+  agrees with them. Review round 4's four rows, three whose heap ends exactly
+  at 4 GiB and a control 16 bytes above, took their fill counts from the
+  derivation alone. A cell may end exactly at 4 GiB, where the pre-fix VM
+  trapped.
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
 - The 62 malformed-image controls and a seeded fuzz corpus of 3,640 mutated
   goldens are refused with the reference codec's first defect, and none traps.
@@ -100,7 +104,9 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
     runs them;
   - 11 run controls run to the outcome and call count that `check-spec.py`
     freezes, also on exactly that much fuel.
-- Twenty-six WAT mutants are each killed by a wrong observation.
+- Thirty WAT mutants are each killed by a wrong observation. One restores the
+  pre-fix trap at 4 GiB and is killed by that trap, only while every other
+  ceiling row stays right.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.
