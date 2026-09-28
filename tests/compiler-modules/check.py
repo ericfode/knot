@@ -751,6 +751,39 @@ MUTANTS += [
      'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>',
      'witness': 'arrow-let', 'plain': True,
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tparse\texpected-=\t'}},
+    {'name': 'own-terms-unregistered', 'file': 'qualify.bend',
+     'old': 'declarations(tail,ns,aliases,Con{name,terms},ctors),rest => Done{Con{name,rest}}',
+     'new': 'declarations(tail,ns,aliases,terms,ctors),rest => Done{Con{name,rest}}',
+     'witness': 'own-bare-after-qualified', 'actual': {'exit': 0}},
+    {'name': 'own-constructors-unregistered', 'file': 'qualify.bend',
+     'old': 'constructors(tail,ns,aliases,Con{head,globals})', 'new': 'constructors(tail,ns,aliases,globals)',
+     'witness': 'own-constructor-in-type', 'actual': {'exit': 0}},
+    {'name': 'rooted-local-invalid', 'file': 'imports.bend',
+     'old': 'S.choose(Bool,String.eq(part,"."),u => Bool.or(rooted(rest),relative(rest)),u =>',
+     'new': 'S.choose(Bool,String.eq(part,"."),u => relative(rest),u =>',
+     'witness': 'rooted-local-import',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-path\t'}},
+    {'name': 'rooted-hash-invalid', 'file': 'imports.bend',
+     'old': 'S.choose(Bool,hash_head(part),u => Bool.or(rooted(rest),named(rest)),u =>',
+     'new': 'S.choose(Bool,hash_head(part),u => named(rest),u =>',
+     'witness': 'rooted-hash-import',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-path\t'}},
+    {'name': 'dotted-let-binder-unresolved', 'file': 'check.bend',
+     'old': 'u => E.binder(bindings,token)),v =>', 'new': 'u => Done{Unit{}}),v =>',
+     'witness': 'dotted-let-binder', 'plain': True, 'actual': {'exit': 0}},
+    {'name': 'dotted-field-binder-unresolved', 'file': 'patterns.bend',
+     'old': 'S.bind(Unit,Fields,E.binder(bindings,token),u =>', 'new': 'S.bind(Unit,Fields,Done{Unit{}},u =>',
+     'witness': 'dotted-field-binder', 'actual': {'exit': 0}},
+    {'name': 'dotted-binder-scope-blind', 'file': 'scope.bend',
+     'old': 'Bool.or(Bool.not(String.contains(S.text(token),".")),bound(bindings,token)),u =>',
+     'new': 'Bool.not(String.contains(S.text(token),".")),u =>',
+     'witness': 'dotted-rebound-let',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tdotted-binder\t'}},
+    {'name': 'erased-let-resolved', 'file': 'check.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,U32.is_eq(q,0),u => Done{Unit{}},u => E.binder(bindings,token))',
+     'new': 'E.binder(bindings,token)',
+     'witness': 'dotted-erased-let',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tdotted-binder\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -767,7 +800,10 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'output-guard-files-ignored', 'output-guard-base-ignored', 'output-guard-single-basis',
                     'output-query-ignored', 'output-climb-ignored', 'root-bundle-contains-all',
                     'call-head-resolved-globally', 'type-operators-separate',
-                    'binding-type-continuation-invalid'}
+                    'binding-type-continuation-invalid', 'own-terms-unregistered',
+                    'own-constructors-unregistered', 'rooted-local-invalid', 'rooted-hash-invalid',
+                    'dotted-let-binder-unresolved', 'dotted-field-binder-unresolved',
+                    'dotted-binder-scope-blind', 'erased-let-resolved'}
 
 
 def mutants(fixtures):
@@ -835,12 +871,12 @@ def main():
              HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
              HERE / 'review-round2.json', HERE / 'review-round3.json', HERE / 'review-round4.json',
-             HERE / 'review-round5.json',
+             HERE / 'review-round5.json', HERE / 'review-round6.json',
              *sorted((ROOT / 'src/host').glob('*')),
              ROOT / 'tests/compiler-io-abi-2/expectations.json',
              *sorted((ROOT / 'tests/compiler-io-abi-2/reference').glob('*'))]
     paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3',
-                               'review-round4', 'review-round5')
+                               'review-round4', 'review-round5', 'review-round6')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -853,7 +889,8 @@ def main():
         round3, record['round3_reference'] = review_reference(manifest, 'review-round3')
         round4, record['round4_reference'] = review_reference(manifest, 'review-round4')
         round5, record['round5_reference'] = review_reference(manifest, 'review-round5')
-        review += round3 + round4 + round5
+        round6, record['round6_reference'] = review_reference(manifest, 'review-round6')
+        review += round3 + round4 + round5 + round6
         record['adapters'] = adapter_pins()
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}
