@@ -341,6 +341,13 @@ MUTANTS = [
     {'name': 'unspelled-own-target', 'file': 'literal-check.bend',
      'old': 'declares(G.find_constructor(types,name,0),id)', 'new': 'False{}',
      'fixture': 'own-n-literal-expr', 'verdict': (2, 'Invalid\tcheck\tunknown-type\t')},
+    # Exhaustion mutant: Nat.add(kn,t) re-counts t at every level of a recursion,
+    # so the frozen linear value becomes resource exhaustion in both lanes.
+    {'name': 'offset-nat-add', 'file': 'check.bend', 'import': 'import ./primitive-op.bend as R\n',
+     'old': 'run(n,Expression{spelled,Some{target}},catalog,current,scope)',
+     'new': 'run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},'
+            'catalog,current,scope)',
+     'fixture': 'offset-expression-depth', 'export': 'successor', 'arguments': [], 'exhausted': True, 'eval': True},
     # Display mutants: the frozen wrong display is the kill; any other output is not.
     {'name': 'constructor-tag-display', 'file': 'eval.bend', 'lane': 'eval',
      'old': 'shape(L.kind(definition),definition,value)', 'new': 'shape(None{},definition,value)',
@@ -381,6 +388,8 @@ def killed_by_value(m, f, compiler, folder):
     result = wasm(output, call)
     if 'trap' in m:
         reject(result, 5, 'HostFailure\twasm\t' + m['trap'])
+    elif m.get('exhausted'):
+        reject(result, 4, 'Exhausted\twasm\tresource-limit')
     else:
         require(m['wrong_tag'] != call['tag'], m)
         wasm_value(result, output, {**call, 'tag': m['wrong_tag']})
@@ -390,7 +399,8 @@ def killed_by_value(m, f, compiler, folder):
 def evaluated_wrong(m, f, folder):
     call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
     shown = 'wrong_display' in m
-    require(m['wrong_display'] != call['display'] if shown else m['wrong_tag'] != call['tag'], m)
+    require(shown or m.get('exhausted') or m['wrong_tag'] != call['tag'], m)
+    require(not shown or m['wrong_display'] != call['display'], m)
     evaluator = folder / 'eval.js'
     record = {'expected_display' if shown else 'expected_tag': call['display' if shown else 'tag'],
               'eval_build': built(folder / 'eval-cli.bend', evaluator)}
@@ -398,6 +408,9 @@ def evaluated_wrong(m, f, folder):
                      call['export'], 1048576, *call['arguments']])
     if shown:
         displayed(evaluated, {**call, 'display': m['wrong_display']})
+        return {**record, 'eval': evaluated}
+    if m.get('exhausted'):
+        reject(evaluated, 4, 'Exhausted\teval\tbudget\t')
         return {**record, 'eval': evaluated}
     wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
     require(evaluated['exit'] == 0 and evaluated['stderr'] == '' and
@@ -420,6 +433,9 @@ def mutants(fixtures):
         code = code.replace(m['old'], m['new'])
         if 'prepend' in m:
             code = code.replace('def decoded(', m['prepend'] + 'def decoded(')
+        if 'import' in m:
+            require(code.startswith('import Base\n'), (m['name'], 'import anchor'))
+            code = code.replace('import Base\n', 'import Base\n' + m['import'], 1)
         path.write_text(code)
         f = by_name[m['fixture']]
         record = {**m, 'sha256': digest(path)}
@@ -517,7 +533,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 32, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 33, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),

@@ -6,7 +6,6 @@ import ./scope.bend as E
 import ./patterns.bend as P
 import ./literal-check.bend as L
 import ./literal-base.bend as LB
-import ./primitive-op.bend as R
 import ./primitive.bend as O
 import ./literal-matrix.bend as M
 
@@ -205,7 +204,8 @@ def intrinsic_type(reference: G.TypeRef, next: U32 -> Result<S.Error,C.Checked>)
     case G.TypeRef{id,definition}: next(id)
 
 # Literals, Nat offsets and literal matches check against a known type; the
-# seed infers none of them. A parsed offset has at least one successor.
+# seed infers none of them. A parsed offset has at least one successor, and it
+# checks as its matrix spelling: Succ constructors around the shared tail.
 def annotated(wanted: Maybe<&2,U32>, token: S.Token, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match wanted:
     case None{}: C.invalid(C.Checked,"annotation-required",token)
@@ -264,9 +264,10 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Literal{+token,+kind,+number,+text},+wanted} C.Catalog{+types,sigs} _:
       S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types,wanted,M.literal(S.Literal{token,kind,number,text})),value => annotated(wanted,token,target => expected(token,Some{target},value)))
     case 1n+ +n Expression{S.Offset{+token,+count,+tail},wanted} C.Catalog{+types,sigs} _:
+      +spelled = M.literal(S.Offset{token,count,tail})
       annotated(wanted,token,+target =>
-        S.bind(U32,C.Checked,L.primitive_type(types,1,token,Some{target},M.literal(S.Offset{token,count,tail})),id =>
-          run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},catalog,current,scope)))
+        S.bind(U32,C.Checked,L.primitive_type(types,1,token,Some{target},spelled),id =>
+          run(n,Expression{spelled,Some{target}},catalog,current,scope)))
     case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
         intrinsic_type(reference,+id =>

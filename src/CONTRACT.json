@@ -294,7 +294,7 @@
     ],
     "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
     "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; every leaf checked, each path's first leaf before any other, and a failing leaf that its path does not select is Unsupported dead-arm, since the seed never checks it; Nat offsets 0..256, with `+` adjacent to the literal; `0n+t` reads as t, as in the seed. With Base, a literal or Nat offset arm on a datatype scrutinee is Invalid pattern-type; without it, the arm takes the literal-base-type rule.",
-    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee.",
+    "checking": "Literals and Nat offsets check against a known type, as in the seed: an unannotated binding is Invalid annotation-required, and a literal or Nat offset scrutinee is Invalid constructor-scrutinee. An expression offset kn+t checks as its matrix spelling, k Succ constructors around the shared tail, as in the seed; each successor takes three levels of the checker depth budget, so an offset above 1364 (less when nested deeper) is Exhausted check.",
     "intrinsic_registry": {
       "types": 4,
       "operations": 39,
@@ -372,8 +372,8 @@
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 32,
-    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, core transitions and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "proof_laws": 33,
+    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, core transitions, offset construction and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
     "unmet": [
       "R3/R7 owned storage and reclamation",
       "broader recursion",

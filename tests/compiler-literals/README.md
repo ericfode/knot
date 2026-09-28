@@ -24,7 +24,10 @@ in an arm that no value reaches first (duplicates, arms after a catch-all,
 `2n` and `3n+q` after `1n+p`, `SCon{'a', SNil{}}` after `"a"`), six
 seed-invalid controls (two reachable failing arms and four invalid patterns
 in unreachable arms), and a literal typed by a book's own Nat or U32 without
-Base. All four freezes are verified against seed 2.0.29,
+Base. Round 7 (one book, committed as `068539e` before its fix):
+expression offsets `1n+`, `2n+` (Base's `Nat.double`) and `3n+` through
+recursion 3000 to 4000 deep, with a `0n+t` control and a mismatch control.
+All four freezes are verified against seed 2.0.29,
 commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
 ## Mechanism
@@ -47,6 +50,19 @@ reads `0n+t` as t itself, whatever t's type; every parsed offset therefore
 spells at least one `Succ`. Arithmetic operator sugar, F32 and raw
 non-ASCII quoted text remain Unsupported, including seed-invalid unannotated
 operator sugar. Unsupported is not evidence that a source book is invalid.
+
+An expression offset checks as its matrix spelling, the expansion the
+pattern matrix uses (`M.literal`): `kn+t` is k `Succ` constructors around t,
+which is checked once and shared, as the seed builds it. Evaluation allocates
+k cells, so recursion through `1n+up(p)` or Base's `Nat.double`
+(`2n+double(p)`) is linear in its depth. Until round 7 it lowered to
+`Nat.add(kn,t)`, which counts both arguments and materializes a fresh Nat:
+about n²/2 cells over a depth-n recursion, Exhausted at `up(2000n)` in the
+evaluator and at `up(3400n)` in Wasm. Each successor costs three levels of
+the 4096-deep checker budget, so an expression offset above 1364 (less
+inside a deeper expression) is `Exhausted check budget`; it checked before,
+at O(k+|t|) per evaluation.
+Pattern offsets stop at 256 either way.
 
 The primitive pattern matrix specializes columns without changing row order.
 Numeric and Char tests require a default. Nat literals and offsets expand into
@@ -215,19 +231,21 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 125 fixture books, 481 fresh seed calls, 250 checks and 250 primary compilations.
-- 886 agreeing evaluator observations and 886 matching Node/Wasm observations;
-  182 additional evaluator rejections, giving 1068 evaluator observations total.
-- 34 byte-identical native/Bun module pairs and 68 complete Base trust audits.
+- 126 fixture books, 487 fresh seed calls, 252 checks and 252 primary compilations.
+- 898 agreeing evaluator observations and 898 matching Node/Wasm observations;
+  182 additional evaluator rejections, giving 1080 evaluator observations total.
+- 35 byte-identical native/Bun module pairs and 70 complete Base trust audits.
 - 182 rejected-compilation output-preservation probes and 182 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
   Node host observes enum results only, so these calls have no Wasm lane.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 32 filled laws; 23 type-correct semantic
-  mutants: five Wasm value kills, fourteen verdict kills and six evaluator kills.
-  The two dead-arm laws and the five own-type literal laws live in
+- Three complete proof entries, 33 filled laws; 24 type-correct semantic
+  mutants: five Wasm value kills, one exhaustion kill in both Wasm and the
+  evaluator, fourteen verdict kills and six evaluator kills.
+  The two dead-arm laws, the five own-type literal laws and the offset
+  spelling law live in
   `src/check-LAWS.bend`, beside the checker they describe, and the checker
   gate proves them.
 
@@ -253,7 +271,11 @@ restoring Invalid for a literal typed by a book's own datatype rejects the
 seed-valid own-nat-literal as `Invalid check literal-base-type`; skipping the
 literal-arm type check rejects the seed-valid own-nat-zero-pattern as
 `Invalid check pattern-type`; and ignoring the spelled constructor rejects the
-seed-valid own-n-literal-expr as `Invalid check unknown-type`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+seed-valid own-n-literal-expr as `Invalid check unknown-type`. The
+exhaustion mutant offset-nat-add restores the `Nat.add(kn,t)` lowering of an
+expression offset; `successor` in offset-expression-depth (frozen Yes) then
+reports `Exhausted wasm resource-limit` from its compiled module and
+`Exhausted eval budget` from its evaluator. The evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. Three display mutants
 are killed by an exact wrong display: skipping the primitive dispatch prints
 `'\0'` as `Chr{}` again, escaping both quotes everywhere prints `'"'` as

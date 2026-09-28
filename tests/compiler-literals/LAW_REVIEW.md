@@ -2,16 +2,17 @@
 
 Contract: [README.md](README.md), unchanged [expectations.json](expectations.json),
 the separately committed [supplemental.json](supplemental.json), the
-review-round-1 to round-6 [regressions.json](regressions.json) and the result
+review-round-1 to round-7 [regressions.json](regressions.json) and the result
 displays in [results.json](results.json). No law changes the seed oracle or
 weakens an existing compiler gate.
 
 | Family | Laws | Proof entry | Obligation |
 | --- | --- | --- | --- |
 | Algebra and reading | 20 | `src/literal-PROOF.bend` | Division/remainder by zero; wide left/right shifts with explicit `n >= 32` evidence; inhabited boundary 32; String append order, length count and a length-mismatch inequality through the accumulator traversals; an escape before `{` stays an escape; surrogate and scalar sequences; decimal maximum/overflow; full-bit signed LEB; NUL; legacy literal capability boundary; the displayed Char `'\''` and a String of every escape class read back through the reader as their codes; raw/escaped glyphs on both sides of each boundary |
-| Core source machine | 7 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; intrinsic argument state; default selection and scope; one String cell; a record's Char, U32, Nat and String fields display as their literals inside the `Name{a,b}` frame |
+| Core source machine | 8 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; the core of `2n+t` (two Succ constructs around t) builds exactly the cells of a literal's Natural state around t's shared value, in 9 transitions; intrinsic argument state; default selection and scope; one String cell; a record's Char, U32, Nat and String fields display as their literals inside the `Name{a,b}` frame |
 | Pattern matrix | 5 | `src/literal-matrix-PROOF.bend` | Zero/one offset, Nat/String constructor expansion and stable distinct numeric test order |
 | Dead leaves | 2 | `src/check-PROOF.bend` | A dead leaf's Invalid becomes `Unsupported check dead-arm` at the same phase and location; its Exhausted stays Exhausted |
+| Offset expressions | 1 | `src/check-PROOF.bend` | The checker lowers `2n+Zero{}` against an installed Nat to its matrix spelling: two Succ constructs around the checked tail, in any scope |
 | Own-type literals | 5 | `src/check-PROOF.bend` | `primitive_type`'s cases: an installed primitive wins for any target and spelling; without it, a Nat literal spelled `Succ` against a target declaring Zero/Succ is `Unsupported check literal-base-type`, one spelled `Zero` against a target declaring only Z/S is `Invalid check unknown-type`, a U32 word is Unsupported against any target, and a literal with no target is Invalid unknown-type, each at the literal's location |
 
 Every declaration is a `law` with a filled implementation in its complete proof
@@ -33,12 +34,22 @@ promotion has no law: the literal-patterns group is at 47968 of its 48000
 composition bytes. Three frozen books and a mutant pin it instead. For the
 same reason the round-5 dead-leaf helper and its two laws sit in
 `check.bend` and `check-LAWS.bend`, beside the checker walk that uses them;
-the checker gate runs their proof entry, and the 32 counted here are the
+the checker gate runs their proof entry, and the 33 counted here are the
 three literal entries only. The round-6 own-type laws sit there too, beside
 the checker that calls `L.primitive_type`; checker-laws is at 22435/48000
 bytes and literal-patterns is unchanged. Their spellings come from the
 matrix's own `M.literal`, so the laws state the case split on the expansion
-the seed uses, not on a copy of it. The walk order itself (live leaves before
+the seed uses, not on a copy of it. The round-7 offset
+law `offset_spelling` sits there for the same reason: `literal-core-LAWS`
+cannot import `check.bend` without closing the whole checker into
+literal-source-machine. It and `natural_offset` form one chain: the checker
+spells `kn+t` as k Succ constructs (`M.literal`, as the matrix does), and
+that core builds the literal's Natural cells around the shared tail. Both are
+concrete at k = 2; no induction over k is claimed, and the linear cost at
+depth rests on the frozen round-7 book and the offset-nat-add mutant. Each
+fails on a changed right-hand side (three successors), `natural_offset` at
+8 transitions, and `offset_spelling` against the restored `Nat.add`
+lowering. The walk order itself (live leaves before
 dead ones) has no law; the dead-before-live mutant and the live-arm controls
 pin it.
 
@@ -58,9 +69,10 @@ append-reversed, inferred-let-literal, kept-zero-offset,
 internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape,
 unlifted-promoted-column, refined-default-binder, all-leaf-invalid,
 dead-before-live, invalid-own-primitive, invalid-own-pattern,
-unspelled-own-target, constructor-tag-display,
+unspelled-own-target, offset-nat-add, constructor-tag-display,
 quote-blind-escape and raw-delete mutants. Mutants retain types and must produce the
-designated runtime disagreement or classification change; a broken compiler or
+designated runtime disagreement, classification change or, for
+offset-nat-add, resource exhaustion against the frozen value; a broken compiler or
 incomplete observation is not a successful mutation test. A deliberately false
 `append_order` (expecting `[97,99,98]`) is rejected by the proof entry.
 

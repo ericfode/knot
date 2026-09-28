@@ -97,3 +97,16 @@ law untargeted_literal:
   for +token: S.Token
   for spelling: S.Node
   {L.primitive_type(Nil{},3,token,None{},spelling) == Fail{S.Invalid{"check","unknown-type",S.at(token)}} : Result<S.Error,U32>}
+
+# An offset expression checks as its matrix spelling (M.literal): `2n+Zero{}`
+# is two Succ constructors around the checked tail, in any scope.
+law offset_spelling:
+  for +token: S.Token
+  for current: U32
+  for scope: E.Scope
+  {K.run(16n,K.Expression{S.Offset{token,2,S.Constructor{S.Token{"Zero",S.At{0,0,0,0}},Nil{}}},Some{0}},
+     C.Catalog{[C.Datatype{S.Token{"Nat",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"Zero",S.At{0,0,0,0}},Nil{}},
+       C.Constructor{S.Token{"Succ",S.At{0,0,0,0}},[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}]}]}],Nil{}},current,scope)
+   == Done{C.Checked{C.Construct{M.retoken("Succ",token),0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}],
+        [C.Construct{M.retoken("Succ",token),0,1,[C.Parameter{S.Token{"pred",S.At{0,0,0,0}},1,0}],
+          [C.Value{S.Token{"Zero",S.At{0,0,0,0}},0,0}]}]},0,Nil{}}} : Result<S.Error,C.Checked>}

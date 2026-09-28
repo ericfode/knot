@@ -30,3 +30,5 @@ def L.word_spells_any_target(token,number,ctors):
   {==}
 def L.untargeted_literal(token,spelling):
   {==}
+def L.offset_spelling(token,current,scope):
+  {==}

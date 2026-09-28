@@ -415,7 +415,13 @@ row, reachable or not, as in the seed. The 256-offset bound, quantities, first-p
 field descent and forward-call restrictions remain enforced. An offset's `+`
 must touch its literal (`1n+p`); a separated `+` is operator sugar,
 `Unsupported parse operator`. As in the seed, `0n+t` reads as t itself, so a
-parsed offset always spells a successor. Literals and Nat offsets check against
+parsed offset always spells a successor. An expression offset checks as that
+spelling, the matrix's own expansion: `kn+t` is k Succ constructors around the
+shared tail, as the seed builds it, so recursion through `1n+f(p)` allocates
+linearly in its depth. Each successor takes three levels of the 4096-deep
+checker budget; an expression offset above 1364 (less when nested deeper)
+is `Exhausted check`.
+Literals and Nat offsets check against
 a known type, as bare constructors do: an unannotated binding (`n = 3`,
 `n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
 scrutinee is `Invalid check constructor-scrutinee`, and with Base a literal or
@@ -486,13 +492,13 @@ Primitive Nat/String traversals in the evaluator are tail calls with
 accumulators, so both evaluator lanes reach the same bounds without host
 stack depth.
 
-Three complete new proof entries check 32 helper laws. They cover the required
+Three complete new proof entries check 33 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
 decoding and display round trips, core transitions and matrix expansion; they
 do not prove whole-compiler correctness or all-input intrinsic refinement. The
 registered literals gate compares the frozen accepted calls in both evaluator
 and compiler lanes, compares 61 frozen primitive and record result displays in
-both evaluator lanes, and kills 18 type-correct semantic mutants. The Wasm host
+both evaluator lanes, and kills 24 type-correct semantic mutants. The Wasm host
 observes enum results only, so result displays have no Wasm lane.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

@@ -125,8 +125,8 @@
   "totals": {
     "compiler": {
       "files": 65,
-      "declarations": 1149,
-      "unique_declarations": 967,
+      "declarations": 1153,
+      "unique_declarations": 969,
       "definitions": 711,
       "classes": 42
     },
@@ -47978,7 +47978,7 @@
     },
     {
       "file": "src/check-LAWS.bend",
-      "sha256": "4c7fe74a6bcfb822085fd690cbe1012e2044fe156c2f04bf2bd74297c0e7657a",
+      "sha256": "eb22fc4e50622d0978e3b810c7f016b0cca184db0d60c9c87711147590595491",
       "imports": [
         {
           "module": "Base",
@@ -48787,12 +48787,80 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/check-LAWS.bend::offset_spelling:law",
+          "name": "offset_spelling",
+          "key": "src/check-LAWS.offset_spelling",
+          "kind": "law",
+          "lines": [
+            103,
+            112
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "Some",
+            "True",
+            "U32",
+            "src/check.Expression",
+            "src/check.run",
+            "src/core.Catalog",
+            "src/core.Checked",
+            "src/core.Construct",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/core.Value",
+            "src/literal-matrix.retoken",
+            "src/scope.Scope",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Offset",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/check.run",
+            "src/core.Checked",
+            "src/literal-matrix.retoken",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/check-PROOF.bend",
-      "sha256": "3bb9d2d7f6e99c17a2cf0c3eba033740fe785480a158c8dc20795fb2361e73f6",
+      "sha256": "20c53a83e5360d7b16443d750de0f896570c24e749ecaceb89edcb3a239f30f4",
       "imports": [
         {
           "module": "Base",
@@ -49571,12 +49639,79 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/check-PROOF.bend::L.offset_spelling:law_fill",
+          "name": "L.offset_spelling",
+          "key": "src/check-LAWS.offset_spelling",
+          "kind": "law_fill",
+          "lines": [
+            33,
+            34
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "Some",
+            "True",
+            "U32",
+            "src/check.Expression",
+            "src/check.run",
+            "src/core.Catalog",
+            "src/core.Checked",
+            "src/core.Construct",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/core.Value",
+            "src/literal-matrix.retoken",
+            "src/scope.Scope",
+            "src/syntax.At",
+            "src/syntax.Constructor",
+            "src/syntax.Error",
+            "src/syntax.Offset",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/check.run",
+            "src/core.Checked",
+            "src/literal-matrix.retoken",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/check.bend",
-      "sha256": "a6aedd81c78d167a8c50d90260802c5ff03b8f985f0dcc6944e114b53212fa67",
+      "sha256": "01344e362440ebf505e968f493cd272c9227aa642afa34449a50b4ee0789c58b",
       "imports": [
         {
           "module": "Base",
@@ -49627,12 +49762,6 @@
           "feature": "imports.local"
         },
         {
-          "module": "./primitive-op.bend",
-          "alias": "R",
-          "file": "src/primitive-op.bend",
-          "feature": "imports.local"
-        },
-        {
           "module": "./primitive.bend",
           "alias": "O",
           "file": "src/primitive.bend",
@@ -49646,6 +49775,7 @@
         }
       ],
       "features": [
+        "bindings",
         "calls",
         "calls.variable",
         "captures",
@@ -49680,8 +49810,8 @@
           "key": "src/check.Mode",
           "kind": "datatype",
           "lines": [
-            13,
-            21
+            12,
+            20
           ],
           "features": [
             "fields",
@@ -49728,8 +49858,8 @@
           "key": "src/check.expected",
           "kind": "definition",
           "lines": [
-            23,
-            27
+            22,
+            26
           ],
           "features": [
             "calls",
@@ -49772,13 +49902,13 @@
           ],
           "captures": [
             {
-              "offset": 1105,
+              "offset": 1073,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 1122,
+              "offset": 1090,
               "names": [
                 "token"
               ]
@@ -49806,8 +49936,8 @@
           "key": "src/check.enum_at",
           "kind": "definition",
           "lines": [
-            29,
-            33
+            28,
+            32
           ],
           "features": [
             "calls",
@@ -49850,13 +49980,13 @@
           ],
           "captures": [
             {
-              "offset": 1411,
+              "offset": 1379,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 1427,
+              "offset": 1395,
               "names": [
                 "index",
                 "tail"
@@ -49887,8 +50017,8 @@
           "key": "src/check.annotation_id",
           "kind": "definition",
           "lines": [
-            35,
-            37
+            34,
+            36
           ],
           "features": [
             "constructors",
@@ -49933,8 +50063,8 @@
           "key": "src/check.annotation",
           "kind": "definition",
           "lines": [
-            39,
-            43
+            38,
+            42
           ],
           "features": [
             "calls",
@@ -49996,8 +50126,8 @@
           "key": "src/check.constant",
           "kind": "definition",
           "lines": [
-            45,
-            49
+            44,
+            48
           ],
           "features": [
             "calls",
@@ -50044,7 +50174,7 @@
           ],
           "captures": [
             {
-              "offset": 2147,
+              "offset": 2115,
               "names": [
                 "tag",
                 "token",
@@ -50052,7 +50182,7 @@
               ]
             },
             {
-              "offset": 2210,
+              "offset": 2178,
               "names": [
                 "token"
               ]
@@ -50083,8 +50213,8 @@
           "key": "src/check.constructor_result",
           "kind": "definition",
           "lines": [
-            51,
-            57
+            50,
+            56
           ],
           "features": [
             "calls",
@@ -50137,7 +50267,7 @@
           ],
           "captures": [
             {
-              "offset": 2692,
+              "offset": 2660,
               "names": [
                 "args",
                 "params",
@@ -50148,7 +50278,7 @@
               ]
             },
             {
-              "offset": 2774,
+              "offset": 2742,
               "names": [
                 "token"
               ]
@@ -50180,8 +50310,8 @@
           "key": "src/check.constructor",
           "kind": "definition",
           "lines": [
-            59,
-            64
+            58,
+            63
           ],
           "features": [
             "calls",
@@ -50236,7 +50366,7 @@
           ],
           "captures": [
             {
-              "offset": 3374,
+              "offset": 3342,
               "names": [
                 "next",
                 "params",
@@ -50246,7 +50376,7 @@
               ]
             },
             {
-              "offset": 3427,
+              "offset": 3395,
               "names": [
                 "params",
                 "reference",
@@ -50255,7 +50385,7 @@
               ]
             },
             {
-              "offset": 3493,
+              "offset": 3461,
               "names": [
                 "token"
               ]
@@ -50287,8 +50417,8 @@
           "key": "src/check.variable",
           "kind": "definition",
           "lines": [
-            66,
-            70
+            65,
+            69
           ],
           "features": [
             "calls",
@@ -50348,8 +50478,8 @@
           "key": "src/check.bound",
           "kind": "definition",
           "lines": [
-            72,
-            76
+            71,
+            75
           ],
           "features": [
             "calls",
@@ -50407,8 +50537,8 @@
           "key": "src/check.callable",
           "kind": "definition",
           "lines": [
-            78,
-            82
+            77,
+            81
           ],
           "features": [
             "calls",
@@ -50450,13 +50580,13 @@
           ],
           "captures": [
             {
-              "offset": 4432,
+              "offset": 4400,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 4483,
+              "offset": 4451,
               "names": [
                 "current",
                 "index",
@@ -50466,13 +50596,13 @@
               ]
             },
             {
-              "offset": 4575,
+              "offset": 4543,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 4631,
+              "offset": 4599,
               "names": [
                 "index",
                 "sig"
@@ -50502,8 +50632,8 @@
           "key": "src/check.call_result",
           "kind": "definition",
           "lines": [
-            84,
-            89
+            83,
+            88
           ],
           "features": [
             "calls",
@@ -50551,13 +50681,13 @@
           ],
           "captures": [
             {
-              "offset": 5036,
+              "offset": 5004,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 5097,
+              "offset": 5065,
               "names": [
                 "index",
                 "items",
@@ -50594,8 +50724,8 @@
           "key": "src/check.prepend_argument",
           "kind": "definition",
           "lines": [
-            91,
-            95
+            90,
+            94
           ],
           "features": [
             "calls",
@@ -50639,7 +50769,7 @@
           ],
           "captures": [
             {
-              "offset": 5497,
+              "offset": 5465,
               "names": [
                 "items",
                 "term"
@@ -50669,8 +50799,8 @@
           "key": "src/check.let_result",
           "kind": "definition",
           "lines": [
-            97,
-            101
+            96,
+            100
           ],
           "features": [
             "calls",
@@ -50710,7 +50840,7 @@
           ],
           "captures": [
             {
-              "offset": 5926,
+              "offset": 5894,
               "names": [
                 "initial",
                 "level",
@@ -50742,8 +50872,8 @@
           "key": "src/check.pattern_arity",
           "kind": "definition",
           "lines": [
-            103,
-            104
+            102,
+            103
           ],
           "features": [
             "calls",
@@ -50783,13 +50913,13 @@
           ],
           "captures": [
             {
-              "offset": 6299,
+              "offset": 6267,
               "names": [
                 "reference"
               ]
             },
             {
-              "offset": 6320,
+              "offset": 6288,
               "names": [
                 "token"
               ]
@@ -50815,8 +50945,8 @@
           "key": "src/check.pattern",
           "kind": "definition",
           "lines": [
-            108,
-            118
+            107,
+            117
           ],
           "features": [
             "calls",
@@ -50866,7 +50996,7 @@
           ],
           "captures": [
             {
-              "offset": 6733,
+              "offset": 6701,
               "names": [
                 "args",
                 "token",
@@ -50874,7 +51004,7 @@
               ]
             },
             {
-              "offset": 6835,
+              "offset": 6803,
               "names": [
                 "args",
                 "reference",
@@ -50910,8 +51040,8 @@
           "key": "src/check.arm_pattern",
           "kind": "definition",
           "lines": [
-            123,
-            131
+            122,
+            130
           ],
           "features": [
             "calls",
@@ -50956,7 +51086,7 @@
           ],
           "captures": [
             {
-              "offset": 7860,
+              "offset": 7828,
               "names": [
                 "kind",
                 "number",
@@ -50966,7 +51096,7 @@
               ]
             },
             {
-              "offset": 8082,
+              "offset": 8050,
               "names": [
                 "count",
                 "tail",
@@ -50997,8 +51127,8 @@
           "key": "src/check.pattern_id",
           "kind": "definition",
           "lines": [
-            133,
-            137
+            132,
+            136
           ],
           "features": [
             "calls",
@@ -51039,7 +51169,7 @@
           ],
           "captures": [
             {
-              "offset": 8413,
+              "offset": 8381,
               "names": [
                 "seen",
                 "tag",
@@ -51047,19 +51177,19 @@
               ]
             },
             {
-              "offset": 8476,
+              "offset": 8444,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 8522,
+              "offset": 8490,
               "names": [
                 "tag"
               ]
             },
             {
-              "offset": 8538,
+              "offset": 8506,
               "names": [
                 "token"
               ]
@@ -51087,8 +51217,8 @@
           "key": "src/check.complete_arms",
           "kind": "definition",
           "lines": [
-            139,
-            142
+            138,
+            141
           ],
           "features": [
             "calls",
@@ -51131,7 +51261,7 @@
           ],
           "captures": [
             {
-              "offset": 8871,
+              "offset": 8839,
               "names": [
                 "token"
               ]
@@ -51159,8 +51289,8 @@
           "key": "src/check.patterns",
           "kind": "definition",
           "lines": [
-            144,
-            151
+            143,
+            150
           ],
           "features": [
             "calls",
@@ -51213,14 +51343,14 @@
           ],
           "captures": [
             {
-              "offset": 9141,
+              "offset": 9109,
               "names": [
                 "seen",
                 "token"
               ]
             },
             {
-              "offset": 9301,
+              "offset": 9269,
               "names": [
                 "arm",
                 "seen",
@@ -51231,7 +51361,7 @@
               ]
             },
             {
-              "offset": 9377,
+              "offset": 9345,
               "names": [
                 "seen",
                 "tail",
@@ -51266,8 +51396,8 @@
           "key": "src/check.prepend_arm",
           "kind": "definition",
           "lines": [
-            153,
-            157
+            152,
+            156
           ],
           "features": [
             "calls",
@@ -51334,8 +51464,8 @@
           "key": "src/check.case_result",
           "kind": "definition",
           "lines": [
-            159,
-            164
+            158,
+            163
           ],
           "features": [
             "calls",
@@ -51383,7 +51513,7 @@
           ],
           "captures": [
             {
-              "offset": 10230,
+              "offset": 10198,
               "names": [
                 "items",
                 "level",
@@ -51416,8 +51546,8 @@
           "key": "src/check.call_body",
           "kind": "definition",
           "lines": [
-            166,
-            170
+            165,
+            169
           ],
           "features": [
             "calls",
@@ -51466,7 +51596,7 @@
           ],
           "captures": [
             {
-              "offset": 10751,
+              "offset": 10719,
               "names": [
                 "current",
                 "index",
@@ -51477,7 +51607,7 @@
               ]
             },
             {
-              "offset": 10847,
+              "offset": 10815,
               "names": [
                 "token",
                 "wanted"
@@ -51505,8 +51635,8 @@
           "key": "src/check.binding_body",
           "kind": "definition",
           "lines": [
-            172,
-            176
+            171,
+            175
           ],
           "features": [
             "calls",
@@ -51551,7 +51681,7 @@
           ],
           "captures": [
             {
-              "offset": 11188,
+              "offset": 11156,
               "names": [
                 "next",
                 "q",
@@ -51561,7 +51691,7 @@
               ]
             },
             {
-              "offset": 11263,
+              "offset": 11231,
               "names": [
                 "next",
                 "q",
@@ -51592,8 +51722,8 @@
           "key": "src/check.match_body",
           "kind": "definition",
           "lines": [
-            178,
-            184
+            177,
+            183
           ],
           "features": [
             "calls",
@@ -51651,7 +51781,7 @@
           ],
           "captures": [
             {
-              "offset": 11690,
+              "offset": 11658,
               "names": [
                 "known",
                 "level",
@@ -51666,7 +51796,7 @@
               ]
             },
             {
-              "offset": 11799,
+              "offset": 11767,
               "names": [
                 "level",
                 "next",
@@ -51675,7 +51805,7 @@
               ]
             },
             {
-              "offset": 11861,
+              "offset": 11829,
               "names": [
                 "inspected",
                 "level",
@@ -51710,8 +51840,8 @@
           "key": "src/check.arm_body",
           "kind": "definition",
           "lines": [
-            186,
-            188
+            185,
+            187
           ],
           "features": [
             "calls",
@@ -51757,8 +51887,8 @@
           "key": "src/check.arm_scope",
           "kind": "definition",
           "lines": [
-            190,
-            192
+            189,
+            191
           ],
           "features": [
             "calls",
@@ -51808,8 +51938,8 @@
           "key": "src/check.rebuilt",
           "kind": "definition",
           "lines": [
-            194,
-            197
+            193,
+            196
           ],
           "features": [
             "calls",
@@ -51869,8 +51999,8 @@
           "key": "src/check.literal_constructor",
           "kind": "definition",
           "lines": [
-            199,
-            201
+            198,
+            200
           ],
           "features": [
             "calls",
@@ -51918,8 +52048,8 @@
           "key": "src/check.intrinsic_type",
           "kind": "definition",
           "lines": [
-            203,
-            205
+            202,
+            204
           ],
           "features": [
             "calls",
@@ -52058,7 +52188,7 @@
           ],
           "captures": [
             {
-              "offset": 13731,
+              "offset": 13781,
               "names": [
                 "body",
                 "level",
@@ -52280,9 +52410,10 @@
           "kind": "definition",
           "lines": [
             241,
-            333
+            334
           ],
           "features": [
+            "bindings",
             "calls",
             "captures",
             "constructors",
@@ -52290,7 +52421,6 @@
             "function-values",
             "generics",
             "lambdas",
-            "literals.list",
             "literals.nat",
             "literals.string",
             "literals.u32",
@@ -52388,7 +52518,6 @@
             "src/literal-matrix.lookup",
             "src/patterns.Fields",
             "src/patterns.branch",
-            "src/primitive-op.NAdd",
             "src/primitive.output",
             "src/scope.Scope",
             "src/scope.find_level",
@@ -52424,14 +52553,14 @@
           ],
           "captures": [
             {
-              "offset": 15633,
+              "offset": 15683,
               "names": [
                 "column",
                 "target"
               ]
             },
             {
-              "offset": 16026,
+              "offset": 16076,
               "names": [
                 "catalog",
                 "current",
@@ -52445,7 +52574,7 @@
               ]
             },
             {
-              "offset": 16127,
+              "offset": 16177,
               "names": [
                 "fields",
                 "head",
@@ -52453,7 +52582,7 @@
               ]
             },
             {
-              "offset": 16678,
+              "offset": 16728,
               "names": [
                 "catalog",
                 "current",
@@ -52464,53 +52593,50 @@
               ]
             },
             {
-              "offset": 16777,
+              "offset": 16827,
               "names": [
                 "first"
               ]
             },
             {
-              "offset": 17040,
+              "offset": 17090,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 17072,
+              "offset": 17122,
               "names": [
                 "token",
                 "value"
               ]
             },
             {
-              "offset": 17239,
+              "offset": 17344,
               "names": [
                 "catalog",
-                "count",
                 "current",
                 "n",
                 "scope",
-                "tail",
+                "spelled",
                 "token",
                 "types"
               ]
             },
             {
-              "offset": 17362,
+              "offset": 17437,
               "names": [
                 "catalog",
-                "count",
                 "current",
                 "n",
                 "scope",
-                "tail",
-                "target",
-                "token"
+                "spelled",
+                "target"
               ]
             },
             {
-              "offset": 17669,
+              "offset": 17686,
               "names": [
                 "args",
                 "catalog",
@@ -52524,7 +52650,7 @@
               ]
             },
             {
-              "offset": 17715,
+              "offset": 17732,
               "names": [
                 "args",
                 "catalog",
@@ -52538,7 +52664,7 @@
               ]
             },
             {
-              "offset": 17792,
+              "offset": 17809,
               "names": [
                 "args",
                 "catalog",
@@ -52552,7 +52678,7 @@
               ]
             },
             {
-              "offset": 17899,
+              "offset": 17916,
               "names": [
                 "id",
                 "op",
@@ -52561,14 +52687,14 @@
               ]
             },
             {
-              "offset": 17985,
+              "offset": 18002,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 18143,
+              "offset": 18160,
               "names": [
                 "catalog",
                 "current",
@@ -52579,7 +52705,7 @@
               ]
             },
             {
-              "offset": 18218,
+              "offset": 18235,
               "names": [
                 "catalog",
                 "current",
@@ -52588,14 +52714,14 @@
               ]
             },
             {
-              "offset": 18270,
+              "offset": 18287,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 18462,
+              "offset": 18479,
               "names": [
                 "args",
                 "catalog",
@@ -52608,7 +52734,7 @@
               ]
             },
             {
-              "offset": 18557,
+              "offset": 18574,
               "names": [
                 "args",
                 "catalog",
@@ -52622,7 +52748,7 @@
               ]
             },
             {
-              "offset": 18652,
+              "offset": 18669,
               "names": [
                 "args",
                 "catalog",
@@ -52634,13 +52760,13 @@
               ]
             },
             {
-              "offset": 18716,
+              "offset": 18733,
               "names": [
                 "types"
               ]
             },
             {
-              "offset": 18910,
+              "offset": 18927,
               "names": [
                 "args",
                 "catalog",
@@ -52652,7 +52778,7 @@
               ]
             },
             {
-              "offset": 19002,
+              "offset": 19019,
               "names": [
                 "args",
                 "catalog",
@@ -52664,7 +52790,7 @@
               ]
             },
             {
-              "offset": 19062,
+              "offset": 19079,
               "names": [
                 "args",
                 "catalog",
@@ -52675,13 +52801,13 @@
               ]
             },
             {
-              "offset": 19335,
+              "offset": 19352,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 19369,
+              "offset": 19386,
               "names": [
                 "ann",
                 "body",
@@ -52698,7 +52824,7 @@
               ]
             },
             {
-              "offset": 19435,
+              "offset": 19452,
               "names": [
                 "body",
                 "catalog",
@@ -52714,7 +52840,7 @@
               ]
             },
             {
-              "offset": 19552,
+              "offset": 19569,
               "names": [
                 "body",
                 "catalog",
@@ -52729,7 +52855,7 @@
               ]
             },
             {
-              "offset": 19617,
+              "offset": 19634,
               "names": [
                 "body",
                 "catalog",
@@ -52743,7 +52869,7 @@
               ]
             },
             {
-              "offset": 19726,
+              "offset": 19743,
               "names": [
                 "initial",
                 "next",
@@ -52752,7 +52878,7 @@
               ]
             },
             {
-              "offset": 19931,
+              "offset": 19948,
               "names": [
                 "arms",
                 "catalog",
@@ -52765,7 +52891,7 @@
               ]
             },
             {
-              "offset": 20011,
+              "offset": 20028,
               "names": [
                 "arms",
                 "binding",
@@ -52779,7 +52905,7 @@
               ]
             },
             {
-              "offset": 20049,
+              "offset": 20066,
               "names": [
                 "arms",
                 "binding",
@@ -52791,7 +52917,7 @@
               ]
             },
             {
-              "offset": 20138,
+              "offset": 20155,
               "names": [
                 "binding",
                 "catalog",
@@ -52802,7 +52928,7 @@
               ]
             },
             {
-              "offset": 20245,
+              "offset": 20262,
               "names": [
                 "binding",
                 "catalog",
@@ -52814,7 +52940,7 @@
               ]
             },
             {
-              "offset": 20352,
+              "offset": 20369,
               "names": [
                 "binding",
                 "body",
@@ -52822,7 +52948,7 @@
               ]
             },
             {
-              "offset": 20415,
+              "offset": 20432,
               "names": [
                 "arms",
                 "binding",
@@ -52836,7 +52962,7 @@
               ]
             },
             {
-              "offset": 20479,
+              "offset": 20496,
               "names": [
                 "arms",
                 "catalog",
@@ -52848,7 +52974,7 @@
               ]
             },
             {
-              "offset": 20949,
+              "offset": 20966,
               "names": [
                 "catalog",
                 "current",
@@ -52860,14 +52986,14 @@
               ]
             },
             {
-              "offset": 21051,
+              "offset": 21068,
               "names": [
                 "checked",
                 "token"
               ]
             },
             {
-              "offset": 21462,
+              "offset": 21479,
               "names": [
                 "body",
                 "catalog",
@@ -52883,7 +53009,7 @@
               ]
             },
             {
-              "offset": 21503,
+              "offset": 21520,
               "names": [
                 "body",
                 "catalog",
@@ -52900,7 +53026,7 @@
               ]
             },
             {
-              "offset": 21589,
+              "offset": 21606,
               "names": [
                 "body",
                 "catalog",
@@ -52915,7 +53041,7 @@
               ]
             },
             {
-              "offset": 21628,
+              "offset": 21645,
               "names": [
                 "body",
                 "catalog",
@@ -52930,7 +53056,7 @@
               ]
             },
             {
-              "offset": 21637,
+              "offset": 21654,
               "names": [
                 "body",
                 "bound",
@@ -52946,7 +53072,7 @@
               ]
             },
             {
-              "offset": 21742,
+              "offset": 21759,
               "names": [
                 "catalog",
                 "current",
@@ -52961,7 +53087,7 @@
               ]
             },
             {
-              "offset": 21855,
+              "offset": 21872,
               "names": [
                 "checked",
                 "fields",
@@ -52969,7 +53095,7 @@
               ]
             },
             {
-              "offset": 22288,
+              "offset": 22305,
               "names": [
                 "catalog",
                 "current",
@@ -52979,7 +53105,7 @@
               ]
             },
             {
-              "offset": 22336,
+              "offset": 22353,
               "names": [
                 "catalog",
                 "current",
@@ -52988,7 +53114,7 @@
               ]
             },
             {
-              "offset": 22564,
+              "offset": 22581,
               "names": [
                 "params",
                 "tag",
@@ -52997,7 +53123,7 @@
               ]
             },
             {
-              "offset": 22989,
+              "offset": 23006,
               "names": [
                 "catalog",
                 "current",
@@ -53009,7 +53135,7 @@
               ]
             },
             {
-              "offset": 23098,
+              "offset": 23115,
               "names": [
                 "checked",
                 "token"
@@ -53101,7 +53227,6 @@
               "src/literal-matrix.MDefault",
               "src/literal-matrix.MLeaves",
               "src/literal-matrix.MatrixLeaf",
-              "src/primitive-op.NAdd",
               "src/scope.Scope",
               "src/syntax.Arm",
               "src/syntax.At",
@@ -53124,8 +53249,8 @@
           "key": "src/check.checked_function",
           "kind": "definition",
           "lines": [
-            335,
-            337
+            336,
+            338
           ],
           "features": [
             "constructors",
@@ -53160,8 +53285,8 @@
           "key": "src/check.function_body",
           "kind": "definition",
           "lines": [
-            339,
-            342
+            340,
+            343
           ],
           "features": [
             "calls",
@@ -53209,7 +53334,7 @@
           ],
           "captures": [
             {
-              "offset": 23731,
+              "offset": 23748,
               "names": [
                 "signature"
               ]
@@ -53239,8 +53364,8 @@
           "key": "src/check.functions",
           "kind": "definition",
           "lines": [
-            344,
-            354
+            345,
+            355
           ],
           "features": [
             "calls",
@@ -53295,7 +53420,7 @@
           ],
           "captures": [
             {
-              "offset": 24355,
+              "offset": 24372,
               "names": [
                 "catalog",
                 "depth",
@@ -53305,7 +53430,7 @@
               ]
             },
             {
-              "offset": 24474,
+              "offset": 24491,
               "names": [
                 "head"
               ]
@@ -53337,8 +53462,8 @@
           "key": "src/check.enum_constructors",
           "kind": "definition",
           "lines": [
-            358,
-            363
+            359,
+            364
           ],
           "features": [
             "calls",
@@ -53396,8 +53521,8 @@
           "key": "src/check.enum_profile",
           "kind": "definition",
           "lines": [
-            365,
-            369
+            366,
+            370
           ],
           "features": [
             "calls",
@@ -53436,7 +53561,7 @@
           ],
           "captures": [
             {
-              "offset": 25247,
+              "offset": 25264,
               "names": [
                 "tail"
               ]
@@ -53464,8 +53589,8 @@
           "key": "src/check.resolved",
           "kind": "definition",
           "lines": [
-            371,
-            374
+            372,
+            375
           ],
           "features": [
             "calls",
@@ -53506,7 +53631,7 @@
           ],
           "captures": [
             {
-              "offset": 25498,
+              "offset": 25515,
               "names": [
                 "types"
               ]
@@ -53532,8 +53657,8 @@
           "key": "src/check.check",
           "kind": "definition",
           "lines": [
-            376,
-            381
+            377,
+            382
           ],
           "features": [
             "calls",
@@ -53581,7 +53706,7 @@
           ],
           "captures": [
             {
-              "offset": 25771,
+              "offset": 25788,
               "names": [
                 "n",
                 "nodes"
@@ -67501,7 +67626,7 @@
     },
     {
       "file": "src/literal-core-LAWS.bend",
-      "sha256": "aa431abdf8eeae87157e63da892ce3dcefb15910357b06be3ff4a863a97351f4",
+      "sha256": "e4acee6423bb2517612337e31875db08d2eea917c7ceca69fa6d93e66dad447e",
       "imports": [
         {
           "module": "Base",
@@ -67670,13 +67795,70 @@
           }
         },
         {
+          "id": "src/literal-core-LAWS.bend::natural_offset:law",
+          "name": "natural_offset",
+          "key": "src/literal-core-LAWS.natural_offset",
+          "kind": "law",
+          "lines": [
+            24,
+            32
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "U32",
+            "src/core.Book",
+            "src/core.Construct",
+            "src/core.Parameter",
+            "src/core.Reference",
+            "src/eval.Entry",
+            "src/eval.Evaluate",
+            "src/eval.Natural",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-core-LAWS.bend::intrinsic_arguments:law",
           "name": "intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law",
           "lines": [
-            22,
-            29
+            34,
+            41
           ],
           "features": [
             "calls",
@@ -67738,8 +67920,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law",
           "lines": [
-            31,
-            35
+            43,
+            47
           ],
           "features": [
             "calls",
@@ -67786,8 +67968,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law",
           "lines": [
-            37,
-            42
+            49,
+            54
           ],
           "features": [
             "calls",
@@ -67840,8 +68022,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law",
           "lines": [
-            44,
-            52
+            56,
+            64
           ],
           "features": [
             "calls",
@@ -67896,8 +68078,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law",
           "lines": [
-            54,
-            62
+            66,
+            74
           ],
           "features": [
             "calls",
@@ -67944,7 +68126,7 @@
     },
     {
       "file": "src/literal-core-PROOF.bend",
-      "sha256": "7d8652d9baa110e11019df5d2164fe6a63dae3c98e4cfbf8e0332412adfe4804",
+      "sha256": "d23a100c0d4d7a3a1006d75cb250e5c022db0e0d91f447c0b2eebbca74251c9f",
       "imports": [
         {
           "module": "Base",
@@ -68101,13 +68283,69 @@
           }
         },
         {
+          "id": "src/literal-core-PROOF.bend::L.natural_offset:law_fill",
+          "name": "L.natural_offset",
+          "key": "src/literal-core-LAWS.natural_offset",
+          "kind": "law_fill",
+          "lines": [
+            7,
+            7
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "Result",
+            "U32",
+            "src/core.Book",
+            "src/core.Construct",
+            "src/core.Parameter",
+            "src/core.Reference",
+            "src/eval.Entry",
+            "src/eval.Evaluate",
+            "src/eval.Natural",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/eval.Value",
+            "src/eval.run",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/literal-core-PROOF.bend::L.intrinsic_arguments:law_fill",
           "name": "L.intrinsic_arguments",
           "key": "src/literal-core-LAWS.intrinsic_arguments",
           "kind": "law_fill",
           "lines": [
-            7,
-            7
+            8,
+            8
           ],
           "features": [
             "calls",
@@ -68168,8 +68406,8 @@
           "key": "src/literal-core-LAWS.default_selection",
           "kind": "law_fill",
           "lines": [
-            8,
-            8
+            9,
+            9
           ],
           "features": [
             "calls",
@@ -68216,8 +68454,8 @@
           "key": "src/literal-core-LAWS.default_scope",
           "kind": "law_fill",
           "lines": [
-            9,
-            12
+            10,
+            13
           ],
           "features": [
             "calls",
@@ -68276,8 +68514,8 @@
           "key": "src/literal-core-LAWS.text_cell",
           "kind": "law_fill",
           "lines": [
-            13,
-            13
+            14,
+            14
           ],
           "features": [
             "calls",
@@ -68331,8 +68569,8 @@
           "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
           "kind": "law_fill",
           "lines": [
-            14,
-            14
+            15,
+            15
           ],
           "features": [
             "calls",

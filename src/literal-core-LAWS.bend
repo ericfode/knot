@@ -19,6 +19,18 @@ law natural_cell:
   {E.step(E.Natural{id,1,value,frames},C.Book{Nil{},Nil{}}) ==
     Done{E.Natural{id,0,E.Object{id,1,[value]},frames}} : Result<S.Error,E.State>}
 
+# `2n+t` checks as its matrix spelling Succ{Succ{t}}; that core builds the
+# cells of a literal's Natural state around t's shared value instead of Zero.
+law natural_offset:
+  for +id: U32
+  for +token: S.Token
+  for +field: S.Token
+  for tail: S.Token
+  for +value: E.Value
+  {E.run(9n,E.Evaluate{C.Construct{token,id,1,[C.Parameter{field,1,id}],
+      [C.Construct{token,id,1,[C.Parameter{field,1,id}],[C.Reference{tail,0,id}]}]},[E.Entry{0,value}],Nil{}},C.Book{Nil{},Nil{}}) ==
+    E.run(3n,E.Natural{id,2,value,Nil{}},C.Book{Nil{},Nil{}}) : Result<S.Error,E.Value>}
+
 law intrinsic_arguments:
   for token: S.Token
   for +id: U32
