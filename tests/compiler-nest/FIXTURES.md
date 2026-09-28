@@ -86,12 +86,13 @@ Negatives name their nearby valid control in `control`.
 |---|---|---|---|---|
 | Multi-scrutinee `match a b:` | `multi-table`, `multi-three` | `multi-var-column-reorder`, `multi-shadow-binder` | `multi-ctor-column-reorder` (var-column-reorder) | |
 | Wildcard / variable patterns | `wildcard-default`, `variable-rebind`, `variable-reusable` | `forward-bare-binder` | `variable-affine-overuse` (variable-reusable), `bare-constructor-binder` (forward-bare-binder), `forward-constructor-pattern` (forward-bare-binder) | |
-| Nested constructor patterns | `nested-pair`, `nested-sum` | `nested-alias-reconstruct` | `nested-missing` (nested-pair) | `generic-box-pattern` |
+| Nested constructor patterns | `nested-pair`, `nested-sum` | `nested-alias-reconstruct` | `nested-missing` (nested-pair) | |
 | First-match order | `first-match-multi` and `-swapped`, `first-match-nested` and `-swapped` | `first-match-duplicate-arm` | | |
 | Unreachable rows | `unreachable-after-wildcard` | `unreachable-type-error`, `unreachable-free-name` | `unreachable-pattern-type` (after-wildcard) | |
 | Exhaustiveness | (every accepted fixture) | `empty-type` | `multi-missing` (first-match-multi), `nested-missing`, `empty-match` (empty-type) | |
 | Erased / affine nested fields | `erased-nested-ignore`, `affine-nested-promote` | | `erased-nested-inspect`, `erased-nested-live-use` (both: erased-nested-ignore), `affine-nested-reuse` (affine-nested-promote) | |
-| Structural recursion + nesting | `rec-even-nested`, `rec-multi-descent`, `rec-list-nested` | | `rec-swapped-args` (multi-descent), `rec-alias` (even-nested) | `closure-parameter` |
+| Structural recursion + nesting | `rec-even-nested`, `rec-multi-descent`, `rec-list-nested` | | `rec-swapped-args` (multi-descent), `rec-alias` (even-nested) | |
+| Knot-specific (seed-accepted, beyond this stage) | | | | `closure-parameter` (closure in an arm), `generic-box-pattern` (nested pattern through a generic) |
 
 **Totals:**
 
