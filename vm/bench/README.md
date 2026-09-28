@@ -39,11 +39,13 @@ lane's start-up: a native process start costs about 15 M instructions, which is
 negligible for the first five workloads but about 5% of `sha256-64k`, whose single
 64 KiB hash lasts about 10 ms. Repeat that one enough to be timed, or compare cycles.
 
-**The workloads need reclamation.** Each allocates about 10^6–10^9 cells and
-activations in total while its live set stays small. Under a bump arena without release they
-exceed 128 MiB long before finishing. They can therefore complete only once vm-rc's
-RC heap exists, so vm-lockstep's "at most 4×" ratio gate cannot run on these
-sources before vm-rc. The coordinator must either order vm-rc before that gate or
+**The workloads need reclamation.** Each allocates far more than it keeps live.
+By SPEC §5's size rule, a bump arena without release needs 16 GB for
+`deep-recursion`'s 10^9 Activations (at least 16 bytes each), at least 6.4 GB for
+`peano`'s 2×10^8 Succ Objects and 7.7 GB for `list-fold`'s 2.4×10^8 list cells
+(32 bytes each), all beyond D19's 65,536-page (4 GiB) maximum; the other three are
+unmeasured. These three can therefore complete only once vm-rc's RC heap exists,
+so vm-lockstep's "at most 4×" ratio gate cannot run on the whole set before vm-rc. The coordinator must either order vm-rc before that gate or
 freeze separate bump-sized variants; this increment does neither.
 
 ## parse-cli over S

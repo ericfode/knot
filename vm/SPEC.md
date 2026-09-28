@@ -1,10 +1,10 @@
 # `knot-image-1` and `knot-vm-1`
 
 Status: the normative contract for the VM-first route (D14), fixed on 2026-09-27
-before any implementation. `docs/compiler-campaign/VM-DESIGN.md` (main `454bf30`)
-chose the design; this document fixes its details. Decisions D15–D18 are adopted
-in `docs/COMPILER-CAMPAIGN.md`; [DECISIONS.md](DECISIONS.md) proposes their exact
-wording. `vm-model` (Bend) and `vm-core` (WAT) are built independently from this
+before any implementation. `docs/compiler-campaign/VM-DESIGN.md` (main `454bf30`,
+amended for D19 at `819bf17`) chose the design; this document fixes its details.
+Decisions D15–D19 are adopted in `docs/COMPILER-CAMPAIGN.md`;
+[DECISIONS.md](DECISIONS.md) proposes the exact wording of D15–D18. `vm-model` (Bend) and `vm-core` (WAT) are built independently from this
 text and must then agree in lockstep.
 
 The core forms come from two unmerged heads, pinned by
@@ -218,7 +218,8 @@ Other version-1 limits: at most 1,048,576 records per table, live arity at most
 **Words.** Zero is not a value; it marks an empty slot. An immediate is
 `(v << 1) | 1` for `v < 2^31`: a nullary constructor tag, or the value of a U32,
 Nat, Char or File token, according to the static type. Every other word is the
-8-byte-aligned byte address of a cell. Scalars are **canonically boxed**: a
+8-byte-aligned byte address of a cell, an unsigned 32-bit address: under the
+4 GiB maximum (D19), pointers at or above 2^31 are ordinary. Scalars are **canonically boxed**: a
 U32, Nat or Char value below 2^31 is always immediate, and one at or above 2^31
 is always a Big cell. Nat is a word (D15), never a unary chain.
 
@@ -262,7 +263,10 @@ below `max(4, 2 + payload)` words. Each class has a LIFO free list; a free cell 
 bump pointer; it writes `rc = 1`, the header and payload, and zeroes padding. A
 debug build poisons freed payloads with `0xdeadbeef`. Addresses, bump, free-list
 order and padding MUST agree in lockstep; the timing of `memory.grow` need not.
-If the heap cannot grow, the allocation stops the machine with `Exhausted` kind 2.
+An allocation whose cell would end beyond the declared maximum of 65,536 pages
+(4 GiB, D19) stops the machine with `Exhausted` kind 2 (heap), reproducibly on every
+host. A host that refuses `memory.grow` below that maximum is `HostFailure`, never
+`Exhausted`.
 
 **Constants.** At load, before any other allocation, pool entries are materialized
 in index order from the bump pointer, immortal: a scalar at or above 2^31 is a Big
@@ -273,7 +277,7 @@ cell with `node = none` and no captures: the **terminal continuation**.
 
 **Memory map.** Bytes `[0, 4096)` are control and scratch; the image is copied to
 byte 4096; the frame region starts at the next 64 KiB boundary and is 16 MiB; the
-heap follows it and grows to the 2,048-page (128 MiB) total. Host byte buffers are
+heap follows it and grows up to the declared 65,536-page (4 GiB) maximum (D19). Host byte buffers are
 allocator blocks with no edges, freed by their IO operation; `knot_alloc` keeps
 them disjoint from cells across host callbacks and memory growth. Test builds may
 lower the frame or heap limit only at initialization, and must report it.
@@ -479,11 +483,14 @@ witness (U32 `sub`, `mul`, `and`, `is_ne/lt/le/ge`, the conversions, and Nat
 
 ## 10. IO and `knot-io-2` (D17)
 
-The baseline is `knot-io-1` at `campaign/io-host` `f42ae395`. The VM imports only
+The baseline is `knot-io-1` as merged on main: `campaign/io-host` `963a759`
+(merge `0b9498b`), with D19's host memory ceiling (`a60307d`). The VM imports only
 `knot_io`, exports `memory`, `knot_alloc(i32)->i32` and `knot_main()->()`, declares
-at most 2,048 pages, and has no start section; debug exports exist only in the
-test build. Every inherited signature, the 16-byte result record, errno table,
-ordering, sandbox and ownership rule stays in force. The delta, owned by io-abi-2:
+a memory maximum of exactly 65,536 pages (D19), and has no start section; debug
+exports exist only in the test build. Every inherited signature, the 16-byte result
+record, errno table, ordering, sandbox and ownership rule stays in force. The
+delta, owned by io-abi-2 and merged on main (`2e93d58`), whose
+`docs/compiler-campaign/IO-ABI.md` section "knot-io-2 delta" is authoritative:
 
 | Import | Parameters (i32, no result) | Delta |
 |---|---|---|
@@ -491,11 +498,11 @@ ordering, sandbox and ownership rule stays in force. The delta, owned by io-abi-
 | `path_identity` | `path, path_length, out` | modules' `path-host.bend` `inspect`: canonical spelling and absence of symlinks. |
 | `exhausted` | `kind` | Adds kind 3 (frame region); 1 stays fuel, 2 memory and representation. |
 
-io-abi-2 freezes `path_identity`'s payload and precedence from `campaign/modules`
-`0111f133`'s C and JS bodies (hashes in `registry.json`) before vm-io starts. This
-document invents no identity algorithm and relaxes no sandbox rule. An image may
-already encode foreign id 7; no run claims IO conformance before that contract
-and its fixtures land.
+io-abi-2 froze `path_identity`'s payload and precedence from `campaign/modules`
+`0111f133`'s C and JS bodies, the same bodies whose hashes `registry.json` pins.
+This document invents no identity algorithm and relaxes no sandbox rule. An image
+may already encode foreign id 7; no VM run claims IO conformance before vm-io
+passes that contract's fixtures.
 
 Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
@@ -525,7 +532,7 @@ reached:
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
 | literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
-| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 128 MiB memory; display bounds of §8 |
+| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
 
 `NatRange`, `RCOverflow`, image size and display are representation-resource
 exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise

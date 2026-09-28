@@ -3,6 +3,9 @@
 D15–D18 were adopted at `454bf30` in `docs/COMPILER-CAMPAIGN.md`. The wording below
 is what [SPEC.md](SPEC.md) implements; it refines the adopted rows without
 changing their direction. This executor does not edit the campaign decision table.
+D19, adopted on main after this branch's base (`b926a3c`), replaces the 2,048-page
+(128 MiB) memory bound with a declared 65,536-page (4 GiB) maximum; the spec
+follows it (§5, §10, §11) without a new image header word.
 
 - **D15 (Nat).** Nat is the mathematical range 0..2^32-1, held in the VM's
   canonically boxed scalar word (immediate below 2^31, a Big cell from 2^31). Every
@@ -75,10 +78,14 @@ changing their direction. This executor does not edit the campaign decision tabl
    Unsupported. The golden `foreign-print` records the observation as it is; its
    plan is hand-built from §1's rules because no Knot core exists for it. The
    literals owner, or io-check, should fix the classification.
-2. **The speed gate needs vm-rc.** Every frozen workload allocates about
-   10^6–10^9 cells and activations while its live set stays small, so none can
-   finish in 128 MiB without release. vm-lockstep's first ratio gate therefore
-   needs vm-rc first, or separate bump-sized variants frozen by the coordinator.
+2. **The speed gate needs vm-rc.** The frozen workloads allocate far more than
+   they keep live. By SPEC §5's size rule, without release `deep-recursion` alone
+   allocates 10^9 Activations of at least 16 bytes (16 GB), `peano` at least
+   2×10^8 Succ Objects of 32 bytes (6.4 GB) and `list-fold` at least 2.4×10^8 list
+   cells of 32 bytes (7.7 GB), each beyond D19's 4 GiB maximum; the other three
+   are unmeasured.
+   vm-lockstep's first ratio gate therefore needs vm-rc first, or separate
+   bump-sized variants frozen by the coordinator.
 3. **parse-cli over S stops early.** The literals head's `parse-cli` uses the
    literal-free lexer, so all 34 files of S end Unsupported (28 at a literal, 6 at
    a declaration form). The recorded counts are the byte-identity targets for
