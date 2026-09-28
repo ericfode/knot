@@ -221,6 +221,34 @@ law split_binds_promotion_witness:
 law empty_match_binds_promotion_witness:
   {modes([uninhabited()],[parameter("m",0),parameter("v",1)],promoting(on(named("v"),Nil{}))) == rejected() : Result<S.Error,C.Checked>}
 
+# An unannotated let of a matched binder, through the whole checker. Where a
+# positive branch has refined the binder, flat or in a matrix, the let needs an
+# annotation; a residual binder and an annotated let are accepted.
+def accepted(result: Result<S.Error,C.Checked>) -> Bool: Result.is_done(&1,&1,S.Error,C.Checked,result)
+def unannotated() -> Result<S.Error,C.Checked>: Fail{S.Invalid{"check","annotation-required",S.At{0,0,1,0}}}
+def mode_annotation() -> Maybe<&2,S.Token>: Some{token("Mode")}
+def let_v(annotation: Maybe<&2,S.Token>, value: S.Node) -> S.Node: S.Binding{token("v"),1,annotation,value,named("v")}
+def flat_let(annotation: Maybe<&2,S.Token>) -> Result<S.Error,C.Checked>:
+  modes(Nil{},[parameter("m",0)],on(named("m"),[arm(ctor("Lo"),let_v(annotation,named("m"))),arm(ctor("Hi"),ctor("Hi"))]))
+def matrix_let(annotation: Maybe<&2,S.Token>) -> Result<S.Error,C.Checked>:
+  modes(Nil{},[parameter("m",0),parameter("n",0)],on(S.Sequence{[named("m"),named("n")]},
+    [arm(S.Sequence{[ctor("Lo"),ctor("Lo")]},let_v(annotation,named("n"))),arm(S.Sequence{[wild(),wild()]},ctor("Hi"))]))
+def residual_let() -> Result<S.Error,C.Checked>:
+  modes(Nil{},[parameter("m",0),parameter("n",0)],on(S.Sequence{[named("m"),named("n")]},
+    [arm(S.Sequence{[ctor("Lo"),wild()]},ctor("Lo")),arm(S.Sequence{[wild(),wild()]},let_v(None{},named("m")))]))
+
+law refined_flat_let_witness:
+  {flat_let(None{}) == unannotated() : Result<S.Error,C.Checked>}
+
+law refined_matrix_let_witness:
+  {matrix_let(None{}) == unannotated() : Result<S.Error,C.Checked>}
+
+law residual_let_witness:
+  {accepted(residual_let()) == True{} : Bool}
+
+law annotated_let_witness:
+  {[accepted(flat_let(mode_annotation())),accepted(matrix_let(mode_annotation()))] == [True{},True{}] : List<&2,Bool>}
+
 # Exhaustiveness at each split: the positive matrix takes the split
 # constructor, the remainder keeps every other available constructor in order,
 # and the negative matrix drops only rows headed by the split constructor.

@@ -42,6 +42,45 @@ law refined_constructor_is_fresh:
    == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
    : Result<S.Error,C.Checked>}
 
+# A let without an annotation infers its value, and inference has no type for a
+# constructor term: a binder refined to a constructor elaborates to one, as a
+# literal does. An annotation, or a term that is not a constructor, stands.
+law refined_value_needs_annotation:
+  for +token: S.Token
+  for +uses: List<&2,U32>
+  for +type_id: U32
+  for tag: U32
+  {K.expected(token,None{},C.Checked{C.Value{token,type_id,tag},type_id,uses})
+   == Fail{S.Invalid{"check","annotation-required",S.at(token)}}
+   : Result<S.Error,C.Checked>}
+
+law refined_construct_needs_annotation:
+  for +token: S.Token
+  for +fields: List<&2,C.Parameter>
+  for +args: List<&2,C.Term>
+  for +uses: List<&2,U32>
+  for +type_id: U32
+  for tag: U32
+  {K.expected(token,None{},C.Checked{C.Construct{token,type_id,tag,fields,args},type_id,uses})
+   == Fail{S.Invalid{"check","annotation-required",S.at(token)}}
+   : Result<S.Error,C.Checked>}
+
+law unrefined_binder_is_inferable:
+  for +token: S.Token
+  for +uses: List<&2,U32>
+  for +level: U32
+  for +type_id: U32
+  {K.expected(token,None{},C.Checked{C.Reference{token,level,type_id},type_id,uses})
+   == Done{C.Checked{C.Reference{token,level,type_id},type_id,uses}}
+   : Result<S.Error,C.Checked>}
+
+law annotation_admits_constructor:
+  for +token: S.Token
+  for tag: U32
+  {K.expected(token,Some{0},C.Checked{C.Value{token,0,tag},0,Nil{}})
+   == Done{C.Checked{C.Value{token,0,tag},0,Nil{}}}
+   : Result<S.Error,C.Checked>}
+
 law nearest_binding_wins:
   for +tail: List<&2,C.Binding>
   for +level: U32

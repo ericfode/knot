@@ -89,6 +89,10 @@ def L.destructured_field_promotion_witness(): {==}
 def L.bound_promotion_witness(): {==}
 def L.split_binds_promotion_witness(): {==}
 def L.empty_match_binds_promotion_witness(): {==}
+def L.refined_flat_let_witness(): {==}
+def L.refined_matrix_let_witness(): {==}
+def L.residual_let_witness(): {==}
+def L.annotated_let_witness(): {==}
 
 def L.remainder_omits_split(head,tail,ctor,split):
   Equal.cong(Bool,List<&2,S.Token>,found =>

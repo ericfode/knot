@@ -13,8 +13,12 @@ type Mode is Data:
   Arguments{nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, token: S.Token}
   Arms{nodes: List<&2,S.Node>, token: S.Token, level: U32, expected: Maybe<&2,U32>}
 
+# A let without an annotation infers its value, and a constructor term has no
+# inferred type: not a literal, and not a binder refined to one.
 def expected(+token: S.Token, wanted: Maybe<&2,U32>, +value: C.Checked) -> Result<S.Error,C.Checked>:
   match wanted value:
+    case None{} C.Checked{C.Value{origin,typ,tag},ignored,uses}: C.invalid(C.Checked,"annotation-required",token)
+    case None{} C.Checked{C.Construct{origin,typ,tag,params,args},ignored,uses}: C.invalid(C.Checked,"annotation-required",token)
     case None{} _: Done{value}
     case Some{type_id} C.Checked{term,actual,uses}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(type_id,actual),u => Done{value},u => C.invalid(C.Checked,"type-mismatch",token))

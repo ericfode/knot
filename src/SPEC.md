@@ -50,8 +50,15 @@ digits, underscores or dots. Keywords cannot be identifiers.
   events. Forward live calls are invalid even when the graph is acyclic.
 - Sequential local bindings `x = value`, `+x = value`, and `-x = value`.
   An optional `: T` annotation supplies the initializer's expected type.
-  Constructor initializers require it, as in `x : Flag = On{}`; an unannotated
-  variable or call can infer its type from an already known declaration.
+  Constructor initializers require it, as in `x : Flag = On{}`, and so does a
+  binder that a match has refined to a constructor: in a positive branch the
+  seed substitutes the binder by its constructor term, which it cannot infer,
+  so an unannotated `v = z` there reports `Invalid check annotation-required`,
+  through an alias, a nested field level or an enclosing match, in every let
+  form (`v =`, `+v =`, `-v =`). An unannotated variable or call can infer its
+  type from an already known declaration: a residual or default-row binder
+  (the seed types it `Flag<> - Off{}`), a field never split, a later parameter
+  and a call on a rebuilt binder.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
