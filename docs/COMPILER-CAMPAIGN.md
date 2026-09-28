@@ -13,6 +13,7 @@ Later additions the same day:
 - "you can delegate to codex too"
 - "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
 - "You can let claude do actual work too. i just want you to use up my codex tokens as well"
+- "Please keep the focus on self hosting first"
 
 ## Definition of done
 
@@ -50,6 +51,7 @@ Later additions the same day:
 | D10 | Data lifetime for milestone 1: unique `Type` objects plus reference-counted immutable `Data` (candidate B of `research/data-lifetime/`). Copied Data (A) stays as the conformance control. Reclamation is part of owned-storage acceptance; the bump arena stays interim. | The r3r7 packet: both candidates pass 105 traces with 16 of 16 mutants killed, and B peaks at 43 words against 1,532 on the shared-subterm trace. The packet asked for a coordinator or user decision; the coordinator decided under the goal. The user can reverse it. |
 | D11 | D6 revised. The native C backend starts now, in parallel on the current core IR, and grows with each accepted profile. It no longer waits for self-hosting. | The user asked for maximal parallel use of Codex and of Claude implementers. The C emitter shares only core terms, so its conflicts are small. |
 | D12 | Host effects before the IO ABI lands. A reachable IO or host-effect declaration checks successfully. Evaluation of a pure entry agrees with the seed. Compilation reports `Unsupported compile host-effect` (exit 3) and emits no artifact. | This follows `docs/BEND-SUBSET-STAGES.md` (build rejects a missing capability before emission) over the baseslice suite's check-phase pin. The coordinator reconciles that pin when baseslice is implemented. |
+| D13 | Self-hosting has priority over every other track, at the user's direction. New increments, reviews and merge work go first to the self-hosting path: literals, generics, closures, the descent rule, modules, the Base slice, surface sugar, the IO host and its lowering, owned Wasm storage, the frontend as Wasm (E2E-2) and the fixpoint (E2E-3). The C backend, GPU emission and optimizer branches wait for review and merge until the self-hosting queue is clear. Their finished work is preserved on their branches. | User, 2026-09-27: "Please keep the focus on self hosting first". |
 
 ## Milestone ladder
 
