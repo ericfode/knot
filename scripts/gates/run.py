@@ -56,6 +56,10 @@ GATES = (
           'research/flat-store/receipts/*-wasm.json', 'research/flat-store/receipts/mutant-*.json',
           'research/flat-store/receipts/native.wasm', 'research/flat-store/receipts/store.wat'),
          ('owned-store',)),
+    Gate('recursion', ('python3', 'tests/compiler-recursion/check.py'),
+         ('tests/compiler-recursion/receipts/recursion.json',)),
+    Gate('fields-wasm', ('python3', 'tests/compiler-fields-wasm/check.py'),
+         ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
 )
 

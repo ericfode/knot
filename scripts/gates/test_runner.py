@@ -263,8 +263,8 @@ class ExecutionTests(unittest.TestCase):
         self.assertNotIn('blocked', starts)
         self.assertEqual('blocked', got[-1]['status'])
 
-    def test_all_eleven_gates_and_required_edges(self):
-        self.assertEqual(11, len(run.GATES))
+    def test_all_registered_gates_and_required_edges(self):
+        self.assertEqual(13, len(run.GATES))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
