@@ -1247,3 +1247,27 @@ Prevention: a lowering that replaces a constructor form with a primitive
 changes cost, not only value. Freeze every such form at a depth near the
 gate's budgets, measure evaluator transitions and Wasm cells at two sizes,
 and require the ratio the seed's representation implies.
+
+## 2026-09-28 — Literals review round 8: a builder chunk was a host stack depth
+
+Since `knot-literals-wasm-1` landed, `literal-wasm.bend` handed each section
+body to the published byte builder as one fragment. The builder's `finish`
+copies a chunk with Base's `List.append`, which is not tail recursive, so on
+the Bun compile lane a chunk of about 60.5 KB overflowed the host stack
+(`bend: memory fault`, exit 1, an unclassified outcome) while the native lane
+built the module. No frozen book reached that size: the largest module was
+39191 bytes. Round 1 had fixed the same class in the evaluator lane only (long
+Strings), and seven review rounds passed over the compiler lane; the
+coordinator's verifier found it by scaling module size until the lanes
+disagreed.
+
+[The round-8 freeze](../tests/compiler-literals/regressions.json) pins a
+156918-byte book first. The fix appends each section body in 4096-byte runs
+(`machine-code.bend::runs`); the unbounded-chunk mutant, which restores one
+chunk, faults on that book. See [the round-8 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: once one lane is fixed for host stack depth, scale every phase of
+both lanes (check, eval, compile, run) with the same inputs past the fault,
+and freeze a book at about twice the observed threshold. Treat any non-tail
+traversal over data proportional to the output, including one inside a
+pinned package, as a stack budget to bound at its call site.

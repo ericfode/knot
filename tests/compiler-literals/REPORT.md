@@ -4,6 +4,129 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 8
+
+The coordinator's review of `27c1aa2` confirmed one major finding: the Bun
+compile lane faulted (exit 1, `bend: memory fault (machine stack overflow?)`,
+an unclassified outcome) on every `knot-literals-wasm-1` module above about
+60.5 KB, while the native lane built the correct module. It is fixed in new
+commits; no history was rewritten and no earlier expectation changed.
+
+| Commit | Content |
+| --- | --- |
+| `788be82` | Freeze: module-width, 7 seed calls, before the fix, with the measured lane split |
+| `8a2db01` | `machine-code.bend::runs`; `literal-wasm.bend::section` appends 4096-byte runs; laws `runs_are_bounded` and `seq_undoes_runs`; mutant unbounded-chunk and the `fault` kill kind; README, SPEC, CONTRACT, LAW_REVIEW; census approved |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] The Bun compile lane crashes (exit 1, unclassified) on any knot-literals-wasm-1 module above about 60.5 KB, while the native lane builds the correct module | Fixed in `8a2db01`. `section` handed each body to the published builder as one fragment, and the builder's `finish` copies a chunk with Base's `List.append`, which is not tail recursive, so a chunk's length was a host stack depth. `machine-code.bend::runs` splits a byte list into consecutive runs of at most `width` bytes, tail recursively (`seq` undoes it), and `appended` adds a body's 4096-byte runs to the builder in order. `B.append` scans each run against the room left, so the byte limit, the first failing byte and the error mapping are those of one fragment. The builder package is hash-pinned and published, so the bound sits at the call site; its `finish` is unchanged. | module-width builds 156918 bytes, byte-identical in both lanes, and all 7 calls agree seed, evaluator and Wasm in both; before the fix the Bun compile faulted. Native bytes are identical before and after on every probe. Laws `runs_are_bounded` and `seq_undoes_runs`. Mutant unbounded-chunk. |
+
+### Freeze and measured lane split
+
+`tests/compiler-literals/regressions/module-width.bend` (seed: all seven
+calls as frozen) holds a 3000-Char String literal (`length`: 3000n Yes, 2999n
+No), a `case 450n` (`depth`: 450n Yes, 449n No) and a 100-Char String pattern
+(`spelled`: its spelling through `String.reverse` Yes, its 99-Char prefix No);
+`main` is `length(Far)`. Gate CLIs, bundle mode, before (`27c1aa2`) and after
+(`8a2db01`):
+
+| Book | Native bytes | Bun compile before | Bun compile after |
+| --- | --- | --- | --- |
+| strexpr_1000 (1000-Char String) | 22728 | Built, identical | Built, identical |
+| strexpr_3000 | 62728 | memory fault, exit 1 | Built, identical |
+| natpat_450 (`case 450n`) | 65657 | memory fault, exit 1 | Built, identical |
+| module-width | 156918 | memory fault, exit 1 (5 s), output untouched | Built, identical |
+| many_13 (13 x 2000 Chars) | 524021 | not run | Built, identical |
+| many_16 (16 x 2000 Chars) | 644304 | not run | Built, identical |
+| big_32 (verifier's probe) | 644441 | not run | Built, identical |
+| many_17, many_30 | Exhausted emit budget | not run | Exhausted emit budget, no output |
+
+Check and evaluation agreed in both lanes before and after. The two lanes now
+build identical modules up to the 32768-instruction bound and both report
+`Exhausted emit` beyond it. The largest module of any earlier frozen book was
+39191 bytes (nat-pattern-offset), under the fault threshold.
+
+### Laws and mutant
+
+- `literal-LAWS.bend::runs_are_bounded`: `runs(2,[1,2,3,4,5])` is
+  `[[1,2],[3,4],[5]]`, in order, each run at most the width.
+- `literal-LAWS.bend::seq_undoes_runs`: `seq(runs(3,[1,...,7]))` is
+  `[1,...,7]`.
+- Negative controls: each law fails alone on a changed right-hand side and
+  against a `split` that closes a run without reversing it. Both are concrete;
+  that runs stay within the width and that `seq` undoes `runs` for every input
+  is not claimed. All 13 `src/*PROOF.bend` entries print `All terms check.`
+- Mutant unbounded-chunk restores `W.bytes(cap,data)`, one chunk per section.
+  Its Bun compiler builds u32-literals to the gate's bytes (Built 3164) and
+  faults on module-width with exactly `bend: memory fault (machine stack
+  overflow?)`, exit 1, leaving the output file untouched. Since no existing
+  kill accepts a build failure, `check.py` adds a `fault` kill: the pinned
+  fault on a book both gate lanes built, plus the control book's bytes. The
+  MUTANTS header states that exception; any other failure is still no kill.
+
+### Known limits
+
+- The builder's `finish` still recurses on each chunk. The bound holds
+  because every Knot call site in this profile feeds runs of at most 4096
+  bytes; a package revision with a tail-recursive `emit` would remove the
+  bound for every user. That is the output_builder owner's decision.
+- The older profiles (`knot-enum-1`, `knot-fields-wasm-1`) compose small
+  fragments and were not changed or probed at this size.
+
+### Gates on the round-8 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `8a2db01` passed all 22 registered
+gates (exit 0) in 663.0 seconds with 4 workers (run directory
+`run-z5rdmlst`). `npm run -s gates:verify` passed 18 tests. The direct
+literals gate had passed earlier on the same behavior (473 s). Counts are
+copied from the runner; categories overlap and are not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1160; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=1020; mutants=54; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| io-abi-2 | case mode=insensitive; fixtures=43; host boundaries=25; mutants=5; mutants killed=5; parity=153; read observations=21; reference observations=64; seed exhausted=2; seed observations=61 |
+| selfhost | blocked=63; cases=65; d4 gaps=5; judge mutants=20; mutants=3; passed=2 |
+| literals | agree eval observations=912; agree fixtures=36; artifact preservation probes=182; boundary probes=8; byte identity pairs=36; check observations=254; compile observations=254; eval observations=1094; execution lanes=2; fixtures=127; invalid fixtures=47; mutant eval observations=7; mutant fault observations=1; mutant verdict observations=14; mutant wasm observations=6; no artifact probes=182; proof entries=3; proof laws=35; reference calls=494; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=25; trust audits=72; unsupported fixtures=44; wasm observations=912 |
+
+Receipt drift: identical=64; semantic=17; volatile-only=9. The 16 semantic
+drifts in shared receipts (source hashes and derived code) are left for the
+coordinator. The literals receipt was copied from the run's normalized output
+after all 213 recorded input hashes were checked against the tree.
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers. literal-emission is 45280/48000 bytes (43967 before),
+  literal-algebra-laws 26368/48000 (25400) and literal-machine-runtime
+  23024/48000 (22304); literal-patterns is unchanged.
+- Per changed file (`--preflight --task=tests/compiler-literals/README.md`),
+  truncated contexts equal those at `27c1aa2`: literal-wasm.bend 4
+  (context-helper limit on runtime, binary, module and emit), machine-code.bend
+  2, literal-LAWS.bend 0 and literal-PROOF.bend 0.
+- The module-width book has no preflight: Perch's parser adapter reports
+  `resource-unavailable` (Maximum call stack size exceeded) on it. It is a
+  test book, not compiler source.
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
 ## Review round 7
 
 The coordinator's review of `df0edb1` confirmed one major finding: an
