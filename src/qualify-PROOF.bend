@@ -25,3 +25,5 @@ def L.local_constructor_is_not_a_pattern_binder(at): {==}
 def L.global_constructor_is_not_a_pattern_binder(at): {==}
 def L.term_name_can_be_a_pattern_binder(at): {==}
 def L.promoted_constructor_is_not_a_pattern_binder(at): {==}
+def L.later_constructor_leaves_a_binder(at): {==}
+def L.let_binder_cannot_rebind_a_constructor(at,value,body): {==}

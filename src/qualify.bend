@@ -201,6 +201,19 @@ def pattern(+token: S.Token, +node: S.Node, +names: Names, +ctors: List<&2,Strin
       Fail{S.Invalid{"check","constructor-pattern-binder",S.at(token)}},u =>
       Done{Qualified{node,[S.text(token)]}}))
 
+def prefixed(+namespace: String, names: List<&2,String>) -> List<&2,String>:
+  match names:
+    case Nil{}: Nil{}
+    case Con{head,tail}: Con{prefix(namespace,head),prefixed(namespace,tail)}
+
+# Constructors enter the binder inventory at their declaration, as the seed's
+# parser registers them, so a later constructor does not rule an earlier binder.
+def visible(node: S.Node, names: Names, ctors: List<&2,String>) -> List<&2,String>:
+  match node names:
+    case S.Datatype{token,data,children} Names{ns,aliases,globals,own}:
+      List.append(&2,String,prefixed(ns,constructors_in(children)),ctors)
+    case _ _: ctors
+
 # A pattern contributes binders; an expression only reads its current scope.
 # The same traversal therefore handles parameters, fields and match arms.
 def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound: List<&2,String>, +ctors: List<&2,String>) -> Result<S.Error,Qualified>:
@@ -221,10 +234,11 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
         then(walk_in(n,S.Sequence{args},position,names,bound,ctors),items => binders =>
           sequence(items,xs => Done{Qualified{S.Call{t,xs},binders}})))
     case 1n+ +n S.Binding{+token,q,ann,value,+body}:
+      then(pattern(token,S.Variable{token},names,ctors),binder => binders =>
       S.bind(Maybe<&2,S.Token>,Qualified,annotation(ann,names),a =>
         then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
           then(walk_in(n,body,Expression{},names,Con{S.text(token),bound},ctors),b => unused =>
-            done(S.Binding{token,q,a,v,b}))))
+            done(S.Binding{token,q,a,v,b})))))
     case 1n+ +n S.Match{token,value,+arms}:
       then(walk_in(n,value,Expression{},names,bound,ctors),v => ignored =>
         then(walk_in(n,S.Sequence{arms},Expression{},names,bound,ctors),items => unused =>
@@ -247,15 +261,10 @@ def walk_in(fuel: Nat, node: S.Node, +position: Position, +names: Names, +bound:
     case 1n+ n S.Sequence{Nil{}}: done(S.Sequence{Nil{}})
     case 1n+ +n S.Sequence{Con{+head,+tail}}:
       then(walk_in(n,head,position,names,bound,ctors),h => binders =>
-        then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,ctors),t => more => prepend(h,binders,t,more)))
+        then(walk_in(n,S.Sequence{tail},position,following(position,head,names),bound,visible(head,names,ctors)),t => more => prepend(h,binders,t,more)))
 
 def walk(fuel: Nat, node: S.Node, position: Position, names: Names, bound: List<&2,String>) -> Result<S.Error,Qualified>:
   walk_in(fuel,node,position,names,bound,Nil{})
-
-def prefixed(+namespace: String, names: List<&2,String>) -> List<&2,String>:
-  match names:
-    case Nil{}: Nil{}
-    case Con{head,tail}: Con{prefix(namespace,head),prefixed(namespace,tail)}
 
 def result(value: Qualified) -> Result<S.Error,S.Node>:
   match value:
@@ -268,5 +277,5 @@ def qualify(+namespace: String, +aliases: List<&2,Alias>, globals: Symbols, root
     case Symbols{+terms,+ctors} S.Sequence{+items}:
       S.bind(List<&2,String>,S.Node,declarations(items,namespace,aliases,terms,ctors),checked =>
         S.bind(Qualified,S.Node,walk_in(65536n,S.Sequence{items},Expression{},Names{namespace,aliases,List.append(&2,String,terms,ctors),Nil{}},Nil{},
-          List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))),result))
+          ctors),result))
     case _ _: Fail{S.Internal{"load","book-node"}}

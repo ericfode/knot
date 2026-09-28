@@ -21,7 +21,7 @@ def show_check(result: Result<S.Error,C.Book>) -> IO(Unit):
 def show_parse(depth: Nat, result: Result<S.Error,P.Parsed>) -> IO(Unit):
   match result:
     case Fail{+e}: IO.die(Unit,D.status(e),D.error(e))
-    case Done{P.Parsed{value,rest}}: show_check(K.check(depth,value))
+    case Done{P.Parsed{value,rest}}: show_check(K.file(depth,value))
 
 def source(characters: Nat, depth: Nat, text: String) -> IO(Unit):
   show_parse(depth,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(characters,text),tokens => P.parse(512n,tokens)))

@@ -550,8 +550,8 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'witness': 'case-alias',
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\ttype-mismatch\t'}},
     {'name': 'pattern-global-ctors-dropped', 'file': 'qualify.bend',
-     'old': 'List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))',
-     'new': 'prefixed(namespace,ctors_in(items))',
+     'old': 'Nil{},\n          ctors),result))',
+     'new': 'Nil{},\n          Nil{}),result))',
      'witness': 'base-ctor-binder', 'actual': {'exit': 0}},
     {'name': 'promoted-constructor-ignored', 'file': 'qualify.bend',
      'old': 'pattern(token,S.Promotion{token},names,ctors)',
@@ -576,6 +576,19 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'new': 'False{}',
      'witness': 'header-bom',
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-after-declaration\t'}},
+    {'name': 'constructor-order-ignored', 'file': 'qualify.bend',
+     'old': 'Nil{},\n          ctors),result))',
+     'new': 'Nil{},\n          List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))),result))',
+     'witness': 'later-ctor-binder',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tconstructor-pattern-binder\t'}},
+    {'name': 'let-binder-unchecked', 'file': 'qualify.bend',
+     'old': 'then(pattern(token,S.Variable{token},names,ctors),binder => binders =>',
+     'new': 'then(done(S.Variable{token}),binder => binders =>',
+     'witness': 'let-base-ctor', 'actual': {'exit': 0}},
+    {'name': 'file-let-binder-unchecked', 'file': 'check.bend',
+     'old': 'named(ctors,S.text(token))',
+     'new': 'False{}',
+     'witness': 'let-single-ctor', 'plain': True, 'actual': {'exit': 0}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -584,7 +597,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'host-symlink-ignored', 'host-case-ignored',
                     'pattern-global-ctors-dropped', 'promoted-constructor-ignored',
                     'source-budget-counts-characters', 'import-comment-splits-anywhere',
-                    'alias-keeps-glued-comment', 'header-character-ignored'}
+                    'alias-keeps-glued-comment', 'header-character-ignored',
+                    'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked'}
 
 
 def mutants(fixtures):
@@ -610,7 +624,11 @@ def mutants(fixtures):
         output = directory / 'mutant.js'
         built = successful([*SEED, entry, '-o', output])
         fixture = by_name[mutant['witness']]
-        result = run(['bun', output, '--bundle', BUNDLE, HERE / fixture['file']])
+        mode = [] if mutant.get('plain') else ['--bundle', BUNDLE]
+        result = run(['bun', output, *mode, HERE / fixture['file']])
+        if mutant.get('plain'):
+            fixture = {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
+                       'knot_expected': fixture['plain']}
         expected = mutant['actual']
         require(result['exit'] == expected['exit'], (mutant, result))
         if expected['exit'] == 0:

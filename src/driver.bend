@@ -26,7 +26,7 @@ def parsed_root(value: P.Parsed) -> S.Node:
 def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
     case Limits{chars,parser,+checker}:
-      checked(S.bind(P.Parsed,C.Book,result,tree => K.check(checker,parsed_root(tree))),next)
+      checked(S.bind(P.Parsed,C.Book,result,tree => K.file(checker,parsed_root(tree))),next)
 
 def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
@@ -34,7 +34,7 @@ def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
       checked(
         S.bind(List<&2,S.Token>,C.Book,L.tokenize(chars,text),tokens =>
           S.bind(P.Parsed,C.Book,P.parse(parser,tokens),tree =>
-            K.check(checker,parsed_root(tree)))),
+            K.file(checker,parsed_root(tree)))),
         next)
 
 def read_result(limits: Limits, result: Result<&1,&1,U32 & String,String>, next: C.Book -> IO(Unit)) -> IO(Unit):

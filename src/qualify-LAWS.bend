@@ -163,3 +163,24 @@ law promoted_constructor_is_not_a_pattern_binder:
   {Q.walk_in(1n,S.Promotion{S.Token{"Off",at}},Q.Pattern{},
     Q.Names{"m",Nil{},Nil{},["m.Off"]},Nil{},["m.Off"]) ==
     Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
+
+law later_constructor_leaves_a_binder:
+  for +at: S.At
+  {Q.qualify("",Nil{},Q.Symbols{Nil{},Nil{}},S.Sequence{[
+    S.Datatype{S.Token{"Mark",at},False{},[S.Constructor{S.Token{"Unit0",at},Nil{}}]},
+    S.Function{S.Token{"f",at},Nil{},S.Token{"Mark",at},
+      S.Binding{S.Token{"Mark",at},1,None{},S.Constructor{S.Token{"Unit0",at},Nil{}},S.Variable{S.Token{"Mark",at}}}},
+    S.Datatype{S.Token{"Other",at},False{},[S.Constructor{S.Token{"Mark",at},Nil{}}]}]}) ==
+    Done{S.Sequence{[
+      S.Datatype{S.Token{"Mark",at},False{},[S.Constructor{S.Token{"Unit0",at},Nil{}}]},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"Mark",at},
+        S.Binding{S.Token{"Mark",at},1,None{},S.Constructor{S.Token{"Unit0",at},Nil{}},S.Variable{S.Token{"Mark",at}}}},
+      S.Datatype{S.Token{"Other",at},False{},[S.Constructor{S.Token{"Mark",at},Nil{}}]}]}} : Result<S.Error,S.Node>}
+
+law let_binder_cannot_rebind_a_constructor:
+  for +at: S.At
+  for value: S.Node
+  for body: S.Node
+  {Q.walk_in(1n,S.Binding{S.Token{"True",at},1,None{},value,body},Q.Expression{},
+    Q.Names{"m",Nil{},["True"],Nil{}},Nil{},["True"]) ==
+    Fail{S.Invalid{"check","constructor-pattern-binder",at}} : Result<S.Error,Q.Qualified>}
