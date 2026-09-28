@@ -11,7 +11,9 @@ value reported a false `Invalid check reusable-type`.
 |---|---|
 | `4fe5e6a` | D7 freeze before the repair: 35 seed-derived fixtures under `round7-fixtures/`, `round7-expectations.json` and `round7_seed.py` (134 seed calls; a replay without `--write` reports no differences) |
 | `7281182` | The fix in `matrix.bend::alias_bound`, two laws in `matrix-LAWS.bend` with proofs in `matrix-PROOF.bend`, the `nest-round7` gate with three mutants, the let/alias generator `letalias.py`, runner registration, SPEC text and the census approval (summary in the commit message) |
-| This commit | Receipts (`round7.json`, `round7-letalias.json`, `round7-letalias-before.json`, `round7-all-gates.json.gz`), falsification, preflight, these dispositions, LAW_REVIEW round 7, the contract entry, the campaign state pointer and the Perch review log entry |
+| `b9f88e5` | Receipts (`round7.json`, `round7-letalias.json`, `round7-letalias-before.json`, `round7-all-gates.json.gz`), falsification, preflight, these dispositions, LAW_REVIEW round 7, the contract entry, the campaign state pointer and the Perch review log entry |
+| `410205e` | Direct runs of the five earlier nest gates (counts unchanged) and the disposition of every probe class |
+| Final commit | The final-tree gate run (`round7-final-gates.json.gz`) |
 
 ## Coordinator rulings on the round-6 open items
 
@@ -172,6 +174,20 @@ it: the row binder path still passes mark 2 (see *Mutants*).
     Wasm values, 3 mutants / 6 kills, 1,500 generated programs (seed and
     Knot 780 Accepted / 720 Invalid, 0 false acceptances, 0 false Invalid,
     1,836 generated evaluator values).
+- **Final tree.** On `410205e` (the tree this report describes, apart from
+  this report and the final summary), `npm run -s gates` exited 0 with 26/26
+  gates passed (`run-67kw2nyk`, 561.8 s; summary in
+  `round7-final-gates.json.gz`). Every gate's counts equal the `7281182` run.
+  Two earlier runs on the same tree exited 1 on a host failure, not on a gate
+  assertion: `run-vzchnrui` in `nest-round3` and `run-97mlt842` in
+  `nest-round4`. In both, a mutant build stopped when the seed's clang
+  discovery printed `bend needs clang 14 or newer ... (found no clang)`, and
+  the other 25 gates passed. `docs/compiler-campaign/GATES.md` records this
+  host failure as undiagnosed. `clang --version` works here, and 192
+  concurrent probes under fresh `TMPDIR`s all succeeded. The host was shared
+  with another worktree's gate run and ran at a load average of 20 to 28.
+  The runner keeps such failures and does not retry them; no assertion
+  changed.
 
 ### Mutation sites, answered
 
