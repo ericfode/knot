@@ -1,21 +1,21 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T16:10:02+00:00",
+ "date": "2026-09-28T18:02:22+00:00",
  "status": "passed",
  "sources": {
-  "model/word.bend": "a8c68780225f05f11ddb2ba8b94ca3e0d0c18e9b888cab6d9ebb1b74e91ef6fc",
-  "model/decode.bend": "be532fa946a7b028ab49d4b7feb7cbb318f6ebedcdc96c510aec4ba9460ecda9",
-  "model/validate.bend": "5dd4dde9b94404ee85b2bcebf9de1d87649000045af91ea34d3caecf120c0ce8",
-  "model/encode.bend": "fc63bc38f60bce9d2193e7dd4602defd0905c0aab2fb5d7a7c8e0f3f605514f3",
+  "model/word.bend": "4bec5f4d2f55b67758e1195c0bbf6d6d4d317ddd8cc0f0c5bda35973a2a6fabc",
+  "model/decode.bend": "fafae5ff52d8ce4d8de21423923961505ae0c6ca4b1e035ddc7d6fa0700f83a4",
+  "model/validate.bend": "4a95532418153b93475b3bcd37be9dd5f8f4aa8f30fc55c15699706937392b32",
+  "model/encode.bend": "ad0842c6168b8f1a4c8a96bff2e4503d820b3098c1425a96daf9b9ac5a75a4d4",
   "model/memory.bend": "288c3bbefe6cf5d5b90ad12159de774d2cbfb12b22e78fd37aa1597a6a1997af",
-  "model/machine.bend": "35af9ab1c33c40d493f2b8a3d2d48964646c58ee6384db9e13bb2fabb26ffc00",
+  "model/machine.bend": "da767af160d081b421977e44b09f192c1d7755e84316f3566ff8b0b7e9a87fb8",
   "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
   "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "bef3f6c9166a51878eb5b05621f423c55cee50909f190a6d5a49441f2d9fa6b2",
   "model-lanes.bend": "aa73565b26d180a7b570d7e9d60b49b3249cc33cc2c065fb19340f2f5bb501f4",
-  "LAWS.bend": "8bbc21f67c5c4bfe563e1b3f85e0b3341c227d59d6a3e3139a82451b3641df89",
-  "PROOF.bend": "d778cf46e3a3d29e09cacf85660d9f14522e02df0dbe6ee5b26e35ca0639331a"
+  "LAWS.bend": "ff62c0f9b9dcfa2e1a506a1c435224a95d2a707ef0f430d3a2b51c0454c0fee9",
+  "PROOF.bend": "de294dee4ca6410d2afc360505cc1f8b95755570f6f8bc8e4373ca33b28c7650"
  },
  "fixtures": {
   "value_on": 75,
@@ -30,7 +30,7 @@
  },
  "connectives": {
   "sources": 10,
-  "choices": 70
+  "choices": 69
  },
  "seed": {
   "char-pick": "On{}",
@@ -76,6 +76,18 @@
    "8:5",
    "8:6"
   ]
+ },
+ "harness_controls": {
+  "concurrent": {
+   "workers": 3,
+   "rows": 157,
+   "disagreements": 0
+  },
+  "torn": {
+   "empty": "HostFailure image: length",
+   "short": "HostFailure image: length",
+   "prefix": "HostFailure image: total"
+  }
  },
  "goldens": {
   "value-off": {
@@ -542,10 +554,19 @@
   "function-root-shared": "HostFailure image: function root",
   "child-not-record": "HostFailure image: child offset",
   "child-after-parent": "HostFailure image: child after parent",
-  "oversize": "HostFailure image: exhausted image-size",
-  "oversize-and-bad-magic": "HostFailure image: exhausted image-size",
-  "oversize-and-misaligned": "HostFailure image: exhausted image-size",
   "unused-constant": "HostFailure image: noncanonical",
+  "oversize": "Exhausted 2 image-size",
+  "oversize-and-bad-magic": "Exhausted 2 image-size",
+  "oversize-and-misaligned": "Exhausted 2 image-size",
+  "limit:size-at-limit": "HostFailure image: total",
+  "limit:records-over-limit": "Exhausted 2 records",
+  "limit:records-beyond-image": "HostFailure image: record count",
+  "limit:records-at-limit": "HostFailure image: section 5 record length",
+  "limit:arity-over-limit": "Exhausted 2 arity",
+  "limit:arity-beyond-record": "HostFailure image: function record",
+  "limit:slots-over-limit": "Exhausted 2 slots",
+  "limit:closure-slots-over-limit": "Exhausted 2 slots",
+  "limit:slots-at-limit": "HostFailure image: validator: main: slots 65536, reached 0",
   "plan:ref-beyond-depth": "HostFailure image: validator: id: slot 1 beyond depth 1",
   "plan:let-slot": "HostFailure image: validator: main: let slot 1 at depth 0",
   "plan:branch-first-slot": "HostFailure image: validator: second: branch binders",
@@ -592,6 +613,7 @@
  },
  "admitted_kinds": {
   "plan": 6,
+  "limit": 1,
   "codes": 7,
   "run": 41,
   "model": 11
@@ -620,6 +642,10 @@
   "plan:key-arms-none": {
    "outcome": "audit\tpassed\t21\tDescribed\t0\t3",
    "calls": 3
+  },
+  "limit:arity-at-limit": {
+   "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
+   "calls": 1
   },
   "codes:surrogate-pair": {
    "outcome": "audit\tpassed\t13\tDescribed\t0\t2",
@@ -1959,7 +1985,7 @@
   }
  },
  "proof": {
-  "laws": 29,
+  "laws": 32,
   "stdout": "All terms check."
  },
  "mutants": [
@@ -1979,7 +2005,8 @@
    ],
    "kills": 67,
    "law": "closure_captures_runs",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "rc-over-count",
@@ -1997,7 +2024,8 @@
    ],
    "kills": 16,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "append-drops-tail",
@@ -2011,7 +2039,8 @@
    ],
    "kills": 4,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "tail-keeps-caller",
@@ -2029,7 +2058,8 @@
    ],
    "kills": 118,
    "law": "closure_captures_runs",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "scope-keeps-slots",
@@ -2047,7 +2077,8 @@
    ],
    "kills": 20,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "arm-selection",
@@ -2065,7 +2096,8 @@
    ],
    "kills": 33,
    "law": "recursion_map_runs",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "slot-off-by-one",
@@ -2083,7 +2115,8 @@
    ],
    "kills": 198,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "erased-argument",
@@ -2101,7 +2134,8 @@
    ],
    "kills": 29,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "nat-bound",
@@ -2113,7 +2147,8 @@
    ],
    "kills": 2,
    "law": "nat_sum_bound",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "succ-bound",
@@ -2125,7 +2160,8 @@
    ],
    "kills": 2,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "remainder-by-zero",
@@ -2136,7 +2172,8 @@
    ],
    "kills": 1,
    "law": "remainder_by_zero",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "wide-shift",
@@ -2147,7 +2184,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "fuel-unchecked",
@@ -2165,7 +2203,8 @@
    ],
    "kills": 95,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "child-order",
@@ -2176,7 +2215,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "capture-exactness",
@@ -2187,7 +2227,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "inspection",
@@ -2205,7 +2246,17 @@
    ],
    "kills": 13,
    "law": null,
-   "crashes": 8
+   "crashes": 8,
+   "crashed": [
+    "admitted:run:inspect-is-empty",
+    "admitted:run:inspect-eq-code",
+    "admitted:run:inspect-eq-a-ends",
+    "admitted:run:inspect-eq-b-ends",
+    "admitted:run:inspect-halt-code",
+    "admitted:run:inspect-halt-message",
+    "admitted:run:inspect-print-after-surrogate",
+    "admitted:model:inspect-append-b-whole"
+   ]
   },
   {
    "mutant": "char-tag",
@@ -2217,7 +2268,8 @@
    ],
    "kills": 2,
    "law": "char_case_selects_chr",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "key-bound",
@@ -2231,7 +2283,8 @@
    ],
    "kills": 4,
    "law": "key_max_selected",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "none-slot",
@@ -2244,7 +2297,8 @@
    ],
    "kills": 3,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "debit-refunded",
@@ -2259,7 +2313,8 @@
    ],
    "kills": 5,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "non-scalar-printed",
@@ -2277,7 +2332,8 @@
    ],
    "kills": 8,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "enter-arity",
@@ -2292,7 +2348,11 @@
    ],
    "kills": 5,
    "law": null,
-   "crashes": 2
+   "crashes": 2,
+   "crashed": [
+    "admitted:run:erased-closure-invoked-live",
+    "admitted:run:phase-two-erased"
+   ]
   },
   {
    "mutant": "calls-uncounted",
@@ -2308,9 +2368,10 @@
     "invocations:invoke-words:two 1000000 000000000001 0",
     "invocations:invoke-words:two 0001048576 1 0"
    ],
-   "kills": 163,
+   "kills": 164,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "arrow-argument",
@@ -2322,7 +2383,8 @@
    ],
    "kills": 2,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "exact-branch-type",
@@ -2334,7 +2396,8 @@
    ],
    "kills": 2,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "exact-key-and-default-type",
@@ -2345,7 +2408,8 @@
    ],
    "kills": 1,
    "law": "arms_fit_their_case",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "chr-uninspected",
@@ -2358,7 +2422,8 @@
    ],
    "kills": 3,
    "law": "chr_inspects_its_operand",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-visits-exclusive",
@@ -2370,7 +2435,8 @@
    ],
    "kills": 2,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-bytes-exclusive",
@@ -2381,7 +2447,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-unary-bytes-exclusive",
@@ -2392,7 +2459,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-nat-one-visit",
@@ -2403,7 +2471,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-unary-unbounded",
@@ -2414,7 +2483,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-commas-free",
@@ -2425,7 +2495,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-scalars",
@@ -2436,7 +2507,8 @@
    ],
    "kills": 1,
    "law": "text_size_counts_bytes",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-succ-named",
@@ -2448,7 +2520,8 @@
    ],
    "kills": 2,
    "law": "nat_spells_its_names",
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "display-charge-first",
@@ -2459,7 +2532,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "separator-unchecked",
@@ -2472,7 +2546,8 @@
    ],
    "kills": 3,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "usage-as-word",
@@ -2488,7 +2563,8 @@
    ],
    "kills": 6,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "or-through-base",
@@ -2499,7 +2575,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "xor-through-base",
@@ -2510,7 +2587,8 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
   },
   {
    "mutant": "append-b-shallow",
@@ -2521,7 +2599,77 @@
    ],
    "kills": 1,
    "law": null,
-   "crashes": 0
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "limit-as-malformed",
+   "breaks": "a count past its limit is HostFailure image",
+   "killed": true,
+   "by": [
+    "controls:oversize",
+    "controls:oversize-and-bad-magic",
+    "controls:oversize-and-misaligned",
+    "controls:limit:records-over-limit",
+    "controls:limit:arity-over-limit",
+    "controls:limit:slots-over-limit",
+    "controls:limit:closure-slots-over-limit"
+   ],
+   "kills": 7,
+   "law": "slots_past_limit",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "limit-exclusive",
+   "breaks": "a count at its limit is Exhausted",
+   "killed": true,
+   "by": [
+    "controls:limit:size-at-limit",
+    "controls:limit:records-at-limit",
+    "controls:limit:slots-at-limit",
+    "admitted:limit:arity-at-limit"
+   ],
+   "kills": 4,
+   "law": "slots_at_limit",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "record-limit-before-fit",
+   "breaks": "the record limit precedes the count's fit",
+   "killed": true,
+   "by": [
+    "controls:limit:records-beyond-image"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "arity-limit-before-record",
+   "breaks": "the arity limit precedes its record's length",
+   "killed": true,
+   "by": [
+    "controls:limit:arity-beyond-record"
+   ],
+   "kills": 1,
+   "law": "arity_beyond_record",
+   "crashes": 0,
+   "crashed": []
+  },
+  {
+   "mutant": "closure-slots-unlimited",
+   "breaks": "a Closure's slots is unlimited",
+   "killed": true,
+   "by": [
+    "controls:limit:closure-slots-over-limit"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0,
+   "crashed": []
   }
  ],
  "harness_mutants": [
