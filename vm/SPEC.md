@@ -451,7 +451,8 @@ types, and checks that `FN`'s result type is **describable**: algebraic, with ev
 live field of every constructor describable in turn. A cycle through algebraic
 types stays describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque
 type are not, so neither are the pinned Char (its U32 field) and String. These
-checks read only the image, in that order, before anything else and at zero fuel.
+checks read only the image, in that order, before anything else and without
+debiting fuel.
 Failures are `HostFailure invoke unknown-export`, `argument-arity`,
 `argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
 invoke result-type`: Knot has no describe spelling for such a result, so the VM
