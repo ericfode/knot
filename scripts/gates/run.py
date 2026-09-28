@@ -194,6 +194,17 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                 sdk = ''
             if sdk:
                 env['SDKROOT'] = sdk
+        # Gate programs that rebuild their own environment keep PATH but may drop
+        # CC; the seed then probes the xcrun shim. A `clang` first on PATH that
+        # runs the resolved compiler (with the SDK the shim would supply) keeps
+        # every such path off the shim.
+        tools = run_dir / 'bin'
+        tools.mkdir()
+        wrapper = tools / 'clang'
+        sdk_line = f": \"${{SDKROOT:={env['SDKROOT']}}}\"; export SDKROOT\n" if 'SDKROOT' in env else ''
+        wrapper.write_text(f'#!/bin/sh\n{sdk_line}exec "{cc}" "$@"\n')
+        wrapper.chmod(0o755)
+        env['PATH'] = str(tools) + os.pathsep + env.get('PATH', '')
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()

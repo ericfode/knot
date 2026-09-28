@@ -5,6 +5,7 @@ import io
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import time
@@ -242,6 +243,25 @@ class ExecutionTests(unittest.TestCase):
                 'print("# pass 3\\nPASS: eight law rules;")')), root, root, env, 5)
             self.assertEqual('passed', good['status'])
             self.assertEqual({'tests': 3, 'law_rules': 8}, good['counts'])
+
+    def test_clang_on_path_survives_a_trimmed_environment(self):
+        # A gate program that rebuilds its environment keeps PATH but may drop CC
+        # and SDKROOT; `clang` must still be the resolved compiler with its SDK.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fake = root / 'real-clang'
+            fake.write_text('#!/bin/sh\necho "clang version 99 sdk=$SDKROOT"\n')
+            fake.chmod(0o755)
+            run_dir = root / 'run'
+            run_dir.mkdir()
+            with patch.object(run, 'host_cc', return_value=str(fake)), \
+                 patch.object(run, 'copy_cache', lambda *a, **k: None), \
+                 patch.dict(os.environ, {'SDKROOT': '/fake/sdk'}):
+                env, _ = run.environment(run_dir)
+            self.assertEqual(str(fake), env['CC'])
+            trimmed = {'PATH': env['PATH']}
+            out = subprocess.run(['clang', '--version'], env=trimmed, capture_output=True, text=True).stdout
+            self.assertEqual('clang version 99 sdk=/fake/sdk', out.strip())
 
     def test_dependency_order_parallelism_and_blocked_consumer(self):
         starts, ends = {}, {}
