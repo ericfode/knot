@@ -1093,3 +1093,26 @@ match frontier, not lexical level: a level-order rule accepts
 Give the fuzzer atoms for every lexical and typing edge the change touches;
 the round-3 corpus reproduces all three defects on the pre-fix compiler
 (76 false acceptances, 32 false Invalid) and none after the repair.
+
+## 2026-09-28 — nest review round 4: dead split helpers, rebuilt-descendant recursion
+
+Confirmed:
+- The round-2 binary split left the round-1 n-ary helpers (`has_default`,
+  `signature`) and three laws over them in place. The laws were cited as
+  exhaustiveness evidence for a split that no longer calls them.
+- A recursive call on a variable-row field binder was Unsupported after an
+  earlier row nested into that field. The checker rebuilds a matched binder
+  from its fields, and the first-parameter descent rule accepted only a
+  reference. The seed accepts these calls; its comparison is structural.
+
+See the [round-4 dispositions](../tests/compiler-nest/receipts/REVIEW-4.md).
+
+Prevention:
+- When an algorithm is replaced, remove the superseded helpers and their laws
+  in the same change. Grep each law's subject for live callers before citing
+  the law as evidence.
+- When a lowering changes how a binder is represented (a reference against a
+  rebuilt constructor), rerun every rule that inspects checked terms. The
+  descent rule is one of them. Freeze a recursive fixture for each path by
+  which a variable row can reach its body: through the negative branch (a
+  reference) and through a positive branch (a rebuild).
