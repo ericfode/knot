@@ -1,0 +1,194 @@
+{
+  "schema": "knot-modules-review-round3-1",
+  "purpose": "Seed-derived review-round-3 regressions frozen before repairs. No existing oracle is changed.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/load.bend": "07e57ed03bfb6019843f4bc9036ab11f9d926dc59c5c2a0ed6fc1274cc59be02",
+    "src/imports.bend": "830dbdf122e0af757229052ae066c96f61da0167d13302f126cd95d850efb3e2",
+    "src/qualify.bend": "d11543d3f252265f775c5ecd6adbc292c137323d4b12fc2c552b68926defe4ed",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
+    "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+  },
+  "findings": [
+    "truncation"
+  ],
+  "sources": {
+    "trunc/base.bend": "df1f0eced058141cd072b1a7755ab6bd3371c95affd0088eb63faa3c732fc4b7",
+    "trunc/entry.bend": "5cff46f038e9666f4cbd5518c6c194043c5b44e1f555e4c8f47cddc88f806984",
+    "trunc/exact.bend": "44e4f1c6fff6b176ab78dcb0ab295f68feebacb0aa7523bed430bb67a7fa441a",
+    "trunc/lib/big.bend": "671e4e14af6c83ca1f6124ca53aba69715cef17573ad71772741adf185cffcd8",
+    "trunc/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "trunc/lib/mark.bend": "3f96252cc24402bc47af838c27584628010ba1ecc919d9897260cdcb91d629e0",
+    "trunc/module.bend": "550fa2236342de04753e9cb12df6646c72aca32cce84399e8d137fdccace3fda",
+    "trunc/over.bend": "1791772bb89e5b9a072984346836c5052a95df9b0ecfe1e03e32eb9d06f5fe54"
+  },
+  "fixtures": [
+    {
+      "name": "multibyte-entry-tail",
+      "finding": "truncation",
+      "file": "trunc/entry.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "trunc/entry.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/trunc/entry.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Light\n- observed : lib/flag.Flag\nLocation: bad\n660 | def bad() -> Light:\n661>|   F.On{}\n    |   ^^^^^^\n662 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 4,
+        "outcome": "Exhausted",
+        "phase": "lex",
+        "code": "budget",
+        "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
+      }
+    },
+    {
+      "name": "multibyte-module-tail",
+      "finding": "truncation",
+      "file": "trunc/module.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "trunc/module.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/trunc/module.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : lib/big.Flag\n- observed : lib/mark.Mark\nLocation: lib/big.bad\n653 | def bad() -> Flag:\n654>|   G.Mark{}\n    |   ^^^^^^^^\n655 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 4,
+        "outcome": "Exhausted",
+        "phase": "lex",
+        "code": "budget",
+        "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
+      }
+    },
+    {
+      "name": "multibyte-base-tail",
+      "finding": "truncation",
+      "file": "trunc/base.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "trunc/base.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/trunc/base.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Light\n- observed : Bool\nLocation: bad\n656 | def bad() -> Light:\n657>|   True{}\n    |   ^^^^^^\n658 | \n"
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 4,
+        "outcome": "Exhausted",
+        "phase": "lex",
+        "code": "budget",
+        "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
+      }
+    },
+    {
+      "name": "byte-budget-exact",
+      "finding": "truncation",
+      "file": "trunc/exact.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "trunc/exact.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/trunc/exact.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "trunc/exact.bend",
+        "trunc/lib/flag.bend"
+      ]
+    },
+    {
+      "name": "byte-budget-over",
+      "finding": "truncation",
+      "file": "trunc/over.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "trunc/over.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round3/trunc/over.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": ""
+        }
+      ],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 4,
+        "outcome": "Exhausted",
+        "phase": "lex",
+        "code": "budget",
+        "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
+      }
+    }
+  ]
+}
