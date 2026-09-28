@@ -13,7 +13,7 @@ Changing a fixture, a case or a pinned outcome is a separately reviewed amendmen
 
 ## Contents
 
-- `fixtures/*.bend`: 40 small programs, one feature or edge each.
+- `fixtures/*.bend`: 42 small programs, one feature or edge each.
   - Every fixture is ASCII with LF line endings and no tabs. None uses literals.
   - None imports Base. Each declares its own enums (`Flag`, `Color`, `Outcome`,
     `Shape`, and a one-constructor `Unit`) and its own carriers (`Res`, `Opt`,
@@ -84,8 +84,8 @@ Classes:
 | --- | --- | --- | --- | --- |
 | higher-order | `lambda-apply` | `defunc-sites` | `lambda-match` | `reusable-function-param`, `apply-non-function`, `closure-over-applied`, `closure-domain-mismatch` |
 | returned-closures | `return-closure`, `compose` | `curried-arities` | `dependent-arrow` | `unannotated-let-lambda` |
-| captures | `nested-capture`, `choose-thunks` | - | - | `lambda-forward-call` |
-| affinity | - | `closure-drop` | - | `closure-call-twice`, `closure-twice-data`, `capture-affine-twice`, `capture-then-use` |
+| captures | `nested-capture`, `choose-thunks`, `choose-promoted` | - | - | `lambda-forward-call` |
+| affinity | - | `closure-drop` | - | `closure-call-twice`, `closure-twice-data`, `capture-affine-twice`, `capture-field-twice`, `capture-then-use` |
 | erasure | - | `erased-closure-arg` | - | `erased-capture-live` |
 | lambda-binders | - | `lambda-reusable-binder` | - | `reusable-closure-binder`, `lambda-matches-binder` |
 | continuations | `bind-continuation`, `curried-continuation`, `generic-choose-bind` | - | `do-block` | - |
@@ -94,8 +94,8 @@ Classes:
 | partial-application | `partial-application` | - | - | - |
 | match-interplay | `closure-in-arm` | - | - | `lambda-matches-capture` |
 
-That makes 13 positive, 6 edge, 4 boundary and 17 negative fixtures. They
-produce 283 seed entry calls and 17 seed rejections.
+That makes 14 positive, 6 edge, 4 boundary and 18 negative fixtures. They
+produce 292 seed entry calls and 18 seed rejections.
 
 ### What Knot's own source needs
 
@@ -109,6 +109,9 @@ definitions used as values in 5. The suite pins their shapes:
   in `generic-choose-bind`, including an instance at a function type. The last
   thunk of `staged` has a statement body, a `+m = ...` let and then a call, as
   `src/patterns.bend` and `src/check.bend` write them.
+- `S.choose` inside a match arm whose field binders are promoted, as in
+  `case State{+off,+line,+col,...}:` in `src/lex.bend`: `choose-promoted`
+  captures the `+a` field in both thunks and in a nested choose.
 - `S.bind(A, B, r, +x => S.bind(..., y => ...))`: `bind-continuation`,
   `generic-choose-bind`, and the `+binder` in `lambda-reusable-binder`.
 - Curried continuations such as `next: E.Scope -> C.Binding -> C.Term -> R`,
@@ -173,6 +176,7 @@ Knot never reports `Invalid`. When the seed rejects, Knot never reports
 | `compose` | agree | - | - | - |
 | `nested-capture` | agree | - | - | - |
 | `choose-thunks` | agree | - | - | - |
+| `choose-promoted` | agree | - | fields | - |
 | `bind-continuation` | agree | - | fields | - |
 | `curried-continuation` | agree | - | - | - |
 | `generic-choose-bind` | agree | - | fields, generics | - |
@@ -194,6 +198,7 @@ Knot never reports `Invalid`. When the seed rejects, Knot never reports
 | `closure-call-twice` | reject | `Invalid\tcheck\taffine-reuse\t` | - | `lambda-apply` |
 | `closure-twice-data` | reject | `Invalid\tcheck\taffine-reuse\t` | - | `return-closure` |
 | `capture-affine-twice` | reject | `Invalid\tcheck\taffine-reuse\t` | - | `choose-thunks` |
+| `capture-field-twice` | reject | `Invalid\tcheck\taffine-reuse\t` | fields | `choose-promoted` |
 | `capture-then-use` | reject | `Invalid\tcheck\taffine-reuse\t` | - | `return-closure` |
 | `map-reuses-function` | reject | `Invalid\tcheck\taffine-reuse\t` | fields, recursion | `closure-list` |
 | `reusable-function-param` | reject | `Invalid\tcheck\treusable-type\t` | - | `lambda-apply` |
@@ -291,7 +296,9 @@ because an implementer could reasonably expect otherwise.
 - **Captures are consumed when the closure is built**, not when it runs. Two
   thunks that capture one affine value are rejected although only one runs
   (`capture-affine-twice`). Each branch may capture its own affine value, or
-  both may share a `+` value (`choose-thunks`).
+  both may share a `+` value (`choose-thunks`). A field binder follows the
+  same rule: a `+` field binder may be captured by every thunk
+  (`choose-promoted`), a plain one only once (`capture-field-twice`).
 - **Erased positions consume nothing.** A lambda passed to an erased parameter
   may capture a value that is also passed live, and a closure may use an erased
   capture as an erased argument (`erased-closure-arg`). Returning it live is

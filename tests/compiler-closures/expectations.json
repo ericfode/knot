@@ -230,6 +230,37 @@
       }
     },
     {
+      "name": "choose-promoted",
+      "file": "fixtures/choose-promoted.bend",
+      "class": "positive",
+      "feature": "captures",
+      "intent": "The S.choose idiom over a match arm, as in src/lex.bend: the field binder +a is promoted, so both thunks and a nested choose capture it; the plain field b is captured once.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag",
+            "Flag",
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 7; every call must match the seed."
+      }
+    },
+    {
       "name": "bind-continuation",
       "file": "fixtures/bind-continuation.bend",
       "class": "positive",
@@ -953,6 +984,30 @@
         "diagnostic": "Invalid\tcheck\taffine-reuse\t",
         "knot_expected": true,
         "justification": "Captures count when the closure is built: two captures of affine a are affine-reuse, whichever thunk runs."
+      }
+    },
+    {
+      "name": "capture-field-twice",
+      "file": "fixtures/capture-field-twice.bend",
+      "class": "negative",
+      "feature": "affinity",
+      "intent": "choose-promoted without the +: the affine field binder a is captured by two thunks.",
+      "twin": "choose-promoted",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- observed : a (consumed more than once)\n",
+        "Location: promoted\n",
+        "29>|     case Pair{a, b}:"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+        "knot_expected": true,
+        "justification": "A field binder without + is affine like a parameter: two captures of a are affine-reuse, whichever thunk runs."
       }
     },
     {
@@ -3271,6 +3326,286 @@
             ],
             "exit": 0,
             "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "choose-promoted",
+        "source_sha256": "0acf008b30b0b198dfd21ea397a378d8a5e3e767fd6f81dcfce31628d1aaef1d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Unit": [
+            "Unit"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/fixtures/choose-promoted.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/fixtures/choose-promoted.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/fixtures/choose-promoted.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--Off-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{}, F.Off{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--Off-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--Off-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{}, F.Off{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--Off-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--Off-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{}, F.On{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--Off-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--Off-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{}, F.On{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--Off-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--On-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{}, F.Off{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--On-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--On-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{}, F.Off{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--On-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--On-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{}, F.On{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--On-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-promoted--run--On-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-promoted.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{}, F.On{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-promoted--run--On-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-promoted.On{}\n",
             "stderr": "",
             "result": {
               "type": "Flag",
@@ -9675,6 +10010,41 @@
           "exit": 1,
           "stdout": "",
           "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nContext:\n- c : Flag\nLocation: shared\n13 | \n14>| def shared(c: Flag, a: Flag) -> Flag:\n   |                     ^\n15 |   choose(c, u => a, u => a)\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "capture-field-twice",
+        "source_sha256": "1094eb0e3fe72211313e66b722d96ba4b7b63ee9c83e2fe9962f410e97043fe8",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Unit": [
+            "Unit"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/fixtures/capture-field-twice.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nContext:\n- c : Flag\nLocation: promoted\n28 |   match p:\n29>|     case Pair{a, b}: choose(c, u => a, u => choose(a, v => xor(a, b), v => a))\n   |               ^\n30 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/fixtures/capture-field-twice.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nContext:\n- c : Flag\nLocation: promoted\n28 |   match p:\n29>|     case Pair{a, b}: choose(c, u => a, u => choose(a, v => xor(a, b), v => a))\n   |               ^\n30 | \n"
         },
         "calls": []
       },
