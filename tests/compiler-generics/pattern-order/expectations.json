@@ -89,6 +89,26 @@
       }
     },
     {
+      "name": "later-family-binding",
+      "file": "fixtures/later-family-binding.bend",
+      "class": "negative",
+      "feature": "pattern-order",
+      "intent": "The binding variant: a let-bound Box scrutinized by `case Box{v}` above `type Box`.",
+      "twin": "earlier-family-forward-binding",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "a declared constructor (unknown: Box)"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+        "knot_expected": true,
+        "justification": "The seed reports the late pattern first. Independently, the seed never lets a match scrutinize a local binder (\"a match cannot scrutinize a local binder\"), whatever the declaration order. Knot rejects that scrutinee as Invalid check unmatchable-binder, so the binding variant is rejected before its pattern is resolved."
+      }
+    },
+    {
       "name": "earlier-family-forward-uses",
       "file": "fixtures/earlier-family-forward-uses.bend",
       "class": "positive",
@@ -133,6 +153,33 @@
       "knot": {
         "require": "agree",
         "justification": "Every constructor pattern follows its family's declaration; forward types and constructor expressions resolve in the whole book, so the seed's results fix the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "earlier-family-forward-binding",
+      "file": "fixtures/earlier-family-forward-binding.bend",
+      "class": "positive",
+      "feature": "pattern-order",
+      "intent": "A let annotated `Box<Flag>` and bound to `Box{x}` above the declarations; the Box pattern follows them.",
+      "twin": "later-family-binding",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "A binding's annotation and constructor expression resolve in the whole book, and the only pattern follows its declaration, so the seed's results fix the evaluator and Wasm results."
       }
     }
   ],
@@ -269,6 +316,38 @@
           "exit": 1,
           "stdout": "",
           "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}:\n  |          ^^^^^\n4 |       On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "later-family-binding",
+        "source_sha256": "a4c7478b5d9aa5822a3d0665090e5579697ada625588e4cf42003d5211b57c77",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-binding.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n3 |   match b:\n4>|     case Box{v}:\n  |          ^^^^^^\n5 |       v\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/later-family-binding.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n3 |   match b:\n4>|     case Box{v}:\n  |          ^^^^^^\n5 |       v\n"
         },
         "calls": []
       },
@@ -417,6 +496,107 @@
             ],
             "exit": 0,
             "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "earlier-family-forward-binding",
+        "source_sha256": "9922b724fb09c133eba7bb8497b7c5fe0dddb3df0de827c14a326e243119e0d4",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-binding--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-binding--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-binding--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/pattern-order-wrappers/earlier-family-forward-binding--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/pattern-order/fixtures/earlier-family-forward-binding.On{}\n",
             "stderr": "",
             "result": {
               "type": "Flag",
