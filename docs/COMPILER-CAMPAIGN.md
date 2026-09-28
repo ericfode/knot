@@ -12,6 +12,7 @@ Later additions the same day:
 - "an extension to bends syntax that allows for unicode symbols but do that last … after we are self hosting"
 - "you can delegate to codex too"
 - "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
+- "You can let claude do actual work too. i just want you to use up my codex tokens as well"
 
 ## Definition of done
 
@@ -47,6 +48,8 @@ Later additions the same day:
 | D8 | The user's instruction authorizes this campaign to edit `src/` through delegated worktrees. Compiler Planning's accepted work and all receipts are preserved; package directories are not edited unless an increment explicitly requires it; arrays (`vec`) stay out of the bootstrap profile. | Ownership continuity. |
 | D9 | New Bend code follows the user's calibrated register: one core idea, laws stated as `law` declarations with checked proofs (not unchecked law comments), and terse, exact names. It avoids costume vocabulary, narration and ornament. | `docs/perch-calibration/taste-duel-2026-09-27/`, rubric v8. |
 | D10 | Data lifetime for milestone 1: unique `Type` objects plus reference-counted immutable `Data` (candidate B of `research/data-lifetime/`). Copied Data (A) stays as the conformance control. Reclamation is part of owned-storage acceptance; the bump arena stays interim. | The r3r7 packet: both candidates pass 105 traces with 16 of 16 mutants killed, and B peaks at 43 words against 1,532 on the shared-subterm trace. The packet asked for a coordinator or user decision; the coordinator decided under the goal. The user can reverse it. |
+| D11 | D6 revised. The native C backend starts now, in parallel on the current core IR, and grows with each accepted profile. It no longer waits for self-hosting. | The user asked for maximal parallel use of Codex and of Claude implementers. The C emitter shares only core terms, so its conflicts are small. |
+| D12 | Host effects before the IO ABI lands. A reachable IO or host-effect declaration checks successfully. Evaluation of a pure entry agrees with the seed. Compilation reports `Unsupported compile host-effect` (exit 3) and emits no artifact. | This follows `docs/BEND-SUBSET-STAGES.md` (build rejects a missing capability before emission) over the baseslice suite's check-phase pin. The coordinator reconciles that pin when baseslice is implemented. |
 
 ## Milestone ladder
 
