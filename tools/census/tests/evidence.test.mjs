@@ -202,7 +202,8 @@ test('new suites supply recursion check/eval and fields Wasm evidence with exhau
   const recursion = accepted.classes.find(c => c.feature === 'recursion').stages;
   assert.ok(recursion.check.evidence.some(e => e.startsWith('recursion:')));
   assert.ok(recursion.eval.evidence.some(e => e.startsWith('recursion:')));
-  assert.deepEqual(recursion.wasm.evidence, []);
+  assert.deepEqual(recursion.wasm.evidence, ['generics:tests/compiler-generics/fixtures/quantity-parity.bend',
+    'generics:tests/compiler-generics/fixtures/seq-parity.bend']);
   const fields = accepted.classes.find(c => c.feature === 'fields').stages;
   assert.ok(fields.wasm.evidence.some(e => e.startsWith('fields-wasm:')));
   assert.ok(!fields.wasm.evidence.some(e => e.endsWith('/arena-overflow.bend')));
