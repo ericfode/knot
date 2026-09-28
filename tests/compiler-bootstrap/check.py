@@ -1017,17 +1017,28 @@ def sandbox_controls(bundle, manifest, argv) -> list[dict]:
         result.append({'name': label, 'expected': {'refused': True, 'reason': reason}, 'observed': seen})
     result.append({'name': 'argv-reserved-refused', 'expected': {'reserved': ['--threads']},
                    'observed': {'reserved': reserved_in([*argv, '--threads', '2'], manifest)}})
-    # Live routing of A2's result on S: a host timeout, a host stack trap, a Knot rejection, success.
+    # Live routing of A2's result on the S that C1 built: a host timeout, a host
+    # stack trap, a Knot rejection, success, a Knot budget, the VM's fuel and
+    # heap budgets (D16, D19), and a harness that cannot run A2 yet.
     answered = {'abi': 'knot-io', 'blocked': None}
+    pending = {'abi': 'knot-io', 'blocked': {'source': 'harness', 'exit': 3, 'stdout': '',
+                                             'stderr': 'Unsupported\thost\tio-abi-pending\n'}}
     record = lambda exit, stderr, **more: {'argv': argv, 'exit': exit, 'stdout': b'', 'stderr': stderr, **more}
     routed = [a3_stopped(a, o, argv) for a, o in (
         (None, record(None, b'', outcome='Exhausted', budget_seconds=1, source='harness')),
         (answered, record(4, b'Exhausted\twasm\tcall-stack\n', host=True, files={})),
         (answered, record(3, b'Unsupported\tlex\tliteral\t0:1:1:1\n', host=False, files={})),
-        (answered, record(0, b'', host=False, files={})))]
-    result.append({'name': 'a3-routing', 'expected': {'statuses': ['divergent-exhausted', 'divergent-exhausted',
-                                                                    'blocked', 'reached']},
-                   'observed': {'statuses': [r['status'] if r else 'reached' for r in routed]}})
+        (answered, record(0, b'', host=False, files={})),
+        (answered, record(4, b'Exhausted\tparse\tbudget\t12:13:3:4\n', host=False, files={})),
+        (answered, record(4, b'Exhausted\tio\tsteps\n', host=False, files={})),
+        (answered, record(4, b'Exhausted\tio\tmemory\n', host=False, files={})),
+        (pending, record(3, b'Unsupported\thost\tio-abi-pending\n', source='harness')))]
+    result.append({'name': 'a3-routing', 'expected': {
+        'statuses': ['divergent-exhausted', 'divergent-exhausted', 'divergent-unsupported', 'reached',
+                     'divergent-exhausted', 'blocked', 'blocked', 'blocked'],
+        'excuses': [None, None, None, None, None, 'vm-fuel', 'vm-heap', 'harness-io-abi-pending']},
+        'observed': {'statuses': [r['status'] if r else 'reached' for r in routed],
+                     'excuses': [r.get('excuse') if r else None for r in routed]}})
     return result
 
 
