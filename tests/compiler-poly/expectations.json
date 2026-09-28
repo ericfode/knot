@@ -99,6 +99,68 @@
       }
     },
     {
+      "name": "bind-promoted-instance",
+      "file": "fixtures/bind-promoted-instance.bend",
+      "class": "positive",
+      "feature": "generic-arrows",
+      "increment": "poly-closures",
+      "summary": "The check.bend run shapes: +ps => at Seq<&2,Flag> passed on and captured, and bound => +fs => on the second curried binder.",
+      "census": [
+        "higher-order",
+        "lambdas",
+        "captures",
+        "calls.variable",
+        "generics",
+        "quantities.arguments",
+        "quantities.reusable"
+      ],
+      "mirrors": [
+        "src/check.bend:182 run",
+        "src/check.bend:211 run",
+        "src/patterns.bend:38 fields",
+        "src/syntax.bend:81 bind"
+      ],
+      "twin": null,
+      "requires": [
+        "closures",
+        "fields",
+        "generics"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "params",
+          "params": [
+            "Flag",
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "fields",
+          "params": [
+            "Flag"
+          ],
+          "result": "Color"
+        },
+        {
+          "name": "once",
+          "params": [
+            "Flag"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. + lambda binders at a generic instance: +ps at Seq<&2,Flag> as the binder of bind's continuation, passed on and captured, and +fs on the second binder of a curried continuation. Each is used twice."
+      }
+    },
+    {
       "name": "bind-rigid-caller",
       "file": "fixtures/bind-rigid-caller.bend",
       "class": "positive",
@@ -389,7 +451,7 @@
       ],
       "knot": {
         "require": "agree",
-        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Type arguments that are themselves arrows into a Res instance: the defunctionalized apply sees a function of functions. Knot's only arrow-valued type argument is IO(Unit) in S.choose (check-cli.bend:51); this is its rank-1 edge."
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Type arguments that are themselves arrows into a Res instance: the defunctionalized apply sees a function of functions. Knot's only arrow-valued type argument is IO(Unit) in S.choose (check-cli.bend:51, pinned by rank2-choose-action); this is its rank-1 edge."
       }
     },
     {
@@ -579,6 +641,41 @@
       }
     },
     {
+      "name": "promoted-affine-instance",
+      "file": "fixtures/promoted-affine-instance.bend",
+      "class": "negative",
+      "feature": "generic-arrows",
+      "increment": "poly-closures",
+      "summary": "A + binder promotes an &1 instance: bound => +fs => at Seq<&1,Flag>, so once could read fs twice.",
+      "census": [
+        "higher-order",
+        "lambdas",
+        "generics",
+        "quantities.reusable"
+      ],
+      "mirrors": [],
+      "twin": "bind-promoted-instance",
+      "requires": [
+        "closures",
+        "fields",
+        "generics"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "Location: once\n",
+        "90>|   color_of(scope_once(g,bound => +fs =>"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t",
+        "precedent": "tests/compiler-closures/fixtures/reusable-closure-binder.bend",
+        "knot_expected": true,
+        "justification": "A + lambda binder at Seq<&1,Flag>, which is Type: the parameter rule refuses it for the reason closures reusable-closure-binder pins."
+      }
+    },
+    {
       "name": "rigid-capture-twice",
       "file": "fixtures/rigid-capture-twice.bend",
       "class": "negative",
@@ -711,6 +808,57 @@
         "precedent": "tests/compiler-generics/fixtures/reusable-type-param.bend",
         "knot_expected": true,
         "justification": "A + binder at a variable of kind Type; the seed reason is the one generics reusable-type-param pins."
+      }
+    },
+    {
+      "name": "rank2-choose-action",
+      "file": "fixtures/rank2-choose-action.bend",
+      "class": "positive",
+      "feature": "higher-rank",
+      "increment": "poly-closures",
+      "summary": "The check-cli configure and compile-cli configured shape: choose at Act(Color), one thunk loading with a continuation that captures +g.",
+      "census": [
+        "higher-order",
+        "lambdas",
+        "captures",
+        "calls.variable",
+        "generics",
+        "quantities.arguments",
+        "patterns.nested"
+      ],
+      "mirrors": [
+        "src/check-cli.bend:48 configure",
+        "src/parse-cli.bend:40 configure",
+        "src/compile-cli.bend:38 configured",
+        "src/syntax.bend:76 choose"
+      ],
+      "twin": null,
+      "requires": [
+        "closures",
+        "fields",
+        "generics",
+        "nested-patterns",
+        "type-level-definition"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag",
+            "Flag",
+            "Flag"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. choose's erased -A is instantiated at the rank-2 Act(Color), as S.choose(IO(Unit),..) is in check-cli, parse-cli and compile-cli: impredicative instantiation. One thunk dies; the other loads with a continuation that captures +g."
       }
     },
     {
@@ -1083,6 +1231,41 @@
       "knot": {
         "require": "agree",
         "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. The erased answer R is instantiated at two types, and Act at Act(Flag) (join). That is impredicative instantiation, the mechanism Knot's source needs for S.choose(IO(Unit),..) at check-cli.bend:51, parse-cli.bend:43 and compile-cli.bend:44, so poly-closures owns it."
+      }
+    },
+    {
+      "name": "rank2-choose-mismatch",
+      "file": "fixtures/rank2-choose-mismatch.bend",
+      "class": "negative",
+      "feature": "higher-rank",
+      "increment": "poly-closures",
+      "summary": "A thunk of choose at Act(Color) returns Act(Flag): the action instance has the wrong answer type.",
+      "census": [
+        "higher-order",
+        "lambdas",
+        "generics"
+      ],
+      "mirrors": [],
+      "twin": "rank2-choose-action",
+      "requires": [
+        "closures",
+        "fields",
+        "generics",
+        "nested-patterns",
+        "type-level-definition"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : @-R:Type -> @k:(@_:Color -> Op<R>) -> Op<R>\n- observed : @-R:Type -> @k:(@_:Flag -> Op<R>) -> Op<R>\n",
+        "Location: configured\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "precedent": "tests/compiler-generics/fixtures/wrong-type-arg.bend",
+        "knot_expected": true,
+        "justification": "A thunk of choose at Act(Color) returns Act(Flag): the rank-2 action instance at the wrong answer type, the ordinary expected/observed mismatch generics wrong-type-arg pins."
       }
     },
     {
@@ -1481,7 +1664,6 @@
         "calls.variable"
       ],
       "mirrors": [
-        "src/check-cli.bend:28 read_result",
         "src/syntax.bend:81 bind",
         "base.bend:36 Result"
       ],
@@ -2298,6 +2480,60 @@
       }
     },
     {
+      "name": "sigma-in-result-action",
+      "file": "fixtures/sigma-in-result-action.bend",
+      "class": "positive",
+      "feature": "sigma",
+      "increment": "templates",
+      "summary": "The driver.bend opened and read_pair shape: Act.bind at Both(Handle,Res<&1,&1,Both(Code,Flag),Color>), a partial read_pair, a Pack inside Fail.",
+      "census": [
+        "dependent",
+        "generics",
+        "bindings",
+        "patterns.nested",
+        "quantities.arguments",
+        "higher-order",
+        "calls.partial",
+        "lambdas"
+      ],
+      "mirrors": [
+        "src/driver.bend:50 opened",
+        "src/driver.bend:44 read_pair",
+        "src/check-cli.bend:28 read_result",
+        "src/check-cli.bend:39 opened"
+      ],
+      "twin": null,
+      "requires": [
+        "closures",
+        "destructuring-let",
+        "fields",
+        "generics",
+        "nested-patterns",
+        "poly-closures",
+        "type-level-definition"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag",
+            "Flag",
+            "Flag"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid, inside templates: every call must match the seed through check and eval. The composition the CLIs write: a Sigma inside a Res inside a rank-2 action. Act.bind runs at a Both(Handle,Res<&1,&1,Both(Code,Flag),Color>) answer and is fed a partial read_pair; a Pack pattern is nested in Fail, and the outer pair is destructured by a let."
+      }
+    },
+    {
       "name": "sigma-pair",
       "file": "fixtures/sigma-pair.bend",
       "class": "positive",
@@ -3029,6 +3265,267 @@
               "type": "Verdict",
               "constructor": "Accepted",
               "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "bind-promoted-instance",
+        "source_sha256": "a89c126bff945df3830fa2a20b4be0cdd3d33249f957fa70e91d3d5dff95b5fc",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Blue"
+          ],
+          "Fault": [
+            "Invalid",
+            "Unsupported"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/bind-promoted-instance.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/bind-promoted-instance.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-poly/fixtures/bind-promoted-instance.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "params",
+            "arguments": [
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--params--Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Flag:\n  F.params(F.Off{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--params--Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "params",
+            "arguments": [
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--params--Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Flag:\n  F.params(F.Off{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--params--Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "params",
+            "arguments": [
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--params--On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Flag:\n  F.params(F.On{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--params--On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "params",
+            "arguments": [
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--params--On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Flag:\n  F.params(F.On{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--params--On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "fields",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--fields--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Color:\n  F.fields(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--fields--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "fields",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--fields--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Color:\n  F.fields(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--fields--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "once",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--once--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Color:\n  F.once(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--once--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "once",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/bind-promoted-instance--once--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/bind-promoted-instance.bend as F\n\ndef main() -> F.Color:\n  F.once(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/bind-promoted-instance--once--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/bind-promoted-instance.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
             }
           }
         ]
@@ -5688,6 +6185,46 @@
         "calls": []
       },
       {
+        "case": "promoted-affine-instance",
+        "source_sha256": "98b4e72b5cc1651d0d985936f8a8367c8c45f45e6ce912110375b25774c36260",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Blue"
+          ],
+          "Fault": [
+            "Invalid",
+            "Unsupported"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/promoted-affine-instance.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- g     : Flag\n- bound : Flag\nLocation: once\n89 | def once(g: Flag) -> Color:\n90>|   color_of(scope_once(g,bound => +fs => Done{paint(both(first_once(fs),both(first_once(fs),bound)))}))\n   |                                  ^^^^\n91 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/promoted-affine-instance.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- g     : Flag\n- bound : Flag\nLocation: once\n89 | def once(g: Flag) -> Color:\n90>|   color_of(scope_once(g,bound => +fs => Done{paint(both(first_once(fs),both(first_once(fs),bound)))}))\n   |                                  ^^^^\n91 | \n"
+        },
+        "calls": []
+      },
+      {
         "case": "rigid-capture-twice",
         "source_sha256": "2b61766b0bf4ca9118a770eb98e18be99312649e5ba9102fee6d7e3598c21b88",
         "enums": {
@@ -5836,6 +6373,295 @@
           "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- A : Type\n- c : Flag\nLocation: pick\n21 | \n22>| def pick(-A: Type, c: Flag, +x: A, y: A) -> A:\n   |                                 ^\n23 |   choose(A,c,u => x,u => x)\n"
         },
         "calls": []
+      },
+      {
+        "case": "rank2-choose-action",
+        "source_sha256": "9a1a7df3bbe636a5f7acbe23f3e5b1dccbde65f88b31e7222c5eedfc881e2835",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Blue",
+            "Gray"
+          ],
+          "Fault": [
+            "Invalid",
+            "Unsupported"
+          ],
+          "Unit": [
+            "Unit"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/rank2-choose-action.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/rank2-choose-action.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-poly/fixtures/rank2-choose-action.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.Off{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.Off{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.On{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.On{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--Off-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--On-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.Off{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--On-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--On-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.Off{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--On-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--On-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.On{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--On-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/rank2-choose-action--run--On-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/rank2-choose-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.On{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/rank2-choose-action--run--On-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/rank2-choose-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          }
+        ]
       },
       {
         "case": "rank2-continuation",
@@ -7281,6 +8107,50 @@
             }
           }
         ]
+      },
+      {
+        "case": "rank2-choose-mismatch",
+        "source_sha256": "328f78cf1ac6b7410d84061d5bac4c2a176cab1302b33342be4f3da9604fe652",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Blue",
+            "Gray"
+          ],
+          "Fault": [
+            "Invalid",
+            "Unsupported"
+          ],
+          "Unit": [
+            "Unit"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/rank2-choose-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : @-R:Type -> @k:(@_:Color -> Op<R>) -> Op<R>\n- observed : @-R:Type -> @k:(@_:Flag -> Op<R>) -> Op<R>\nContext:\n- c : Flag\n- f : Flag\n- g : Flag\n- u : Unit\nLocation: configured\n74 | def configured(c: Flag, f: Flag, +g: Flag) -> Act(Color):\n75>|   choose(Act(Color),c,u => Act.die(Flag,Invalid{}),u =>\n   |                            ^^^^^^^^^^^^^^^^^^^^^^^\n76 |     load(f,book => render(book,g)))\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/rank2-choose-mismatch.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : @-R:Type -> @k:(@_:Color -> Op<R>) -> Op<R>\n- observed : @-R:Type -> @k:(@_:Flag -> Op<R>) -> Op<R>\nContext:\n- c : Flag\n- f : Flag\n- g : Flag\n- u : Unit\nLocation: configured\n74 | def configured(c: Flag, f: Flag, +g: Flag) -> Act(Color):\n75>|   choose(Act(Color),c,u => Act.die(Flag,Invalid{}),u =>\n   |                            ^^^^^^^^^^^^^^^^^^^^^^^\n76 |     load(f,book => render(book,g)))\n"
+        },
+        "calls": []
       },
       {
         "case": "rank2-continuation-twice",
@@ -11640,6 +12510,296 @@
               "type": "Flag",
               "constructor": "On",
               "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "sigma-in-result-action",
+        "source_sha256": "796bf94263ec6909329c5d375a4394758a22cfb3cef1c3209c00da1e44c7828c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Blue",
+            "Gray"
+          ],
+          "Code": [
+            "Missing",
+            "Denied"
+          ],
+          "Fault": [
+            "Invalid",
+            "Unsupported"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/sigma-in-result-action.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-poly/fixtures/sigma-in-result-action.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-poly/fixtures/sigma-in-result-action.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.Off{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.Off{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.On{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.Off{},F.On{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--Off-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.Off{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Gray{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Gray",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.Off{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.On{},F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-poly/fixtures/sigma-in-result-action.bend as F\n\ndef main() -> F.Color:\n  F.run(F.On{},F.On{},F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-poly/wrappers/sigma-in-result-action--run--On-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-poly/fixtures/sigma-in-result-action.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
             }
           }
         ]

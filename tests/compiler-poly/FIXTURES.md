@@ -50,14 +50,17 @@ reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
 | --- | --- | --- |
 | `S.choose(-A: Type, c, yes: Unit -> A, no: Unit -> A)` (with `S.bind`, about 300 call sites by VM-DESIGN.md's count), instantiated at `Result<S.Error,State>`, `List<&2,Token>` and `Maybe<&2,C.Term>` | `src/syntax.bend:76`, `src/syntax.bend:98` (skip_lines), `src/lex.bend:12` (normal, four chained), `src/lex.bend:35` (step_at), `src/parse.bend:54` (wrap_call) | `choose-rigid`, `choose-result-chain` |
 | `S.bind(-A: Data, -B: Data, r: Result<Error,A>, next: A -> Result<Error,B>)` at `List<&2,S.Token>`, `P.Parsed` and `List<&2,U32>`, nested, the inner lambda capturing the outer binder | `src/syntax.bend:81`, `src/driver.bend:30` (source), `src/driver.bend:69` (ordinals), `src/lex.bend:67` (scan) | `bind-instance-chain`, `bind-rigid-caller` |
+| `+` lambda binders at generic instances: `+params =>` at `List<&2,C.Parameter>` as `S.bind`'s continuation binder, `bound => +fields =>` on a second curried binder, `+token => mark =>` | `src/check.bend:182` and `:211` (run), `src/patterns.bend:38` (fields), `src/patterns.bend:68` (branch), `src/wasm.bend:274` (profiled) | `bind-promoted-instance` |
 | lambdas created inside generic code at rigid arrows: `x => f(x,R,k)` captures `f: A -> IO(B)` | `base.bend:155` (IO.bind) | `choose-rigid`, `bind-rigid-caller`, `generic-compose`, `generic-capture` |
 | curried continuations into `Result` instances, one captured in a choose thunk whose body is a let then a call | `src/patterns.bend:14` (add), `src/check.bend:165` (arm_scope), `src/parse.bend:43` (then), `src/check.bend:141` (call_body), `src/core.bend:39` (exhausted) | `curried-generic-continuation` |
 | `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `bind` and `die` | `base.bend:147`, `:155`, `:184` | `rank2-pure-bind`, `rank2-two-answers`, `rank2-param` |
 | `next: C.Book -> IO(Unit)` threaded through `checked`, `read_result`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
 | `IO.bind(..,opened(characters,depth))` (partial application) and `IO.bind(..,IO.args(),arguments)` (a named def) | `src/check-cli.bend:39`, `src/check-cli.bend:45`, `src/parse-cli.bend:56` | `rank2-partial-bind` |
+| `S.choose(IO(Unit),..)`: `choose`'s erased `-A` at a rank-2 action type (impredicative instantiation), one thunk dying and the other loading with a continuation that captures `+` parameters | `src/check-cli.bend:51` (configure), `src/parse-cli.bend:43` (configure), `src/compile-cli.bend:44` (configured) | `rank2-choose-action` |
 | statement-only `do IO<Unit>:`: a statement, then the tail action, with no `<-` and no `return` | `src/driver.bend:46` (read_pair), `src/check-cli.bend:35`, `src/parse-cli.bend:27`, `src/compile-cli.bend:17` (write_pair) | `rank2-do-block` (boundary) |
 | `List.length(&2,S.Node,args)`, `List.reverse(&2,S.Token,..)` into Base's `a, -A: Kind(a)` definitions; `List.reverse` forwards `a, A` to `List.reverse.go` | `src/check.bend:55`, `src/lex.bend:55` (finish), `src/eval.bend:133`, `base.bend:814`, `base.bend:835`, `base.bend:843` | `kind-closure-list`, `kind-forward` |
-| `Result<&1,&1,U32 & String,String>`, the two-quantity family `Result<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)` and its short form `Result<S.Error,A>` | `src/check-cli.bend:28`, `src/syntax.bend:81`, `base.bend:36` | `kind-two-quantities` |
+| the two-quantity family `Result<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)`, spelled long as `Result<&1,&1,..>`, and its short form `Result<S.Error,A>` | `src/syntax.bend:81`, `base.bend:36` | `kind-two-quantities` |
+| a Sigma inside a `Result` inside an action: `IO.bind(File & Result<&1,&1,U32 & String,String>,Unit,File.read(..),read_pair(..))`, then `(file,result) = pair` and `case Fail{(code,message)}` | `src/driver.bend:50` (opened), `src/driver.bend:44` (read_pair), `src/check-cli.bend:28` (read_result), `src/check-cli.bend:39` (opened) | `sigma-in-result-action` |
 | `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
 | `set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, ..)`, with `refine` and `replace` passing closed lambdas whose binders shadow their own parameters | `src/scope.bend:77`, `src/scope.bend:85`, `src/scope.bend:108` | `template-set-known-thunk` |
 | `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, spelled `File & Result<..>` and destructured by `(file,result) = pair`; `Sigma`'s field `snd: B(fst)` | `base.bend:127`, `base.bend:25`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
@@ -92,8 +95,8 @@ adversarial case that the owning increment must not reject:
 - Edges with no counterpart in any source:
   - `generic-arrow-instances`: a type argument that is a rank-1 arrow. The only
     arrow-valued type argument in `src/` is `IO(Unit)` at
-    `src/check-cli.bend:51`, which is rank-2, so the fixture cites that line as
-    its nearest shape.
+    `src/check-cli.bend:51`, which is rank-2 and pinned by
+    `rank2-choose-action`. The fixture cites that line as its nearest shape.
   - `rank2-two-answers`: one action type at two answers.
   - `rank2-param`: rank-2 parameter types written out.
   - `kind-zero-arrow`: `Kind(&0)` at an arrow.
@@ -124,7 +127,7 @@ Out of scope:
 
 ## Contents
 
-- `fixtures/*.bend`: 56 small programs, one shape or edge each.
+- `fixtures/*.bend`: 61 small programs, one shape or edge each.
   - Every fixture is ASCII with LF line endings and no tabs. Line 1 is a
     `# summary`, which `regen.py` checks against the case's `summary`.
   - No fixture imports anything, not even Base. Each declares its own enums
@@ -211,15 +214,20 @@ Classes:
 
 | Feature | Increment | Positive | Edge | Boundary | Negative |
 | --- | --- | --- | --- | --- | --- |
-| generic-arrows | poly-closures | `choose-rigid`, `choose-result-chain`, `bind-instance-chain`, `bind-rigid-caller`, `generic-compose`, `generic-capture`, `curried-generic-continuation` | `generic-arrow-instances` | - | `rigid-closure-twice`, `rigid-domain-mismatch`, `rigid-capture-twice`, `rigid-reusable-type`, `bind-arrow-instance`, `choose-branch-mismatch` |
-| higher-rank | poly-closures | `rank2-pure-bind`, `rank2-continuation`, `rank2-partial-bind`, `rank2-try` | `rank2-two-answers`, `rank2-param` | `rank2-do-block` | `rank2-rigid-answer`, `rank2-continuation-twice`, `rank2-run-twice`, `rank2-monomorphic-arg` |
+| generic-arrows | poly-closures | `choose-rigid`, `choose-result-chain`, `bind-instance-chain`, `bind-rigid-caller`, `bind-promoted-instance`, `generic-compose`, `generic-capture`, `curried-generic-continuation` | `generic-arrow-instances` | - | `rigid-closure-twice`, `rigid-domain-mismatch`, `rigid-capture-twice`, `rigid-reusable-type`, `bind-arrow-instance`, `choose-branch-mismatch`, `promoted-affine-instance` |
+| higher-rank | poly-closures | `rank2-pure-bind`, `rank2-continuation`, `rank2-partial-bind`, `rank2-try`, `rank2-choose-action` | `rank2-two-answers`, `rank2-param` | `rank2-do-block` | `rank2-rigid-answer`, `rank2-continuation-twice`, `rank2-run-twice`, `rank2-monomorphic-arg`, `rank2-choose-mismatch` |
 | kind-polymorphism | poly-closures | `kind-closure-list`, `kind-higher-order`, `kind-forward`, `kind-two-quantities`, `kind-result-list` | `kind-zero-arrow` | - | `kind-closure-at-data`, `kind-closure-reuse`, `kind-quantity-mismatch`, `kind-reuse-affine-result`, `kind-meet-reuse` |
 | templates | templates | `template-map-types`, `template-fold-quant`, `template-any-forward`, `template-set-known-thunk`, `template-filter-data` | `template-generic-arg` | - | `template-open-type`, `template-type-mismatch`, `template-quant-kind`, `template-plain-param`, `template-thunk-affine` |
-| sigma | templates | `sigma-pair`, `sigma-dependent`, `sigma-unpack` | `sigma-reusable` | - | `sigma-snd-mismatch`, `sigma-unrefined`, `sigma-family-live-binder`, `sigma-affine-twice`, `sigma-reuse-affine` |
+| sigma | templates | `sigma-pair`, `sigma-dependent`, `sigma-unpack`, `sigma-in-result-action` | `sigma-reusable` | - | `sigma-snd-mismatch`, `sigma-unrefined`, `sigma-family-live-binder`, `sigma-affine-twice`, `sigma-reuse-affine` |
 
-That makes 24 positive, 6 edge, 1 boundary and 25 negative fixtures. They
-produce 309 seed entry calls and 25 seed rejections. The 30 `agree` fixtures
-account for 304 of the calls: 208 for `poly-closures` and 96 for `templates`.
+That makes 27 positive, 6 edge, 1 boundary and 27 negative fixtures, 61 in
+all, one above the 40 to 60 the increment aimed for. The audit confirmed the
+five added fixtures (`rank2-choose-action`, `rank2-choose-mismatch`,
+`sigma-in-result-action`, `bind-promoted-instance`,
+`promoted-affine-instance`) as Knot-source shapes that nothing else covers, so
+none was cut. They produce 336 seed entry calls and 27 seed rejections. The 33
+`agree` fixtures account for 331 of the calls: 226 for `poly-closures` and 105
+for `templates`.
 
 The negatives cover each rejection the goal names:
 - **An affine capture used twice:** `rigid-capture-twice`, `template-thunk-affine`.
@@ -232,10 +240,12 @@ The negatives cover each rejection the goal names:
 - **A wrong quantity instantiation:** `kind-quantity-mismatch`,
   `kind-closure-at-data`, `template-quant-kind`, `bind-arrow-instance`,
   `kind-reuse-affine-result`, `kind-meet-reuse`, `rigid-reusable-type`,
+  `promoted-affine-instance` (a `+` lambda binder at `Seq<&1,Flag>`),
   `sigma-reuse-affine`, `sigma-family-live-binder`.
 - **Template misuse:** `template-open-type`, `template-plain-param`,
   `template-type-mismatch`, `template-quant-kind`.
 - **Type errors:** `rigid-domain-mismatch`, `choose-branch-mismatch`,
+  `rank2-choose-mismatch` (an action instance at the wrong answer type),
   `sigma-snd-mismatch`, and `sigma-unrefined` (a dependent type that has not
   been refined).
 
@@ -264,12 +274,14 @@ Knot never reports `Invalid` (D4). When the seed rejects, Knot reports `Invalid`
     closures, and a field destructured from a `&1` pair used twice.
   - `type-mismatch` (generics `rigid-mismatch`, `wrong-type-arg` and
     `quantity-invariant`; closures `closure-domain-mismatch`): distinct rigid
-    variables (`B` and `A`, or `R` and `A`), an instance of the wrong shape,
-    `Seq<&2,Flag>` against `Seq<&1,Flag>`, and a function value of the wrong
-    arrow type, including the wrong rank.
+    variables (`B` and `A`, or `R` and `A`), an instance of the wrong shape
+    (including `Act(Flag)` where `Act(Color)` is due), `Seq<&2,Flag>` against
+    `Seq<&1,Flag>`, and a function value of the wrong arrow type, including the
+    wrong rank.
   - `reusable-type` (generics `reusable-type-param` and `meet-not-reusable`;
-    sugar `annotation-reusable-quantity`): a `+` binder at a `Type` variable, at
-    a `&1` instance, or at the meet `&2 <&> &1`.
+    sugar `annotation-reusable-quantity`; closures `reusable-closure-binder`):
+    a `+` binder at a `Type` variable, at a `&1` instance (a parameter, a let
+    or a lambda binder), or at the meet `&2 <&> &1`.
 - **Class-only pins.** These negatives pin exit 2 only:
   - `bind-arrow-instance`, `kind-closure-at-data` and `template-quant-kind`.
     Each gives an arrow type where a `Data` kind is wanted. This is the reason
@@ -311,10 +323,13 @@ suites; `expectations.json` holds the exact strings.
 | `rigid-reusable-type` | poly-closures | reject | `Invalid\tcheck\treusable-type\t` | generics `reusable-type-param` | closures, fields, generics | `choose-rigid` |
 | `bind-arrow-instance` | poly-closures | reject | exit 2 | generics `kind-type-for-data` | closures, fields, generics, nested-patterns, recursion | `bind-instance-chain` |
 | `choose-branch-mismatch` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | closures, fields, generics, nested-patterns | `choose-result-chain` |
+| `bind-promoted-instance` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `promoted-affine-instance` | poly-closures | reject | `Invalid\tcheck\treusable-type\t` | closures `reusable-closure-binder` | closures, fields, generics | `bind-promoted-instance` |
 | `rank2-pure-bind` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
 | `rank2-continuation` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
 | `rank2-partial-bind` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
 | `rank2-try` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns, type-level-definition | - |
+| `rank2-choose-action` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns, type-level-definition | - |
 | `rank2-two-answers` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
 | `rank2-param` | poly-closures | agree | - | - | closures, fields, generics | - |
 | `rank2-do-block` | poly-closures | agree-or-unsupported | - | - | closures, do-notation, fields, generics, type-level-definition | - |
@@ -322,6 +337,7 @@ suites; `expectations.json` holds the exact strings.
 | `rank2-continuation-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, fields, generics, type-level-definition | `rank2-pure-bind` |
 | `rank2-run-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, fields, generics, type-level-definition | `rank2-two-answers` |
 | `rank2-monomorphic-arg` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | closures `closure-domain-mismatch` | closures, fields, generics | `rank2-param` |
+| `rank2-choose-mismatch` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | closures, fields, generics, nested-patterns, type-level-definition | `rank2-choose-action` |
 | `kind-closure-list` | poly-closures | agree | - | - | closures, fields, generics, recursion | - |
 | `kind-higher-order` | poly-closures | agree | - | - | closures, fields, generics | - |
 | `kind-forward` | poly-closures | agree | - | - | closures, fields, generics, recursion | - |
@@ -348,6 +364,7 @@ suites; `expectations.json` holds the exact strings.
 | `sigma-dependent` | templates | agree | - | - | fields, generics, nested-patterns, type-level-definition | - |
 | `sigma-unpack` | templates | agree | - | - | closures, destructuring-let, fields, generics, poly-closures, type-level-definition | - |
 | `sigma-reusable` | templates | agree | - | - | fields, generics | - |
+| `sigma-in-result-action` | templates | agree | - | - | closures, destructuring-let, fields, generics, nested-patterns, poly-closures, type-level-definition | - |
 | `sigma-snd-mismatch` | templates | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
 | `sigma-unrefined` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
 | `sigma-family-live-binder` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
@@ -376,8 +393,9 @@ in `expectations.json`):
   `packages/vec/main.bend:98`) on its own Sigma, without Base. `sugar-check`
   owns the form (sugar `destructure-constructor`). Until it lands, Knot reports
   `Unsupported\tparse\tdestructuring-binding\t` (`src/parse.bend:134`), so
-  `sigma-pair`, `sigma-unpack` and `sigma-affine-twice` stay blocked. The
-  last one pins `affine-reuse` on a `g` that the let binds.
+  `sigma-pair`, `sigma-unpack`, `sigma-in-result-action` and
+  `sigma-affine-twice` stay blocked. The last one pins `affine-reuse` on a `g`
+  that the let binds.
 - `type-level-definition`: a def whose result is a type. This covers
   `Act(A)` (the `IO(A)` shape), `Both(A,B)` (the `Pair` shape) and `Shade(f)`, a
   family that computes by `match`. The generics suite lists this capability as
@@ -395,7 +413,9 @@ in `expectations.json`):
     fold a `Seq<&1,Flag -> Flag>` of closures;
   - `template-generic-arg` passes `ident(Flag)` as a function value;
   - `sigma-pair` and `sigma-affine-twice` store a closure in a pair component;
-  - `sigma-unpack` applies `f: A -> B -> R`.
+  - `sigma-unpack` applies `f: A -> B -> R`;
+  - `sigma-in-result-action` binds a rank-2 action at a pair type and passes a
+    partial `read_pair(depth)`.
 
 A fixture is blocked while a need it names is unavailable. The runner reports a
 blocked fixture separately. It never relabels a blocked fixture as passing, and
@@ -504,9 +524,12 @@ boundaries, so this suite records them and does not decide them:
 
 - **Closures (increment 7).** That suite owns monomorphic closures, including
   `generic-choose-bind`, which instantiates `choose` at `Color` and at
-  `Flag -> Flag`. Here `choose` runs at the caller's rigid `A` and at
-  two-quantity instances, and `bind` at `Seq<&2,Flag>` and `Tree`. Negatives
-  reuse closures' codes and add nothing to its vocabulary.
+  `Flag -> Flag`. Here `choose` runs at the caller's rigid `A`, at
+  two-quantity instances and at the rank-2 `Act(Color)`, and `bind` at
+  `Seq<&2,Flag>` and `Tree`. Closures' `+` lambda binders are at an enum
+  (`lambda-reusable-binder`) or an arrow (`reusable-closure-binder`). Here they
+  are at a generic instance (`bind-promoted-instance`). Negatives reuse
+  closures' codes and add nothing to its vocabulary.
 - **Generics (increment 6).** That suite owns `Kind(a)` over data and `Box`
   values, `quantity-zero` with data, and the quantity meet over a data pair.
   Here the element types are arrows (`kind-closure-list`, `kind-zero-arrow`),
@@ -537,6 +560,10 @@ because an implementer could reasonably expect otherwise.
   - A type argument may itself be an arrow into an instance
     (`generic-arrow-instances`), and a generic `compose` may be passed to
     `compose` (`generic-compose`).
+  - A `+` lambda binder at a generic instance follows the parameter rule. It is
+    accepted at `Seq<&2,Flag>`, on a first or a second curried binder
+    (`bind-promoted-instance`). It is refused at `Seq<&1,Flag>`, with the
+    error at the binder (`promoted-affine-instance`).
 - **Higher rank.**
   - `Act(A)` unfolds to a rank-2 arrow, so an action is applied directly to its
     answer type and continuation, as in `m(Color,c => Emit{c})` or
@@ -544,7 +571,11 @@ because an implementer could reasonably expect otherwise.
   - The answer type is rigid inside `R => k => ..` (`rank2-rigid-answer`).
   - The seed's polymorphism is impredicative: `Act(Act(Flag))` and
     `Act.join` check (`rank2-two-answers`). Knot's source relies on it for
-    `S.choose(IO(Unit),..)`.
+    `S.choose(IO(Unit),..)`, and `choose(Act(Color),..)` checks
+    (`rank2-choose-action`). A thunk at `Act(Flag)` there is a mismatch
+    between the unfolded arrows,
+    `@-R:Type -> @k:(@_:Color -> Op<R>) -> Op<R>` against its `Flag`
+    counterpart (`rank2-choose-mismatch`).
   - A named generic def fits a rank-2 parameter (`ident` for
     `@-A: Type -> A -> A`). A monomorphic def does not
     (`rank2-monomorphic-arg`).
@@ -584,6 +615,10 @@ because an implementer could reasonably expect otherwise.
     Without it, `snd` has the stuck type `Shade(f)` (`sigma-unrefined`).
   - `Dep<&2,&2,..>` is `Data`, and `Dep<&1,&1,..>` is not
     (`sigma-reusable`, `sigma-reuse-affine`).
+  - A Sigma may be the error of a `Res`, which may be the answer of an action.
+    `case Fail{Pack{code,message}}` nests a `Pack` pattern in `Fail`, and
+    `Act.bind` accepts a partial `read_pair(depth)` at the pair type
+    (`sigma-in-result-action`).
 - These probes are not frozen, but they shaped the fixtures:
   - A let of a bare constructor needs an annotation: `+blank = Blank{}` reports
     `cannot infer`, and `+blank : Mode = Blank{}` checks.
@@ -667,7 +702,7 @@ suite are in this suite.
 | `src/check.bend:147` binding_body | higher-order | `curried-generic-continuation` (`add`, `next: Scope -> ..`) |
 | `src/check.bend:153` match_body | higher-order | `curried-generic-continuation` |
 | `src/check.bend:161` arm_body | higher-order | `curried-generic-continuation` (`open`) |
-| `src/check.bend:165` arm_scope | higher-order | `curried-generic-continuation` (`open`) |
+| `src/check.bend:165` arm_scope | higher-order | `curried-generic-continuation` (`open`); `bind-promoted-instance` (`bound => +fs =>`, the `+fields` binder of `check.bend:211`) |
 | `src/compile-cli.bend:62` main | function-values | `rank2-partial-bind` |
 | `src/core.bend:35` invalid | dependent | sugar `dependent-result` |
 | `src/core.bend:37` unsupported | dependent | sugar `dependent-result` |
@@ -677,8 +712,8 @@ suite are in this suite.
 | `src/driver.bend:25` parsed | higher-order | `bind-instance-chain`, `rank2-continuation` |
 | `src/driver.bend:30` source | higher-order | `bind-instance-chain` |
 | `src/driver.bend:39` read_result | higher-order | `rank2-try`, `rank2-continuation` |
-| `src/driver.bend:44` read_pair | higher-order | `rank2-do-block` (boundary), `sigma-pair` |
-| `src/driver.bend:50` opened | higher-order | `rank2-continuation`, `rank2-partial-bind` |
+| `src/driver.bend:44` read_pair | higher-order | `rank2-do-block` (boundary), `sigma-pair`, `sigma-in-result-action` |
+| `src/driver.bend:50` opened | higher-order | `rank2-continuation`, `rank2-partial-bind`, `sigma-in-result-action` |
 | `src/driver.bend:55` load | higher-order | `rank2-continuation` |
 | `src/eval-cli.bend:36` main | function-values | `rank2-partial-bind` |
 | `src/eval.bend:23` internal | dependent | sugar `dependent-result` |
@@ -693,8 +728,8 @@ suite are in this suite.
 | `src/scope.bend:77` set_known | higher-order, templates, dependent | `template-set-known-thunk`; sugar `template-set-known` |
 | `src/scope.bend:85` refine | templates | `template-set-known-thunk` |
 | `src/scope.bend:108` replace | templates | `template-set-known-thunk` |
-| `src/syntax.bend:76` choose | higher-order, dependent | `choose-rigid`, `choose-result-chain`; sugar `dependent-choose`; closures `generic-choose-bind` |
-| `src/syntax.bend:81` bind | higher-order, dependent | `bind-instance-chain`, `bind-rigid-caller`, `kind-result-list`; sugar `dependent-bind` |
+| `src/syntax.bend:76` choose | higher-order, dependent | `choose-rigid`, `choose-result-chain`, `rank2-choose-action`; sugar `dependent-choose`; closures `generic-choose-bind` |
+| `src/syntax.bend:81` bind | higher-order, dependent | `bind-instance-chain`, `bind-rigid-caller`, `bind-promoted-instance`, `kind-result-list`; sugar `dependent-bind` |
 | `src/wasm.bend:55` internal | dependent | sugar `dependent-result` |
 | `src/wasm.bend:100` call_body | higher-order | `curried-generic-continuation` |
 | `src/wasm.bend:104` after_argument | higher-order | `curried-generic-continuation` |
@@ -718,7 +753,8 @@ The fixtures write each spelling on their own carriers:
 - `Seq<&2,Flag>` for `List<&2,T>`;
 - `Res<Fault,A>` for the short `Result`, and `Res<&1,&1,Fault,Flag>` for the
   long one (`kind-two-quantities` passes the short form where the long one is
-  spelled);
+  spelled). The long form with a Sigma error, as the source writes it, is
+  `Res<&1,&1,Both(Code,Flag),Color>` (`sigma-in-result-action`);
 - `Opt<&2,Term>` for `Maybe<&2,T>`;
 - `Seq<Flag>` for `List<String>`;
 - `Seq<&1,Res<Fault,Flag>>` for `List<&1,T>`;
