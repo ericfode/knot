@@ -501,6 +501,42 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
     return functions
 
 
+def core_view(name: str, case: dict, plan: dict, shown: dict, source: str, reg: dict) -> str:
+    """How a golden's plan meets check-cli's core display: equal to the lowering of the core it
+    prints, or, where none exists, a Program (whose main the pinned heads reject) or a Book whose
+    review declared the exact Unsupported line before observation (SPEC section 11)."""
+    declared = case.get('unavailable')
+    if shown['exit'] == 0:
+        require(not declared, f'{name}: declared unavailable, but check-cli prints a core')
+        derived = from_display(shown['stdout'], plan, source, reg)
+        require(derived == plan['functions'], (name, 'plan differs from the checked core', derived))
+        return 'checked-core'
+    if declared:
+        require(unavailable_line(shown, declared), f'{name}: declared unavailable as {declared!r}, check-cli gives {observed(shown)}')
+    else:
+        require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
+    return f"unavailable: {shown['stderr'].strip()}"
+
+
+def core_controls(cases: dict, plans: dict, sources: dict, displays: dict, reg: dict) -> list:
+    """What the display lane must refuse: a Book without a core that declared no gap, a declaration
+    where check-cli prints a core, and a declaration of another line than the one it prints."""
+    def without(name, *keys):
+        return {k: v for k, v in cases[name].items() if k not in keys}
+    out = []
+    for label, name, case in [
+            ('undeclared', 'chr-pattern', without('chr-pattern', 'unavailable')),
+            ('declared-with-core', 'value-on', {**cases['value-on'], 'unavailable': 'Unsupported check char-constructor-pattern'}),
+            ('declared-other-line', 'list-head-match', {**cases['list-head-match'], 'unavailable': 'Unsupported check char-constructor-pattern'})]:
+        try:
+            core_view(name, case, plans[name], displays[name], sources[name], reg)
+        except AssertionError as refusal:
+            out.append({'control': f'core:{label}', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'core control {label} was admitted')
+    return out
+
+
 PRINT = re.compile(r'import Base\n\ndef main\(\) -> IO\(Unit\):\n  IO\.print\((.*)\)\n')
 
 
@@ -690,11 +726,19 @@ def output_expectation(case, plan, evaluator=None) -> dict:
             'eval_lane': classify(case['eval'])}
 
 
+def unavailable_line(lane: dict, declared: str) -> bool:
+    """A head's exit-3 answer is `Unsupported<TAB>phase<TAB>cause<TAB>span` on stderr; `declared`
+    spells its phase and cause with spaces, as a golden's literal review does."""
+    line = re.fullmatch(r'Unsupported\t(\w+)\t([\w-]+)\t\d+:\d+:\d+:\d+\n', lane['stderr'])
+    return lane['exit'] == 3 and lane['stdout'] == '' and line is not None and f'Unsupported {line[1]} {line[2]}' == declared
+
+
 def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
     """The Exhausted-lane rule, applied to the frozen observations of one golden."""
-    seed, ev = case['seed'], case['eval']
+    seed, ev, declared = case['seed'], case['eval'], case.get('unavailable')
     fuel = VM_FUEL
     require('divergence' not in case or plan['entry'] == 'program', f"{case['name']}: only a Program's output diverges")
+    require(declared is None or plan['entry'] == 'book', f"{case['name']}: only a Book's core is declared unavailable")
     if plan['entry'] == 'program':
         return output_expectation(case, plan, evaluator)
     main = next(f for f in plan['functions'] if f['name'] == 'main')
@@ -715,19 +759,25 @@ def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
                 'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
     require(seed['exit'] == 0, f"{case['name']}: the seed must succeed")
     value = described(seed['stdout'], erased_fields(source))
-    if ev['exit'] == 0:
+    if declared:
+        # Section 11: a seed-accepted form that a pinned head reports Unsupported leaves its lane
+        # unavailable, not excused. The review declares the exact line, and the VM owes the seed's value.
+        require(unavailable_line(ev, declared), f"{case['name']}: declared unavailable as {declared!r}, eval-cli gives {ev}")
+        lane = {'eval_lane': 'Unsupported', 'eval_unavailable': declared}
+    elif ev['exit'] == 0:
         _, _, tree = result_view(plan, ev['stdout'])
         require(tree == value, f"{case['name']}: eval-cli prints {tree!r}, the seed {value!r}")
         return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0, 'stdout': ev['stdout'], 'stderr': '',
                 'basis': 'eval-cli', 'eval_lane': 'agree'}
-    # The eval lane is excused only by a documented bound; the VM owes the seed's value.
-    excuse = eval_excuse(case, plan, value, evaluator)
+    else:
+        # The eval lane is excused only by a documented bound; the VM owes the seed's value.
+        lane = {'eval_lane': 'Exhausted', 'eval_bound': eval_excuse(case, plan, value, evaluator)}
     root = re.match(r'[\w.]+', value)[0]
     ctors = [c['name'] for c in plan['types'][main['result']]['constructors']]
     require(root in ctors, f"{case['name']}: seed root {root} is not a constructor of main's result")
     return {'argv': ['IMAGE', 'main', str(fuel)], 'exit': 0,
             'stdout': f"Evaluated\t{main['result']}\t{ctors.index(root)}\t{value}\n", 'stderr': '',
-            'basis': 'seed', 'eval_lane': 'Exhausted', 'eval_bound': excuse}
+            'basis': 'seed', **lane}
 
 
 # Section 11's eval-cli bounds, by the phase it names in `Exhausted<TAB>phase<TAB>budget`, each
@@ -917,6 +967,18 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, 
             ('eval-inspect-within-budget', 'nat-pred', exhausted('eval-inspect-within-budget', '1023n\n', 'inspect'),
              bounds, None),
             ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}, None),
+            # Section 11: a Book's eval lane is unavailable only where its review declares the exact
+            # Unsupported line that the head prints; no other failure of a Book's lane stands in.
+            ('eval-unsupported-undeclared', 'chr-pattern', without('chr-pattern', 'unavailable'), bounds, None),
+            ('unavailable-where-eval-agrees', 'value-on',
+             {**cases['value-on'], 'unavailable': 'Unsupported check char-constructor-pattern'}, bounds, None),
+            ('unavailable-other-line', 'list-head-match',
+             {**cases['list-head-match'], 'unavailable': 'Unsupported check char-constructor-pattern'}, bounds, None),
+            ('unavailable-on-program', 'foreign-print',
+             {**cases['foreign-print'], 'unavailable': 'Unsupported check char-constructor-pattern'}, bounds, None),
+            ('eval-invalid-book', 'value-on',
+             {**cases['value-on'], 'eval': {'exit': 2, 'stdout': '', 'stderr': 'Invalid\tparse\tfunction-result\t0:0:0:0\n'}},
+             bounds, None),
             # D20: a declared divergence exactly where the program prints a non-scalar Char.
             ('non-scalar-as-agreement', 'print-non-scalar', without('print-non-scalar', 'divergence', 'vm_stdout'), bounds, None),
             ('divergence-on-scalar-output', 'foreign-print',
@@ -1337,14 +1399,31 @@ main()->0=call0(call1(v2.1{v1.7;v2.0});v1.7)
 """
 
 
-def lowered_controls(planned: list, reg: dict) -> list:
+# list_head_match as the literals head's check-cli would display it were a `List<Flag>` parameter
+# checked: type 0 Bool, 1 List, 2 Flag, the Con head binder `1 $1:2` carrying the core's Flag and
+# the plan typing its slot by List's pinned `none` field. It follows the display that check-cli
+# does print for the same source over a monomorphic list, `first_on(1:2)->0=case $0 [...]`.
+LIST_HEAD_MATCH_DISPLAY = """Checked
+first_on(1:1)->0=case $0 [0=>v0.0;1(1 $1:2;1 $2:1;)=>case $1 [0=>v0.0;1=>v0.1]]
+main()->0=call0(v1.1{v2.1;v1.0})
+"""
+
+
+def lowered_controls(planned: list, plans: dict, reg: dict) -> list:
     """The display cross-check follows section 3's typing: a Branch slot takes the pinned
     field (`none`), not the core binder's U32, and a Case takes its position's type, not
-    its last arm's. The lowering of FIRST_CODE_DISPLAY is the admitted plan `first-code`."""
-    plan = next(p for label, p, _ in planned if label == 'first-code')
-    derived = from_display(FIRST_CODE_DISPLAY, plan, '', reg)
-    require(derived == plan['functions'], ('first-code: lowering differs from the admitted plan', derived))
-    return ['first-code']
+    its last arm's. The lowering of FIRST_CODE_DISPLAY is the admitted plan `first-code`, and
+    that of LIST_HEAD_MATCH_DISPLAY the admitted plan `list-head-match`, which is also the plan
+    of the golden of that name."""
+    out = []
+    for label, display in (('first-code', FIRST_CODE_DISPLAY), ('list-head-match', LIST_HEAD_MATCH_DISPLAY)):
+        plan = next(p for name, p, _ in planned if name == label)
+        derived = from_display(display, plan, '', reg)
+        require(derived == plan['functions'], (f'{label}: lowering differs from the admitted plan', derived))
+        out.append(label)
+    require(plans['list-head-match'] == next(p for name, p, _ in planned if name == 'list-head-match'),
+            'the golden list-head-match is the admitted plan')
+    return out
 
 
 ILL_TYPED = {'outcome': 'HostFailure', 'cause': 'image ill-typed'}
@@ -2219,15 +2298,21 @@ RULE_MUTANTS = [
     ('d20-calls-unchecked', [("        require(case.get('vm_calls') == vm['calls'],\n"
                               "                f\"{name}: literal review counts {case.get('vm_calls')} calls, the reference evaluation {vm['calls']}\")\n",
                               "")]),
+    # Section 11: an unavailable Book lane is declared, exactly, and the declaration must match a head that has no core.
+    ('unavailable-line-unchecked', [("        require(unavailable_line(ev, declared), f\"{case['name']}: declared unavailable as {declared!r}, eval-cli gives {ev}\")\n",
+                                     "")]),
+    ('unavailable-cause-unnamed', [("and f'Unsupported {line[1]} {line[2]}' == declared\n", "and bool(declared)\n")]),
+    ('core-declaration-ignored', [("        require(not declared, f'{name}: declared unavailable, but check-cli prints a core')\n", "")]),
+    ('core-undeclared-book', [("        require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')\n", "        pass\n")]),
     ('inspect-steps-as-visits', [("'steps': 4 * value.count('{') - 2,\n", "'steps': value.count('{'),\n")]),
     ('transitions-without-materialization', [("            self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)\n",
                                               "            self.transitions += 1\n")]),
 ]
 
 
-def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest) -> list:
-    """Each mutant of check-spec.py re-derives every refusal, golden expectation and
-    expectation control."""
+def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest, displays) -> list:
+    """Each mutant of check-spec.py re-derives every refusal, golden expectation, expectation
+    control and display-lane control."""
     source = RULE.read_text()
     results = []
     for name, edits in RULE_MUTANTS:
@@ -2263,6 +2348,13 @@ def rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest) ->
                 break
             except Exception:
                 continue
+        if not killed_by:
+            try:
+                mutant.core_controls(cases, plans, sources, displays, reg)
+            except AssertionError as changed:
+                killed_by = str(changed)
+            except Exception:
+                pass
         results.append({'mutant': f'rule:{name}', 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -2389,7 +2481,7 @@ def main() -> int:
         if 'seed_bun_stderr' in c:
             require(c['seed_bun_stderr'] == c['seed_bun']['stderr'],
                     f"{c['name']}: literal review {c['seed_bun_stderr']!r}, Bun lane {c['seed_bun']['stderr']!r}")
-        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout', 'vm_calls'):
+        for key in ('seed_stdout_hex', 'seed_bun_stderr', 'divergence', 'vm_stdout', 'vm_calls', 'unavailable'):
             require(planned[c['name']].get(key) == c.get(key), f"{c['name']}: plan.json {key} differs from the frozen row")
         require(planned[c['name']].get('invocations') == ([reviewed(i) for i in c.get('invocations', [])] or None),
                 f"{c['name']}: plan.json invocations differ from the frozen row")
@@ -2419,14 +2511,7 @@ def main() -> int:
         problems = codec.validate(plan, reg)
         require(not problems, (name, problems))
         check_declarations(plan, sources[name])
-        shown = displays[name]
-        if shown['exit'] == 0:
-            derived = from_display(shown['stdout'], plan, sources[name], reg)
-            require(derived == plan['functions'], (name, 'plan differs from the checked core', derived))
-            view = 'checked-core'
-        else:
-            require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
-            view = f"unavailable: {shown['stderr'].strip()}"
+        view = core_view(name, case, plan, displays[name], sources[name], reg)
         table[name] = vm_expectation(case, plan, bounds, sources[name])
         reproduced(name, plan, table[name])
         if 'invocations' in case:
@@ -2465,16 +2550,19 @@ def main() -> int:
     require(big, 'a boxed scalar constant')
     abstract = [n for p in plans.values() for n in walk(p) if n[0] not in ('branch', 'default') and n[1] is None]
     require(abstract, 'a none-typed node')
+    chars = [n for p in plans.values() for n in walk(p)
+             if n[0] == 'case' and n[4] == 'tags' and n[3] == p.get('representation', {}).get('Char')]
+    require(chars, 'a tags-mode Case on Char')
 
     planned = plan_controls(plans)
-    lowered = lowered_controls(planned, reg)
+    lowered = lowered_controls(planned, plans, reg)
     limited = limit_controls(plans, images, digest)
     controls = byte_controls(images, digest) + [(f'limit:{k}', d, r, '') for k, d, r in limited if r] + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
     admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None] + \
         [(f'limit:{k}', d) for k, d, r in limited if r is None]
     boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources) + \
-        seed_display_controls()
+        seed_display_controls() + core_controls(cases, plans, sources, displays, reg)
     excused = excused_controls(cases, plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
@@ -2511,7 +2599,7 @@ def main() -> int:
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
                             controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans)) + \
-        rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest)
+        rule_mutants(cases, plans, bounds, sources, table, controls, reg, digest, displays)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
@@ -2524,7 +2612,7 @@ def main() -> int:
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
-                            'none_typed_nodes': len(abstract)})
+                            'none_typed_nodes': len(abstract), 'tags_cases_on_char': len(chars)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "

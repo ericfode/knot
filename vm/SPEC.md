@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 93 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 96 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -870,7 +870,10 @@ meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`,
 `nat-case-big`, each by `Exhausted primitive budget`, their largest Nats 2^31, 2^31
-and 2^31 + 1 past 2^20);
+and 2^31 + 1 past 2^20; `nat-transitions`, `Nat.is_gt(U32.to_nat(1048576),0n)`, by
+`Exhausted eval budget`: its Nat 2^20 is inside the inclusive primitive budget, but
+its 1,048,585 transitions pass the 1,048,576 budget) or unavailable (`chr-pattern` and
+`list-head-match`, below);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
@@ -890,6 +893,21 @@ relabelled, and their plans follow §1 by hand. `io-bind`, `non-scalar-unprinted
 and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
 so their `A`-typed nodes are `none`.
 
+**A Book's unavailable lane.** A Book whose form a pinned head cannot check is
+unavailable the same way, and Unsupported is still never a bound (above). `chr-pattern`,
+the first tags-mode Case on Char (`case Chr{x}`, on an immediate Char and a Big one), and
+`list-head-match`, S's Case on the head bound from a `List<Flag>` parameter, run on the
+seed (`True{}` each). Both heads exit 3 for them, with `Unsupported check
+char-constructor-pattern` and `Unsupported parse parameter-type`. The golden's literal
+review declares that exact line (`unavailable`, in plan.json before observation), and
+the gate requires both heads to print it: a head that prints a core, another line, no
+declaration, or another failure (an Invalid lane of a Book, an Unsupported one without
+its declaration) is refused. The expectation is the seed's value, basis `seed`,
+`eval_lane` `Unsupported` and `eval_unavailable` the declared line, never agreement.
+With no checked core to compare, the plan is held to the reference evaluation against
+the seed's value; `list-head-match`'s plan also equals the lowering of a hand-written
+display (§12) and is the plan of the admitted control of that name.
+
 ## 12. Frozen evidence and later obligations
 
 `check-spec.py` (gate `vm-spec`) builds both oracle heads with the seed's native
@@ -902,7 +920,8 @@ lane and requires:
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;
 - each Book plan equal to an independent erasure and slot projection of that
-  head's `check-cli` core display, and each Program `main = IO.print(e)`'s argument
+  head's `check-cli` core display (save the two whose head answers Unsupported,
+  declared in plan.json, §11), and each Program `main = IO.print(e)`'s argument
   equal to that projection of `e` checked as a `String` Book;
 - the eval result's type index and constructor matching the image, and its tree
   equal to the seed's value in §8's spelling; a disagreeing eval lane is refused
@@ -923,8 +942,11 @@ lane and requires:
   the VM's (eleven frozen expectation controls, among them the wide code as
   agreement, its plan printing U+1F600, a surrogate built but never printed as a
   divergence, and the Bun lane's empty output as `print-non-scalar-second`'s; two more
-  refuse a `calls` review that refunds the refused entry, or that is missing);
-- the reference evaluation reproducing every Book golden's expectation and every
+  refuse a `calls` review that refunds the refused entry, or that is missing); five
+  more refuse an unavailable eval lane that is undeclared, declared where eval-cli
+  agrees, declared as another line or on a Program, or an Invalid lane of a Book, and
+  three refuse the same at the display lane (`core:`); a Book's declared line is read
+  from both heads;- the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
 - each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
   `invoke-words` equal to its literal review and to §8: `serializer.invocation`'s
@@ -948,13 +970,13 @@ lane and requires:
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
-- all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
-  `none`-typed node covered;
+- all 13 node forms, both Case modes, a tags-mode Case on Char, a Program, a boxed
+  scalar constant and a `none`-typed node covered;
 - all 71 refusals of §4 with their frozen reasons, each resource limit
   `Exhausted` kind 2 on one side and malformed or invalid on the other, its six
-  admitted plan controls and `arity-at-limit`; `first-code` also equals the independent lowering of its `check-cli`
-  display, written by hand in the literals head's grammar because no pinned head
-  checks a `List<U32>` parameter;
+  admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
+  equal the independent lowering of a `check-cli` display written by hand in the
+  literals head's grammar, because no pinned head checks a `List<T>` parameter;
 - 56 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
@@ -1076,9 +1098,8 @@ count; vm-rc, vm-io and vm-prims close reclamation, effects and the final regist
 The reference evaluation performs only `IO.print`, so vm-io also owes the
 inspection controls and mutants for every other foreign's operands, the byte
 List's whole extent among them, and a Halt that dies with its code and message.
-Goldens of the `list-head-match` shape (a Case on a List element) and the
-`first-code` shape (a concrete arm beside the `none` head), each seed `True{}`, are
-owed as soon as a pinned head checks a `List<T>` parameter; until then the admitted
-controls witness validation only, not evaluation.
+A golden of the `first-code` shape (a concrete arm beside the `none` head), seed
+`True{}`, is still owed; until then its admitted control witnesses validation and the
+hand-written lowering, not the seed. `list-head-match` has its golden (§11).
 The first speed gate is at most 4× seed-native on each frozen workload on a quiet
 host; above 10× requires design review.

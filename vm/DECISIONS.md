@@ -94,7 +94,8 @@ follows it (§5, §10, §11) without a new image header word.
    beyond what `none` instantiation already allows. Neither pinned head checks a
    `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
    shape is witnessed by the admitted control `list-head-match` until a golden can
-   be frozen.
+   be frozen (round 9: the golden `list-head-match`, entry 25, with its lane declared
+   unavailable).
    Review round 5 found the arm rule refusing S the same way: "a Case and every
    arm body" agreed exactly, and List pins `Con{none, List}`, so a Case whose Nil
    arm is concrete and whose Con arm returns the head had no legal type. S has the
@@ -439,6 +440,43 @@ follows it (§5, §10, §11) without a new image header word.
    with its code and message, is still unwitnessed: it needs the host's `die`, so
    vm-io owns it.
 
+25. **A Book may have an unavailable core, and a Char has a tags-mode golden.**
+   The round-8 hand-off left two shapes witnessed only by the codec and the model's
+   agreement with `evaluate.py`: a tags-mode Case on Char (`case Chr{x}`, §3, whose
+   `Chr` row binds the Char's own word) and S's Case on a List's `none`-typed head
+   (`list-head-match`, whose plan was an admitted control). The seed runs both
+   (`True{}`, on its Bun and native lanes), and both pinned heads decline: `Unsupported
+   check char-constructor-pattern` and `Unsupported parse parameter-type`, exit 3
+   (DECISIONS finding 4; literals head, owner literals). They are now goldens, and the
+   gate meets them without excusing Unsupported, which §11 and D4 forbid. A Book may
+   lack a checked core, as a Program already does, only where its literal review
+   declares the exact line in plan.json (`unavailable`, before observation); the
+   gate requires both heads to print it. A head that prints a core, another line,
+   another failure or no declaration is refused, and the expectation is the seed's
+   value with `eval_lane` `Unsupported` and `eval_unavailable` the declared line,
+   basis `seed`, never agreement. Five expectation controls (an undeclared line,
+   a declaration where eval-cli agrees, another line, a Program, an Invalid Book
+   lane) and three display-lane controls (`core:`) refuse each variant, and four rule
+   mutants (the declaration unchecked, its cause unnamed, a core ignored, an
+   undeclared Book without a core) are killed by them. `chr-pattern` is
+   `Bool.and(code_is('a', 97), code_is(Char.from_u32(2147483649), 2147483649))`
+   over `case Chr{x}: U32.is_eq(x, n)`: one Char immediate and one Big, so the Big
+   word is both the scrutinee and the bound field, which vm-model's RC audit and
+   lockstep can compare with the seed. `list-head-match` is the admitted control's
+   plan, unchanged, and equal to the lowering of a display written by hand in the
+   head's grammar (`LIST_HEAD_MATCH_DISPLAY`, by analogy with the display that
+   check-cli prints for the same source over a monomorphic list). The coverage check
+   requires a tags-mode Case on Char. The `first-code` shape stays owed a golden.
+26. **A real eval lane that exhausts by transitions.** Review round 8's rule excused
+   an eval lane by a documented bound but froze the transitions case only through a
+   fabricated observation (`u32-to-nat-big` given an `Exhausted eval` line). The seed
+   golden `nat-transitions`, `Nat.is_gt(U32.to_nat(1048576),0n)`, is the real
+   observation: check-cli prints a core, and eval-cli reports `Exhausted eval budget`
+   although its Nat 2^20 is inside the inclusive primitive budget. The gate measures
+   1,048,585 transitions past the 1,048,576 budget, and the VM owes the seed's
+   `True{}`. It parses as `Unsupported` on the main-line parser (a `declaration-form`),
+   never `Invalid`.
+
 ## Findings that need an owner
 
 1. **A D4 classification defect in the literals head.** For
@@ -464,8 +502,9 @@ follows it (§5, §10, §11) without a new image header word.
    a declaration form). The recorded counts are the byte-identity targets for
    E2E-2 today, not an A2(S) cost basis.
 4. **No Char constructor pattern.** Knot reports `Unsupported check
-   char-constructor-pattern` for `case Chr{x}`, so tag dispatch on Char (§3) has no
-   golden yet.
+   char-constructor-pattern` for `case Chr{x}`. Tag dispatch on Char (§3) has its
+   golden, `chr-pattern` (entry 25), which the seed runs and both heads decline; the
+   gap stays open. Owner: literals.
 5. **The main-line parser classifies six closure goldens Invalid.** The tree's
    own `src/parse-cli.bend` (before closures merges) reports
    `Invalid parse expected-=` for the arrow-typed lets in `closure-capture-off`,
