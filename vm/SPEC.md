@@ -502,11 +502,13 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 **Arguments.** The VM loads and validates the image first (§4); its entry kind
 selects the form of the words after `IMAGE`: a Book takes `FN FUEL [ORDINALS…]`
-and a Program `FUEL -- [ARGS…]`. Fewer words, or a Program's second word other
-than `--`, is `HostFailure arguments usage`. FUEL and every ORDINAL are **decimal
+and a Program `FUEL -- [ARGS…]`. The form's shape is checked before its words:
+fewer words than it names, or a Program's second word other than `--`, is
+`HostFailure arguments usage`. FUEL and every ORDINAL are **decimal
 u32 words**: one or more ASCII digits `0`–`9` and nothing else (no sign, space,
 separator, radix prefix or other script's digit), with a value at most
-4,294,967,295. Leading zeros are allowed: `01` and `000000000001` are 1. Every
+4,294,967,295. Any number of leading zeros is allowed: `01`, `000000000001` and
+4,400 zeros followed by `1` are all 1. Every
 other word, the empty word included, is `HostFailure arguments expected-u32`; a
 value above the maximum is refused, never reduced modulo 2^32 (`4294967296` is
 not 0). This is Base's `U32.read`, which eval-cli applies to its budget and
@@ -542,7 +544,7 @@ cause named:
    `result-u32`, `result-u32-field`, `result-char` and `result-string`).
 
 The reference predicate is `serializer.invocation`, with `serializer.decimal` for
-step 1's words. The image keeps less than
+step 1's words; `serializer.arguments` selects the form by entry kind. The image keeps less than
 eval-cli's core, so two eval-cli answers differ by contract: eval-cli admits a U32
 ordinal 0 as the value 0, because its loader models U32 as one nullary constructor
 (`opaque-parameter`), and refuses a constructor whose fields are all erased as
@@ -815,6 +817,14 @@ lane and requires:
   with FUEL `x`, `two 9 x`, `4294967296`, `4294967297`, `+1`, `-1`, ` 1`, the empty
   word, U+0661, `1_0` and FUEL `4294967296` are `expected-u32`; `01`,
   `000000000001` and FUEL `0001048576` enter; `4294967295` is `argument-range`;
+- 13 **argument controls** (`check-spec.py argument_controls`), verdicts by literal
+  review of what no eval-cli row can show: on `invoke-words`' image, `two` and
+  `absent` are `usage` (before the lookup), a 4,401-character ordinal of leading
+  zeros enters (eval-cli agrees, observed but not frozen), and the Program form
+  `5 --` is `expected-u32` (FUEL `--`); on `foreign-print`'s, `5 --` and
+  `0005 -- a --` run, FUEL `x` and `4294967296` are `expected-u32`, and `--`,
+  `5 a`, `x a` (the shape before FUEL) and the Book form `main 5` are `usage`; and
+  a bad magic word is `HostFailure image` whatever the words (`absent x`);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -853,9 +863,9 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 59 codec mutants and 4 source mutants killed through a changed image, a decode
+- 64 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe or invocation verdict or a changed observation, and 21 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 21 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five survive every golden and die only by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit,

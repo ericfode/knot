@@ -239,13 +239,20 @@ follows it (§5, §10, §11) without a new image header word.
    word is `HostFailure arguments usage`. eval-cli spells its usage refusal
    differently and caps its budget at 1,048,576 transitions; neither is compared,
    and every frozen budget stays within the cap. `serializer.invocation` takes the
-   words after IMAGE and reads them with `serializer.decimal`; an invocation row
+   words after IMAGE and reads them with `serializer.decimal`, which drops leading
+   zeros before converting because Python's `int` refuses a string above 4,300
+   digits; `serializer.arguments` selects the form by entry kind. An invocation row
    may name its FUEL word, which eval-cli receives as its budget. Golden
    `invoke-words` freezes 16 invocations, each agreeing with eval-cli (§12). Ten
    codec mutants of the grammar and its order (words after the lookup or per
    parameter, FUEL unchecked, reduction modulo 2^32, an exclusive maximum, no
    leading zeros, a ten-digit cap, the empty word as 0, other scripts' digits,
-   Python's `int`) and two invocation controls are killed. vm-expected.json only
+   Python's `int`) and two invocation controls are killed. What no eval-cli row
+   can show (usage, whose text eval-cli spells otherwise; the Program form; a
+   4,401-character word; the image before the words) is frozen in 13 argument
+   controls by literal review, and five more codec mutants (usage deleted, the
+   entry kind ignored, the Program's FUEL or its `--` unchecked, its FUEL read
+   before its shape) are killed. vm-expected.json only
    gains rows; the earlier invocations' argv already carried `1000000` as FUEL.
 17. **A Nat Case's predecessor is moved, and made only when bound.** The same
    re-review found §6.1 leaking. It made Succ's field `n - 1` at selection,

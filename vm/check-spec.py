@@ -1338,6 +1338,36 @@ def display_controls() -> list:
     ]
 
 
+def argument_controls(images: dict) -> list:
+    """(label, image, words after IMAGE, section 8's frozen verdict), by literal review, for
+    what the frozen invocations cannot show beside eval-cli: the usage refusal, which
+    eval-cli spells otherwise; the Program form; a word of any length; and the image read
+    before the words. None admits the words."""
+    book, program = images['invoke-words'], images['foreign-print']
+    usage, word = 'HostFailure arguments usage', 'HostFailure arguments expected-u32'
+    return [
+        ('book-without-fuel', book, ['two'], usage),
+        ('book-usage-before-lookup', book, ['absent'], usage),
+        ('book-long-zeros', book, ['two', '1000000', '0' * 4400 + '1', '0'], None),
+        ('book-program-form', book, ['5', '--'], word),
+        ('program-runs', program, ['5', '--'], None),
+        ('program-args', program, ['0005', '--', 'a', '--'], None),
+        ('program-fuel-word', program, ['x', '--'], word),
+        ('program-fuel-beyond', program, ['4294967296', '--'], word),
+        ('program-without-fuel', program, ['--'], usage),
+        ('program-without-separator', program, ['5', 'a'], usage),
+        ('program-shape-before-fuel', program, ['x', 'a'], usage),
+        ('program-book-form', program, ['main', '5'], usage),
+        ('image-before-words', word_patch(book, 0, 0x474D494C), ['absent', 'x'], 'HostFailure image: magic'),
+    ]
+
+
+def argument_verdict(data: bytes, argv: list, reg: dict, digest: bytes, c=None) -> str | None:
+    """Sections 4 and 8 before any entry: the image first, then its entry kind's words."""
+    c = c or codec
+    return rejected(data, reg, digest, c) or c.arguments(c.decode(data, digest), argv)
+
+
 def describe_controls(plans: dict) -> list:
     """(label, type table, result type, section 8's frozen verdict) for the Book describe
     domain: None where the VM describes the result, else why it reports Unsupported."""
@@ -1510,17 +1540,26 @@ CODEC_MUTANTS = [
                                      "        if at == len(ordinals):\n            return 'HostFailure invoke argument-arity'\n"
                                      "        if ordinals[at] is None:\n            return 'HostFailure arguments expected-u32'\n")]),
     ('invoke-fuel-unchecked', [("    if None in map(decimal, argv[1:]):", "    if None in map(decimal, argv[2:]):")]),
-    ('invoke-words-wrap', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
-                            "    return int(word) & 0xFFFFFFFF if re.fullmatch('[0-9]+', word) else None")]),
-    ('invoke-words-maximum-exclusive', [("int(word) <= 0xFFFFFFFF", "int(word) < 0xFFFFFFFF")]),
+    ('invoke-words-wrap', [("    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None",
+                            "    return int(digits) & 0xFFFFFFFF if re.fullmatch('[0-9]+', word) else None")]),
+    ('invoke-words-maximum-exclusive', [("int(digits) <= 0xFFFFFFFF", "int(digits) < 0xFFFFFFFF")]),
     ('invoke-words-no-leading-zeros', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('0|[1-9][0-9]*', word)")]),
     ('invoke-words-ten-digits', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('[0-9]{1,10}', word)")]),
-    ('invoke-words-empty-zero', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
-                                  "    return int(word or 0) if re.fullmatch('[0-9]*', word) and int(word or 0) <= 0xFFFFFFFF else None")]),
+    ('invoke-words-empty-zero', [("re.fullmatch('[0-9]+', word)", "re.fullmatch('[0-9]*', word)")]),
     ('invoke-words-unicode-digits', [("re.fullmatch('[0-9]+', word)", "word.isdigit()")]),
-    ('invoke-words-host-int', [("    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None",
+    ('invoke-words-host-int', [("    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None",
                                 "    try:\n        value = int(word)\n    except ValueError:\n        return None\n"
                                 "    return value if 0 <= value <= 0xFFFFFFFF else None")]),
+    # Section 8's forms (argument_controls): usage, the Program's shape before its FUEL word.
+    ('arguments-without-usage', [("    if len(argv) < 2:\n        return 'HostFailure arguments usage'\n", "")]),
+    ('arguments-ignore-entry', [("    if plan['entry'] == 'book':\n        return invocation(plan, argv)",
+                                 "    if True:\n        return invocation(plan, argv)")]),
+    ('program-fuel-unchecked', [("    return None if decimal(argv[0]) is not None else 'HostFailure arguments expected-u32'",
+                                 "    return None")]),
+    ('program-without-separator', [("    if len(argv) < 2 or argv[1] != '--':", "    if len(argv) < 2:")]),
+    ('program-fuel-before-shape', [("    if len(argv) < 2 or argv[1] != '--':\n        return 'HostFailure arguments usage'\n",
+                                    "    if not argv or decimal(argv[0]) is None:\n        return 'HostFailure arguments expected-u32'\n"
+                                    "    if len(argv) < 2 or argv[1] != '--':\n        return 'HostFailure arguments usage'\n")]),
     # Review round 3: a String constant is its code list at every step.
     ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
                                    "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
@@ -1542,7 +1581,7 @@ def invocation_verdicts(invoking: list, c=None) -> dict:
     return {label: c.invocation(plan, words) for label, plan, words in invoking}
 
 
-def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking) -> list:
+def codec_mutants(plans, images, controls, admitted, describing, reg, digest, invoking, arguing) -> list:
     """`plans` and `images` include the code-list controls; a decode that differs from its
     plan kills as surely as an encode that differs from its image."""
     source = CODEC.read_text()
@@ -1603,6 +1642,14 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest, in
             changed = [label for label in frozen if verdicts[label] != frozen[label]]
             if changed:
                 killed_by = f'invocation {changed[0]}: {verdicts[changed[0]]}'
+        for label, data, argv, verdict in [] if killed_by else arguing:
+            try:
+                got = argument_verdict(data, argv, reg, digest, mutant)
+            except Exception:
+                continue
+            if got != verdict:
+                killed_by = f'argument control {label}: {got}'
+                break
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -1945,8 +1992,12 @@ def main() -> int:
 
     invoking = [(invocation_label(name, i), plans[name], invocation_words(i))
                 for name, case in cases.items() for i in case.get('invocations', [])]
+    arguing = argument_controls(images)
+    for label, data, argv, verdict in arguing:
+        got = argument_verdict(data, argv, reg, digest)
+        require(got == verdict, f'argument control {label}: {got!r}, frozen {verdict!r}')
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
-                            controls, admitted, describing, reg, digest, invoking) + source_mutants(cases, built) + \
+                            controls, admitted, describing, reg, digest, invoking, arguing) + source_mutants(cases, built) + \
         evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
@@ -1954,7 +2005,9 @@ def main() -> int:
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
-                  admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts, mutants=mutants,
+                  admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts,
+                  arguments={label: {'argv': ['IMAGE', *argv], 'verdict': verdict} for label, _, argv, verdict in arguing},
+                  mutants=mutants,
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
@@ -1963,7 +2016,7 @@ def main() -> int:
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
           f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
-          f"{len(verdicts)} describe controls, "
+          f"{len(verdicts)} describe controls, {len(arguing)} argument controls, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 

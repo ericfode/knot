@@ -643,8 +643,21 @@ def undescribable(plan: dict, t) -> str | None:
 def decimal(word: str) -> int | None:
     """A decimal u32 word (SPEC section 8), or None: one or more ASCII digits and nothing
     else, leading zeros allowed, at most 2^32-1. It is Base's `U32.read`, which eval-cli
-    applies to its budget and ordinals."""
-    return int(word) if re.fullmatch('[0-9]+', word) and int(word) <= 0xFFFFFFFF else None
+    applies to its budget and ordinals. Leading zeros are dropped before conversion, so a
+    word of any length is read."""
+    digits = word.lstrip('0') or '0'
+    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None
+
+
+def arguments(plan: dict, argv: list) -> str | None:
+    """Why SPEC section 8 refuses the words after IMAGE of an admitted image, or None to run
+    it. Its entry kind selects the form: a Book's `FN FUEL ORDINAL...` (`invocation`), or a
+    Program's `FUEL -- ARG...`, whose shape is read before its FUEL word."""
+    if plan['entry'] == 'book':
+        return invocation(plan, argv)
+    if len(argv) < 2 or argv[1] != '--':
+        return 'HostFailure arguments usage'
+    return None if decimal(argv[0]) is not None else 'HostFailure arguments expected-u32'
 
 
 def invocation(plan: dict, argv: list) -> str | None:
