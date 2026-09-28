@@ -214,5 +214,81 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "gpu_records": {
+    "profile": "knot-gpu-records-2",
+    "device_profile": "knot-device-records-2",
+    "version": 2,
+    "contract": "tests/compiler-gpu/SPEC.md",
+    "entry": "tests/compiler-gpu/compile.bend",
+    "emitter": "src/records.bend::emit(checked_book, name, live_ordinals, depth, bytes)",
+    "arguments": "[--limits depth bytes] source output entry [live-ordinals...]",
+    "checking": "driver.load checks the entire book before emission; emit requires a checked Book",
+    "closure": "Selected entry and live transitive callees; no source evaluation or branch specialization",
+    "forms": [
+      "Value",
+      "Reference",
+      "Construct",
+      "Let",
+      "Case",
+      "Application",
+      "tail structural self-recursion"
+    ],
+    "host_abi": "One compiled invocation; enum-only live parameters and result. The runner labels describe this invocation and do not supply runtime inputs.",
+    "ownership": {
+      "Type": "unique move/open/release",
+      "Data": "Affine bindings move; reusable bindings share reference-counted immutable edges and release retained owners at scope exit",
+      "erased": "no capture, instruction or argument evaluation"
+    },
+    "activations": {
+      "capture_width": 512,
+      "maximum": 64,
+      "calls": "Separate activation per static acyclic call site; saved caller interval is disjoint from active callees",
+      "recursion": "Tail self-call transfers new arguments to the original parameter range and jumps to the entry"
+    },
+    "joins": "One-shot argument and return joins per acyclic call; issued attempt 1 is embedded in delivery and resume; reverse argument delivery preserves logical slots",
+    "unsupported": {
+      "recursive-activation": "non-tail self-calls need general activation allocation",
+      "dynamic-attempt": "other live calls in a recursive function could reuse attempts",
+      "entry-parameters": "structured host parameters",
+      "entry-result": "structured host result",
+      "expression-form": "checked core forms outside the admitted expression positions"
+    },
+    "budgets": {
+      "emitter_depth": 4096,
+      "output_bytes": 1048576,
+      "instructions": 16384,
+      "joins": 512,
+      "objects": 1024,
+      "pending": 2048,
+      "rc_limit": 65535,
+      "identity_limit": 4294967295,
+      "attempt_limit": 4294967295,
+      "max_storage_bytes": 16777216
+    },
+    "host": "scripts/run-records.py",
+    "device_host": "scripts/run-records-device.mjs",
+    "host_defaults": {
+      "quantum": 64,
+      "max_rounds": 1024,
+      "timeout_seconds": 60,
+      "storage_bytes": 16777216
+    },
+    "cpu_mode": "--cpu-only uses the existing independent runtime2 Driver/Reference oracle",
+    "device_mode": "Default host mode dispatches the unchanged generic runtime2/runtime.wgsl on a real Metal adapter",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-gpu/check.py --cpu-only",
+    "device_gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-gpu/check.py --device --receipt tests/compiler-gpu/receipts/device.json",
+    "evidence": "tests/compiler-gpu/receipts/gpu.json",
+    "frozen_expectations": "tests/compiler-gpu/expectations.json",
+    "proof_entry": "src/records-PROOF.bend",
+    "proof_boundary": "13 filled lowering-helper laws plus differential corpus and semantic mutants; no general compiler correctness or device refinement theorem",
+    "limits": [
+      "serial device interpreter",
+      "no dynamic activations or attempts",
+      "no cancellation lowering",
+      "no structured host ABI",
+      "no performance claim",
+      "Metal execution requires coordinator receipt"
+    ]
   }
 }

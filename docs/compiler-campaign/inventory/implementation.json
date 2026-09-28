@@ -121,10 +121,10 @@
   },
   "totals": {
     "compiler": {
-      "files": 30,
-      "declarations": 425,
-      "unique_declarations": 369,
-      "definitions": 275,
+      "files": 33,
+      "declarations": 517,
+      "unique_declarations": 448,
+      "definitions": 333,
       "classes": 40
     },
     "frontend_files": {
@@ -56517,6 +56517,6567 @@
           "execution": {
             "references": [],
             "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/records-LAWS.bend",
+      "sha256": "afa1d81b38ba08ad3ba1b1c980f4ddf851c0a0d14aa2a748b8046c7beb004c8d",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./records.bend",
+          "alias": "R",
+          "file": "src/records.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "higher-order",
+        "imports.base",
+        "imports.local",
+        "laws",
+        "literals.list",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "types.base"
+      ],
+      "declarations": [
+        {
+          "id": "src/records-LAWS.bend::reusable_occurrence_acquires_an_edge:law",
+          "name": "reusable_occurrence_acquires_an_edge",
+          "key": "src/records-LAWS.reusable_occurrence_acquires_an_edge",
+          "kind": "law",
+          "lines": [
+            6,
+            9
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "True",
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::affine_occurrence_transfers_an_edge:law",
+          "name": "affine_occurrence_transfers_an_edge",
+          "key": "src/records-LAWS.affine_occurrence_transfers_an_edge",
+          "kind": "law",
+          "lines": [
+            11,
+            14
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "False",
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::dropped_binding_enters_cleanup:law",
+          "name": "dropped_binding_enters_cleanup",
+          "key": "src/records-LAWS.dropped_binding_enters_cleanup",
+          "kind": "law",
+          "lines": [
+            16,
+            18
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.release"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.release"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::completion_carries_issued_attempt:law",
+          "name": "completion_carries_issued_attempt",
+          "key": "src/records-LAWS.completion_carries_issued_attempt",
+          "kind": "law",
+          "lines": [
+            20,
+            24
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.delivery"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.delivery"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::logical_slots_survive_reverse_delivery:law",
+          "name": "logical_slots_survive_reverse_delivery",
+          "key": "src/records-LAWS.logical_slots_survive_reverse_delivery",
+          "kind": "law",
+          "lines": [
+            26,
+            32
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/records.delivery",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "U32",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/records.delivery",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::erased_argument_has_no_slot:law",
+          "name": "erased_argument_has_no_slot",
+          "key": "src/records-LAWS.erased_argument_has_no_slot",
+          "kind": "law",
+          "lines": [
+            34,
+            42
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::erased_parameter_has_no_owner:law",
+          "name": "erased_parameter_has_no_owner",
+          "key": "src/records-LAWS.erased_parameter_has_no_owner",
+          "kind": "law",
+          "lines": [
+            44,
+            52
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.bind_parameters",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.bind_parameters",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::tail_arguments_keep_source_order:law",
+          "name": "tail_arguments_keep_source_order",
+          "key": "src/records-LAWS.tail_arguments_keep_source_order",
+          "kind": "law",
+          "lines": [
+            54,
+            60
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.moves",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "U32",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.moves",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::relocation_preserves_the_test:law",
+          "name": "relocation_preserves_the_test",
+          "key": "src/records-LAWS.relocation_preserves_the_test",
+          "kind": "law",
+          "lines": [
+            62,
+            67
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "U32",
+            "src/records.Address",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.relocate",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/records.Record",
+            "src/records.relocate",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::return_cleans_before_delivery:law",
+          "name": "return_cleans_before_delivery",
+          "key": "src/records-LAWS.return_cleans_before_delivery",
+          "kind": "law",
+          "lines": [
+            69,
+            74
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "laws",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.Reply",
+            "src/records.cleanup",
+            "src/records.delivery",
+            "src/records.push",
+            "src/records.returned"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Flow",
+            "src/records.cleanup",
+            "src/records.delivery",
+            "src/records.push",
+            "src/records.returned"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::full_activation_cannot_wrap:law",
+          "name": "full_activation_cannot_wrap",
+          "key": "src/records-LAWS.full_activation_cannot_wrap",
+          "kind": "law",
+          "lines": [
+            76,
+            80
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "laws",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.reserve",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.reserve",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::pending_compilation_needs_fuel:law",
+          "name": "pending_compilation_needs_fuel",
+          "key": "src/records-LAWS.pending_compilation_needs_fuel",
+          "kind": "law",
+          "lines": [
+            82,
+            88
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mode",
+            "src/records.lower",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mode",
+            "src/records.lower",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-LAWS.bend::affine_binding_moves_even_data:law",
+          "name": "affine_binding_moves_even_data",
+          "key": "src/records-LAWS.affine_binding_moves_even_data",
+          "kind": "law",
+          "lines": [
+            90,
+            98
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nil",
+            "Result",
+            "True",
+            "U32",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Constructor",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/records-PROOF.bend",
+      "sha256": "baf5148edc2442ea1f7cc1937d71d5657e52638927242731d383380c3a585f2c",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./records-LAWS.bend",
+          "alias": "L",
+          "file": "src/records-LAWS.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "calls",
+        "constructors",
+        "dependent",
+        "equality",
+        "fields",
+        "generics",
+        "higher-order",
+        "imports.base",
+        "imports.local",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "proofs",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.reusable",
+        "types.base"
+      ],
+      "declarations": [
+        {
+          "id": "src/records-PROOF.bend::L.reusable_occurrence_acquires_an_edge:law_fill",
+          "name": "L.reusable_occurrence_acquires_an_edge",
+          "key": "src/records-LAWS.reusable_occurrence_acquires_an_edge",
+          "kind": "law_fill",
+          "lines": [
+            4,
+            4
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "True",
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.affine_occurrence_transfers_an_edge:law_fill",
+          "name": "L.affine_occurrence_transfers_an_edge",
+          "key": "src/records-LAWS.affine_occurrence_transfers_an_edge",
+          "kind": "law_fill",
+          "lines": [
+            5,
+            5
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "False",
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.transfer"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.dropped_binding_enters_cleanup:law_fill",
+          "name": "L.dropped_binding_enters_cleanup",
+          "key": "src/records-LAWS.dropped_binding_enters_cleanup",
+          "kind": "law_fill",
+          "lines": [
+            6,
+            6
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.release"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.release"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.completion_carries_issued_attempt:law_fill",
+          "name": "L.completion_carries_issued_attempt",
+          "key": "src/records-LAWS.completion_carries_issued_attempt",
+          "kind": "law_fill",
+          "lines": [
+            7,
+            7
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.delivery"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record",
+            "src/records.delivery"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.logical_slots_survive_reverse_delivery:law_fill",
+          "name": "L.logical_slots_survive_reverse_delivery",
+          "key": "src/records-LAWS.logical_slots_survive_reverse_delivery",
+          "kind": "law_fill",
+          "lines": [
+            8,
+            8
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/records.delivery",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "U32",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/records.delivery",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.erased_argument_has_no_slot:law_fill",
+          "name": "L.erased_argument_has_no_slot",
+          "key": "src/records-LAWS.erased_argument_has_no_slot",
+          "kind": "law_fill",
+          "lines": [
+            9,
+            9
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.erased_parameter_has_no_owner:law_fill",
+          "name": "L.erased_parameter_has_no_owner",
+          "key": "src/records-LAWS.erased_parameter_has_no_owner",
+          "kind": "law_fill",
+          "lines": [
+            10,
+            10
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.bind_parameters",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.bind_parameters",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.tail_arguments_keep_source_order:law_fill",
+          "name": "L.tail_arguments_keep_source_order",
+          "key": "src/records-LAWS.tail_arguments_keep_source_order",
+          "kind": "law_fill",
+          "lines": [
+            11,
+            11
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.moves",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "U32",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.moves",
+            "src/records.push",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.relocation_preserves_the_test:law_fill",
+          "name": "L.relocation_preserves_the_test",
+          "key": "src/records-LAWS.relocation_preserves_the_test",
+          "kind": "law_fill",
+          "lines": [
+            12,
+            12
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "U32",
+            "src/records.Address",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.relocate",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/records.Record",
+            "src/records.relocate",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.return_cleans_before_delivery:law_fill",
+          "name": "L.return_cleans_before_delivery",
+          "key": "src/records-LAWS.return_cleans_before_delivery",
+          "kind": "law_fill",
+          "lines": [
+            13,
+            13
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "literals.u32",
+            "proofs",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.Reply",
+            "src/records.cleanup",
+            "src/records.delivery",
+            "src/records.push",
+            "src/records.returned"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Flow",
+            "src/records.cleanup",
+            "src/records.delivery",
+            "src/records.push",
+            "src/records.returned"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.full_activation_cannot_wrap:law_fill",
+          "name": "L.full_activation_cannot_wrap",
+          "key": "src/records-LAWS.full_activation_cannot_wrap",
+          "kind": "law_fill",
+          "lines": [
+            14,
+            14
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.reserve",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.reserve",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.pending_compilation_needs_fuel:law_fill",
+          "name": "L.pending_compilation_needs_fuel",
+          "key": "src/records-LAWS.pending_compilation_needs_fuel",
+          "kind": "law_fill",
+          "lines": [
+            15,
+            15
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Fail",
+            "List",
+            "Result",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mode",
+            "src/records.lower",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mode",
+            "src/records.lower",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records-PROOF.bend::L.affine_binding_moves_even_data:law_fill",
+          "name": "L.affine_binding_moves_even_data",
+          "key": "src/records-LAWS.affine_binding_moves_even_data",
+          "kind": "law_fill",
+          "lines": [
+            16,
+            16
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nil",
+            "Result",
+            "True",
+            "U32",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Constructor",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        }
+      ]
+    },
+    {
+      "file": "src/records.bend",
+      "sha256": "279aa87efb9b2356b18c8cf3338dffacca9b18d6d5c2af233e15201a90e5d7d6",
+      "imports": [
+        {
+          "module": "Base",
+          "alias": null,
+          "file": "Base",
+          "feature": "imports.base"
+        },
+        {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./wasm-bytes.bend",
+          "alias": "W",
+          "file": "src/wasm-bytes.bend",
+          "feature": "imports.local"
+        }
+      ],
+      "features": [
+        "bindings",
+        "calls",
+        "calls.variable",
+        "captures",
+        "constructors",
+        "dependent",
+        "fields",
+        "generics",
+        "higher-order",
+        "imports.base",
+        "imports.local",
+        "lambdas",
+        "literals.list",
+        "literals.nat",
+        "literals.string",
+        "literals.u32",
+        "matches",
+        "matches.multi",
+        "patterns.nested",
+        "patterns.variable",
+        "patterns.wildcard",
+        "quantities.affine",
+        "quantities.arguments",
+        "quantities.erased",
+        "quantities.reusable",
+        "recursion",
+        "types.base",
+        "types.data",
+        "types.type"
+      ],
+      "declarations": [
+        {
+          "id": "src/records.bend::Slot:datatype",
+          "name": "Slot",
+          "key": "src/records.Slot",
+          "kind": "datatype",
+          "lines": [
+            7,
+            8
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Bool",
+            "U32",
+            "src/records.Slot"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/records.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Record:datatype",
+          "name": "Record",
+          "key": "src/records.Record",
+          "kind": "datatype",
+          "lines": [
+            9,
+            11
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "U32",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Plan:datatype",
+          "name": "Plan",
+          "key": "src/records.Plan",
+          "kind": "datatype",
+          "lines": [
+            12,
+            13
+          ],
+          "features": [
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/records.Plan",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/records.Plan",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Flow:datatype",
+          "name": "Flow",
+          "key": "src/records.Flow",
+          "kind": "datatype",
+          "lines": [
+            14,
+            15
+          ],
+          "features": [
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Exit:datatype",
+          "name": "Exit",
+          "key": "src/records.Exit",
+          "kind": "datatype",
+          "lines": [
+            16,
+            18
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "U32",
+            "src/records.Exit"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Exit"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Activation:datatype",
+          "name": "Activation",
+          "key": "src/records.Activation",
+          "kind": "datatype",
+          "lines": [
+            19,
+            20
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "Bool",
+            "U32",
+            "src/records.Activation",
+            "src/records.Exit"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/records.Activation",
+            "src/records.Exit"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Mode:datatype",
+          "name": "Mode",
+          "key": "src/records.Mode",
+          "kind": "datatype",
+          "lines": [
+            21,
+            26
+          ],
+          "features": [
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.Mode"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.Mode"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::Address:datatype",
+          "name": "Address",
+          "key": "src/records.Address",
+          "kind": "datatype",
+          "lines": [
+            27,
+            28
+          ],
+          "features": [
+            "fields",
+            "quantities.affine",
+            "types.base",
+            "types.data"
+          ],
+          "references": [
+            "U32",
+            "src/records.Address"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Address"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::internal:definition",
+          "name": "internal",
+          "key": "src/records.internal",
+          "kind": "definition",
+          "lines": [
+            30,
+            31
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "String",
+            "src/syntax.Error",
+            "src/syntax.Internal"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "src/syntax.Internal"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::unsupported:definition",
+          "name": "unsupported",
+          "key": "src/records.unsupported",
+          "kind": "definition",
+          "lines": [
+            32,
+            33
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "String",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Unsupported"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Unsupported"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::exhausted:definition",
+          "name": "exhausted",
+          "key": "src/records.exhausted",
+          "kind": "definition",
+          "lines": [
+            34,
+            35
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Exhausted"
+          ],
+          "type_references": [
+            "Result",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "U32",
+              "src/syntax.At",
+              "src/syntax.Exhausted"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::host:definition",
+          "name": "host",
+          "key": "src/records.host",
+          "kind": "definition",
+          "lines": [
+            36,
+            37
+          ],
+          "features": [
+            "constructors",
+            "dependent",
+            "fields",
+            "generics",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Fail",
+            "Result",
+            "String",
+            "src/syntax.Error",
+            "src/syntax.Host"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Fail",
+              "String",
+              "src/syntax.Host"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::maximum:definition",
+          "name": "maximum",
+          "key": "src/records.maximum",
+          "kind": "definition",
+          "lines": [
+            39,
+            40
+          ],
+          "features": [
+            "calls",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "U32",
+            "U32.is_ge"
+          ],
+          "type_references": [
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "U32.is_ge"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::width:definition",
+          "name": "width",
+          "key": "src/records.width",
+          "kind": "definition",
+          "lines": [
+            42,
+            47
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "False",
+            "True",
+            "U32",
+            "WCon",
+            "WNil",
+            "src/records.Op",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "False",
+              "True",
+              "U32",
+              "WCon",
+              "WNil",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::push:definition",
+          "name": "push",
+          "key": "src/records.push",
+          "kind": "definition",
+          "lines": [
+            49,
+            52
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable"
+          ],
+          "references": [
+            "Con",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Record",
+            "src/records.maximum",
+            "src/records.width"
+          ],
+          "type_references": [
+            "src/records.Flow",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/records.maximum",
+              "src/records.width"
+            ],
+            "types": [
+              "Con",
+              "U32",
+              "src/records.Flow",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::append:definition",
+          "name": "append",
+          "key": "src/records.append",
+          "kind": "definition",
+          "lines": [
+            54,
+            57
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "src/records.Flow",
+            "src/records.Record",
+            "src/records.append",
+            "src/records.push"
+          ],
+          "type_references": [
+            "List",
+            "src/records.Flow",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.append",
+              "src/records.push"
+            ],
+            "types": [
+              "Con",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::scope:definition",
+          "name": "scope",
+          "key": "src/records.scope",
+          "kind": "definition",
+          "lines": [
+            59,
+            61
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/records.Flow"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::base:definition",
+          "name": "base",
+          "key": "src/records.base",
+          "kind": "definition",
+          "lines": [
+            63,
+            65
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Activation"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Activation"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/records.Activation"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::source:definition",
+          "name": "source",
+          "key": "src/records.source",
+          "kind": "definition",
+          "lines": [
+            67,
+            69
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Slot"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::reserve:definition",
+          "name": "reserve",
+          "key": "src/records.reserve",
+          "kind": "definition",
+          "lines": [
+            71,
+            75
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.and",
+            "Result",
+            "U32",
+            "U32.add",
+            "U32.is_le",
+            "U32.sub",
+            "src/records.Flow",
+            "src/records.exhausted",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 2635,
+              "names": [
+                "count",
+                "first",
+                "locals",
+                "next",
+                "plan"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "U32.add",
+              "U32.is_le",
+              "U32.sub",
+              "src/records.exhausted",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "U32",
+              "src/records.Flow"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::labels:definition",
+          "name": "labels",
+          "key": "src/records.labels",
+          "kind": "definition",
+          "lines": [
+            77,
+            80
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Result",
+            "U32",
+            "U32.add",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add"
+            ],
+            "types": [
+              "src/records.Flow",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::reusable:definition",
+          "name": "reusable",
+          "key": "src/records.reusable",
+          "kind": "definition",
+          "lines": [
+            82,
+            86
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "U32.sub",
+            "src/core.Datatype",
+            "src/records.internal",
+            "src/records.reusable",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3251,
+              "names": [
+                "data"
+              ]
+            },
+            {
+              "offset": 3267,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "U32.sub",
+              "src/records.internal",
+              "src/records.reusable",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Datatype"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::function_at:definition",
+          "name": "function_at",
+          "key": "src/records.function_at",
+          "kind": "definition",
+          "lines": [
+            88,
+            92
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "U32.sub",
+            "src/core.Function",
+            "src/records.function_at",
+            "src/records.internal",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3559,
+              "names": [
+                "head"
+              ]
+            },
+            {
+              "offset": 3575,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "U32.sub",
+              "src/records.function_at",
+              "src/records.internal",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::named:definition",
+          "name": "named",
+          "key": "src/records.named",
+          "kind": "definition",
+          "lines": [
+            94,
+            98
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "String",
+            "String.eq",
+            "U32",
+            "U32.add",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/records.host",
+            "src/records.named",
+            "src/syntax.Error",
+            "src/syntax.choose",
+            "src/syntax.text"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 3909,
+              "names": [
+                "index"
+              ]
+            },
+            {
+              "offset": 3926,
+              "names": [
+                "index",
+                "name",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.eq",
+              "U32.add",
+              "src/records.host",
+              "src/records.named",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::signature:definition",
+          "name": "signature",
+          "key": "src/records.signature",
+          "kind": "definition",
+          "lines": [
+            100,
+            102
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::live:definition",
+          "name": "live",
+          "key": "src/records.live",
+          "kind": "definition",
+          "lines": [
+            104,
+            108
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Parameter",
+            "src/records.live"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "U32.add",
+              "U32.is_eq",
+              "src/records.live"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::fields:definition",
+          "name": "fields",
+          "key": "src/records.fields",
+          "kind": "definition",
+          "lines": [
+            110,
+            114
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Binding",
+            "src/records.fields"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Binding"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "U32.add",
+              "U32.is_eq",
+              "src/records.fields"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::lookup:definition",
+          "name": "lookup",
+          "key": "src/records.lookup",
+          "kind": "definition",
+          "lines": [
+            116,
+            122
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "src/records.Slot",
+            "src/records.internal",
+            "src/records.lookup",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 4863,
+              "names": [
+                "head"
+              ]
+            },
+            {
+              "offset": 4879,
+              "names": [
+                "level",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/records.internal",
+              "src/records.lookup",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::remove:definition",
+          "name": "remove",
+          "key": "src/records.remove",
+          "kind": "definition",
+          "lines": [
+            124,
+            130
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.is_eq",
+            "src/records.Slot",
+            "src/records.remove",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/records.Slot"
+          ],
+          "captures": [
+            {
+              "offset": 5142,
+              "names": [
+                "tail"
+              ]
+            },
+            {
+              "offset": 5152,
+              "names": [
+                "head",
+                "level",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/records.remove",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::transfer:definition",
+          "name": "transfer",
+          "key": "src/records.transfer",
+          "kind": "definition",
+          "lines": [
+            132,
+            133
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.u32",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.pick",
+            "U32",
+            "src/records.Op",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick"
+            ],
+            "types": [
+              "U32",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::occurrence:definition",
+          "name": "occurrence",
+          "key": "src/records.occurrence",
+          "kind": "definition",
+          "lines": [
+            135,
+            138
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Done",
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/records.push",
+            "src/records.remove",
+            "src/records.transfer",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "src/records.push",
+              "src/records.remove",
+              "src/records.transfer"
+            ],
+            "types": [
+              "Done",
+              "src/records.Flow",
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::bind_slot:definition",
+          "name": "bind_slot",
+          "key": "src/records.bind_slot",
+          "kind": "definition",
+          "lines": [
+            140,
+            143
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Con",
+            "Done",
+            "List",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/records.reusable",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 5840,
+              "names": [
+                "capture",
+                "level",
+                "locals",
+                "next",
+                "plan",
+                "quantity"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "U32.is_eq",
+              "src/records.reusable",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "U32",
+              "src/records.Flow",
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::bind_parameters:definition",
+          "name": "bind_parameters",
+          "key": "src/records.bind_parameters",
+          "kind": "definition",
+          "lines": [
+            145,
+            150
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.bind_parameters",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 6226,
+              "names": [
+                "first",
+                "flow",
+                "level",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 6287,
+              "names": [
+                "first",
+                "flow",
+                "level",
+                "q",
+                "tail",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 6357,
+              "names": [
+                "first",
+                "level",
+                "tail",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/records.bind_parameters",
+              "src/records.bind_slot",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::bind_fields:definition",
+          "name": "bind_fields",
+          "key": "src/records.bind_fields",
+          "kind": "definition",
+          "lines": [
+            152,
+            157
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/records.bind_fields",
+            "src/records.bind_slot",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Binding",
+            "src/core.Datatype",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 6712,
+              "names": [
+                "first",
+                "flow",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 6752,
+              "names": [
+                "first",
+                "flow",
+                "level",
+                "q",
+                "tail",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 6822,
+              "names": [
+                "first",
+                "tail",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/records.bind_fields",
+              "src/records.bind_slot",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "U32",
+              "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::release:definition",
+          "name": "release",
+          "key": "src/records.release",
+          "kind": "definition",
+          "lines": [
+            159,
+            160
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "literals.u32",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "U32",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::drops:definition",
+          "name": "drops",
+          "key": "src/records.drops",
+          "kind": "definition",
+          "lines": [
+            162,
+            165
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/records.drops",
+            "src/records.push",
+            "src/records.release"
+          ],
+          "type_references": [
+            "List",
+            "src/records.Flow",
+            "src/records.Slot"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.drops",
+              "src/records.push",
+              "src/records.release"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "src/records.Slot"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::cleanup:definition",
+          "name": "cleanup",
+          "key": "src/records.cleanup",
+          "kind": "definition",
+          "lines": [
+            167,
+            169
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable"
+          ],
+          "references": [
+            "Nil",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.drops",
+            "src/records.push"
+          ],
+          "type_references": [
+            "src/records.Flow"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.drops",
+              "src/records.push"
+            ],
+            "types": [
+              "Nil",
+              "U32",
+              "src/records.Flow",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::delivery:definition",
+          "name": "delivery",
+          "key": "src/records.delivery",
+          "kind": "definition",
+          "lines": [
+            171,
+            172
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "literals.u32",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/records.Op",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "U32",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::returned:definition",
+          "name": "returned",
+          "key": "src/records.returned",
+          "kind": "definition",
+          "lines": [
+            174,
+            178
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "U32",
+            "src/records.Exit",
+            "src/records.Finish",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.Reply",
+            "src/records.append",
+            "src/records.cleanup",
+            "src/records.delivery",
+            "src/records.push"
+          ],
+          "type_references": [
+            "U32",
+            "src/records.Exit",
+            "src/records.Flow"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.append",
+              "src/records.cleanup",
+              "src/records.delivery",
+              "src/records.push"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/records.Finish",
+              "src/records.Op",
+              "src/records.Reply"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::moves:definition",
+          "name": "moves",
+          "key": "src/records.moves",
+          "kind": "definition",
+          "lines": [
+            180,
+            185
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.moves",
+            "src/records.push",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow"
+          ],
+          "captures": [
+            {
+              "offset": 7818,
+              "names": [
+                "destination",
+                "flow",
+                "source",
+                "tail"
+              ]
+            },
+            {
+              "offset": 7859,
+              "names": [
+                "destination",
+                "flow",
+                "source",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/records.moves",
+              "src/records.push",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Parameter",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::deliveries:definition",
+          "name": "deliveries",
+          "key": "src/records.deliveries",
+          "kind": "definition",
+          "lines": [
+            188,
+            193
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "U32.is_eq",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.deliveries",
+            "src/records.delivery",
+            "src/records.push",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/core.Parameter",
+            "src/records.Flow"
+          ],
+          "captures": [
+            {
+              "offset": 8273,
+              "names": [
+                "flow",
+                "join",
+                "slot",
+                "source",
+                "tail"
+              ]
+            },
+            {
+              "offset": 8317,
+              "names": [
+                "flow",
+                "join",
+                "slot",
+                "source",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/records.deliveries",
+              "src/records.delivery",
+              "src/records.push",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::live_terms:definition",
+          "name": "live_terms",
+          "key": "src/records.live_terms",
+          "kind": "definition",
+          "lines": [
+            195,
+            199
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32.is_eq",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.live_terms",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "src/core.Parameter",
+            "src/core.Term"
+          ],
+          "captures": [
+            {
+              "offset": 8640,
+              "names": [
+                "ps",
+                "tail"
+              ]
+            },
+            {
+              "offset": 8665,
+              "names": [
+                "head",
+                "ps",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/records.live_terms",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::call_terms:definition",
+          "name": "call_terms",
+          "key": "src/records.call_terms",
+          "kind": "definition",
+          "lines": [
+            201,
+            203
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "Result",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/records.live_terms",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/core.Function",
+            "src/core.Term",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.live_terms"
+            ],
+            "types": [
+              "Done",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::children:definition",
+          "name": "children",
+          "key": "src/records.children",
+          "kind": "definition",
+          "lines": [
+            205,
+            214
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "WCon",
+            "WNil",
+            "src/core.Application",
+            "src/core.Branch",
+            "src/core.Case",
+            "src/core.Construct",
+            "src/core.Function",
+            "src/core.Let",
+            "src/core.Sequence",
+            "src/core.Term",
+            "src/records.call_terms",
+            "src/records.function_at",
+            "src/records.live_terms",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/core.Function",
+            "src/core.Term",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 9185,
+              "names": [
+                "args"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.call_terms",
+              "src/records.function_at",
+              "src/records.live_terms",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "False",
+              "Nil",
+              "U32",
+              "WCon",
+              "WNil",
+              "src/core.Application",
+              "src/core.Branch",
+              "src/core.Case",
+              "src/core.Construct",
+              "src/core.Let",
+              "src/core.Sequence"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::self_call:definition",
+          "name": "self_call",
+          "key": "src/records.self_call",
+          "kind": "definition",
+          "lines": [
+            216,
+            219
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "False",
+            "U32",
+            "U32.is_eq",
+            "src/core.Application",
+            "src/core.Term"
+          ],
+          "type_references": [
+            "Bool",
+            "U32",
+            "src/core.Term"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.is_eq"
+            ],
+            "types": [
+              "False",
+              "src/core.Application"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::recursive:definition",
+          "name": "recursive",
+          "key": "src/records.recursive",
+          "kind": "definition",
+          "lines": [
+            221,
+            229
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.nat",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "Succ",
+            "True",
+            "U32",
+            "Zero",
+            "src/core.Function",
+            "src/core.Term",
+            "src/records.children",
+            "src/records.exhausted",
+            "src/records.recursive",
+            "src/records.self_call",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Function",
+            "src/core.Term",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 9917,
+              "names": [
+                "functions",
+                "head",
+                "index",
+                "n",
+                "tail"
+              ]
+            },
+            {
+              "offset": 9983,
+              "names": [
+                "functions",
+                "index",
+                "n",
+                "tail"
+              ]
+            },
+            {
+              "offset": 10054,
+              "names": [
+                "functions",
+                "index",
+                "n",
+                "tail"
+              ]
+            },
+            {
+              "offset": 10130,
+              "names": [
+                "functions",
+                "index",
+                "n",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.children",
+              "src/records.exhausted",
+              "src/records.recursive",
+              "src/records.self_call",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "False",
+              "Nil",
+              "Succ",
+              "True",
+              "Zero"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::within:definition",
+          "name": "within",
+          "key": "src/records.within",
+          "kind": "definition",
+          "lines": [
+            231,
+            234
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "U32.is_le",
+            "src/records.Flow",
+            "src/records.Plan"
+          ],
+          "type_references": [
+            "Bool",
+            "src/records.Flow"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "U32.is_le"
+            ],
+            "types": [
+              "U32",
+              "src/records.Flow",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::checked:definition",
+          "name": "checked",
+          "key": "src/records.checked",
+          "kind": "definition",
+          "lines": [
+            236,
+            237
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "Result",
+            "src/records.Flow",
+            "src/records.exhausted",
+            "src/records.within",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Result",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 10485,
+              "names": [
+                "flow"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.exhausted",
+              "src/records.within",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Done"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::activation:definition",
+          "name": "activation",
+          "key": "src/records.activation",
+          "kind": "definition",
+          "lines": [
+            240,
+            244
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool.and",
+            "Result",
+            "U32",
+            "U32.add",
+            "U32.is_le",
+            "U32.is_lt",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.exhausted",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 10876,
+              "names": [
+                "arity",
+                "base",
+                "code",
+                "count",
+                "join",
+                "labels",
+                "locals",
+                "next",
+                "slot"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "U32.add",
+              "U32.is_le",
+              "U32.is_lt",
+              "src/records.exhausted",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "U32",
+              "src/records.Flow",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::construct:definition",
+          "name": "construct",
+          "key": "src/records.construct",
+          "kind": "definition",
+          "lines": [
+            246,
+            247
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.pick",
+            "Done",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Op",
+            "src/records.push",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Bool",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "src/records.push"
+            ],
+            "types": [
+              "Done",
+              "U32",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::result_scope:definition",
+          "name": "result_scope",
+          "key": "src/records.result_scope",
+          "kind": "definition",
+          "lines": [
+            249,
+            251
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/records.Slot",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/records.Flow"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::call_enter:definition",
+          "name": "call_enter",
+          "key": "src/records.call_enter",
+          "kind": "definition",
+          "lines": [
+            253,
+            257
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.Mark",
+            "src/records.Op",
+            "src/records.append",
+            "src/records.bind_parameters",
+            "src/records.deliveries",
+            "src/records.live",
+            "src/records.scope",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/records.append",
+              "src/records.bind_parameters",
+              "src/records.deliveries",
+              "src/records.live",
+              "src/records.scope"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/records.Mark",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::call:definition",
+          "name": "call",
+          "key": "src/records.call",
+          "kind": "definition",
+          "lines": [
+            259,
+            266
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mark",
+            "src/records.Reply",
+            "src/records.activation",
+            "src/records.call_enter",
+            "src/records.checked",
+            "src/records.labels",
+            "src/records.push",
+            "src/records.recursive",
+            "src/records.result_scope",
+            "src/records.scope",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 12228,
+              "names": [
+                "base",
+                "body",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "next",
+                "params",
+                "types"
+              ]
+            },
+            {
+              "offset": 12238,
+              "names": [
+                "base",
+                "body",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "next",
+                "params",
+                "saved",
+                "types"
+              ]
+            },
+            {
+              "offset": 12247,
+              "names": [
+                "base",
+                "body",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12277,
+              "names": [
+                "base",
+                "body",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12288,
+              "names": [
+                "base",
+                "body",
+                "callee",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12297,
+              "names": [
+                "base",
+                "body",
+                "callee",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "join",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12327,
+              "names": [
+                "base",
+                "body",
+                "callee",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "join",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12337,
+              "names": [
+                "base",
+                "body",
+                "callee",
+                "depth",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "join",
+                "label",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "types"
+              ]
+            },
+            {
+              "offset": 12411,
+              "names": [
+                "base",
+                "callee",
+                "dst",
+                "first",
+                "index",
+                "join",
+                "label",
+                "next",
+                "params",
+                "saved",
+                "slot",
+                "state",
+                "types"
+              ]
+            },
+            {
+              "offset": 12505,
+              "names": [
+                "callee",
+                "dst",
+                "index",
+                "join",
+                "label",
+                "next",
+                "rec",
+                "saved",
+                "slot"
+              ]
+            },
+            {
+              "offset": 12610,
+              "names": [
+                "label",
+                "saved",
+                "slot"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/records.activation",
+              "src/records.call_enter",
+              "src/records.checked",
+              "src/records.labels",
+              "src/records.push",
+              "src/records.recursive",
+              "src/records.result_scope",
+              "src/records.scope",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/records.Activation",
+              "src/records.Mark",
+              "src/records.Reply"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          }
+        },
+        {
+          "id": "src/records.bend::lower:definition",
+          "name": "lower",
+          "key": "src/records.lower",
+          "kind": "definition",
+          "lines": [
+            269,
+            327
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "Succ",
+            "U32.add",
+            "U32.is_eq",
+            "Zero",
+            "src/core.Application",
+            "src/core.Branch",
+            "src/core.Case",
+            "src/core.Construct",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Let",
+            "src/core.Parameter",
+            "src/core.Reference",
+            "src/core.Value",
+            "src/records.Activation",
+            "src/records.Arguments",
+            "src/records.Arm",
+            "src/records.Arms",
+            "src/records.Body",
+            "src/records.Expression",
+            "src/records.Flow",
+            "src/records.Mark",
+            "src/records.Mode",
+            "src/records.Op",
+            "src/records.Slot",
+            "src/records.append",
+            "src/records.base",
+            "src/records.bind_fields",
+            "src/records.bind_slot",
+            "src/records.call",
+            "src/records.checked",
+            "src/records.cleanup",
+            "src/records.construct",
+            "src/records.exhausted",
+            "src/records.fields",
+            "src/records.function_at",
+            "src/records.internal",
+            "src/records.labels",
+            "src/records.live",
+            "src/records.lookup",
+            "src/records.lower",
+            "src/records.moves",
+            "src/records.occurrence",
+            "src/records.push",
+            "src/records.remove",
+            "src/records.reserve",
+            "src/records.result_scope",
+            "src/records.returned",
+            "src/records.reusable",
+            "src/records.scope",
+            "src/records.signature",
+            "src/records.source",
+            "src/records.unsupported",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Activation",
+            "src/records.Flow",
+            "src/records.Mode",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 13089,
+              "names": [
+                "dst",
+                "flow",
+                "tag"
+              ]
+            },
+            {
+              "offset": 13247,
+              "names": [
+                "a",
+                "args",
+                "dst",
+                "functions",
+                "n",
+                "params",
+                "tag",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 13257,
+              "names": [
+                "a",
+                "args",
+                "dst",
+                "first",
+                "functions",
+                "n",
+                "params",
+                "tag",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 13353,
+              "names": [
+                "dst",
+                "first",
+                "params",
+                "tag",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 13409,
+              "names": [
+                "done",
+                "dst",
+                "first",
+                "params",
+                "tag"
+              ]
+            },
+            {
+              "offset": 13554,
+              "names": [
+                "dst",
+                "level"
+              ]
+            },
+            {
+              "offset": 13565,
+              "names": [
+                "dst",
+                "level",
+                "locals"
+              ]
+            },
+            {
+              "offset": 13573,
+              "names": [
+                "dst",
+                "level",
+                "locals"
+              ]
+            },
+            {
+              "offset": 13629,
+              "names": [
+                "dst",
+                "state"
+              ]
+            },
+            {
+              "offset": 13877,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 13966,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14033,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14054,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14065,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14117,
+              "names": [
+                "args",
+                "base",
+                "body",
+                "dst",
+                "entry",
+                "exit",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14127,
+              "names": [
+                "args",
+                "base",
+                "body",
+                "dst",
+                "entry",
+                "exit",
+                "first",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 14265,
+              "names": [
+                "base",
+                "body",
+                "dst",
+                "first",
+                "functions",
+                "index",
+                "n",
+                "params",
+                "types"
+              ]
+            },
+            {
+              "offset": 14360,
+              "names": [
+                "body",
+                "functions",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 14367,
+              "names": [
+                "act",
+                "body",
+                "functions",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 14619,
+              "names": [
+                "a",
+                "body",
+                "flow",
+                "functions",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 14667,
+              "names": [
+                "a",
+                "body",
+                "flow",
+                "functions",
+                "level",
+                "n",
+                "q",
+                "typ",
+                "types",
+                "value"
+              ]
+            },
+            {
+              "offset": 14703,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "level",
+                "n",
+                "q",
+                "typ",
+                "types",
+                "value"
+              ]
+            },
+            {
+              "offset": 14711,
+              "names": [
+                "a",
+                "body",
+                "dst",
+                "functions",
+                "level",
+                "n",
+                "q",
+                "typ",
+                "types",
+                "value"
+              ]
+            },
+            {
+              "offset": 14802,
+              "names": [
+                "a",
+                "body",
+                "dst",
+                "functions",
+                "level",
+                "n",
+                "q",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 14877,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 15009,
+              "names": [
+                "a",
+                "arms",
+                "functions",
+                "level",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 15020,
+              "names": [
+                "a",
+                "arms",
+                "functions",
+                "level",
+                "locals",
+                "n",
+                "types"
+              ]
+            },
+            {
+              "offset": 15029,
+              "names": [
+                "a",
+                "arms",
+                "functions",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "types"
+              ]
+            },
+            {
+              "offset": 15084,
+              "names": [
+                "a",
+                "arms",
+                "functions",
+                "level",
+                "locals",
+                "n",
+                "next",
+                "state",
+                "types"
+              ]
+            },
+            {
+              "offset": 15352,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15417,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15438,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "loop",
+                "n",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15449,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15498,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "functions",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15508,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "first",
+                "functions",
+                "loop",
+                "n",
+                "params",
+                "self",
+                "types"
+              ]
+            },
+            {
+              "offset": 15644,
+              "names": [
+                "base",
+                "entry",
+                "first",
+                "params"
+              ]
+            },
+            {
+              "offset": 15745,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "flow",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "r",
+                "self",
+                "t",
+                "types"
+              ]
+            },
+            {
+              "offset": 15778,
+              "names": [
+                "args",
+                "base",
+                "entry",
+                "exit",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "r",
+                "self",
+                "t",
+                "types"
+              ]
+            },
+            {
+              "offset": 15786,
+              "names": [
+                "args",
+                "base",
+                "dst",
+                "entry",
+                "exit",
+                "functions",
+                "index",
+                "loop",
+                "n",
+                "r",
+                "self",
+                "t",
+                "types"
+              ]
+            },
+            {
+              "offset": 15937,
+              "names": [
+                "dst",
+                "exit"
+              ]
+            },
+            {
+              "offset": 16059,
+              "names": [
+                "b",
+                "e",
+                "exit",
+                "functions",
+                "i",
+                "n",
+                "r",
+                "term",
+                "types"
+              ]
+            },
+            {
+              "offset": 16067,
+              "names": [
+                "b",
+                "dst",
+                "e",
+                "exit",
+                "functions",
+                "i",
+                "n",
+                "r",
+                "term",
+                "types"
+              ]
+            },
+            {
+              "offset": 16178,
+              "names": [
+                "dst",
+                "exit"
+              ]
+            },
+            {
+              "offset": 16423,
+              "names": [
+                "a",
+                "first",
+                "flow",
+                "functions",
+                "n",
+                "params",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 16489,
+              "names": [
+                "a",
+                "first",
+                "flow",
+                "functions",
+                "head",
+                "n",
+                "params",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 16574,
+              "names": [
+                "a",
+                "first",
+                "functions",
+                "n",
+                "params",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 16975,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "n",
+                "params",
+                "source",
+                "tag",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 16986,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "locals",
+                "n",
+                "params",
+                "source",
+                "tag",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 16995,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "locals",
+                "n",
+                "params",
+                "slot",
+                "source",
+                "tag",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 17027,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "locals",
+                "n",
+                "params",
+                "slot",
+                "source",
+                "tag",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 17037,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "label",
+                "locals",
+                "n",
+                "params",
+                "slot",
+                "source",
+                "tag",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 17208,
+              "names": [
+                "a",
+                "functions",
+                "label",
+                "locals",
+                "n",
+                "slot",
+                "source",
+                "tail",
+                "types"
+              ]
+            },
+            {
+              "offset": 17483,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "n",
+                "params",
+                "source",
+                "types"
+              ]
+            },
+            {
+              "offset": 17493,
+              "names": [
+                "a",
+                "body",
+                "first",
+                "functions",
+                "n",
+                "params",
+                "source",
+                "types"
+              ]
+            },
+            {
+              "offset": 17609,
+              "names": [
+                "a",
+                "body",
+                "functions",
+                "n",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_eq",
+              "src/records.append",
+              "src/records.base",
+              "src/records.bind_fields",
+              "src/records.bind_slot",
+              "src/records.call",
+              "src/records.checked",
+              "src/records.cleanup",
+              "src/records.construct",
+              "src/records.exhausted",
+              "src/records.fields",
+              "src/records.function_at",
+              "src/records.internal",
+              "src/records.labels",
+              "src/records.live",
+              "src/records.lookup",
+              "src/records.lower",
+              "src/records.moves",
+              "src/records.occurrence",
+              "src/records.push",
+              "src/records.remove",
+              "src/records.reserve",
+              "src/records.result_scope",
+              "src/records.returned",
+              "src/records.reusable",
+              "src/records.scope",
+              "src/records.signature",
+              "src/records.source",
+              "src/records.unsupported",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "Succ",
+              "U32",
+              "Zero",
+              "src/core.Application",
+              "src/core.Branch",
+              "src/core.Case",
+              "src/core.Construct",
+              "src/core.Let",
+              "src/core.Parameter",
+              "src/core.Reference",
+              "src/core.Value",
+              "src/records.Activation",
+              "src/records.Arguments",
+              "src/records.Arm",
+              "src/records.Arms",
+              "src/records.Body",
+              "src/records.Expression",
+              "src/records.Mark",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::addresses:definition",
+          "name": "addresses",
+          "key": "src/records.addresses",
+          "kind": "definition",
+          "lines": [
+            330,
+            334
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "U32",
+            "U32.add",
+            "src/records.Address",
+            "src/records.Mark",
+            "src/records.Record",
+            "src/records.addresses"
+          ],
+          "type_references": [
+            "List",
+            "U32",
+            "src/records.Address",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.add",
+              "src/records.addresses"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/records.Address",
+              "src/records.Mark"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::address:definition",
+          "name": "address",
+          "key": "src/records.address",
+          "kind": "definition",
+          "lines": [
+            336,
+            340
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_eq",
+            "src/records.Address",
+            "src/records.address",
+            "src/records.internal",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Address",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 18225,
+              "names": [
+                "pc"
+              ]
+            },
+            {
+              "offset": 18239,
+              "names": [
+                "label",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "src/records.address",
+              "src/records.internal",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/records.Address"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::relocate:definition",
+          "name": "relocate",
+          "key": "src/records.relocate",
+          "kind": "definition",
+          "lines": [
+            342,
+            348
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "False",
+            "List",
+            "Result",
+            "True",
+            "U32",
+            "WCon",
+            "WNil",
+            "src/records.Address",
+            "src/records.Op",
+            "src/records.Record",
+            "src/records.address",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/records.Address",
+            "src/records.Record",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 18425,
+              "names": [
+                "a",
+                "b",
+                "d",
+                "e"
+              ]
+            },
+            {
+              "offset": 18524,
+              "names": [
+                "a",
+                "b",
+                "d",
+                "e",
+                "table"
+              ]
+            },
+            {
+              "offset": 18566,
+              "names": [
+                "a",
+                "b",
+                "e",
+                "yes"
+              ]
+            },
+            {
+              "offset": 18662,
+              "names": [
+                "b",
+                "c",
+                "d",
+                "e"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.address",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Done",
+              "False",
+              "True",
+              "U32",
+              "WCon",
+              "WNil",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::show:definition",
+          "name": "show",
+          "key": "src/records.show",
+          "kind": "definition",
+          "lines": [
+            350,
+            354
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Nil",
+            "String",
+            "String.concat",
+            "U32.show",
+            "src/records.Mark",
+            "src/records.Op",
+            "src/records.Record"
+          ],
+          "type_references": [
+            "String",
+            "src/records.Record"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "String.concat",
+              "U32.show"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "src/records.Mark",
+              "src/records.Op"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::rows:definition",
+          "name": "rows",
+          "key": "src/records.rows",
+          "kind": "definition",
+          "lines": [
+            356,
+            362
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Nil",
+            "Result",
+            "String",
+            "String.append",
+            "src/records.Address",
+            "src/records.Mark",
+            "src/records.Record",
+            "src/records.relocate",
+            "src/records.rows",
+            "src/records.show",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "src/records.Address",
+            "src/records.Record",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 19254,
+              "names": [
+                "separator",
+                "table",
+                "tail"
+              ]
+            },
+            {
+              "offset": 19330,
+              "names": [
+                "item",
+                "separator"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.append",
+              "src/records.relocate",
+              "src/records.rows",
+              "src/records.show",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "src/records.Mark"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::bounded_bytes:definition",
+          "name": "bounded_bytes",
+          "key": "src/records.bounded_bytes",
+          "kind": "definition",
+          "lines": [
+            364,
+            365
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "List.length",
+            "Result",
+            "U32",
+            "U32.from_nat",
+            "U32.is_le",
+            "src/records.exhausted",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 19572,
+              "names": [
+                "bytes"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.length",
+              "U32.from_nat",
+              "U32.is_le",
+              "src/records.exhausted",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Done"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::encode:definition",
+          "name": "encode",
+          "key": "src/records.encode",
+          "kind": "definition",
+          "lines": [
+            367,
+            375
+          ],
+          "features": [
+            "bindings",
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "List.reverse",
+            "Nil",
+            "Result",
+            "String",
+            "String.concat",
+            "U32",
+            "U32.show",
+            "src/records.Flow",
+            "src/records.Plan",
+            "src/records.Record",
+            "src/records.addresses",
+            "src/records.bounded_bytes",
+            "src/records.rows",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/wasm-bytes.chars"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 19900,
+              "names": [
+                "arity",
+                "cap",
+                "captures",
+                "joins"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.reverse",
+              "String.concat",
+              "U32.show",
+              "src/records.addresses",
+              "src/records.bounded_bytes",
+              "src/records.rows",
+              "src/syntax.bind",
+              "src/wasm-bytes.chars"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/records.Flow",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::enum_constructors:definition",
+          "name": "enum_constructors",
+          "key": "src/records.enum_constructors",
+          "kind": "definition",
+          "lines": [
+            377,
+            381
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/core.Constructor",
+            "src/records.enum_constructors"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/core.Constructor"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/records.enum_constructors"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil",
+              "True",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::enum_type:definition",
+          "name": "enum_type",
+          "key": "src/records.enum_type",
+          "kind": "definition",
+          "lines": [
+            383,
+            388
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "List.length",
+            "Nil",
+            "Result",
+            "String",
+            "U32",
+            "U32.from_nat",
+            "U32.is_eq",
+            "U32.sub",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/records.enum_constructors",
+            "src/records.enum_type",
+            "src/records.internal",
+            "src/records.unsupported",
+            "src/syntax.Error",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "String",
+            "U32",
+            "src/core.Datatype",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 20754,
+              "names": [
+                "code",
+                "ctors"
+              ]
+            },
+            {
+              "offset": 20821,
+              "names": [
+                "ctors"
+              ]
+            },
+            {
+              "offset": 20882,
+              "names": [
+                "code"
+              ]
+            },
+            {
+              "offset": 20910,
+              "names": [
+                "code",
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "List.length",
+              "U32.from_nat",
+              "U32.is_eq",
+              "U32.sub",
+              "src/records.enum_constructors",
+              "src/records.enum_type",
+              "src/records.internal",
+              "src/records.unsupported",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Datatype"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::inputs:definition",
+          "name": "inputs",
+          "key": "src/records.inputs",
+          "kind": "definition",
+          "lines": [
+            390,
+            399
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Done",
+            "False",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.add",
+            "U32.is_lt",
+            "WCon",
+            "WNil",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/records.construct",
+            "src/records.enum_type",
+            "src/records.host",
+            "src/records.inputs",
+            "src/records.reusable",
+            "src/syntax.Error",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 21359,
+              "names": [
+                "first",
+                "flow",
+                "tag",
+                "tail",
+                "typ",
+                "types",
+                "values"
+              ]
+            },
+            {
+              "offset": 21427,
+              "names": [
+                "first",
+                "flow",
+                "tag",
+                "tail",
+                "typ",
+                "types",
+                "values"
+              ]
+            },
+            {
+              "offset": 21479,
+              "names": [
+                "first",
+                "flow",
+                "tag",
+                "tail",
+                "types",
+                "values"
+              ]
+            },
+            {
+              "offset": 21551,
+              "names": [
+                "first",
+                "tail",
+                "types",
+                "values"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.add",
+              "U32.is_lt",
+              "src/records.construct",
+              "src/records.enum_type",
+              "src/records.host",
+              "src/records.inputs",
+              "src/records.reusable",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "False",
+              "Nil",
+              "String",
+              "U32",
+              "WCon",
+              "WNil",
+              "src/core.Parameter"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::entry:definition",
+          "name": "entry",
+          "key": "src/records.entry",
+          "kind": "definition",
+          "lines": [
+            401,
+            408
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/records.Activation",
+            "src/records.Body",
+            "src/records.Finish",
+            "src/records.Flow",
+            "src/records.Mark",
+            "src/records.Plan",
+            "src/records.bind_parameters",
+            "src/records.enum_type",
+            "src/records.inputs",
+            "src/records.live",
+            "src/records.lower",
+            "src/records.push",
+            "src/records.recursive",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/records.Flow",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 21991,
+              "names": [
+                "args",
+                "body",
+                "depth",
+                "functions",
+                "index",
+                "params",
+                "types"
+              ]
+            },
+            {
+              "offset": 22102,
+              "names": [
+                "body",
+                "depth",
+                "functions",
+                "index",
+                "params",
+                "types"
+              ]
+            },
+            {
+              "offset": 22192,
+              "names": [
+                "body",
+                "depth",
+                "functions",
+                "index",
+                "types"
+              ]
+            },
+            {
+              "offset": 22270,
+              "names": [
+                "body",
+                "depth",
+                "functions",
+                "index",
+                "state",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.bind_parameters",
+              "src/records.enum_type",
+              "src/records.inputs",
+              "src/records.live",
+              "src/records.lower",
+              "src/records.push",
+              "src/records.recursive",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/core.Function",
+              "src/core.Signature",
+              "src/records.Activation",
+              "src/records.Body",
+              "src/records.Finish",
+              "src/records.Flow",
+              "src/records.Mark",
+              "src/records.Plan"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/records.bend::emit:definition",
+          "name": "emit",
+          "key": "src/records.emit",
+          "kind": "definition",
+          "lines": [
+            410,
+            415
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Result",
+            "String",
+            "U32",
+            "src/core.Book",
+            "src/core.Function",
+            "src/records.Flow",
+            "src/records.encode",
+            "src/records.entry",
+            "src/records.function_at",
+            "src/records.named",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "String",
+            "U32",
+            "src/core.Book",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 22596,
+              "names": [
+                "args",
+                "cap",
+                "depth",
+                "functions",
+                "types"
+              ]
+            },
+            {
+              "offset": 22674,
+              "names": [
+                "args",
+                "cap",
+                "depth",
+                "functions",
+                "index",
+                "types"
+              ]
+            },
+            {
+              "offset": 22760,
+              "names": [
+                "cap"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/records.encode",
+              "src/records.entry",
+              "src/records.function_at",
+              "src/records.named",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "U32",
+              "src/core.Book"
+            ],
             "dynamic_calls": []
           }
         }

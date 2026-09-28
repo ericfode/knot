@@ -67,6 +67,9 @@ GATES = (
          ('research/adaptive-tasks/runtime2/receipts/cpu.json',
           'research/adaptive-tasks/runtime2/receipts/observations.txt.gz',
           'research/adaptive-tasks/runtime2/receipts/programs.txt')),
+    Gate('gpu-emit', ('python3', 'tests/compiler-gpu/check.py', '--cpu-only'),
+         ('tests/compiler-gpu/receipts/gpu.json',
+          'tests/compiler-gpu/receipts/observations.json.gz')),
 )
 
 

@@ -1,0 +1,558 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "basis": "Literal tags and classifications, pinned reference observations frozen before emitter implementation.",
+  "cases": [
+    {
+      "name": "pair",
+      "file": "tests/compiler-fields-wasm/fixtures/pair.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.direct(F.Off{},F.On{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.Off{})"
+        },
+        {
+          "export": "direct",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.direct(F.On{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.Off{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.Off{},F.On{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.swapped(F.On{},F.Off{})"
+        },
+        {
+          "export": "swapped",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.swapped(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "nested",
+      "file": "tests/compiler-fields-wasm/fixtures/nested.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "aliasing",
+      "file": "tests/compiler-fields-wasm/fixtures/aliasing.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "erased",
+      "file": "tests/compiler-fields-wasm/fixtures/erased.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        },
+        {
+          "export": "empty",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.empty()"
+        },
+        {
+          "export": "ghost",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.ghost()"
+        }
+      ]
+    },
+    {
+      "file": "tests/compiler-wasm/fixtures/three-colors.bend",
+      "type": "Color",
+      "type_id": 0,
+      "constructors": [
+        "Red",
+        "Green",
+        "Blue"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 2,
+          "seed": "F.main()"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            0
+          ],
+          "tag": 1,
+          "seed": "F.cycle(F.Red{})"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            1
+          ],
+          "tag": 2,
+          "seed": "F.cycle(F.Green{})"
+        },
+        {
+          "export": "cycle",
+          "arguments": [
+            2
+          ],
+          "tag": 0,
+          "seed": "F.cycle(F.Blue{})"
+        }
+      ],
+      "name": "three-colors"
+    },
+    {
+      "file": "tests/compiler-wasm/fixtures/argument-order.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.first(F.Off{},F.On{},F.Off{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.second(F.Off{},F.Off{},F.Off{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 0,
+          "seed": "F.first(F.Off{},F.On{},F.On{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.second(F.Off{},F.Off{},F.On{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 1,
+          "seed": "F.first(F.On{},F.On{},F.Off{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.second(F.On{},F.Off{},F.Off{})"
+        },
+        {
+          "export": "first",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.first(F.On{},F.On{},F.On{})"
+        },
+        {
+          "export": "second",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.second(F.On{},F.Off{},F.On{})"
+        }
+      ],
+      "name": "argument-order"
+    },
+    {
+      "name": "parity",
+      "file": "tests/compiler-gpu/fixtures/parity.bend",
+      "type": "Flag",
+      "type_id": 1,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.main()"
+        },
+        {
+          "export": "zero",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.zero()"
+        },
+        {
+          "export": "one",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.one()"
+        },
+        {
+          "export": "two",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.two()"
+        },
+        {
+          "export": "five",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.five()"
+        },
+        {
+          "export": "six",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.six()"
+        }
+      ]
+    },
+    {
+      "name": "sharing",
+      "file": "tests/compiler-gpu/fixtures/sharing.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "repeated",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.repeated()"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.Off{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            0,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.Off{},F.On{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            0
+          ],
+          "tag": 0,
+          "seed": "F.observe(F.On{},F.Off{})"
+        },
+        {
+          "export": "observe",
+          "arguments": [
+            1,
+            1
+          ],
+          "tag": 1,
+          "seed": "F.observe(F.On{},F.On{})"
+        }
+      ]
+    },
+    {
+      "name": "type-loop",
+      "file": "tests/compiler-gpu/fixtures/type-loop.bend",
+      "type": "Flag",
+      "type_id": 0,
+      "constructors": [
+        "Off",
+        "On"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "tag": 1,
+          "seed": "F.main()"
+        },
+        {
+          "export": "empty",
+          "arguments": [],
+          "tag": 0,
+          "seed": "F.empty()"
+        }
+      ]
+    }
+  ],
+  "rejects": [
+    {
+      "name": "recursive-activation",
+      "file": "tests/compiler-gpu/fixtures/recursive-activation.bend",
+      "entry": "main",
+      "code": "recursive-activation",
+      "seed_stdout": "On{}"
+    },
+    {
+      "name": "dynamic-attempt",
+      "file": "tests/compiler-gpu/fixtures/dynamic-attempt.bend",
+      "entry": "main",
+      "code": "dynamic-attempt",
+      "seed_stdout": "On{}"
+    },
+    {
+      "name": "structured-result",
+      "file": "tests/compiler-recursion/fixtures/direct.bend",
+      "entry": "main",
+      "code": "entry-result",
+      "seed_stdout": "0n"
+    }
+  ]
+}

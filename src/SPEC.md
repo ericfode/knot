@@ -306,3 +306,63 @@ checks and runtime agreement are distinct evidence. Do not claim a general
 compiler-correctness or checker-soundness theorem. Final receipts must identify
 source hashes, seed hashes, commands, generated modules, tool versions, Perch
 coverage/adjudications and remaining limitations.
+
+## GPU records profile: `knot-gpu-records-2`
+
+The separate `tests/compiler-gpu/compile.bend` entry emits one checked invocation
+as a version-2 JSON bundle accepted by `runtime2/bundle.py`. Its command is
+`[--limits depth bytes] source output entry [live-ordinals...]`. Default CLIs and
+their existing assertions are unchanged. The whole book passes `driver.load`
+before `records.emit` lowers the selected entry's live call closure. Emission
+never calls the source evaluator, computes a source branch, or replaces a
+function body with its result. See the [frozen emission contract](../tests/compiler-gpu/SPEC.md).
+
+All values are tagged objects. Each activation owns a disjoint 512-slot capture
+interval. Affine occurrences move; reusable Data occurrences acquire an edge with `share`,
+and retained binding edges are released at scope exit. A Case branches on device,
+opens the selected constructor, and binds only live fields. Erased arguments,
+fields and bindings emit no work. Returning releases unused bindings and drains
+pending cleanup before delivering the result.
+
+Every acyclic call has its own activation and one-shot argument/return joins.
+The argument join preserves logical slot order even when results are delivered
+in reverse order. The return join saves the caller's full activation interval.
+Both carry their issued literal attempt 1. A checked tail self-call evaluates
+new arguments, cleans its old scope, moves the arguments back to its original
+parameter captures and jumps to the same entry. It reuses no join. Non-tail
+self-calls report `Unsupported records recursive-activation`; other live calls
+inside recursive functions conservatively report `Unsupported records dynamic-attempt`. Neither produces a bundle. The conservative classification
+also rejects calls on paths a more precise analysis might prove one-shot.
+
+Entry signatures must use enum-only datatypes. Structured host parameters and
+results report `entry-parameters` and `entry-result`. Unknown entries, wrong
+live arity and out-of-domain ordinals are HostFailure. Source Invalid,
+Unsupported, compilation/resource Exhausted, internal errors and host errors
+remain separate. Compilation checks and output construction finish before the
+output file is opened; unsuccessful compilation preserves an existing file.
+
+The [host runner](../scripts/run-records.py) validates the bundle and dispatches
+the unchanged generic WGSL interpreter on Metal. `--cpu-only` runs the qualified
+independent records oracle. Both print the JSON shape used by `run-wasm.mjs`:
+`validated`, `export`, `arguments`, `result`, `bytes`. Optional export/argument
+labels describe the already compiled invocation; they are not runtime inputs.
+An optional receipt records full final ownership, mode, bundle/runtime hashes,
+rounds and device identity. Exhausted execution retains its last published
+state in that receipt. CPU simulation cannot establish device execution.
+
+The gate compares 53 fixed seed calls over nine programs with the independent
+Knot evaluator, actual Knot Wasm and records from native and Bun compiler builds.
+It checks final ownership, suspension boundaries and executed tail back edges,
+plus explicit rejections and five type-correct compiler mutants. This gives
+bounded recursive Wasm evidence for the selected fixtures without widening the
+existing Wasm profile's general guarantee. Thirteen filled laws state specific
+lowering helpers; they do not prove general compiler correctness or WGSL
+refinement. The coordinator's Metal command is:
+
+```sh
+BEND_NO_TELEMETRY=1 python3 tests/compiler-gpu/check.py --device \
+  --receipt tests/compiler-gpu/receipts/device.json
+```
+
+There is no dynamic activation/attempt allocation, cancellation lowering,
+parallelism, structured host ABI, specialization or GPU speed claim.

@@ -941,3 +941,20 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-27 — gpu-emit: quantity is part of transfer selection
+
+A manual contract review found that the first records-emitter draft selected
+`share` for every Data occurrence, including affine bindings. The original
+53-call differential and final-owner checks passed, but an unnecessary acquire
+can exhaust an RC limit of one. The final implementation also tests the checked
+binding quantity. A filled `affine_binding_moves_even_data` law and the gate's
+`affine-data-count-one` boundary now cover the distinction; fixed source
+expectations were unchanged. This was a development review finding, not a
+provider finding; no live Perch request ran.
+
+Prevention: pair resource-ceiling controls with value and final-ownership
+comparisons when a lowering chooses move versus acquire. Exact final owners
+alone do not establish that temporary ownership obeys the source quantity.
+[Contract, witnesses and proof boundary](../tests/compiler-gpu/LAW_REVIEW.md);
+[executable gate](../tests/compiler-gpu/check.py).
