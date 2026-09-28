@@ -207,3 +207,14 @@ law file_binders_meet_only_earlier_constructors:
    == (Fail{S.Invalid{"check","constructor-pattern-binder",at}},Done{Unit{}},
        Fail{S.Invalid{"check","constructor-pattern-binder",at}})
    : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}
+
+law own_names_are_registered_in_order:
+  for +at: S.At
+  {(Q.declarations([S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Sequence{Nil{}}},
+      S.Function{S.Token{"m.f",at},Nil{},S.Token{"Flag",at},S.Sequence{Nil{}}}],"m",Nil{},Nil{},Nil{}),
+    Q.declarations([S.Function{S.Token{"m.f",at},Nil{},S.Token{"Flag",at},S.Sequence{Nil{}}},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Sequence{Nil{}}}],"m",Nil{},Nil{},Nil{}),
+    Q.constructors([S.Constructor{S.Token{"On",at},Nil{}},S.Constructor{S.Token{"m.On",at},Nil{}}],"m",Nil{},Nil{}))
+   == (Fail{S.Invalid{"load","duplicate-global",at}},Done{["m.m.f","m.f"]},
+       Fail{S.Invalid{"load","duplicate-global",at}})
+   : Result<S.Error,List<&2,String>> & Result<S.Error,List<&2,String>> & Result<S.Error,List<&2,String>>}

@@ -84,25 +84,27 @@ def fresh(+token: S.Token, +ns: String, +aliases: List<&2,Alias>, +globals: List
     S.choose(Result<S.Error,String>,Bool.or(contains(globals,S.text(token)),contains(globals,prefix(ns,S.text(token)))),u => invalid(String,"duplicate-global",token),u =>
       Done{prefix(ns,S.text(token))}))
 
+# Each declaration joins the table its successors must avoid, as the seed
+# registers it: a bare spelling equal to an earlier qualified name is not fresh.
 def constructors(nodes: List<&2,S.Node>, +ns: String, +aliases: List<&2,Alias>, +globals: List<&2,String>) -> Result<S.Error,List<&2,String>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Constructor{token,fields},+tail}:
-      S.bind(String,List<&2,String>,fresh(token,ns,aliases,globals),head =>
-        S.bind(List<&2,String>,List<&2,String>,constructors(tail,ns,aliases,globals),rest => Done{Con{head,rest}}))
+      S.bind(String,List<&2,String>,fresh(token,ns,aliases,globals),+head =>
+        S.bind(List<&2,String>,List<&2,String>,constructors(tail,ns,aliases,Con{head,globals}),rest => Done{Con{head,rest}}))
     case _: Fail{S.Internal{"load","constructor-node"}}
 
 def declarations(nodes: List<&2,S.Node>, +ns: String, +aliases: List<&2,Alias>, +terms: List<&2,String>, +ctors: List<&2,String>) -> Result<S.Error,List<&2,String>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Datatype{token,data,+children},+tail}:
-      S.bind(String,List<&2,String>,fresh(token,ns,aliases,terms),name =>
-        S.bind(List<&2,String>,List<&2,String>,constructors(children,ns,aliases,ctors),cs =>
-          S.bind(List<&2,String>,List<&2,String>,declarations(tail,ns,aliases,terms,ctors),rest =>
+      S.bind(String,List<&2,String>,fresh(token,ns,aliases,terms),+name =>
+        S.bind(List<&2,String>,List<&2,String>,constructors(children,ns,aliases,ctors),+cs =>
+          S.bind(List<&2,String>,List<&2,String>,declarations(tail,ns,aliases,Con{name,terms},List.append(&2,String,cs,ctors)),rest =>
             Done{Con{name,List.append(&2,String,cs,rest)}})))
     case Con{S.Function{token,params,result,body},+tail}:
-      S.bind(String,List<&2,String>,fresh(token,ns,aliases,terms),name =>
-        S.bind(List<&2,String>,List<&2,String>,declarations(tail,ns,aliases,terms,ctors),rest => Done{Con{name,rest}}))
+      S.bind(String,List<&2,String>,fresh(token,ns,aliases,terms),+name =>
+        S.bind(List<&2,String>,List<&2,String>,declarations(tail,ns,aliases,Con{name,terms},ctors),rest => Done{Con{name,rest}}))
     case _: Fail{S.Internal{"load","declaration-node"}}
 
 def constructors_in(nodes: List<&2,S.Node>) -> List<&2,String>:
