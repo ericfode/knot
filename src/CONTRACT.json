@@ -231,7 +231,8 @@
     "unmet": [
       "rec-swapped-args: Unsupported check recursive-call, frozen Invalid expectation unchanged",
       "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged",
-      "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved)"
+      "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved; open obligation, D21)",
+      "General law in its total form: a matrix whose first row is irrefutable lowers to that row's body (only its partial-correctness part is proved; open obligation, D21)"
     ],
     "defaults": "The negative branch excludes one constructor and retains the live unrefined lexical binding. A variable row is checked even when its remainder is empty. A missing arm is dead code only when a live binder outside the pending suffix of the match frontier (which starts at the scrutinee) has an empty constructor set: an emptied residual or a zero-constructor datatype. Dead code never bypasses body checking.",
     "names": "Names are words joined by dots (Invalid lex name otherwise); pattern binders and live let binders are single words (Invalid parse pattern-binder or binding-name). Match and case headers join lines up to their colon. A constructor's { must touch its name in patterns and bodies (Invalid parse detached-brace otherwise); joined header tokens keep their offsets, so a line break never bridges that gap.",

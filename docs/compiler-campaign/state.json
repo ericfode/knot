@@ -69,12 +69,13 @@
     {
       "id": "nest",
       "executor": "claude",
-      "state": "review round 5 (law gap) waiting for a coordinator decision: the irrefutable-first-row law is proved in general (src/lowering-LAWS.bend, filled in src/lowering-PROOF.bend and checked through the matrix proof entry); the general exhaustive-lowering law stays unmet with its typing obstacle recorded, and the coordinator should accept that shortfall or require the theorem. No compiler behavior changed. Integration note: campaign/descent-2 (based on 57a0c01) replaces the descent rule and must pass the round-4 fixtures; its complete rule may turn the six seed-rejected round-4 controls from Unsupported to Invalid, which needs a reviewed amendment",
+      "state": "review round 6 ready for coordinator: the detached-brace unsound acceptance is fixed (a constructor's { must touch its name; a space, comment or line break reports Invalid parse detached-brace, and the header join keeps offsets so it no longer bridges the gap), after a seed-derived freeze of 35 fixtures; nest-round6 gate added (5 mutants in both lanes) and the fuzz draws detached braces. The main-era flat, outer, body, argument and let forms close with the same rule, for the coordinator to ratify. D21: both general lowering laws stay required and are recorded as open proof obligations in src/SPEC.md and src/CONTRACT.json. Integration note: campaign/descent-2 (based on 57a0c01) replaces the descent rule and must pass the round-4 fixtures; its complete rule may turn the six seed-rejected round-4 controls from Unsupported to Invalid, which needs a reviewed amendment",
       "unmet_laws": [
-        "General exhaustive-matrix/no-missing-branch lowering theorem"
+        "Irrefutable first row, total form: a matrix whose first row is irrefutable lowers to that row's body (open proof obligation, D21)",
+        "Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch (open proof obligation, D21)"
       ],
-      "general_laws": [
-        "src/lowering-LAWS.bend::irrefutable_first_row_selected"
+      "partial_laws": [
+        "src/lowering-LAWS.bend::irrefutable_first_row_selected (partial correctness: every successful lowering selects the first row's body)"
       ],
       "law_witnesses": [
         "src/matrix-LAWS.bend::irrefutable_lowering_witness",
