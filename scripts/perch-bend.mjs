@@ -28,7 +28,7 @@ function sourcePoints(source) {
 }
 
 /** The import-header grammar is copied from pinned book_load; resolution is omitted. */
-function parseImports(source) {
+export function parseImports(source) {
   const lines = source.split('\n');
   const body = lines.slice();
   const aliases = Object.create(null);
