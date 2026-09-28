@@ -65,6 +65,26 @@ effects remain explicitly unsupported. This restriction leaves recursive trees
 and field-bound variables outstanding for the broader S1 stage. A recognized
 unsupported form makes no claim about the validity of its remaining contents.
 
+The parser recognizes these out-of-profile prefixes before applying the narrower
+enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
+
+| Recognized form | Phase | Code |
+| --- | --- | --- |
+| `type Name<...` generic datatype header | `parse` | `generic-datatype` |
+| `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
+| `~name:` in a function parameter list | `parse` | `template-binder` |
+| Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
+| `import ./...` or `import 0x.../...` | `parse` | `import` |
+
+Recognition stops at that prefix; it neither validates the suffix nor loads a
+module. Malformed supported syntax still reports `Invalid`. The reviewed
+[classification fixtures](../tests/subsets/classification-cases.json) pair six
+seed-accepted programs (local and hash imports separately) with six nearby
+syntax errors, fixing complete diagnostics including locations. The hash
+fixture uses a frozen local cache; it does not claim a published package.
+Six checked prefix laws quantify over source locations and unconsumed suffixes;
+they are classification laws, not a parser soundness theorem or feature support.
+
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).
 They preserve ordered field signatures and validate their declared kinds and

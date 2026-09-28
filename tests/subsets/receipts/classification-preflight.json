@@ -1,0 +1,857 @@
+{
+  "scope": "Offline structural preflight only; live ratings deferred to coordinator",
+  "inputs": {
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/SPEC.md": "5529d217e8b0a975abf1065deb876aa2a63e9eb63a8f601904b0f61d6012c48d",
+    "tests/subsets/classification-cases.json": "014d252d2e1e7cad36fba074213c3a9f0c9b67e593b11a501f92e5c7c37bf6fc",
+    "tests/subsets/classification/destructure-malformed.bend": "4bb247c50405472be392515923fd093c7ac2fc08b8c7b2f6620d91504f8ac939",
+    "tests/subsets/classification/destructure.bend": "90845487bd821c25e5b8915aed37c398eaeefe54397385d53e181a1b9c62b288",
+    "tests/subsets/classification/generic-malformed.bend": "4bc35fbdc39211ae5e7cabf4e8a644a892d8e99b3765083a4fb327b0a7092595",
+    "tests/subsets/classification/generic.bend": "7c3e2486808268da160b6d519c8027a5e130a44c62d8cb53aa23a46b8a4ab21b",
+    "tests/subsets/classification/hash-import-malformed.bend": "2fc83ec12e41b629e98112de7199f26e049c3e6121b89b1867be48f5e17aa647",
+    "tests/subsets/classification/hash-import.bend": "a64cd73eea637f6e15f2f68219f7d3873452220ebcab5088aa407742e19f649d",
+    "tests/subsets/classification/local-import-malformed.bend": "46f5c25928e82b9ea3804e7b05a29777b0b78a28792b8de7429c04e7d69c3dce",
+    "tests/subsets/classification/local-import.bend": "9ad9c76011419fd247b4772b4308c2a96f01c653028ec9f1e464ecf8ec848044",
+    "tests/subsets/classification/match-malformed.bend": "4bb367ee201573cdce32f6eda69a46081113dd426cd084b8a1f5b43a1b25abdb",
+    "tests/subsets/classification/match.bend": "a4dea9fdf7df79d8f61b7b22af027ab147d9f40f9561c23f77a5bf6496f64955",
+    "tests/subsets/classification/module.bend": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e",
+    "tests/subsets/classification/template-malformed.bend": "4ffd5c4a350d551931dab406adcbec585cdffb076a2ce4f4f04875a64e9044fb",
+    "tests/subsets/classification/template.bend": "d85156031510250462ab376852f3c0d2246e78fc58d059dfbb278e339a936d3d"
+  },
+  "implementation": {
+    "schema": 1,
+    "command": "style-preflight",
+    "mode": "targets",
+    "provider_requests": 0,
+    "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+    "rubric_version": 8,
+    "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+    "task": {
+      "origin": "explicit-cohort",
+      "path": null,
+      "sha256": "06acc5f0225f9f37f720f0db2ca01a56e4708ca5518ef3734b29baa543499415",
+      "bytes": 284,
+      "available": true,
+      "reason": null
+    },
+    "summary": {
+      "units": 42,
+      "files": 3,
+      "unranked_files": 0,
+      "empty_files": 0,
+      "truncated_units": 4,
+      "truncated_by_limit": {
+        "caller-or-byte-limit": 2,
+        "context-file-limit": 2
+      },
+      "supporting_role_impossible": 4,
+      "role_gap_units_by_reason": {
+        "context-file-limit": 2,
+        "truncated-context": 4
+      },
+      "max_state_bytes": 26328,
+      "composition_available": true,
+      "composition_reasons": []
+    },
+    "structural_blockers": 4,
+    "inventory": null,
+    "composition": {
+      "required": "always",
+      "available": true,
+      "reasons": [],
+      "selected_files": [
+        "src/LAWS.bend",
+        "src/PROOF.bend",
+        "src/parse.bend"
+      ],
+      "context_files": 5,
+      "source_bytes": 26496,
+      "byte_limit": 48000,
+      "unresolved_by_reason": {},
+      "unresolved": []
+    },
+    "file_groups": null,
+    "units": [
+      {
+        "target": "src/parse.bend::Parsed",
+        "kind": "bend_datatype",
+        "line": 4,
+        "state_bytes": 2778,
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "diagnostics_available": false,
+        "supporting_role_possible": false,
+        "role_context_gaps": [
+          {
+            "path": "src/parse.bend",
+            "name": "S.Node",
+            "reason": "context-file-limit"
+          },
+          {
+            "path": "src/parse.bend",
+            "name": "S.Token",
+            "reason": "context-file-limit"
+          }
+        ]
+      },
+      {
+        "target": "src/parse.bend::Mode",
+        "kind": "bend_datatype",
+        "line": 7,
+        "state_bytes": 12638,
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "diagnostics_available": false,
+        "supporting_role_possible": false,
+        "role_context_gaps": [
+          {
+            "path": "src/parse.bend",
+            "name": "S.Token",
+            "reason": "context-file-limit"
+          },
+          {
+            "path": "src/parse.bend",
+            "name": "S.Node",
+            "reason": "context-file-limit"
+          }
+        ]
+      },
+      {
+        "target": "src/parse.bend::invalid",
+        "kind": "bend_definition",
+        "line": 27,
+        "state_bytes": 6180,
+        "truncated": true,
+        "limit_reasons": [],
+        "diagnostics_available": false,
+        "supporting_role_possible": false,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::unsupported",
+        "kind": "bend_definition",
+        "line": 30,
+        "state_bytes": 6138,
+        "truncated": true,
+        "limit_reasons": [],
+        "diagnostics_available": false,
+        "supporting_role_possible": false,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::starts",
+        "kind": "bend_definition",
+        "line": 33,
+        "state_bytes": 15039,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::scrutinee",
+        "kind": "bend_definition",
+        "line": 38,
+        "state_bytes": 16247,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::then",
+        "kind": "bend_definition",
+        "line": 43,
+        "state_bytes": 14450,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::prepend",
+        "kind": "bend_definition",
+        "line": 49,
+        "state_bytes": 14470,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::wrap_call",
+        "kind": "bend_definition",
+        "line": 54,
+        "state_bytes": 15001,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::wrap_type",
+        "kind": "bend_definition",
+        "line": 63,
+        "state_bytes": 14579,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::wrap_function",
+        "kind": "bend_definition",
+        "line": 69,
+        "state_bytes": 14532,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::wrap_match",
+        "kind": "bend_definition",
+        "line": 75,
+        "state_bytes": 14491,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::expect",
+        "kind": "bend_definition",
+        "line": 81,
+        "state_bytes": 15659,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::parameter_end",
+        "kind": "bend_definition",
+        "line": 88,
+        "state_bytes": 6351,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::parameter_parts",
+        "kind": "bend_definition",
+        "line": 95,
+        "state_bytes": 8681,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::parameter",
+        "kind": "bend_definition",
+        "line": 105,
+        "state_bytes": 19358,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::template_parameter",
+        "kind": "bend_definition",
+        "line": 113,
+        "state_bytes": 17966,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::body_end",
+        "kind": "bend_definition",
+        "line": 120,
+        "state_bytes": 16266,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::reply",
+        "kind": "bend_definition",
+        "line": 127,
+        "state_bytes": 16769,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::term_failure",
+        "kind": "bend_definition",
+        "line": 134,
+        "state_bytes": 16228,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::run",
+        "kind": "bend_definition",
+        "line": 144,
+        "state_bytes": 25873,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/parse.bend::parse",
+        "kind": "bend_definition",
+        "line": 307,
+        "state_bytes": 25874,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::empty_source",
+        "kind": "bend_law",
+        "line": 7,
+        "state_bytes": 10069,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::word_source",
+        "kind": "bend_law",
+        "line": 11,
+        "state_bytes": 10027,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::no_character_budget",
+        "kind": "bend_law",
+        "line": 15,
+        "state_bytes": 10107,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::no_parser_budget",
+        "kind": "bend_law",
+        "line": 20,
+        "state_bytes": 26328,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::generic_header",
+        "kind": "bend_law",
+        "line": 25,
+        "state_bytes": 26310,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::multiple_scrutinees",
+        "kind": "bend_law",
+        "line": 31,
+        "state_bytes": 26270,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::template_binder",
+        "kind": "bend_law",
+        "line": 37,
+        "state_bytes": 26260,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::destructuring_binding",
+        "kind": "bend_law",
+        "line": 43,
+        "state_bytes": 6685,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::local_import",
+        "kind": "bend_law",
+        "line": 50,
+        "state_bytes": 26230,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/LAWS.bend::hash_import",
+        "kind": "bend_law",
+        "line": 56,
+        "state_bytes": 26261,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.empty_source",
+        "kind": "bend_law_fill",
+        "line": 4,
+        "state_bytes": 1011,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.word_source",
+        "kind": "bend_law_fill",
+        "line": 9,
+        "state_bytes": 971,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.no_character_budget",
+        "kind": "bend_law_fill",
+        "line": 14,
+        "state_bytes": 945,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.no_parser_budget",
+        "kind": "bend_law_fill",
+        "line": 17,
+        "state_bytes": 917,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.generic_header",
+        "kind": "bend_law_fill",
+        "line": 20,
+        "state_bytes": 1077,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.multiple_scrutinees",
+        "kind": "bend_law_fill",
+        "line": 23,
+        "state_bytes": 1047,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.template_binder",
+        "kind": "bend_law_fill",
+        "line": 26,
+        "state_bytes": 1029,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.destructuring_binding",
+        "kind": "bend_law_fill",
+        "line": 29,
+        "state_bytes": 1074,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.local_import",
+        "kind": "bend_law_fill",
+        "line": 32,
+        "state_bytes": 993,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "src/PROOF.bend::L.hash_import",
+        "kind": "bend_law_fill",
+        "line": 35,
+        "state_bytes": 1022,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      }
+    ],
+    "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+  },
+  "fixtures": {
+    "schema": 1,
+    "command": "style-preflight",
+    "mode": "targets",
+    "provider_requests": 0,
+    "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+    "rubric_version": 8,
+    "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+    "task": {
+      "origin": "explicit-cohort",
+      "path": null,
+      "sha256": "40bf22cb16595b85b555b7972d1b0d32f916123d2054c631af29334b37f68511",
+      "bytes": 196,
+      "available": true,
+      "reason": null
+    },
+    "summary": {
+      "units": 16,
+      "files": 7,
+      "unranked_files": 0,
+      "empty_files": 0,
+      "truncated_units": 0,
+      "truncated_by_limit": {},
+      "supporting_role_impossible": 1,
+      "role_gap_units_by_reason": {
+        "nonlocal-import": 1
+      },
+      "max_state_bytes": 986,
+      "composition_available": false,
+      "composition_reasons": [
+        "unresolved_composition_context"
+      ]
+    },
+    "structural_blockers": 1,
+    "inventory": null,
+    "composition": {
+      "required": "always",
+      "available": false,
+      "reasons": [
+        "unresolved_composition_context"
+      ],
+      "selected_files": [
+        "tests/subsets/classification/destructure.bend",
+        "tests/subsets/classification/generic.bend",
+        "tests/subsets/classification/hash-import.bend",
+        "tests/subsets/classification/local-import.bend",
+        "tests/subsets/classification/match.bend",
+        "tests/subsets/classification/module.bend",
+        "tests/subsets/classification/template.bend"
+      ],
+      "context_files": 7,
+      "source_bytes": 809,
+      "byte_limit": 48000,
+      "unresolved_by_reason": {
+        "nonlocal-import": 1
+      },
+      "unresolved": [
+        {
+          "path": "tests/subsets/classification/hash-import.bend",
+          "name": "M.Flag",
+          "reason": "nonlocal-import"
+        }
+      ]
+    },
+    "file_groups": null,
+    "units": [
+      {
+        "target": "tests/subsets/classification/generic.bend::Box",
+        "kind": "bend_datatype",
+        "line": 1,
+        "state_bytes": 813,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/generic.bend::Flag",
+        "kind": "bend_datatype",
+        "line": 4,
+        "state_bytes": 813,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/generic.bend::main",
+        "kind": "bend_definition",
+        "line": 8,
+        "state_bytes": 816,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/match.bend::Flag",
+        "kind": "bend_datatype",
+        "line": 1,
+        "state_bytes": 930,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/match.bend::both",
+        "kind": "bend_definition",
+        "line": 5,
+        "state_bytes": 930,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/match.bend::main",
+        "kind": "bend_definition",
+        "line": 12,
+        "state_bytes": 929,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/template.bend::Flag",
+        "kind": "bend_datatype",
+        "line": 1,
+        "state_bytes": 814,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/template.bend::constant",
+        "kind": "bend_definition",
+        "line": 5,
+        "state_bytes": 815,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/template.bend::main",
+        "kind": "bend_definition",
+        "line": 8,
+        "state_bytes": 815,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/destructure.bend::Flag",
+        "kind": "bend_datatype",
+        "line": 1,
+        "state_bytes": 985,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/destructure.bend::Cell",
+        "kind": "bend_datatype",
+        "line": 5,
+        "state_bytes": 839,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/destructure.bend::take",
+        "kind": "bend_definition",
+        "line": 8,
+        "state_bytes": 986,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/destructure.bend::main",
+        "kind": "bend_definition",
+        "line": 12,
+        "state_bytes": 985,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/local-import.bend::main",
+        "kind": "bend_definition",
+        "line": 3,
+        "state_bytes": 708,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      },
+      {
+        "target": "tests/subsets/classification/hash-import.bend::main",
+        "kind": "bend_definition",
+        "line": 3,
+        "state_bytes": 705,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": false,
+        "role_context_gaps": [
+          {
+            "path": "tests/subsets/classification/hash-import.bend",
+            "name": "M.Flag",
+            "reason": "nonlocal-import"
+          }
+        ]
+      },
+      {
+        "target": "tests/subsets/classification/module.bend::Flag",
+        "kind": "bend_datatype",
+        "line": 1,
+        "state_bytes": 532,
+        "truncated": false,
+        "limit_reasons": [],
+        "diagnostics_available": true,
+        "supporting_role_possible": true,
+        "role_context_gaps": []
+      }
+    ],
+    "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+  },
+  "intentional_malformed_controls": [
+    {
+      "file": "tests/subsets/classification/destructure-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/destructure-malformed.bend\n"
+    },
+    {
+      "file": "tests/subsets/classification/generic-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/generic-malformed.bend\n"
+    },
+    {
+      "file": "tests/subsets/classification/hash-import-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/hash-import-malformed.bend\n"
+    },
+    {
+      "file": "tests/subsets/classification/local-import-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/local-import-malformed.bend\n"
+    },
+    {
+      "file": "tests/subsets/classification/match-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/match-malformed.bend\n"
+    },
+    {
+      "file": "tests/subsets/classification/template-malformed.bend",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Style ranking failed: Bend target does not parse: tests/subsets/classification/template-malformed.bend\n"
+    }
+  ]
+}

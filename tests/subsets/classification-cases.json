@@ -1,0 +1,144 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "scope": "Fixed before parser edits: six seed-accepted forms and six nearby syntax errors. Unsupported recognizes a form without validating its remaining contents.",
+  "hash_import": {
+    "package": "0x77a1a37baca5d86f62241cab956a1fb1",
+    "module": "classification/module.bend",
+    "manifest": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e module.bend\n",
+    "module_sha256": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e"
+  },
+  "cases": [
+    {
+      "file": "classification/generic.bend",
+      "reference": {
+        "exit": 0,
+        "value": "Box{On{}}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8"
+      }
+    },
+    {
+      "file": "classification/generic-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : 'is'"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-is\t9:10:1:9"
+      }
+    },
+    {
+      "file": "classification/match.bend",
+      "reference": {
+        "exit": 0,
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10"
+      }
+    },
+    {
+      "file": "classification/match-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : a term"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\texpected-:\t81:82:6:10"
+      }
+    },
+    {
+      "file": "classification/template.bend",
+      "reference": {
+        "exit": 0,
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/template-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : a name"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/destructure.bend",
+      "reference": {
+        "exit": 0,
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : '='"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/local-import.bend",
+      "reference": {
+        "exit": 0,
+        "value": "module.On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\timport\t7:8:1:7"
+      }
+    },
+    {
+      "file": "classification/local-import-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : an import ('import Base'"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdeclaration-name\t7:8:2:0"
+      }
+    },
+    {
+      "file": "classification/hash-import.bend",
+      "reference": {
+        "exit": 0,
+        "value": "0x77a1a37baca5d86f62241cab956a1fb1/module.On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\timport\t7:41:1:7"
+      }
+    },
+    {
+      "file": "classification/hash-import-malformed.bend",
+      "reference": {
+        "exit": 1,
+        "diagnostic_contains": "expected : an import path of plain names"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tdeclaration-name\t8:42:1:8"
+      }
+    }
+  ]
+}
