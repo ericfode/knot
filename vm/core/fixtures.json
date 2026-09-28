@@ -602,5 +602,182 @@
    },
    "basis": "about 32,000 Activations of 32 bytes fill 1 MiB"
   }
- ]
+ ],
+ "admitted": {
+  "rule": "vm-spec's admitted controls (check-spec.py plan_controls rows without a message, and code_controls) at 5f9a0fd: SPEC section 4 requires vm-core to load each one. Expected runs are literal review of each control's plan, written before the VM admitted them (D7).",
+  "rows": [
+   {
+    "control": "plan:case-none-parameter",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\till-typed\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed",
+     "calls": 2
+    },
+    "basis": "pred(x: none) cases on x at Flag; main passes Nat 7. Admitted at load; after two entries the Case inspects the word 7 at the two-constructor Flag (section 6.1), which is ill-typed"
+   },
+   {
+    "control": "plan:case-none-let",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\till-typed\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed",
+     "calls": 3
+    },
+    "basis": "pred lets the none-typed result of seven() (Nat 7) and cases on it at Flag. Admitted at load; after three entries the Case inspects 7 at Flag, which is ill-typed"
+   },
+   {
+    "control": "plan:list-head-match",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tTrue{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "first_on(Con{On{}, Nil{}}) matches the head bound from List's none field at Flag: On is tag 1, answered True{} (Bool is type 0); the seed prints True{}"
+   },
+   {
+    "control": "codes:surrogate-pair",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0xD83D, 0xDE00], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:u1f600",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0x1F600], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:lone-surrogate",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0xD800], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:u10ffff",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0x10FFFF], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:u110000",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0x110000], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:u32-max",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0xFFFFFFFF], [0x61]) on string-ne-order's plan: the first codes differ, False{} (Bool is type 0)"
+   },
+   {
+    "control": "codes:pair-beside-u1f600",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t0\tFalse{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "String.eq([0xD83D, 0xDE00], [0x1F600]): two codes against one, never merged, False{} (Bool is type 0)"
+   }
+  ]
+ }
 }
