@@ -2893,6 +2893,165 @@
       }
     },
     {
+      "name": "offset-expression-depth",
+      "file": "tests/compiler-literals/regressions/offset-expression-depth.bend",
+      "sha256": "cea8fa54aa1e1bc8aaf8ec50197856afb3955cbb266bb97e682b962356194c2d",
+      "finding": "offset expression depth",
+      "covers": "`1n+`, `2n+` (Base Nat.double) and `3n+` expression offsets through recursion 3000-4000 deep, and a `0n+t` control",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-expression-depth.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/offset-expression-depth.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "successor",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-depth-successor-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-depth.bend as F\n\ndef main() -> F.Answer:\n  F.successor()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-depth-successor-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "successor_short",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-depth-successor_short-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-depth.bend as F\n\ndef main() -> F.Answer:\n  F.successor_short()\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-depth-successor_short-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "doubled",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-depth-doubled-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-depth.bend as F\n\ndef main() -> F.Answer:\n  F.doubled()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-depth-doubled-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "tripled",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-depth-tripled-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-depth.bend as F\n\ndef main() -> F.Answer:\n  F.tripled()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-depth-tripled-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "zero",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-expression-depth-zero-0.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-expression-depth.bend as F\n\ndef main() -> F.Answer:\n  F.zero()\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-expression-depth-zero-0.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-expression-depth.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
       "name": "offset-spaced-expression",
       "file": "tests/compiler-literals/regressions/offset-spaced-expression.bend",
       "sha256": "978bb5a5a4c5fea5af063d8f8584da5b91a5c30f43b500d5d6d1306c4e41840e",

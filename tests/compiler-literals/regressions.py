@@ -140,6 +140,9 @@ PLAN = {
     'pattern-string-on-enum': ('literal pattern on a datatype', 'case "a" on Answer', [], PATTERN),
     'pattern-offset-on-enum': ('literal pattern on a datatype', 'case 1n+p on Answer', [], PATTERN),
     'pattern-u32-on-bool': ('literal pattern on a datatype', 'case 0 on Base Bool', [], PATTERN),
+    'offset-expression-depth': ('offset expression depth', '`1n+`, `2n+` (Base Nat.double) and `3n+` '
+                                'expression offsets through recursion 3000-4000 deep, and a `0n+t` control',
+                                ['successor', 'successor_short', 'doubled', 'tripled', 'zero'], oracle.AGREE),
     'offset-zero': ('zero offset', '0n+t as an inferred let, a checked argument, a scrutinee, '
                     'and a Nat, U32 or String binder arm',
                     ['inferred', 'checked', 'scrutinee', 'nat_binder', 'u32_binder', 'string_binder'],
