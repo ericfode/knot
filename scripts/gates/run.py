@@ -62,6 +62,8 @@ GATES = (
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('bootstrap', ('python3', 'tests/compiler-bootstrap/check.py'),
+         ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
 )
 
 
@@ -211,6 +213,15 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         result['bound_observations'] = sum(len(row[field]['stdout'].splitlines()) for row in record['bounds'])
     if gate.name == 'owned-store':
         result.update(cases=record['case_count'], literal_witnesses=record['literal_witnesses'], execution_lanes=2)
+    if gate.name == 'bootstrap':
+        stages = record['stages']
+        if (any(record['verdict'].values()) or any(s['status'] == 'reached' and (s['disagree'] or s['agree'] != s['corpus'])
+                                                  for s in stages)
+                or any(s['blocker']['stderr'].split('\t', 1)[0] not in ('Unsupported', 'Exhausted')
+                       for s in stages if s['status'] == 'blocked')):
+            raise ValueError('Bootstrap receipt violates its stage verdict')
+        result.update(corpus=record['corpus']['files'], stages=len(stages),
+                      reached=sum(s['status'] == 'reached' for s in stages))
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
