@@ -41,6 +41,10 @@ law surrogate_code:
   for +token: S.Token
   {L.glyph("\\u{d83d}",token) == Done{L.Glyph{55357,"","\\u{d83d}"}} : Result<S.Error,L.Glyph>}
 
+law escape_before_brace:
+  for +token: S.Token
+  {L.glyph("\\n{",token) == Done{L.Glyph{10,"{","\\n"}} : Result<S.Error,L.Glyph>}
+
 law surrogate_sequence:
   for token: S.Token
   {L.quoted("\"\\u{d83d}\\u{de00}\"",token) == Done{L.Quoted{[55357,56832],"","\"\\u{d83d}\\u{de00}\""}} : Result<S.Error,L.Quoted>}

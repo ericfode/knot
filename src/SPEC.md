@@ -400,7 +400,9 @@ separately frozen bootstrap-helper fixture. See
 the complete representation, bounds, evidence and remaining obligations.
 Decimal U32 and Nat literals reject overflow. Escaped Char/String payloads are
 lists of U32 codes: 1–8 hex digits, NUL, surrogates and codes above U+10FFFF are
-preserved. Escaped surrogate pairs remain two Chars. Operator sugar, F32 and
+preserved. Escaped surrogate pairs remain two Chars. Only `\u{` and `\U{` open
+a code point, as the seed's `u{...}` match does; any other escape before `{`
+(`"\n{"`) is that escape followed by a brace. Operator sugar, F32 and
 raw non-ASCII quoted text report the exact frozen Unsupported prefixes.
 
 The first-match matrix lowers Nat literals/offsets through Zero/Succ and String
@@ -414,7 +416,10 @@ a known type, as bare constructors do: an unannotated binding (`n = 3`,
 `n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
 scrutinee is `Invalid check constructor-scrutinee`, and a literal or offset arm
 on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
-is `Unsupported check nested-field-pattern`. `Chr{...}` patterns and broader
+is `Unsupported check nested-field-pattern`. A promoted binder (`+x`,
+`1n+ +p`, `SCon{c, +t}`) over a column that other rows split copies its value:
+rebuilding it from the split fields consumes none of them, so it may be used
+twice. Without `+` such a binder stays affine. `Chr{...}` patterns and broader
 nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
 in patterns and expressions.

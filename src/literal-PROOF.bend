@@ -13,6 +13,7 @@ def L.append_order(): {==}
 def L.length_count(): {==}
 def L.equal_length(): {==}
 def L.surrogate_code(token): {==}
+def L.escape_before_brace(token): {==}
 def L.surrogate_sequence(token): {==}
 def L.scalar_sequence(token): {==}
 def L.decimal_maximum(token): {==}

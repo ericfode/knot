@@ -46,9 +46,8 @@ def unicode(input: String, +count: U32, +code: U32, +raw: String, +token: S.Toke
 
 def glyph(input: String, +token: S.Token) -> Result<S.Error,Glyph>:
   match input:
-    case SCon{'\\',SCon{+u,SCon{'{',+tail}}}:
-      S.choose(Result<S.Error,Glyph>,Bool.or(Char.is_eq(u,'u'),Char.is_eq(u,'U')),x =>
-        unicode(tail,0,0,String.concat(["\\",SCon{u,SNil{}},"{"]),token),x => invalid(Glyph,token,"escape"))
+    case SCon{'\\',SCon{'u',SCon{'{',tail}}}: unicode(tail,0,0,"\\u{",token)
+    case SCon{'\\',SCon{'U',SCon{'{',tail}}}: unicode(tail,0,0,"\\U{",token)
     case SCon{'\\',SCon{+c,tail}}:
       escaped(escape(c),tail,SCon{'\\',SCon{c,SNil{}}},token)
     case SCon{+c,tail}:

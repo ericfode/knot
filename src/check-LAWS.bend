@@ -42,6 +42,18 @@ law refined_constructor_is_fresh:
    == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
    : Result<S.Error,C.Checked>}
 
+law promoted_rebuild_is_fresh:
+  for term: C.Term
+  for type_id: U32
+  for uses: List<&2,U32>
+  {K.promoted(2,C.Checked{term,type_id,uses}) == Done{C.Checked{term,type_id,Nil{}}} : Result<S.Error,C.Checked>}
+
+law affine_rebuild_keeps_uses:
+  for term: C.Term
+  for type_id: U32
+  for uses: List<&2,U32>
+  {K.promoted(1,C.Checked{term,type_id,uses}) == Done{C.Checked{term,type_id,uses}} : Result<S.Error,C.Checked>}
+
 law nearest_binding_wins:
   for +tail: List<&2,C.Binding>
   for +level: U32

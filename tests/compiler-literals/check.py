@@ -262,6 +262,19 @@ MUTANTS = [
      'old': 'case S.Literal{token,kind,number,text}: C.invalid(G.ConstructorRef,"pattern-type",token)',
      'new': 'case S.Literal{token,kind,number,text}: C.unsupported(G.ConstructorRef,"pattern-type",token)',
      'fixture': 'pattern-u32-on-enum', 'verdict': (3, 'Unsupported\tcheck\tpattern-type\t')},
+    {'name': 'broad-unicode-escape', 'file': 'literal.bend',
+     'old': r'''    case SCon{'\\',SCon{'u',SCon{'{',tail}}}: unicode(tail,0,0,"\\u{",token)
+    case SCon{'\\',SCon{'U',SCon{'{',tail}}}: unicode(tail,0,0,"\\U{",token)
+''',
+     'new': r'''    case SCon{'\\',SCon{+u,SCon{'{',+tail}}}:
+      S.choose(Result<S.Error,Glyph>,Bool.or(Char.is_eq(u,'u'),Char.is_eq(u,'U')),x =>
+        unicode(tail,0,0,String.concat(["\\",SCon{u,SNil{}},"{"]),token),x => invalid(Glyph,token,"escape"))
+''',
+     'fixture': 'escape-brace', 'verdict': (2, 'Invalid\tlex\tescape\t')},
+    {'name': 'affine-promoted-rebuild', 'file': 'check.bend',
+     'old': 'S.bind(C.Checked,C.Checked,next(C.Construct{origin,typ,tag,params,args}),value => promoted(q,value))',
+     'new': 'next(C.Construct{origin,typ,tag,params,args})',
+     'fixture': 'promoted-split', 'verdict': (2, 'Invalid\tcheck\taffine-reuse\t')},
 ]
 
 
@@ -417,7 +430,7 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 27, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 28, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),

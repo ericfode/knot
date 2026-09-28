@@ -955,14 +955,10 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32",
               "U32.is_gt",
               "Word.Con",
@@ -3010,14 +3006,10 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32",
               "U32.is_gt",
               "Word.Con",
@@ -4826,10 +4818,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
-              "Char.is_eq",
               "Char.to_u32",
-              "String.concat",
               "U32.is_gt",
               "src/literal.escape",
               "src/literal.escaped",
@@ -6425,14 +6414,10 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32.is_gt",
               "src/literal.Glyph",
               "src/literal.escape",
@@ -8076,7 +8061,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 771,
+          "declarations": 772,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -11763,6 +11748,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.promoted",
+            "file": "src/check.bend",
+            "via": "src/check.variable",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Checked",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -11888,13 +11891,15 @@
             "dependencies": [
               "Maybe",
               "Result",
+              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -15302,14 +15307,10 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32",
               "U32.is_gt",
               "Word.Con",
@@ -22140,7 +22141,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 771,
+          "declarations": 772,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -25827,6 +25828,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.promoted",
+            "file": "src/check.bend",
+            "via": "src/check.variable",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Checked",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -25952,13 +25971,15 @@
             "dependencies": [
               "Maybe",
               "Result",
+              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -29366,14 +29387,10 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32",
               "U32.is_gt",
               "Word.Con",
@@ -36204,7 +36221,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 686,
+          "declarations": 687,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -38663,6 +38680,19 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.promoted",
+            "file": "src/check.bend",
+            "via": "src/check.variable",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -38752,7 +38782,9 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/scope.reference"
+              "src/check.promoted",
+              "src/scope.reference",
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -41057,10 +41089,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
-              "Char.is_eq",
               "Char.to_u32",
-              "String.concat",
               "U32.is_gt",
               "src/literal.escape",
               "src/literal.escaped",
@@ -45811,7 +45840,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 809,
+          "declarations": 810,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -49537,6 +49566,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.promoted",
+            "file": "src/check.bend",
+            "via": "src/check.variable",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/core.Checked",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -49664,13 +49711,15 @@
             "dependencies": [
               "Maybe",
               "Result",
+              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -53037,14 +53086,10 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
               "Char",
-              "Char.is_eq",
               "Char.to_u32",
-              "List",
               "Result",
               "String",
-              "String.concat",
               "U32.is_gt",
               "src/literal.Glyph",
               "src/literal.escape",
