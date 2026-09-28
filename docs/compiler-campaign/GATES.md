@@ -22,7 +22,12 @@ On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
 passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
 `$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
 under parallel load, which the seed reported as "found no clang". The resolved
-binary is the same compiler the shim forwards to.
+binary is the same compiler the shim forwards to. Some gate programs rebuild
+their own environment for seed and mutant builds, keeping `PATH` but dropping
+`CC` and `SDKROOT`, so the runner also puts a `clang` wrapper first on `PATH`.
+The wrapper runs the resolved compiler and supplies the SDK when it is missing,
+which keeps those paths off the shim. `test_runner` pins it with a trimmed
+environment.
 
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
