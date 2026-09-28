@@ -141,8 +141,8 @@ spanning the first continuation line break:
 - `layout-call-args`, `layout-braces`, `layout-dedent-close` and `layout-comments`: `Invalid parse expected-term` (SF-01);
 - `layout-def-header`: `Invalid parse parameter` (SF-02).
 
-Another blocker hides it on `layout-brackets`, `layout-lambda-statements` and
-`layout-choose-ladder`.
+Another blocker hides it on `layout-brackets`, `layout-lambda-statements`,
+`layout-choose-ladder` and `cross-module-hof`.
 
 The other blocked cases stop at `Unsupported`:
 
@@ -176,7 +176,7 @@ The other blocked cases stop at `Unsupported`:
 | `qualified-nested-ctors` | modules | SF-08 | base, modules, packages, nest, generics, literals | `qualified-nested-ctors-foreign` (pattern-type) | blocked |
 | `qualified-fields` | generics | SF-09 | base, modules, packages, nest, generics, literals | `qualified-fields-unknown` (unknown-type) | blocked |
 | `qualified-collision` | generics | INT-02 | base, modules, generics | `qualified-collision-bare` (unknown-function) | blocked |
-| `cross-module-hof` | integrate-1 | SF-21 | base, modules, generics, closures, nest | `cross-module-hof-type-arg` (type-mismatch) | blocked |
+| `cross-module-hof` | integrate-1 | SF-21 | layout, base, modules, generics, closures, nest | `cross-module-hof-type-arg` (type-mismatch) | blocked |
 | `rose-tree` | generics | SF-10 | base, generics, literals, nat-columns, nest | `rose-tree-kids` (type-mismatch) | blocked |
 | `mutual-term-bind` | generics | SF-10 | base, generics, literals, nat-columns, nest | `mutual-term-bind-defs` (forward-live-call) | blocked |
 | `io-load-continuation` | core-io | SF-13 | base, io, closures, generics, products, do, literals, nest, lists | `io-load-continuation-type` (type-mismatch) | blocked |
@@ -195,6 +195,11 @@ The other blocked cases stop at `Unsupported`:
 
 Each case's `shape` and `site` in `expectations.json` name the Knot source it
 mirrors.
+
+`cross-module-hof` needs `layout` as well: its `level` is S's nested
+`S.choose` ladder, whose lambda arguments continue on the next line inside the
+call (main.bend:37-39). A case's needs name every capability its source uses,
+so the layout gap it will report once its other blockers land is the reviewed one.
 
 `layout-lambda-statements` separates two ways of implementing layout.
 Continuation newlines inside delimiters are skippable. The newlines between a
