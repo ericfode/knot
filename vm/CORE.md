@@ -85,6 +85,12 @@ first defect. The gate requires this on:
   the loaded copy no longer equal the file.
 - **Scratch above the bump.** Describe, UTF-8 output and `Halt` messages are
   built above the bump pointer, which they do not advance.
+- **`knot_alloc` after boot (an obligation for vm-io).** After boot,
+  `knot_alloc`'s cursor still points just past the loaded image, into the gap
+  before the frame region. This is harmless in vm-core, because no allocating
+  import runs after boot: `print`, `die` and `exhausted` return nothing.
+  vm-io's `args`, `read` and `read_bytes` effects must first aim it at
+  allocator blocks above the bump.
 
 ## Choices the spec leaves open
 
