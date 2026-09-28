@@ -261,7 +261,9 @@ def run(fuel: Nat, action: Action, +bundle: String, +characters: Nat, +depth: Na
 def start(+path: String, +bundle: String) -> Action:
   S.choose(Action,Bool.xor(String.starts_with(path,"/"),String.starts_with(bundle,"/")),u =>
     Stopped{S.Unsupported{"load","mixed-path-roots",S.At{0,0,0,0}}},u =>
-    Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}})
+  S.choose(Action,Bool.or(I.climbs(I.normalize(path)),I.climbs(I.normalize(bundle))),u =>
+    Stopped{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}},u =>
+    Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}}))
 
 def begin(result: Result<S.Error,Unit>, +path: String, +bundle: String, characters: Nat, depth: Nat,
   next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):

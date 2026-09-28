@@ -94,6 +94,18 @@ law mixed_path_roots_are_unsupported:
   {L.start("/source/main.bend","bundle")
     == L.Stopped{S.Unsupported{"load","mixed-path-roots",S.At{0,0,0,0}}} : L.Action}
 
+law climbing_paths_have_no_identity:
+  {(I.resolve("app/two.bend","","lib","../../w/app/m/flag.bend"),
+    L.start("../w/app/ok.bend","lib"),L.start("app/plain.bend","../w/lib")) ==
+    (Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}},
+     L.Stopped{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}},
+     L.Stopped{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}})
+    : Result<S.Error,I.Target> & L.Action & L.Action}
+
+law working_directory_bundle_contains_local_paths:
+  {I.resolve("main.bend","",I.normalize("."),"./extra/flag.bend")
+    == Fail{S.Invalid{"load","import-path",S.At{0,0,0,0}}} : Result<S.Error,I.Target>}
+
 law package_escape_is_invalid:
   {I.resolve("bundle/0xab/board.bend","0xab/board","bundle","../outside.bend")
     == Fail{S.Invalid{"load","package-escape",S.At{0,0,0,0}}} : Result<S.Error,I.Target>}

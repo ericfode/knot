@@ -128,18 +128,28 @@ def relative_parts(+left: List<&2,String>, +right: List<&2,String>) -> List<&2,S
 def relative_path(from: String, target: String) -> String:
   String.join(relative_parts(segments(split(from,'/'),False{},Nil{}),segments(split(target,'/'),False{},Nil{})),"/")
 
+# The normalized working directory is "": it contains every relative path.
 def bundle_prefix(+bundle: String) -> String:
-  S.choose(String,String.ends_with(bundle,"/"),u => bundle,u => String.append(bundle,"/"))
+  S.choose(String,Bool.or(String.is_empty(bundle),String.ends_with(bundle,"/")),u => bundle,u =>
+    String.append(bundle,"/"))
+
+# A normalized relative path that still begins with ".." names its file through
+# a parent of the working directory, whose name is unknown here, so its spelling
+# is not canonical: identity and containment cannot be decided on it.
+def climbs(+path: String) -> Bool:
+  String.eq(first(split(path,'/')),"..")
 
 def resolve(+importer: String, +namespace: String, +bundle: String, +path: String) -> Result<S.Error,Target>:
   +target = S.choose(String,hashed(path),u => join(bundle,path),u => join(directory(importer),path))
   +inside = String.starts_with(target,bundle_prefix(bundle))
   +space = S.choose(String,inside,u => without_suffix(String.drop(target,String.length(bundle_prefix(bundle)))),u =>
     without_suffix(join(directory(namespace),relative_path(directory(importer),target))))
+  S.choose(Result<S.Error,Target>,climbs(target),u =>
+    Fail{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}},u =>
   S.choose(Result<S.Error,Target>,Bool.and(hashed(namespace),Bool.not(hashed(space))),u =>
     Fail{S.Invalid{"load","package-escape",S.At{0,0,0,0}}},u =>
   S.choose(Result<S.Error,Target>,Bool.and(inside,Bool.not(hashed(space))),u =>
-    Fail{S.Invalid{"load","import-path",S.At{0,0,0,0}}},u => Done{Target{target,space}}))
+    Fail{S.Invalid{"load","import-path",S.At{0,0,0,0}}},u => Done{Target{target,space}})))
 
 def pushed(+word: String, +rest: List<&2,String>) -> List<&2,String>:
   S.choose(List<&2,String>,String.is_empty(word),u => rest,u => Con{String.reverse(word),rest})

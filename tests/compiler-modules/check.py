@@ -194,9 +194,15 @@ def review_reference(manifest, round):
         if 'loaded_files' in fixture:
             fixture['loaded_files'] = [os.path.relpath(target / name, HERE)
                                        for name in fixture['loaded_files']]
+        if 'cwd' in frozen:
+            fixture['cwd'] = str(target / frozen['cwd'])
         for call in fixture['calls']:
             entry = target / call['run']
-            result = run([*SEED, entry])
+            if 'cwd' in frozen:
+                # The seed receives the same literal relative spellings as Knot.
+                result = run([*SEED, frozen['entry']], bundle=frozen['bundle_arg'], cwd=fixture['cwd'])
+            else:
+                result = run([*SEED, entry])
             normalized = {**result, **{key: result[key].replace(str(ROOT), '<ROOT>')
                                       for key in ('stdout', 'stderr')}}
             require(observation(normalized) == observation(call), (call, result))
@@ -337,6 +343,8 @@ def audit(result, fixture, base):
     require(rows['BasePin'] == [base['sha256']], ('wrong Base identity', result))
     if 'loaded_files' in fixture:
         expected = {str((HERE / path).resolve()) for path in fixture['loaded_files']}
+        if 'cwd' in fixture:
+            expected = {os.path.relpath(path, fixture['cwd']) for path in expected}
     else:
         expected = {str((HERE / fixture['file']).resolve())}
         for module in fixture['modules']:
@@ -393,40 +401,49 @@ def single_file(fixture, commands, source, name, lane):
     return results
 
 
-def fixture_observations(fixture, lanes, base):
-    name = fixture.get('name', Path(fixture['file']).stem)
+def invocation(fixture):
+    """Working directory, entry and bundle arguments of a module fixture."""
+    if 'cwd' in fixture:
+        return Path(fixture['cwd']), fixture['entry'], fixture['bundle_arg']
     source = HERE / fixture['file']
     if fixture.get('entry_mode') == 'relative':
         source = source.relative_to(ROOT)
     bundle = HERE / fixture.get('bundle', 'bundle/lib')
     if fixture.get('bundle_mode') == 'relative':
         bundle = bundle.relative_to(ROOT)
+    return ROOT, source, bundle
+
+
+def fixture_observations(fixture, lanes, base):
+    name = fixture.get('name', Path(fixture['file']).stem)
+    cwd, source, bundle = invocation(fixture)
     item = {'name': name, 'file': fixture['file'], 'knot': fixture['knot'],
             'reference': fixture['calls'], 'lanes': {}}
     outputs = {}
     for lane, commands in lanes.items():
         plain = {phase: commands['plain-' + phase] for phase in ('check', 'eval', 'compile')}
         commands = {phase: [*argv[:-1], bundle] for phase, argv in commands.items() if '-' not in phase}
-        checked = run([*commands['check'], source])
+        checked = run([*commands['check'], source], cwd=cwd)
         if observe(checked, fixture):
             require(checked['stdout'].startswith('Checked\n'), checked)
         evaluated = []
         for call in fixture['calls']:
             args = [arg['tag'] for arg in call['arguments']]
-            result = run([*commands['eval'], source, call['export'], 65536, *args])
+            result = run([*commands['eval'], source, call['export'], 65536, *args], cwd=cwd)
             entry = {'export': call['export'], 'arguments': call['arguments'], 'result': result}
             if observe(result, fixture):
                 entry['value'] = value(result, call)
             evaluated.append(entry)
-        output = BUILD / f'{name}-{lane}.wasm'
+        # A relative load writes beside its sources, spelled on the same basis.
+        output = (cwd if 'cwd' in fixture else BUILD) / f'{name}-{lane}.wasm'
         marker = b'existing output must survive rejected module compilation\n'
         output.write_bytes(marker)
-        compiled = run([*commands['compile'], source, output])
+        compiled = run([*commands['compile'], source, output.name if 'cwd' in fixture else output], cwd=cwd)
         accepted = observe(compiled, fixture)
         evidence = {'check': checked, 'evaluations': evaluated, 'compile': compiled,
                     'wasm': [], 'artifact_preserved': not accepted}
         if checked['exit'] == 0:
-            evidence['audit'] = audit(run([*commands['audit'], source]), fixture, base)
+            evidence['audit'] = audit(run([*commands['audit'], source], cwd=cwd), fixture, base)
         if accepted:
             binary = output.read_bytes()
             require(binary.startswith(b'\0asm\x01\0\0\0'), compiled)
@@ -611,6 +628,21 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'witness': 'field-cross-module-ctor',
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tconstructor-pattern-binder\t'}},
 ]
+MUTANTS += [
+    {'name': 'climbing-target-accepted', 'file': 'imports.bend',
+     'old': 'S.choose(Result<S.Error,Target>,climbs(target),u =>',
+     'new': 'S.choose(Result<S.Error,Target>,False{},u =>',
+     'witness': 'two-spellings',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\ttype-mismatch\t'}},
+    {'name': 'climbing-root-accepted', 'file': 'load.bend',
+     'old': 'Bool.or(I.climbs(I.normalize(path)),I.climbs(I.normalize(bundle)))',
+     'new': 'False{}',
+     'witness': 'bundle-climbing-spelling', 'actual': {'exit': 0}},
+    {'name': 'working-directory-bundle-empty', 'file': 'imports.bend',
+     'old': 'Bool.or(String.is_empty(bundle),String.ends_with(bundle,"/"))',
+     'new': 'String.ends_with(bundle,"/")',
+     'witness': 'bundle-dot', 'actual': {'exit': 0}},
+]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
                     'path-identity-ignored', 'qualified-freshness-ignored', 'base-collision-ignored',
@@ -620,7 +652,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'source-budget-counts-characters', 'import-comment-splits-anywhere',
                     'alias-keeps-glued-comment', 'header-character-ignored',
                     'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked',
-                    'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide'}
+                    'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide',
+                    'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty'}
 
 
 def mutants(fixtures):
@@ -646,8 +679,9 @@ def mutants(fixtures):
         output = directory / 'mutant.js'
         built = successful([*SEED, entry, '-o', output])
         fixture = by_name[mutant['witness']]
-        mode = [] if mutant.get('plain') else ['--bundle', BUNDLE]
-        result = run(['bun', output, *mode, HERE / fixture['file']])
+        cwd, source, bundle = invocation(fixture)
+        mode = [] if mutant.get('plain') else ['--bundle', bundle]
+        result = run(['bun', output, *mode, source], cwd=cwd)
         if mutant.get('plain'):
             fixture = plain_obligation(fixture)
         expected = mutant['actual']
@@ -676,10 +710,12 @@ def main():
              HERE / 'FIXTURES.md', HERE / 'regen.py', HERE / 'regressions.json',
              HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
-             HERE / 'review-round2.json', HERE / 'review-round3.json', *sorted((ROOT / 'src/host').glob('*')),
+             HERE / 'review-round2.json', HERE / 'review-round3.json', HERE / 'review-round4.json',
+             *sorted((ROOT / 'src/host').glob('*')),
              ROOT / 'tests/compiler-io-abi-2/expectations.json',
              *sorted((ROOT / 'tests/compiler-io-abi-2/reference').glob('*'))]
-    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3')
+    paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3',
+                               'review-round4')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -690,7 +726,8 @@ def main():
         probes, record['probe_reference'] = probe_reference(manifest)
         review, record['review_reference'] = review_reference(manifest, 'review-round2')
         round3, record['round3_reference'] = review_reference(manifest, 'review-round3')
-        review += round3
+        round4, record['round4_reference'] = review_reference(manifest, 'review-round4')
+        review += round3 + round4
         record['adapters'] = adapter_pins()
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}
