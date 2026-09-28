@@ -8,7 +8,8 @@ Checks, in order:
 - every golden image runs through scripts/run-wasm-io.mjs with the output
   vm/golden/vm-expected.json fixes, and through the test build with the
   precise Exhausted, Unsupported or HostFailure cause in the VM's own outcome
-  registers and a structural audit after every transition;
+  registers and a structural audit after every transition; so does every Book
+  invocation vm-expected.json freezes beside them (SPEC section 8's walk);
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits;
@@ -18,7 +19,9 @@ Checks, in order:
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
   states), refused with the reference codec's first defect; the controls
-  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them; and a
+  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them, and its
+  run controls, run to the outcome and call count check-spec.py freezes with
+  them, also on exactly that much fuel (section 7's operand check); and a
   seeded fuzz corpus of mutated goldens, where every refusal matches the
   reference and no run traps;
 - WAT mutants, each killed by a named fixture group through a wrong
@@ -419,6 +422,24 @@ MUTANTS = [
      [('(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (local.get $upto)))',
        '(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (i64.add (local.get $upto) (i64.const 0x1000000))))')],
      'ceiling'),
+    # vm-spec 94bc3d5: section 7's operand check and section 8's invocation walk
+    ('closure-operand-count', 'a Closure is entered whatever its operand count',
+     [('(br_if $bad (i32.ne (global.get $nops) (local.get $live)))', '')], 'runs'),
+    ('terminal-operand-count', 'the terminal continuation is entered whatever its operand count',
+     [('(br_if $bad (i32.ne (global.get $nops) (i32.const 1)))', '')], 'runs'),
+    ('operand-check-after-debit', "a Closure's operand count is checked after its fuel",
+     [('(br_if $bad (i32.ne (global.get $nops) (local.get $live)))\n        (call $debit)',
+       '(call $debit)\n        (br_if $bad (i32.ne (global.get $nops) (local.get $live)))')], 'runs'),
+    ('invocation-arity-first', 'the ordinal count is checked before the walk',
+     [('(local.set $k (i32.sub (global.get $argc) (i32.const 3)))',
+       '(local.set $k (i32.sub (global.get $argc) (i32.const 3)))\n'
+       '    (if (i32.ne (local.get $k) (local.get $n))\n'
+       '      (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_argument_arity))))')],
+     'invocations'),
+    ('function-argument-dropped', 'an arrow parameter is refused as argument-range',
+     [('        (if (i32.lt_u (i32.sub (call $kind (local.get $p)) (i32.const 1)) (i32.const 2))\n'
+       '          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_function_argument))))\n',
+       '')], 'invocations'),
 ]
 
 
@@ -435,7 +456,7 @@ def main() -> int:
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
                   [HERE / 'vm.wat', HERE / 'vm.wasm', HERE / 'build.json', HERE / 'build.py', HERE / 'harness.mjs',
                    HERE / 'check-core.py', HERE / 'SPEC.md', HERE / 'serializer.py', HERE / 'registry.json', HOST,
-                   HERE / 'golden/vm-expected.json', *(HERE / 'core').glob('*')])}}
+                   HERE / 'check-spec.py', HERE / 'golden/vm-expected.json', *(HERE / 'core').glob('*')])}}
 
     # pins and module shape
     pins, module_bytes, test_bytes = build.build()
@@ -473,6 +494,25 @@ def main() -> int:
                         'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls'],
                         'transitions': dump['steps'], 'audited': dump['audited']})
     record['goldens'] = goldens
+
+    # the Book invocations vm-spec froze with the goldens (SPEC section 8's walk)
+    invoked = [(f"{n} {' '.join(row['argv'][1:])}", n, row) for n in sorted(expected.get('invocations', {}))
+             for row in expected['invocations'][n]]
+    invocation_argv = {label: [a if a != 'IMAGE' else f'{n}.kimg' for a in row['argv']] for label, n, row in invoked}
+    got = dict(zip([c[0] for c in invoked], pool(lambda c: host(module, golden, invocation_argv[c[0]]), invoked)))
+    traced = harness([{'id': label, 'wasm': str(test), 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
+                       'argv': invocation_argv[label], 'trace': 'audit'} for label, n, _ in invoked])
+    invocations = []
+    for label, n, row in invoked:
+        dump, state = traced[label], traced[label]['state']
+        require(dump['broken'] is None, f'invocation {label}: state audit {dump["broken"]}')
+        require(got[label] == expected_run(row), f'invocation {label}: {got[label]} differs from {expected_run(row)}')
+        require(all(state[k] == v for k, v in expected_dump(row).items()), f'invocation {label}: dump {state}')
+        require((dump['exit'], dump['stdout']) == (got[label]['exit'], got[label]['stdout']),
+                f'invocation {label}: harness and host differ')
+        invocations.append({'invocation': label, 'exit': got[label]['exit'], 'outcome': state['outcome'],
+                            'cause': state['cause'], 'calls': state['calls']})
+    record['invocations'] = invocations
 
     # vm/core fixtures: literal-review runs, dumps and lowered limits
     fixtures = json.loads((HERE / 'core/fixtures.json').read_text())
@@ -608,6 +648,36 @@ def main() -> int:
         require(all(seen[k] == v for k, v in row['dump'].items()), f"admitted control {r['label']}: {seen} vs {row['dump']}")
         admissions.append({'control': r['label'], 'sha256': r['sha256'], 'exit': g['exit'], **row['dump']})
 
+    # the run controls vm-spec admits and freezes with their runs (SPEC sections 4, 7
+    # and 12): loaded, then run to the frozen outcome and call count. Section 7 checks
+    # Enter's operands before its fuel, so each also runs on exactly its `calls` of
+    # fuel to the same outcome: an ill-typed Enter is refused at fuel 0 too.
+    runs_frozen = spec.run_controls(plans)
+    run_rows = []
+    for i, (label, plan, run) in enumerate(runs_frozen):
+        data = codec.encode(plan, digest)
+        require(spec.rejected(data, reg, digest) is None, f'run control {label}: the reference refuses it')
+        (loaded / f'r{i}.kimg').write_bytes(data)
+        want = expected_run({'stderr': '', **run}) if 'exit' in run else expected_run(run)
+        dump = {**expected_dump(run if 'exit' not in run else {'exit': 0}), 'calls': run['calls']}
+        for fuel in ('1000000', str(run['calls'])):
+            argv = ['main', fuel] if plan['entry'] == 'book' else [fuel, '--']
+            run_rows.append({'label': f'run:{label}@{fuel}', 'sha256': sha(data), 'argv': [f'r{i}.kimg', *argv],
+                             'want': want, 'dump': dump})
+    ran = pool(lambda r: host(module, loaded, r['argv']), run_rows)
+    dumped = traced(run_rows, loaded)
+    for r, g in zip(run_rows, ran):
+        dump, state = dumped[r['label']], dumped[r['label']]['state']
+        require(g == r['want'], f"run control {r['label']}: {g} vs {r['want']}")
+        require(dump['booted'] and (dump['exit'], dump['stdout']) == (g['exit'], g['stdout']),
+                f"run control {r['label']}: not loaded, or harness and host differ: {dump}")
+        seen = {'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls']}
+        require(all(seen[k] == v for k, v in r['dump'].items()), f"run control {r['label']}: {seen} vs {r['dump']}")
+    for label, _, _ in runs_frozen:
+        rows_for = [r for r in run_rows if r['label'].startswith(f'run:{label}@')]
+        admissions.append({'control': f'run:{label}', 'sha256': rows_for[0]['sha256'], 'exit': rows_for[0]['want']['exit'],
+                           **rows_for[0]['dump'], 'fuel_runs': [r['label'].split('@')[1] for r in rows_for]})
+
     fuzz = BUILD / 'fuzz'
     fuzz.mkdir()
     corpus = fuzz_corpus(images, reg, digest, fuzz)
@@ -642,11 +712,17 @@ def main() -> int:
                     for r, g in zip(rows, got)]
     admitted_jobs = [{'id': f"admitted:{r['label']}", 'files': {r['argv'][0]: str(loaded / r['argv'][0])},
                       'argv': r['argv'], 'want': frozen[r['label']]['expect']} for r in welcome]
+    invocation_jobs = [{'id': f'invocation:{label}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
+                        'argv': invocation_argv[label], 'want': expected_run(row), 'dump': expected_dump(row)}
+                       for label, n, row in invoked]
+    run_jobs = [{'id': r['label'], 'files': {r['argv'][0]: str(loaded / r['argv'][0])}, 'argv': r['argv'],
+                 'want': r['want'], 'dump': r['dump']} for r in run_rows]
     ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
                            for j, r in zip(ceiling_jobs, ceiling)]
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
-              'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs}
+              'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
+              'invocations': invocation_jobs, 'runs': run_jobs}
 
     def observed_wrong(job, out):
         shown = {k: out[k] for k in ('exit', 'stdout', 'stderr')} != job['want']
@@ -682,7 +758,8 @@ def main() -> int:
     record['status'] = 'passed'
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
-    print(f"vm-core passed: {len(goldens)} golden images, {len(core)} fixture runs, {len(dumps)} dump rows, "
+    print(f"vm-core passed: {len(goldens)} golden images, {len(invocations)} Book invocations, {len(core)} fixture runs, "
+          f"{len(dumps)} dump rows, "
           f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "

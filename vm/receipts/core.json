@@ -1,13 +1,14 @@
 {
- "date": "2026-09-28T11:10:55.559782+00:00",
+ "date": "2026-09-28T11:18:24.240395+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
-  "vm/SPEC.md": "c68df99fdd9836d12dc0bd2e42c41e33a85380be78cfdf7de0a2e3383465d9cb",
-  "vm/build.json": "9d6324bd3337aac32f3e7f400122d71886c918d96d095a02083d1386922a5ae1",
+  "vm/SPEC.md": "d0666796ac67a26f36f9c01137822d14ab7ae847ed1462dc92d35b5b7a31ad11",
+  "vm/build.json": "23d4daf382c5d6d3fdb35fed6f92b248368851dac7db4aa8f027200e35447f4a",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "8350ad44168f110babab4f196e5191e58e1985386441a86f96554e7a057d4aa9",
+  "vm/check-core.py": "1733f864d7665445439ebd280d07a74471d4f2c4a84bde2d691e4ce77991e518",
+  "vm/check-spec.py": "2cad8c30f3ac305c3c5301619e765f60fc6e955850cd8c4724f8c62248cfaca4",
   "vm/core/ceiling-band.kimg": "26c6ebdcdcc807b4671d67deb34a87a0edf345f77e83e92a16f8fc270bd2e720",
   "vm/core/ceiling-band.plan.json": "7e96235edf058d09328155a367402004daf7c04149f3e11f86abcb8486116679",
   "vm/core/ceiling-over.kimg": "568b444d7ad13cd4ff824e3062166b0c774caf41d007a7d881c36d11cafbd3a2",
@@ -39,12 +40,12 @@
   "vm/core/render-nat.plan.json": "badeb34410d36b267ba0a5f722a9f27746dce2b8f70f697bf7b250f69215745b",
   "vm/core/unsupported-foreign.kimg": "ab7e2eda7b5b2de10ff0e713d85489055352a894c8bbf7d8386e8b1cb9b36bab",
   "vm/core/unsupported-foreign.plan.json": "48b7962552cfc0f7723ee3fbddf5a93acd79712c710f4e6516eba9ba5938d93b",
-  "vm/golden/vm-expected.json": "429deb28858b1859a2c702660c52728e0f2151bee36b2abce53d01c3649c38db",
+  "vm/golden/vm-expected.json": "d8905d9e9c17107b3e60d89d06d0db9ac1356ec9f8c0a823e3d8d5c9b6e4ae31",
   "vm/harness.mjs": "2b83412779206b8ed2cbdb7f5a8ad6c50f5fc8fab362d6d56bf990cb15d3ce57",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
-  "vm/serializer.py": "cde04014f675f71c5cd8638d3c793c5dba9703ecf64809bc3e3371bf47856e3d",
-  "vm/vm.wasm": "cdd338f38e6c7136c0493ec11d044cbafc86684240e5b4502da47e5b7cba17ee",
-  "vm/vm.wat": "e42a871f692bb0750ced5c24e4ffef9148ad7d6ae38d628bbe8330d16e1455ba"
+  "vm/serializer.py": "78af9dea829c433ec09a9d52f584b3eaa2c3df3c5f6130662a067afe62dc319d",
+  "vm/vm.wasm": "77a9a5c214038d6f1585b5eff27b56b6b89483bca25025a46f9c5bdf77d85a64",
+  "vm/vm.wat": "0f4c6e738ecffa513eeb41d2a807ab4c7c5beec3cb29e6cfcb5908227d00a222"
  },
  "pins": {
   "tool": "wat2wasm",
@@ -52,17 +53,17 @@
   "flags": [],
   "source": {
    "path": "vm/vm.wat",
-   "sha256": "e42a871f692bb0750ced5c24e4ffef9148ad7d6ae38d628bbe8330d16e1455ba"
+   "sha256": "0f4c6e738ecffa513eeb41d2a807ab4c7c5beec3cb29e6cfcb5908227d00a222"
   },
   "module": {
    "path": "vm/vm.wasm",
-   "sha256": "cdd338f38e6c7136c0493ec11d044cbafc86684240e5b4502da47e5b7cba17ee",
-   "bytes": 19279
+   "sha256": "77a9a5c214038d6f1585b5eff27b56b6b89483bca25025a46f9c5bdf77d85a64",
+   "bytes": 19374
   },
   "test_build": {
    "prefix": ";;TEST ",
-   "sha256": "7d9d15e937ea0ad6d2b675b00c624e40974cc868a5f6ca463f5b8224a8b62ad6",
-   "bytes": 19607
+   "sha256": "ea118032d6c7bf32d7bfdfbcd4f2bb62e613197616202d5fa75ac12096093d16",
+   "bytes": 19703
   }
  },
  "shape": {
@@ -345,6 +346,26 @@
    "audited": 14
   },
   {
+   "name": "invoke-args",
+   "exit": 0,
+   "stdout_sha256": "cce238ba42382f8b8ce8bbf40c6588857a260940762ebf562b862e7eeb1d2224",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2,
+   "transitions": 13,
+   "audited": 13
+  },
+  {
+   "name": "invoke-arrow",
+   "exit": 0,
+   "stdout_sha256": "36139b910b99c84f7a237ba7aaa3dfc63f2132f61425e2e9380b23c9d55ac18c",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 3,
+   "transitions": 15,
+   "audited": 15
+  },
+  {
    "name": "io-bind",
    "exit": 0,
    "stdout_sha256": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
@@ -515,6 +536,26 @@
    "audited": 12
   },
   {
+   "name": "non-scalar-code",
+   "exit": 0,
+   "stdout_sha256": "812b9a2c348e9fdde6a678d57147703133eca060e7377241eef4cdb1cf8bd2ff",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 8,
+   "transitions": 35,
+   "audited": 35
+  },
+  {
+   "name": "non-scalar-unprinted",
+   "exit": 0,
+   "stdout_sha256": "bc8ea2ab9fae6fdbd49b557fa37f423f40ce55f63074b5fdcf462e2cf15fb558",
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 14,
+   "transitions": 67,
+   "audited": 67
+  },
+  {
    "name": "pair",
    "exit": 0,
    "stdout_sha256": "993db63466600f28fac26758697b1af29fdadcc1d5dc59b04c2559095526dbf8",
@@ -543,6 +584,16 @@
    "calls": 4,
    "transitions": 11,
    "audited": 12
+  },
+  {
+   "name": "print-non-scalar-second",
+   "exit": 5,
+   "stdout_sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
+   "outcome": "HostFailure",
+   "cause": "abi",
+   "calls": 13,
+   "transitions": 61,
+   "audited": 62
   },
   {
    "name": "print-non-scalar-wide",
@@ -983,6 +1034,204 @@
    "calls": 1,
    "transitions": 3,
    "audited": 3
+  }
+ ],
+ "invocations": [
+  {
+   "invocation": "invoke-args two 1000000 1 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-args two 1000000 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-arity",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args two 1000000 1 0 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-arity",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args two 1000000 5",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args two 1000000 5 0 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args two 1000000 1 2",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args succ 1000000 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-args succ 1000000 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "structured-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args succ 1000000 1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "structured-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args succ 1000000 2",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args size 1000000 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 2
+  },
+  {
+   "invocation": "invoke-args size 1000000 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "structured-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args code 1000000 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "structured-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args code 1000000 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args is_zero 1000000 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args is_zero 1000000 7",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args real 1000000 0",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-args real 1000000 1",
+   "exit": 0,
+   "outcome": "Completed",
+   "cause": null,
+   "calls": 1
+  },
+  {
+   "invocation": "invoke-args real 1000000 2",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args text 1000000 1",
+   "exit": 3,
+   "outcome": "Unsupported",
+   "cause": "result-type",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args text 1000000 2",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args absent 1000000",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "unknown-export",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-args main 1000000 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-arity",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-arrow feed 1000000 1 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "function-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-arrow feed 1000000 1 0 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "function-argument",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-arrow feed 1000000 1",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-arity",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-arrow feed 1000000 2 0",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-range",
+   "calls": 0
+  },
+  {
+   "invocation": "invoke-arrow feed 1000000",
+   "exit": 5,
+   "outcome": "HostFailure",
+   "cause": "argument-arity",
+   "calls": 0
   }
  ],
  "fixtures": {
@@ -1760,15 +2009,97 @@
     "exit": 0,
     "outcome": "Completed",
     "calls": 2
+   },
+   {
+    "control": "run:arrow-through-identity",
+    "sha256": "ad51452d060ed6671a936355609922734835e9693462756c39f87a6771f51c4a",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:erased-closure-invoked-live",
+    "sha256": "520e2b57133e287510b66fc5f7722019d239f2d43d35dc86281f29fbf4871e4f",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:live-closure-invoked-erased",
+    "sha256": "50d41b7b161178606ef9102cfc6b273185d73ced24b1ac74a6c6f1e147bd5565",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:terminal-invoked-erased",
+    "sha256": "0bdce1ae49b18c513376c0ffe920eba60ddfb32536a9b5abbf4be6d0ba058444",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 4,
+    "fuel_runs": [
+     "1000000",
+     "4"
+    ]
+   },
+   {
+    "control": "run:phase-one-live",
+    "sha256": "ea8963bd6995a6639549e85bb8f42a3e902779ce0bc751204495d332ef9a1222",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:phase-two-erased",
+    "sha256": "5be8b945c1d1c0fc9d9c37c2cfad8a4578ea2861b542c109997377af376e40e6",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:u32-file-alias",
+    "sha256": "a4c1758eed3b8c2427cb34af500e430e40c06d1227654b9f79c4348347431033",
+    "exit": 0,
+    "outcome": "Completed",
+    "calls": 1,
+    "fuel_runs": [
+     "1000000",
+     "1"
+    ]
    }
   ],
   "fuzz": {
    "seed": 20260928,
    "per_image": 40,
-   "images": 3440,
-   "corpus_sha256": "4818a2d1a5bfc0abf0d4564e97e05a8602cbba1e174b0e7ea4dca37a5af403cc",
-   "refused": 3143,
-   "accepted": 297,
+   "images": 3640,
+   "corpus_sha256": "8fa4ecdd2e27afab99bc951e7cd3b410d2db484cae42fb010367081a811d7fd4",
+   "refused": 3336,
+   "accepted": 304,
    "reference_crash": 0
   }
  },
@@ -1784,7 +2115,7 @@
     "golden:nat-pred",
     "golden:nat-show-codes"
    ],
-   "wrong_observations": 9,
+   "wrong_observations": 10,
    "crashes": 0
   },
   {
@@ -1798,7 +2129,7 @@
     "golden:char-space",
     "golden:closure-capture-off"
    ],
-   "wrong_observations": 69,
+   "wrong_observations": 74,
    "crashes": 0
   },
   {
@@ -1823,7 +2154,7 @@
     "golden:char-code",
     "golden:char-eq"
    ],
-   "wrong_observations": 144,
+   "wrong_observations": 149,
    "crashes": 0
   },
   {
@@ -1905,9 +2236,10 @@
    "group": "goldens",
    "killed_by": [
     "golden:print-non-scalar",
-    "golden:print-non-scalar-mid"
+    "golden:print-non-scalar-mid",
+    "golden:print-non-scalar-second"
    ],
-   "wrong_observations": 2,
+   "wrong_observations": 3,
    "crashes": 0
   },
   {
@@ -1921,6 +2253,69 @@
     "ceiling:ceiling-top"
    ],
    "wrong_observations": 4,
+   "crashes": 0
+  },
+  {
+   "mutant": "closure-operand-count",
+   "breaks": "a Closure is entered whatever its operand count",
+   "group": "runs",
+   "killed_by": [
+    "run:erased-closure-invoked-live@1000000",
+    "run:erased-closure-invoked-live@2",
+    "run:live-closure-invoked-erased@1000000",
+    "run:live-closure-invoked-erased@2",
+    "run:phase-one-live@1000000"
+   ],
+   "wrong_observations": 8,
+   "crashes": 0
+  },
+  {
+   "mutant": "terminal-operand-count",
+   "breaks": "the terminal continuation is entered whatever its operand count",
+   "group": "runs",
+   "killed_by": [
+    "run:terminal-invoked-erased@1000000",
+    "run:terminal-invoked-erased@4"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "operand-check-after-debit",
+   "breaks": "a Closure's operand count is checked after its fuel",
+   "group": "runs",
+   "killed_by": [
+    "run:erased-closure-invoked-live@1000000",
+    "run:erased-closure-invoked-live@2",
+    "run:live-closure-invoked-erased@1000000",
+    "run:live-closure-invoked-erased@2",
+    "run:phase-one-live@1000000"
+   ],
+   "wrong_observations": 8,
+   "crashes": 0
+  },
+  {
+   "mutant": "invocation-arity-first",
+   "breaks": "the ordinal count is checked before the walk",
+   "group": "invocations",
+   "killed_by": [
+    "invocation:invoke-args two 1000000 5",
+    "invocation:invoke-args two 1000000 5 0 1",
+    "invocation:invoke-args succ 1000000 1 0",
+    "invocation:invoke-arrow feed 1000000 1 0 0"
+   ],
+   "wrong_observations": 4,
+   "crashes": 0
+  },
+  {
+   "mutant": "function-argument-dropped",
+   "breaks": "an arrow parameter is refused as argument-range",
+   "group": "invocations",
+   "killed_by": [
+    "invocation:invoke-arrow feed 1000000 1 0",
+    "invocation:invoke-arrow feed 1000000 1 0 0"
+   ],
+   "wrong_observations": 2,
    "crashes": 0
   }
  ]

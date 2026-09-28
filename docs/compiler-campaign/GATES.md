@@ -78,17 +78,20 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - The pinned `wat2wasm` reassembles `vm/vm.wasm` byte for byte. The module's
   imports, exports and 65,536-page memory are as the spec requires, and its call
   graph has no cycle.
-- All 86 golden images run through `scripts/run-wasm-io.mjs` with their
-  `vm-expected.json` outputs. The test build confirms each exhaustion cause and
-  audits the state after every transition.
+- All 91 golden images run through `scripts/run-wasm-io.mjs` with their
+  `vm-expected.json` outputs. So do its 28 frozen Book invocations. The test
+  build confirms each exhaustion cause and audits the state after every
+  transition.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
   lowered limits, including the 250,000-deep non-tail recursion, and six
   Books whose bump pointer ends near 4 GiB.
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
-- The 61 malformed-image controls and a seeded fuzz corpus of 3,440 mutated
+- The 61 malformed-image controls and a seeded fuzz corpus of 3,640 mutated
   goldens are refused with the reference codec's first defect, and none traps.
-  The 10 controls vm-spec admits load and run as literal review froze them.
-- Thirteen WAT mutants are each killed by a wrong observation.
+  The 17 controls vm-spec admits load. Of these, 10 run as literal review froze
+  them. The 7 run controls run to the outcome and call count that
+  `check-spec.py` freezes, including on exactly that much fuel.
+- Eighteen WAT mutants are each killed by a wrong observation.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.

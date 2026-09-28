@@ -172,6 +172,7 @@
   (data (i32.const 3568) "display")
   (data (i32.const 3592) "abi")
   (data (i32.const 3616) "internal")
+  (data (i32.const 3640) "function-argument")
 
   ;; §9 prim registry (ids 0..40): arity, input representations, output
   ;; representation; arity 0xff marks a reserved id. Representation ids follow
@@ -303,6 +304,7 @@
   (global $R_display i32 (i32.const 3568))
   (global $R_abi i32 (i32.const 3592))
   (global $R_internal i32 (i32.const 3616))
+  (global $R_function_argument i32 (i32.const 3640))
 
   ;; ---------------------------------------------------------------- registers
   ;; image geometry: total words, section offsets and record counts (§2)
@@ -2734,7 +2736,7 @@
   ;; Book: IMAGE FN FUEL ORDINALS; Program: IMAGE FUEL -- ARGS. Returns the
   ;; entered function's record; Book ordinals go to the frame region at F0+64.
   (func $entry (result i32)
-    (local $f i32) (local $i i32) (local $n i32) (local $o i32) (local $p i32) (local $name i32)
+    (local $f i32) (local $i i32) (local $n i32) (local $k i32) (local $o i32) (local $p i32) (local $name i32)
     (if (i32.eq (call $w (i32.const 3)) (i32.const 1))
       (then
         (if (i32.lt_u (global.get $argc) (i32.const 3))
@@ -2766,15 +2768,20 @@
         (br $each)))
     (if (i32.eq (local.get $f) (i32.const -1))
       (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_unknown_export))))
+    ;; §8's walk: each live parameter takes the next ordinal, a nullary
+    ;; constructor tag of its algebraic type; leftover ordinals follow
     (local.set $n (call $w (i32.add (local.get $f) (i32.const 3))))
-    (if (i32.ne (i32.sub (global.get $argc) (i32.const 3)) (local.get $n))
-      (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_argument_arity))))
+    (local.set $k (i32.sub (global.get $argc) (i32.const 3)))
     (local.set $i (i32.const 0))
     (block $done
       (loop $each
         (br_if $done (i32.ge_u (local.get $i) (local.get $n)))
-        (local.set $o (call $u32must (i32.add (local.get $i) (i32.const 3))))
+        (if (i32.ge_u (local.get $i) (local.get $k))
+          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_argument_arity))))
         (local.set $p (call $w (i32.add (i32.add (local.get $f) (i32.const 6)) (local.get $i))))
+        (if (i32.lt_u (i32.sub (call $kind (local.get $p)) (i32.const 1)) (i32.const 2))
+          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_function_argument))))
+        (local.set $o (call $u32must (i32.add (local.get $i) (i32.const 3))))
         (if (i32.or (i32.ne (call $kind (local.get $p)) (i32.const 0))
                     (i32.ge_u (local.get $o) (call $ty (local.get $p) (i32.const 3))))
           (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_argument_range))))
@@ -2784,6 +2791,8 @@
                    (i32.or (i32.shl (local.get $o) (i32.const 1)) (i32.const 1)))
         (local.set $i (i32.add (local.get $i) (i32.const 1)))
         (br $each)))
+    (if (i32.gt_u (local.get $k) (local.get $n))
+      (then (call $stop (i32.const 3) (i32.const 5) (i32.const 160) (global.get $R_argument_arity))))
     (if (i32.eqz (call $describable (call $w (i32.add (local.get $f) (i32.const 2)))))
       (then (call $stop (i32.const 4) (i32.const 3) (i32.const 224) (global.get $R_result_type))))
     (global.set $resT (call $w (i32.add (local.get $f) (i32.const 2))))

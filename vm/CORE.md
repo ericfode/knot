@@ -57,7 +57,7 @@ of `serializer.validate`'s recursion and stops at the first defect, and the
 canonical check comes last. A refusal therefore names the reference codec's
 first defect. The gate requires this on:
 - the 61 frozen controls, counted against SPEC §4's own figure;
-- 3,440 seeded single mutations of the goldens: 3,143 refused, and 297 admitted
+- 3,640 seeded single mutations of the goldens: 3,336 refused, and 304 admitted
   and run to a clean outcome.
 
 A refusal is read only from a run that stopped before `vm_boot` returned. A run
@@ -135,13 +135,20 @@ adopt them or record its own, so that lockstep compares like with like.
    1. usage;
    2. the image;
    3. the syntax of FUEL and the ordinals (`arguments expected-u32`);
-   4. the export (`invoke unknown-export`);
-   5. arity;
-   6. each ordinal: `argument-range` (also for a parameter of a
-      non-algebraic type), then `structured-argument`;
-   7. the result type (`Unsupported invoke result-type`).
+   4. §8's walk, as `serializer.invocation` reads it:
+      - the export (`invoke unknown-export`);
+      - each live parameter in turn:
+        - no ordinal left: `argument-arity`;
+        - an arrow of either kind: `function-argument`;
+        - an ordinal at or beyond the type's constructor count:
+          `argument-range`. An opaque or `none` parameter has no
+          constructors;
+        - a constructor with a live field: `structured-argument`;
+      - leftover ordinals (`argument-arity`);
+      - the result type (`Unsupported invoke result-type`).
 
-   A Program's third word must be `--` (`arguments usage` otherwise).
+   A Program's third word must be `--` (`arguments usage` otherwise). Steps 1–3
+   are the VM's own reading, and SPEC §8 starts at step 4.
 8. **Halted states.**
    - At an `ill-typed` halt only the outcome is specified: a Gather frame may
      already be popped.
@@ -181,18 +188,35 @@ adopt them or record its own, so that lockstep compares like with like.
 
 ## Evidence (gate `vm-core`)
 
-- **Goldens.** All 86 through the real host, equal to `vm-expected.json`. The
+- **Goldens.** All 91 through the real host, equal to `vm-expected.json`. The
   test build confirms every Exhausted, Unsupported and HostFailure cause in the
-  VM's own outcome registers, and audits the state at all 1,570 transitions.
-  For D20's `print-non-scalar`, `print-non-scalar-mid` and
-  `print-non-scalar-wide`, the registers show that the VM refused before its
+  VM's own outcome registers, and audits the state at all 1,761 transitions.
+  For D20's `print-non-scalar`, `print-non-scalar-mid`,
+  `print-non-scalar-wide` and `print-non-scalar-second`, the registers show
+  that the VM refused before its
   host call. The real host would refuse the same bytes with the same
   `HostFailure io abi` line.
+- **Book invocations.** The 28 that `vm-expected.json` freezes for
+  `invoke-args` and `invoke-arrow` are checked through the real host and
+  through the test build's registers. Together they cover every cause of §8's
+  walk.
 - **Admitted controls.** vm-spec's three admitted plan controls (a Case on a
   `none` slot) and seven code-list controls load. They run as `fixtures.json`
   froze them by literal review: `list-head-match` prints `True{}`, the two
   `case-none-*` controls fail `ill-typed` after boot, and every code list
   compares `False{}`.
+- **Run controls.** The seven that check-spec.py freezes (`run_controls`)
+  load, and each runs to its frozen exit, output, outcome and `calls`:
+  - `arrow-through-identity` prints `On{}` after 3 calls;
+  - `u32-file-alias` prints `Off{}` after 1;
+  - the five others fail `ill-typed` at §7's operand check.
+
+  §7 puts that check before the fuel test. Each control is therefore run again
+  with exactly its `calls` of fuel, to the same outcome, so an ill-typed Enter
+  is refused at fuel 0 too. The VM's checks were already in place; this merge
+  adds the gate's evidence for them. An Action's check (`nops > 1`) cannot fail,
+  because an Invoke and a Program phase pass at most one operand. Its removal
+  is an equivalent mutant, so no mutant is listed for it.
 - **[core/fixtures.json](core/fixtures.json).** Literal review, frozen before
   any run:
   - the 250,000-deep non-tail recursion, with 500,003 entries and seven yields
@@ -212,9 +236,9 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 61 frozen controls and 3,440 fuzz images,
+- **Malformed images.** As above: 61 frozen controls and 3,640 fuzz images,
   with no trap.
-- **Mutants.** Thirteen, each killed by a wrong observation in a named group:
+- **Mutants.** Eighteen, each killed by a wrong observation in a named group:
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -224,4 +248,8 @@ adopt them or record its own, so that lockstep compares like with like.
   - a refused `none` slot (the admitted controls);
   - a refused code above U+10FFFF (`string-beyond-unicode`);
   - a surrogate left to the host (the D20 goldens, through the VM's registers);
-  - a describe that demands its whole 16 MiB text window below 4 GiB (ceiling).
+  - a describe that demands its whole 16 MiB text window below 4 GiB (ceiling);
+  - a Closure or the terminal continuation entered whatever its operand
+    count, and a Closure's count checked after its fuel (run controls);
+  - the ordinal count checked before the walk, and an arrow parameter
+    refused as `argument-range` (Book invocations).
