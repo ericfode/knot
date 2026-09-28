@@ -1,14 +1,14 @@
 {
- "date": "2026-09-28T15:03:36.761672+00:00",
+ "date": "2026-09-28T16:51:03.660644+00:00",
  "status": "passed",
  "scope": "knot-vm-1 vm/vm.wat: loader, validator, machine, describe; vm-core subset of SPEC section 10",
  "inputs": {
   "scripts/run-wasm-io.mjs": "4ee7b16d5ae02614a47087dd8498352a487b7efffad6fca8ea629a60eae0b3ec",
-  "vm/SPEC.md": "125de63ab67327d55f2d05010734be16747d86f119a8b986c4b3734ad77f0792",
-  "vm/build.json": "eaf485d040cf00b091a5b6ad6c48e98a0c709b55a9f5cadaae946ccab2e273a2",
+  "vm/SPEC.md": "f52eca73e1ba4882f5180bc729ade834c5ff29a230b1843746d4821fc244b5df",
+  "vm/build.json": "c935185a3ed89dc698f4b329c31defc217dcf6c14a939bb489fa391167005c3f",
   "vm/build.py": "a612ca129431d602f01d8dd680773b2584806b5b0340225735d9dc63dd54fc4c",
-  "vm/check-core.py": "d9db502e06803762215c97a0e638f6fca3bd552e47b5832d82f54073453d8424",
-  "vm/check-spec.py": "8db320e809af47bf1006e4c3df08b451dac79e89d16384132fd8114a0b98f1f7",
+  "vm/check-core.py": "d28a69fa0c6c6ecf6984413aafd3818c82a5e04da5557f666226dbf749c55d87",
+  "vm/check-spec.py": "2c2bf64534fb1cfa4e4a303ece215db7407b4237db5b788a9d2143053a3ddeee",
   "vm/core/ceiling-append-top.kimg": "6218878b405984ad47e4664ae542743fd168e40eee11ab7e090740e8e38b6b47",
   "vm/core/ceiling-append-top.plan.json": "b7e0b093d587dad40cc8595af23b09a063c142fc3ced688e483936caeab56009",
   "vm/core/ceiling-band.kimg": "26c6ebdcdcc807b4671d67deb34a87a0edf345f77e83e92a16f8fc270bd2e720",
@@ -61,8 +61,8 @@
   "vm/harness.mjs": "cd8c7c38107106a3be21d8efaaf40844c8cb4be09f21d135b96efe969f09a1ab",
   "vm/registry.json": "34e7b9bb84ddeb47a34a1f261358399c30b033cf8c4fd5b32a414fcbb815577a",
   "vm/serializer.py": "ef47e887c0233ca1716a5c7952f9e306646ab11b29db05f80c7347b973ca5da5",
-  "vm/vm.wasm": "501c56f0247875d9063c92c5e2a9363e9f700e85843747ea68a318d235d940c6",
-  "vm/vm.wat": "1200b10735513398351a76c1e244526c5a77b6b3dea5c614daec6886974db878"
+  "vm/vm.wasm": "be53657c2eae5b648f9a3ea53d5b7ea52260e49611bdf1ccc21939f247a467cb",
+  "vm/vm.wat": "c2a7205744bb5bc336862ca14bb9c1314437a946fa85a5e46442a5d5785c54fb"
  },
  "pins": {
   "tool": "wat2wasm",
@@ -70,17 +70,17 @@
   "flags": [],
   "source": {
    "path": "vm/vm.wat",
-   "sha256": "1200b10735513398351a76c1e244526c5a77b6b3dea5c614daec6886974db878"
+   "sha256": "c2a7205744bb5bc336862ca14bb9c1314437a946fa85a5e46442a5d5785c54fb"
   },
   "module": {
    "path": "vm/vm.wasm",
-   "sha256": "501c56f0247875d9063c92c5e2a9363e9f700e85843747ea68a318d235d940c6",
-   "bytes": 19429
+   "sha256": "be53657c2eae5b648f9a3ea53d5b7ea52260e49611bdf1ccc21939f247a467cb",
+   "bytes": 19381
   },
   "test_build": {
    "prefix": ";;TEST ",
-   "sha256": "db21a3ce6bf2edf0b1fca01d65827356cf87c13a961dbb06913bfb26052c888d",
-   "bytes": 19785
+   "sha256": "ef2c965bea40a7d5129b93b220a06fc244859cb90bb03e3f02ed8012b59d5765",
+   "bytes": 19737
   }
  },
  "shape": {
@@ -2597,6 +2597,222 @@
     "fuel_runs": [
      "2"
     ]
+   },
+   {
+    "control": "run:inspect-chr",
+    "sha256": "178482c14febe93339a05a02e3beba637c35d5212d225b146d8c32264f9c73d5",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:inspect-succ-object",
+    "sha256": "866a8a5b717bdbb3dce77e6770e6a039096f5799bf119155305a79c407ea0040",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:inspect-succ-closure",
+    "sha256": "7cebb3e9841bff3b9572745fa2a1f2e2204bd8837770f9bd46b8f525b3c8e42d",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 2,
+    "fuel_runs": [
+     "1000000",
+     "2"
+    ]
+   },
+   {
+    "control": "run:inspect-u32-to-nat",
+    "sha256": "fa2411721fa7ebccdfb09c19aca4f0f114e047de9078af564570a52b1345a4ea",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-u32-from-nat",
+    "sha256": "0f01370889229f19a4f355d56fe45ebc07ed7355c8c8bd79e86ecac2832cd3c1",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-char-from-u32",
+    "sha256": "dfe65178bf6675bd55814c79be140d516dc32f0e48b7266c5de0681cb54a3a8a",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-char-to-u32",
+    "sha256": "46f7e444464de00f167153b92370a1e75ef699d7fe7ef4e21f36976923d5abaa",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-append-b",
+    "sha256": "7dc975dbefb7088cb0788cd0155f50a9804c711a8a2f7f82e96fc2c3ba61d0b2",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-append-char",
+    "sha256": "cd8fcb910ac239fa28af74083cb49b678d69b32cd36bdbd5c8f89716dc87459c",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-length-char",
+    "sha256": "dd606e58ca53d822a10e76bb55205f8e37b3d2c821a1803c0ada2bfbbd47a97a",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-reverse-char",
+    "sha256": "2daa0c4a9965e8656085ce666a579816148400138595cb7616734ab4d2336e71",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-is-empty",
+    "sha256": "eda1d6c44d6793a392444ecf0ad8737a5d9b975f5ba61ed656fb033f414d94de",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-eq-code",
+    "sha256": "d16e1edf7fc684a5dc8fad3dd7a45823c4f7ead68b372a97671229547e4d1fbf",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-eq-a-ends",
+    "sha256": "9245b48335078ab7476c7621d8eb063e72c3a60c42309f70ffc3e4a6f271c5c0",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-eq-b-ends",
+    "sha256": "e1656161063fd844f29a7887f1a743e9837c296c5959012aff10ffdc14594fb9",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 3,
+    "fuel_runs": [
+     "1000000",
+     "3"
+    ]
+   },
+   {
+    "control": "run:inspect-halt-code",
+    "sha256": "98762dcd518cb1a69c8f641c1e93c0f3b6f1140ecc359eb829cb297ac095829a",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 4,
+    "fuel_runs": [
+     "1000000",
+     "4"
+    ]
+   },
+   {
+    "control": "run:inspect-halt-message",
+    "sha256": "8b8d64349f902e96178ab5bda81ad58d4de778f75050cee072fabc911680f685",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 4,
+    "fuel_runs": [
+     "1000000",
+     "4"
+    ]
+   },
+   {
+    "control": "run:inspect-print-after-surrogate",
+    "sha256": "fd7eb4353d3253ca5eefd7d3f5114be510c16b7f6bf77bbe76f353286376ba3b",
+    "exit": 5,
+    "outcome": "HostFailure",
+    "cause": "ill-typed",
+    "calls": 5,
+    "fuel_runs": [
+     "1000000",
+     "5"
+    ]
    }
   ],
   "fuzz": {
@@ -2959,6 +3175,56 @@
     "limited:nat-pred-heap"
    ],
    "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "append-b-unread",
+   "breaks": "append moves b unread (the old CORE.md choice 3)",
+   "group": "runs",
+   "killed_by": [
+    "run:inspect-append-b@1000000",
+    "run:inspect-append-b@3"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "is-empty-reads-one-cell",
+   "breaks": "is_empty reads only its head cell (the old CORE.md choice 3)",
+   "group": "runs",
+   "killed_by": [
+    "run:inspect-is-empty@1000000",
+    "run:inspect-is-empty@3"
+   ],
+   "wrong_observations": 2,
+   "crashes": 0
+  },
+  {
+   "mutant": "eq-exits-early",
+   "breaks": "eq reads both Strings in step and stops at the first difference or either end",
+   "group": "runs",
+   "killed_by": [
+    "run:inspect-eq-code@1000000",
+    "run:inspect-eq-code@3",
+    "run:inspect-eq-a-ends@1000000",
+    "run:inspect-eq-a-ends@3",
+    "run:inspect-eq-b-ends@1000000"
+   ],
+   "wrong_observations": 6,
+   "crashes": 0
+  },
+  {
+   "mutant": "move-prims-unread",
+   "breaks": "the four conversions move their word unread",
+   "group": "runs",
+   "killed_by": [
+    "run:inspect-u32-to-nat@1000000",
+    "run:inspect-u32-to-nat@3",
+    "run:inspect-u32-from-nat@1000000",
+    "run:inspect-u32-from-nat@3",
+    "run:inspect-char-from-u32@1000000"
+   ],
+   "wrong_observations": 8,
    "crashes": 0
   },
   {

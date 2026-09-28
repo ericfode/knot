@@ -386,6 +386,14 @@ def ceiling_expectation(plan: dict, image: bytes) -> tuple[dict, dict]:
     return exhausted, {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump}
 
 
+def run_control_count() -> int:
+    """SPEC section 12's frozen number of admitted run controls."""
+    text = ' '.join((HERE / 'SPEC.md').read_text().split())
+    m = re.search(r'(\d+) admitted \*\*run controls\*\*', text)
+    require(m, 'SPEC section 12 states its number of run controls')
+    return int(m.group(1))
+
+
 def refusal_counts() -> tuple[int, int, int]:
     """SPEC section 4's frozen refusals: (total, byte-level, plan-level)."""
     text = ' '.join((HERE / 'SPEC.md').read_text().split())
@@ -684,6 +692,32 @@ MUTANTS = [
        '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
        '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n'
        '        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n')], 'limited'),
+    # vm-spec DECISIONS 18: every operand is read over its section 9 extent, a String whole.
+    # Each reads less, and exactly as much on a well-typed word; an inspection control kills it
+    ('append-b-unread', 'append moves b unread (the old CORE.md choice 3)',
+     [('    (drop (call $slen (local.get $b)))\n', '')], 'runs'),
+    ('is-empty-reads-one-cell', 'is_empty reads only its head cell (the old CORE.md choice 3)',
+     [('(return (call $bool (i32.eqz (call $slen (local.get $a))))))',
+       '(return (if (result i32) (i32.eq (local.get $a) (i32.const 1)) (then (i32.const 3))'
+       ' (else (drop (call $scell (local.get $a))) (i32.const 1)))))')], 'runs'),
+    ('eq-exits-early', 'eq reads both Strings in step and stops at the first difference or either end',
+     [('  (func $seq (param $a i32) (param $b i32) (result i32)\n'
+       '    (if (i32.ne (call $slen (local.get $a)) (call $slen (local.get $b))) (then (return (i32.const 1))))\n'
+       '    (block $done\n'
+       '      (loop $next\n'
+       '        (br_if $done (i32.eq (local.get $a) (i32.const 1)))\n',
+       '  (func $seq (param $a i32) (param $b i32) (result i32)\n'
+       '    (block $done\n'
+       '      (loop $next\n'
+       '        (br_if $done (i32.or (i32.eq (local.get $a) (i32.const 1)) (i32.eq (local.get $b) (i32.const 1))))\n'
+       '        (drop (call $scell (local.get $a)))\n'
+       '        (drop (call $scell (local.get $b)))\n'),
+      ('        (br $next)))\n    (i32.const 3))',
+       '        (br $next)))\n    (call $bool (i32.eq (local.get $a) (local.get $b))))')], 'runs'),
+    ('move-prims-unread', 'the four conversions move their word unread',
+     [('(if (i32.lt_u (local.get $id) (i32.const 34))',
+       '(if (i32.and (i32.lt_u (local.get $id) (i32.const 34)) (i32.gt_u (i32.sub (local.get $id) (i32.const 16)) (i32.const 3)))')],
+     'runs'),
     # the pre-fix VM itself: both guards restored. Its defect is the trap, so group `trap` kills
     # it only when every row ending exactly at 4 GiB traps and every other ceiling row stays right
     ('top-trap', 'a cell or an append block ending exactly at 4 GiB traps (the pre-fix VM)',
@@ -946,6 +980,8 @@ def main() -> int:
     # 1,000,000 and again on exactly its `calls`, to the same outcome, since section 7
     # checks Enter's operands before its fuel: an ill-typed Enter is refused at fuel 0 too.
     runs_frozen = spec.run_controls(plans)
+    require(len(runs_frozen) == run_control_count(),
+            f'SPEC section 12 freezes {run_control_count()} run controls; check-spec.py yields {len(runs_frozen)}')
     run_rows = []
     for i, (label, plan, run) in enumerate(runs_frozen):
         data = codec.encode(plan, digest)

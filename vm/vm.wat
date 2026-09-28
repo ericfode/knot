@@ -1854,22 +1854,30 @@
     (i32.load offset=12 (local.get $x)))
 
   ;; ---------------------------------------------------------------- strings (§9)
-  ;; A String prim first inspects every cell it walks: SNil is the immediate
-  ;; of tag 0, SCon an Object of the pinned String with a Char head.
+  ;; A String's extent is whole (§6): head to tail, each cell is SNil, the
+  ;; immediate of tag 0, or an SCon Object of the pinned String whose head is a
+  ;; Char. Every String operand is walked to SNil by $slen before its prim
+  ;; computes, whatever its answer or its moves.
+
+  ;; one SCon cell and its Char, inspected; its tail
+  (func $scell (param $s i32) (result i32)
+    (if (i32.eqz (local.get $s)) (then (call $internal)))
+    (if (i32.or (i32.and (local.get $s) (i32.const 1))
+          (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))
+            (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))
+                    (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1)))))
+      (then (call $refuse (global.get $R_ill_typed))))
+    (drop (call $num (i32.load offset=16 (local.get $s))))
+    (i32.load offset=20 (local.get $s)))
+
+  ;; the whole extent, inspected; its length
   (func $slen (param $s i32) (result i32)
     (local $n i32)
     (block $done
       (loop $next
         (br_if $done (i32.eq (local.get $s) (i32.const 1)))
-        (if (i32.eqz (local.get $s)) (then (call $internal)))
-        (if (i32.or (i32.and (local.get $s) (i32.const 1))
-              (i32.or (i32.and (i32.load offset=4 (local.get $s)) (i32.const 7))
-                (i32.or (i32.ne (i32.load offset=8 (local.get $s)) (global.get $rString))
-                        (i32.ne (i32.load offset=12 (local.get $s)) (i32.const 1)))))
-          (then (call $refuse (global.get $R_ill_typed))))
-        (drop (call $num (i32.load offset=16 (local.get $s))))
+        (local.set $s (call $scell (local.get $s)))
         (local.set $n (i32.add (local.get $n) (i32.const 1)))
-        (local.set $s (i32.load offset=20 (local.get $s)))
         (br $next)))
     (local.get $n))
 
@@ -1894,6 +1902,7 @@
       (br_if $digit (local.get $v)))
     (local.get $s))
 
+  ;; eq reads a whole, then b whole, and only then compares: no early exit
   (func $seq (param $a i32) (param $b i32) (result i32)
     (if (i32.ne (call $slen (local.get $a)) (call $slen (local.get $b))) (then (return (i32.const 1))))
     (block $done
@@ -1906,12 +1915,14 @@
         (br $next)))
     (i32.const 3))
 
-  ;; append(a, b) copies a's cells onto the moved b from a's last character to
-  ;; its first. On the bump arena those L cells are one block whose i-th
-  ;; character sits (L-1-i) cells up, so one forward walk writes them.
+  ;; append(a, b) reads a whole, then the b it moves whole, then copies a's
+  ;; cells onto b from a's last character to its first. On the bump arena
+  ;; those L cells are one block whose i-th character sits (L-1-i) cells up,
+  ;; so one forward walk writes them.
   (func $append (param $a i32) (param $b i32) (result i32)
     (local $n i32) (local $base i32) (local $end i64) (local $c i32)
     (local.set $n (call $slen (local.get $a)))
+    (drop (call $slen (local.get $b)))
     (if (i32.eqz (local.get $n)) (then (return (local.get $b))))
     (local.set $end (i64.add (global.get $bump) (i64.shl (i64.extend_i32_u (local.get $n)) (i64.const 5))))
     (if (i64.gt_u (local.get $end) (global.get $HL)) (then (call $exhaust (i32.const 2) (global.get $R_heap))))
@@ -1950,17 +1961,6 @@
         (br $next)))
     (local.get $s))
 
-  ;; is_empty reads only the head cell
-  (func $sempty (param $a i32) (result i32)
-    (if (i32.eq (local.get $a) (i32.const 1)) (then (return (i32.const 3))))
-    (if (i32.eqz (local.get $a)) (then (call $internal)))
-    (if (i32.or (i32.and (local.get $a) (i32.const 1))
-          (i32.or (i32.and (i32.load offset=4 (local.get $a)) (i32.const 7))
-            (i32.or (i32.ne (i32.load offset=8 (local.get $a)) (global.get $rString))
-                    (i32.ne (i32.load offset=12 (local.get $a)) (i32.const 1)))))
-      (then (call $refuse (global.get $R_ill_typed))))
-    (i32.const 1))
-
   ;; ---------------------------------------------------------------- prims (§9)
   ;; Words for Bool (False 0, True 1) and Cmp (LT 0, EQ 1, GT 2) are immediates.
   (func $bool (param $c i32) (result i32)
@@ -1971,8 +1971,9 @@
     (if (i64.gt_u (local.get $p) (i64.const 0xffffffff)) (then (call $exhaust (i32.const 2) (global.get $R_nat_range))))
     (call $scalar (i32.wrap_i64 (local.get $p))))
 
-  ;; the prim's result from its gathered operands; scalar operands are
-  ;; inspected in operand order before anything is allocated
+  ;; the prim's result from its gathered operands. Each operand is inspected
+  ;; over its §9 extent, in operand order, before anything is allocated: a
+  ;; scalar's word here, the move prims' included; a String whole in its prim.
   (func $prim (param $id i32) (param $ops i32) (param $n i32) (result i32)
     (local $a i32) (local $b i32) (local $x i32) (local $y i32)
     (local.set $a (i32.load (local.get $ops)))
@@ -2008,7 +2009,7 @@
                                   (else (i32.shl (local.get $x) (local.get $y)))))))
         (return (call $scalar (if (result i32) (i32.ge_u (local.get $y) (i32.const 32)) (then (i32.const 0))
                                   (else (i32.shr_u (local.get $x) (local.get $y)))))))
-        ;; to_nat, from_nat, from_u32, to_u32 move their word (§9 ownership)
+        ;; to_nat, from_nat, from_u32, to_u32 move the word inspected above (§9)
         (return (local.get $a)))
         (return (call $bool (i32.eq (local.get $x) (local.get $y)))))
         (return (call $bool (i32.or (i32.le_u (i32.sub (local.get $x) (i32.const 9)) (i32.const 4))
@@ -2029,7 +2030,7 @@
         (return (call $append (local.get $a) (local.get $b))))
         (return (call $reverse (local.get $a))))
         (return (call $nat (i64.extend_i32_u (call $slen (local.get $a))))))
-        (return (call $sempty (local.get $a))))
+        (return (call $bool (i32.eqz (call $slen (local.get $a))))))
     (call $internal)
     (i32.const 0))
 
@@ -2108,7 +2109,7 @@
     (local.set $t (call $nodetype (local.get $n)))
     (if (i32.eq (local.get $op) (i32.const 4))
       (then
-        ;; Nat's Succ and Char's Chr read their operand as a scalar and act on words;
+        ;; Succ and Chr inspect their operand as a scalar (§6), then act on words;
         ;; Chr yields the word itself, a Big cell included (CORE.md choice 13)
         (if (i32.eq (local.get $t) (global.get $rNat))
           (then
