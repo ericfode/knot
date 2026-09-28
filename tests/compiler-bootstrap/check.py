@@ -63,6 +63,12 @@ MAGIC = b'\0asm\x01\0\0\0'
 SANDBOX = {COMPILER: 'bundle', PARSER: 'parser-bundle', CHECKER: 'checker-bundle'}
 # Exhausted observations the host makes itself, by (phase, code).
 HOST_EXHAUSTION = {('wasm', 'call-stack'): 'host-stack', ('wasm', 'memory'): 'host-memory'}
+# Budgets a generation's runtime declares and C1's native lane lacks, as the IO
+# host renders exhausted(kind): D16 fuel and frame region, D19 heap.
+RUNTIME_EXHAUSTION = {('io', 'steps'): 'vm-fuel', ('io', 'memory'): 'vm-heap', ('io', 'frames'): 'vm-frames'}
+# Unsupported results of a harness that cannot run a generation yet (host.mjs).
+PENDING = {('host', code): f'harness-{code}' for code in ('io-abi-pending', 'abi-unrecognized')}
+DIVERGENT = ('divergent-exhausted', 'divergent-unsupported')
 
 
 def require(condition, detail):
@@ -164,16 +170,47 @@ def outcome(obs) -> str:
     return expected if word == expected else 'Unclassified'
 
 
+def detail(obs) -> tuple[str, ...]:
+    """The stderr fields after the classification word."""
+    return tuple(obs['stderr'].rstrip('\n').split('\t')[1:])
+
+
 def exhaustion(obs) -> str | None:
     """Which budget an Exhausted observation ran out of, from recorded fields
-    only: Knot's own declared budget, or the host's stack, memory or time."""
+    only: Knot's own budget (`Exhausted phase budget at`), a runtime budget,
+    or the host's stack, memory or time."""
     if outcome(obs) != 'Exhausted':
         return None
     if obs.get('exit') is None:
         return 'host-time'
     if obs.get('host'):
-        return HOST_EXHAUSTION.get(tuple(obs['stderr'].rstrip('\n').split('\t')[1:]), 'host-unclassified')
-    return 'knot-budget'
+        return HOST_EXHAUSTION.get(detail(obs), 'host-unclassified')
+    if detail(obs)[1:2] == ('budget',):
+        return 'knot-budget'
+    return RUNTIME_EXHAUSTION.get(detail(obs), 'unclassified')
+
+
+def excuse(row) -> str | None:
+    """Why A2 may stop on the S that C1 built without diverging from C1: a
+    runtime budget C1 lacks, or a harness that cannot run A2 yet."""
+    if exhaustion(row) in RUNTIME_EXHAUSTION.values():
+        return exhaustion(row)
+    if row.get('source') == 'harness' and outcome(row) == 'Unsupported':
+        return PENDING.get(detail(row))
+    return None
+
+
+def after_c1(row) -> str:
+    """e2e3.a3's status when A2 stops on the S that C1 built. C1 built S under
+    the same argv and the same Knot semantics, so a Knot Unsupported, or an
+    exhaustion without an excuse, is A2 diverging from C1: never passing. Any
+    other class stays a blocker, which the judge rejects unless excused."""
+    kind = outcome(row)
+    if excuse(row) or kind not in ALLOWED:
+        return 'blocked'
+    if kind == 'Exhausted':
+        return 'divergent-exhausted'
+    return 'divergent-unsupported' if row.get('source') == 'knot' else 'blocked'
 
 
 def reserved_in(argv, manifest) -> list[str]:
@@ -311,7 +348,7 @@ def generation_problems(p, contract, manifest) -> list[str]:
 def judge(progress, contract: Path = ROOT / CONTRACT, manifest: Path = MANIFEST) -> list[str]:
     """Gate verdict over recorded fields, src/CONTRACT.json and the fixed
     manifest: reached stages agree exactly; blocked stages report Unsupported or
-    Exhausted; host exhaustion after C1 built S is divergent; every generation
+    Exhausted; after C1 built S, only an excused stop may block A2; every generation
     step shares the one contract that src/CONTRACT.json fixes; Knot never calls
     its own source Invalid. The receipt must name both files by hash."""
     fixed = {CONTRACT: contract.read_bytes(), f'{REL}/manifest.json': manifest.read_bytes()}
@@ -331,17 +368,23 @@ def judge(progress, contract: Path = ROOT / CONTRACT, manifest: Path = MANIFEST)
             kind, tag = outcome(s['blocker']), exhaustion(s['blocker'])
             if kind not in ALLOWED:
                 violations.append(f"{sid}: {s['blocker']['source']} blocker is {kind}; only Unsupported or Exhausted may block")
-            if s['blocker'].get('resource') != tag or tag == 'host-unclassified':
+            if s['blocker'].get('resource') != tag or tag in ('host-unclassified', 'unclassified'):
                 violations.append(f"{sid}: blocker resource tag {s['blocker'].get('resource')} differs from its recorded fields ({tag})")
-            if sid == 'e2e3.a3' and seen.get('e2e3.a2') == 'reached' and tag and tag.startswith('host-'):
-                violations.append(f'{sid}: blocked by {tag} after C1 built S; must be divergent-exhausted')
+            if sid == 'e2e3.a3' and seen.get('e2e3.a2') == 'reached':
+                required, why = after_c1(s['blocker']), excuse(s['blocker'])
+                if required != 'blocked':
+                    violations.append(f'{sid}: blocked by {tag or kind} after C1 built S; must be {required}')
+                elif why is None and kind in ALLOWED:
+                    violations.append(f"{sid}: {s['blocker']['source']} {kind} blocks after C1 built S without an excuse")
+                if s.get('excuse') != why:
+                    violations.append(f"{sid}: excuse tag {s.get('excuse')} differs from its recorded fields ({why})")
             if s['disagree'] != 0:
                 violations.append(f"{sid}: blocked stage also disagrees on {s['disagree']} inputs")
-        elif status == 'divergent-exhausted':
-            violations.append(f"{sid}: divergent-exhausted ({exhaustion(s['blocker'])}) is non-passing: "
-                              'A2 ran out of a host resource on the S that C1 built')
+        elif status in DIVERGENT:
+            violations.append(f"{sid}: {status} ({exhaustion(s['blocker']) or outcome(s['blocker'])}) is non-passing: "
+                              'A2 stopped where C1 did not, on the S that C1 built')
         elif status == 'not-run':
-            if seen.get(s['prerequisite']) not in ('blocked', 'not-run', 'divergent-exhausted'):
+            if seen.get(s['prerequisite']) not in ('blocked', 'not-run', *DIVERGENT):
                 violations.append(f"{sid}: not run although prerequisite {s['prerequisite']} is {seen.get(s['prerequisite'], 'absent')}")
             if s['agree'] or s['disagree']:
                 violations.append(f'{sid}: not-run stage records comparisons')
@@ -695,18 +738,15 @@ def compile_stage(sid, program: Path, folder: Path, bundle, manifest, argv, keep
 
 
 def a3_stopped(answer, obs, argv) -> dict | None:
-    """The e2e3.a3 row when A2 did not build A3 from the S that C1 built. Host
-    exhaustion, whether the host process timed out or the module trapped, is
-    divergent-exhausted; any other failure is a blocker for the judge. None
-    when A2 exited 0."""
+    """The e2e3.a3 row when A2 did not build A3 from the S that C1 built,
+    routed by after_c1; None when A2 exited 0."""
     answered = answer is not None and not answer['blocked']
     if answered and obs['exit'] == 0:
         return None
     tag = exhaustion(shown(obs))
-    if tag and tag.startswith('host-'):
-        return stage('e2e3.a3', status='divergent-exhausted', corpus=1, agree=0, disagree=0, args=argv,
-                     blocker=stopped(obs, 'host'))
-    return blocked('e2e3.a3', 'knot' if answered else obs.get('source', 'harness'), obs, 1, args=argv)
+    row = stopped(obs, 'host' if tag and tag.startswith('host-') else 'knot' if answered else obs.get('source', 'harness'))
+    return stage('e2e3.a3', status=after_c1(row), corpus=1, agree=0, disagree=0, args=argv, blocker=row,
+                 **({'excuse': excuse(row)} if excuse(row) else {}))
 
 
 def host(module: Path, runs, label, cwd: Path = ROOT):
@@ -1144,13 +1184,21 @@ def mutants(progress, contract, manifest) -> list[dict]:
         f = b['files'][next(x for x in b['order'] if x.startswith(f'{LIB}/') or x.startswith('.toolchain/'))]
         f['sha256'] = digest(f['sha256'].encode())
 
-    def exhausted(p, status='blocked', tag='host-stack'):
+    def stop_a3(p, blocker, status='blocked', **extra):
+        """A3 stopped after a reached A2, on the given blocker; downstream not run."""
         s, c, cases = step(p), contracts(p)[1], step(p, 'e2e3.conformance')['corpus']
         s.clear()
         s.update(stage('e2e3.a3', status=status, corpus=1, agree=0, disagree=0, args=list(c['argv']),
-                       blocker={'source': 'host', 'argv': list(c['argv']), 'exit': 4, 'stdout': '',
-                                'stderr': 'Exhausted\twasm\tcall-stack\n', 'host': True, 'resource': tag}))
+                       blocker={'argv': list(c['argv']), 'stdout': '', **blocker}, **extra))
         p['stages'][-2:] = [not_run('e2e3.fixpoint', 'e2e3.a3', 1), not_run('e2e3.conformance', 'e2e3.a3', cases)]
+
+    host_stack = lambda tag='host-stack': {'source': 'host', 'exit': 4, 'stderr': 'Exhausted\twasm\tcall-stack\n',
+                                           'host': True, 'resource': tag}
+    knot_unsupported = {'source': 'knot', 'exit': 3, 'stderr': 'Unsupported\tlex\tliteral\t0:1:1:1\n', 'host': False}
+    knot_budget = {'source': 'knot', 'exit': 4, 'stderr': 'Exhausted\tparse\tbudget\t12:13:3:4\n', 'host': False,
+                   'resource': 'knot-budget'}
+    vm_fuel = {'source': 'knot', 'exit': 4, 'stderr': 'Exhausted\tio\tsteps\n', 'host': False, 'resource': 'vm-fuel'}
+    pending = {'source': 'harness', 'exit': 3, 'stderr': 'Unsupported\thost\tio-abi-pending\n'}
 
     def diagnostic_tail(p):
         row = next(r for r in step(p, 'e2e3.conformance')['generations']['a3']['observations'] if r['stderr'])
@@ -1234,9 +1282,17 @@ def mutants(progress, contract, manifest) -> list[dict]:
         ('argv-seed-reserved', 1, 'seed-reserved', reserved),
         ('sandbox-symlink', 1, 'not a regular single-link file', symlinked),
         ('sandbox-unpinned', 1, 'differs from its pin', unpinned),
-        ('a3-host-exhausted', 1, 'must be divergent-exhausted', exhausted),
-        ('a3-divergent-exhausted', 1, 'is non-passing', lambda p: exhausted(p, status='divergent-exhausted')),
-        ('a3-resource-forged', 1, 'resource tag', lambda p: exhausted(p, tag='knot-budget')),
+        ('a3-host-exhausted', 1, 'must be divergent-exhausted', lambda p: stop_a3(p, host_stack())),
+        ('a3-divergent-exhausted', 1, 'is non-passing', lambda p: stop_a3(p, host_stack(), 'divergent-exhausted')),
+        ('a3-resource-forged', 1, 'resource tag', lambda p: stop_a3(p, host_stack('knot-budget'))),
+        ('a3-knot-unsupported', 1, 'must be divergent-unsupported', lambda p: stop_a3(p, knot_unsupported)),
+        ('a3-knot-budget', 1, 'must be divergent-exhausted', lambda p: stop_a3(p, knot_budget)),
+        ('a3-divergent-unsupported', 1, 'is non-passing',
+         lambda p: stop_a3(p, knot_unsupported, 'divergent-unsupported')),
+        ('a3-excuse-forged', 1, 'excuse tag',
+         lambda p: stop_a3(p, knot_unsupported, excuse='harness-io-abi-pending')),
+        ('a3-vm-fuel', 0, None, lambda p: stop_a3(p, vm_fuel, excuse='vm-fuel')),
+        ('a3-io-abi-pending', 0, None, lambda p: stop_a3(p, pending, excuse='harness-io-abi-pending')),
         ('diagnostic-tail', 1, 'diagnostics differ from C1', diagnostic_tail),
         ('artifact-over-budget', 1, 'exceeds output_bytes', oversize),
         *((f'artifact-memory-{label}', 1, reason, lambda p, d=memory_probes()[label]:
@@ -1498,7 +1554,7 @@ def main() -> int:
         progress['tiers'] = {}
         for tier in ('E2E-2', 'E2E-3'):
             rows = [s for s in stages if s['tier'] == tier]
-            first = next((s for s in rows if s['status'] in ('blocked', 'divergent-exhausted')), None)
+            first = next((s for s in rows if s['status'] in ('blocked', *DIVERGENT)), None)
             progress['tiers'][tier] = {
                 'reached': [s['id'] for s in rows if s['status'] == 'reached'],
                 'first_blocker': first and {'stage': first['id'], 'source': first['blocker']['source'],

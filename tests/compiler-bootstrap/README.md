@@ -39,7 +39,7 @@ never count. Every wall-clock guard is multiplied by `KNOT_GATE_TIMEOUT_SCALE`
 | `e2e2.self-parse` | The parser module runs on the same corpus through `host.mjs`. | Exit, stdout and stderr are byte-identical to the reference on every file. |
 | `e2e3.c1` | The seed builds C1 from the S sandbox (native, twice). C1 compiles the conformance corpus. | Every program and reject matches. |
 | `e2e3.a2` | C1 compiles S inside the S sandbox, with the generation argv. | It prints `Built` with an artifact within `output_bytes`. |
-| `e2e3.a3` | A2 compiles the same S under `host.mjs`, inside a fresh copy of the sandbox, with the same argv. | It builds A3. Host exhaustion here is `divergent-exhausted`, which never passes. |
+| `e2e3.a3` | A2 compiles the same S under `host.mjs`, inside a fresh copy of the sandbox, with the same argv. | It builds A3. A2 may stop here only with an excuse (see [A2 after C1 built S](#a2-after-c1-built-s)); otherwise the stop is `divergent-exhausted` or `divergent-unsupported`, which never pass. |
 | `e2e3.fixpoint` | A2 and A3 are compared. | They are byte-identical. |
 | `e2e3.conformance` | A2 and A3 each compile the conformance corpus. | Every call tag and rejection matches, every module is byte-identical to C1's, and every `(exit, stdout, stderr)` equals C1's byte for byte. |
 
@@ -198,10 +198,12 @@ fixtures, and they are recorded, not judged.
 ## Receipts
 
 - `receipts/progress.json` (schema 2) holds, per stage: the status (`reached`,
-  `blocked`, `divergent-exhausted` or `not-run`), the corpus size, and the agree
+  `blocked`, `divergent-exhausted`, `divergent-unsupported` or `not-run`), the
+  corpus size, and the agree
   and disagree counts. A generation stage also holds its `args`. A blocked stage
   holds its raw blocker: source, argv, exit, stdout, stderr, the host flag, and
-  for `Exhausted` its `resource` tag. A not-run stage holds its `prerequisite`.
+  for `Exhausted` its `resource` tag. An excused `e2e3.a3` also holds its
+  `excuse`. A not-run stage holds its `prerequisite`.
   The receipt also records:
   - `tiers`: each tier's first blocking classification;
   - `bundles`: each staged sandbox, with its dependency-first order and per-file
@@ -235,10 +237,29 @@ exhaustion's source:
 
 | Tag | Meaning |
 | --- | --- |
-| `knot-budget` | The compiler reported exit 4 itself. |
+| `knot-budget` | The compiler reported one of Knot's own budgets itself: `Exhausted <phase> budget <at>` (lex, parse, check, emit and the rest). |
+| `vm-fuel`, `vm-heap`, `vm-frames` | A generation's runtime budget, as the IO host renders `exhausted(kind)`: `Exhausted io steps`, `Exhausted io memory`, `Exhausted io frames` (D16 fuel and frame region, D19 heap). |
 | `host-stack` | The host trapped a stack overflow (`host: true`, `Exhausted wasm call-stack`). |
 | `host-memory` | The host failed to allocate memory (`host: true`, `Exhausted wasm memory`). |
 | `host-time` | A wall-clock guard fired (`exit: null`). |
+| `unclassified`, `host-unclassified` | Any other `Exhausted` shape. A blocker with either tag fails the verdict. |
+
+### A2 after C1 built S
+
+C1 built S under the same argv and the same Knot semantics that A2 runs. So when A2
+stops on that S, the harness routes the stop by its recorded fields
+(`after_c1()` and `excuse()`, which the judge reuses):
+
+| A2's stop at `e2e3.a3` | Status | `excuse` |
+| --- | --- | --- |
+| A runtime budget C1 lacks: `vm-fuel`, `vm-heap`, `vm-frames` | `blocked` (allowed) | the tag |
+| The harness cannot run A2 yet: `Unsupported host io-abi-pending` or `abi-unrecognized`, source `harness` | `blocked` (allowed) | `harness-io-abi-pending`, `harness-abi-unrecognized` |
+| Any other exhaustion: `knot-budget` (an argv-controlled or fixed Knot budget), `host-*`, `unclassified` | `divergent-exhausted` (never passes) | none |
+| A Knot `Unsupported` | `divergent-unsupported` (never passes) | none |
+| Anything else (`Invalid`, `HostFailure`, a crash, an unexcused harness result) | `blocked` | none; the judge rejects it |
+
+There is no blanket rule: only the listed runtime budgets and harness codes excuse
+a stop, and the judge recomputes the excuse and requires the recorded one to match.
 
 The verdict fails when:
 
@@ -247,8 +268,9 @@ The verdict fails when:
   (`Invalid`, `HostFailure`, `InternalFailure`, a signal, a stack trace, or a
   mismatched exit and word);
 - a blocker's recorded `resource` tag differs from the tag derived from its fields;
-- `e2e3.a3` is blocked by a host resource after `e2e3.a2` was reached (it must be
-  `divergent-exhausted`), or any stage is `divergent-exhausted`;
+- `e2e3.a3` is blocked after `e2e3.a2` was reached, unless its blocker has an
+  excuse and the recorded `excuse` equals it; or any stage is
+  `divergent-exhausted` or `divergent-unsupported`;
 - a not-run stage follows a reached prerequisite;
 - any `src/*.bend` reference observation reports its own source as `Invalid` or
   worse (D4);
@@ -291,8 +313,9 @@ not have any yet. So the harness also builds a **reached chain**: the real recei
 with a2, a3, fixpoint and conformance reached as a correct fixpoint records them,
 with generation observations equal to C1's, and an artifact memory record
 read from Knot's own memory shape (one memory, 1 page, maximum 1). The chain must
-pass, and so must its
-module-loading variant (`reached-chain-bundled`). That variant is judged under a
+pass, and so must two excused stops of A3 on it: `a3-vm-fuel` (`Exhausted io
+steps`) and `a3-io-abi-pending`. So must its module-loading variant
+(`reached-chain-bundled`). That variant is judged under a
 scratch copy of `src/CONTRACT.json` that advertises `[--bundle ROOT]` and
 `--audit-bundle` (`--contract`, with the receipt's `inputs` naming the copy), and
 the harness also writes a copy with module loading withdrawn. These mutants of
@@ -312,18 +335,22 @@ the chain must each be rejected:
 10. `a3-host-exhausted`: A3 is host-Exhausted after a reached A2.
 11. `a3-divergent-exhausted`: A3's status is `divergent-exhausted`.
 12. `a3-resource-forged`: a host stack trap is tagged `knot-budget`.
-13. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
-14. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
-15. `artifact-memory-*`: A3's memory record is the reader's real output on one
+13. `a3-knot-unsupported`: A3 is blocked by a Knot `Unsupported` after a reached A2.
+14. `a3-knot-budget`: A3 is blocked by `Exhausted parse budget` after a reached A2.
+15. `a3-divergent-unsupported`: A3's status is `divergent-unsupported`.
+16. `a3-excuse-forged`: a Knot `Unsupported` claims the `harness-io-abi-pending` excuse.
+17. `diagnostic-tail`: one character near the end of an A3 diagnostic changes.
+18. `artifact-over-budget`: an artifact is one byte over `output_bytes`.
+19. `artifact-memory-*`: A3's memory record is the reader's real output on one
     probe module (see the `wasm-memory-reader` control): `no-maximum`,
     `two-memories`, `memory64-second`, `shared`, `imported-and-defined`,
     `gc-global-import` and `truncated`.
-16. `audit-closure-differs`: a staged module is missing from the audit (module
+20. `audit-closure-differs`: a staged module is missing from the audit (module
     loading advertised).
-17. `audit-missing`: no audit is recorded (module loading advertised).
-18. `modules-erased-both`: `--bundle` and the audit are removed from both steps
+21. `audit-missing`: no audit is recorded (module loading advertised).
+22. `modules-erased-both`: `--bundle` and the audit are removed from both steps
     and the parser compile, while the contract advertises module loading.
-19. `modules-forged-both`: both steps use `--bundle` while the contract does not
+23. `modules-forged-both`: both steps use `--bundle` while the contract does not
     advertise it.
 
 The runner's `counts()` rechecks the recorded verdict and blocker classes
@@ -348,9 +375,13 @@ They use test doubles, not Knot evidence:
 - Damaged copies of the S sandbox must fail re-verification: a symlink, a second
   hard link, a changed package, and an extra file.
 - The argv check must find `--threads`.
-- A2's result on S must be routed correctly: a host timeout and a host stack trap
-  become `divergent-exhausted`, a Knot `Unsupported` stays `blocked`, and exit 0
-  proceeds to a reached row. The same pure function builds the live row.
+- A2's result on S must be routed correctly (`a3-routing`): a host timeout, a
+  host stack trap and a Knot `Exhausted parse budget` become
+  `divergent-exhausted`; a Knot `Unsupported` becomes `divergent-unsupported`;
+  `Exhausted io steps`, `Exhausted io memory` and the harness's
+  `io-abi-pending` stay `blocked` with the excuses `vm-fuel`, `vm-heap` and
+  `harness-io-abi-pending`; and exit 0 proceeds to a reached row. The same pure
+  function builds the live row.
 - The memory reader on eight hand-assembled modules (`wasm-memory-reader`):
   Knot's shape, no maximum, two memories, a second memory64, a shared memory,
   an imported plus a defined memory, a GC-typed global import before an imported
@@ -412,10 +443,11 @@ the sandbox. The adapter's hash joins the receipt's `inputs`.
 - A seed build failure, a pin mismatch, a non-Darwin host or another Node is a
   harness failure (exit 1), not a stage result. A clang flake in the native lane
   is surfaced, not retried.
-- `divergent-exhausted` applies only to host resources. A Knot-side
-  `Unsupported`, or a knot-budget `Exhausted`, at `e2e3.a3` after a reached
-  `e2e3.a2` remains an allowed blocker. On the VM route, the VM's declared
-  heap budget (D19) is a knot budget.
+- The excuses name the IO host's current rendering of `exhausted(kind)` (`io
+  steps`, `io memory`, `io frames`). `io memory` also covers the host's 16 MiB
+  transfer cap, which C1 lacks as well. When the VM route renders its budgets
+  differently, add the new shapes to `RUNTIME_EXHAUSTION`; until then they are
+  `unclassified` and fail the verdict.
 - The host-memory tag rests on V8's error messages. This host allocates a
   4 GiB memory without failing, so no real allocation failure is exercised;
   the classification control feeds the messages to `trap` directly.
