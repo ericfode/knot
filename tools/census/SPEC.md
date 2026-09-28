@@ -42,8 +42,10 @@ the approval policy. New classes per declaration, new source files, and changed
 imports require an explicit policy diff. Package dependency features are checked
 transitively, including arrays behind Vec. A reviewed
 `dependency_feature_exceptions` entry may exempt named features of one exact
-file SHA-256. The modules path-identity adapter has the sole `foreign` exception;
-other files, changed bytes, and other forbidden features retain rejection. This
+file SHA-256. The modules path-identity wrapper has the sole `foreign` exception;
+other files, changed bytes, and other forbidden features retain rejection. The
+exception pins the Bend wrapper's bytes, not the C/JS adapters it imports; the
+modules gate pins those. This
 records a trusted host boundary, not Knot support for foreign source programs.
 Removal is allowed, but changes still require regenerated manifests.
 

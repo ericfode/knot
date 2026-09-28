@@ -154,9 +154,12 @@ at their import event, with independent type/function and constructor namespaces
 Declaration order governs duplicates and live calls, as in the frozen seed.
 Fresh declarations check both bare and qualified names. Installing Base rejects
 same-category collisions with user names already loaded; Base selection never
-lets a user declaration shadow a Base dependency. Pattern binders, including
-reusable binders, are resolved against the full constructor inventory before
-qualification, independently of Base reachability.
+lets a user declaration shadow a Base dependency. Pattern and let binders,
+including reusable and typed ones, are resolved and rejected only when they name a
+constructor registered before them in load order (loaded globals, all of Base once
+imported, and earlier datatypes of the file), independently of Base reachability.
+Single-file books apply the same rule to let, arm and flat field binders in
+declaration order before checking.
 The downstream checker, evaluator and emitters have no module-specific bypass.
 
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
@@ -170,7 +173,11 @@ and their exact unchecked complement. This is an explicit D2 trust inventory,
 not whole-Base acceptance or proof of unchecked declarations.
 
 Loading is bounded by 1,024 machine transitions and the existing per-file
-character/parser limits. The character cap applies before import-header removal.
+source/parser limits. The source cap counts UTF-8 bytes and applies before
+import-header removal, so a larger file is Exhausted, never truncated. Header
+lines follow the seed's import grammar: a glued `#` belongs to the path word
+(`import Base#c` is `Invalid load import-alias`); until the header closes, a line
+with anything but printable ASCII, space or tab is `Unsupported load header-character`.
 Base reads are capped at 131,072 ASCII bytes and constrained by the exact digest.
 Base dependency traversal has a finite work bound. User and traversal bound
 failures report `Exhausted`; Base identity/encoding failures report
@@ -180,7 +187,7 @@ retains its enum profile, without fielded or recursive Wasm support.
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 81 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 89 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 

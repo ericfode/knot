@@ -1111,3 +1111,27 @@ adapter closure when building mutants. Recompute local import closure after
 merging context manifests, retaining bounded selected mechanisms and interface
 collaborators. The full manifest then has zero offline structural blockers;
 this is not a live semantic/style verdict.
+
+## 2026-09-28 — Modules review round 3: bytes, header text and binder order
+
+The coordinator's six confirmed findings are fixed after seed freezes; see
+[the review record](../tests/compiler-modules/REVIEW-ROUND-3.md). They were
+missed defects of the same kinds as round 2. A budget counted decoded
+characters while the header pass hid text from the lexer. The header parser
+split on a narrower whitespace class and comment rule than the seed. Binder checks
+used whole-file (qualify) or whole-book (checker) constructor inventories where the
+seed's parser sees only constructors registered so far. A pinned adapter digest
+had no reader. Verifying the order fix also showed the field-binder variant and
+a cross-namespace match; both were frozen (`a1d6d46`) before repair.
+
+One avoidable rework: the single-file binder pass first went into `check.bend`
+and pushed the `checking` manifest composition to 50,315 bytes, over the
+perch-context gate's 48,000-byte bound. The offline manifest preflight caught
+it before the full gate run, and the pass moved to `qualify.bend`.
+
+Prevention: freeze adversarial encodings (multibyte text in regions a pass
+removes, every JS `\s` separator) beside any text transform. Freeze each
+binder position (let, arm, field, reusable, typed) against earlier, later and
+other-module constructors. Give every recorded digest a reader and a
+changed-byte control. Run the manifest preflight after growing a file already
+near its group bound. No elapsed time was measured.

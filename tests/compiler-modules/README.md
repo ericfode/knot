@@ -6,6 +6,9 @@ ordinary names. Only the hash-verified Base receives reachable-slice treatment.
 
 [Review round 2](REVIEW-ROUND-2.md) records the four fixed findings, seed freezes,
 necessary host-verdict amendments, proof boundaries and the complete gate table.
+[Review round 3](REVIEW-ROUND-3.md) records six more: byte-bounded sources,
+pinned adapter bytes, the seed's header comment and separator rules, and binders
+judged against the constructors declared before them.
 The earlier [verification receipt](receipts/verification.json) and preflight
 receipts without `review-round2` remain historical evidence for the first round.
 
@@ -43,8 +46,9 @@ The query assumes stable files, and does not implement realpath module identity.
 inventories its 466 declarations. Base names register at the import event.
 Bare and qualified collisions reject in either load order, and user definitions
 cannot shadow Base dependencies. The slice follows references from every user
-definition. Pattern-binder validity uses the full constructor inventory even
-when a Base constructor is outside that slice.
+definition. A pattern or let binder may not name a constructor registered
+before it (all of Base once imported), even when that constructor is outside
+the slice; a later constructor leaves it a variable.
 
 The audit follows complete checking and emits `BasePin`, loaded `Module` paths,
 and the exact ordered `BaseChecked` / `BaseUnchecked` partition. Unchecked Base
@@ -58,7 +62,9 @@ The original 42 fixtures, four regressions and five boundary probes remain
 unchanged. Twelve review fixtures were frozen from the pinned seed before their
 repairs in `0474aa7` and `483f684`. Two controls preserve canonical duplicate
 imports and a no-Base namespace. The case-alias probe explicitly requires a
-case-insensitive filesystem.
+case-insensitive filesystem. Round 3 adds 26 seed fixtures in `review-round3/`,
+five of them also through the single-file CLIs, and six literal adapter-pin
+controls.
 
 ```sh
 BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/regen.py
@@ -67,17 +73,19 @@ BEND_NO_TELEMETRY=1 npm run -s gates
 BEND_NO_TELEMETRY=1 npm run -s gates:verify
 ```
 
-The module gate checks 63 fixtures and 71 seed calls, both native and Bun:
-126 checks, 142 evaluations, 126 compilations, 58 Wasm observations, 23 identical
-Wasm pairs, 80 preserved outputs, 46 trust audits, 22 pin observations and six
-corrupted-Base observations. All 14 semantic mutants are independently
-seed-typechecked and killed. The four complete proof entries check 81 filled
-laws: loader/path 23, qualification 23, Base selection 20 and pin helpers 15.
-These are helper/transition proofs, not a general compiler-correctness theorem.
+The module gate checks 89 fixtures and 97 seed calls, both native and Bun:
+178 checks, 194 evaluations, 178 compilations, 66 Wasm observations, 27 identical
+Wasm pairs, 124 preserved outputs, 58 trust audits, 30 single-file observations,
+22 pin observations, six corrupted-Base observations and six adapter-pin controls.
+All 24 semantic mutants are independently seed-typechecked and killed. The four
+complete proof entries check 89 filled laws: loader/path 28, qualification 26,
+Base selection 20 and pin helpers 15. These are helper/transition proofs, not a
+general compiler-correctness theorem.
 
 Offline preflight covers every compiler declaration through 23 bounded manifest
-groups with zero structural blockers. The direct nine-file review has 32
-truncated contexts and an oversized combined composition. Deliberately invalid
+groups with zero structural blockers (1,375 declaration occurrences, all 23
+compositions available). The direct eleven-file round-3 review (326 declarations)
+has 55 truncated contexts and an oversized combined composition: 56 blockers. Deliberately invalid
 binder fixtures fail parsing as expected. No live style ratings or style pass
 are claimed; live Perch remains with the coordinator.
 

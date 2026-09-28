@@ -56,8 +56,10 @@ An audit emitted after complete checking records the selected Base declarations
 and the exact unchecked complement. Loading Base is not whole-Base acceptance.
 
 The loader permits at most 1,024 machine transitions. Each user file is bounded
-by the existing character budget (maximum 65,536), before header removal; parser
-and checker limits retain their existing meanings. Base input is capped at
+by the existing budget (maximum 65,536), counted in UTF-8 bytes of the text read,
+before header removal; the loader reads one byte more, and decoding never shortens
+input, so a larger file is `Exhausted` rather than truncated. Parser and checker
+limits retain their existing meanings. Base input is capped at
 131,072 ASCII bytes and then constrained by its exact digest. The slice traversal
 has a separate finite depth/work bound. These limits are operational bounds, not
 proofs about the validity of larger programs.
@@ -78,12 +80,32 @@ name scopes, Base dependency selection and pin boundaries. They are checked
 helper/transition laws, not a theorem of compiler correctness or whole-graph
 confluence.
 
+Header lines follow the seed's import grammar: a `#` begins a comment at the
+start of a word or right after the alias identifier, and is otherwise part of
+its word, so `import Base#c` names a non-Base path without an alias (`Invalid
+load import-alias`). The seed splits header lines on JavaScript whitespace; until
+the header closes, a line holding anything but printable ASCII, space or tab
+reports `Unsupported load header-character`.
+
 Review-round-2 fixtures freeze symlink/case aliases, Base namespace collisions
 in both import orders, ordinary/reusable constructor-named binders and a
 column-zero foreign body. Constructor binder rejection uses resolved names
-and the full registered constructor inventory, even when Base is not in the
+and the registered constructor inventory, even when Base is not in the
 selected slice. Quoted foreign bodies remain Unsupported regardless of column;
 non-string module imports after declarations remain Invalid.
+
+Review-round-3 fixtures (`review-round3.json`) freeze byte-budget truncation,
+glued `#` imports, header separators, binder order and let binders. As in the
+seed's parser, a pattern or let binder (ordinary, reusable or typed) is rejected
+only when its resolved name is a constructor registered before it: the loaded
+globals, including all of Base once imported, and the file's earlier datatypes.
+A constructor declared later leaves the binder a variable. Single-file books
+apply the same rule to let, arm and flat field binders in declaration order
+before checking; the checker no longer tests field binders against the whole
+book, which crossed module namespaces. The gate also
+pins the bytes of the path query's Bend wrapper and C/JS adapters to
+`host-check-expectations.json`, requires the adapters to equal the io-abi-2
+reference bodies, and runs literal drift controls.
 
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.

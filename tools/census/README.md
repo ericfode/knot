@@ -31,9 +31,12 @@ scope. No environment file is read.
 The module loader's authorized path-identity query has a `foreign` exception
 pinned to `src/path-host.bend` and its exact SHA-256 in `approved.json`. Ordinary
 `census:approve` does not grant or refresh that exception. Four literal policy
-controls retain the default ban, exact-byte boundary, file boundary and other
-forbidden features. The C/JS adapters are host metadata queries; compiler
-semantics remain in Bend.
+controls retain the default ban, the wrapper's exact bytes, file boundary and
+other forbidden features. The exception covers the Bend wrapper only: the bytes
+of the C/JS adapters it runs (`src/host/path-identity.{c,js}`) are pinned by the
+modules gate against `tests/compiler-modules/host-check-expectations.json` and
+the io-abi-2 reference bodies, with literal drift controls. The adapters are
+host metadata queries; compiler semantics remain in Bend.
 
 `approved.json` is the review boundary. Both generation and `--check` reject new
 classes per declaration, new source files and new imports. They also reject arrays,
