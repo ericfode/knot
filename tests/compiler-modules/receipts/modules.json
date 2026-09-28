@@ -579,7 +579,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "ebebf1231d64f8c7746cbdd5fc45da2d77e0854927930a1efeb0dd82735e030b"
+      "sha256": "7444040148ee5a448ff327c1e52c412d98acd6cd0410da3791ece6c983e38a53"
     },
     {
       "lane": "native",
@@ -596,7 +596,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "870901379cb051947c88958355650cfe694a686e534087b8e7f9456056fe48e6"
+      "sha256": "bf9ab3e3d601e43d5c2ba8a008e724265eb5fa1cbb00b9f192d0a9aa4ca5ad8d"
     },
     {
       "lane": "native",
@@ -613,7 +613,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "11dd36c04f33a912de87cbaad8b8f71ffd61bdac67a48d67a14d44e656621f5e"
+      "sha256": "36116af93fb79a01a9fae14692ad6e2677b70aaec4ce11cd124783a275b3b216"
     },
     {
       "lane": "bun",
@@ -630,7 +630,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "2ec0b161531a7745ffcc3b87948ee15cfb5b67c9c2c3fefd18c00b00e1888982"
+      "sha256": "c9c67c1c135fa5684547d3db80f326b4319992fdb1ff313fccbdc5bf835f720e"
     },
     {
       "lane": "bun",
@@ -647,7 +647,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "1b9209d72c412e143385847c180e94c2f5ee2c04fb9d2ebd827cca80480c1a66"
+      "sha256": "65906b502eafdbc4880e31285a993abbcd1b49f9599fb8be49c0e41657ca0ec1"
     },
     {
       "lane": "bun",
@@ -664,7 +664,7 @@
         "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "69946802394cf209e11ecb30c93ffb77f921c9e97633c491d83260e15f37a0c3"
+      "sha256": "aa1140284fcc6b0ebb7f9a594716461e00f761ff82fa804107bfa82d2485563c"
     }
   ],
   "date": "<normalized-date>",
@@ -24005,14 +24005,2714 @@
           "stdout": "Lit{}\n"
         }
       ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-parameter-call-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-parameter-call-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t154:158:11:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "shadow-parameter-call",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/shadow/param/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend",
+          "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- flip : lib/m.Flag\n- b    : lib/m.Flag\nLocation: lib/m.g\n10 | def g(flip: Flag, b: Flag) -> Flag:\n11>|   flip(b)\n   |   ^^^^^^^\n12 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-field-call-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-field-call-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t218:222:15:21\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "shadow-field-call",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/shadow/field/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/shadow/field/main.bend",
+          "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- flip : lib/m.Flag\n- b    : lib/m.Flag\nLocation: lib/m.g\n14 |   match p:\n15>|     case P{flip, b}: flip(b)\n   |                      ^^^^^^^\n16 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-let-call-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-let-call-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tunknown-function\t162:166:12:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "shadow-let-call",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/shadow/let/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/shadow/let/main.bend",
+          "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- a    : lib/m.Flag\n- b    : lib/m.Flag\n- flip : lib/m.Flag\nLocation: lib/m.g\n11 |   flip = a\n12>|   flip(b)\n   |   ^^^^^^^\n13 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "byte_identical": true,
+      "file": "../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/lib/m.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+            ],
+            "result": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/lib/m.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nlib/m.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nlib/m.g(1:0,1:0)->0=call0($1:0)\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call2(call1(v0.1;v0.0))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+              "$ROOT/.local/compiler-modules/gate/unshadowed-module-call-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t130\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "e602e16375ca6d9a339ac532b13a6425bda9206e0ebe433848863bfecc6eef7e",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/unshadowed-module-call-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":130}\n"
+              }
+            }
+          ]
+        },
+        "native": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/lib/m.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+            ],
+            "result": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/lib/m.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nlib/m.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nlib/m.g(1:0,1:0)->0=call0($1:0)\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call2(call1(v0.1;v0.0))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+              "$ROOT/.local/compiler-modules/gate/unshadowed-module-call-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t130\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "e602e16375ca6d9a339ac532b13a6425bda9206e0ebe433848863bfecc6eef7e",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/unshadowed-module-call-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":130}\n"
+              }
+            }
+          ]
+        }
+      },
+      "name": "unshadowed-module-call",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-entry-call-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                "$ROOT/.local/compiler-modules/gate/shadow-entry-call-bun-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+              "$ROOT/.local/compiler-modules/gate/shadow-entry-call-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                "$ROOT/.local/compiler-modules/gate/shadow-entry-call-native-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tcheck\tnot-callable\t166:170:11:2\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "shadow-entry-call",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/shadow/entry.bend",
+          "stderr": "Error:\n- expected : a function type\n- observed : Light\nContext:\n- flip : Light\n- b    : Light\nLocation: g\n10 | def g(flip: Light, b: Light) -> Light:\n11>|   flip(b)\n   |   ^^^^^^^\n12 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "pair-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+              "$ROOT/.local/compiler-modules/gate/or-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+              "$ROOT/.local/compiler-modules/gate/or-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t58:59:7:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "or-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/or-param.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/or-param.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-field-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-field-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t73:74:8:15\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "pair-field",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-field.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/pair-field.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-module-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-module-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t54:55:7:17\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "pair-module-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/module/main.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/module/main.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-let-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+              "$ROOT/.local/compiler-modules/gate/pair-let-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "pair-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/pair-let.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/pair-let.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+              "$ROOT/.local/compiler-modules/gate/or-let-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+              "$ROOT/.local/compiler-modules/gate/or-let-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t73:74:8:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "or-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/or-let.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/or-let.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+              "$ROOT/.local/compiler-modules/gate/arrow-let-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                "$ROOT/.local/compiler-modules/gate/arrow-let-bun-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+              "$ROOT/.local/compiler-modules/gate/arrow-let-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                "$ROOT/.local/compiler-modules/gate/arrow-let-native-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "arrow-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+              "$ROOT/.local/compiler-modules/gate/apply-let-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+              "$ROOT/.local/compiler-modules/gate/apply-let-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t69:70:8:8\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "apply-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/apply-let.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/apply-let.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+              "$ROOT/.local/compiler-modules/gate/local-pair-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                "$ROOT/.local/compiler-modules/gate/local-pair-parameter-bun-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+              "$ROOT/.local/compiler-modules/gate/local-pair-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                "$ROOT/.local/compiler-modules/gate/local-pair-parameter-native-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "local-pair-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+          ],
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/local-pair.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n"
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+              "$ROOT/.local/compiler-modules/gate/undeclared-pair-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                "$ROOT/.local/compiler-modules/gate/undeclared-pair-parameter-bun-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+              "$ROOT/.local/compiler-modules/gate/undeclared-pair-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                "$ROOT/.local/compiler-modules/gate/undeclared-pair-parameter-native-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tparameter-type\t56:57:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "undeclared-pair-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: drop\n4 | \n5>| def drop(p: Light & Light) -> Light:\n  |             ^^^^^^^^^^^^^\n6 |   Lit{}\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+              "$ROOT/.local/compiler-modules/gate/undeclared-pair-let-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                "$ROOT/.local/compiler-modules/gate/undeclared-pair-let-bun-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+              "$ROOT/.local/compiler-modules/gate/undeclared-pair-let-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                "$ROOT/.local/compiler-modules/gate/undeclared-pair-let-native-plain.wasm"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 3,
+              "stderr": "Unsupported\tparse\tbinding-type\t71:72:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "undeclared-pair-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend",
+          "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: main\n5 | def main() -> Light:\n6>|   x : Light & Light = (Lit{}, Dark{})\n  |       ^^^^^^^^^^^^^^\n7 |   Lit{}\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+              "$ROOT/.local/compiler-modules/gate/juxtaposed-parameter-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                "$ROOT/.local/compiler-modules/gate/juxtaposed-parameter-bun-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+              "$ROOT/.local/compiler-modules/gate/juxtaposed-parameter-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                "$ROOT/.local/compiler-modules/gate/juxtaposed-parameter-native-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\targument-separator\t56:61:5:18\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "juxtaposed-parameter",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend",
+          "stderr": "Error:\n- expected : Type\n- observed : Quant\nContext:\n- p     : Light\n- Light : Quant\nLocation: drop\n4 | \n5>| def drop(p: Light Light) -> Light:\n  |                             ^^^^^\n6 |   Lit{}\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+              "$ROOT/.local/compiler-modules/gate/juxtaposed-let-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/compile.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                "$ROOT/.local/compiler-modules/gate/juxtaposed-let-bun-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/eval.js",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+              "$ROOT/.local/compiler-modules/gate/juxtaposed-let-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "plain": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/compile",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                "$ROOT/.local/compiler-modules/gate/juxtaposed-let-native-plain.wasm"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            },
+            "eval-0": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/eval",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+                "main",
+                "65536"
+              ],
+              "exit": 2,
+              "stderr": "Invalid\tparse\texpected-=\t71:76:6:12\n",
+              "stdout": ""
+            }
+          },
+          "wasm": []
+        }
+      },
+      "name": "juxtaposed-let",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : ':'\nLocation:\n5 | def main() -> Light:\n6>|   x : Light Light = Lit{}\n  |     ^\n7 |   Lit{}\n",
+          "stdout": ""
+        }
+      ]
     }
   ],
   "inputs": {
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
-    "src/CONTRACT.json": "ea79bbbd97e6093478d9fffeaf9091400d8419608b395f0fb54abe0b76f77f1c",
-    "src/LAWS.bend": "6d5270077a7642d88fb05fb88086f1ad61cb0aaf1691dd0f7d1e8617653479dc",
-    "src/PROOF.bend": "949dc5edb3fd068d5e8d2e845115a457ee392f02a5f0266bd9633274ea47a494",
-    "src/SPEC.md": "7a1fda184e4e54eeb891b154a8cb7ee8a6bd05fb3abed31790dc3fd6fefd7e02",
+    "src/CONTRACT.json": "0d8acf1595285ba8b2c18366b3c8da8ec9731a85d62dc415e2e755bbdc3eb4d9",
+    "src/LAWS.bend": "e13331fb10ac628b74f2f243d8f4be4462773f7365f1a52c0838165d3d7caa1e",
+    "src/PROOF.bend": "64afa92765d2757290953bdb272c92ddd8363c07b81c6ddeaa039efac548f1ae",
+    "src/SPEC.md": "a28405cb008aa17cebd6241ce430164b6f6b2b1b87a93569a95b6e1f812c9be9",
     "src/base-load-LAWS.bend": "bc474ba56a21d9bba54c413d6543325e6596f2ae7469b426adcf02af0810a009",
     "src/base-load-PROOF.bend": "ee43281f8668b287cab6b7eb415f748533392fe98e40c30c94433529c55031df",
     "src/base-load.bend": "1be1d62fd627e77a59a930d401a1572988d60385cb4e60eb0d2d83181cef4941",
@@ -24043,12 +26743,12 @@
     "src/load-PROOF.bend": "07148d45b2cab875b14ca9e799fbf98c9ad4efb60ec9ac8e560cb7de95862c1c",
     "src/load.bend": "12fc8c75d7d6ff414fb50f39451909b67ff50c7029d9a4ab6b90f7b040cdb2e3",
     "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "f4c66fc07bc74ad71508e68b278b8c65399ad49b66d41e154702551031cf9cca",
+    "src/parse.bend": "0ee82dbdcdfb78926cae73a46430f5c9ad0baa6a194c2346f61e44c43492c06e",
     "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
     "src/patterns.bend": "f8265042a647dda5dbfa0217d21a7f3ff732c3a69b870203a4b64739176b8907",
-    "src/qualify-LAWS.bend": "3fe1fc111efea7ddd880b5521331405d86a50f8ee7c6e2ce180b376b66ebd93f",
-    "src/qualify-PROOF.bend": "f5bf1545b0d3b08fbd30a5120350e3923681953a38e2cb620b00ccca1bf09a5a",
-    "src/qualify.bend": "824631f82ac31df3d42562a3be24adfd3cf271d6ae94d96ce3491f8932950cf1",
+    "src/qualify-LAWS.bend": "8af5bfe36b379a74f10ffeeba3cf9c6925483ed4e9ffbee7aa2ce77973aabaf7",
+    "src/qualify-PROOF.bend": "7923f5f6d843913bfd118edf817dda58ef83e01ad764a4ec321c102e43be8db5",
+    "src/qualify.bend": "465241928d9cd9966c8df74b13ee57f17f5d8e1d9faff61c0cb25f17e1ed0e35",
     "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
     "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
     "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
@@ -24085,7 +26785,7 @@
     "tests/compiler-modules/calls/qualified-names--see-On.bend": "9e738bd0ae8b5c05d834fcfe826937d892fafb9a6bd0b408661696cf30e358e2",
     "tests/compiler-modules/calls/same-bare-names--flip-Off.bend": "e0203f2259705da01787406a9dea8942e84a783b86941d3852ca912b72fd5da0",
     "tests/compiler-modules/calls/same-bare-names--flip-On.bend": "7c4ddd88dd2dffb23861030e8a840deeea9f0df28e371459daea4ded56871f67",
-    "tests/compiler-modules/check.py": "a1fea36328db6f710dba77458e4089b15a579813dfb65dba9211b02ece66d66e",
+    "tests/compiler-modules/check.py": "712231c3d528484d7054bc5bec515619da8f5a6a2531ccc12b949ea6fc06e018",
     "tests/compiler-modules/expectations.json": "5497e5bb60f0d4c944517834952d30a4e2f1ba0c55545f5c07595439e1607374",
     "tests/compiler-modules/fixtures/alias-member-definition.bend": "ca6d12c52f130625895c5d871272ae519e2bb1081e4d34b711fe45e62a1de67b",
     "tests/compiler-modules/fixtures/alias-name-reuse.bend": "2b0f660ff0844d17fbc9d4b8639e175bc36a0b520755a0315a0960fdc58c0a53",
@@ -24250,7 +26950,31 @@
     "tests/compiler-modules/review-round4/string/comment-quote.bend": "4724864797c876e55a2f65e57c3eba89d17be816d38c1ce1d850940eff38f2c3",
     "tests/compiler-modules/review-round4/string/foreign-import.bend": "df685405906776f8cd205ba7ef973dfc37c69c999d8d25cef2cb082d81212e44",
     "tests/compiler-modules/review-round4/string/module-import.bend": "792711e4c23168a56ca5f763b3cf09b227ad3b8c523de8b78f47558be6260024",
-    "tests/compiler-modules/review-round4/string/single-line.bend": "23cd5f55bca18d7e92686f30b4982a1096e58bf13a784ec9ea9b5c13d417503f"
+    "tests/compiler-modules/review-round4/string/single-line.bend": "23cd5f55bca18d7e92686f30b4982a1096e58bf13a784ec9ea9b5c13d417503f",
+    "tests/compiler-modules/review-round5.json": "69785d563605f1e45f8f4b7f747b7bfb08f3b00f087dabc8c67680bca6a7a210",
+    "tests/compiler-modules/review-round5/operator/apply-let.bend": "db86d3eb6e33a2e0373338180b43c4397e57522e8990fe546575e5ba6c199a2a",
+    "tests/compiler-modules/review-round5/operator/arrow-let.bend": "a1af8f48ffa514de04acf6b0d3b8517e26dded5c5e9d4a9ccf74a2a93697095f",
+    "tests/compiler-modules/review-round5/operator/juxtaposed-let.bend": "e4dbfff5d007e1756648f55014406040fe55101ad7e96879b7b0af15e0e70541",
+    "tests/compiler-modules/review-round5/operator/juxtaposed-param.bend": "a280978e96385c9757ee777b58962e83439c3da0bde912324d78211b7517009e",
+    "tests/compiler-modules/review-round5/operator/local-pair.bend": "0656f4ae46fa6063a8e264417b503d89566b4c4eae0aab4ebfb6b25b2069ceba",
+    "tests/compiler-modules/review-round5/operator/module/lib/m.bend": "5177eafcd9b6a36900dd9bc603d9d4367ffc9dc1d1bbc87abc1cfc278ee73603",
+    "tests/compiler-modules/review-round5/operator/module/main.bend": "c1dded064b2300617b9b9c842f3688bd858f9ab17c72d0f412b0650f04754523",
+    "tests/compiler-modules/review-round5/operator/or-let.bend": "eced1e66ec9b43e9d90749c727d1a9ac0c9f27cf0b9948b0d9fab5cb1fe68004",
+    "tests/compiler-modules/review-round5/operator/or-param.bend": "e79317a845b1944b618bd99da96ee7bbb202515ecbfdd40c6efff92a44d36384",
+    "tests/compiler-modules/review-round5/operator/pair-field.bend": "6f5e9f7f0138884ab83ebfd29cbf71bccd82f1c103e3cb9666db1d72aa60e39e",
+    "tests/compiler-modules/review-round5/operator/pair-let.bend": "23294e33f1e480625a9d361ce00f698420784ce77257d0805e43e4edf11aeaf9",
+    "tests/compiler-modules/review-round5/operator/pair-param.bend": "9030ec9883b9b6a85c17368aeab561f377c96aa31701a94cebf2cef47cb33456",
+    "tests/compiler-modules/review-round5/operator/undeclared-pair-let.bend": "9120ccae16db5ad1782403d6c99f266dc5798b64c21af69c8f2735cd87f32c50",
+    "tests/compiler-modules/review-round5/operator/undeclared-pair.bend": "3f9c33d01b257bfe168e4285099ee3b61dedaca17f4ff163be7568cecd1f8d43",
+    "tests/compiler-modules/review-round5/shadow/entry.bend": "9099064bd828555268f2c6c2b1665efbeb8fb48bd9166b174e30f52919c0bca3",
+    "tests/compiler-modules/review-round5/shadow/field/lib/m.bend": "36226ec95b8515ced206c42f2eda84d1d0a7892f9ba1c7b4623fa1ea91db10e1",
+    "tests/compiler-modules/review-round5/shadow/field/main.bend": "75a45422b9c5e103cab105783cfb7251cddb8ce8c72e549867bc2bf60a53ca28",
+    "tests/compiler-modules/review-round5/shadow/let/lib/m.bend": "23a51df211cafa2bedd4a662bfb424bc1874c8ba60d47aa15a43b1e44f2f2ca4",
+    "tests/compiler-modules/review-round5/shadow/let/main.bend": "b8e793be6b2ac530415145998cfc55e8c510e97bb831e747d9add9881c022981",
+    "tests/compiler-modules/review-round5/shadow/param/lib/m.bend": "d3b97029db1f283676a7c9e80eeb8e79c9c722e2c3d320d2d334817cdaef40f3",
+    "tests/compiler-modules/review-round5/shadow/param/main.bend": "b8e793be6b2ac530415145998cfc55e8c510e97bb831e747d9add9881c022981",
+    "tests/compiler-modules/review-round5/shadow/unbound/lib/m.bend": "5db544d15830a502fe6660a402f1940299c60580fa02b81e13147c658a915895",
+    "tests/compiler-modules/review-round5/shadow/unbound/main.bend": "f6a5e533c6ad308fba3e23be1d64fbfed40486447638018bff4dc1b8d2a279d2"
   },
   "mutants": [
     {
@@ -24475,7 +27199,7 @@
         "stderr": "",
         "stdout": "Checked\nlib/flag.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nlib/left.left(1:0)->0=call0($0:0)\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call2(call1(v0.0))\n\n"
       },
-      "sha256": "c26610b5cec02d3e85974321e7c43048737e903820043d7efa3d1ef06aea17b7",
+      "sha256": "7677a8e8f529f52f7929cf05cf19a23c2d002883b64482f2594cebe4959e0176",
       "typecheck": {
         "argv": [
           "bun",
@@ -24570,7 +27294,7 @@
         "stderr": "",
         "stdout": "Checked\nBool.not(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->1=v1.1\n\n"
       },
-      "sha256": "db5e2a7481416132a2ca12d8309cfb54d8a2361e987d670cfd3fb3bc974b32ac",
+      "sha256": "6bd899a3416e425cfa89e01e13f683bd30d02e1f7f792452b998763055f6e2b6",
       "typecheck": {
         "argv": [
           "bun",
@@ -24664,7 +27388,7 @@
         "stderr": "",
         "stdout": "Checked\nlib/m.open(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->2=v2.1\n\n"
       },
-      "sha256": "5cb1e8dc9ba638301a07b7664665991a0fcb1650e1397a601740f2bfe6ffb349",
+      "sha256": "d2726282030c29bfa5cf19fb6e799c3e7dfd7352aa2080410beec56c77d10393",
       "typecheck": {
         "argv": [
           "bun",
@@ -24855,7 +27579,7 @@
         "stderr": "",
         "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=v0.0\n\n"
       },
-      "sha256": "61ac6afb29ed3043f54f53810fa597f10508a452232e752f55cecb181a18ba5f",
+      "sha256": "c8824ff93ec2517b5b10ccf6573e5001e3451c87c09bb71cabb266c05575df19",
       "typecheck": {
         "argv": [
           "bun",
@@ -24902,7 +27626,7 @@
         "stderr": "",
         "stdout": "Checked\nlib/m.open(1:1)->0=case $0 [0(2 $1:0;)=>$1:0]\nmain()->2=v2.1\n\n"
       },
-      "sha256": "8407519dc6af56372785950e2cb133f8245050065c504c856195488845232d99",
+      "sha256": "0e27923f2cba9b713b67f002fb39038ef9bf28bf7cd83ede5da6dcc6ba49c955",
       "typecheck": {
         "argv": [
           "bun",
@@ -25141,7 +27865,7 @@
         "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t130:134:11:9\n",
         "stdout": ""
       },
-      "sha256": "af8d382c0e8ef53777b8ed43f2316a09391a5e33a56d2af70e88a054fcc28b92",
+      "sha256": "2e491e5a1ce6f0f5d29edcb5d027d50b7df3c4806d6ca4620f92388944b82ce8",
       "typecheck": {
         "argv": [
           "bun",
@@ -25188,7 +27912,7 @@
         "stderr": "",
         "stdout": "Checked\nlib/keep.keep(1:0)->0=let1 $1:0=$0:0 in $1:0\nsee(1:0)->1=case $0 [1=>v1.0;0=>v1.1]\nmain()->1=call1(call0(v0.0))\n\n"
       },
-      "sha256": "49abae8f89f448c21e8fd32e9ce273ac2496dce0c6f0f7dec034a4a0e5a17331",
+      "sha256": "5699e2aa481d097eab59fa30411a9cfebb7bb29470fae62fa5d23496d170cb81",
       "typecheck": {
         "argv": [
           "bun",
@@ -25234,7 +27958,7 @@
         "stderr": "",
         "stdout": "Checked\nf(1:0)->0=let1 $1:0=$0:0 in $1:0\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call1(call0(v0.1))\n\n"
       },
-      "sha256": "9d7a52120b873569113fc2b68a577554ec7b08fc6d77e43d996be9940d5ab72b",
+      "sha256": "647f883bb1f6e4775b6dcb1002e822d0fe908227979bd24e78440001adfa9283",
       "typecheck": {
         "argv": [
           "bun",
@@ -25328,7 +28052,7 @@
         "stderr": "Unsupported\tcheck\tvariable-pattern\t79:82:7:9\n",
         "stdout": ""
       },
-      "sha256": "74dda0f5a1f80fde4d1ed539afc9f733656f58cd215d5883ef9c0e3229bf63e4",
+      "sha256": "5a3b956196b6bca33749d1517b7a9ea7dad4af30353e69715557be414f097adf",
       "typecheck": {
         "argv": [
           "bun",
@@ -25662,7 +28386,7 @@
         "stderr": "Invalid\tparse\tfunction-result\t57:58:5:19\n",
         "stdout": ""
       },
-      "sha256": "cc22493a9dab54d548332384ebef47be352252fd9cdf35a7c1349d3e36863f0f",
+      "sha256": "e74ae490f867c788ea2e925ab194972ab90ad32e54a5b179266352e2b4c663fe",
       "typecheck": {
         "argv": [
           "bun",
@@ -25709,7 +28433,7 @@
         "stderr": "",
         "stdout": "Checked\nmain()->0=v0.1\n\n"
       },
-      "sha256": "ca9837fbd74b1ea07be3c37359689eb09f0cbeb8dbbc9ac7a5dd56aca7c3f50a",
+      "sha256": "f1667c4b682e630174bc42d05b94e873ba31a42432a2bf079c9f04923326fd8a",
       "typecheck": {
         "argv": [
           "bun",
@@ -25972,6 +28696,148 @@
         "stderr": "",
         "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       }
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/call-head-resolved-globally/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/call-head-resolved-globally/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "qualify.bend",
+      "name": "call-head-resolved-globally",
+      "new": "S.bind(S.Token,Qualified,reference(token,names),t =>\n        then(",
+      "old": "S.bind(S.Token,Qualified,local(token,names,bound),t =>\n        then(",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/call-head-resolved-globally/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/shadow/param/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nlib/m.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nlib/m.g(1:0,1:0)->0=call0($1:0)\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call2(call1(v0.0;v0.0))\n\n"
+      },
+      "sha256": "3c268c666a17b4399642b92c356f9afde188af4fec08cb37da6cdeab12e36891",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/call-head-resolved-globally/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "shadow-parameter-call"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tparse\targument-separator\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/type-operators-separate/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/type-operators-separate/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "parse.bend",
+      "name": "type-operators-separate",
+      "new": "False{}",
+      "old": "Bool.or(starts(ts,\"&\"),starts(ts,\"|\"))",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/type-operators-separate/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tparse\targument-separator\t58:59:7:18\n",
+        "stdout": ""
+      },
+      "sha256": "c96170bbd5f9925d458115f1fe5e95b49a67ac1c08cb241637caa8e807fffc7e",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/type-operators-separate/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "pair-parameter"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tparse\texpected-=\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/binding-type-continuation-invalid/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/binding-type-continuation-invalid/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "parse.bend",
+      "name": "binding-type-continuation-invalid",
+      "new": "S.choose(Result<S.Error,Parsed>,False{},u =>",
+      "old": "S.choose(Result<S.Error,Parsed>,continues(tail),u =>",
+      "outcome": "semantic-kill",
+      "plain": true,
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/binding-type-continuation-invalid/mutant.js",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tparse\texpected-=\t71:72:6:12\n",
+        "stdout": ""
+      },
+      "sha256": "c219087446dfb99e84d100cc483221e8291b3cf39a1489344323e9a59e6d31bc",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/binding-type-continuation-invalid/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "arrow-let"
     }
   ],
   "output_guard": [
@@ -27723,6 +30589,260 @@
         "stdout": "Lit{}\n"
       },
       "run": "rel/w/app/ok.bend"
+    }
+  ],
+  "round5_reference": [
+    {
+      "name": "shadow-parameter-call",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/shadow/param/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- flip : lib/m.Flag\n- b    : lib/m.Flag\nLocation: lib/m.g\n10 | def g(flip: Flag, b: Flag) -> Flag:\n11>|   flip(b)\n   |   ^^^^^^^\n12 | \n",
+        "stdout": ""
+      },
+      "run": "shadow/param/main.bend"
+    },
+    {
+      "name": "shadow-field-call",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/shadow/field/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- flip : lib/m.Flag\n- b    : lib/m.Flag\nLocation: lib/m.g\n14 |   match p:\n15>|     case P{flip, b}: flip(b)\n   |                      ^^^^^^^\n16 | \n",
+        "stdout": ""
+      },
+      "run": "shadow/field/main.bend"
+    },
+    {
+      "name": "shadow-let-call",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/shadow/let/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a function type\n- observed : lib/m.Flag\nContext:\n- a    : lib/m.Flag\n- b    : lib/m.Flag\n- flip : lib/m.Flag\nLocation: lib/m.g\n11 |   flip = a\n12>|   flip(b)\n   |   ^^^^^^^\n13 | \n",
+        "stdout": ""
+      },
+      "run": "shadow/let/main.bend"
+    },
+    {
+      "name": "unshadowed-module-call",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/shadow/unbound/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "shadow/unbound/main.bend"
+    },
+    {
+      "name": "shadow-entry-call",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/shadow/entry.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a function type\n- observed : Light\nContext:\n- flip : Light\n- b    : Light\nLocation: g\n10 | def g(flip: Light, b: Light) -> Light:\n11>|   flip(b)\n   |   ^^^^^^^\n12 | \n",
+        "stdout": ""
+      },
+      "run": "shadow/entry.bend"
+    },
+    {
+      "name": "pair-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/pair-param.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/pair-param.bend"
+    },
+    {
+      "name": "or-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/or-param.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/or-param.bend"
+    },
+    {
+      "name": "pair-field",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/pair-field.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/pair-field.bend"
+    },
+    {
+      "name": "pair-module-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/module/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/module/main.bend"
+    },
+    {
+      "name": "pair-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/pair-let.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/pair-let.bend"
+    },
+    {
+      "name": "or-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/or-let.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/or-let.bend"
+    },
+    {
+      "name": "arrow-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/arrow-let.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/arrow-let.bend"
+    },
+    {
+      "name": "apply-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/apply-let.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/apply-let.bend"
+    },
+    {
+      "name": "local-pair-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/local-pair.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "operator/local-pair.bend"
+    },
+    {
+      "name": "undeclared-pair-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/undeclared-pair.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: drop\n4 | \n5>| def drop(p: Light & Light) -> Light:\n  |             ^^^^^^^^^^^^^\n6 |   Lit{}\n",
+        "stdout": ""
+      },
+      "run": "operator/undeclared-pair.bend"
+    },
+    {
+      "name": "undeclared-pair-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/undeclared-pair-let.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a defined name\n- observed : Pair\nLocation: main\n5 | def main() -> Light:\n6>|   x : Light & Light = (Lit{}, Dark{})\n  |       ^^^^^^^^^^^^^^\n7 |   Lit{}\n",
+        "stdout": ""
+      },
+      "run": "operator/undeclared-pair-let.bend"
+    },
+    {
+      "name": "juxtaposed-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/juxtaposed-param.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Type\n- observed : Quant\nContext:\n- p     : Light\n- Light : Quant\nLocation: drop\n4 | \n5>| def drop(p: Light Light) -> Light:\n  |                             ^^^^^\n6 |   Lit{}\n",
+        "stdout": ""
+      },
+      "run": "operator/juxtaposed-param.bend"
+    },
+    {
+      "name": "juxtaposed-let",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round5/operator/juxtaposed-let.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : ':'\nLocation:\n5 | def main() -> Light:\n6>|   x : Light Light = Lit{}\n  |     ^\n7 |   Lit{}\n",
+        "stdout": ""
+      },
+      "run": "operator/juxtaposed-let.bend"
     }
   ],
   "seed": {
