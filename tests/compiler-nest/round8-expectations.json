@@ -1,0 +1,3783 @@
+{
+  "basis": "Reviewer Type-kind promotion repros verbatim (host entries over Sel appended where a parameter is fielded), reviewer generator hits, frontier-binding negatives and Data controls, frozen with the pinned seed before the repair.",
+  "seed": {
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sha256": {
+      "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+    }
+  },
+  "fixtures": [
+    {
+      "name": "c1-promote-default-row",
+      "file": "tests/compiler-nest/round8-fixtures/c1-promote-default-row.bend",
+      "sha256": "f969b62d74917f69e79bee6781d9086b6b1bc7482e60e9fe4cb426810d0adc9b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c1-promote-default-row.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n4 | \n5>| def f(m: Mode) -> Mode:\n  |       ^\n6 |   match m:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c2-promote-no-match",
+      "file": "tests/compiler-nest/round8-fixtures/c2-promote-no-match.bend",
+      "sha256": "5adaec820b76bf79ff0644be656c47e3d41fd22f73be1c2305da7645c5336c62",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c2-promote-no-match.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n4 | \n5>| def f(m: Mode) -> Mode:\n  |       ^\n6 |   match m:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c3-ctor-then-promote-row",
+      "file": "tests/compiler-nest/round8-fixtures/c3-ctor-then-promote-row.bend",
+      "sha256": "5fa38e273adfabf12f6c2909310f23bdeeeef9d7519b462e29b01a0885fbbc2c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c3-ctor-then-promote-row.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box) -> Flag:\n   |       ^\n20 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c4-promote-direct-reuse",
+      "file": "tests/compiler-nest/round8-fixtures/c4-promote-direct-reuse.bend",
+      "sha256": "ce156fdce2ca1d41cc56994a51bcb0be6d5af7fec2f58f2777ce4bb76a3915c4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c4-promote-direct-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box) -> Flag:\n   |       ^\n20 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c5-ctor-then-promote-use",
+      "file": "tests/compiler-nest/round8-fixtures/c5-ctor-then-promote-use.bend",
+      "sha256": "d40acb2d97309b207108a7c623327ee9f7648601fe1d27d8c27c1c974e21eed1",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c5-ctor-then-promote-use.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box) -> Flag:\n   |       ^\n20 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c6-field-promote-direct",
+      "file": "tests/compiler-nest/round8-fixtures/c6-field-promote-direct.bend",
+      "sha256": "d4d47558db2e318563b6789fa6daa44c7eae541dbab227587e79d3ce7066dd21",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c6-field-promote-direct.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 |   match w:\n19>|     case W{+b, c}: bx(b)\n   |            ^^\n20 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c7-promote-wildcard-row",
+      "file": "tests/compiler-nest/round8-fixtures/c7-promote-wildcard-row.bend",
+      "sha256": "542774e36f70d767f8aae28d0658f218f727fdcd5ea41969b83276fa6d44dd3d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c7-promote-wildcard-row.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box) -> Flag:\n   |       ^\n20 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "c8-empty-type-promote-leaf",
+      "file": "tests/compiler-nest/round8-fixtures/c8-empty-type-promote-leaf.bend",
+      "sha256": "7c708eed284b8b0c32b692b241fbdb0863313bc680ba869d2f86710c2a2c8c0a",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/c8-empty-type-promote-leaf.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n6 | \n7>| def f(v: V) -> Flag:\n  |       ^\n8 |   match v:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "d1-data-promote-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.bend",
+      "sha256": "519a3946848feb2537eebc17aa0e7dbe06400f0a9311fd74382df52486a5ee3f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d1-data-promote-destructure/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d1-data-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "data-control"
+    },
+    {
+      "name": "d4-data-promote-direct-reuse",
+      "file": "tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.bend",
+      "sha256": "1ed263e17107c2a93e6a3bf98cedd7774faa4db7aa095b8b824bfd6c97097b57",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d4-data-promote-direct-reuse/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d4-data-promote-direct-reuse.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "data-control"
+    },
+    {
+      "name": "d7-data-ctor-then-promote-row",
+      "file": "tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.bend",
+      "sha256": "22f1c9d64169cd5bdfd318e90edb20ee03072233bbbcf494a8f467c54bf31ba6",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d7-data-ctor-then-promote-row/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d7-data-ctor-then-promote-row.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "data-control"
+    },
+    {
+      "name": "d8-data-ctor-then-promote-use",
+      "file": "tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.bend",
+      "sha256": "c173d17677cb802f30900cabe5e955166eb5e3e059c2f9f2d075fe5f95893b1e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/d8-data-ctor-then-promote-use/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/d8-data-ctor-then-promote-use.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "data-control"
+    },
+    {
+      "name": "k1-param-promote-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/k1-param-promote-destructure.bend",
+      "sha256": "f7c97fc16ad264f4b13838dce439f8af2a101914d35fdf172523e8656a442b95",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k1-param-promote-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Lo",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k1-param-promote-destructure/f-Lo.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k1-param-promote-destructure.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Hi",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k1-param-promote-destructure/f-Hi.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k1-param-promote-destructure.Hi{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k10-promote-nested-rows",
+      "file": "tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.bend",
+      "sha256": "95ec688ceb8d05fce1fc59b6e8f452563e8adc39ac611c3df3223e4acd01a02e",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k10-promote-nested-rows/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k10-promote-nested-rows.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k11-promote-rebuild-reuse",
+      "file": "tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.bend",
+      "sha256": "ce1247ca236dfea04a61df6fe877bbb8b9fa19a4b39a33701ef78925651eab83",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k11-promote-rebuild-reuse/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k11-promote-rebuild-reuse.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k12-promote-field-binder-rebuild",
+      "file": "tests/compiler-nest/round8-fixtures/k12-promote-field-binder-rebuild.bend",
+      "sha256": "3947bc9aba85117278005838b46bddbced2cd5048b5be4553a4dfc85742a3d7f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k12-promote-field-binder-rebuild.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k12-promote-field-binder-rebuild/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k12-promote-field-binder-rebuild.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k12-promote-field-binder-rebuild/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k12-promote-field-binder-rebuild.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k12-promote-field-binder-rebuild/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k12-promote-field-binder-rebuild.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k13-generated-a01432",
+      "file": "tests/compiler-nest/round8-fixtures/k13-generated-a01432.bend",
+      "sha256": "f0be9611ce975b11b70ae845237dee9799991546fb68029849ce7ac11adaeb6c",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k13-generated-a01432.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/mkflag-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/mkflag-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/mkflag-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k13-generated-a01432/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k13-generated-a01432.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k14-generated-a02809",
+      "file": "tests/compiler-nest/round8-fixtures/k14-generated-a02809.bend",
+      "sha256": "2a8bf72a9d5550d1358ee94eb6d4d21f64d13ba5d6a9658822b6cbb4e0afc4b4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k14-generated-a02809.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/mkflag-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/mkflag-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/mkflag-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S0-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S0-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S0-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S1-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S1-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S1-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S2-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S2-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k14-generated-a02809/probe-S2-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k14-generated-a02809.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k15-generated-a02883",
+      "file": "tests/compiler-nest/round8-fixtures/k15-generated-a02883.bend",
+      "sha256": "4f9ffd415c1dc5b702d6287d553298ab194d41ea51ee9c9e67505a38f4d2bc70",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k15-generated-a02883.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/mkflag-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/mkflag-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/mkflag-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k15-generated-a02883/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k15-generated-a02883.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k16-inherited-field-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.bend",
+      "sha256": "a70ec71d09ec74635054fcdcd2422480937f2e28b7d07d12a0bbd90f26c91177",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k16-inherited-field-destructure/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k16-inherited-field-destructure.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k2-promote-destructure-field-reuse",
+      "file": "tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.bend",
+      "sha256": "8f71df1cc971674de551da3813109b0cc60df965237272ae4c9e82e717a08f99",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k2-promote-destructure-field-reuse/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k2-promote-destructure-field-reuse.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k3-promote-destructure-rebuild-twice",
+      "file": "tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.bend",
+      "sha256": "1fb0dcbeb04e729aa7ea3d3f09de2283fd17d4f7a9fc164b7b19523dc13b47fb",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k3-promote-destructure-rebuild-twice/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k3-promote-destructure-rebuild-twice.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k4-multi-promote-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.bend",
+      "sha256": "0a99ab2417ccf75f2679b9cda75f92229b3c39d385f2442a059212cbda20a450",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S0-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S0-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0,
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S0-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S1-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S1-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S1-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S2-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S2-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2,
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k4-multi-promote-destructure/probe-S2-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k4-multi-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k5-promote-nested-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.bend",
+      "sha256": "9b2390fa31a46be06ddbf4a5bb2b9adfa6b450e7f0fda139f113e30b00470939",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k5-promote-nested-destructure/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k5-promote-nested-destructure.Off{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k6-field-promote-destructure",
+      "file": "tests/compiler-nest/round8-fixtures/k6-field-promote-destructure.bend",
+      "sha256": "481ad5b82f5f21291e3d034453e512725028d34a2bc4fdf5be2ab34363f033b4",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k6-field-promote-destructure.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k6-field-promote-destructure/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k6-field-promote-destructure.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k6-field-promote-destructure/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k6-field-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k6-field-promote-destructure/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k6-field-promote-destructure.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k7-generated-a02852",
+      "file": "tests/compiler-nest/round8-fixtures/k7-generated-a02852.bend",
+      "sha256": "22c913960bc4768225c86d5276f8a87ae266b72b4dee1e28544133db02903e15",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k7-generated-a02852.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/mkflag-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/mkflag-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "mkflag",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/mkflag-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k7-generated-a02852/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k7-generated-a02852.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k8-promote-destructure-both-names",
+      "file": "tests/compiler-nest/round8-fixtures/k8-promote-destructure-both-names.bend",
+      "sha256": "6d73aca499aa032dd642af1025203efaa33ea53059a0b1c0ca88a26143253e16",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k8-promote-destructure-both-names.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Lo",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k8-promote-destructure-both-names/f-Lo.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k8-promote-destructure-both-names.Lo{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Hi",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k8-promote-destructure-both-names/f-Hi.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k8-promote-destructure-both-names.Hi{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "k9-promote-destructure-param-name",
+      "file": "tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.bend",
+      "sha256": "3318c5e9f93e1b6967c51ed244cbdc0656ae8da9c2b2e0dd543ecc1b9194dbfc",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/both-Off-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            0,
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/both-Off-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/both-On-Off.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "both",
+          "ordinals": [
+            1,
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/both-On-On.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Off",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/probe-S0.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.Off{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/probe-S1.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.On{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "probe",
+          "ordinals": [
+            2
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "On",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/k9-promote-destructure-param-name/probe-S2.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/k9-promote-destructure-param-name.On{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "n1-promote-then-let",
+      "file": "tests/compiler-nest/round8-fixtures/n1-promote-then-let.bend",
+      "sha256": "6075acd610d344991e36652cd8bc3f3bbdb1928b8e9f90c3164bf64232977b9f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n1-promote-then-let.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n4 | \n5>| def f(m: Mode) -> Mode:\n  |       ^\n6 |   match m:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "n2-inherited-field-reused",
+      "file": "tests/compiler-nest/round8-fixtures/n2-inherited-field-reused.bend",
+      "sha256": "48aac3244879bc25b76994d075c08fcc802429690f1f909518c4b046b616d17f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n2-inherited-field-reused.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n25 |       match y:\n26>|         case W{b}: both(bx(b), bx(b))\n   |                ^\n27 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "n3-inherited-field-bound",
+      "file": "tests/compiler-nest/round8-fixtures/n3-inherited-field-bound.bend",
+      "sha256": "8ffd05b91beca5c2ca29eb8d813419d01bea4b7787d1a82363d7fe5baffd416f",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n3-inherited-field-bound.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n25 |       match y:\n26>|         case W{b}: bx(b)\n   |                ^\n27 | \n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "n4-promote-then-match-later",
+      "file": "tests/compiler-nest/round8-fixtures/n4-promote-then-match-later.bend",
+      "sha256": "09494d8cfcbaf3fef7e78eecea87f580bd6719b6a9c81de497d755e22746dfd6",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n4-promote-then-match-later.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box, v: Box) -> Flag:\n   |       ^\n20 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "n5-promote-then-empty-match-later",
+      "file": "tests/compiler-nest/round8-fixtures/n5-promote-then-empty-match-later.bend",
+      "sha256": "e55b7e8c3024c5984e2b9e69e6e4bcad6e6e6c0bfd596da7a7021e34391308f8",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n5-promote-then-empty-match-later.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n20 | \n21>| def f(x: Box, v: V) -> Flag:\n   |       ^\n22 |   match x:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "n6-promote-column-then-split",
+      "file": "tests/compiler-nest/round8-fixtures/n6-promote-column-then-split.bend",
+      "sha256": "f24d807cfcb402691036a8d756d2df2bd6d339ce5a99914e6a6088893fca97bc",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/n6-promote-column-then-split.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: f\n18 | \n19>| def f(x: Box, w: Box) -> Flag:\n   |       ^\n20 |   match x w:\n"
+      },
+      "calls": [],
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "finding": "kind-at-binding"
+    },
+    {
+      "name": "x1-empty-type-promote-empty-match",
+      "file": "tests/compiler-nest/round8-fixtures/x1-empty-type-promote-empty-match.bend",
+      "sha256": "444f71e2c4d87ba041ef758c06d909b5dee5f01e148a2afa85caf2e6784c745f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/x1-empty-type-promote-empty-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "destructured-promotion"
+    },
+    {
+      "name": "y1-promote-residual-destructure-type",
+      "file": "tests/compiler-nest/round8-fixtures/y1-promote-residual-destructure-type.bend",
+      "sha256": "fd4112d3a4b05ae50841ab2968dfdcc34b8f44a6a4ad6a9fb72038d94a03a22b",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/y1-promote-residual-destructure-type.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Hi",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y1-promote-residual-destructure-type/f-Lo.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/y1-promote-residual-destructure-type.Hi{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Lo",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y1-promote-residual-destructure-type/f-Hi.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/y1-promote-residual-destructure-type.Lo{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdefault-scrutinee\t"
+      },
+      "finding": "default-scrutinee"
+    },
+    {
+      "name": "y2-promote-residual-destructure-data",
+      "file": "tests/compiler-nest/round8-fixtures/y2-promote-residual-destructure-data.bend",
+      "sha256": "f3de9274c91084f9dc09b1d4b4e9ade62a0ad2e5b5b909b7a81bf5b7b7fc8e90",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round8-fixtures/y2-promote-residual-destructure-data.bend"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "f",
+          "ordinals": [
+            0
+          ],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Hi",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y2-promote-residual-destructure-data/f-Lo.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/y2-promote-residual-destructure-data.Hi{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "f",
+          "ordinals": [
+            1
+          ],
+          "type_id": 0,
+          "tag": 0,
+          "result": "Lo",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/y2-promote-residual-destructure-data/f-Hi.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round8-fixtures/y2-promote-residual-destructure-data.Lo{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdefault-scrutinee\t"
+      },
+      "finding": "default-scrutinee"
+    }
+  ]
+}
