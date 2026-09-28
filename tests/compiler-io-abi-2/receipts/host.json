@@ -1,0 +1,2261 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "profile": "knot-io-2",
+  "sources": {
+    "scripts/run-wasm-io.mjs": "43b2246bdbd14d3068033466cdd7d17f2771959e0de5fb6cf642797e9c3b75e7",
+    "tests/compiler-io/host/invoke.mjs": "94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec",
+    "tests/compiler-io-abi-2/FIXTURES.md": "6f214e710d33a76659525006882ec0a975b04bb2dd281c2942c6f7e468532852",
+    "tests/compiler-io-abi-2/check.py": "649980e394f53f7beb27ffc0ce24b8560fb9b93fc2c456a295cf50a08d6f266d",
+    "tests/compiler-io-abi-2/expectations.json": "73fe3bb65077c1846a7afd51b207e9cdc60b8cce1ebded682e9279a378d452dd",
+    "tests/compiler-io-abi-2/probe.wat": "761f4198709ab5cd17ab51bd163c1161903dd0bc97598c4e34c19e984e12c97b",
+    "tests/compiler-io-abi-2/read-bytes.bend": "51c096fed76a2a9d3f6b4e85b374ccaed3e9a9dc5e5dc2292c77ed8c40a6e253",
+    "tests/compiler-io-abi-2/reference/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "tests/compiler-io-abi-2/reference/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2",
+    "tests/compiler-io-abi-2/reference-main.c": "0cc65643438abd4eb784a950e3c8c97c22f769f44c8299793a8645c5fb693c3b",
+    "tests/compiler-io-abi-2/reference.mjs": "568cb6748a7b15e355be86545a2596458dfee7967db776376ca7601361314998"
+  },
+  "tools": {
+    "node": "v22.22.3",
+    "bun": "1.3.14",
+    "wat2wasm": "1.0.41",
+    "clang": "Apple clang version 21.0.0 (clang-2100.1.1.101)"
+  },
+  "seed": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    "effs/file_open.c": "62d98ea6e21c4aeede4eadae7abac2ff2601e5335a3bd19faa1f74afa514521f",
+    "effs/file_open.js": "dd549f5f05eb896aef9a3a02ffecf2ee902e653f5463be72781edab1cd1180ae",
+    "effs/file_read.c": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8",
+    "effs/file_read.js": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+  },
+  "fixtures": [
+    {
+      "family": "read_bytes",
+      "name": "empty",
+      "wasm_sha256": "2d4728adb3ae832cd19fdf260145b04257303797f5f8443782a2939768d7b97b",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "binary",
+      "wasm_sha256": "c621b7812f5f9ff46bd0b5e612d424cc46f210b6aeb9bd2be2b8697d3f854d98",
+      "observations": [
+        [
+          0,
+          1,
+          "00ff80c328eda080f09f9982efbbbf"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "split-binary",
+      "wasm_sha256": "f96306b6b9cb3ab5197f47aa7aee12e8173bedc0048c6bc241124eaea64dabc0",
+      "observations": [
+        [
+          0,
+          1,
+          "f0"
+        ],
+        [
+          0,
+          1,
+          "9f99"
+        ],
+        [
+          0,
+          1,
+          "8200ff"
+        ],
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "zero-keeps-position",
+      "wasm_sha256": "2210bc5a0f2253b7d808f1af824d30f863cd56f9065b11f80c088a8b1d9ba368",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ],
+        [
+          0,
+          1,
+          "00ff"
+        ],
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "shared-cursor",
+      "wasm_sha256": "d1340a9145a201b3d1d4cccbbe456511bab13f23bf3f7a096769e8024561c702",
+      "observations": [
+        [
+          0,
+          1,
+          "61c3"
+        ],
+        [
+          0,
+          1,
+          "28efbfbd"
+        ],
+        [
+          0,
+          1,
+          "62"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "text-then-bytes",
+      "wasm_sha256": "249138524459b8e39252d39d952eb3dca376e5e0ffe21c3ed2e1b04c1bdec86c",
+      "observations": [
+        [
+          0,
+          1,
+          "efbfbd"
+        ],
+        [
+          0,
+          1,
+          "9f998200"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "all-byte-values",
+      "wasm_sha256": "f984cf41afa1886fe1091425be19ee7e67457e58d8f1005ddac1907587576509",
+      "observations": [
+        [
+          0,
+          1,
+          "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "write-handle",
+      "wasm_sha256": "3d499da00066532990c21b5845e8b5711a7edd76c9a432294dfc1f2e66bef5ec",
+      "observations": [
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ],
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "append-handle",
+      "wasm_sha256": "8ee97b2ff84f46d344c81cb03483d01e1a77d669bc481b63c4c9419af98786a7",
+      "observations": [
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "directory",
+      "wasm_sha256": "fc69cd82f19638a39571691820ce39febbc134f12e45265f73bb3436e8385339",
+      "observations": [
+        [
+          21,
+          1,
+          "49732061206469726563746f7279"
+        ],
+        [
+          21,
+          1,
+          "49732061206469726563746f7279"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "read_bytes",
+      "name": "grow-memory",
+      "wasm_sha256": "a4dd4a92b197ea719687c65d20e2782b5421b579e6eeabc544b9af0cd0845eaf",
+      "observations": [
+        [
+          0,
+          1,
+          {
+            "bytes": 65537,
+            "sha256": "ef9993e97e36b66b65b16a741da437aecddffa22185e176a49f8cfe9ecc7a07c"
+          }
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "empty",
+      "wasm_sha256": "3e18acc02aff3ed0ea45effa7b2782115963f19f246bb8b9f4afe1ad559aff0c",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "dot",
+      "wasm_sha256": "357b55a9ac5d78f1420650f1aec7f8915dd7b4f7b8c1b55a0db9b070be8d1f59",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "file",
+      "wasm_sha256": "2a43a8167e1597788794a44ca678702f06451750cd16fcfd760d0e9f99f969fc",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "directory",
+      "wasm_sha256": "aa91521668237e9c52a5d47edb64abb29db85a5b50165e9edf79dea1629efd64",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "separators",
+      "wasm_sha256": "4eb4df3c1bf505ab9717596cdabaec931eacc1b036872a8531edf9badafab1a4",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "parent",
+      "wasm_sha256": "4afb3c36f7a30b0b5d2d5ab5e119e47545b509a161d4165de47599ba34c1a1e5",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "file-parent",
+      "wasm_sha256": "0434a9a627fa61c3e89499c09a5608c861a4199499cae8a7d2c1f4826cf8cd54",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "absolute",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "absolute-root",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "missing",
+      "wasm_sha256": "860692371ee6ed7e0b659a469b402446ecb343610ff5cd8dd882d3bd61da4951",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "missing-child",
+      "wasm_sha256": "5bb28aadd5e40552e47cc2f87796fbd1bb0235ffcdeee8bd1d06a37590c67618",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "not-directory",
+      "wasm_sha256": "2ba2aa297ef9617dc4debe0249a53befef3c2d208bb0227e475ffb02c8585d8a",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "missing-before-parent",
+      "wasm_sha256": "7e3fbaec0b40f184cbdb8bbb5d4f144534655af815cb383da67f5323024a5237",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unicode",
+      "wasm_sha256": "d3221010000d6d29652f2a89096a2e15df13aad08b300c117d2c26c4c416badb",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "symlink-file",
+      "wasm_sha256": "669fdffe3211c1437ff3ca5a93b002000657d6262b4c85f7c41cd85f44f4a15a",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "symlink-directory",
+      "wasm_sha256": "e8dce7eb630d7af39447f648fbe39957b4b6aba6459b6dbc2a8b3f3dd6b8f4d0",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "symlink-before-parent",
+      "wasm_sha256": "d8a11385b3d6f7790cb941b74c7a5476acf36d1546868c6c6141088a5fb59082",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "dangling-symlink",
+      "wasm_sha256": "a5ee02108f6bd394bb1f289b3809fa568ec8aa4bbd80cec5ba05bb9f79437a86",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "symlink-outside",
+      "wasm_sha256": "d747e584c067c9db4a16cb14cc94aae34dde401b3e078229e5b35fa9842d07e5",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "hardlink",
+      "wasm_sha256": "4cd75560e829b86a0e7784aa47de61b9883309064d61ebf69975ef62a9bdcad2",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "fifo",
+      "wasm_sha256": "05ad57ec538db5d67412b9f79e100d23b2cac8cbd43e6c2e5a6a59e4392b8e09",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "case-file",
+      "wasm_sha256": "d1e239861e1caa63b73b078b820ec7f66ec1754cf8086b7a37e92885f10e3557",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "case-directory",
+      "wasm_sha256": "58d698d1ed7f293d6d6e9da7386240fcc452d1dd0825e1b1231eae020cbd2555",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "case-before-parent",
+      "wasm_sha256": "188a567978e225eb378f0972734d7b7aa0cfe29b636cf89e314cb7f5655d9e31",
+      "observations": [
+        [
+          0,
+          0,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "nul",
+      "wasm_sha256": "1ac638179962624c0260108a7abaf5d71d27242cb404f8385850ea2404546df0",
+      "observations": [
+        [
+          92,
+          0,
+          "496c6c6567616c20627974652073657175656e6365"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "too-long",
+      "wasm_sha256": "e36f880ab423775e5c5db9d003b4863ccb795f5b95d728ddbf99e76b1c48fb9a",
+      "observations": [
+        [
+          63,
+          0,
+          "46696c65206e616d6520746f6f206c6f6e67"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-file",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-root",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-ancestor-relative",
+      "wasm_sha256": "2a43a8167e1597788794a44ca678702f06451750cd16fcfd760d0e9f99f969fc",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory",
+      "wasm_sha256": "ced2f8696d79953a5337d63e6fc2b6b24a23c2d58f49506bd4f30ed6bb0101cb",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory-entry",
+      "wasm_sha256": "1af2407ebdc489b44718e1039fff69fd5603661a67bf7ee03a9e70a85a348dc9",
+      "observations": [
+        [
+          13,
+          0,
+          "5065726d697373696f6e2064656e696564"
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    },
+    {
+      "family": "path_identity",
+      "name": "unlistable-directory-missing",
+      "wasm_sha256": "495706d8202a51a45570e91c688064d4fcaa77806dd87fa8345df7da10f78219",
+      "observations": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ],
+      "outcome": {
+        "status": "Completed",
+        "exit": 0
+      }
+    }
+  ],
+  "parity": [
+    [
+      "file.bin",
+      1
+    ],
+    [
+      "FILE.BIN",
+      0
+    ],
+    [
+      "dir",
+      1
+    ],
+    [
+      "DIR",
+      0
+    ],
+    [
+      "leaf",
+      1
+    ],
+    [
+      "link-file",
+      0
+    ],
+    [
+      "link-dir",
+      0
+    ],
+    [
+      "dangling",
+      0
+    ],
+    [
+      "fifo",
+      1
+    ],
+    [
+      "missing",
+      1
+    ],
+    [
+      ".",
+      1
+    ],
+    [
+      "file.bin/file.bin",
+      1
+    ],
+    [
+      "file.bin/FILE.BIN",
+      1
+    ],
+    [
+      "file.bin/dir",
+      1
+    ],
+    [
+      "file.bin/DIR",
+      1
+    ],
+    [
+      "file.bin/leaf",
+      1
+    ],
+    [
+      "file.bin/link-file",
+      1
+    ],
+    [
+      "file.bin/link-dir",
+      1
+    ],
+    [
+      "file.bin/dangling",
+      1
+    ],
+    [
+      "file.bin/fifo",
+      1
+    ],
+    [
+      "file.bin/missing",
+      1
+    ],
+    [
+      "file.bin/.",
+      1
+    ],
+    [
+      "file.bin/..",
+      1
+    ],
+    [
+      "FILE.BIN/file.bin",
+      0
+    ],
+    [
+      "FILE.BIN/FILE.BIN",
+      0
+    ],
+    [
+      "FILE.BIN/dir",
+      0
+    ],
+    [
+      "FILE.BIN/DIR",
+      0
+    ],
+    [
+      "FILE.BIN/leaf",
+      0
+    ],
+    [
+      "FILE.BIN/link-file",
+      0
+    ],
+    [
+      "FILE.BIN/link-dir",
+      0
+    ],
+    [
+      "FILE.BIN/dangling",
+      0
+    ],
+    [
+      "FILE.BIN/fifo",
+      0
+    ],
+    [
+      "FILE.BIN/missing",
+      0
+    ],
+    [
+      "FILE.BIN/.",
+      0
+    ],
+    [
+      "FILE.BIN/..",
+      0
+    ],
+    [
+      "dir/file.bin",
+      1
+    ],
+    [
+      "dir/FILE.BIN",
+      1
+    ],
+    [
+      "dir/dir",
+      1
+    ],
+    [
+      "dir/DIR",
+      1
+    ],
+    [
+      "dir/leaf",
+      1
+    ],
+    [
+      "dir/link-file",
+      1
+    ],
+    [
+      "dir/link-dir",
+      1
+    ],
+    [
+      "dir/dangling",
+      1
+    ],
+    [
+      "dir/fifo",
+      1
+    ],
+    [
+      "dir/missing",
+      1
+    ],
+    [
+      "dir/.",
+      1
+    ],
+    [
+      "dir/..",
+      1
+    ],
+    [
+      "DIR/file.bin",
+      0
+    ],
+    [
+      "DIR/FILE.BIN",
+      0
+    ],
+    [
+      "DIR/dir",
+      0
+    ],
+    [
+      "DIR/DIR",
+      0
+    ],
+    [
+      "DIR/leaf",
+      0
+    ],
+    [
+      "DIR/link-file",
+      0
+    ],
+    [
+      "DIR/link-dir",
+      0
+    ],
+    [
+      "DIR/dangling",
+      0
+    ],
+    [
+      "DIR/fifo",
+      0
+    ],
+    [
+      "DIR/missing",
+      0
+    ],
+    [
+      "DIR/.",
+      0
+    ],
+    [
+      "DIR/..",
+      0
+    ],
+    [
+      "leaf/file.bin",
+      1
+    ],
+    [
+      "leaf/FILE.BIN",
+      1
+    ],
+    [
+      "leaf/dir",
+      1
+    ],
+    [
+      "leaf/DIR",
+      1
+    ],
+    [
+      "leaf/leaf",
+      1
+    ],
+    [
+      "leaf/link-file",
+      1
+    ],
+    [
+      "leaf/link-dir",
+      1
+    ],
+    [
+      "leaf/dangling",
+      1
+    ],
+    [
+      "leaf/fifo",
+      1
+    ],
+    [
+      "leaf/missing",
+      1
+    ],
+    [
+      "leaf/.",
+      1
+    ],
+    [
+      "leaf/..",
+      1
+    ],
+    [
+      "link-file/file.bin",
+      0
+    ],
+    [
+      "link-file/FILE.BIN",
+      0
+    ],
+    [
+      "link-file/dir",
+      0
+    ],
+    [
+      "link-file/DIR",
+      0
+    ],
+    [
+      "link-file/leaf",
+      0
+    ],
+    [
+      "link-file/link-file",
+      0
+    ],
+    [
+      "link-file/link-dir",
+      0
+    ],
+    [
+      "link-file/dangling",
+      0
+    ],
+    [
+      "link-file/fifo",
+      0
+    ],
+    [
+      "link-file/missing",
+      0
+    ],
+    [
+      "link-file/.",
+      0
+    ],
+    [
+      "link-file/..",
+      0
+    ],
+    [
+      "link-dir/file.bin",
+      0
+    ],
+    [
+      "link-dir/FILE.BIN",
+      0
+    ],
+    [
+      "link-dir/dir",
+      0
+    ],
+    [
+      "link-dir/DIR",
+      0
+    ],
+    [
+      "link-dir/leaf",
+      0
+    ],
+    [
+      "link-dir/link-file",
+      0
+    ],
+    [
+      "link-dir/link-dir",
+      0
+    ],
+    [
+      "link-dir/dangling",
+      0
+    ],
+    [
+      "link-dir/fifo",
+      0
+    ],
+    [
+      "link-dir/missing",
+      0
+    ],
+    [
+      "link-dir/.",
+      0
+    ],
+    [
+      "link-dir/..",
+      0
+    ],
+    [
+      "dangling/file.bin",
+      0
+    ],
+    [
+      "dangling/FILE.BIN",
+      0
+    ],
+    [
+      "dangling/dir",
+      0
+    ],
+    [
+      "dangling/DIR",
+      0
+    ],
+    [
+      "dangling/leaf",
+      0
+    ],
+    [
+      "dangling/link-file",
+      0
+    ],
+    [
+      "dangling/link-dir",
+      0
+    ],
+    [
+      "dangling/dangling",
+      0
+    ],
+    [
+      "dangling/fifo",
+      0
+    ],
+    [
+      "dangling/missing",
+      0
+    ],
+    [
+      "dangling/.",
+      0
+    ],
+    [
+      "dangling/..",
+      0
+    ],
+    [
+      "fifo/file.bin",
+      1
+    ],
+    [
+      "fifo/FILE.BIN",
+      1
+    ],
+    [
+      "fifo/dir",
+      1
+    ],
+    [
+      "fifo/DIR",
+      1
+    ],
+    [
+      "fifo/leaf",
+      1
+    ],
+    [
+      "fifo/link-file",
+      1
+    ],
+    [
+      "fifo/link-dir",
+      1
+    ],
+    [
+      "fifo/dangling",
+      1
+    ],
+    [
+      "fifo/fifo",
+      1
+    ],
+    [
+      "fifo/missing",
+      1
+    ],
+    [
+      "fifo/.",
+      1
+    ],
+    [
+      "fifo/..",
+      1
+    ],
+    [
+      "missing/file.bin",
+      1
+    ],
+    [
+      "missing/FILE.BIN",
+      1
+    ],
+    [
+      "missing/dir",
+      1
+    ],
+    [
+      "missing/DIR",
+      1
+    ],
+    [
+      "missing/leaf",
+      1
+    ],
+    [
+      "missing/link-file",
+      1
+    ],
+    [
+      "missing/link-dir",
+      1
+    ],
+    [
+      "missing/dangling",
+      1
+    ],
+    [
+      "missing/fifo",
+      1
+    ],
+    [
+      "missing/missing",
+      1
+    ],
+    [
+      "missing/.",
+      1
+    ],
+    [
+      "missing/..",
+      1
+    ],
+    [
+      "./file.bin",
+      1
+    ],
+    [
+      "./FILE.BIN",
+      0
+    ],
+    [
+      "./dir",
+      1
+    ],
+    [
+      "./DIR",
+      0
+    ],
+    [
+      "./leaf",
+      1
+    ],
+    [
+      "./link-file",
+      0
+    ],
+    [
+      "./link-dir",
+      0
+    ],
+    [
+      "./dangling",
+      0
+    ],
+    [
+      "./fifo",
+      1
+    ],
+    [
+      "./missing",
+      1
+    ],
+    [
+      "./.",
+      1
+    ],
+    [
+      "$SANDBOX/file.bin",
+      1
+    ],
+    [
+      "$SANDBOX/FILE.BIN",
+      0
+    ],
+    [
+      "$SANDBOX/dir",
+      1
+    ],
+    [
+      "$SANDBOX/DIR",
+      0
+    ],
+    [
+      "$SANDBOX/leaf",
+      1
+    ],
+    [
+      "$SANDBOX/link-file",
+      0
+    ],
+    [
+      "$SANDBOX/link-dir",
+      0
+    ],
+    [
+      "$SANDBOX/dangling",
+      0
+    ],
+    [
+      "$SANDBOX/fifo",
+      1
+    ],
+    [
+      "$SANDBOX/missing",
+      1
+    ],
+    [
+      "$SANDBOX/.",
+      1
+    ]
+  ],
+  "seed_runs": [
+    {
+      "name": "empty",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "empty",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "empty",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "binary",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "00ff80c328eda080f09f9982efbbbf"
+        ]
+      ]
+    },
+    {
+      "name": "binary",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "00ff80c328eda080f09f9982efbbbf"
+        ]
+      ]
+    },
+    {
+      "name": "binary",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "00ff80c328eda080f09f9982efbbbf"
+        ]
+      ]
+    },
+    {
+      "name": "split-binary",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "f0"
+        ],
+        [
+          0,
+          "9f99"
+        ],
+        [
+          0,
+          "8200ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "split-binary",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "f0"
+        ],
+        [
+          0,
+          "9f99"
+        ],
+        [
+          0,
+          "8200ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "split-binary",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "f0"
+        ],
+        [
+          0,
+          "9f99"
+        ],
+        [
+          0,
+          "8200ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "zero-keeps-position",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ],
+        [
+          0,
+          "00ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "zero-keeps-position",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ],
+        [
+          0,
+          "00ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "zero-keeps-position",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          ""
+        ],
+        [
+          0,
+          "00ff"
+        ],
+        [
+          0,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "shared-cursor",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "61c3"
+        ],
+        [
+          0,
+          "28efbfbd"
+        ],
+        [
+          0,
+          "62"
+        ]
+      ]
+    },
+    {
+      "name": "shared-cursor",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "61c3"
+        ],
+        [
+          0,
+          "28efbfbd"
+        ],
+        [
+          0,
+          "62"
+        ]
+      ]
+    },
+    {
+      "name": "shared-cursor",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "61c3"
+        ],
+        [
+          0,
+          "28efbfbd"
+        ],
+        [
+          0,
+          "62"
+        ]
+      ]
+    },
+    {
+      "name": "text-then-bytes",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "efbfbd"
+        ],
+        [
+          0,
+          "9f998200"
+        ]
+      ]
+    },
+    {
+      "name": "text-then-bytes",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "efbfbd"
+        ],
+        [
+          0,
+          "9f998200"
+        ]
+      ]
+    },
+    {
+      "name": "text-then-bytes",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "efbfbd"
+        ],
+        [
+          0,
+          "9f998200"
+        ]
+      ]
+    },
+    {
+      "name": "all-byte-values",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        ]
+      ]
+    },
+    {
+      "name": "all-byte-values",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        ]
+      ]
+    },
+    {
+      "name": "all-byte-values",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        ]
+      ]
+    },
+    {
+      "name": "write-handle",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ],
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "write-handle",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ],
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "write-handle",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ],
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "append-handle",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "append-handle",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "append-handle",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          9,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "directory",
+      "lane": "interpreter",
+      "status": "agree",
+      "observations": [
+        [
+          21,
+          "49732061206469726563746f7279"
+        ],
+        [
+          21,
+          "49732061206469726563746f7279"
+        ]
+      ]
+    },
+    {
+      "name": "directory",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          21,
+          "49732061206469726563746f7279"
+        ],
+        [
+          21,
+          "49732061206469726563746f7279"
+        ]
+      ]
+    },
+    {
+      "name": "directory",
+      "lane": "js",
+      "status": "agree",
+      "observations": [
+        [
+          21,
+          "49732061206469726563746f7279"
+        ],
+        [
+          21,
+          "49732061206469726563746f7279"
+        ]
+      ]
+    },
+    {
+      "name": "grow-memory",
+      "lane": "interpreter",
+      "status": "Exhausted",
+      "bound": "Bun lane stack, lists over 32000 cells"
+    },
+    {
+      "name": "grow-memory",
+      "lane": "native",
+      "status": "agree",
+      "observations": [
+        [
+          0,
+          {
+            "bytes": 65537,
+            "sha256": "ef9993e97e36b66b65b16a741da437aecddffa22185e176a49f8cfe9ecc7a07c"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "grow-memory",
+      "lane": "js",
+      "status": "Exhausted",
+      "bound": "Bun lane stack, lists over 32000 cells"
+    }
+  ],
+  "host_boundaries": [
+    {
+      "name": "bytes-wrong-signature",
+      "wasm_sha256": "0683e2b711a523061a65d432d6357b8281e8f013542482089e24bb3f9409f50b",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-wrong-signature",
+      "wasm_sha256": "cc7f8be93e1d287b5d6d262abb2d4b3ff2dea21e9acda0bae4a801797c1b50e1",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "bytes-unaligned-result",
+      "wasm_sha256": "b635396810868f4a5902a12389202a339c3471689fc30009344bc1917a183a27",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-unaligned-result",
+      "wasm_sha256": "adbd90c673153b85025444aaecc3d607d8853e4efa2dbd18b16cea37bc838568",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "bytes-bad-result",
+      "wasm_sha256": "bc6a986d9c4482f108afb987ea5161486d00c50d9d02849ca4062f9e509140e2",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-bad-result",
+      "wasm_sha256": "db5d8fb44f775e3f9b4f9f415f5d30e2de75e23f604056bc312b7456bded56d1",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-bad-pointer",
+      "wasm_sha256": "5d3021e431d18ad5ed4194a9dafbc1453eda609acf453c80c3d4cdf7b165ffcc",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-invalid-utf8",
+      "wasm_sha256": "5021c0b40ea829db524e6da3887a5a44065cb1be8ee6cd83cbe14214f5be5502",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "bytes-allocator-effect",
+      "wasm_sha256": "fd10c01305ac9c66d4ac5dbb3dec4460dbb84b5e16c6a26ab1c75bfed0cad2c4",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "identity-allocator-effect",
+      "wasm_sha256": "41be8a3881d94e5ec3bd6d1cbf536896584703cbbf80232ba4add844dad21b63",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "unknown-exhaustion",
+      "wasm_sha256": "7efacf4e1a1a6b72f4cb0f8020de07c7032124eaa24aee4c56a851ccf618ca41",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "allocator-step-exhaustion",
+      "wasm_sha256": "7562cdf3e66798e4568d15f36c686d1701b19f2b07e3c36d387aa770b643c917",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "allocator-frame-exhaustion",
+      "wasm_sha256": "56362e709ba47828ed53e42acab511ada7efc5a2b3a200eec0976c70f6196331",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tabi\n"
+    },
+    {
+      "name": "bytes-unknown-handle",
+      "wasm_sha256": "99fe92253c6bcbcb5544f42fae088f55840ba4bc41a30756dd01426a26e934f9",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "handle",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\thandle\n"
+    },
+    {
+      "name": "bytes-closed-handle",
+      "wasm_sha256": "50133383f6cccbfe27d8f978e1284be1c1d9e598b1f6f5f9bc2cef216b3706b2",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "handle",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\thandle\n"
+    },
+    {
+      "name": "identity-parent-escape",
+      "wasm_sha256": "1a628d0d7bcd79a7b11dd80b1465f1e4daf10e91a6efd70993ff26624a6d081c",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "identity-absolute-escape",
+      "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "identity-secret-lower",
+      "wasm_sha256": "6d9e8f5337d1110f26b8d60b55e65909eaec3ae687632e2d5943e8fabeb2323f",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "identity-secret-upper",
+      "wasm_sha256": "15cf385aa78d98522627ef9539db911b98f2e01844b98e3bdafb63e1a4b3527a",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "identity-secret-nested",
+      "wasm_sha256": "f06d8d51bfb67d80f7eadb1ced8c4056038de135e941c3ed4b7c440a7982157f",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "identity-secret-after-missing",
+      "wasm_sha256": "2ce5bd21cc51c2d0551da240416cdad0bf7a0287ed190f0b91c664050a7fd00b",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      },
+      "stdout": "",
+      "stderr": "HostFailure\tio\tsandbox\n"
+    },
+    {
+      "name": "bytes-transfer-limit",
+      "wasm_sha256": "31e6477752c0994899b12c270af0568fe4d706945a34e27ae3a98e1968727626",
+      "outcome": {
+        "status": "Exhausted",
+        "code": "memory",
+        "exit": 4
+      },
+      "stdout": "",
+      "stderr": "Exhausted\tio\tmemory\n"
+    },
+    {
+      "name": "bytes-allocator-exhaustion",
+      "wasm_sha256": "151cbb58d8f06f599bf1e990669483d01a75292ac171d363e33aa448c82fe599",
+      "outcome": {
+        "status": "Exhausted",
+        "code": "memory",
+        "exit": 4
+      },
+      "stdout": "",
+      "stderr": "Exhausted\tio\tmemory\n"
+    },
+    {
+      "name": "frame-exhaustion",
+      "wasm_sha256": "d961a0006443c58dad85ba713b5b9df0928d8e88ebbd9e065273ad15ae20e6b7",
+      "outcome": {
+        "status": "Exhausted",
+        "code": "frames",
+        "exit": 4
+      },
+      "stdout": "",
+      "stderr": "Exhausted\tio\tframes\n"
+    },
+    {
+      "name": "frame-exhaustion-stops",
+      "wasm_sha256": "42d685ded127e32616b7cc7e18665e89493ac422c6348de62d494e06131c5022",
+      "outcome": {
+        "status": "Exhausted",
+        "code": "frames",
+        "exit": 4
+      },
+      "stdout": "",
+      "stderr": "Exhausted\tio\tframes\n"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "decode-raw-bytes",
+      "witness": "binary",
+      "killed": true,
+      "host_sha256": "5203ea64a2dc55d697b183267b16e8f80a64599fdebe72a7fc199b32d8545d00",
+      "observation": {
+        "name": "binary",
+        "wasm_sha256": "c621b7812f5f9ff46bd0b5e612d424cc46f210b6aeb9bd2be2b8697d3f854d98",
+        "observations": [
+          [
+            0,
+            1,
+            "00efbfbdefbfbdefbfbd28efbfbdefbfbdefbfbdf09f9982efbbbf"
+          ]
+        ],
+        "outcome": {
+          "status": "Completed",
+          "exit": 0
+        }
+      }
+    },
+    {
+      "name": "ignore-path-identity",
+      "witness": "symlink-file",
+      "killed": true,
+      "host_sha256": "59dbbfe4eadc717c209abc0a5dec43a7bea08e910126f155619e827f01267176",
+      "observation": {
+        "name": "symlink-file",
+        "wasm_sha256": "669fdffe3211c1437ff3ca5a93b002000657d6262b4c85f7c41cd85f44f4a15a",
+        "observations": [
+          [
+            0,
+            1,
+            ""
+          ]
+        ],
+        "outcome": {
+          "status": "Completed",
+          "exit": 0
+        }
+      }
+    },
+    {
+      "name": "ignore-case-identity",
+      "witness": "case-file",
+      "killed": true,
+      "host_sha256": "a128f9308c3ed44dce33afae6c604f33fdc7658c2f8ce2c3c889b7104d5aed27",
+      "observation": {
+        "name": "case-file",
+        "wasm_sha256": "d1e239861e1caa63b73b078b820ec7f66ec1754cf8086b7a37e92885f10e3557",
+        "observations": [
+          [
+            0,
+            1,
+            ""
+          ]
+        ],
+        "outcome": {
+          "status": "Completed",
+          "exit": 0
+        }
+      }
+    },
+    {
+      "name": "misclassify-frames",
+      "witness": "frame-exhaustion",
+      "killed": true,
+      "host_sha256": "4ac191ce32ee99bffab19a6154fe864b41b58a89b37dd192c83356883a728942",
+      "observation": {
+        "name": "frame-exhaustion",
+        "wasm_sha256": "d961a0006443c58dad85ba713b5b9df0928d8e88ebbd9e065273ad15ae20e6b7",
+        "outcome": {
+          "status": "Exhausted",
+          "code": "steps",
+          "exit": 4
+        },
+        "stdout": "",
+        "stderr": "Exhausted\tio\tsteps\n"
+      }
+    },
+    {
+      "name": "skip-root-ancestors",
+      "witness": "unlistable-ancestor-file",
+      "killed": true,
+      "host_sha256": "d1253984cf4930af6b57772d193677941dba64dc907802851d1fd3d0a48c3a21",
+      "observation": {
+        "name": "unlistable-ancestor-file",
+        "wasm_sha256": "78265e96fc3750f473303f7ac86a9579594ba337041777e81f46396a4d261ad8",
+        "observations": [
+          [
+            0,
+            1,
+            ""
+          ]
+        ],
+        "outcome": {
+          "status": "Completed",
+          "exit": 0
+        }
+      }
+    }
+  ],
+  "read_observations": 21,
+  "reference_observations": 64,
+  "case_mode": "insensitive",
+  "seal_mode": "enforced",
+  "seed_observations": 61,
+  "seed_exhausted": 2,
+  "mutants_killed": 5,
+  "style": {
+    "changed_bend_targets": 12,
+    "structural_blockers": 0,
+    "provider_requests": 0,
+    "rubric_version": 8,
+    "status": "preflight-only; no laws added; live review pending"
+  }
+}

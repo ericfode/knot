@@ -1,9 +1,11 @@
-# Knot IO ABI: `knot-io-1`
+# Knot IO ABI: `knot-io-2`
 
 This is milestone 10's **host boundary**, qualified independently of Knot
-lowering. Under D14 the Wasm VM imports this ABI to execute serialized Knot
-images. The ABI has no dependency on image, heap, closure or native Wasm
-lowering layouts. The frozen authority is
+lowering. `knot-io-2` (D17) is `knot-io-1` plus `read_bytes`, `path_identity`
+and exhaustion kind 3; [its delta](#knot-io-2-delta) is below. The rest
+describes `knot-io-1`; lines marked `knot-io-2` are the only changes to it.
+Under D14 the Wasm VM imports this ABI to execute serialized Knot images. The
+ABI has no dependency on image, heap, closure or native Wasm lowering layouts. The frozen authority is
 [`tests/compiler-io/FIXTURES.md`](../../tests/compiler-io/FIXTURES.md), including
 its Darwin error table and scalar-value precondition, extended by the
 [review-2 literals and seed witnesses](../../tests/compiler-io/host/REVIEW-2.md).
@@ -16,6 +18,7 @@ Run a module with:
 ```sh
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs program.wasm sandbox -- arg1 arg2
 BEND_NO_TELEMETRY=1 python3 -B tests/compiler-io/host-check.py
+BEND_NO_TELEMETRY=1 python3 -B tests/compiler-io-abi-2/check.py
 ```
 
 The sandbox is the program's virtual working directory. Arguments following
@@ -55,20 +58,21 @@ The guest reserves each 16-byte result record before calling an import:
 | Offset | Word | Meaning |
 | --- | --- | --- |
 | 0 | `errno` | 0 for `Done`; a nonzero Darwin code for `Fail` |
-| 4 | `value` | An open handle, returned read/write handle, or argument count |
+| 4 | `value` | An open handle, returned read/write handle, argument count, or identity bit |
 | 8 | `address` | Returned bytes or argument descriptor array |
 | 12 | `length` | Byte length of that range |
 
 For `Fail`, the range contains the UTF-8 **message**, so the error is the pair
 `(errno, message)`. A failing open has `value = 0`. A failing read/write retains
 the input handle. Success on open/write has an empty byte range. Successful
-read returns text. Success on args returns an array of `[address, byte_length]`
+read returns text and `read_bytes` raw bytes. Success on args returns an array of `[address, byte_length]`
 pairs; `value` is the number of pairs, and `length = 8 * value`.
 
 The host allocates returned ranges by calling `knot_alloc`. It never retains a
 guest memory view across that call: allocation may grow and detach memory.
 The allocator must reserve disjoint, stable guest-owned ranges, may grow memory,
-and must make no effect calls. The sole permitted callback is `exhausted(2)`.
+and must make no effect calls. The sole permitted callback is `exhausted(2)`;
+since `knot-io-2` kinds 1 and 3 there are also `HostFailure io abi`.
 An allocation failure must not return an alias or a wrapped pointer. Allocation
 provenance and non-overlap remain the checked guest runtime's obligations;
 range validation alone cannot prove them. Returned storage belongs to the
@@ -86,9 +90,11 @@ record. Effects finish synchronously before the next guest instruction.
 | `die` | `code, address, length` | Writes string plus LF to stderr and stops execution with `code mod 256`. It never resumes a continuation, even for code 0. |
 | `open` | `path, path_length, mode, mode_length, out` | Opens relative to the sandbox using exactly `r`, `w`, or `a`; returns an opaque handle or an error pair. |
 | `read` | `handle, maximum, out` | Reads at most `maximum` bytes from the current position, decodes that read independently, and returns the same handle and Result. |
+| `read_bytes` | `handle, maximum, out` | `knot-io-2`. As `read`, on the same cursor, but returns the bytes undecoded. |
 | `write_bytes` | `handle, address, length, invalid, out` | Writes the complete byte range, or returns errno 22 without writing if `invalid != 0`. |
 | `close` | `handle` | Consumes the handle. OS close errors are ignored, as in Base. |
-| `exhausted` | `kind` | Runtime diagnostic, not a Base effect: 1 = step budget, 2 = allocation budget. Stops with `Exhausted`, exit 4. |
+| `path_identity` | `path, path_length, out` | `knot-io-2`. The modules loader's foreign `inspect`: value 1 if every existing component is an exact, non-symlink directory entry, else 0. |
+| `exhausted` | `kind` | Runtime diagnostic, not a Base effect: 1 = step budget (VM fuel), 2 = allocation budget (heap), 3 = frame region (`knot-io-2`). Stops with `Exhausted`, exit 4. |
 
 **Byte-list packing belongs to the guest.** A `List<&2,U32>` cannot be narrowed
 unchecked. Scan the complete list, accumulating `invalid |= element >> 8`, and
@@ -167,7 +173,7 @@ lookup is exposed.
 | `Completed` | 0 | `knot_main` returned; its final Bend value was discarded by the guest. |
 | `Halted` | 0..255 | Program `IO.die`; only the program's message is written. |
 | `Unsupported` | 3 | An unlisted Wasm import was requested. |
-| `Exhausted` | 4 | Explicit step/allocation limit or a recognized engine call-stack exhaustion. |
+| `Exhausted` | 4 | Explicit step/allocation/frame limit or a recognized engine call-stack exhaustion. |
 | `HostFailure` | 5 | Bad module/ABI, unknown handle, sandbox refusal, unmodeled OS failure or unexpected trap. |
 
 Failures print `classification<TAB>io<TAB>code<LF>` to stderr. A program may
@@ -176,6 +182,68 @@ failure. No source is parsed here, so this adapter never produces `Invalid`.
 Unexpected traps remain host failures, never alleged source errors or inferred
 arena exhaustion. The CLI initializes its exit status to 5 and clears it only
 with an explicit completed host result.
+
+## knot-io-2 delta
+
+The frozen authority is
+[`tests/compiler-io-abi-2/FIXTURES.md`](../../tests/compiler-io-abi-2/FIXTURES.md)
+and its `expectations.json`, fixed before the host changed. D17 adds exactly:
+
+- **`read_bytes(handle, maximum, out)`** loads images and other binary input.
+  It shares `read`'s result record, precedence (result range, handle,
+  direction 9, directory 21), unsigned maximum, one-syscall read and 16-MiB
+  bound, and it advances the **same** cursor by the bytes consumed. It never
+  decodes, removes a BOM or replaces invalid UTF-8. On a readable file a zero
+  maximum returns an empty Done without moving the cursor.
+- **`path_identity(path, length, out)`** is the modules loader's foreign
+  `inspect` (`campaign/modules` 0111f13, `path-identity.c`/`.js`). Components
+  are examined in spelling order before normalization. Empty and `.` do
+  nothing; `..` steps back lexically. An existing symlink (dangling or not)
+  answers 0 at once. Every other existing component must equal an actual
+  directory entry byte for byte, so a case alias answers 0 on a
+  case-insensitive volume. ENOENT and ENOTDIR answer 1 at once: a missing path
+  is left to `File.open`. A component is `lstat`ed before its parent is
+  listed, so an existing component under a search-only parent (mode 0100)
+  fails with 13. Success is errno 0 with value 0 or 1 and an empty range; 0
+  is an answer, not `Invalid`. Identity never follows a link, opens a file or
+  reads contents, so FIFOs, hardlinks and special files answer 1 and `open`
+  still refuses them.
+- **`exhausted(3)`** is frame-region exhaustion: `Exhausted io frames`, exit 4.
+
+Precedence for `path_identity`: result range, then strict UTF-8 (`abi`), then
+NUL (errno 92, value 0), then path policy, then the walk. Its error surface is
+92, 63 (`File name too long`, the witnessed `lstat` failure) and 13
+(`Permission denied`, the witnessed listing failure); any other OS failure is
+`HostFailure io os`. The `open` surface is unchanged. Policy is lexical:
+`.env`/`.env.*` in any spelling is refused as for `open`; a relative spelling
+may use `..` inside the root but never above it; an absolute spelling must
+begin with the canonical root (native realpath, which restores on-disk case).
+Anything else is `HostFailure io sandbox`. Policy only refuses spellings; it
+does not redefine identity. An accepted spelling is walked exactly as the
+foreign bodies walk it: a relative one from the root, an absolute one from `/`
+through every ancestor of the root. The walk therefore reads the metadata and
+directory listings of those ancestors, outside the root, but never follows a
+link or opens a file. An unlistable ancestor fails an absolute spelling with
+13, while the same file spelled relatively answers 1, as in both foreign
+bodies.
+
+Gate `io-abi-2` runs three independent lanes before the host lane. The two
+unmodified foreign bodies reproduce all 32 identity literals (64
+observations), six of them on trees with a search-only (mode 0100) ancestor or
+subdirectory. The pinned seed's `File.read_bytes`/`File.read` reproduce
+errno and bytes of all 11 byte fixtures in the interpreter, native and JS
+lanes, via
+[`read-bytes.bend`](../../tests/compiler-io-abi-2/read-bytes.bend); only the
+documented Bun stack bound excuses the two Bun lanes on the 65,537-byte
+fixture. Then the Wasm host must equal the literals (43 fixtures, 21 read
+observations), equal both foreign bodies on 153 generated spellings, meet 25
+boundary controls, and kill five mutants: decoding raw reads, accepting
+symlinks, ignoring directory-entry case, reporting frames as steps and walking
+an absolute spelling from the root instead of `/`. The case mutant needs a
+case-insensitive volume, and the unlistable fixtures and ancestor mutant need
+mode 0100 to refuse listing (not so for root); elsewhere they are recorded
+unavailable, never passed or killed. No VM, image or Knot evaluator lane
+exists yet.
 
 ## Guest execution under D14
 
