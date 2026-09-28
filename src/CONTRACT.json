@@ -9,7 +9,13 @@
     "pinned Base",
     "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend"
   ],
-  "accepted_program_imports": [],
+  "accepted_program_imports": [
+    "--bundle: ./path.bend as A",
+    "--bundle: ../path.bend as A",
+    "--bundle: path.bend as A",
+    "--bundle: 0x<hash>/path.bend as A",
+    "--bundle: Base"
+  ],
   "host": {
     "engine": "Node",
     "version": "22.22.3",
@@ -19,7 +25,7 @@
   },
   "compiler": {
     "entry": "src/compile-cli.bend",
-    "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "arguments": "[--bundle ROOT] source output [characters parser-depth checker-depth emitter-depth output-bytes]",
     "defaults": {
       "characters": 65536,
       "parser_depth": 512,
@@ -37,7 +43,7 @@
   },
   "evaluator": {
     "entry": "src/eval-cli.bend",
-    "arguments": "source function transition-budget [live-ordinals...]",
+    "arguments": "[--bundle ROOT] source function transition-budget [live-ordinals...]",
     "input_limits": {
       "characters": 65536,
       "parser_depth": 512,
@@ -214,5 +220,50 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "module_loading": {
+    "profile": "knot-modules-1",
+    "contract": "tests/compiler-modules/SPEC.md",
+    "evidence": "tests/compiler-modules/receipts/modules.json",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/check.py",
+    "check_arguments": "--bundle ROOT source",
+    "audit_arguments": "--audit-bundle ROOT source",
+    "legacy_commands": "Existing single-file forms retain their diagnostics, limits and exit codes; parent-relative imports now report Unsupported parse import.",
+    "bundle": "Explicit frozen local directory standing in for BEND_LIB; no network or named-package resolution.",
+    "identity": "Lexically normalized filesystem path; symlink and case aliases excluded.",
+    "namespaces": "Local modules relative to entry directory; bundle modules relative to bundle root; aliases are file-local.",
+    "declaration_order": "Dependency-first ordered stream; all user definitions checked, including unused definitions; completed paths are loaded once and active back edges rejected.",
+    "base": {
+      "path": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+      "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+      "bytes": 67190,
+      "declarations": 466,
+      "pin": "Runtime Bend SHA-256 over bounded ASCII input, before inventory construction.",
+      "registration": "Book-global from first import event, with distinct type/function and constructor namespaces.",
+      "slice": "Transitive dependencies of every user declaration; selected Base source is parsed and checked in the combined book.",
+      "trust_inventory": "After combined checking, audit records BasePin, Module paths, BaseChecked names and exact BaseUnchecked complement.",
+      "unsupported": "Reachable features outside the language yield specific Unsupported reasons; no unchecked acceptance or substitute prelude."
+    },
+    "limits": {
+      "loader_transitions": 1024,
+      "source_characters_per_file": 65536,
+      "base_ascii_bytes": 131072,
+      "base_slice": "Finite dependency work bound derived from parser depth."
+    },
+    "unsupported": {
+      "named_packages": "load named-package",
+      "absolute_imports": "load absolute-import",
+      "mixed_entry_bundle_path_basis": "load mixed-path-roots"
+    },
+    "proof_entries": [
+      "src/load-PROOF.bend",
+      "src/qualify-PROOF.bend",
+      "src/base-load-PROOF.bend",
+      "src/base-pin-PROOF.bend"
+    ],
+    "proof_laws": 68,
+    "proof_boundary": "Path, scope, transition, selection and digest helper laws; not whole-graph confluence, SHA-256 refinement or compiler correctness.",
+    "foreign_effects": "Existing IO arguments/print and file open/read/close/write only; no realpath, environment lookup or network added.",
+    "wasm_profile": "Existing enum emitter; importing a book adds no fielded or recursive Wasm capability."
   }
 }

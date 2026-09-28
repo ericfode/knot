@@ -264,7 +264,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual('blocked', got[-1]['status'])
 
     def test_all_registered_gates_and_required_edges(self):
-        self.assertEqual(14, len(run.GATES))
+        self.assertEqual(15, len(run.GATES))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})

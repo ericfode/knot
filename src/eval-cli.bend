@@ -26,6 +26,11 @@ def configured(path: String, +name: String, result: Result<S.Error,Request>) -> 
     case Fail{e}: D.fail(e)
     case Done{+request}: D.load(path,D.Limits{65536n,512n,512n},book => evaluate(book,name,request))
 
+def module_configured(root: String, path: String, +name: String, result: Result<S.Error,Request>) -> IO(Unit):
+  match result:
+    case Fail{e}: D.fail(e)
+    case Done{+request}: D.bundle(path,root,D.Limits{65536n,512n,512n},book => evaluate(book,name,request))
+
 def arguments(args: List<String>) -> IO(Unit):
   match args:
     case Con{path,Con{name,Con{budget,values}}}:
@@ -33,5 +38,22 @@ def arguments(args: List<String>) -> IO(Unit):
         S.bind(List<&2,U32>,Request,D.ordinals(values),xs => Done{Request{fuel,xs}})))
     case _: D.fail(S.Host{"arguments","expected source function transition-budget [live-ordinals...]"})
 
+def module_arguments(root: String, args: List<String>) -> IO(Unit):
+  match args:
+    case Con{path,Con{name,Con{budget,values}}}:
+      module_configured(root,path,name,S.bind(Nat,Request,D.natural(U32.read(budget),1048576),fuel =>
+        S.bind(List<&2,U32>,Request,D.ordinals(values),xs => Done{Request{fuel,xs}})))
+    case _: D.fail(S.Host{"arguments","expected --bundle root source function transition-budget [live-ordinals...]"})
+
+def select(flag: String, root: String, rest: List<String>, module: Bool) -> IO(Unit):
+  match module:
+    case True{}: module_arguments(root,rest)
+    case False{}: arguments(Con{flag,Con{root,rest}})
+
+def dispatch(args: List<String>) -> IO(Unit):
+  match args:
+    case Con{+flag,Con{root,rest}}: select(flag,root,rest,String.eq(flag,"--bundle"))
+    case _: arguments(args)
+
 def main() -> IO(Unit):
-  IO.bind(List<String>,Unit,IO.args(),arguments)
+  IO.bind(List<String>,Unit,IO.args(),dispatch)

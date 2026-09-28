@@ -6,11 +6,12 @@ import ./diagnostic.bend as D
 import ./core.bend as C
 import ./check.bend as K
 import ./checked-display.bend as V
+import ./driver.bend as R
 
 def show_tree(result: Result<S.Error,String>) -> IO(Unit):
   match result:
     case Fail{+e}: IO.die(Unit,D.status(e),D.error(e))
-    case Done{text}: IO.print(String.append("Checked\n",text))
+    case Done{text}: R.print(String.append("Checked\n",text))
 
 def show_check(result: Result<S.Error,C.Book>) -> IO(Unit):
   match result:
@@ -61,5 +62,27 @@ def arguments(args: List<String>) -> IO(Unit):
       configure(path,U32.read(chars),U32.read(depth))
     case _: IO.die(Unit,5,"HostFailure\targuments\texpected path [character-budget checker-depth]")
 
+def module_arguments(+root: String, args: List<String>) -> IO(Unit):
+  match args:
+    case Con{path,Nil{}}: R.bundle(path,root,R.Limits{65536n,512n,512n},book => show_check(Done{book}))
+    case _: R.fail(S.Host{"arguments","expected --bundle root source"})
+
+def audit_arguments(root: String, args: List<String>) -> IO(Unit):
+  match args:
+    case Con{path,Nil{}}: R.audit(path,root)
+    case _: R.fail(S.Host{"arguments","expected --audit-bundle root source"})
+
+def select(flag: String, root: String, rest: List<String>, bundle: Bool, audit: Bool) -> IO(Unit):
+  match bundle audit:
+    case False{} False{}: arguments(Con{flag,Con{root,rest}})
+    case False{} True{}: audit_arguments(root,rest)
+    case True{} _: module_arguments(root,rest)
+
+def dispatch(args: List<String>) -> IO(Unit):
+  match args:
+    case Con{+flag,Con{root,rest}}:
+      select(flag,root,rest,String.eq(flag,"--bundle"),String.eq(flag,"--audit-bundle"))
+    case _: arguments(args)
+
 def main() -> IO(Unit):
-  IO.bind(List<String>,Unit,IO.args(),arguments)
+  IO.bind(List<String>,Unit,IO.args(),dispatch)

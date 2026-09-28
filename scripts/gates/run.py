@@ -60,6 +60,8 @@ GATES = (
          ('tests/compiler-recursion/receipts/recursion.json',)),
     Gate('fields-wasm', ('python3', 'tests/compiler-fields-wasm/check.py'),
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
+    Gate('modules', ('python3', 'tests/compiler-modules/check.py'),
+         ('tests/compiler-modules/receipts/modules.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
 )
@@ -215,6 +217,20 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
+    if gate.name == 'modules':
+        fixtures = record['fixtures']
+        lanes = [lane for fixture in fixtures for lane in fixture['lanes'].values()]
+        result.update(reference_calls=sum(len(fixture['reference']) for fixture in fixtures),
+                      execution_lanes=len(fixtures[0]['lanes']),
+                      check_observations=len(lanes), compile_observations=len(lanes),
+                      eval_observations=sum(len(lane['evaluations']) for lane in lanes),
+                      wasm_observations=sum(len(lane['wasm']) for lane in lanes),
+                      artifact_preservation_probes=sum(lane['artifact_preserved'] for lane in lanes),
+                      byte_identity_pairs=sum(fixture.get('byte_identical', False) for fixture in fixtures),
+                      trust_audits=sum('audit' in lane for lane in lanes),
+                      pin_observations=len(record['pin']),
+                      tampered_base_observations=len(record['tampered_base']),
+                      proof_entries=len(record['proofs']))
     return result
 
 

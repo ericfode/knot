@@ -128,7 +128,12 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/load.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
@@ -267,6 +272,67 @@
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "module-import-paths",
+      "files": [
+        "src/imports.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Import headers and lexical canonical path resolution."
+    },
+    {
+      "name": "module-qualification",
+      "files": [
+        "src/qualify.bend",
+        "src/qualify-LAWS.bend",
+        "src/qualify-PROOF.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Per-file aliases, ordered registration and lexical scope."
+    },
+    {
+      "name": "module-base-slice",
+      "files": [
+        "src/base-load.bend",
+        "src/base-load-LAWS.bend",
+        "src/base-load-PROOF.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/parse.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Complete Base inventory and checked reachable declaration partition."
+    },
+    {
+      "name": "module-base-pin",
+      "files": [
+        "src/base-pin.bend",
+        "src/base-pin-LAWS.bend",
+        "src/base-pin-PROOF.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "ASCII SHA-256 verification of the unmodified pinned Base input."
+    },
+    {
+      "name": "module-loading",
+      "files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary."
     }
   ]
 }

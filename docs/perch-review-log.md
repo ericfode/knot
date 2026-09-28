@@ -1,5 +1,34 @@
 # Perch review log
 
+## 2026-09-27 Pacific — modules context and integration ordering
+
+The module implementation exposed two deterministic integration misses: manifest
+groups omitted imported local files, and a shorter checker-display path changed
+the seed-generated foreign-capability order. The unchanged manifest and fields
+trust tests caught both. Closing every group and sharing the checked display/IO
+boundary repaired them without changing assertions. The same implementation
+also needed separate type/function and constructor reference sets: otherwise a
+user name could incorrectly hide a reachable Base declaration. The independent
+[namespace regressions](../tests/compiler-modules/regressions.json) retain that
+failure boundary. A full-Base SHA vector caught a non-tail padding append that
+overflowed the Bun host stack; reversed accumulation preserves the same bytes.
+A later 50 KB comment and 50,000 blank-line probe found the same host-stack
+weakness in header splitting/reassembly after the initial corpus passed. Both
+seed-accepted regressions were frozen in `71d20dd` before the traversal repair.
+
+The [final preflight table](../tests/compiler-modules/README.md#offline-preflight)
+records truncation and composition limits. Four new closed submechanisms fit
+48 KB; the loader closure is 83,512 bytes and remains unavailable. No live scores
+or automatic style pass are claimed. An additional gate-run export was correctly
+refused while parallel preflight commands were still writing receipts.
+
+Prevention: check import closure and the existing trust inventories immediately
+after adding CLI paths; include cross-namespace cases, long-header boundaries and the real pinned input
+in frozen controls; finish all preflight/receipt writes before starting the gate
+runner's immutable export. Final deterministic results and the initial failures
+are recorded in the module verification receipt. No elapsed-effort estimate is
+inferred from these attempts.
+
 ## 2026-09-26 Pacific — expressive role and helper scale
 
 Confirmed policy mismatch: marginal contract importance was making tiny access,

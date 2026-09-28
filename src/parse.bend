@@ -234,7 +234,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case _: invalid(tokens,"body")
     case 1n+ +n Header{+keyword,+name}:
       S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"import"),Bool.and(starts(tokens,"/"),
-        Bool.or(S.matches(name,"."),String.starts_with(S.text(name),"0x")))),u =>
+        Bool.or(Bool.or(S.matches(name,"."),S.matches(name,"..")),String.starts_with(S.text(name),"0x")))),u =>
         unsupported(Con{name,tokens},"import"),u =>
       S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"type"),u =>

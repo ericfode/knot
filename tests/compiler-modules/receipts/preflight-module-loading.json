@@ -1,0 +1,2185 @@
+{
+  "schema": 1,
+  "command": "style-preflight",
+  "mode": "manifest",
+  "manifest": {
+    "path": "docs/compiler-campaign/manifest.json",
+    "sha256": "f0900de5ca47cd9696c4c3b69e141add080997d656cb8427cf997ede071ee108",
+    "groups": [
+      "syntax-core",
+      "frontend-lexing",
+      "frontend-parsing",
+      "diagnostics",
+      "catalog",
+      "scope-patterns",
+      "checking",
+      "evaluation",
+      "wasm-codec",
+      "wasm-emission",
+      "driver-pipeline",
+      "frontend-laws",
+      "checker-laws",
+      "runtime-laws",
+      "catalog-laws",
+      "fields-laws",
+      "recursion-laws",
+      "module-import-paths",
+      "module-qualification",
+      "module-base-slice",
+      "module-base-pin",
+      "module-loading"
+    ],
+    "selected_groups": [
+      "module-loading"
+    ],
+    "scope": "selected-group"
+  },
+  "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+  "rubric_version": 8,
+  "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+  "preflight_snapshot": {
+    "requested_paths": 10,
+    "parse_calls": 10
+  },
+  "source_snapshot": [
+    {
+      "path": "docs/compiler-campaign/manifest.json",
+      "source_sha256": "f0900de5ca47cd9696c4c3b69e141add080997d656cb8427cf997ede071ee108"
+    },
+    {
+      "path": "perch-style.json",
+      "source_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693"
+    },
+    {
+      "path": "src/base-load.bend",
+      "source_sha256": "b0bdd7ba2778e45dc996d8d1724a2757a93b7c90cc0e2fccfbf77d0e3f84516d"
+    },
+    {
+      "path": "src/base-pin.bend",
+      "source_sha256": "3ec5617dfc03bf5d9f45d6511eaf017a39263eee48df547ed293d76ebc7f8f2b"
+    },
+    {
+      "path": "src/imports.bend",
+      "source_sha256": "9ac6c1f445b9dd3ece2bd24a6ab611132e7a9754ea5bb33b006929be318fdf43"
+    },
+    {
+      "path": "src/lex.bend",
+      "source_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
+    },
+    {
+      "path": "src/load-LAWS.bend",
+      "source_sha256": "6406caf05f1bcd4a98b8a668285eefa27e28e216ed7a16589d52c449ab2137c5"
+    },
+    {
+      "path": "src/load-PROOF.bend",
+      "source_sha256": "971fc83d73e4be67ccaea2116103b892e3309ecd54f7740ccc8ed7932cbe3065"
+    },
+    {
+      "path": "src/load.bend",
+      "source_sha256": "bce84fc9b1fc95c19031da456d79a92e038bca444d922ef1f9082dacbfeac440"
+    },
+    {
+      "path": "src/parse.bend",
+      "source_sha256": "e6fd0a207022a08a47791972d5951857defffbbc600bc088febe5ff54119a532"
+    },
+    {
+      "path": "src/qualify.bend",
+      "source_sha256": "6c547a48bb0b6aee02222797231e4cb36cd69953d7f781228a65c899445cfdb2"
+    },
+    {
+      "path": "src/syntax.bend",
+      "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+    },
+    {
+      "path": "tests/compiler-modules/SPEC.md",
+      "source_sha256": "bcd4befc0f3008077a60ff985d35a63a39915a9fa05b455869ac8a161b5bc919"
+    }
+  ],
+  "summary": {
+    "groups": 1,
+    "groups_completed": 1,
+    "units": 75,
+    "files": 3,
+    "truncated_units": 13,
+    "supporting_role_impossible": 13,
+    "compositions_available": 0
+  },
+  "structural_blockers": 14,
+  "provider_requests": 0,
+  "provider_responses": 0,
+  "source_freshness": {
+    "status": "current",
+    "changed_sources": []
+  },
+  "groups": [
+    {
+      "name": "module-loading",
+      "files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend"
+      ],
+      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary.",
+      "schema": 1,
+      "command": "style-preflight",
+      "mode": "targets",
+      "provider_requests": 0,
+      "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+      "rubric_version": 8,
+      "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+      "task": {
+        "origin": "task-file",
+        "path": "tests/compiler-modules/SPEC.md",
+        "sha256": "bcd4befc0f3008077a60ff985d35a63a39915a9fa05b455869ac8a161b5bc919",
+        "bytes": 4909,
+        "available": true,
+        "reason": null
+      },
+      "summary": {
+        "units": 75,
+        "files": 3,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 13,
+        "truncated_by_limit": {
+          "context-file-limit": 5,
+          "context-helper-limit": 8
+        },
+        "supporting_role_impossible": 13,
+        "role_gap_units_by_reason": {
+          "context-file-limit": 5,
+          "context-helper-limit": 8,
+          "truncated-context": 13
+        },
+        "max_state_bytes": 44513,
+        "composition_available": false,
+        "composition_reasons": [
+          "composition_byte_limit"
+        ]
+      },
+      "structural_blockers": 14,
+      "inventory": null,
+      "composition": {
+        "required": "always",
+        "available": false,
+        "reasons": [
+          "composition_byte_limit"
+        ],
+        "selected_files": [
+          "src/load.bend",
+          "src/load-LAWS.bend",
+          "src/load-PROOF.bend"
+        ],
+        "context_files": 10,
+        "source_bytes": 82701,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": []
+      },
+      "file_groups": null,
+      "units": [
+        {
+          "target": "src/load.bend::Receipt",
+          "kind": "bend_datatype",
+          "line": 10,
+          "state_bytes": 8847,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::State",
+          "kind": "bend_datatype",
+          "line": 13,
+          "state_bytes": 8232,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Symbols",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Decl",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Input",
+          "kind": "bend_datatype",
+          "line": 16,
+          "state_bytes": 8283,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Step",
+          "kind": "bend_datatype",
+          "line": 20,
+          "state_bytes": 8755,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "I.Import",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Alias",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Origin",
+          "kind": "bend_datatype",
+          "line": 26,
+          "state_bytes": 7231,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::Action",
+          "kind": "bend_datatype",
+          "line": 30,
+          "state_bytes": 8993,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Import",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Alias",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Symbols",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Decl",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::base_path",
+          "kind": "bend_definition",
+          "line": 36,
+          "state_bytes": 8692,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::base_hash",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 8043,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::known",
+          "kind": "bend_definition",
+          "line": 42,
+          "state_bytes": 12156,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::cyclic",
+          "kind": "bend_definition",
+          "line": 46,
+          "state_bytes": 12160,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::enter",
+          "kind": "bend_definition",
+          "line": 50,
+          "state_bytes": 11154,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::has_base",
+          "kind": "bend_definition",
+          "line": 55,
+          "state_bytes": 11083,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::base_names",
+          "kind": "bend_definition",
+          "line": 59,
+          "state_bytes": 11093,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::symbols",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 8539,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::install_base",
+          "kind": "bend_definition",
+          "line": 68,
+          "state_bytes": 20648,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::leave",
+          "kind": "bend_definition",
+          "line": 74,
+          "state_bytes": 13464,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::parsed",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 9178,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::body",
+          "kind": "bend_definition",
+          "line": 85,
+          "state_bytes": 44074,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/qualify.bend",
+              "name": "Names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "is_pattern",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "local",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "done",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "constructor_token",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "then",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "sequence",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "reference",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "annotation",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "introduced",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declared",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "following",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step_at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "identifier_text",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "member",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "contains",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "prefix",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::joined",
+          "kind": "bend_definition",
+          "line": 90,
+          "state_bytes": 9556,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::sliced",
+          "kind": "bend_definition",
+          "line": 95,
+          "state_bytes": 10720,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::finish",
+          "kind": "bend_definition",
+          "line": 101,
+          "state_bytes": 44513,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/lex.bend",
+              "name": "State",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "finish",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "S.at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.here",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.skip_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.matches",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.column",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "then",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.identifier",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "expect",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_call",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "body_end",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "unsupported",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "template_parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "term_failure",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "reply",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "starts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_type",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_function",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "scrutinee",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_match",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::read_result",
+          "kind": "bend_definition",
+          "line": 107,
+          "state_bytes": 8664,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::read_pair",
+          "kind": "bend_definition",
+          "line": 112,
+          "state_bytes": 9478,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::opened",
+          "kind": "bend_definition",
+          "line": 118,
+          "state_bytes": 11580,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::read",
+          "kind": "bend_definition",
+          "line": 128,
+          "state_bytes": 12411,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::received",
+          "kind": "bend_definition",
+          "line": 131,
+          "state_bytes": 8625,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::stopped",
+          "kind": "bend_definition",
+          "line": 136,
+          "state_bytes": 11922,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_header",
+          "kind": "bend_definition",
+          "line": 141,
+          "state_bytes": 11200,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::within",
+          "kind": "bend_definition",
+          "line": 147,
+          "state_bytes": 7834,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_source",
+          "kind": "bend_definition",
+          "line": 153,
+          "state_bytes": 22963,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::checked_base",
+          "kind": "bend_definition",
+          "line": 161,
+          "state_bytes": 21422,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_base",
+          "kind": "bend_definition",
+          "line": 166,
+          "state_bytes": 28283,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-pin.bend",
+              "name": "add",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "rounds",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "schedule",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "constants",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "added",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "ctor",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "alpha",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "digit",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::step_target",
+          "kind": "bend_definition",
+          "line": 171,
+          "state_bytes": 12376,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_state",
+          "kind": "bend_definition",
+          "line": 179,
+          "state_bytes": 10694,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_body",
+          "kind": "bend_definition",
+          "line": 184,
+          "state_bytes": 15567,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::plan",
+          "kind": "bend_definition",
+          "line": 192,
+          "state_bytes": 31970,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "normalize",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "segments",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::delivered",
+          "kind": "bend_definition",
+          "line": 210,
+          "state_bytes": 9155,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::run",
+          "kind": "bend_definition",
+          "line": 215,
+          "state_bytes": 33567,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "read_pair",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "normalize",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory_parts",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::start",
+          "kind": "bend_definition",
+          "line": 227,
+          "state_bytes": 13568,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::load",
+          "kind": "bend_definition",
+          "line": 232,
+          "state_bytes": 34939,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "parsed",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Target",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Target",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hashed",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "read_pair",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::tree",
+          "kind": "bend_definition",
+          "line": 237,
+          "state_bytes": 8715,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::lines",
+          "kind": "bend_definition",
+          "line": 241,
+          "state_bytes": 7737,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::describe",
+          "kind": "bend_definition",
+          "line": 246,
+          "state_bytes": 9942,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::completed_module_is_not_read_again",
+          "kind": "bend_law",
+          "line": 10,
+          "state_bytes": 30525,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load-LAWS.bend::active_module_is_a_cycle",
+          "kind": "bend_law",
+          "line": 23,
+          "state_bytes": 30302,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load-LAWS.bend::source_failure_is_preserved",
+          "kind": "bend_law",
+          "line": 35,
+          "state_bytes": 21973,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::raw_input_is_bounded_before_header_removal",
+          "kind": "bend_law",
+          "line": 44,
+          "state_bytes": 21919,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::empty_namespace_is_entry_relative",
+          "kind": "bend_law",
+          "line": 52,
+          "state_bytes": 15509,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::nested_namespace_is_importer_relative",
+          "kind": "bend_law",
+          "line": 56,
+          "state_bytes": 15536,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::parent_paths_have_one_identity",
+          "kind": "bend_law",
+          "line": 60,
+          "state_bytes": 15525,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::hash_paths_use_the_bundle",
+          "kind": "bend_law",
+          "line": 64,
+          "state_bytes": 15494,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::package_relative_paths_keep_identity",
+          "kind": "bend_law",
+          "line": 68,
+          "state_bytes": 15529,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::bundle_identity_is_independent_of_import_spelling",
+          "kind": "bend_law",
+          "line": 72,
+          "state_bytes": 15560,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::absolute_import_is_unsupported",
+          "kind": "bend_law",
+          "line": 76,
+          "state_bytes": 17771,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::mixed_path_roots_are_unsupported",
+          "kind": "bend_law",
+          "line": 80,
+          "state_bytes": 13519,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::package_escape_is_invalid",
+          "kind": "bend_law",
+          "line": 84,
+          "state_bytes": 15514,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::namespace_is_lexically_canonical",
+          "kind": "bend_law",
+          "line": 88,
+          "state_bytes": 10112,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::duplicate_alias_is_invalid",
+          "kind": "bend_law",
+          "line": 91,
+          "state_bytes": 17776,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::parent_import_is_recognized_without_loading",
+          "kind": "bend_law",
+          "line": 95,
+          "state_bytes": 31161,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.completed_module_is_not_read_again",
+          "kind": "bend_law_fill",
+          "line": 4,
+          "state_bytes": 6160,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.active_module_is_a_cycle",
+          "kind": "bend_law_fill",
+          "line": 7,
+          "state_bytes": 5981,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.source_failure_is_preserved",
+          "kind": "bend_law_fill",
+          "line": 10,
+          "state_bytes": 5828,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.raw_input_is_bounded_before_header_removal",
+          "kind": "bend_law_fill",
+          "line": 13,
+          "state_bytes": 5863,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.empty_namespace_is_entry_relative",
+          "kind": "bend_law_fill",
+          "line": 16,
+          "state_bytes": 5723,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.nested_namespace_is_importer_relative",
+          "kind": "bend_law_fill",
+          "line": 19,
+          "state_bytes": 5758,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.parent_paths_have_one_identity",
+          "kind": "bend_law_fill",
+          "line": 22,
+          "state_bytes": 5733,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.hash_paths_use_the_bundle",
+          "kind": "bend_law_fill",
+          "line": 25,
+          "state_bytes": 5692,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.package_relative_paths_keep_identity",
+          "kind": "bend_law_fill",
+          "line": 28,
+          "state_bytes": 5749,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.bundle_identity_is_independent_of_import_spelling",
+          "kind": "bend_law_fill",
+          "line": 31,
+          "state_bytes": 5806,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.absolute_import_is_unsupported",
+          "kind": "bend_law_fill",
+          "line": 34,
+          "state_bytes": 5697,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.mixed_path_roots_are_unsupported",
+          "kind": "bend_law_fill",
+          "line": 37,
+          "state_bytes": 5693,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.package_escape_is_invalid",
+          "kind": "bend_law_fill",
+          "line": 40,
+          "state_bytes": 5712,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.namespace_is_lexically_canonical",
+          "kind": "bend_law_fill",
+          "line": 43,
+          "state_bytes": 5646,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.duplicate_alias_is_invalid",
+          "kind": "bend_law_fill",
+          "line": 46,
+          "state_bytes": 5694,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.parent_import_is_recognized_without_loading",
+          "kind": "bend_law_fill",
+          "line": 49,
+          "state_bytes": 5831,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        }
+      ],
+      "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+    }
+  ],
+  "note": "Qualification covers exactly the selected manifest groups, each with its own declaration and composition obligations. Shared declarations count once per group. Local collaborators retain the existing bounded context and closure checks. Structural preflight is not a style rating or semantic acceptance."
+}
