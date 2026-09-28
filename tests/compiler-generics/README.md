@@ -38,7 +38,8 @@ body, with erased arguments absent from its live signature.
 | [Bare family names](bare-families/README.md) | 7 | 3 | Frozen in `0c4eb10` before the arity repair |
 | [Value arguments](value-arguments/README.md) | 5 | 5 | Frozen in `58afc10` before the term-argument repair |
 | [Empty families](empty-families/README.md) | 7 | 7 | Frozen in `cfad5c4` before the empty-datatype repair |
-| Total | 85 | 180 | 56 seed-valid programs and 29 seed rejections |
+| [Definition references](def-references/README.md) | 7 | 5 | Frozen in `efdca4a` before the def-reference repair |
+| Total | 92 | 185 | 61 seed-valid programs and 31 seed rejections |
 
 The original `closure-apply` and `template-twice` pins remain. Optional
 `match-erased-type` and `alias-type` remain Unsupported. Five independent literal
@@ -54,6 +55,7 @@ ABI controls inspect erased parameter counts without invoking generic exports.
 | Term argument demoted | `value-argument-parameter` | Reports Invalid for a seed-valid `Tag<On{}>` |
 | Empty family demoted | `empty-generic-absurd` | Reports Invalid for a seed-valid generic empty family |
 | Empty datatype demoted | `empty-type` | Reports Invalid for a seed-valid monomorphic empty type |
+| Definition reference freed | `def-reference-live` | Reports a seed-valid `one` reference Invalid free-name |
 
 Each mutant is seed-typechecked and exercised in native and Bun lanes. A parser
 failure, host/internal error, exhausted budget or invalid Wasm cannot count as

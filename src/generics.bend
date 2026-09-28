@@ -333,7 +333,8 @@ def run(fuel: Nat, mode: Mode, +catalog: G.Catalog, +current: U32, +env: Environ
   match fuel mode catalog env:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} G.Catalog{families,sigs} _:
-      S.bind(Binding,Checked,E.term_name(Binding,G.Named,lookup(env,token),token,name => G.family_named(families,name,0)),binding =>
+      S.bind(Binding,Checked,E.term_name(Binding,G.Named,G.FunctionRef,lookup(env,token),token,
+        name => G.family_named(families,name,0),name => G.function_named(sigs,name,0)),binding =>
         S.bind(Checked,Checked,occurrence(binding,token,env,term => typ => run(n,Rebuild{term,typ},catalog,current,env)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} G.Catalog{+families,sigs} _:
       S.bind(G.ConstructorRef,Checked,G.constructor_named(families,token,0),+reference =>

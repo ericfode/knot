@@ -44,7 +44,9 @@ checker; every other book keeps the monomorphic checker and its pinned
 diagnostics. Acceptance is therefore decided per book: the generic checker's
 first-live-parameter descent also applies to a monomorphic function in a book
 that has generic syntax elsewhere. Both checkers classify an unbound term name
-that names a datatype as `Unsupported check type-level-term`.
+that names a datatype as `Unsupported check type-level-term`, and one that
+names a definition, a first-class function value, as `Unsupported check
+def-reference` (law `def_reference`).
 
 ## Erasure
 
@@ -73,6 +75,6 @@ type sugar, function types and templates.
   `Unsupported check empty-datatype` in both catalogs (laws `empty_family`
   and `empty_datatype`).
 
-Laws in `types-LAWS.bend`, `type-erasure-LAWS.bend`, `catalog-LAWS.bend` and
-`LAWS.bend` are proved; corpus agreement is finite differential evidence, not
+Laws in `types-LAWS.bend`, `type-erasure-LAWS.bend`, `catalog-LAWS.bend`,
+`check-LAWS.bend` and `LAWS.bend` are proved; corpus agreement is finite differential evidence, not
 a checker-soundness or compiler-correctness theorem.

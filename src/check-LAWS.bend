@@ -47,6 +47,21 @@ law nearest_binding_wins:
   for +level: U32
   {E.find(Con{C.Binding{S.Token{"x",S.At{0,1,1,0}},level,1,0,True{},None{}},tail},S.Token{"x",S.At{7,8,2,0}}) == Done{C.Binding{S.Token{"x",S.At{0,1,1,0}},level,1,0,True{},None{}}} : Result<S.Error,C.Binding>}
 
+law def_reference:
+  for -R: Type
+  for -F: Type
+  for +token: S.Token
+  for error: S.Error
+  for datatype: S.Token -> Result<S.Error,R>
+  for function: S.Token -> Result<S.Error,F>
+  for absent: S.Error
+  for present: F
+  for untyped: {datatype(token) == Fail{absent} : Result<S.Error,R>}
+  for defined: {function(token) == Done{present} : Result<S.Error,F>}
+  {E.term_name(C.Binding,R,F,Fail{error},token,datatype,function)
+   == Fail{S.Unsupported{"check","def-reference",S.at(token)}}
+   : Result<S.Error,C.Binding>}
+
 law no_checker_budget:
   for node: S.Node
   {K.check(0n,node) == Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,C.Book>}

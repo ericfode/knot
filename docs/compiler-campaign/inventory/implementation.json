@@ -125,8 +125,8 @@
   "totals": {
     "compiler": {
       "files": 40,
-      "declarations": 693,
-      "unique_declarations": 600,
+      "declarations": 695,
+      "unique_declarations": 601,
       "definitions": 448,
       "classes": 41
     },
@@ -39762,7 +39762,7 @@
     },
     {
       "file": "src/check-LAWS.bend",
-      "sha256": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+      "sha256": "267fbccdac610172180cd96894c003373ee65d7bf88c886c32eb711fbdea9c34",
       "imports": [
         {
           "module": "Base",
@@ -39797,11 +39797,13 @@
       ],
       "features": [
         "calls",
+        "calls.variable",
         "constructors",
         "dependent",
         "equality",
         "fields",
         "generics",
+        "higher-order",
         "imports.base",
         "imports.local",
         "laws",
@@ -39811,8 +39813,10 @@
         "literals.u32",
         "quantities.affine",
         "quantities.arguments",
+        "quantities.erased",
         "quantities.reusable",
-        "types.base"
+        "types.base",
+        "types.type"
       ],
       "declarations": [
         {
@@ -40121,13 +40125,66 @@
           }
         },
         {
+          "id": "src/check-LAWS.bend::def_reference:law",
+          "name": "def_reference",
+          "key": "src/check-LAWS.def_reference",
+          "kind": "law",
+          "lines": [
+            50,
+            63
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "laws",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "quantities.reusable",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "Result",
+            "src/core.Binding",
+            "src/scope.term_name",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "Result",
+            "src/core.Binding",
+            "src/scope.term_name",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/check-LAWS.bend::no_checker_budget:law",
           "name": "no_checker_budget",
           "key": "src/check-LAWS.no_checker_budget",
           "kind": "law",
           "lines": [
-            50,
-            52
+            65,
+            67
           ],
           "features": [
             "calls",
@@ -40172,7 +40229,7 @@
     },
     {
       "file": "src/check-PROOF.bend",
-      "sha256": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+      "sha256": "2234bd5a1e1a63b6f9b4d33b673736cf1727f055088c9602333f111bedbc95c6",
       "imports": [
         {
           "module": "Base",
@@ -40187,6 +40244,24 @@
           "feature": "imports.local"
         },
         {
+          "module": "./syntax.bend",
+          "alias": "S",
+          "file": "src/syntax.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./core.bend",
+          "alias": "C",
+          "file": "src/core.bend",
+          "feature": "imports.local"
+        },
+        {
+          "module": "./scope.bend",
+          "alias": "E",
+          "file": "src/scope.bend",
+          "feature": "imports.local"
+        },
+        {
           "module": "./check-LAWS.bend",
           "alias": "L",
           "file": "src/check-LAWS.bend",
@@ -40195,21 +40270,28 @@
       ],
       "features": [
         "calls",
+        "calls.variable",
+        "captures",
         "constructors",
         "dependent",
         "equality",
         "fields",
         "generics",
+        "higher-order",
         "imports.base",
         "imports.local",
+        "lambdas",
         "literals.nat",
         "literals.string",
         "literals.u32",
         "proofs",
         "quantities.affine",
         "quantities.arguments",
+        "quantities.erased",
         "quantities.reusable",
-        "types.base"
+        "rewrites",
+        "types.base",
+        "types.type"
       ],
       "declarations": [
         {
@@ -40218,8 +40300,8 @@
           "key": "src/check-LAWS.empty_sequence_preserves_uses",
           "kind": "law_fill",
           "lines": [
-            5,
-            6
+            8,
+            9
           ],
           "features": [
             "calls",
@@ -40265,8 +40347,8 @@
           "key": "src/check-LAWS.repeated_affine_level",
           "kind": "law_fill",
           "lines": [
-            7,
-            8
+            10,
+            11
           ],
           "features": [
             "calls",
@@ -40317,8 +40399,8 @@
           "key": "src/check-LAWS.live_erased_occurrence",
           "kind": "law_fill",
           "lines": [
-            9,
-            10
+            12,
+            13
           ],
           "features": [
             "calls",
@@ -40370,8 +40452,8 @@
           "key": "src/check-LAWS.erased_occurrence_preserves_identity",
           "kind": "law_fill",
           "lines": [
-            11,
-            12
+            14,
+            15
           ],
           "features": [
             "calls",
@@ -40420,8 +40502,8 @@
           "key": "src/check-LAWS.refined_constructor_is_fresh",
           "kind": "law_fill",
           "lines": [
-            13,
-            14
+            16,
+            17
           ],
           "features": [
             "calls",
@@ -40470,8 +40552,8 @@
           "key": "src/check-LAWS.nearest_binding_wins",
           "kind": "law_fill",
           "lines": [
-            15,
-            16
+            18,
+            19
           ],
           "features": [
             "calls",
@@ -40517,13 +40599,110 @@
           }
         },
         {
+          "id": "src/check-PROOF.bend::L.def_reference:law_fill",
+          "name": "L.def_reference",
+          "key": "src/check-LAWS.def_reference",
+          "kind": "law_fill",
+          "lines": [
+            20,
+            28
+          ],
+          "features": [
+            "calls",
+            "calls.variable",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "higher-order",
+            "lambdas",
+            "literals.string",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.erased",
+            "quantities.reusable",
+            "rewrites",
+            "types.base",
+            "types.type"
+          ],
+          "references": [
+            "Done",
+            "Equal.sym",
+            "Fail",
+            "Result",
+            "src/core.Binding",
+            "src/scope.term_name",
+            "src/scope.unbound",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.Unsupported",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "Result",
+            "src/core.Binding",
+            "src/scope.term_name",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [
+            {
+              "offset": 574,
+              "names": [
+                "F",
+                "R",
+                "error",
+                "function",
+                "token"
+              ]
+            },
+            {
+              "offset": 575,
+              "names": [
+                "F",
+                "R",
+                "_",
+                "error",
+                "function",
+                "token"
+              ]
+            },
+            {
+              "offset": 873,
+              "names": [
+                "F",
+                "error",
+                "token"
+              ]
+            },
+            {
+              "offset": 874,
+              "names": [
+                "F",
+                "_",
+                "error",
+                "token"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/check-PROOF.bend::L.no_checker_budget:law_fill",
           "name": "L.no_checker_budget",
           "key": "src/check-LAWS.no_checker_budget",
           "kind": "law_fill",
           "lines": [
-            17,
-            18
+            29,
+            30
           ],
           "features": [
             "calls",
@@ -40568,7 +40747,7 @@
     },
     {
       "file": "src/check.bend",
-      "sha256": "5d0e4673a690f722da999e42146bb952c852bac4b05b551ad44529e976797ca3",
+      "sha256": "fcf4b71281b4ca7e7bdd565d90256c7183fe8232d2389bacbbd6430d7a57af33",
       "imports": [
         {
           "module": "Base",
@@ -42737,7 +42916,7 @@
           "kind": "definition",
           "lines": [
             174,
-            234
+            235
           ],
           "features": [
             "calls",
@@ -42855,13 +43034,19 @@
           ],
           "captures": [
             {
-              "offset": 11637,
+              "offset": 11660,
               "names": [
                 "types"
               ]
             },
             {
-              "offset": 11672,
+              "offset": 11694,
+              "names": [
+                "sigs"
+              ]
+            },
+            {
+              "offset": 11732,
               "names": [
                 "catalog",
                 "current",
@@ -42872,7 +43057,7 @@
               ]
             },
             {
-              "offset": 11747,
+              "offset": 11807,
               "names": [
                 "catalog",
                 "current",
@@ -42881,14 +43066,14 @@
               ]
             },
             {
-              "offset": 11799,
+              "offset": 11859,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 12003,
+              "offset": 12063,
               "names": [
                 "args",
                 "catalog",
@@ -42901,7 +43086,7 @@
               ]
             },
             {
-              "offset": 12098,
+              "offset": 12158,
               "names": [
                 "args",
                 "catalog",
@@ -42914,7 +43099,7 @@
               ]
             },
             {
-              "offset": 12166,
+              "offset": 12226,
               "names": [
                 "args",
                 "catalog",
@@ -42926,19 +43111,7 @@
               ]
             },
             {
-              "offset": 12381,
-              "names": [
-                "args",
-                "catalog",
-                "current",
-                "n",
-                "scope",
-                "token",
-                "wanted"
-              ]
-            },
-            {
-              "offset": 12473,
+              "offset": 12441,
               "names": [
                 "args",
                 "catalog",
@@ -42957,17 +43130,29 @@
                 "current",
                 "n",
                 "scope",
+                "token",
+                "wanted"
+              ]
+            },
+            {
+              "offset": 12593,
+              "names": [
+                "args",
+                "catalog",
+                "current",
+                "n",
+                "scope",
                 "token"
               ]
             },
             {
-              "offset": 12806,
+              "offset": 12866,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 12840,
+              "offset": 12900,
               "names": [
                 "ann",
                 "body",
@@ -42984,7 +43169,7 @@
               ]
             },
             {
-              "offset": 12906,
+              "offset": 12966,
               "names": [
                 "body",
                 "catalog",
@@ -43000,7 +43185,7 @@
               ]
             },
             {
-              "offset": 13023,
+              "offset": 13083,
               "names": [
                 "body",
                 "catalog",
@@ -43015,7 +43200,7 @@
               ]
             },
             {
-              "offset": 13088,
+              "offset": 13148,
               "names": [
                 "body",
                 "catalog",
@@ -43029,7 +43214,7 @@
               ]
             },
             {
-              "offset": 13197,
+              "offset": 13257,
               "names": [
                 "initial",
                 "next",
@@ -43038,7 +43223,7 @@
               ]
             },
             {
-              "offset": 13401,
+              "offset": 13461,
               "names": [
                 "arms",
                 "catalog",
@@ -43051,7 +43236,7 @@
               ]
             },
             {
-              "offset": 13469,
+              "offset": 13529,
               "names": [
                 "arms",
                 "catalog",
@@ -43063,7 +43248,7 @@
               ]
             },
             {
-              "offset": 14610,
+              "offset": 14670,
               "names": [
                 "catalog",
                 "current",
@@ -43075,14 +43260,14 @@
               ]
             },
             {
-              "offset": 14712,
+              "offset": 14772,
               "names": [
                 "checked",
                 "token"
               ]
             },
             {
-              "offset": 15123,
+              "offset": 15183,
               "names": [
                 "body",
                 "catalog",
@@ -43098,7 +43283,7 @@
               ]
             },
             {
-              "offset": 15164,
+              "offset": 15224,
               "names": [
                 "body",
                 "catalog",
@@ -43115,7 +43300,7 @@
               ]
             },
             {
-              "offset": 15250,
+              "offset": 15310,
               "names": [
                 "body",
                 "catalog",
@@ -43130,7 +43315,7 @@
               ]
             },
             {
-              "offset": 15289,
+              "offset": 15349,
               "names": [
                 "body",
                 "catalog",
@@ -43145,7 +43330,7 @@
               ]
             },
             {
-              "offset": 15298,
+              "offset": 15358,
               "names": [
                 "body",
                 "bound",
@@ -43161,7 +43346,7 @@
               ]
             },
             {
-              "offset": 15403,
+              "offset": 15463,
               "names": [
                 "catalog",
                 "current",
@@ -43176,7 +43361,7 @@
               ]
             },
             {
-              "offset": 15516,
+              "offset": 15576,
               "names": [
                 "checked",
                 "fields",
@@ -43184,7 +43369,7 @@
               ]
             },
             {
-              "offset": 15949,
+              "offset": 16009,
               "names": [
                 "catalog",
                 "current",
@@ -43194,7 +43379,7 @@
               ]
             },
             {
-              "offset": 15997,
+              "offset": 16057,
               "names": [
                 "catalog",
                 "current",
@@ -43203,7 +43388,7 @@
               ]
             },
             {
-              "offset": 16225,
+              "offset": 16285,
               "names": [
                 "params",
                 "tag",
@@ -43212,7 +43397,7 @@
               ]
             },
             {
-              "offset": 16650,
+              "offset": 16710,
               "names": [
                 "catalog",
                 "current",
@@ -43224,7 +43409,7 @@
               ]
             },
             {
-              "offset": 16759,
+              "offset": 16819,
               "names": [
                 "checked",
                 "token"
@@ -43314,8 +43499,8 @@
           "key": "src/check.checked_function",
           "kind": "definition",
           "lines": [
-            236,
-            238
+            237,
+            239
           ],
           "features": [
             "constructors",
@@ -43350,8 +43535,8 @@
           "key": "src/check.function_body",
           "kind": "definition",
           "lines": [
-            240,
-            243
+            241,
+            244
           ],
           "features": [
             "calls",
@@ -43399,7 +43584,7 @@
           ],
           "captures": [
             {
-              "offset": 17392,
+              "offset": 17452,
               "names": [
                 "signature"
               ]
@@ -43429,8 +43614,8 @@
           "key": "src/check.functions",
           "kind": "definition",
           "lines": [
-            245,
-            255
+            246,
+            256
           ],
           "features": [
             "calls",
@@ -43485,7 +43670,7 @@
           ],
           "captures": [
             {
-              "offset": 18016,
+              "offset": 18076,
               "names": [
                 "catalog",
                 "depth",
@@ -43495,7 +43680,7 @@
               ]
             },
             {
-              "offset": 18135,
+              "offset": 18195,
               "names": [
                 "head"
               ]
@@ -43527,8 +43712,8 @@
           "key": "src/check.enum_constructors",
           "kind": "definition",
           "lines": [
-            259,
-            264
+            260,
+            265
           ],
           "features": [
             "calls",
@@ -43586,8 +43771,8 @@
           "key": "src/check.enum_profile",
           "kind": "definition",
           "lines": [
-            266,
-            270
+            267,
+            271
           ],
           "features": [
             "calls",
@@ -43626,7 +43811,7 @@
           ],
           "captures": [
             {
-              "offset": 18908,
+              "offset": 18968,
               "names": [
                 "tail"
               ]
@@ -43654,8 +43839,8 @@
           "key": "src/check.resolved",
           "kind": "definition",
           "lines": [
-            272,
-            275
+            273,
+            276
           ],
           "features": [
             "calls",
@@ -43696,7 +43881,7 @@
           ],
           "captures": [
             {
-              "offset": 19159,
+              "offset": 19219,
               "names": [
                 "types"
               ]
@@ -43722,8 +43907,8 @@
           "key": "src/check.check",
           "kind": "definition",
           "lines": [
-            277,
-            282
+            278,
+            283
           ],
           "features": [
             "calls",
@@ -43771,7 +43956,7 @@
           ],
           "captures": [
             {
-              "offset": 19432,
+              "offset": 19492,
               "names": [
                 "n",
                 "nodes"
@@ -56273,7 +56458,7 @@
     },
     {
       "file": "src/generics.bend",
-      "sha256": "07cc22dbc54b4cef6ebb1e09811f6b7dffa15def868e34fca8e992aa031b1211",
+      "sha256": "9b5e989e6643bb775454244695133b399524e46c15bcafc6ad460cf8293aa305",
       "imports": [
         {
           "module": "Base",
@@ -60446,7 +60631,7 @@
           "kind": "definition",
           "lines": [
             332,
-            395
+            396
           ],
           "features": [
             "bindings",
@@ -60585,13 +60770,19 @@
           ],
           "captures": [
             {
-              "offset": 20629,
+              "offset": 20652,
               "names": [
                 "families"
               ]
             },
             {
-              "offset": 20670,
+              "offset": 20692,
+              "names": [
+                "sigs"
+              ]
+            },
+            {
+              "offset": 20731,
               "names": [
                 "catalog",
                 "current",
@@ -60602,7 +60793,7 @@
               ]
             },
             {
-              "offset": 20741,
+              "offset": 20802,
               "names": [
                 "catalog",
                 "current",
@@ -60611,7 +60802,7 @@
               ]
             },
             {
-              "offset": 20749,
+              "offset": 20810,
               "names": [
                 "catalog",
                 "current",
@@ -60621,14 +60812,14 @@
               ]
             },
             {
-              "offset": 20802,
+              "offset": 20863,
               "names": [
                 "token",
                 "wanted"
               ]
             },
             {
-              "offset": 21011,
+              "offset": 21072,
               "names": [
                 "args",
                 "catalog",
@@ -60641,7 +60832,7 @@
               ]
             },
             {
-              "offset": 21073,
+              "offset": 21134,
               "names": [
                 "args",
                 "catalog",
@@ -60654,7 +60845,7 @@
               ]
             },
             {
-              "offset": 21081,
+              "offset": 21142,
               "names": [
                 "args",
                 "catalog",
@@ -60668,7 +60859,7 @@
               ]
             },
             {
-              "offset": 21089,
+              "offset": 21150,
               "names": [
                 "args",
                 "catalog",
@@ -60683,7 +60874,7 @@
               ]
             },
             {
-              "offset": 21217,
+              "offset": 21278,
               "names": [
                 "args",
                 "catalog",
@@ -60699,7 +60890,7 @@
               ]
             },
             {
-              "offset": 21272,
+              "offset": 21333,
               "names": [
                 "args",
                 "catalog",
@@ -60713,7 +60904,7 @@
               ]
             },
             {
-              "offset": 21388,
+              "offset": 21449,
               "names": [
                 "family",
                 "params",
@@ -60723,13 +60914,13 @@
               ]
             },
             {
-              "offset": 21462,
+              "offset": 21523,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 21666,
+              "offset": 21727,
               "names": [
                 "args",
                 "catalog",
@@ -60741,7 +60932,7 @@
               ]
             },
             {
-              "offset": 21754,
+              "offset": 21815,
               "names": [
                 "args",
                 "catalog",
@@ -60753,7 +60944,7 @@
               ]
             },
             {
-              "offset": 21812,
+              "offset": 21873,
               "names": [
                 "args",
                 "catalog",
@@ -60764,7 +60955,7 @@
               ]
             },
             {
-              "offset": 21822,
+              "offset": 21883,
               "names": [
                 "args",
                 "catalog",
@@ -60776,7 +60967,7 @@
               ]
             },
             {
-              "offset": 22291,
+              "offset": 22352,
               "names": [
                 "body",
                 "catalog",
@@ -60791,7 +60982,7 @@
               ]
             },
             {
-              "offset": 22398,
+              "offset": 22459,
               "names": [
                 "body",
                 "catalog",
@@ -60805,7 +60996,7 @@
               ]
             },
             {
-              "offset": 22457,
+              "offset": 22518,
               "names": [
                 "body",
                 "catalog",
@@ -60815,7 +61006,7 @@
               ]
             },
             {
-              "offset": 22669,
+              "offset": 22730,
               "names": [
                 "arms",
                 "catalog",
@@ -60829,7 +61020,7 @@
               ]
             },
             {
-              "offset": 22726,
+              "offset": 22787,
               "names": [
                 "arms",
                 "catalog",
@@ -60842,7 +61033,7 @@
               ]
             },
             {
-              "offset": 22790,
+              "offset": 22851,
               "names": [
                 "arms",
                 "binding",
@@ -60854,7 +61045,7 @@
               ]
             },
             {
-              "offset": 22800,
+              "offset": 22861,
               "names": [
                 "arms",
                 "binding",
@@ -60863,36 +61054,36 @@
                 "env",
                 "family",
                 "n",
-                "token"
-              ]
-            },
-            {
-              "offset": 23931,
-              "names": [
-                "catalog",
-                "current",
-                "env",
-                "families",
-                "head",
-                "index",
-                "n",
-                "q",
-                "rest",
-                "result",
-                "substitutions",
-                "tail",
-                "target",
                 "token"
               ]
             },
             {
               "offset": 23992,
               "names": [
+                "catalog",
+                "current",
+                "env",
+                "families",
+                "head",
+                "index",
+                "n",
+                "q",
+                "rest",
+                "result",
+                "substitutions",
+                "tail",
+                "target",
                 "token"
               ]
             },
             {
-              "offset": 24047,
+              "offset": 24053,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 24108,
               "names": [
                 "catalog",
                 "current",
@@ -60910,7 +61101,7 @@
               ]
             },
             {
-              "offset": 24126,
+              "offset": 24187,
               "names": [
                 "catalog",
                 "current",
@@ -60926,7 +61117,7 @@
               ]
             },
             {
-              "offset": 24180,
+              "offset": 24241,
               "names": [
                 "catalog",
                 "current",
@@ -60941,13 +61132,13 @@
               ]
             },
             {
-              "offset": 24346,
+              "offset": 24407,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 24394,
+              "offset": 24455,
               "names": [
                 "catalog",
                 "current",
@@ -60965,7 +61156,7 @@
               ]
             },
             {
-              "offset": 24501,
+              "offset": 24562,
               "names": [
                 "catalog",
                 "current",
@@ -60980,14 +61171,14 @@
               ]
             },
             {
-              "offset": 24637,
+              "offset": 24698,
               "names": [
                 "checked",
                 "token"
               ]
             },
             {
-              "offset": 25129,
+              "offset": 25190,
               "names": [
                 "arm",
                 "binding",
@@ -61007,7 +61198,7 @@
               ]
             },
             {
-              "offset": 25185,
+              "offset": 25246,
               "names": [
                 "binding",
                 "body",
@@ -61026,7 +61217,7 @@
               ]
             },
             {
-              "offset": 25193,
+              "offset": 25254,
               "names": [
                 "binding",
                 "body",
@@ -61046,7 +61237,7 @@
               ]
             },
             {
-              "offset": 25302,
+              "offset": 25363,
               "names": [
                 "binding",
                 "body",
@@ -61064,7 +61255,7 @@
               ]
             },
             {
-              "offset": 25340,
+              "offset": 25401,
               "names": [
                 "binding",
                 "body",
@@ -61082,7 +61273,7 @@
               ]
             },
             {
-              "offset": 25349,
+              "offset": 25410,
               "names": [
                 "binding",
                 "body",
@@ -61101,7 +61292,7 @@
               ]
             },
             {
-              "offset": 25456,
+              "offset": 25517,
               "names": [
                 "binding",
                 "catalog",
@@ -61119,7 +61310,7 @@
               ]
             },
             {
-              "offset": 25586,
+              "offset": 25647,
               "names": [
                 "checked",
                 "family",
@@ -61129,7 +61320,7 @@
               ]
             },
             {
-              "offset": 26039,
+              "offset": 26100,
               "names": [
                 "catalog",
                 "current",
@@ -61139,7 +61330,7 @@
               ]
             },
             {
-              "offset": 26079,
+              "offset": 26140,
               "names": [
                 "catalog",
                 "current",
@@ -61148,7 +61339,7 @@
               ]
             },
             {
-              "offset": 26087,
+              "offset": 26148,
               "names": [
                 "catalog",
                 "current",
@@ -61158,7 +61349,7 @@
               ]
             },
             {
-              "offset": 26315,
+              "offset": 26376,
               "names": [
                 "params",
                 "tag",
@@ -61167,7 +61358,7 @@
               ]
             },
             {
-              "offset": 26747,
+              "offset": 26808,
               "names": [
                 "catalog",
                 "current",
@@ -61179,7 +61370,7 @@
               ]
             },
             {
-              "offset": 26850,
+              "offset": 26911,
               "names": [
                 "checked",
                 "token"
@@ -61287,8 +61478,8 @@
           "key": "src/generics.checked_function",
           "kind": "definition",
           "lines": [
-            397,
-            399
+            398,
+            400
           ],
           "features": [
             "calls",
@@ -61327,8 +61518,8 @@
           "key": "src/generics.function_body",
           "kind": "definition",
           "lines": [
-            401,
-            404
+            402,
+            405
           ],
           "features": [
             "calls",
@@ -61375,7 +61566,7 @@
           ],
           "captures": [
             {
-              "offset": 27488,
+              "offset": 27549,
               "names": [
                 "signature"
               ]
@@ -61406,8 +61597,8 @@
           "key": "src/generics.functions",
           "kind": "definition",
           "lines": [
-            406,
-            411
+            407,
+            412
           ],
           "features": [
             "calls",
@@ -61454,7 +61645,7 @@
           ],
           "captures": [
             {
-              "offset": 27832,
+              "offset": 27893,
               "names": [
                 "catalog",
                 "depth",
@@ -61463,7 +61654,7 @@
               ]
             },
             {
-              "offset": 27946,
+              "offset": 28007,
               "names": [
                 "function"
               ]
@@ -61491,8 +61682,8 @@
           "key": "src/generics.resolved",
           "kind": "definition",
           "lines": [
-            413,
-            416
+            414,
+            417
           ],
           "features": [
             "calls",
@@ -61532,7 +61723,7 @@
           ],
           "captures": [
             {
-              "offset": 28192,
+              "offset": 28253,
               "names": [
                 "families"
               ]
@@ -61559,8 +61750,8 @@
           "key": "src/generics.check",
           "kind": "definition",
           "lines": [
-            418,
-            419
+            419,
+            420
           ],
           "features": [
             "calls",
@@ -61594,7 +61785,7 @@
           ],
           "captures": [
             {
-              "offset": 28369,
+              "offset": 28430,
               "names": [
                 "depth"
               ]
@@ -61616,8 +61807,8 @@
           "key": "src/generics.typed_parameters",
           "kind": "definition",
           "lines": [
-            421,
-            425
+            422,
+            426
           ],
           "features": [
             "calls",
@@ -61669,8 +61860,8 @@
           "key": "src/generics.required",
           "kind": "definition",
           "lines": [
-            427,
-            433
+            428,
+            434
           ],
           "features": [
             "calls",
@@ -72030,7 +72221,7 @@
     },
     {
       "file": "src/scope.bend",
-      "sha256": "d0fb04c5c0448f01c11fe32de83380d9e1f6cc961dd25df327b8b966bd72dcdc",
+      "sha256": "a36dbebfa9d8b5498e2484f2a21f9819130330824829e1ea7dd1c61797eb0c79",
       "imports": [
         {
           "module": "Base",
@@ -72637,8 +72828,8 @@
           "key": "src/scope.unbound",
           "kind": "definition",
           "lines": [
-            57,
-            60
+            58,
+            62
           ],
           "features": [
             "calls",
@@ -72646,7 +72837,6 @@
             "dependent",
             "fields",
             "generics",
-            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -72659,12 +72849,14 @@
             "Done",
             "Fail",
             "Result",
+            "String",
             "src/core.unsupported",
             "src/syntax.Error",
             "src/syntax.Token"
           ],
           "type_references": [
             "Result",
+            "String",
             "src/syntax.Error",
             "src/syntax.Token"
           ],
@@ -72675,8 +72867,7 @@
             ],
             "types": [
               "Done",
-              "Fail",
-              "String"
+              "Fail"
             ],
             "dynamic_calls": []
           }
@@ -72687,8 +72878,8 @@
           "key": "src/scope.term_name",
           "kind": "definition",
           "lines": [
-            62,
-            65
+            64,
+            70
           ],
           "features": [
             "calls",
@@ -72698,6 +72889,7 @@
             "fields",
             "generics",
             "higher-order",
+            "literals.string",
             "matches",
             "patterns.variable",
             "quantities.affine",
@@ -72727,10 +72919,12 @@
             ],
             "types": [
               "Done",
-              "Fail"
+              "Fail",
+              "String"
             ],
             "dynamic_calls": [
-              "datatype"
+              "datatype",
+              "function"
             ]
           }
         },
@@ -72740,8 +72934,8 @@
           "key": "src/scope.occurrence",
           "kind": "definition",
           "lines": [
-            67,
-            73
+            72,
+            78
           ],
           "features": [
             "calls",
@@ -72797,13 +72991,13 @@
           ],
           "captures": [
             {
-              "offset": 3320,
+              "offset": 3516,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 3366,
+              "offset": 3562,
               "names": [
                 "level",
                 "live",
@@ -72813,7 +73007,7 @@
               ]
             },
             {
-              "offset": 3487,
+              "offset": 3683,
               "names": [
                 "level"
               ]
@@ -72848,8 +73042,8 @@
           "key": "src/scope.reference",
           "kind": "definition",
           "lines": [
-            75,
-            78
+            80,
+            83
           ],
           "features": [
             "calls",
@@ -72898,8 +73092,8 @@
           "key": "src/scope.live_scope",
           "kind": "definition",
           "lines": [
-            80,
-            82
+            85,
+            87
           ],
           "features": [
             "calls",
@@ -72940,8 +73134,8 @@
           "key": "src/scope.extend",
           "kind": "definition",
           "lines": [
-            84,
-            87
+            89,
+            92
           ],
           "features": [
             "calls",
@@ -72993,8 +73187,8 @@
           "key": "src/scope.set_known",
           "kind": "definition",
           "lines": [
-            89,
-            95
+            94,
+            100
           ],
           "features": [
             "calls",
@@ -73042,7 +73236,7 @@
           ],
           "captures": [
             {
-              "offset": 4550,
+              "offset": 4746,
               "names": [
                 "payload",
                 "token",
@@ -73051,7 +73245,7 @@
               ]
             },
             {
-              "offset": 4590,
+              "offset": 4786,
               "names": [
                 "known"
               ]
@@ -73080,8 +73274,8 @@
           "key": "src/scope.refine",
           "kind": "definition",
           "lines": [
-            97,
-            98
+            102,
+            103
           ],
           "features": [
             "calls",
@@ -73110,13 +73304,13 @@
           ],
           "captures": [
             {
-              "offset": 4768,
+              "offset": 4964,
               "names": [
                 "tag"
               ]
             },
             {
-              "offset": 4777,
+              "offset": 4973,
               "names": [
                 "tag",
                 "token"
@@ -73140,8 +73334,8 @@
           "key": "src/scope.after",
           "kind": "definition",
           "lines": [
-            101,
-            105
+            106,
+            110
           ],
           "features": [
             "calls",
@@ -73173,13 +73367,13 @@
           ],
           "captures": [
             {
-              "offset": 5085,
+              "offset": 5281,
               "names": [
                 "tail"
               ]
             },
             {
-              "offset": 5095,
+              "offset": 5291,
               "names": [
                 "level",
                 "tail"
@@ -73205,8 +73399,8 @@
           "key": "src/scope.levels",
           "kind": "definition",
           "lines": [
-            107,
-            110
+            112,
+            115
           ],
           "features": [
             "calls",
@@ -73253,8 +73447,8 @@
           "key": "src/scope.find_level",
           "kind": "definition",
           "lines": [
-            112,
-            118
+            117,
+            123
           ],
           "features": [
             "calls",
@@ -73295,13 +73489,13 @@
           ],
           "captures": [
             {
-              "offset": 5634,
+              "offset": 5830,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 5650,
+              "offset": 5846,
               "names": [
                 "level",
                 "tail"
@@ -73331,8 +73525,8 @@
           "key": "src/scope.replace",
           "kind": "definition",
           "lines": [
-            120,
-            121
+            125,
+            126
           ],
           "features": [
             "calls",
@@ -73360,13 +73554,13 @@
           ],
           "captures": [
             {
-              "offset": 5803,
+              "offset": 5999,
               "names": [
                 "term"
               ]
             },
             {
-              "offset": 5812,
+              "offset": 6008,
               "names": [
                 "term"
               ]
@@ -73387,8 +73581,8 @@
           "key": "src/scope.remove_fields",
           "kind": "definition",
           "lines": [
-            123,
-            126
+            128,
+            131
           ],
           "features": [
             "calls",
@@ -73437,8 +73631,8 @@
           "key": "src/scope.branch",
           "kind": "definition",
           "lines": [
-            128,
-            130
+            133,
+            135
           ],
           "features": [
             "calls",
@@ -73478,8 +73672,8 @@
           "key": "src/scope.parameters",
           "kind": "definition",
           "lines": [
-            132,
-            136
+            137,
+            141
           ],
           "features": [
             "calls",
@@ -73545,8 +73739,8 @@
           "key": "src/scope.matchable",
           "kind": "definition",
           "lines": [
-            138,
-            144
+            143,
+            149
           ],
           "features": [
             "calls",
@@ -73590,13 +73784,13 @@
           ],
           "captures": [
             {
-              "offset": 6891,
+              "offset": 7087,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 6942,
+              "offset": 7138,
               "names": [
                 "from",
                 "level",
@@ -73608,7 +73802,7 @@
               ]
             },
             {
-              "offset": 7027,
+              "offset": 7223,
               "names": [
                 "level",
                 "name",
@@ -73618,7 +73812,7 @@
               ]
             },
             {
-              "offset": 7093,
+              "offset": 7289,
               "names": [
                 "token"
               ]
@@ -73649,8 +73843,8 @@
           "key": "src/scope.scrutinee",
           "kind": "definition",
           "lines": [
-            146,
-            152
+            151,
+            157
           ],
           "features": [
             "calls",
@@ -73692,7 +73886,7 @@
           ],
           "captures": [
             {
-              "offset": 7377,
+              "offset": 7573,
               "names": [
                 "scope",
                 "token"

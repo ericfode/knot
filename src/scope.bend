@@ -52,17 +52,22 @@ def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
     case Scope{bindings,level,from,live,smaller}: find(bindings,name)
 
-# A term name that is unbound but names a datatype is type-level syntax:
-# Unsupported, not a free name. Both checkers share this classification.
-def unbound(-B: Type, -R: Type, found: Result<S.Error,R>, token: S.Token, error: S.Error) -> Result<S.Error,B>:
+# A term name that is unbound but names a datatype or a definition lies
+# outside the first-order term profile: Unsupported, not a free name. Both
+# checkers share this classification.
+def unbound(-B: Type, -R: Type, found: Result<S.Error,R>, token: S.Token, code: String,
+  otherwise: Result<S.Error,B>) -> Result<S.Error,B>:
   match found:
-    case Done{reference}: C.unsupported(B,"type-level-term",token)
-    case Fail{ignored}: Fail{error}
+    case Done{reference}: C.unsupported(B,code,token)
+    case Fail{ignored}: otherwise
 
-def term_name(-B: Type, -R: Type, found: Result<S.Error,B>, +token: S.Token, datatype: S.Token -> Result<S.Error,R>) -> Result<S.Error,B>:
+def term_name(-B: Type, -R: Type, -F: Type, found: Result<S.Error,B>, +token: S.Token,
+  datatype: S.Token -> Result<S.Error,R>, function: S.Token -> Result<S.Error,F>) -> Result<S.Error,B>:
   match found:
     case Done{binding}: Done{binding}
-    case Fail{error}: unbound(B,R,datatype(token),token,error)
+    case Fail{error}:
+      unbound(B,R,datatype(token),token,"type-level-term",
+        unbound(B,F,function(token),token,"def-reference",Fail{error}))
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:

@@ -43,8 +43,10 @@ try {
 }
 '''
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
-           HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families')
-PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend')
+           HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
+           HERE / 'def-references')
+PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
+          'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 ENV = {**os.environ, 'BEND_NO_TELEMETRY': '1',
        'BEND_HUB': 'offline://disabled', 'BEND_ORIGIN': 'offline://disabled'}
@@ -92,10 +94,16 @@ MUTANTS = (
      'new': 'C.invalid(C.Datatype,"empty-datatype",name)',
      'witness': 'empty-type', 'phase': 'check',
      'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tempty-datatype\t'}},
+    {'name': 'def-reference-free', 'file': 'scope.bend',
+     'old': 'unbound(B,F,function(token),token,"def-reference",Fail{error})',
+     'new': 'Fail{error}',
+     'witness': 'def-reference-live', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tfree-name\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
-                'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid'}
+                'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
+                'def-reference-free'}
 
 
 def require(condition, detail):

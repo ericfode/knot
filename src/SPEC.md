@@ -70,7 +70,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
 Constructor names must be unique across the book in this first profile.
 Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
 Free names, type/arity mismatches, missing arms,
-affine reuse and live inspection of erased values are invalid.
+affine reuse and live inspection of erased values are invalid. A name bound to
+no local but to a datatype or a top-level definition is not free: using it as
+a term value reports Unsupported (`type-level-term`, `def-reference`).
 
 Duplicate arms are outside this profile and report Unsupported: the pinned
 reference can accept overlapping nullary patterns, choosing the first match.
