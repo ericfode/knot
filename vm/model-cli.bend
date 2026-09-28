@@ -155,17 +155,28 @@ def audit_program(+plan: W.Plan, +booted: M.Booted, budget: String) -> IO(Unit):
 def run_program(+plan: W.Plan, +booted: M.Booted, budget: String) -> IO(Unit):
   fuel(U32.read(budget),f => reported(M.run(bound(),M.code_of(booted),M.program(plan,booted,f))))
 
-def entry_of(plan: W.Plan) -> U32:
-  match plan:
-    case W.Plan{entry,types,functions,reps}: entry
+def usage() -> IO(Unit):
+  stopped(W.Refused{"arguments","usage"})
+
+# SPEC §8: the image's entry kind selects the form of the words after IMAGE,
+# a Book's `FN FUEL [ORDINALS...]` or a Program's `FUEL -- [ARGS...]`. A shape
+# the form does not name is `usage`, before any word is read.
+def booked(audit: Bool, +plan: W.Plan, +booted: M.Booted, args: List<String>) -> IO(Unit):
+  match audit args:
+    case False{} Con{+name,Con{budget,values}}: run_book(plan,booted,name,budget,values)
+    case True{} Con{+name,Con{budget,values}}: audit_book(plan,booted,name,budget,values)
+    case _ _: usage()
+
+def programmed(audit: Bool, +plan: W.Plan, +booted: M.Booted, args: List<String>) -> IO(Unit):
+  match audit args:
+    case False{} Con{budget,Con{separator,rest}}: W.choose(IO(Unit),String.eq(separator,"--"),u => run_program(plan,booted,budget),u => usage())
+    case True{} Con{budget,Con{separator,rest}}: W.choose(IO(Unit),String.eq(separator,"--"),u => audit_program(plan,booted,budget),u => usage())
+    case _ _: usage()
 
 def started(audit: Bool, +plan: W.Plan, +booted: M.Booted, args: List<String>) -> IO(Unit):
-  match audit args:
-    case False{} Con{+name,Con{budget,values}}:
-      W.choose(IO(Unit),U32.is_eq(entry_of(plan),0),u => run_book(plan,booted,name,budget,values),u => run_program(plan,booted,name))
-    case True{} Con{+name,Con{budget,values}}:
-      W.choose(IO(Unit),U32.is_eq(entry_of(plan),0),u => audit_book(plan,booted,name,budget,values),u => audit_program(plan,booted,name))
-    case _ _: stopped(W.Refused{"arguments","expected FN FUEL or FUEL --"})
+  match plan:
+    case W.Plan{0,types,functions,reps}: booked(audit,plan,booted,args)
+    case _: programmed(audit,plan,booted,args)
 
 def booted_start(result: Result<W.Stop,M.Booted>, audit: Bool, +plan: W.Plan, args: List<String>) -> IO(Unit):
   match result:
@@ -199,7 +210,7 @@ def opened(result: Result<&1,&1,U32 & String,File>, audit: Bool, args: List<Stri
 def image(audit: Bool, args: List<String>) -> IO(Unit):
   match args:
     case Con{path,rest}: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(result,audit,rest))
-    case Nil{}: stopped(W.Refused{"arguments","expected IMAGE"})
+    case Nil{}: usage()
 
 def arguments(args: List<String>) -> IO(Unit):
   image(False{},args)

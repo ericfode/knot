@@ -83,8 +83,16 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - Completing Chr inspects its operand at Char, used or not, as the reference
   evaluation's `construct` reads it; SPEC §6's list of inspection points does
   not yet name Succ's or Chr's operand.
-- A Nat Case allocates the predecessor's Big cell only when a Branch binds it,
-  so a default arm leaks nothing (§6.1 does not say when).
+- A Nat Case makes the predecessor only for a selected Succ Branch, after the
+  Scope push, and moves it into its slot (§6.1): `nat-case-big` frees its Big
+  predecessor and `nat-default-big` allocates none, both under the RC audit.
+  With atomic steps (below) the push-first order shows only when the frame
+  region and the heap are both full, which no control reaches.
+- The command line reads the image first, then its entry kind's form (§8): a
+  missing word, or a Program's second word other than `--`, is `HostFailure
+  arguments usage` before any word is read; FUEL and each ordinal are Base's
+  `U32.read` words (`expected-u32`). check-spec's 13 argument controls run in
+  the gate.
 - A refused transition leaves the machine as it was: the model's steps are
   atomic, including one refused mid-way by an allocation. An Enter's debit
   stands once paid (§7): a target that then stops the machine, such as D20's

@@ -12,6 +12,9 @@ seed's native lane and requires:
   first entry, and value-on, which makes one entry, completes on fuel 1;
 - check-spec's frozen refusal controls, and a child at its parent's offset,
   refused with check-spec's exact reason;
+- check-spec's argument controls (SPEC section 8): the image before the words,
+  then its entry kind's form, `usage` before any word, each word a decimal u32;
+  an admitted one runs as the reference evaluation runs it;
 - the inspection controls (SPEC sections 3 and 6): a word laundered through a
   `none`-typed identity is refused ill-typed where it is read (a Case scrutinee,
   a prim operand, Chr's operand, a rendered word before its visit is charged),
@@ -151,7 +154,7 @@ def build_tree(name: str, section=None, mutation=()) -> Path:
     (tree / 'vm' / 'model').mkdir(parents=True, exist_ok=True)
     for source in SOURCES:
         text = (HERE / source).read_text()
-        if source == f'model/{section}.bend':
+        if source in (f'model/{section}.bend', f'{section}.bend'):
             for old, new in mutation:
                 require(text.count(old) == 1, f'mutant {name}: {old!r} occurs {text.count(old)} times')
                 text = text.replace(old, new)
@@ -281,6 +284,42 @@ def controls() -> list:
     body = cs.word(capture, cs.word(capture, 7) + 1 + 5)
     listed.append(('model:child-is-parent', cs.word_patch(capture, body + 4, body), '', ''))
     return [(label, data, cs.rejected(data, REGISTRY, DIGEST)) for label, data, _, _ in listed]
+
+
+def argument_runs(model: Path, audit: Path) -> dict:
+    """SPEC section 8's argument controls, check-spec's by literal review: the image first,
+    then its entry kind's form and words. A refused one halts with check-spec's verdict; an
+    admitted one runs as the reference evaluation runs its fuel and ordinals, and its RC
+    audit passes."""
+    folder = BUILD / 'arguments'
+    folder.mkdir(parents=True, exist_ok=True)
+    images = {p.stem: p.read_bytes() for p in GOLDEN.glob('*.kimg')}
+    listed = cs.argument_controls(images)
+    require(any(v is None for *_, v in listed) and any(v for *_, v in listed), 'check-spec lists admitted and refused argument controls')
+
+    def one(item):
+        label, data, words, verdict = item
+        require(cs.argument_verdict(data, words, REGISTRY, DIGEST) == verdict, f'argument control {label}: check-spec gives another verdict')
+        path = folder / f'{label}.kimg'
+        if not path.exists() or path.read_bytes() != data:
+            path.write_bytes(data)
+        result = run([model, '--', path, *words], 120)
+        if verdict is not None and verdict.startswith('HostFailure image: '):
+            return label, {'result': result, 'agrees': model_refusal(result) == verdict}
+        if verdict is not None:
+            return label, {'result': result, 'agrees': agrees({'outcome': 'HostFailure', 'cause': verdict.split(' ', 1)[1]}, result)}
+        plan = codec.decode(data, DIGEST)
+        if plan['entry'] == 'book':
+            got = reference.book(plan, words[0], [codec.decimal(w) for w in words[2:]], codec.decimal(words[1]))
+        else:
+            got = reference_run(plan, codec.decimal(words[0]))
+        audited = run([audit, '--', path, *words], 300)
+        m = AUDIT.match(audited['stdout'].strip())
+        good = agrees(expected_run(got), result)
+        balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == got['calls']
+        return label, {'result': audited if good else result, 'agrees': good and balanced}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, listed))
 
 
 def model_refusal(result) -> str | None:
@@ -635,9 +674,9 @@ def proof() -> dict:
 
 # ------------------------------------------------------------------ mutants
 
-# Type-correct semantic mutants of the model: (name, section of vm/model/, [(old, new)],
-# what it breaks). The last twenty are review fix round 1's, each killed by the control
-# that witnessed its defect.
+# Type-correct semantic mutants of the model: (name, section of vm/model/ or an entry of
+# vm/, [(old, new)], what it breaks). Review fix rounds 1 and 2 add theirs, each killed by
+# the control that witnessed its defect.
 MUTANTS = [
     ('rc-under-count', 'memory', [('    Done{stored_word(heap,w,0,U32.add(rc,1))})))',
        '    Done{stored_word(heap,w,0,rc)})))')],
@@ -756,6 +795,13 @@ MUTANTS = [
         '      W.choose(Result<W.Stop,List<&2,U32>>,U32.is_ge(visits,visit_limit()),u => exhausted(List<&2,U32>),u =>\n'
         '      H.inspected_at(List<&2,U32>,code,heap,t,w,u =>\n')],
      'a word is charged before it is inspected'),
+    # SPEC section 8's argument forms, in the command line (vm/model-cli.bend).
+    ('separator-unchecked', 'model-cli', [(
+        'case False{} Con{budget,Con{separator,rest}}: W.choose(IO(Unit),String.eq(separator,"--"),',
+        'case False{} Con{budget,Con{separator,rest}}: W.choose(IO(Unit),True{},')],
+     "a Program's second word need not be `--`"),
+    ('usage-as-word', 'model-cli', [('  stopped(W.Refused{"arguments","usage"})', '  stopped(W.Refused{"arguments","expected-u32"})')],
+     'a missing word is expected-u32, not usage'),
 ]
 
 
@@ -793,6 +839,7 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
                     'fuel': fuel_runs(bins['model'], expected),
                     'controls': control_runs(bins['model'], listed),
                     'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
+                    'arguments': argument_runs(bins['model'], bins['audit']),
                     'audit': audit_runs(bins['audit'], expected)}
         killed = kills(base, observed)
         law = law_kill(tree) if name in LAW_MUTANTS else None
@@ -839,6 +886,7 @@ def main() -> int:
             'fuel': fuel_runs(bins['model'], expected),
             'controls': control_runs(bins['model'], listed),
             'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
+            'arguments': argument_runs(bins['model'], bins['audit']),
             'audit': audit_runs(bins['audit'], expected)}
     for check, rows in base.items():
         bad = {n: r['result'] for n, r in rows.items() if not r['agrees']}
@@ -862,6 +910,7 @@ def main() -> int:
         invocations={n: (r['result']['stdout'] or r['result']['stderr']).strip()[:120] for n, r in base['invocations'].items()},
         fuel=summary(base['fuel']),
         inspection={n: r['result']['stderr'].strip() for n, r in base['inspection'].items()},
+        arguments={n: (r['result']['stdout'] or r['result']['stderr']).strip()[:120] for n, r in base['arguments'].items()},
         controls={n: r['reference'] for n, r in base['controls'].items()},
         admitted_kinds=kinds(base['admitted']),
         admitted={n: {'outcome': (r['result']['stdout'] or r['result']['stderr']).strip()[:120], 'calls': r['calls']}
@@ -876,7 +925,8 @@ def main() -> int:
     swept_total = sum(r['stats']['mutations'] for r in swept.values())
     print(f"vm-model passed: {len(base['goldens'])} goldens, {len(base['invocations'])} invocations, "
           f"{len(base['fuel'])} fuel controls, "
-          f"{len(base['controls'])} refusal controls, {len(base['admitted'])} admitted controls "
+          f"{len(base['controls'])} refusal controls, {len(base['arguments'])} argument controls, "
+          f"{len(base['admitted'])} admitted controls "
           f"({', '.join(f'{n} {k}' for k, n in kinds(base['admitted']).items())}), "
           f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "

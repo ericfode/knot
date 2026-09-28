@@ -110,12 +110,13 @@ def selected_fields(+code: H.Code, +heap: H.Heap, +t: U32, +w: U32, +f: U32) -> 
   W.choose(Result<W.Stop,Fields>,H.is_rep(code,t,2),u => H.bind(H.Heap,Fields,H.dup(heap,w),heap => Done{Fields{heap,[w]}}),u =>
     H.bind(H.Heap,Fields,H.dups(fields,heap),heap => Done{Fields{heap,fields}})))
 
-# A Branch binding f fields enters its body in a new Scope.
+# A Branch binding f fields enters its body in a new Scope, pushed before its
+# fields are made (§6.1: the frame region is exhausted before the heap).
 def branch_entered(+code: H.Code, +arm: U32, +f: U32, +t: U32, +w: U32, +stack: H.Stack, +heap: H.Heap) -> Result<W.Stop,Next>:
   +act = H.act_of(stack)
   W.choose(Result<W.Stop,Next>,U32.is_eq(f,0),u => to(Eval{H.operand(code,arm,3)},stack,heap),
-    u => with_fields(Next,selected_fields(code,heap,t,w,f),+heap => words =>
-           then_stack(Next,H.pushed(stack,H.Scope{H.depth_of(heap,act)}),stack =>
+    u => then_stack(Next,H.pushed(stack,H.Scope{H.depth_of(heap,act)}),stack =>
+           with_fields(Next,selected_fields(code,heap,t,w,f),+heap => words =>
              to(Eval{H.operand(code,arm,3)},stack,H.deepened(H.binds(words,heap,act,H.depth_of(heap,act)),act,U32.add(H.depth_of(heap,act),f))))))
 
 # The selected arm is a Default or a Branch. An absent arm (`none`) or any
