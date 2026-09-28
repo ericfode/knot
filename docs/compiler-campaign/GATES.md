@@ -91,9 +91,10 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
   build confirms each exhaustion cause and audits the state after every
   transition.
 - `vm/core/fixtures.json` fixes literal-review runs, state-dump rows and
-  lowered limits, including the 250,000-deep non-tail recursion.
-- Three Books on Chr's operand (`reference` rows) run as literal review froze
-  them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
+  lowered limits, including the 250,000-deep non-tail recursion and where a
+  Nat Case makes its predecessor against its Scope push (vm-spec D17).
+- Three Books on Chr's operand and one with a Big predecessor (`reference`
+  rows) run as literal review froze them. vm-spec's reference evaluation (`vm/evaluate.py`) must give the same
   run and call count.
 - Ten images (nine Books and a Program) whose bump pointer ends near or
   exactly at 4 GiB. Each row's bump pointer and outcome are first derived from
@@ -115,7 +116,7 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Thirty WAT mutants are each killed by a wrong observation. One restores the
+- Thirty-one WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right.
 

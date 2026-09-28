@@ -2200,13 +2200,14 @@
     (local.set $f (call $w (i32.add (local.get $arm) (i32.const 5))))
     (if (local.get $f)
       (then
-        ;; Nat's field is the new word n - 1; Char's is its own code word
+        ;; push Scope(depth), then bind: Chr's field is its own code word; Succ's
+        ;; is the predecessor n - 1, made only now (a Big from 2^31) and moved
+        (local.set $d (i32.load offset=12 (global.get $act)))
+        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))
         (if (i32.eq (local.get $scr) (global.get $rNat))
           (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))
         (if (i32.eq (local.get $scr) (global.get $rChar))
           (then (call $dup (local.get $x)) (local.set $w (local.get $x))))
-        (local.set $d (i32.load offset=12 (global.get $act)))
-        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))
         (if (local.get $fields)
           (then
             (block $bound

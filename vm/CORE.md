@@ -126,8 +126,11 @@ adopt them or record its own, so that lockstep compares like with like.
    A heap too small for the block is reported before any of it is written.
    Sequential allocation would stop partway, so only the halted state's bump
    pointer can differ.
-5. **Nat Case.** The new word n − 1 is allocated only when the selected arm is
-   the Branch that binds it, not when the Default is taken.
+5. **Nat Case.** Selection reads the tag and allocates nothing. Only a
+   selected Succ Branch makes the predecessor n − 1, after its Scope push, and
+   moves it into its slot; a Default or a Zero arm makes none. SPEC §6.1 now
+   states this (vm-spec D17). The VM used to make the predecessor before the
+   push; `nat-pred-frames` and `nat-pred-heap` pin the order.
 6. **Rendering bounds.** A visit is one rendered constructor application. A
    Nat word n counts n + 1 visits, one per layer of its logical view, and is
    spelled with its own type's Zero and Succ names. The 16 MiB bound applies
@@ -214,8 +217,9 @@ adopt them or record its own, so that lockstep compares like with like.
   fail on images nested deeper than Python's recursion limit. `check-core.py`
   lays out its 200,000-deep image iteratively. At depth 40 that layout is
   checked equal to `serializer.encode`.
-- **Ambiguities.** Choices 5 and 8 above are real ambiguities in §6–§8 and
-  need one normative reading before lockstep. SPEC §8 has settled choice 6.
+- **Ambiguities.** Choice 8 above is a real ambiguity in §6–§7 and needs one
+  normative reading before lockstep. SPEC §8 has settled choice 6, and §6.1
+  choice 5 (D17).
 - **Chr's inspection (choice 13).** §6's Inspection list should name the
   operand of a Chr construction, which the reference evaluation reads. Until
   then the evaluator, vm-model and vm-core agree, but §6's wording alone
@@ -283,10 +287,11 @@ adopt them or record its own, so that lockstep compares like with like.
   adds the gate's evidence for them. An Action's check (`nops > 1`) cannot fail,
   because an Invoke and a Program phase pass at most one operand. Its removal
   is an equivalent mutant, so no mutant is listed for it.
-- **Reference rows (choice 13).** `chr-unchecked` (review round 3's repro),
-  `chr-closure` and the control `chr-big-code`. Each frozen run is literal
-  review, and `evaluate.book` and the VM must both give it: two are
-  `ill-typed` after 2 calls, and the control prints `True{}`.
+- **Reference rows.** `chr-unchecked` (review round 3's repro),
+  `chr-closure` and the control `chr-big-code` (choice 13), and
+  `nat-pred-big` (choice 5). Each frozen run is literal review, and
+  `evaluate.book` and the VM must both give it: two are `ill-typed` after 2
+  calls, the Chr control prints `True{}`, and `nat-pred-big` prints `On{}`.
 - **[core/fixtures.json](core/fixtures.json).** Literal review, frozen before
   any run:
   - the 250,000-deep non-tail recursion, with 500,003 entries and seven yields
@@ -295,7 +300,12 @@ adopt them or record its own, so that lockstep compares like with like.
   - a yield immediately after an Action's effect (`q` printed once);
   - exact fuel boundaries, rendering and both display bounds;
   - an ill-typed flow through a `none` parameter;
-  - the Unsupported foreign leaf, and the invocation errors.
+  - the Unsupported foreign leaf, and the invocation errors;
+  - `nat-pred-big` under a 24-byte frame region and a 48-byte heap (choice 5):
+    the Case's Scope does not fit, so the predecessor is never made (bump
+    H0 + 48); or the Scope is pushed and the predecessor's Big is `Exhausted`
+    kind 2 (top F0 + 36). The heap row's bump is also where §5's model
+    (`ceiling_run`) stops under that heap.
 - **Ceiling.** Ten images whose bump pointer ends near or exactly at 4 GiB, at
   most two at a time. Each dump pins the bump pointer, which keeps the image in
   its band:
@@ -342,7 +352,7 @@ adopt them or record its own, so that lockstep compares like with like.
   cycle and no `call_indirect`.
 - **Malformed images.** As above: 62 frozen controls and 3,720 fuzz images,
   with no trap.
-- **Mutants.** Thirty, each killed by a wrong observation in a named group
+- **Mutants.** Thirty-one, each killed by a wrong observation in a named group
   (one by a trap, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
@@ -364,6 +374,8 @@ adopt them or record its own, so that lockstep compares like with like.
     zero's name, a Nat word costing one visit, and each display bound
     exclusive (run controls);
   - Chr yielding its operand unread (the reference rows);
+  - a Nat Case's predecessor made before its Scope push (the two
+    `nat-pred` limited rows);
   - a cell, or an `append` block, ending exactly at 4 GiB taken as
     `Exhausted`, and a bump pointer that wraps to 0 there (the three ceiling
     rows at exactly 4 GiB);

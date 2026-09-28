@@ -676,6 +676,14 @@ MUTANTS = [
      [('    (global.set $bump (local.get $end))\n    (local.get $p))',
        '    (global.set $bump (i64.extend_i32_u (i32.wrap_i64 (local.get $end))))\n    (local.get $p))')],
      'full-heap'),
+    # vm-spec D17: a Nat Case's predecessor is made after the Branch's Scope push
+    ('nat-pred-before-push', "a Nat Case's predecessor is made before its Scope push",
+     [('        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n'
+       '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
+       '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n',
+       '        (if (i32.eq (local.get $scr) (global.get $rNat))\n'
+       '          (then (local.set $w (call $scalar (i32.sub (local.get $v) (i32.const 1))))))\n'
+       '        (drop (call $frame (i32.const 3) (i32.const 0) (local.get $d) (i32.const 0)))\n')], 'limited'),
     # the pre-fix VM itself: both guards restored. Its defect is the trap, so group `trap` kills
     # it only when every row ending exactly at 4 GiB traps and every other ceiling row stays right
     ('top-trap', 'a cell or an append block ending exactly at 4 GiB traps (the pre-fix VM)',
@@ -1029,6 +1037,9 @@ def main() -> int:
                        for label, n, row in invoked]
     run_jobs = [{'id': r['label'], 'files': {r['argv'][0]: str(loaded / r['argv'][0])}, 'argv': r['argv'],
                  'want': r['want'], 'dump': r['dump']} for r in run_rows]
+    limited_jobs = [{'id': f"limited:{l['name']}", 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
+                     'argv': [staged(l['image']), *l['argv']], 'limits': l['limits'], 'want': expected_run(l['dump']),
+                     'dump': {k: v for k, v in l['dump'].items() if k != 'yields'}} for l in fixtures['limited']]
     ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
                            for j, r in zip(ceiling_jobs, ceiling)]
     full_heap = [j for j in ceiling_mutant_jobs if j['dump']['bump'] == 1 << 32]
@@ -1037,7 +1048,7 @@ def main() -> int:
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
               'full-heap': full_heap, 'trap': ceiling_mutant_jobs,
-              'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs}
+              'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs, 'limited': limited_jobs}
 
     def observed_wrong(job, out):
         return shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
