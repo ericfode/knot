@@ -1,0 +1,14 @@
+{
+ "entry":"book",
+ "representation":{"Bool":0,"U32":1,"Char":2},
+ "types":[
+  {"kind":"data","name":"Bool","constructors":[{"name":"False","fields":[]},{"name":"True","fields":[]}]},
+  {"kind":"opaque","name":"U32"},
+  {"kind":"data","name":"Char","constructors":[{"name":"Chr","fields":[1]}]}
+ ],
+ "functions":[
+  {"name":"U32.is_eq","parameters":[1,1],"result":0,"slots":2,"body":["prim",0,8,[["ref",1,0],["ref",1,1]]]},
+  {"name":"Char.to_u32","parameters":[2],"result":1,"slots":1,"body":["prim",1,19,[["ref",2,0]]]},
+  {"name":"main","parameters":[],"result":0,"slots":0,"body":["call",0,0,[["call",1,1,[["lit",2,"Char",65]]],["lit",1,"U32",65]]]}
+ ]
+}

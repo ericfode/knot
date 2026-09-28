@@ -1,0 +1,1999 @@
+{
+ "date": "2026-09-28T04:34:11.522242+00:00",
+ "status": "passed",
+ "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
+ "oracles": {
+  "literals": "2ea222e7a832445a764f6ab1852b85aeaad11820",
+  "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
+ },
+ "inputs": {
+  "vm/DECISIONS.md": "3bb4d67e3d565debdb9a849976913711be702474bfe6df87206c0bea6ebc87a4",
+  "vm/SPEC.md": "be270e6547a84b44f9442cb88dfb592df17aa32b531ef78439cbfc5d2b4a331c",
+  "vm/bench/baselines.json": "8ca808abea5e57aabeb5ffb1b07fc7816ee54ec832f247076dfec367bbed260d",
+  "vm/bench/cps-choose.bend": "ca61883f3311207973a8edd3974c9c21d11628c60630deddb67d605ae00d170b",
+  "vm/bench/deep-recursion.bend": "72f6c32ac25d8693d9486b175b9ebb466d112c3976595d640a3f85cc9ddc037b",
+  "vm/bench/list-fold.bend": "d388f1903558dd10f89b4a5ce6a7d0ef6be1ece5387c74f9897fcd2cf7c1cd87",
+  "vm/bench/parse-cli.json": "8dadd489f593485bbd1c97fd446757f52664a32719fd4c9b14f313d2ea782b17",
+  "vm/bench/peano.bend": "c46df95ebaef4505f83141f11785d7d63e9785a6e229e77e5e9b535ae2e16c4f",
+  "vm/bench/run.py": "ed30fdd7dfa747e1509c6d26da2c47e7df66aa97a3679effd2a3f7b200c59d04",
+  "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
+  "vm/bench/string-scan.bend": "3d0cbf019f47c5e8be52fc69a9c133489fdc759dcd6a1fa280baf06b6c9d151b",
+  "vm/bench/workloads.json": "aba6ceed7d6e3189a0c271f49d15d9235502d4d9b1d1f9c37918153f4d1076a5",
+  "vm/check-spec.py": "62d6eab6fcf805f7b29899f7ea92375c19ffef48c2a89129d5e53fc1c7effd20",
+  "vm/golden/bounds.json": "3045599dca7704244419cff44e259db9e2997fa07a8b361bb04a8e936306da0e",
+  "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
+  "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
+  "vm/golden/case-char.plan.json": "4e518be75be5ab174377eba9b932ce7defef2bd45f13f51f4c09eea1d5135268",
+  "vm/golden/case-off.bend": "5808d9983778bd0a9604c1665007e5be940698804a765cc8b9566888adcca998",
+  "vm/golden/case-off.kimg": "92460d1aeef037d5fa755a377984ff0004aa1ace2af439bc78e02ded03fc6210",
+  "vm/golden/case-off.plan.json": "1f71067699a5a53ee8e0d3cbd44eb184f07f11833789ed00d64cc1004767ce24",
+  "vm/golden/case-on.bend": "84c402b267b2c98f040f3b66e4c810e81e82ddebd2b2d1f465c561a393b0a338",
+  "vm/golden/case-on.kimg": "e60959551912d0acd2da9a42f36f33daee083fe3f05635014db6516dc34b8738",
+  "vm/golden/case-on.plan.json": "c8b2d151f8ec00bc80e63d3a2bd74f61436df1cb5b802701b431ebbc79302dfd",
+  "vm/golden/char-code.bend": "2559b91db0af5dfe9be5452220f6b7e5a71e7fa1b5e40fc8ac481b7829503800",
+  "vm/golden/char-code.kimg": "4d7f72ff2ff113e1e5c6f07f101bca0e5aadae400b46ff1abaca1a7929182003",
+  "vm/golden/char-code.plan.json": "1b8811c19612eb7ba512fe004aa975064e416d5baa22e487537d3b50c446c3c7",
+  "vm/golden/char-eq.bend": "e54b28c421450c0ca6880246da39df85513c2d5953b35a0a1ebc7755fa131ff8",
+  "vm/golden/char-eq.kimg": "79f87163d3bf327a094f9a50f34268b5424802f571031100552a264e38ead8d2",
+  "vm/golden/char-eq.plan.json": "f4bcc46592b2164dfc47fa4b035963a03e38dee50b335668389d9da24cb820da",
+  "vm/golden/char-space.bend": "749b879970d22ca52cf158aa50325401a20342888f969cf0bdb190f2c26e50ea",
+  "vm/golden/char-space.kimg": "d50ff53ddc3410e1defaaada46bc97952365ab6b8ce20210f6d4b73c39407b5a",
+  "vm/golden/char-space.plan.json": "bfac9481cb85dcd1791bab98c84da00d81a08e99af008b1f5fb2e52245041b56",
+  "vm/golden/closure-capture-off.bend": "a2982f956e5d80d1f0a5948efedc3f259ea0cafb6e52ba6c6efda8d65950cfb4",
+  "vm/golden/closure-capture-off.kimg": "ad05d9d852c664ff69988fb2cac76fc89a6bda834edd66cafac8fdac7f6cc1a8",
+  "vm/golden/closure-capture-off.plan.json": "f11f2f809958a4646172941b13f5b2137e65f20535c1dc64a53eea7d2ada29a2",
+  "vm/golden/closure-capture-on.bend": "e7de301bfaf92728ca87187f300d5bde3645af09d1fd2a53aeb99ddebcf814a0",
+  "vm/golden/closure-capture-on.kimg": "b19513d927fe3e16b1c26b170e68f665e52c40cb257159413af0d35704c227e2",
+  "vm/golden/closure-capture-on.plan.json": "022c8f0a7a9393b5ec06aa65b3e6a8b61d5b24cb62aa9cbea20d001fc10bf5a4",
+  "vm/golden/closure-captures.bend": "c1562715236ee2ce37e471130b5ccc53d23f84c2fba3510d1021d92f79c5eb34",
+  "vm/golden/closure-captures.kimg": "abc93f78c1d79660a6cfb074665e82a54ad2f5ab5e385fae7b161ffed35ae8fb",
+  "vm/golden/closure-captures.plan.json": "b04e6fa274bee2052a021a983e7e258121653539356caa46b2001c569d16e5ec",
+  "vm/golden/closure-id.bend": "59c6180dbc3de22a3c3ae43ba7b62e4dc87bcd078460d7b06b89ab5b7f2dec95",
+  "vm/golden/closure-id.kimg": "548ef2935f02491913be70df17021e9d07843d9da68a94645518849001d3fbbe",
+  "vm/golden/closure-id.plan.json": "8433c1d19f767a5847c6067ae60cdba5404cfd868d27b3ed812a08e947cc8aae",
+  "vm/golden/closure-nested.bend": "cbddd799d892dd0a490eb3e29a8ca528f5ba91df07d37d810a059e759b5e8887",
+  "vm/golden/closure-nested.kimg": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7",
+  "vm/golden/closure-nested.plan.json": "7e1c93ebd03f3a41839ad2a5a32dec7c95e23c2179977fb185e103ae92bbe522",
+  "vm/golden/closure-return.bend": "3009d6615092c4b964f28538a8b61e7624d9687d5b16a16bab9f48cee2f32f3d",
+  "vm/golden/closure-return.kimg": "3f0c38cb86b6297bb0f0996bcc51689e79f07a3e6c654a7ecc0d3e4fbbb66d28",
+  "vm/golden/closure-return.plan.json": "c334e835e5d85ca76179c8d54b6dc8c7e65812dfbe8b3919dae97f2ac1095ed6",
+  "vm/golden/closure-shadow.bend": "133e4fe9da41e9d19e3939e51e0640e9c6bddb7ff948ffce97b5ced3258311ae",
+  "vm/golden/closure-shadow.kimg": "1bb2a7c4939b723e21ccc954b592cc73a6d9e3aed8a2193c75fede8ea671bc00",
+  "vm/golden/closure-shadow.plan.json": "f77ca6c7c305c62d350fb957c2fa4686aff43e905b33cc9fc8455c892b12c1db",
+  "vm/golden/construct.bend": "844619acfdc40758b7722eaaf3514d69872b66caff4e460400e9d70a67f9f801",
+  "vm/golden/construct.kimg": "5d5e9f4f4c276148df809210b14984f258c68349dbca468239cecf854012cc6f",
+  "vm/golden/construct.plan.json": "795a012c40353b9ee90039be74ab99cf8f2124ea8113090ba6b5bdeeee00a71f",
+  "vm/golden/default-hit.bend": "8810a50ee5168885ca597aedb3cff79a4df7e2ba54ac73e06b105f2decb58675",
+  "vm/golden/default-hit.kimg": "3d04fc4a82e7a9db6e5c07288556d463fb1ed161503e0516a89fe18be039067a",
+  "vm/golden/default-hit.plan.json": "7db6bc9d0dac9b0d7295655165d58d9719b19a87bf7f029921218902c6f976bc",
+  "vm/golden/default-miss.bend": "856a1767428bed2c304ba66a2acc35b1a93b1d0337d77f0b4a73e38fee0eddd1",
+  "vm/golden/default-miss.kimg": "e9e727736e37370fc822275680809d20050356688ee71935aafc0190416f2795",
+  "vm/golden/default-miss.plan.json": "bf939ee923c5e0f3daf8937874a9cfa864ac98387e2874ad2176ec3760448254",
+  "vm/golden/erased-argument.bend": "b3ee8e4367d78d9e9c26020233d3f3e6a490da25b7eec8915147e1f2e1fe750f",
+  "vm/golden/erased-argument.kimg": "a93cd85710967e27c9369987b416fa052a4c96828b30295b08479aba69840eff",
+  "vm/golden/erased-argument.plan.json": "c2182c7c89580eaffafaf2b8ab966f34b5f0139f77878fd52032c047884ccbc1",
+  "vm/golden/erased-construct.bend": "3843fa596feeba33415c45c14bb9cf0d4b0c41a1e31eb3ec886129add1e35767",
+  "vm/golden/erased-construct.kimg": "75ee9c3dbae09a4da0ec5a5e7c948ba74b98d6dab561aeb4eaa068396fa273c7",
+  "vm/golden/erased-construct.plan.json": "c421aba2361812eebf45a6ece75585c87faf5ec04b3c122edf52d58073a4a810",
+  "vm/golden/erased-field.bend": "a1430c284d46746fee43130432ad38de762e4532250bd26dd875d2cf13c001d6",
+  "vm/golden/erased-field.kimg": "f8aab37239b16a5364850c89425568e51c39e16b1cfe55bc74f0c7910de9db0a",
+  "vm/golden/erased-field.plan.json": "6e72468c69ae4b201f4ccec98229cb8743c0ed6e01593dd1ac4d966ef9ea5eac",
+  "vm/golden/erased-let.bend": "d6612eae198742f4c24e3b28fb5627e98c104f1c3cff06c4a4614f9b884ca2b1",
+  "vm/golden/erased-let.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
+  "vm/golden/erased-let.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
+  "vm/golden/expectations.json": "5f7926001ca44e9134f5f0857339b0b9d43a67b1f9511815e08f1ffa502cce18",
+  "vm/golden/foreign-print.bend": "84b4e5fbee2bfc11a969873e55960dc377e62c901031720df869086efb809f23",
+  "vm/golden/foreign-print.kimg": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+  "vm/golden/foreign-print.plan.json": "600697ac10dc96ee1f2c60c300f6ce2cbdad71fb4b9a480bef4b2116c5ca20ae",
+  "vm/golden/let.bend": "9acfa26d80240137d6dd226ed4e8253ac4adb2539e9c38afb2ce8803fba7d694",
+  "vm/golden/let.kimg": "536b67a804773ec463309e7c054937d831e48cf854b4155883f1e456f3f0d119",
+  "vm/golden/let.plan.json": "3b2593a46031dd65e7ca0c4afd68333f8c5fca6a382c78bda8b335be98fb6d80",
+  "vm/golden/nat-add.bend": "7007600ac06dfc27d6041be83ca1d1a3b000f478a34299dcd3d1fe0a7c4ed775",
+  "vm/golden/nat-add.kimg": "1edc1a48f0c1c026f6d00963724e9fa539a3bda68a7484a098eede7c59125043",
+  "vm/golden/nat-add.plan.json": "3843b33a56090f01c97d430b6afd41e41f77a296161e5a372824752bf9a9dac9",
+  "vm/golden/nat-big.bend": "6aca8d5c80b6bee3b84d447c1137803d069c6586cac5cc697ec491146169b615",
+  "vm/golden/nat-big.kimg": "0719f5caeef7d65f429186f09dc474a2aabf5a86f68a60c5fdd923d8913c61fb",
+  "vm/golden/nat-big.plan.json": "1d59177b156f02a125d1dfcbd907da5d1f5c8ca295a3d7b88b376f1c9ba90c6e",
+  "vm/golden/nat-mul.bend": "57bc5363c5e7ae0373d685d201e2528387845a421275de280a0ad4d74f708371",
+  "vm/golden/nat-mul.kimg": "1eb7399ad614ec6244f2b56d15f68d5bc5809afdcd6544ab29aee38301db7ebf",
+  "vm/golden/nat-mul.plan.json": "097563d8ef84631d57087e4cfcf0a86c4975ea32c2fcd1db822b6bfda7df8d09",
+  "vm/golden/nat-range.bend": "940d9dba401f8d1c5151a2d4e9d67310a0f93e8325659d8049a8c494d7356a13",
+  "vm/golden/nat-range.kimg": "ad719e55041d9f60d76ecd4fb07210f8e80ac09686b32dbb56a19eb0f38bf1eb",
+  "vm/golden/nat-range.plan.json": "8742b3d887b2a6600d024d0c967e56efdf2bef87105b8cf0b32d35c8f58fb4e3",
+  "vm/golden/nat-show.bend": "157c241bde653b3abcb810e78d301f4dbd5d247b58057fcb0e66a4ee467faaa5",
+  "vm/golden/nat-show.kimg": "0028095ce0cf5007552a7abe7e575c64fbb36d56d98323eb0f7a3e70f08b7e33",
+  "vm/golden/nat-show.plan.json": "9191f744449d08d84f5c03094b6160287ae9f902659a5a533041e6e52cb949e8",
+  "vm/golden/nat-sub-floor.bend": "658e16a0494057b53c133d954863bfbe7794e2ad365479f00545292cb7eecbfd",
+  "vm/golden/nat-sub-floor.kimg": "44c525813fb38f37508b599dff0c6f41da7ad976d85d8be39336cb3f7305609a",
+  "vm/golden/nat-sub-floor.plan.json": "3f108ca68f7449111b4842e9c2046f956490dfd3a0cb948f63fa498c3954e674",
+  "vm/golden/nat-unpack.bend": "099577a5effd238fc08fb57781ceb5d32edb9579728a4ce1cd3f51ec72fbb1f8",
+  "vm/golden/nat-unpack.kimg": "2e8c83f17a8f6700edaa11dc8a2fb6aed63da3e548736e268fa1862f61e464bb",
+  "vm/golden/nat-unpack.plan.json": "77fe291f78a01e0d594941aaebfa443d00a083def06a13bd56ba9b307be6d92d",
+  "vm/golden/nested-call.bend": "c7b2cf22a65ca56f4e73d075a4e9b93e44af1cae4af26dccda3b8c405336a411",
+  "vm/golden/nested-call.kimg": "7e995aa8f3ee2e69deeff7e88c91296d5eaec6debe157b222800c93d2c5841b3",
+  "vm/golden/nested-call.plan.json": "5c2e5a77ed2431f0b749c684a0ac36a4f337b93bd7d7c51783dc650a75e43966",
+  "vm/golden/pair.bend": "e49c711270c64181a864ea821943ee760ead6ba96a603fa412addca4c73222cb",
+  "vm/golden/pair.kimg": "06a2caee911d17805e1fb1ca8efc6953037a5105e57f37cc5964f93856dd8169",
+  "vm/golden/pair.plan.json": "f96fe9a5c65a580076074676a06bd1d454d6a978e843c1e17376d6f73a6fa57e",
+  "vm/golden/plan.json": "8183cc4124d2319132a81cadd0cd1c6398bb8cc3aee473e812f85c33eda72cfb",
+  "vm/golden/recursion-map.bend": "e3934c3524b4d71854e4817aa22d8c53180bfe4b0de8f9e8f779a9a754b9ddda",
+  "vm/golden/recursion-map.kimg": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08",
+  "vm/golden/recursion-map.plan.json": "690e6e3c83c39bcaeeabb2bfcfd3f5ba48f2276f28ba604447086cb74cd74ec4",
+  "vm/golden/recursion-tail.bend": "cd57b29b4e451554bf319f55fdccec28b5effeb63f78c8c59365257f93c8838a",
+  "vm/golden/recursion-tail.kimg": "fede17445cfe3e4e4cf0b81a02b426f40c06286d820eabca84c34d27ed6d67ad",
+  "vm/golden/recursion-tail.plan.json": "d2ab6598eb6c998859b03f0b56ff21e092ea66bc946b1bfdf2e4f9092c31ca24",
+  "vm/golden/reference.bend": "c5cc0031061ed0f58be5c9ed1c069181741fcc77650aa6da1596078bf5b9f06d",
+  "vm/golden/reference.kimg": "b896240530b237df02a92bb129b76eba80170bb7ab4b4f5405c313f0b631cc08",
+  "vm/golden/reference.plan.json": "db9da8fd27f03ce414c3ecca906b876a3b19593b6009966c87ccc55c7d684d1c",
+  "vm/golden/second.bend": "5923178aed3fe1c3d31438152b6d4369e9e8cad7a78db2e98fad06d3c23c3f11",
+  "vm/golden/second.kimg": "127c848f584c6eff211571093f484f084be37d8973b5cb116b900738aa03c17f",
+  "vm/golden/second.plan.json": "98e179317881ef11b5325cb0f5f2bdb52e34efa0187964d706181b4eb4dba38b",
+  "vm/golden/shadow.bend": "49e5e8e92b73770b3fbbc774371e776ff261ccbae03011b64b7f76911474c871",
+  "vm/golden/shadow.kimg": "b05d7cb23a2e72ec74f0a37d9bccb6cc5904a17f9391053ce9ba3c9b582dff06",
+  "vm/golden/shadow.plan.json": "f4806ede4dce1b39797325fda5e250e6a9ff919e4e794036e7bf603188d1eba5",
+  "vm/golden/string-append.bend": "069a97e754e4225c28b10a589bb471c342194582c15099773654ab8fca317ced",
+  "vm/golden/string-append.kimg": "66308d3d8e9b8ad7c3ca09ad39feeac5285713d9e21a993e97fe85165a918fdf",
+  "vm/golden/string-append.plan.json": "aa54ae7b036de56e0baebd050e8b3fd6b18b56728e4268f186fb243f2849f579",
+  "vm/golden/string-empty.bend": "aa4eee7eece080bc550db970316f7e1ba8eb3e586977271e168b08140bfdee89",
+  "vm/golden/string-empty.kimg": "3ffc3cdf0eea4123dc63e985ab13ccf65493df2655cdbb00f3030aa2af557b74",
+  "vm/golden/string-empty.plan.json": "1cf5205623ea84eec37003cce7a0cfa65ea6372e0a836f4dabb23319cf37dae4",
+  "vm/golden/string-eq.bend": "2f0270496b12fab28901a5ebb2de1afafcb254bf50a5902fb87c9c30b6d40dad",
+  "vm/golden/string-eq.kimg": "e6556b46426110f2abf07921a2e8338de74bf5d8ba0f7c255bc44d8431e5ed75",
+  "vm/golden/string-eq.plan.json": "029399dfc98cdaa936de6f3cfa0cdb49c7870fe2578a4e0353eb925382115d73",
+  "vm/golden/string-length.bend": "3e70d7b1cf6ecba905cad84d3d7151d1378b2e87c1de5c463db206d4d8c5c238",
+  "vm/golden/string-length.kimg": "1f3a9c5649b7ca25ef0f37a28f83f87dbd5c724776ad591110184e3f66f07f6a",
+  "vm/golden/string-length.plan.json": "4c0b95031b3bb5537395fe68d337b1fc3ef2b7853bd6914bc70a585adf01462e",
+  "vm/golden/string-reverse.bend": "cffc0f330a804b52e9d385cda62e063f35aa750d5b33e782fcdf5d784d85fb4d",
+  "vm/golden/string-reverse.kimg": "d9387b3fc8c4e58d012751d9987688f4c18eb924ae5d4e80e326c0a9401f448d",
+  "vm/golden/string-reverse.plan.json": "1cefe478e8c698029e22c79ed32917c6c8f565e025af4b7ec96131eedd728db5",
+  "vm/golden/u32-big.bend": "d61f179a913793df59f601eaca4683553da7dbabce062b425b003c3b90a71aa2",
+  "vm/golden/u32-big.kimg": "1a641f67ee89d73459282f97ff98c445ed079977e7257cb0b08685114d5f424b",
+  "vm/golden/u32-big.plan.json": "ff8f8861f74aff1d99095a29d1308ffbee0a7893963a5ab1665606981053316c",
+  "vm/golden/u32-cmp.bend": "620acc84f52dab838747e7e62445880f3fc5d31e1e73544cdc43c39937ac5055",
+  "vm/golden/u32-cmp.kimg": "f1fbe32ccdf0c864cbd28550ae6fe520849104c0d1327f8510b1a41c67b33800",
+  "vm/golden/u32-cmp.plan.json": "257c1ec1908fada8e133077d590c2435ab0f2ae81e59c0409b18f9ef6ead3f5e",
+  "vm/golden/u32-div-zero.bend": "8c1ed70cd0d5879753aee8fdb6335dbfe8e117d039f0f4e2a05e5af7632a1c8a",
+  "vm/golden/u32-div-zero.kimg": "62c938029bcc9728540b3e4aba6d82bc11beec2ba34c9b344c4986d6bc1e5564",
+  "vm/golden/u32-div-zero.plan.json": "ccb513c324e4813bf23eb5aa4f9854bd844bc8fb81d3eee72a943d7d90281a1f",
+  "vm/golden/u32-not.bend": "1b831fdb2df9a8bb1059ea0321e4e23bd92cdc1ec5424408251a63368a913d0c",
+  "vm/golden/u32-not.kimg": "34885e151ec9b83b302d26657ebd995514f6a23377ca930129057b17dff09983",
+  "vm/golden/u32-not.plan.json": "de333f29b8fd283f800394bbe3dbc03319ec0ab4627023d2ab4514435e1e0e9c",
+  "vm/golden/u32-rem-zero.bend": "0dc335c931d8d1ffcf9635c172af2e588b93e345770d74d40d18816ec31a72e9",
+  "vm/golden/u32-rem-zero.kimg": "6487b2a762d894b66cbedb73f1dacb912d67e9f84dc31e8bbf8ae33c38cfa277",
+  "vm/golden/u32-rem-zero.plan.json": "1da319a809aea214423a0d65359796af7a6094e359872378a744eead1df98d31",
+  "vm/golden/u32-shift.bend": "c16582d2e188a739021db4e17c2837e0ddb802ee762bf032dc882acc9411b06e",
+  "vm/golden/u32-shift.kimg": "9e1c0b383458a2b103a074d9a71252795f8c2ac1923dca2f7e85d21aae4a6770",
+  "vm/golden/u32-shift.plan.json": "4748a6911bbfe0c990bad6825ee8e7d642709faa0186dc3901bcade33ed88531",
+  "vm/golden/u32-show.bend": "c6c753c3dff79d4887ecebdfa1e6f112a3feff8fad6a10d4ad77e8309736fea6",
+  "vm/golden/u32-show.kimg": "8f5af5e1a044cbe00b3ad83d992c91e7bf8d36c6584e1aeab25c4065e26bde3b",
+  "vm/golden/u32-show.plan.json": "fb5a5e6f6d44e3420a9da8a2463b6ca0c01f0b2d672082b80a3646d105d9a65a",
+  "vm/golden/u32-shr.bend": "65f1b1f3492787ecb719f03dbe5622a384a50677acec7c59c93e26e1040270cb",
+  "vm/golden/u32-shr.kimg": "f4f4c4f0ab61d07ada90c0fee78825e73e1d70b3f9755a4c35bbbbbda4f62682",
+  "vm/golden/u32-shr.plan.json": "69897d6b9942ef1ec805f78964e804bdb94be7616e8218e50dd9cd33166b64ff",
+  "vm/golden/u32-unsigned.bend": "818e4117b69c6b30931574968407406abccc5ba89569bf61c0920df4bdf4d270",
+  "vm/golden/u32-unsigned.kimg": "cec11d6919ca328fed9059ce8602e7c35b1baab9c13d8051350525ca03b50496",
+  "vm/golden/u32-unsigned.plan.json": "c0e13ccc6dc0da923cb951e8be8fc6f528f8df112709012cfb6eaece8feabe46",
+  "vm/golden/u32-wrap.bend": "680946c5690e405a504b6e583defba73baecd71ec432f07a68a1edd78a4118e1",
+  "vm/golden/u32-wrap.kimg": "2f76582f1595159bfbef06da2b94a26c4aee48371b3a8a53576d07f13ebf6e3c",
+  "vm/golden/u32-wrap.plan.json": "7566c2268cd212f3eb0393c5cc60cbd300fc4e1ee70532beeca69462f8a8cd91",
+  "vm/golden/u32-zero.bend": "9514905b2ada5e8a0bb0606d77303227b24a9d0d8f8303772d3df71db524c8c9",
+  "vm/golden/u32-zero.kimg": "12ace5f2be4e10b46e120931ebae1da8532d22ad55f64cf39c81585c618dfcfb",
+  "vm/golden/u32-zero.plan.json": "f1590f71f79f9e1a20ae6467c36926644a68f10b16ffe3b64551fb53013c8e6c",
+  "vm/golden/unpack.bend": "afb2e4f5acd7918dae20bfeff873c4fab0844570048ffede20b4222fefbc2007",
+  "vm/golden/unpack.kimg": "aebc8cd0780fb27857f16cb381ce6793fe21d1332ccb315b409aaca7f4a2b34a",
+  "vm/golden/unpack.plan.json": "9e3bce1ac2268631089cc19bdacfb8387901b207a90cd23e7ec1a17018d34fbe",
+  "vm/golden/value-off.bend": "0cea3f05e3d0583f12d91825f0f19a0abe450f888f08e663b09558cafd6fc8fa",
+  "vm/golden/value-off.kimg": "c36d57738cc28f4a46b9c962fd512cc8ea99232ad91792d9b1d2051519f65803",
+  "vm/golden/value-off.plan.json": "851ca971537bfbe4aef5794f4231fed11d93244e7c323f4391b2c2378333e258",
+  "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
+  "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
+  "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
+  "vm/golden/vm-expected.json": "0fadb6a2b9e655ce02c2220c138372ff036830b8f150e38452d513975b713599",
+  "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
+  "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
+  "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
+  "vm/oracles/manifest.json": "99d769399af7220e6fb6cc76b8bd15f8051716ded4694b371728bd4e096b15e8",
+  "vm/registry.json": "2ea36f75d4118bc44fccbe244bfe6fa38c3306d93c26fcf06569e51cb8574199",
+  "vm/serializer.py": "95d618f67768dffa138ea8782b17eff25fa24109e4280a6b95272e1f77c7ce09"
+ },
+ "registry": {
+  "prims": 41,
+  "derived": 39,
+  "reserved": 2,
+  "foreign": 8
+ },
+ "bench": {
+  "workloads": 6,
+  "parse_cli_files": 34
+ },
+ "fixtures": [
+  {
+   "name": "value-off",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Value"
+   ],
+   "image_sha256": "c36d57738cc28f4a46b9c962fd512cc8ea99232ad91792d9b1d2051519f65803",
+   "words": 75,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t0\tOff{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "value-on",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Value"
+   ],
+   "image_sha256": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
+   "words": 75,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "reference",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Reference",
+    "Application"
+   ],
+   "image_sha256": "b896240530b237df02a92bb129b76eba80170bb7ab4b4f5405c313f0b631cc08",
+   "words": 95,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nested-call",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Application"
+   ],
+   "image_sha256": "7e995aa8f3ee2e69deeff7e88c91296d5eaec6debe157b222800c93d2c5841b3",
+   "words": 101,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "let",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Let",
+    "Reference"
+   ],
+   "image_sha256": "536b67a804773ec463309e7c054937d831e48cf854b4155883f1e456f3f0d119",
+   "words": 85,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "shadow",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Let"
+   ],
+   "image_sha256": "b05d7cb23a2e72ec74f0a37d9bccb6cc5904a17f9391053ce9ba3c9b582dff06",
+   "words": 95,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "erased-let",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "erasure"
+   ],
+   "image_sha256": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
+   "words": 75,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "erased-argument",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "erasure",
+    "Application"
+   ],
+   "image_sha256": "a93cd85710967e27c9369987b416fa052a4c96828b30295b08479aba69840eff",
+   "words": 95,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "case-off",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Case",
+    "Branch"
+   ],
+   "image_sha256": "92460d1aeef037d5fa755a377984ff0004aa1ace2af439bc78e02ded03fc6210",
+   "words": 123,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "case-on",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Case",
+    "Branch"
+   ],
+   "image_sha256": "e60959551912d0acd2da9a42f36f33daee083fe3f05635014db6516dc34b8738",
+   "words": 123,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t0\tOff{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "construct",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Construct"
+   ],
+   "image_sha256": "5d5e9f4f4c276148df809210b14984f258c68349dbca468239cecf854012cc6f",
+   "words": 95,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "unpack",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Construct",
+    "Case",
+    "Branch",
+    "Reference"
+   ],
+   "image_sha256": "aebc8cd0780fb27857f16cb381ce6793fe21d1332ccb315b409aaca7f4a2b34a",
+   "words": 131,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "pair",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Construct"
+   ],
+   "image_sha256": "06a2caee911d17805e1fb1ca8efc6953037a5105e57f37cc5964f93856dd8169",
+   "words": 101,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "second",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Branch",
+    "Reference"
+   ],
+   "image_sha256": "127c848f584c6eff211571093f484f084be37d8973b5cb116b900738aa03c17f",
+   "words": 138,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "erased-field",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "erasure",
+    "Branch"
+   ],
+   "image_sha256": "f8aab37239b16a5364850c89425568e51c39e16b1cfe55bc74f0c7910de9db0a",
+   "words": 132,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-id",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke"
+   ],
+   "image_sha256": "548ef2935f02491913be70df17021e9d07843d9da68a94645518849001d3fbbe",
+   "words": 125,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-capture-off",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke",
+    "capture"
+   ],
+   "image_sha256": "ad05d9d852c664ff69988fb2cac76fc89a6bda834edd66cafac8fdac7f6cc1a8",
+   "words": 130,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t0\tOff{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-capture-on",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke",
+    "capture"
+   ],
+   "image_sha256": "b19513d927fe3e16b1c26b170e68f665e52c40cb257159413af0d35704c227e2",
+   "words": 130,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-return",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke"
+   ],
+   "image_sha256": "3f0c38cb86b6297bb0f0996bcc51689e79f07a3e6c654a7ecc0d3e4fbbb66d28",
+   "words": 119,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-nested",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke",
+    "capture"
+   ],
+   "image_sha256": "ba4b4ab066c50995f4626acda6a26f70efc0ea9c3d54722a86ee397c259169c7",
+   "words": 143,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-shadow",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke"
+   ],
+   "image_sha256": "1bb2a7c4939b723e21ccc954b592cc73a6d9e3aed8a2193c75fede8ea671bc00",
+   "words": 118,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-zero",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "12ace5f2be4e10b46e120931ebae1da8532d22ad55f64cf39c81585c618dfcfb",
+   "words": 127,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-big",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "1a641f67ee89d73459282f97ff98c445ed079977e7257cb0b08685114d5f424b",
+   "words": 127,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-wrap",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "2f76582f1595159bfbef06da2b94a26c4aee48371b3a8a53576d07f13ebf6e3c",
+   "words": 173,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-unsigned",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "cec11d6919ca328fed9059ce8602e7c35b1baab9c13d8051350525ca03b50496",
+   "words": 131,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-div-zero",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "62c938029bcc9728540b3e4aba6d82bc11beec2ba34c9b344c4986d6bc1e5564",
+   "words": 169,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-rem-zero",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "6487b2a762d894b66cbedb73f1dacb912d67e9f84dc31e8bbf8ae33c38cfa277",
+   "words": 169,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-shift",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "9e1c0b383458a2b103a074d9a71252795f8c2ac1923dca2f7e85d21aae4a6770",
+   "words": 198,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nat-add",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "1edc1a48f0c1c026f6d00963724e9fa539a3bda68a7484a098eede7c59125043",
+   "words": 190,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "char-code",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "4d7f72ff2ff113e1e5c6f07f101bca0e5aadae400b46ff1abaca1a7929182003",
+   "words": 176,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "string-empty",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "3ffc3cdf0eea4123dc63e985ab13ccf65493df2655cdbb00f3030aa2af557b74",
+   "words": 160,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "string-eq",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "e6556b46426110f2abf07921a2e8338de74bf5d8ba0f7c255bc44d8431e5ed75",
+   "words": 173,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "string-append",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "66308d3d8e9b8ad7c3ca09ad39feeac5285713d9e21a993e97fe85165a918fdf",
+   "words": 220,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "string-reverse",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "d9387b3fc8c4e58d012751d9987688f4c18eb924ae5d4e80e326c0a9401f448d",
+   "words": 206,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "default-hit",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Case",
+    "Branch",
+    "Default"
+   ],
+   "image_sha256": "3d04fc4a82e7a9db6e5c07288556d463fb1ed161503e0516a89fe18be039067a",
+   "words": 133,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "default-miss",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Case",
+    "Branch",
+    "Default"
+   ],
+   "image_sha256": "e9e727736e37370fc822275680809d20050356688ee71935aafc0190416f2795",
+   "words": 133,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tOff{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nat-unpack",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Case",
+    "Branch"
+   ],
+   "image_sha256": "2e8c83f17a8f6700edaa11dc8a2fb6aed63da3e548736e268fa1862f61e464bb",
+   "words": 152,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "foreign-print",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Foreign"
+   ],
+   "image_sha256": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
+   "words": 191,
+   "plan_matches": "unavailable: Invalid\tparse\tfunction-result\t13:14:3:11",
+   "seed": "agree",
+   "eval": "Invalid",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "1000000",
+     "--"
+    ],
+    "exit": 0,
+    "stdout": "vm\n",
+    "stderr": "",
+    "basis": "seed",
+    "eval_lane": "Invalid"
+   }
+  },
+  {
+   "name": "nat-sub-floor",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "44c525813fb38f37508b599dff0c6f41da7ad976d85d8be39336cb3f7305609a",
+   "words": 190,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "char-space",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "d50ff53ddc3410e1defaaada46bc97952365ab6b8ce20210f6d4b73c39407b5a",
+   "words": 283,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-show",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "8f5af5e1a044cbe00b3ad83d992c91e7bf8d36c6584e1aeab25c4065e26bde3b",
+   "words": 211,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "string-length",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "1f3a9c5649b7ca25ef0f37a28f83f87dbd5c724776ad591110184e3f66f07f6a",
+   "words": 231,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-not",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "34885e151ec9b83b302d26657ebd995514f6a23377ca930129057b17dff09983",
+   "words": 158,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-shr",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "f4f4c4f0ab61d07ada90c0fee78825e73e1d70b3f9755a4c35bbbbbda4f62682",
+   "words": 198,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nat-mul",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "1eb7399ad614ec6244f2b56d15f68d5bc5809afdcd6544ab29aee38301db7ebf",
+   "words": 190,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nat-show",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "0028095ce0cf5007552a7abe7e575c64fbb36d56d98323eb0f7a3e70f08b7e33",
+   "words": 228,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "char-eq",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "79f87163d3bf327a094f9a50f34268b5424802f571031100552a264e38ead8d2",
+   "words": 144,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "u32-cmp",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Intrinsic"
+   ],
+   "image_sha256": "f1fbe32ccdf0c864cbd28550ae6fe520849104c0d1327f8510b1a41c67b33800",
+   "words": 137,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t2\tGT{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "case-char",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Literal",
+    "Case",
+    "Branch",
+    "Default"
+   ],
+   "image_sha256": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
+   "words": 163,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t2\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "recursion-map",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Application",
+    "Construct",
+    "Case",
+    "recursion"
+   ],
+   "image_sha256": "6dfa78306042faa4d881e259ce923c4063a2d8c8dcc62fcecff19746b9433b08",
+   "words": 238,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "recursion-tail",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Application",
+    "Case",
+    "tail"
+   ],
+   "image_sha256": "fede17445cfe3e4e4cf0b81a02b426f40c06286d820eabca84c34d27ed6d67ad",
+   "words": 189,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "erased-construct",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "erasure",
+    "Construct"
+   ],
+   "image_sha256": "75ee9c3dbae09a4da0ec5a5e7c948ba74b98d6dab561aeb4eaa068396fa273c7",
+   "words": 96,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tProofBox{On{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "closure-captures",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Closure",
+    "Invoke",
+    "capture"
+   ],
+   "image_sha256": "abc93f78c1d79660a6cfb074665e82a54ad2f5ab5e385fae7b161ffed35ae8fb",
+   "words": 162,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tPair{On{},Off{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "nat-big",
+   "lane": "literals",
+   "seed_lane": "native",
+   "features": [
+    "Literal",
+    "Intrinsic",
+    "bound"
+   ],
+   "image_sha256": "0719f5caeef7d65f429186f09dc474a2aabf5a86f68a60c5fdd923d8913c61fb",
+   "words": 190,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "Exhausted",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tTrue{}\n",
+    "stderr": "",
+    "basis": "seed",
+    "eval_lane": "Exhausted"
+   }
+  },
+  {
+   "name": "nat-range",
+   "lane": "literals",
+   "seed_lane": "native",
+   "features": [
+    "Literal",
+    "Intrinsic",
+    "bound"
+   ],
+   "image_sha256": "ad719e55041d9f60d76ecd4fb07210f8e80ac09686b32dbb56a19eb0f38bf1eb",
+   "words": 186,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "Exhausted",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "NatRange",
+    "basis": "bound",
+    "reason": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0.",
+    "eval_lane": "Exhausted"
+   }
+  }
+ ],
+ "boundaries": [
+  {
+   "control": "truncated",
+   "refused": "HostFailure image: total"
+  },
+  {
+   "control": "bad-magic",
+   "refused": "HostFailure image: magic"
+  },
+  {
+   "control": "version-2",
+   "refused": "HostFailure image: magic"
+  },
+  {
+   "control": "total-words",
+   "refused": "HostFailure image: total"
+  },
+  {
+   "control": "entry-kind",
+   "refused": "HostFailure image: header"
+  },
+  {
+   "control": "reserved-word",
+   "refused": "HostFailure image: header"
+  },
+  {
+   "control": "registry-digest",
+   "refused": "HostFailure image: registry digest"
+  },
+  {
+   "control": "section-offset",
+   "refused": "HostFailure image: section 1 offset"
+  },
+  {
+   "control": "record-length",
+   "refused": "HostFailure image: section 4 record length"
+  },
+  {
+   "control": "trailing-word",
+   "refused": "HostFailure image: trailing words"
+  },
+  {
+   "control": "opcode",
+   "refused": "HostFailure image: node record"
+  },
+  {
+   "control": "main-index",
+   "refused": "HostFailure image: main index"
+  },
+  {
+   "control": "name-utf8",
+   "refused": "HostFailure image: name utf-8"
+  },
+  {
+   "control": "function-root-shared",
+   "refused": "HostFailure image: function root"
+  },
+  {
+   "control": "child-not-record",
+   "refused": "HostFailure image: child offset"
+  },
+  {
+   "control": "child-after-parent",
+   "refused": "HostFailure image: child after parent"
+  },
+  {
+   "control": "oversize",
+   "refused": "HostFailure image: exhausted image-size"
+  },
+  {
+   "control": "oversize-and-bad-magic",
+   "refused": "HostFailure image: exhausted image-size"
+  },
+  {
+   "control": "oversize-and-misaligned",
+   "refused": "HostFailure image: exhausted image-size"
+  },
+  {
+   "control": "unused-constant",
+   "refused": "HostFailure image: noncanonical"
+  },
+  {
+   "control": "plan:ref-beyond-depth",
+   "refused": "HostFailure image: validator: id: slot 1 beyond depth 1"
+  },
+  {
+   "control": "plan:let-slot",
+   "refused": "HostFailure image: validator: main: let slot 1 at depth 0"
+  },
+  {
+   "control": "plan:branch-first-slot",
+   "refused": "HostFailure image: validator: second: branch binders"
+  },
+  {
+   "control": "plan:branch-fields",
+   "refused": "HostFailure image: validator: second: branch binders"
+  },
+  {
+   "control": "plan:missing-tag",
+   "refused": "HostFailure image: validator: flip: default must cover exactly the missing tags"
+  },
+  {
+   "control": "plan:redundant-default",
+   "refused": "HostFailure image: validator: flip: default must cover exactly the missing tags"
+  },
+  {
+   "control": "plan:keys-without-default",
+   "refused": "HostFailure image: validator: select: keys must increase strictly, with a default"
+  },
+  {
+   "control": "plan:keys-descending",
+   "refused": "HostFailure image: validator: vowel: keys must increase strictly, with a default"
+  },
+  {
+   "control": "plan:unused-capture",
+   "refused": "HostFailure image: validator: capture: captures are not exactly the free slots of the body"
+  },
+  {
+   "control": "plan:capture-order",
+   "refused": "HostFailure image: validator: swap: captures must increase strictly below depth"
+  },
+  {
+   "control": "plan:closure-slots",
+   "refused": "HostFailure image: validator: main: closure slots 2, reached 1"
+  },
+  {
+   "control": "plan:function-slots",
+   "refused": "HostFailure image: validator: second: slots 2, reached 3"
+  },
+  {
+   "control": "plan:call-arity",
+   "refused": "HostFailure image: validator: main: call arity"
+  },
+  {
+   "control": "plan:call-result",
+   "refused": "HostFailure image: validator: main: call types"
+  },
+  {
+   "control": "plan:construct-arity",
+   "refused": "HostFailure image: validator: main: construct arity"
+  },
+  {
+   "control": "plan:value-with-fields",
+   "refused": "HostFailure image: validator: main: value is not a nullary constructor"
+  },
+  {
+   "control": "plan:reference-type",
+   "refused": "HostFailure image: validator: get: reference type"
+  },
+  {
+   "control": "plan:prim-unknown",
+   "refused": "HostFailure image: validator: U32.is_eq: unknown prim id 41"
+  },
+  {
+   "control": "plan:prim-reserved",
+   "refused": "HostFailure image: validator: U32.add: unknown prim id 39"
+  },
+  {
+   "control": "plan:prim-arity",
+   "refused": "HostFailure image: validator: U32.not: prim arity"
+  },
+  {
+   "control": "plan:prim-result",
+   "refused": "HostFailure image: validator: U32.is_eq: prim result is not the pinned Bool"
+  },
+  {
+   "control": "plan:foreign-unknown",
+   "refused": "HostFailure image: validator: IO.print: unknown foreign id 99"
+  },
+  {
+   "control": "plan:invoke-non-arrow",
+   "refused": "HostFailure image: validator: apply: invoke arity"
+  },
+  {
+   "control": "plan:literal-kind",
+   "refused": "HostFailure image: validator: main: U32 literal at a non-U32 type"
+  },
+  {
+   "control": "plan:program-main-arity",
+   "refused": "HostFailure image: validator: program: main must exist with no live parameters"
+  },
+  {
+   "control": "plan:representation-shape",
+   "refused": "HostFailure image: validator: representation: Bool shape"
+  }
+ ],
+ "mutants": [
+  {
+   "mutant": "big-endian",
+   "killed": true,
+   "by": "image value-off differs"
+  },
+  {
+   "mutant": "function-names-first",
+   "killed": true,
+   "by": "image value-off differs"
+  },
+  {
+   "mutant": "site-from-one",
+   "killed": true,
+   "by": "image closure-id differs"
+  },
+  {
+   "mutant": "child-offset-plus-one",
+   "killed": true,
+   "by": "image reference differs"
+  },
+  {
+   "mutant": "default-before-rows",
+   "killed": true,
+   "by": "image default-hit differs"
+  },
+  {
+   "mutant": "constants-uninterned",
+   "killed": true,
+   "by": "image u32-zero differs"
+  },
+  {
+   "mutant": "nat-constant-as-u32",
+   "killed": true,
+   "by": "image u32-shift differs"
+  },
+  {
+   "mutant": "string-reversed",
+   "killed": true,
+   "by": "image string-eq differs"
+  },
+  {
+   "mutant": "arrow-named",
+   "killed": true,
+   "by": "image closure-id differs"
+  },
+  {
+   "mutant": "decoder-skips-digest",
+   "killed": true,
+   "by": "control registry-digest: HostFailure image: noncanonical"
+  },
+  {
+   "mutant": "size-guard-after-shape",
+   "killed": true,
+   "by": "control oversize-and-misaligned: HostFailure image: length"
+  },
+  {
+   "mutant": "validator-ignores-let-slot",
+   "killed": true,
+   "by": "control plan:let-slot: None"
+  },
+  {
+   "mutant": "validator-ignores-free-captures",
+   "killed": true,
+   "by": "control plan:unused-capture: None"
+  },
+  {
+   "mutant": "validator-optional-key-default",
+   "killed": true,
+   "by": "control plan:keys-without-default: None"
+  },
+  {
+   "mutant": "validator-ignores-binders",
+   "killed": true,
+   "by": "control plan:branch-first-slot: None"
+  },
+  {
+   "mutant": "validator-admits-reserved-prim",
+   "killed": true,
+   "by": "control plan:prim-reserved: None"
+  },
+  {
+   "mutant": "validator-ignores-prim-arity",
+   "killed": true,
+   "by": "control plan:call-arity: None"
+  },
+  {
+   "mutant": "validator-any-literal-kind",
+   "killed": true,
+   "by": "control plan:literal-kind: None"
+  },
+  {
+   "mutant": "validator-ignores-representation",
+   "killed": true,
+   "by": "control plan:representation-shape: None"
+  },
+  {
+   "mutant": "source:case-on",
+   "killed": true,
+   "seed": {
+    "exit": 0,
+    "stdout": "On{}\n",
+    "stderr": ""
+   },
+   "eval": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": ""
+   }
+  },
+  {
+   "mutant": "source:u32-wrap",
+   "killed": true,
+   "seed": {
+    "exit": 0,
+    "stdout": "False{}\n",
+    "stderr": ""
+   },
+   "eval": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t0\tFalse{}\n",
+    "stderr": ""
+   }
+  },
+  {
+   "mutant": "source:closure-capture-on",
+   "killed": true,
+   "seed": {
+    "exit": 0,
+    "stdout": "Off{}\n",
+    "stderr": ""
+   },
+   "eval": {
+    "exit": 0,
+    "stdout": "Evaluated\t0\t0\tOff{}\n",
+    "stderr": ""
+   }
+  }
+ ],
+ "coverage": {
+  "opcodes": [
+   "branch",
+   "call",
+   "case",
+   "closure",
+   "con",
+   "default",
+   "foreign",
+   "invoke",
+   "let",
+   "lit",
+   "prim",
+   "ref",
+   "value"
+  ],
+  "case_modes": [
+   "keys",
+   "tags"
+  ],
+  "program_images": 1
+ }
+}

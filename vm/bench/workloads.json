@@ -1,0 +1,53 @@
+{
+ "rule": "Frozen before any VM exists. Each workload is a pure Book whose main returns True{} exactly when its independent guard holds; a VM run must print Evaluated\\t<Bool>\\t1\\tTrue{}. Sources must not change; a new size is a new workload.",
+ "workloads": [
+  {
+   "name": "peano",
+   "source": "vm/bench/peano.bend",
+   "sha256": "c46df95ebaef4505f83141f11785d7d63e9785a6e229e77e5e9b535ae2e16c4f",
+   "shape": "Unary Peano add/mul on a user datatype: 40 rounds of count(mul(1000,1000)), each building and consuming 10^6 S cells.",
+   "guard": "closed form: 40 * 1000 * 1000 = 40000000",
+   "expected_stdout": "True{}\n"
+  },
+  {
+   "name": "cps-choose",
+   "source": "vm/bench/cps-choose.bend",
+   "sha256": "ca61883f3311207973a8edd3974c9c21d11628c60630deddb67d605ae00d170b",
+   "shape": "Lexer-shaped CPS closure churn: src/lex.bend normal's chain of choose(Result<...>) calls, two closures per link, over 50,000 copies of a 22-character line (1.1M characters).",
+   "guard": "closed form: 4 words and 1 line per copy: 200000 words, 50000 lines",
+   "expected_stdout": "True{}\n"
+  },
+  {
+   "name": "string-scan",
+   "source": "vm/bench/string-scan.bend",
+   "sha256": "3d0cbf019f47c5e8be52fc69a9c133489fdc759dcd6a1fa280baf06b6c9d151b",
+   "shape": "Char-list String building and String.eq scans: 300 rounds each build a fresh 10,000-character SCon string and compare it with a fixed one.",
+   "guard": "closed form: every round compares equal strings: 300 hits",
+   "expected_stdout": "True{}\n"
+  },
+  {
+   "name": "list-fold",
+   "source": "vm/bench/list-fold.bend",
+   "sha256": "d388f1903558dd10f89b4a5ce6a7d0ef6be1ece5387c74f9897fcd2cf7c1cd87",
+   "shape": "List<U32> build and fold: 40 rounds of building 1..1000000 and summing it modulo 2^32.",
+   "guard": "closed form: 40 * (500000500000 mod 2^32) mod 2^32 = 2652269824",
+   "expected_stdout": "True{}\n"
+  },
+  {
+   "name": "deep-recursion",
+   "source": "vm/bench/deep-recursion.bend",
+   "sha256": "72f6c32ac25d8693d9486b175b9ebb466d112c3976595d640a3f85cc9ddc037b",
+   "shape": "Deep non-tail recursion: 400 rounds of depth(250000n), each holding 250,000 pending U32.add frames.",
+   "guard": "closed form: 400 * 250000 = 100000000",
+   "expected_stdout": "True{}\n"
+  },
+  {
+   "name": "sha256-64k",
+   "source": "vm/bench/sha256-64k.bend",
+   "sha256": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
+   "shape": "SHA-256 over 65,536 ASCII bytes ('a' + i mod 26) with modules' base-pin.bend compression function (U32.xor/or/and/not, shifts).",
+   "guard": "hashlib.sha256(bytes(97 + i % 26 for i in range(65536))) = 62b3a2ef06cf977623a5936a8fa653e3caecbf69b5f393ebdfe5022affc5331f",
+   "expected_stdout": "True{}\n"
+  }
+ ]
+}

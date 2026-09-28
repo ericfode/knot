@@ -1,0 +1,10 @@
+{
+ "rule": "A golden whose seed value lies outside knot-vm-1's declared domain. Only a documented bound in vm/SPEC.md section 9 may appear here; each entry names the bound and why the mathematical result crosses it.",
+ "cases": {
+  "nat-range": {
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0."
+  }
+ }
+}

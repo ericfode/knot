@@ -1,0 +1,15 @@
+{
+ "entry":"book",
+ "representation":{"Bool":0,"U32":1,"Char":2,"String":3},
+ "types":[
+  {"kind":"data","name":"Bool","constructors":[{"name":"False","fields":[]},{"name":"True","fields":[]}]},
+  {"kind":"opaque","name":"U32"},
+  {"kind":"data","name":"Char","constructors":[{"name":"Chr","fields":[1]}]},
+  {"kind":"data","name":"String","constructors":[{"name":"SNil","fields":[]},{"name":"SCon","fields":[2,3]}]}
+ ],
+ "functions":[
+  {"name":"String.append","parameters":[3,3],"result":3,"slots":2,"body":["prim",3,35,[["ref",3,0],["ref",3,1]]]},
+  {"name":"String.eq","parameters":[3,3],"result":0,"slots":2,"body":["prim",0,34,[["ref",3,0],["ref",3,1]]]},
+  {"name":"main","parameters":[],"result":0,"slots":0,"body":["call",0,1,[["call",3,0,[["lit",3,"String","a"],["lit",3,"String","b"]]],["lit",3,"String","ab"]]]}
+ ]
+}

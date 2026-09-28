@@ -1,0 +1,674 @@
+{
+ "rule": "SPEC section 9: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees.",
+ "fuel": 1000000,
+ "bounds": {
+  "nat-range": {
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0."
+  }
+ },
+ "cases": {
+  "value-off": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tOff{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "value-on": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "reference": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nested-call": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "let": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "shadow": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "erased-let": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "erased-argument": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "case-off": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "case-on": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tOff{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "construct": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tBox{On{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "unpack": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "pair": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tPair{Off{},On{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "second": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "erased-field": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-id": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-capture-off": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t0\tOff{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-capture-on": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-return": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-nested": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-shadow": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-zero": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-big": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-wrap": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-unsigned": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-div-zero": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-rem-zero": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-shift": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-add": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "char-code": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-empty": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-eq": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-append": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-reverse": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "default-hit": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "default-miss": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tOff{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-unpack": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "foreign-print": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "vm\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Invalid"
+  },
+  "nat-sub-floor": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "char-space": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-show": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "string-length": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-not": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-shr": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-mul": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-show": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "char-eq": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "u32-cmp": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t2\tGT{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "case-char": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t2\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "recursion-map": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t1\tPush{Off{},Push{On{},Stop{}}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "recursion-tail": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "erased-construct": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tProofBox{On{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "closure-captures": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tPair{On{},Off{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "nat-big": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Exhausted"
+  },
+  "nat-range": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "NatRange",
+   "basis": "bound",
+   "reason": "D15: Nat.add(4294967295n,1n) is 4294967296, above the VM's Nat bound 2^32-1. The seed's native lane (Nat to about 2^48) prints True{}; the VM must stop with Exhausted kind 2 before the Succ/add result is narrowed, never wrap to 0.",
+   "eval_lane": "Exhausted"
+  }
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "entry":"book",
+ "representation":{"Bool":0,"Nat":1,"U32":2},
+ "types":[
+  {"kind":"data","name":"Bool","constructors":[{"name":"False","fields":[]},{"name":"True","fields":[]}]},
+  {"kind":"data","name":"Nat","constructors":[{"name":"Zero","fields":[]},{"name":"Succ","fields":[1]}]},
+  {"kind":"opaque","name":"U32"}
+ ],
+ "functions":[
+  {"name":"U32.shrn","parameters":[2,1],"result":2,"slots":2,"body":["prim",2,15,[["ref",2,0],["ref",1,1]]]},
+  {"name":"U32.is_eq","parameters":[2,2],"result":0,"slots":2,"body":["prim",0,8,[["ref",2,0],["ref",2,1]]]},
+  {"name":"main","parameters":[],"result":0,"slots":0,"body":["call",0,1,[["call",2,0,[["lit",2,"U32",2147483648],["lit",1,"Nat",31]]],["lit",2,"U32",1]]]}
+ ]
+}
