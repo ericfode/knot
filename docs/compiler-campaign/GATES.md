@@ -19,8 +19,9 @@ npm run gates -- --jobs 2 --keep-scratch
 ```
 
 Both check commands exit 0 only when all registered gates finish successfully
-and their required outputs are present and readable. There are 14 since the
-recursion, fields-wasm and census merge; `census` runs `tools/census/census.mjs
+and their required outputs are present and readable. The runner's self-test
+requires the fourteen gates registered by the recursion, fields-wasm and census
+merge and unique names, so a new increment only appends its own gate; `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
