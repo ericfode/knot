@@ -1,0 +1,355 @@
+{
+  "schema": "knot-modules-review-round2-1",
+  "purpose": "Seed-derived review regressions frozen before repairs. Symlink setup is explicit; case-alias requires an insensitive filesystem. No existing oracle is changed.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/load.bend": "bce84fc9b1fc95c19031da456d79a92e038bca444d922ef1f9082dacbfeac440",
+    "src/qualify.bend": "6c547a48bb0b6aee02222797231e4cb36cd69953d7f781228a65c899445cfdb2",
+    "src/imports.bend": "bfda95d1ab39b457acc73aec03373714a94c95d3e291373a0437e89e50ecfbd1",
+    "src/base-load.bend": "b0bdd7ba2778e45dc996d8d1724a2757a93b7c90cc0e2fccfbf77d0e3f84516d"
+  },
+  "sources": {
+    "a1/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "a1/main.bend": "c6cb4faef2cc5daf4663b2e5ebf132a4f86363b22d6c1b920cc3be136dc04029",
+    "a2/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "a2/main.bend": "d29ef96dc13eeec001345477adceb17ab76e6fac6a4e4d92b8799793b688ca57",
+    "a4/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "a4/main.bend": "887f120cab4dfa47c3624b8b2854309e4ae230935ee602dbfde736824d003a7b",
+    "a5/Bool.bend": "ec144b73e7bb3bf64860c1d4ad68eebe777c0ae1ee4b001ffd6edf6c900fe3af",
+    "a5/main.bend": "f36e1eb2ca9d645f8d0c9f27d4ecb313a337ae05aa98f622a3ef2d85150d1c5e",
+    "g2/main.bend": "2a9327d3ef4b635923c7a2a4f34f009ee86149a43455a5c6e1c2673f9fdbdd71",
+    "g3/lib/m.bend": "b48ec9b36a486d27c3e513a13986c09bf255ce0eb4a14268e898908eaf2dd051",
+    "g3/main.bend": "9936a129dbad1a07a6a6a011aadf08ea88e3e485d5ccb0381ac8c1c057f3957f",
+    "identity/case.bend": "6c29441b5ded2ae0488413bd625b70425c6c337cbfbf8f2aa30f1408682d71ae",
+    "identity/control.bend": "afed1fd2eaeeda15bc38dff58c78e1e945acc3a6d65818d3562322942f7bdcac",
+    "identity/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "identity/symlink.bend": "9abeace7c3d9528e08a137133b3d1a0eaf42838182c12844e7a16e67bffa3a4f",
+    "l1/main.bend": "e264e70db9e812338fb238f370cb61b086ead528ffdc2001b0340ae914346087",
+    "l1/tick.js": "025da2132f205b78788b8d96eb9344648807c3552510f57e7892478af92107d3"
+  },
+  "symlinks": {
+    "identity/alt": "lib"
+  },
+  "case_alias": {
+    "canonical": "identity/lib/flag.bend",
+    "alias": "identity/lib/FLAG.bend"
+  },
+  "fixtures": [
+    {
+      "name": "symlink-directory",
+      "file": "identity/symlink.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "identity/symlink.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "case-alias",
+      "file": "identity/case.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "identity/case.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/case.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "path-identity",
+        "diagnostic_prefix": "Unsupported\tload\tpath-identity\t"
+      }
+    },
+    {
+      "name": "canonical-control",
+      "file": "identity/control.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "identity/control.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/control.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "loaded_files": [
+        "identity/control.bend",
+        "identity/lib/flag.bend"
+      ]
+    },
+    {
+      "name": "base-first-collision",
+      "file": "a1/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "a1/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a1/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n4 | \n5>| def not(x: Flag) -> Flag:\n  |     ^^^\n6 |   match x:\n"
+        }
+      ],
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "base-last-collision",
+      "file": "a2/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "a2/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a2/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Bool.not)\n- observed : 'Bool.not'\nLocation:\n424 | \n425>| def Bool.not(b: Bool) -> Bool:\n    |     ^^^^^^^^\n426 |   match b:\n"
+        }
+      ],
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "base-body-shadow",
+      "file": "a5/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "a5/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a5/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n2 | \n3>| def not(b: Bool) -> Bool:\n  |     ^^^\n4 |   b\n"
+        }
+      ],
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "load",
+        "code": "duplicate-global",
+        "diagnostic_prefix": "Invalid\tload\tduplicate-global\t"
+      }
+    },
+    {
+      "name": "no-base-control",
+      "file": "a4/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "a4/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a4/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "loaded_files": [
+        "a4/main.bend",
+        "a4/Bool.bend"
+      ]
+    },
+    {
+      "name": "local-ctor-binder",
+      "file": "g3/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "g3/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g3/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{Off}: Off\n   |              ^^^\n11 | \n"
+        }
+      ],
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "base-ctor-binder",
+      "file": "g2/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "g2/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g2/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{True}: True\n   |              ^^^^\n13 | \n"
+        }
+      ],
+      "knot_expected": {
+        "exit": 2,
+        "outcome": "Invalid",
+        "phase": "check",
+        "code": "constructor-pattern-binder",
+        "diagnostic_prefix": "Invalid\tcheck\tconstructor-pattern-binder\t"
+      }
+    },
+    {
+      "name": "foreign-column-zero",
+      "file": "l1/main.bend",
+      "modules": [],
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "l1/main.bend",
+          "argv": [
+            "bun",
+            "<ROOT>/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/l1/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "All terms check, but 1 def relies on unsafe or foreign code:\n- tick\n",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "check",
+        "code": "foreign-definition",
+        "diagnostic_prefix": "Unsupported\tcheck\tforeign-definition\t"
+      }
+    }
+  ]
+}
