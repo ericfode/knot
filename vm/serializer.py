@@ -609,6 +609,31 @@ def validate(plan: dict, registry: dict) -> list[str]:
     return errors
 
 
+# ---------------------------------------------------------------- Book describe domain
+
+def undescribable(plan: dict, t) -> str | None:
+    """Why SPEC section 8 cannot describe a Book result of type `t`, or None when it can.
+
+    Describable: algebraic, with every live field of every constructor describable in
+    turn; a cycle through algebraic types (Nat's Succ) stays describable. A `none`
+    field, an arrow and an opaque type are not, so neither is Char (Chr's U32) nor
+    String. Fields are visited in declaration order, depth first."""
+    types, seen, work = plan['types'], set(), [(t, 'the result')]
+    while work:
+        u, at = work.pop()
+        if u is None:
+            return f'none-typed {at}'
+        if u in seen:
+            continue
+        seen.add(u)
+        kind = types[u]['kind']
+        if kind != 'data':
+            return f"{kind} {types[u].get('name') or 'type'} as {at}"
+        work += reversed([(f, f"field {i} of {c['name']}")
+                          for c in types[u]['constructors'] for i, f in enumerate(c['fields'])])
+    return None
+
+
 # ---------------------------------------------------------------- command line
 
 def registry(path=Path(__file__).with_name('registry.json')) -> dict:

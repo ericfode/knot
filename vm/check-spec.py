@@ -512,19 +512,22 @@ def vm_expectation(case, plan, bounds, source) -> dict:
         require(seed['exit'] == 0, 'program seed must succeed')
         return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
                 'basis': 'seed', 'eval_lane': classify(ev)}
+    main = next(f for f in plan['functions'] if f['name'] == 'main')
+    why = codec.undescribable(plan, main['result'])
+    if why:
+        # Section 8: Knot has no describe spelling for this result type. D4's Unsupported,
+        # derived from the image before any entry; not a bound and not agreement.
+        require(case['name'] not in bounds, f"{case['name']}: a bound cannot stand in for Unsupported")
+        return {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': 'Unsupported', 'cause': 'invoke result-type',
+                'basis': 'describe-domain', 'reason': f'section 8: {why}', 'eval_lane': classify(ev)}
     if case['name'] in bounds:
+        # Section 11: a bound is a declared domain or budget limit, and its outcome is Exhausted.
         bound = bounds[case['name']]
-        row = {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': bound.get('outcome', 'Exhausted')}
-        if row['outcome'] == 'Exhausted':
-            row['kind'] = bound['kind']
-        else:
-            # Section 11's Book-describe bound: a scalar result has no describe spelling.
-            require(bound['cause'] == 'invoke scalar-result', f"{case['name']}: unknown bound {bound['cause']}")
-            main, rep = next(f for f in plan['functions'] if f['name'] == 'main'), plan.get('representation', {})
-            require(main['result'] in [rep.get(r) for r in ('U32', 'Char', 'String') if r in rep],
-                    f"{case['name']}: a scalar-result bound needs a scalar main")
+        require(sorted(bound) == ['basis', 'cause', 'kind'] and bound['kind'] in (1, 2, 3),
+                f"{case['name']}: a bound is Exhausted with a kind, a cause and a basis")
         require(seed['exit'] == 0, f"{case['name']}: a bound excuses only a succeeding seed")
-        return {**row, 'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
+        return {'argv': ['IMAGE', 'main', str(fuel)], 'outcome': 'Exhausted', 'kind': bound['kind'],
+                'cause': bound['cause'], 'basis': 'bound', 'reason': bound['basis'], 'eval_lane': classify(ev)}
     require(seed['exit'] == 0, f"{case['name']}: the seed must succeed")
     value = described(seed['stdout'], erased_fields(source))
     if ev['exit'] == 0:
@@ -534,7 +537,6 @@ def vm_expectation(case, plan, bounds, source) -> dict:
                 'basis': 'eval-cli', 'eval_lane': 'agree'}
     # The eval lane is excused only by a documented bound; the VM owes the seed's value.
     require(classify(ev) == 'Exhausted', f"{case['name']}: eval lane {ev} is not a documented bound")
-    main = next(f for f in plan['functions'] if f['name'] == 'main')
     root = re.match(r'[\w.]+', value)[0]
     ctors = [c['name'] for c in plan['types'][main['result']]['constructors']]
     require(root in ctors, f"{case['name']}: seed root {root} is not a constructor of main's result")
@@ -543,19 +545,25 @@ def vm_expectation(case, plan, bounds, source) -> dict:
             'basis': 'seed', 'eval_lane': 'Exhausted'}
 
 
-def expectation_controls(plans: dict, bounds: dict, sources: dict) -> list:
-    """Observations the rule must refuse: an eval lane that disagrees with the seed."""
-    def row(seed, ev):
-        return {'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
+def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) -> list:
+    """What the rule must refuse: an eval lane that disagrees with the seed, and a bound
+    that is not Exhausted or that stands in for an Unsupported result."""
+    def row(label, seed, ev):
+        return {'name': f'control:{label}', 'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
                 'eval': {'exit': 0, 'stdout': ev, 'stderr': ''}}
+    describe_bound = {'outcome': 'HostFailure', 'cause': 'invoke scalar-result',
+                      'basis': 'round 1: a Book-describe bound, which section 11 no longer admits'}
     out = []
-    for label, name, seed, ev in [
-            ('eval-disagrees', 'value-on', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'),
-            ('eval-keeps-erased-field', 'erased-construct', 'ProofBox{Off{}, On{}}\n',
-             'Evaluated\t1\t0\tProofBox{Off{}}\n'),
-            ('eval-nat-binds-n', 'nat-pred', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n')]:
+    for label, name, case, table in [
+            ('eval-disagrees', 'value-on', row('eval-disagrees', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'), bounds),
+            ('eval-keeps-erased-field', 'erased-construct',
+             row('eval-keeps-erased-field', 'ProofBox{Off{}, On{}}\n', 'Evaluated\t1\t0\tProofBox{Off{}}\n'), bounds),
+            ('eval-nat-binds-n', 'nat-pred',
+             row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds),
+            ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}),
+            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound})]:
         try:
-            vm_expectation({'name': f'control:{label}', **row(seed, ev)}, plans[name], bounds, sources[name])
+            vm_expectation(case, plans[name], table, sources[name])
         except AssertionError as refusal:
             out.append({'control': f'expectation:{label}', 'refused': str(refusal)})
             continue
@@ -762,8 +770,32 @@ def plan_controls(plans: dict) -> list:
     ]
 
 
+def describe_controls(plans: dict) -> list:
+    """(label, type table, result type, section 8's frozen verdict) for the Book describe
+    domain: None where the VM describes the result, else why it reports Unsupported."""
+    flag = plans['value-on']['types'][0]
+    box = [{'kind': 'opaque', 'name': 'U32'}, {'kind': 'data', 'name': 'Box', 'constructors': [{'name': 'Box', 'fields': [0]}]}]
+    flags = [{'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []}, {'name': 'Con', 'fields': [None, 0]}]}, flag]
+    return [
+        ('flag', plans['value-on']['types'], 0, None),
+        ('nat', plans['nat-unpack']['types'], 0, None),
+        ('erased-field', plans['erased-construct']['types'], 1, None),
+        ('u32', plans['result-u32']['types'], 0, 'opaque U32 as the result'),
+        ('u32-field', box, 1, 'opaque U32 as field 0 of Box'),
+        ('char', plans['char-code']['types'], 2, 'opaque U32 as field 0 of Chr'),
+        ('string', plans['string-eq']['types'], 3, 'opaque U32 as field 0 of Chr'),
+        ('list-of-flags', flags, 0, 'none-typed field 0 of Con'),
+        ('arrow', plans['closure-return']['types'], 1, 'arrow type as the result'),
+    ]
+
+
+def describe_verdicts(controls: list, c=None) -> dict:
+    c = c or codec
+    return {label: c.undescribable({'types': types}, t) for label, types, t, _ in controls}
+
+
 # Semantic mutants of the reference codec: (name, [(old, new), ...]). Each must change a
-# committed image or change a frozen refusal; a crash is never a kill.
+# committed image, a frozen refusal or a frozen describe verdict; a crash is never a kill.
 CODEC_MUTANTS = [
     ('big-endian', [("b''.join(w.to_bytes(4, 'little') for w in header + body)",
                      "b''.join(w.to_bytes(4, 'big') for w in header + body)")]),
@@ -821,10 +853,17 @@ CODEC_MUTANTS = [
     ('validator-reference-wildcard', [("                if scope[node[2]] != t:", "                if not fits(scope[node[2]], t):")]),
     ('validator-shape-counts-only', [("[c['fields'] for c in types[t]['constructors']] != [\n                [pinned(n) for n in fields]",
                                       "[len(c['fields']) for c in types[t]['constructors']] != [\n                len(fields)")]),
+    ('describe-root-only', [("        work += reversed([(f, f\"field {i} of {c['name']}\")\n"
+                             "                          for c in types[u]['constructors'] for i, f in enumerate(c['fields'])])\n", "")]),
+    ('describe-admits-scalar-leaves', [("        if kind != 'data':\n", "        if kind != 'data' and at != 'the result':\n"
+                                                                     "            continue\n        if kind != 'data':\n")]),
+    ('describe-admits-none', [("            return f'none-typed {at}'", "            continue")]),
+    ('describe-admits-arrows', [("        if kind != 'data':\n", "        if kind in ('arrow', 'erased-arrow'):\n"
+                                                              "            continue\n        if kind != 'data':\n")]),
 ]
 
 
-def codec_mutants(plans, images, controls, reg, digest) -> list:
+def codec_mutants(plans, images, controls, describing, reg, digest) -> list:
     source = CODEC.read_text()
     results = []
     for name, edits in CODEC_MUTANTS:
@@ -849,6 +888,14 @@ def codec_mutants(plans, images, controls, reg, digest) -> list:
             if got is None or not got.startswith(reason) or message not in got:
                 killed_by = f'control {label}: {got}'
                 break
+        if not killed_by:
+            try:
+                verdicts = describe_verdicts(describing, mutant)
+            except Exception:
+                verdicts = None
+            changed = [label for label, _, _, verdict in describing if verdicts and verdicts[label] != verdict]
+            if changed:
+                killed_by = f'describe control {changed[0]}: {verdicts[changed[0]]}'
         results.append({'mutant': name, 'killed': killed_by is not None, 'by': killed_by})
     return results
 
@@ -1030,7 +1077,8 @@ def main() -> int:
                          'vm': table[name]})
 
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
-                        'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed.',
+                        'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
+                        'A Book result outside section 8\'s describe domain is Unsupported, never a bound.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
@@ -1047,26 +1095,30 @@ def main() -> int:
 
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in plan_controls(plans)]
-    boundaries = expectation_controls(plans, bounds, sources)
+    boundaries = expectation_controls(cases, plans, bounds, sources)
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
         boundaries.append({'control': label, 'refused': got})
+    describing = describe_controls(plans)
+    verdicts = describe_verdicts(describing)
+    for label, _, _, verdict in describing:
+        require(verdicts[label] == verdict, f'describe control {label}: {verdicts[label]!r}, frozen {verdict!r}')
 
-    mutants = codec_mutants(plans, images, controls, reg, digest) + source_mutants(cases, built)
+    mutants = codec_mutants(plans, images, controls, describing, reg, digest) + source_mutants(cases, built)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
-    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, mutants=mutants,
+    record.update(status='passed', fixtures=fixtures, boundaries=boundaries, describe=verdicts, mutants=mutants,
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
                             'none_typed_nodes': len(abstract)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
-          f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
+          f"{len(verdicts)} describe controls, {len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
 

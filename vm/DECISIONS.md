@@ -70,6 +70,15 @@ follows it (§5, §10, §11) without a new image header word.
    lane is a cross-check whose documented bounds now include unary Nat
    materialization: `nat-big` passed 60 GB of RSS in about 6 minutes on that
    lane and was stopped.
+8. **Book results are statically describable or Unsupported.** Review round 2
+   replaced round 1's `HostFailure invoke scalar-result` bound, and the run-time
+   `function-result` and `abstract-result` outcomes, with one predicate on the
+   requested function's result type (SPEC §8): algebraic with describable fields,
+   recursively. A U32, Char or String anywhere in the type, an arrow or a `none`
+   field makes the invocation `Unsupported invoke result-type` before any entry.
+   A bound is a declared domain or budget limit and is always Exhausted; an
+   Unsupported result is D4's refusal, never a bound. Of the 76 Book goldens only
+   `result-u32` falls outside the domain, so no other expectation changed.
 
 ## Findings that need an owner
 
@@ -79,7 +88,10 @@ follows it (§5, §10, §11) without a new image header word.
    Unsupported. The goldens `foreign-print` and `io-bind` record the observation
    as it is; their plans are hand-built from §1's rules because no Knot core
    exists for them. The literals owner, or io-check, should fix the
-   classification.
+   classification. The same `Invalid parse function-result` answers generic
+   result types the seed prints: `def main() -> List<Flag>` (seed `[On{}]`),
+   `-> Bool & Bool` (`(True{}, False{})`) and `-> Result<Bool,Bool>`
+   (`Done{True{}}`).
 2. **The speed gate needs vm-rc.** The frozen workloads allocate far more than
    they keep live. By SPEC §5's size rule, without release `deep-recursion` alone
    allocates 10^9 Activations of at least 16 bytes (16 GB), `peano` at least
@@ -117,3 +129,17 @@ follows it (§5, §10, §11) without a new image header word.
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged
    checker's display, which is the same check this gate runs today.
+7. **eval-cli reports an InternalFailure for results it cannot describe.** The
+   literals `eval-cli` at `2ea222e` reports `InternalFailure eval result-tag` for a
+   Book result that is, or contains, a U32, Char or String, although `check-cli`
+   reports `Checked` and the seed prints the value: golden `result-u32` (seed `5`),
+   `Box{5}` with `type Box is Data: Box{item: U32}` (seed `Box{5}`), `'a'` (seed
+   `'a'`) and `"ab"` (seed `"ab"`). SPEC §11 counts an InternalFailure as a broken
+   invariant; under D4 a result Knot cannot describe is Unsupported, which is what
+   knot-vm-1 reports (`Unsupported invoke result-type`, SPEC §8). Owner: literals.
+8. **eval-cli reports a HostFailure for a closure result.** The closures `eval-cli`
+   at `a1d6891` reports `HostFailure invoke function-result` for
+   `def main() -> Flag -> Flag: x => On{}`, which its `check-cli` reports `Checked`
+   and the seed prints as `x => On{}`. The image and invocation are well formed,
+   so under D4 this too is Unsupported, as knot-vm-1 reports it. Owner: closures,
+   or merge-wave when it merges them.

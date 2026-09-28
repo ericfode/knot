@@ -34,6 +34,8 @@ ownership instructions or lower to ANF or CPS. The checker remains responsible
 for types, quantities, termination and proofs, so a well-formed image is not
 evidence of a checked program. No unchecked node passes through; an unsupported
 source form or reachable leaf is reported `Unsupported` before any image exists.
+A Book's entry is chosen at invocation, so a Book result that §8 cannot describe is
+reported `Unsupported` by the invocation, statically, before any entry.
 A malformed image is `HostFailure image`, never source `Invalid`.
 
 The encoder maps core forms as follows:
@@ -436,9 +438,17 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 **Book** (`IMAGE FN FUEL [ORDINALS…]`). The VM finds `FN` by name, checks that the
 ordinals match its live arity and are nullary constructor tags of the parameter
-types, pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Failures are
-`HostFailure invoke unknown-export`, `argument-arity`, `argument-range` or
-`structured-argument`, as in eval-cli. Return to Top(0) halts with the result and
+types, and checks that `FN`'s result type is **describable**: algebraic, with every
+live field of every constructor describable in turn. A cycle through algebraic
+types stays describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque
+type are not, so neither are the pinned Char (its U32 field) and String. These
+checks read only the image, in that order, before anything else and at zero fuel.
+Failures are `HostFailure invoke unknown-export`, `argument-arity`,
+`argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
+invoke result-type`: Knot has no describe spelling for such a result, so the VM
+refuses the request instead of inventing one (§11; golden `result-u32`; the
+reference predicate is `serializer.undescribable`). The VM then pushes Top(phase 0)
+and starts with `Enter(FN, ordinals)`. Return to Top(0) halts with the result and
 prints
 
 ```
@@ -450,12 +460,10 @@ where `type` is `FN`'s result type index, `tag` is the result's constructor tag
 value and `Name{f1,f2}` for an Object's live fields, without spaces. A Nat word
 `n` renders as its logical view, `n` times `Succ{`, then `Zero{}`, then `n` times
 `}`. Erased fields do not exist and are not printed (golden `erased-construct`:
-eval-cli prints `ProofBox{On{}}`, the seed `ProofBox{Off{}, On{}}`). eval-cli
-reports `InternalFailure eval result-tag` for any U32, Char or String result, so
-the VM reports `HostFailure invoke scalar-result` for one anywhere in the tree
-(§11's Book-describe bound; golden `result-u32`);
-a closure is `function-result` and an untyped (`none`) immediate is
-`abstract-result`. Every rendered word is inspected (§6). Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
+eval-cli prints `ProofBox{On{}}`, the seed `ProofBox{Off{}, On{}}`). Every
+rendered word sits at a concrete describable type, so the tree never meets a
+scalar, closure or `none`-typed word; each is still inspected against that type
+(§6). Rendering is iterative, bounded by 1,048,576 visits and 16 MiB
 of text; hitting either is `Exhausted` kind 2 (`display`), never a truncated
 value. The result is dropped after printing.
 
@@ -576,8 +584,9 @@ copies low bytes and passes the flag; a nonzero flag is errno 22 before any writ
 ## 11. Outcomes and the Exhausted-lane rule
 
 Accepted, Invalid, Unsupported, Exhausted, HostFailure and InternalFailure are
-recorded separately. Malformed images and unknown ids are HostFailure; source forms
-Knot does not handle are Unsupported; a broken invariant is a defect. A timeout or
+recorded separately. Malformed images, unknown ids and malformed invocations are
+HostFailure; source forms Knot does not handle are Unsupported, and so is a Book
+result that §8 cannot describe; a broken invariant is a defect. A timeout or
 crash never counts as a semantic mutant kill.
 
 The observation lanes are the seed, pinned Knot eval-cli, the Bend model on the
@@ -591,7 +600,7 @@ reached:
 | seed native | Nat to about 2^48; its runtime resources |
 | seed Bun | about 32K stack frames (`List.length`); unary Nat materialization: `nat-big` passed 60 GB of RSS in about 6 minutes and was stopped, so word-Nat goldens use the native lane |
 | literals eval | unary Nat and String up to 2^20 (`nat-big`, `nat-range`: `Exhausted primitive budget`); at most 1,048,576 transitions; display 4,096 visits and 65,536 characters |
-| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8; Book describe: algebraic trees with unary Nats only, so a U32, Char or String leaf is `HostFailure invoke scalar-result` (`result-u32`: eval-cli has no describe spelling for it either; Programs print scalars through IO) |
+| knot-vm-1 | Nat at most 2^32-1; call fuel; 16 MiB image; 16 MiB frames; 65,536 pages (4 GiB) of memory (D19); display bounds of §8 |
 
 `NatRange`, `RCOverflow`, image size and display are representation-resource
 exhaustion, kind 2 at the host boundary; the VM's own outcome keeps the precise
@@ -603,8 +612,9 @@ never excuses the VM.
 budgets, the VM MUST return the seed's value and effect trace. Another lane's
 exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
-and a missing lane are neither Exhausted nor agreement. Expected values are never
-regenerated from a candidate VM.
+and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
+D4's refusal of a form Knot does not handle: a recorded capability gap, never a
+bound. Expected values are never regenerated from a candidate VM.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
 golden: the eval-cli line where eval agrees with the seed (70 goldens), agreement
@@ -612,9 +622,12 @@ meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
-(`nat-range`, `nat-mul-range`, `nat-succ-range`) and `HostFailure invoke
-scalar-result` outside the Book-describe domain (`result-u32`), each justified in
-[golden/bounds.json](golden/bounds.json); and the seed's stdout for the Programs
+(`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
+[golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
+`Unsupported invoke result-type` where `main`'s result type is outside §8's
+describe domain (`result-u32`: the seed prints `5`, eval-cli reports the
+`InternalFailure eval result-tag` defect recorded in DECISIONS.md), derived from the
+image's type table and never listed as a bound; and the seed's stdout for the Programs
 `foreign-print` and `io-bind`. For those Programs the eval lane is not excused but
 unavailable: both literals `eval-cli` and `check-cli` report
 `Invalid parse function-result` for `def main() -> IO(Unit)`, a program the seed
@@ -638,12 +651,17 @@ lane and requires:
   (three frozen expectation controls);
 - every literal review (`seed_stdout`, written before observation) equal to the
   seed's printed value;
-- `vm-expected.json` equal to the rule of §11 applied to the frozen observations;
+- `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
+  with every bound Exhausted and no bound standing in for an Unsupported result
+  (two frozen expectation controls);
+- §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
+  box are describable; a U32 root, a U32 field, Char, String, a List of flags
+  (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
 - all 61 refusals of §4 with their frozen reasons;
-- 30 codec mutants and 3 source mutants killed through a changed image, a changed
-  refusal or a changed observation, never a crash;
+- 34 codec mutants and 3 source mutants killed through a changed image, a changed
+  refusal, a changed describe verdict or a changed observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

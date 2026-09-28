@@ -1,5 +1,5 @@
 {
- "rule": "A golden whose seed value lies outside knot-vm-1's declared domain or outside the Book describe domain of section 8. Only a documented bound in vm/SPEC.md section 11 may appear here; each entry names the bound and why the result crosses it. The outcome is Exhausted unless the entry says otherwise.",
+ "rule": "A golden whose seed value lies outside knot-vm-1's declared domain or budgets. Only a documented bound in vm/SPEC.md section 11 may appear here; each entry names the bound and why the result crosses it, and its outcome is Exhausted of the named kind. A result section 8 cannot describe is Unsupported, derived from the image, and never appears here.",
  "cases": {
   "nat-range": {
    "kind": 2,
@@ -15,11 +15,6 @@
    "kind": 2,
    "cause": "NatRange",
    "basis": "D15: Nat.mul(65536n,65536n) is 2^32, above the VM's Nat bound 2^32-1. The seed's native lane prints True{}; the VM must stop with Exhausted kind 2 before the product is narrowed, never wrap to 0."
-  },
-  "result-u32": {
-   "outcome": "HostFailure",
-   "cause": "invoke scalar-result",
-   "basis": "Section 11's Book-describe bound: a Book result is described only as an algebraic tree with unary Nats (section 8). The seed prints the U32 5; eval-cli has no describe spelling for it either (InternalFailure eval result-tag). The VM reports HostFailure invoke scalar-result instead of inventing a rendering; Programs print scalars through IO."
   }
  }
 }
