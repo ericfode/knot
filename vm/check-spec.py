@@ -374,8 +374,11 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
         name = plan_types[t]['constructors'][tag]['name']
         return quantities.get(name, [1] * len(plan_types[t]['constructors'][tag]['fields']))
 
-    def lower(term, scope, depth, deepest):
-        """scope: level -> (slot or None, type). Returns (node, deepest)."""
+    def lower(term, scope, depth, deepest, want):
+        """scope: level -> (slot or None, the slot's image type, the core's type). A slot takes
+        its binder's image type (a Branch field its pinned field, a Let its value's node), while
+        a Case names the core's type as its scrutinee; `want` is the type of the position the
+        term fills, which a Case takes as its own (SPEC section 3). Returns (node, deepest)."""
         kind = term[0]
         if kind == 'value':
             _, t, tag = term
@@ -384,14 +387,14 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
             return ['value', t, tag], deepest
         if kind == 'con':
             _, t, tag, args = term
-            kids = []
+            kids, fields = [], iter(plan_types[t]['constructors'][tag]['fields'])
             for q, a in zip(ctor_quantities(t, tag), args):
                 if q:
-                    node, deepest = lower(a, scope, depth, deepest)
+                    node, deepest = lower(a, scope, depth, deepest, next(fields))
                     kids.append(node)
             return ['con', t, tag, kids], deepest
         if kind == 'ref':
-            slot, t = scope[term[1]]
+            slot, t, _ = scope[term[1]]
             require(slot is not None, 'display: reference to an erased binder')
             return ['ref', t, slot], deepest
         if kind == 'nat':
@@ -402,69 +405,76 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
             _, index, args = term
             _, params, result, _ = headers[index]
             kids = []
-            for (q, _), a in zip(params, args):
+            for (q, t), a in zip(params, args):
                 if q:
-                    node, deepest = lower(a, scope, depth, deepest)
+                    node, deepest = lower(a, scope, depth, deepest, t)
                     kids.append(node)
             return ['call', result, index, kids], deepest
         if kind == 'prim':
-            kids = []
-            for a in term[2]:
-                node, deepest = lower(a, scope, depth, deepest)
-                kids.append(node)
-            # Section 3: an Intrinsic's result type is the pinned representation its registry row names.
+            # Section 3: an Intrinsic's operand and result types are the pinned representations
+            # its registry row names.
             row = prims[term[1]]
+            kids = []
+            for a, name in zip(term[2], row['inputs']):
+                node, deepest = lower(a, scope, depth, deepest, rep.get(name))
+                kids.append(node)
             return ['prim', rep.get(row['output']), row['id'], kids], deepest
         if kind == 'let':
             _, q, level, t, value, body = term
             if not q:
-                return lower(body, {**scope, level: (None, t)}, depth, deepest)
-            v, deepest = lower(value, scope, depth, deepest)
-            b, deepest = lower(body, {**scope, level: (depth, t)}, depth + 1, max(deepest, depth + 1))
+                return lower(body, {**scope, level: (None, t, t)}, depth, deepest, want)
+            v, deepest = lower(value, scope, depth, deepest, t)
+            b, deepest = lower(body, {**scope, level: (depth, v[1], t)}, depth + 1, max(deepest, depth + 1), want)
             return ['let', b[1], depth, v, b], deepest
         if kind == 'case':
             _, level, arms = term
-            slot, scrutinee = scope[level]
+            slot, _, scrutinee = scope[level]
             data = plan_types[scrutinee]['kind'] == 'data' and scrutinee not in scalar
-            rows, default, seen, result = {}, None, set(), None
+            rows, default, seen = {}, None, set()
             for arm in arms:
                 if arm[0] == 'default':
                     if default is None:
-                        body, deepest = lower(arm[1], scope, depth, deepest)
-                        default, result = ['default', body], body[1]
+                        body, deepest = lower(arm[1], scope, depth, deepest, want)
+                        default = ['default', body]
                     break
                 _, key, binders, body_term = arm
                 if key in seen:
                     continue
                 seen.add(key)
-                inner, at = dict(scope), depth
+                fields = plan_types[scrutinee]['constructors'][key]['fields'] if data else []
+                inner, at, live_fields = dict(scope), depth, iter(fields)
                 for q, lv, t in binders:
-                    inner[lv] = (at, t) if q else (None, t)
-                    at += 1 if q else 0
-                body, deepest = lower(body_term, inner, at, max(deepest, at))
+                    if q:
+                        field = next(live_fields)
+                        require(field is None or field == t, f'display: binder type {t}, pinned field {field}')
+                        inner[lv] = (at, field, t)
+                        at += 1
+                    else:
+                        inner[lv] = (None, t, t)
+                body, deepest = lower(body_term, inner, at, max(deepest, at), want)
                 rows[key] = ['branch', key, depth, at - depth, body]
-                result = body[1]
             if data:
                 count = len(plan_types[scrutinee]['constructors'])
                 table = [rows.get(tag) for tag in range(count)]
                 if all(r is not None for r in table):
                     default = None
-                return ['case', result, slot, scrutinee, 'tags', table, default], deepest
-            return ['case', result, slot, scrutinee, 'keys', [rows[k] for k in sorted(rows)], default], deepest
+                return ['case', want, slot, scrutinee, 'tags', table, default], deepest
+            return ['case', want, slot, scrutinee, 'keys', [rows[k] for k in sorted(rows)], default], deepest
         if kind == 'closure':
             _, t, captures, q, level, body_term = term
             slots = sorted(scope[lv][0] for _, lv, _ in captures)
-            inner = {lv: (slots.index(scope[lv][0]), ty) for _, lv, ty in captures}
+            inner = {lv: (slots.index(scope[lv][0]), scope[lv][1], ty) for _, lv, ty in captures}
             n = len(slots) + (1 if q else 0)
-            inner[level] = (len(slots), plan_types[t]['domain']) if q else (None, None)
-            body, inner_deepest = lower(body_term, inner, n, n)
+            domain = plan_types[t]['domain']
+            inner[level] = (len(slots), domain, domain) if q else (None, None, None)
+            body, inner_deepest = lower(body_term, inner, n, n, plan_types[t]['result'])
             return ['closure', t, 1 if q else 0, inner_deepest, slots, body], deepest
         if kind == 'invoke':
             _, t, args = term
-            f, deepest = lower(args[0], scope, depth, deepest)
+            f, deepest = lower(args[0], scope, depth, deepest, t)
             kids = []
             for a in args[1:] if plan_types[t]['kind'] == 'arrow' else []:
-                node, deepest = lower(a, scope, depth, deepest)
+                node, deepest = lower(a, scope, depth, deepest, plan_types[t]['domain'])
                 kids.append(node)
             return ['invoke', plan_types[t]['result'], f, kids], deepest
         raise AssertionError(f'display: {kind}')
@@ -476,9 +486,9 @@ def from_display(text: str, plan: dict, source: str, registry: dict) -> list:
         require(reader.i == len(body_text), f'display: trailing text in {name}')
         scope, slot = {}, 0
         for level, (q, t) in enumerate(params):
-            scope[level] = (slot, t) if q else (None, t)
+            scope[level] = (slot, t, t) if q else (None, t, t)
             slot += 1 if q else 0
-        body, deepest = lower(term, scope, slot, slot)
+        body, deepest = lower(term, scope, slot, slot, result)
         if body[0] == 'prim':
             body[1] = result
         functions.append({'name': name, 'parameters': [t for q, t in params if q], 'result': result,
@@ -1034,6 +1044,23 @@ def plan_controls(plans: dict) -> list:
                  'case', 0, 1, 2, 'tags', [answer(0, 3), answer(1, 3)], None]]], None]},
             {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
              'body': ['call', 0, 0, [['con', 1, 1, [['value', 2, 1], ['value', 1, 0]]]]]}]}
+
+    def first_code(nil):
+        """S's literal.bend `first_code(codes: List<U32>) -> U32` (Nil: 0, Con: the head), called
+        as `U32.is_eq(first_code(Con{7,Nil{}}),7)`; the seed prints True{}. The Case takes its
+        position's type, U32, and the Con arm returns the head, pinned `none` (SPEC section 3)."""
+        return {
+            'entry': 'book', 'representation': {'Bool': 0, 'U32': 1, 'List': 2},
+            'types': [plans['u32-zero']['types'][0], {'kind': 'opaque', 'name': 'U32'},
+                      {'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []},
+                                                                        {'name': 'Con', 'fields': [None, 2]}]}],
+            'functions': [
+                {'name': 'U32.is_eq', 'parameters': [1, 1], 'result': 0, 'slots': 2,
+                 'body': ['prim', 0, 8, [['ref', 1, 0], ['ref', 1, 1]]]},
+                {'name': 'first_code', 'parameters': [2], 'result': 1, 'slots': 3,
+                 'body': ['case', 1, 0, 2, 'tags', [['branch', 0, 1, 0, nil], ['branch', 1, 1, 2, ['ref', None, 1]]], None]},
+                {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['call', 0, 0, [
+                    ['call', 1, 1, [['con', 2, 1, [['lit', 1, 'U32', 7], ['value', 2, 0]]]]], ['lit', 1, 'U32', 7]]]}]}
     return [
         ('ref-beyond-depth', edit('reference', [*body(0), 2], 1), 'slot 1 beyond depth 1'),
         ('let-slot', edit('let', [*body(0), 2], 1), 'let slot 1 at depth 0'),
@@ -1091,6 +1118,9 @@ def plan_controls(plans: dict) -> list:
         ('case-none-parameter', none_parameter(1), None),
         ('case-none-let', none_let(1), None),
         ('list-head-match', list_head_match, None),
+        # An arm body fits its Case: a concrete Nil arm beside the `none` head (review round 5).
+        ('first-code', first_code(['lit', 1, 'U32', 0]), None),
+        ('branch-body-type', first_code(['value', 0, 0]), 'branch body type'),
         ('nat-field-type', edits('nat-unpack', (['types', 0, 'constructors', 1, 'fields'], [1]),
                                  ([*body(0), 5, 1], ['branch', 1, 1, 1, ['case', 1, 1, 1, 'tags', flag_rows(2), None]]),
                                  (['functions', 0, 'slots'], 2)),
@@ -1098,6 +1128,26 @@ def plan_controls(plans: dict) -> list:
         ('reference-none-view', edit('reference', [*body(0), 1], None), 'reference type'),
         ('arrow-cycle', edit('closure-id', ['types', 1, 'domain'], 1), 'arrow cycle'),
     ]
+
+
+# first_code as the literals head's check-cli would display it: type 0 Bool, 1 U32, 2 List;
+# the Con head binder `1 $1:1` carries the core's instantiated U32. No pinned head checks a
+# List<U32> parameter (`Unsupported parse parameter-type`), so the text is written by hand.
+FIRST_CODE_DISPLAY = """Checked
+U32.is_eq(1:1,1:1)->0=U32.is_eq($0:1;$1:1)
+first_code(1:2)->1=case $0 [0=>v1.0;1(1 $1:1;1 $2:2;)=>$1:1]
+main()->0=call0(call1(v2.1{v1.7;v2.0});v1.7)
+"""
+
+
+def lowered_controls(planned: list, reg: dict) -> list:
+    """The display cross-check follows section 3's typing: a Branch slot takes the pinned
+    field (`none`), not the core binder's U32, and a Case takes its position's type, not
+    its last arm's. The lowering of FIRST_CODE_DISPLAY is the admitted plan `first-code`."""
+    plan = next(p for label, p, _ in planned if label == 'first-code')
+    derived = from_display(FIRST_CODE_DISPLAY, plan, '', reg)
+    require(derived == plan['functions'], ('first-code: lowering differs from the admitted plan', derived))
+    return ['first-code']
 
 
 ILL_TYPED = {'outcome': 'HostFailure', 'cause': 'image ill-typed'}
@@ -1306,8 +1356,15 @@ CODEC_MUTANTS = [
                                           "        missing = []")]),
     ('validator-ignores-foreign-operands', [("            for k, name in zip(node[3], row['inputs']):\n",
                                              "            for k, name in zip(node[3], row['inputs']) if op == 'prim' else []:\n")]),
-    ('validator-ignores-key-body-type', [("                    if r[4][1] != t:\n                        fail(where, 'key branch body type')\n", "")]),
-    ('validator-ignores-default-body-type', [("                if default[1][1] != t:\n                    fail(where, 'default body type')\n", "")]),
+    ('validator-ignores-key-body-type', [("                    if not fits(t, r[4][1]):\n                        fail(where, 'key branch body type')\n", "")]),
+    ('validator-ignores-default-body-type', [("                if not fits(t, default[1][1]):\n                    fail(where, 'default body type')\n", "")]),
+    ('validator-ignores-branch-body-type', [("                    if not fits(t, r[4][1]):\n                        fail(where, 'branch body type')\n", "")]),
+    # Review round 5: arm bodies fit their Case; exact equality refuses S's first_code.
+    ('validator-exact-arm-type', [("                    if not fits(t, r[4][1]):\n                        fail(where, 'branch body type')",
+                                   "                    if r[4][1] != t:\n                        fail(where, 'branch body type')"),
+                                  ("                    if not fits(t, r[4][1]):\n                        fail(where, 'key branch body type')",
+                                   "                    if r[4][1] != t:\n                        fail(where, 'key branch body type')"),
+                                  ("                if not fits(t, default[1][1]):", "                if default[1][1] != t:")]),
     ('validator-vacuous-operand-representation', [("                if name not in rep or k[1] != rep[name]:",
                                                    "                if rep.get(name, k[1]) != k[1]:")]),
     ('validator-vacuous-prim-result', [("            if op == 'prim' and (row['output'] not in rep or t != rep[row['output']]):",
@@ -1721,6 +1778,7 @@ def main() -> int:
     require(abstract, 'a none-typed node')
 
     planned = plan_controls(plans)
+    lowered = lowered_controls(planned, reg)
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
     admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
@@ -1763,7 +1821,7 @@ def main() -> int:
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
-                  admitted=[label for label, _ in admitted], runs=runs, describe=verdicts, mutants=mutants,
+                  admitted=[label for label, _ in admitted], lowered=lowered, runs=runs, describe=verdicts, mutants=mutants,
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),

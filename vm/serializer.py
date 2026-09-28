@@ -525,7 +525,8 @@ def validate(plan: dict, registry: dict) -> list[str]:
                 fail(where, 'case slot beyond depth')
                 return depth
             used.add(slot)
-            # The scrutinee type is concrete; its slot may be an erased position (SPEC section 3).
+            # The scrutinee type is concrete; its slot may be an erased position, and each arm
+            # body fits the Case's own type, that of its position (SPEC section 3).
             if scrutinee is None or scope[slot] not in (None, scrutinee):
                 fail(where, 'case scrutinee type')
             deepest = depth
@@ -549,7 +550,7 @@ def validate(plan: dict, registry: dict) -> list[str]:
                         fail(where, 'branch binders')
                         continue
                     deepest = max(deepest, check(r[4], scope + list(fields), where, used))
-                    if r[4][1] != t:
+                    if not fits(t, r[4][1]):
                         fail(where, 'branch body type')
             else:
                 if scrutinee not in scalar:
@@ -562,11 +563,11 @@ def validate(plan: dict, registry: dict) -> list[str]:
                         fail(where, 'key branch binds nothing')
                         continue
                     deepest = max(deepest, check(r[4], scope, where, used))
-                    if r[4][1] != t:
+                    if not fits(t, r[4][1]):
                         fail(where, 'key branch body type')
             if default is not None:
                 deepest = max(deepest, check(default[1], scope, where, used))
-                if default[1][1] != t:
+                if not fits(t, default[1][1]):
                     fail(where, 'default body type')
             return deepest
         if op == 'closure':

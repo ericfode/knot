@@ -95,6 +95,27 @@ follows it (§5, §10, §11) without a new image header word.
    `List<T>` parameter (literals: `Unsupported parse parameter-type`), so the
    shape is witnessed by the admitted control `list-head-match` until a golden can
    be frozen.
+   Review round 5 found the arm rule refusing S the same way: "a Case and every
+   arm body" agreed exactly, and List pins `Con{none, List}`, so a Case whose Nil
+   arm is concrete and whose Con arm returns the head had no legal type. S has the
+   shape three times: `literal.bend`'s `first_code` (`0` or the head),
+   `imports.bend`'s `first` (`""` or the head) and `base-pin.bend`'s `nth` (`0` or
+   the word). §3 now lets every arm body, Branch, key Branch or Default, fit its
+   Case, with the `fits` of Application, Construct and Invoke, and keeps exact
+   agreement for a Reference and its slot and a Let and its body. A value fitting
+   into a Case is laundered no further than one passed to a call. A Case takes the
+   type of the position it fills, the positional rule §3 already states for
+   `none`; all 91 goldens already had that type. A Branch slot takes its
+   constructor's pinned field type, as `validate` did, never the core binder's
+   instantiated type, and `check-spec.from_display` now agrees: it types Branch
+   slots by the pinned field (cross-checked against a concrete binder), Let slots
+   by the value's node and Cases by position, while a nested Case still names the
+   core's type as its scrutinee. The admitted plan control `first-code` (seed
+   `True{}` for the same source) is also the lowering of its hand-written display,
+   which neither the old last-arm Case type nor a core-typed binder reproduces. A
+   refused control `branch-body-type` (a Bool arm in the U32 Case) and two codec
+   mutants (`validator-exact-arm-type`, killed by `first-code`, and
+   `validator-ignores-branch-body-type`) pin both directions.
 10. **Non-scalar output is a divergence by contract (D20).** Review round 3 found
    §11's reference lane and §10's IO contract in conflict: the seed's native lane
    writes a non-scalar Char as generalized UTF-8 (`print-non-scalar`, ASCII source
