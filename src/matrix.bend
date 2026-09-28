@@ -156,7 +156,7 @@ def arms(ctors: List<&2,S.Token>, +columns: List<&2,S.Node>, +rows: List<&2,S.No
 # A variable column binds without inspecting or closing the ordered frontier.
 def variable_column(+binding: C.Binding, +scope: E.Scope, +token: S.Token) -> Result<S.Error,C.Binding>:
   match binding scope:
-    case C.Binding{name,level,q,type_id,param,None{}} E.Scope{bindings,next,open,live,smaller}:
+    case C.Binding{name,level,q,type_id,param,None{}} E.Scope{bindings,next,open,live,aliases}:
       S.choose(Result<S.Error,C.Binding>,Bool.and(param,E.contains(open,level)),u => Done{binding},u =>
         C.invalid(C.Binding,"unmatchable-binder",token))
     case _ _: C.invalid(C.Binding,"already-matched",token)
@@ -172,7 +172,7 @@ def share(work: U32, branches: List<&2,S.Token>) -> U32:
 def split(binding: C.Binding, +token: S.Token, +column: S.Node, +columns: List<&2,S.Node>, +rows: List<&2,S.Node>,
   scope: E.Scope, +types: List<&2,C.Datatype>, +work: U32) -> Result<S.Error,S.Node>:
   match binding scope:
-    case C.Binding{+name,+level,q,+type_id,param,known} E.Scope{bindings,+next,open,live,smaller}:
+    case C.Binding{+name,+level,q,+type_id,param,known} E.Scope{bindings,+next,open,live,aliases}:
       S.bind(C.Datatype,S.Node,G.type_at(types,type_id),definition =>
         +tags = signature(definition,constructors(rows,Nil{}),has_default(rows))
         S.bind(List<&2,S.Node>,S.Node,arms(tags,
@@ -221,13 +221,13 @@ def remarked(bindings: List<&2,C.Binding>, +level: U32, +mark: U32) -> List<&2,C
 
 def alias_bound(binding: C.Binding, +token: S.Token, +mark: U32, scope: E.Scope, +types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
   match binding scope:
-    case C.Binding{name,+level,q,+type_id,param,known} E.Scope{bindings,next,open,live,smaller}:
+    case C.Binding{name,+level,q,+type_id,param,known} E.Scope{bindings,next,open,live,aliases}:
       +actual = P.quantity(q,1,mark)
       S.bind(C.Datatype,E.Scope,G.type_at(types,type_id),definition =>
         S.bind(Unit,E.Scope,G.quantity(token,actual,definition),u =>
-          Done{E.Scope{Con{C.Binding{token,level,actual,type_id,param,known},remarked(bindings,level,mark)},next,open,live,smaller}}))
+          Done{E.Scope{Con{C.Binding{token,level,actual,type_id,param,known},remarked(bindings,level,mark)},next,open,live,aliases}}))
 
 def alias(+scope: E.Scope, token: S.Token, level: U32, mark: U32, types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
   match scope:
-    case E.Scope{bindings,next,open,live,smaller}:
+    case E.Scope{bindings,next,open,live,aliases}:
       S.bind(C.Binding,E.Scope,E.find_level(bindings,level),binding => alias_bound(binding,token,mark,scope,types))

@@ -107,21 +107,22 @@
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
     "owned field storage and reclamation (R3/R7)",
-    "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
   ],
   "structural_recursion": {
     "profile": "knot-structural-recursion-1",
-    "contract": "tests/compiler-recursion/SPEC.md",
-    "evidence": "tests/compiler-recursion/receipts/recursion.json",
+    "contract": "tests/compiler-descent/SPEC.md",
+    "evidence": "tests/compiler-descent/receipts/descent.json",
     "checker": true,
     "independent_evaluator": true,
     "wasm": true,
-    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
-    "other_self_calls": "Unsupported check recursive-call",
+    "rule": "Seed term_descend: live columns compare left to right until strict descent, skipping erased parameters; refined constructor fields compare componentwise or admit a strict subterm; local aliases expand only for comparison.",
+    "other_self_calls": "Invalid check recursive-call for checked nondecreasing live calls; dead calls skip descent.",
     "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call.",
-    "wasm_evidence": "tests/compiler-nest/receipts/nest.json"
+    "wasm_evidence": "tests/compiler-descent/receipts/descent.json",
+    "unsupported": "Generics, literals and other unsupported source forms keep their specific frontend codes; no unchecked approximation.",
+    "bounds": "Provenance expansion and comparison use the current checker depth; exhausted comparison reports Exhausted check budget, never Invalid."
   },
   "structural_terms": {
     "profile": "knot-structural-terms-1",
@@ -204,7 +205,7 @@
       "unreachable"
     ],
     "imports": [],
-    "recursion": "first-parameter structural descent, including nested pattern fields",
+    "recursion": "seed lexicographic structural descent over the supported monomorphic profile, including nested patterns, reconstruction, aliases and erased/dead positions",
     "owned_storage_reclamation": false,
     "unmet_runtime_requirements": [
       "R3",

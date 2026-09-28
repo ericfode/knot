@@ -271,10 +271,13 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/wasm-bytes.bend",
-        "src/matrix.bend"
+        "src/matrix.bend",
+        "src/descent.bend",
+        "src/descent-LAWS.bend",
+        "src/descent-PROOF.bend"
       ],
-      "task": "tests/compiler-recursion/SPEC.md",
-      "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+      "task": "tests/compiler-descent/SPEC.md",
+      "notes": "Lexicographic structural self-call and scope laws, with the full inherited proof chain. The family exceeds the composition bound."
     },
     {
       "name": "pattern-matrix",
@@ -320,6 +323,18 @@
       ],
       "task": "tests/compiler-nest/SPEC.md",
       "notes": "Universal stable-selection and boundary laws plus literal complete-lowering witnesses, including the complete inherited proof chain. The closed family exceeds the composition bound."
+    },
+    {
+      "name": "decreasing-calls",
+      "files": [
+        "src/descent.bend",
+        "src/descent-LAWS.bend",
+        "src/descent-PROOF.bend",
+        "src/syntax.bend",
+        "src/core.bend"
+      ],
+      "task": "tests/compiler-descent/SPEC.md",
+      "notes": "Seed structural comparison algebra, parameter order and comparison-only alias provenance; filled comparison and budget laws."
     }
   ]
 }

@@ -1,0 +1,49 @@
+{
+  "basis": "Literal resource outcomes fixed before the bounds driver: exhaustion is not a semantic ordering or source rejection.",
+  "driver": "tests/compiler-descent/bounds.bend",
+  "cases": [
+    {
+      "name": "shape-zero",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "compare-zero",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "columns-zero",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "alias-chain-enough",
+      "expected": {"exit": 0, "stdout": "Constructor\t0\t1\t0"}
+    },
+    {
+      "name": "alias-chain-short",
+      "control": "alias-chain-enough",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "alias-cycle",
+      "control": "alias-chain-enough",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "compare-enough",
+      "expected": {"exit": 0, "stdout": "LT"}
+    },
+    {
+      "name": "compare-short",
+      "control": "compare-enough",
+      "expected": {"exit": 4, "diagnostic": "Exhausted\tcheck\tbudget\t0:0:0:0"}
+    },
+    {
+      "name": "product-arity",
+      "expected": {"exit": 6, "diagnostic": "InternalFailure\tcheck\tdescent-product-arity"}
+    },
+    {
+      "name": "erased-column-zero",
+      "expected": {"exit": 0, "stdout": "EQ"}
+    }
+  ]
+}

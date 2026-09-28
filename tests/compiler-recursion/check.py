@@ -63,17 +63,43 @@ def reference(manifest):
     return observations
 
 
+def revise(manifest):
+    """Keep the original freeze intact; migrate only independently refrozen outcomes."""
+    contract = ROOT / 'tests/compiler-descent/expectations.json'
+    reference = ROOT / 'tests/compiler-descent/receipts/reference.json'
+    frozen = json.loads(reference.read_text())
+    require(digest(contract) == frozen['inputs'][str(contract.relative_to(ROOT))],
+            'Descent expectations differ from the independent seed freeze')
+    expected = {c['name'].removeprefix('recursion/'): c for c in
+                json.loads(contract.read_text())['legacy'] if c['name'].startswith('recursion/')}
+    revisions = json.loads((HERE / 'expectation-revisions.json').read_text())['cases']
+    require(len({c['name'] for c in revisions}) == len(revisions), 'Duplicate expectation revision')
+    cases = {c['name']: c for c in manifest['cases']}
+    for revision in revisions:
+        name = revision['name']
+        require(name in expected and name in cases, ('unfrozen revision', name))
+        require(all(cases[name][phase]['exit'] == 3 for phase in ('check', 'eval', 'compile')),
+                ('revision must replace the historical conservative outcome', name))
+        required = {phase: expected[name][phase] for phase in ('check', 'eval', 'compile')}
+        # This original gate invokes the enum compiler, which still refuses fields.
+        if required['compile']['exit'] == 0:
+            required['compile'] = {'exit': 3, 'diagnostic': 'Unsupported\tcheck\tconstructor-fields\t'}
+        require(revision == {'name': name, **required}, ('revision differs from frozen decision', name))
+        cases[name].update(required)
+
+
 # These replacements must remain uniquely located and independently typechecked.
 MUTANTS = [
     ('admit-any-self-call', 'check.bend',
-     'Bool.and(U32.is_eq(index,current),Bool.not(E.descends(items,smaller)))',
+     'Bool.and(live,U32.is_eq(index,current))',
      'False{}', 'same-parameter', 0),
     ('stop-propagating-fields', 'patterns.bend',
-     'E.descendants(level,E.levels(introduced),smaller)',
-     'smaller', 'direct', 3),
-    ('stop-nested-propagation', 'scope.bend',
-     'Bool.or(U32.is_eq(level,0),contains(smaller,level))',
-     'U32.is_eq(level,0)', 'even', 3),
+     'E.replace(bindings,level,value(token,type_id,tag,params,args))',
+     'bindings', 'direct', 2),
+    ('stop-nested-propagation', 'descent.bend',
+     'U32.is_eq(id,level),u => value,u => known(tail,level)',
+     'Bool.and(U32.is_eq(id,level),U32.is_eq(level,0)),u => value,u => known(tail,level)',
+     'even', 2),
 ]
 
 
@@ -103,8 +129,11 @@ def main():
     frozen = json.loads((RECEIPTS / 'reference.json').read_text())
     require(frozen['status'] == 'passed' and frozen['frozen_inputs'] == fixed,
             'Expectations changed since the preimplementation seed freeze')
+    revise(manifest)
     paths = sorted((ROOT / 'src').glob('*.bend')) + fixtures + [Path(__file__), HERE / 'cases.json',
-        ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HERE / 'SPEC.md']
+        ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HERE / 'SPEC.md',
+        HERE / 'expectation-revisions.json', ROOT / 'tests/compiler-descent/expectations.json',
+        ROOT / 'tests/compiler-descent/receipts/reference.json']
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'incomplete',
               'seed_revision': manifest['seed_revision'],
               'inputs': {str(p.relative_to(ROOT)): digest(p) for p in paths},
@@ -162,7 +191,7 @@ def main():
             actual = run(['bun', output, HERE / cases[witness]['file']])
             # Require the intended semantic observation, never a crash or timeout.
             observe(actual, {'exit': 0, 'contains': 'Checked\n'} if exit_code == 0 else
-                    {'exit': 3, 'diagnostic': 'Unsupported\tcheck\trecursive-call\t'})
+                    {'exit': 2, 'diagnostic': 'Invalid\tcheck\trecursive-call\t'})
             try:
                 observe(actual, cases[witness]['check'])
             except AssertionError:

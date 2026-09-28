@@ -1,0 +1,75 @@
+[
+  {
+    "name": "reverse-lexicographic-order",
+    "file": "descent.bend",
+    "old": "def columns(params: List<&2,C.Parameter>, args: List<&2,C.Term>, +index: U32, +fuel: Nat,\n  +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Cmp>:\n  match params args:\n    case Nil{} Nil{}: Done{EQ{}}\n    case Con{C.Parameter{+token,q,+type_id},+tail} Con{+arg,+rest}:\n      S.choose(Result<S.Error,Cmp>,U32.is_eq(q,0),u => columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),u =>\n        S.bind(Shape,Cmp,shape(fuel,arg,bindings,aliases),+actual =>\n          S.bind(Shape,Cmp,shape(fuel,C.Reference{token,index,type_id},bindings,aliases),col =>\n            S.bind(Cmp,Cmp,compare(fuel,actual,col),+order =>\n              S.choose(Result<S.Error,Cmp>,equal(order),u => columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),u => Done{order})))))\n    case _ _: C.internal(Cmp,\"descent-call-arity\")\n",
+    "new": "def columns(params: List<&2,C.Parameter>, args: List<&2,C.Term>, +index: U32, +fuel: Nat,\n  +bindings: List<&2,C.Binding>, +aliases: List<&2,Alias>) -> Result<S.Error,Cmp>:\n  match params args:\n    case Nil{} Nil{}: Done{EQ{}}\n    case Con{C.Parameter{+token,+q,+type_id},+tail} Con{+arg,+rest}:\n      S.bind(Cmp,Cmp,columns(tail,rest,U32.add(index,1),fuel,bindings,aliases),+later =>\n        S.choose(Result<S.Error,Cmp>,Bool.or(Bool.not(equal(later)),U32.is_eq(q,0)),u => Done{later},u =>\n          S.bind(Shape,Cmp,shape(fuel,arg,bindings,aliases),+actual =>\n            S.bind(Shape,Cmp,shape(fuel,C.Reference{token,index,type_id},bindings,aliases),col => compare(fuel,actual,col)))))\n    case _ _: C.internal(Cmp,\"descent-call-arity\")\n",
+    "witness": "earlier-growth-later-shrink",
+    "wrong": {
+      "exit": 0
+    }
+  },
+  {
+    "name": "equal-is-smaller",
+    "file": "descent.bend",
+    "old": "def smaller(order: Cmp) -> Bool:\n  match order:\n    case LT{}: True{}\n    case _: False{}",
+    "new": "def smaller(order: Cmp) -> Bool:\n  match order:\n    case LT{}: True{}\n    case EQ{}: True{}\n    case _: False{}",
+    "witness": "all-equal",
+    "wrong": {
+      "exit": 0
+    }
+  },
+  {
+    "name": "strip-rebuilt-constructor",
+    "file": "descent.bend",
+    "old": "    case 1n+ n Compare{arg,Variable{level}}:",
+    "new": "    case 1n+ +n Compare{Constructor{typ,tag,Con{arg,tail}},+col}: run(n,Compare{arg,col})\n    case 1n+ n Compare{arg,Variable{level}}:",
+    "witness": "rebuilt-equal",
+    "wrong": {
+      "exit": 0
+    }
+  },
+  {
+    "name": "lexicographic-constructor-fields",
+    "file": "descent.bend",
+    "old": "    case Product{actual,failed}: next(join(order,actual))",
+    "new": "    case Product{LT{},failed}: Done{Product{LT{},None{}}}\n    case Product{actual,failed}: next(join(order,actual))",
+    "witness": "product-growth",
+    "wrong": {
+      "exit": 0
+    }
+  },
+  {
+    "name": "forget-local-alias",
+    "file": "descent.bend",
+    "old": "reference(origin(aliases,bindings,level),level,value =>",
+    "new": "reference(known(bindings,level),level,value =>",
+    "witness": "alias-field",
+    "wrong": {
+      "exit": 2,
+      "diagnostic": "Invalid\tcheck\trecursive-call\t"
+    }
+  },
+  {
+    "name": "require-dead-descent",
+    "file": "check.bend",
+    "old": "Bool.and(live,U32.is_eq(index,current))",
+    "new": "U32.is_eq(index,current)",
+    "witness": "dead-self-call",
+    "wrong": {
+      "exit": 2,
+      "diagnostic": "Invalid\tcheck\trecursive-call\t"
+    }
+  },
+  {
+    "name": "compare-erased-column",
+    "file": "descent.bend",
+    "old": "S.choose(Result<S.Error,Cmp>,U32.is_eq(q,0),u => columns",
+    "new": "S.choose(Result<S.Error,Cmp>,False{},u => columns",
+    "witness": "erased-column",
+    "wrong": {
+      "exit": 2,
+      "diagnostic": "Invalid\tcheck\trecursive-call\t"
+    }
+  }
+]

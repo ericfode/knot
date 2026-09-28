@@ -1,6 +1,7 @@
 import Base
 import ./syntax.bend as S
 import ./core.bend as C
+import ./descent.bend as D
 import ./scope.bend as E
 import ./matrix.bend as M
 import ./check.bend as K
@@ -116,14 +117,16 @@ law erased_alias_stays_erased:
   for +name: S.Token
   for +alias: S.Token
   for +known: Maybe<&2,C.Term>
-  {M.alias(E.Scope{[C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]},alias,1,2,[flag()]) ==
-    Done{E.Scope{[C.Binding{alias,1,0,0,True{},known},C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
+  for +aliases: List<&2,D.Alias>
+  {M.alias(E.Scope{[C.Binding{name,1,0,0,True{},known}],2,[1],True{},aliases},alias,1,2,[flag()]) ==
+    Done{E.Scope{[C.Binding{alias,1,0,0,True{},known},C.Binding{name,1,0,0,True{},known}],2,[1],True{},aliases}} : Result<S.Error,E.Scope>}
 
 law alias_preserves_descent_and_identity:
   for +name: S.Token
   for +alias: S.Token
-  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1,[flag()]) ==
-    Done{E.Scope{[C.Binding{alias,1,1,0,True{},None{}},C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
+  for +aliases: List<&2,D.Alias>
+  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},aliases},alias,1,1,[flag()]) ==
+    Done{E.Scope{[C.Binding{alias,1,1,0,True{},None{}},C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},aliases}} : Result<S.Error,E.Scope>}
 
 # Exhaustiveness at each split: every declaration absent from the explicit
 # column is retained by the default matrix, in declaration order.

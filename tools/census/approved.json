@@ -1178,6 +1178,10 @@
           "file": "src/core.bend"
         },
         {
+          "module": "./descent.bend",
+          "file": "src/descent.bend"
+        },
+        {
           "module": "./catalog.bend",
           "file": "src/catalog.bend"
         },
@@ -1358,6 +1362,19 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/check.bend::admit:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/check.bend::call_result:definition": [
           "calls",
           "captures",
@@ -1366,6 +1383,7 @@
           "generics",
           "lambdas",
           "literals.string",
+          "literals.u32",
           "matches",
           "matches.multi",
           "patterns.nested",
@@ -4665,6 +4683,10 @@
         {
           "module": "./core.bend",
           "file": "src/core.bend"
+        },
+        {
+          "module": "./descent.bend",
+          "file": "src/descent.bend"
         }
       ],
       "declarations": {
@@ -4687,30 +4709,6 @@
           "quantities.arguments",
           "quantities.reusable",
           "recursion",
-          "types.base"
-        ],
-        "src/scope.bend::descendants:definition": [
-          "calls",
-          "captures",
-          "generics",
-          "lambdas",
-          "literals.u32",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/scope.bend::descends:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "matches",
-          "patterns.nested",
-          "patterns.variable",
-          "patterns.wildcard",
-          "quantities.affine",
-          "quantities.arguments",
           "types.base"
         ],
         "src/scope.bend::sequential:definition": [
@@ -5974,122 +5972,29 @@
         {
           "module": "./eval.bend",
           "file": "src/eval.bend"
+        },
+        {
+          "module": "./descent.bend",
+          "file": "src/descent.bend"
         }
       ],
       "declarations": {
-        "src/recursion-LAWS.bend::root_fields_are_smaller:law": [
-          "calls",
-          "dependent",
-          "equality",
+        "src/recursion-LAWS.bend::parameter:definition": [
+          "constructors",
+          "fields",
           "generics",
-          "laws",
           "literals.u32",
+          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
         ],
-        "src/recursion-LAWS.bend::descendant_fields_are_smaller:law": [
-          "calls",
+        "src/recursion-LAWS.bend::successor:definition": [
           "constructors",
-          "dependent",
-          "equality",
           "fields",
-          "generics",
-          "laws",
-          "literals.list",
-          "literals.u32",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::unrelated_fields_stay_unmarked:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "laws",
           "literals.list",
           "literals.u32",
           "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::marked_reference_descends:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "laws",
-          "literals.list",
-          "literals.u32",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::root_reference_does_not_descend:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "laws",
-          "literals.list",
-          "literals.u32",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::rebuilt_argument_does_not_descend:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "laws",
-          "literals.list",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::computed_argument_does_not_descend:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "laws",
-          "literals.list",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::empty_call_does_not_descend:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "generics",
-          "laws",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-LAWS.bend::later_argument_cannot_establish_descent:law": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "laws",
-          "literals.list",
-          "literals.u32",
           "quantities.reusable",
           "types.base"
         ],
@@ -6144,13 +6049,13 @@
           "generics",
           "laws",
           "literals.list",
+          "literals.nat",
           "literals.u32",
-          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
         ],
-        "src/recursion-LAWS.bend::nondecreasing_self_call_is_unsupported:law": [
+        "src/recursion-LAWS.bend::nondecreasing_self_call_is_invalid:law": [
           "calls",
           "constructors",
           "dependent",
@@ -6159,7 +6064,70 @@
           "generics",
           "laws",
           "literals.list",
+          "literals.nat",
           "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-LAWS.bend::rebuilt_parent_does_not_decrease:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-LAWS.bend::later_argument_establishes_descent:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-LAWS.bend::earlier_growth_blocks_later_descent:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-LAWS.bend::dead_self_call_needs_no_descent:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
           "literals.u32",
           "quantities.affine",
           "quantities.arguments",
@@ -6174,6 +6142,7 @@
           "fields",
           "generics",
           "laws",
+          "literals.nat",
           "literals.u32",
           "quantities.affine",
           "quantities.arguments",
@@ -6212,6 +6181,10 @@
           "file": "src/runtime-PROOF.bend"
         },
         {
+          "module": "./descent-PROOF.bend",
+          "file": "src/descent-PROOF.bend"
+        },
+        {
           "module": "./scope.bend",
           "file": "src/scope.bend"
         },
@@ -6221,115 +6194,6 @@
         }
       ],
       "declarations": {
-        "src/recursion-PROOF.bend::L.root_fields_are_smaller:law_fill": [
-          "calls",
-          "dependent",
-          "equality",
-          "generics",
-          "literals.u32",
-          "proofs",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.descendant_fields_are_smaller:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "literals.u32",
-          "proofs",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.unrelated_fields_stay_unmarked:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "literals.u32",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.marked_reference_descends:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "literals.u32",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.root_reference_does_not_descend:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "literals.u32",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.rebuilt_argument_does_not_descend:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.computed_argument_does_not_descend:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "generics",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.empty_call_does_not_descend:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "generics",
-          "proofs",
-          "quantities.affine",
-          "quantities.arguments",
-          "types.base"
-        ],
-        "src/recursion-PROOF.bend::L.later_argument_cannot_establish_descent:law_fill": [
-          "calls",
-          "constructors",
-          "dependent",
-          "equality",
-          "fields",
-          "literals.u32",
-          "proofs",
-          "quantities.reusable",
-          "types.base"
-        ],
         "src/recursion-PROOF.bend::L.local_binding_preserves_descent:law_fill": [
           "calls",
           "constructors",
@@ -6377,6 +6241,22 @@
           "equality",
           "fields",
           "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-PROOF.bend::L.nondecreasing_self_call_is_invalid:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
           "literals.u32",
           "proofs",
           "quantities.affine",
@@ -6384,14 +6264,58 @@
           "quantities.reusable",
           "types.base"
         ],
-        "src/recursion-PROOF.bend::L.nondecreasing_self_call_is_unsupported:law_fill": [
+        "src/recursion-PROOF.bend::L.rebuilt_parent_does_not_decrease:law_fill": [
           "calls",
           "constructors",
           "dependent",
           "equality",
           "fields",
           "generics",
+          "literals.nat",
           "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-PROOF.bend::L.later_argument_establishes_descent:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-PROOF.bend::L.earlier_growth_blocks_later_descent:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/recursion-PROOF.bend::L.dead_self_call_needs_no_descent:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
           "literals.u32",
           "proofs",
           "quantities.affine",
@@ -6406,6 +6330,7 @@
           "equality",
           "fields",
           "generics",
+          "literals.nat",
           "literals.u32",
           "matches",
           "patterns.variable",
@@ -6445,6 +6370,10 @@
         {
           "module": "./core.bend",
           "file": "src/core.bend"
+        },
+        {
+          "module": "./descent.bend",
+          "file": "src/descent.bend"
         },
         {
           "module": "./scope.bend",
@@ -7404,6 +7333,859 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/descent-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./descent.bend",
+          "file": "src/descent.bend"
+        }
+      ],
+      "declarations": {
+        "src/descent-LAWS.bend::equality_is_product_identity:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "laws",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::growth_blocks_product:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "laws",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::equality_is_not_smaller:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "laws"
+        ],
+        "src/descent-LAWS.bend::same_variable_is_equal:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::unrelated_variable_is_greater:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::field_is_strictly_smaller:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::rebuilt_parent_is_equal:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::rebuilt_smaller_constructor_decreases:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::product_decreases_in_second_field:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::product_growth_blocks_earlier_shrink:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::same_head_subterm_survives_failed_alignment:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::constructor_identity_includes_type:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::opaque_argument_cannot_decrease:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::failed_alignment_skips_its_field:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::erased_column_is_skipped:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::empty_columns_are_equal:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::alias_follows_initializer:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::computed_alias_stays_opaque:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::comparison_exhaustion_is_not_rejection:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-LAWS.bend::inspection_exhaustion_is_not_rejection:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/descent-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./descent-LAWS.bend",
+          "file": "src/descent-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/descent-PROOF.bend::L.equality_is_product_identity:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "matches",
+          "proofs",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.growth_blocks_product:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "matches",
+          "proofs",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.equality_is_not_smaller:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "proofs",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.same_variable_is_equal:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.unrelated_variable_is_greater:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.field_is_strictly_smaller:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.rebuilt_parent_is_equal:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.rebuilt_smaller_constructor_decreases:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.product_decreases_in_second_field:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.product_growth_blocks_earlier_shrink:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.same_head_subterm_survives_failed_alignment:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.constructor_identity_includes_type:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.opaque_argument_cannot_decrease:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.failed_alignment_skips_its_field:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.erased_column_is_skipped:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.empty_columns_are_equal:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.alias_follows_initializer:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.computed_alias_stays_opaque:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.comparison_exhaustion_is_not_rejection:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent-PROOF.bend::L.inspection_exhaustion_is_not_rejection:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/descent.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        }
+      ],
+      "declarations": {
+        "src/descent.bend::Alias:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.base",
+          "types.data"
+        ],
+        "src/descent.bend::Shape:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/descent.bend::Inspection:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/descent.bend::Comparison:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/descent.bend::Product:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/descent.bend::equal:definition": [
+          "constructors",
+          "matches",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::smaller:definition": [
+          "constructors",
+          "matches",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::greater:definition": [
+          "constructors",
+          "matches",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::known:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/descent.bend::origin:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/descent.bend::reference:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::prepend:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::constructed:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::inspect:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/descent.bend::shape:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::join:definition": [
+          "constructors",
+          "matches",
+          "matches.multi",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::skipped:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::variable:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::aligned:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::arguments:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::fallback:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::field:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/descent.bend::order:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/descent.bend::run:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/descent.bend::compare:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/descent.bend::columns:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
           "types.base"
         ]
       }

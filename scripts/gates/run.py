@@ -64,6 +64,8 @@ GATES = (
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
     Gate('nest', ('python3', 'tests/compiler-nest/check.py'),
          ('tests/compiler-nest/receipts/nest.json',)),
+    Gate('descent', ('python3', 'tests/compiler-descent/check.py'),
+         ('tests/compiler-descent/receipts/descent.json',)),
 )
 
 
@@ -200,6 +202,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         return {'entries': len(entries), 'proof_holes': 0}
     if record['status'] not in ('pass', 'passed'):
         raise ValueError('Receipt does not record a completed gate')
+    if gate.name == 'descent':
+        return record['counts']
     result = {key: len(record[key]) for key in ('fixtures', 'mutants', 'budgets', 'boundaries',
                                                'bounds', 'host_boundaries', 'rejects') if key in record}
     if gate.name in ('frontend', 'checker', 'structural', 'fields'):

@@ -9,15 +9,16 @@ runtime storage. The default emitter rejects every fielded book after body
 checking. The separately selected `knot-fields-wasm-1` profile below lowers those
 checked books to a bounded bump arena. Owned-storage reclamation (R3/R7) remains
 unmet; this increment does not qualify either runtime requirement.
-The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
-adds structural self-calls to checking and evaluation: the first checked argument
-must be a reference to a field of parameter 0, directly or through further
-matches. Other self-calls report `Unsupported check recursive-call`; forward
-and mutual calls retain their existing classification. The
-[pattern-matrix gate](../tests/compiler-nest/SPEC.md) executes nested-pattern
-structural recursion in `knot-fields-wasm-1`. Structured host arguments remain
-unsupported. Its two seed-rejected recursion fixtures retain conservative
-Unsupported outcomes and are explicitly unmet.
+The [decreasing-call contract](../tests/compiler-descent/SPEC.md) implements the
+pinned seed's rule for supported monomorphic terms. Live self-calls compare
+arguments lexicographically against match-refined parameters, skipping erased
+columns. Constructor fields compare componentwise; a strict subterm also
+establishes descent. Local aliases retain their initializer for comparison only.
+A fully checked nondecreasing self-call reports `Invalid check recursive-call`;
+dead calls need no decrease. Forward and mutual calls retain their existing
+classification. The [pattern-matrix gate](../tests/compiler-nest/SPEC.md) executes
+nested-pattern recursion in `knot-fields-wasm-1`. Structured host arguments remain
+unsupported. The original first-parameter corpus remains a regression gate.
 References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
@@ -64,7 +65,7 @@ digits, underscores or dots. Keywords cannot be identifiers.
   obligations. Row aliases share those identities, even through nested patterns;
   later row binders shadow earlier names without capturing other columns.
 - In the enum subprofile, live calls form an acyclic graph. Erased arguments may
-  contain forward calls; no enum self-call can meet the field-descent rule.
+  contain forward or self-calls; no live enum self-call can meet the descent rule.
   Every function is checked, including unused
   definitions. No executable artifact is emitted until the entire book passes.
 
@@ -84,7 +85,7 @@ Generic/dependent types, imports, literals, closures, destructuring local
 bindings, laws, templates, foreign code and effects remain explicitly
 unsupported. The default enum emitter rejects fielded books after checking;
 selecting the fields profile enables their checked runtime representation.
-Self-calls beyond the first-parameter field-descent rule remain Unsupported.
+Supported live self-calls that fail the decreasing-call rule are Invalid.
 A recognized unsupported form makes no claim about its remaining contents.
 
 The parser recognizes these out-of-profile prefixes before applying the narrower
@@ -157,7 +158,7 @@ consulted 2026-09-26. Only the stated MVP subset is used.
 ## Fielded Wasm profile: `knot-fields-wasm-1`
 
 This profile accepts completely checked books from
-`knot-structural-terms-1` and first-parameter structural recursion: monomorphic constructor fields, nested patterns,
+`knot-structural-terms-1` and lexicographic structural recursion: monomorphic constructor fields, nested patterns,
 parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
 checker bypass. Imports and forms beyond the stated structural and matrix
 contracts remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
@@ -256,7 +257,12 @@ pattern-tree expansion separately from checker depth. Catalog passes and
 environment/set scans are structural list traversals bounded by the catalog
 limits and source cap. Lookup
 and affine-set merging are deliberately simple linear/quadratic algorithms.
-No performance claim or general checker-soundness proof is made.
+Self-call comparison uses the available checker depth for each column's
+provenance expansion and structural comparison. Aliases and branch refinements
+are resolved without evaluating applications. Comparison traversals consume
+fuel across fields and report exhaustion separately from `GT`; their failure
+cannot establish nondecrease. No performance claim or general checker-soundness
+proof is made.
 
 The checker CLI prints a resolved-term observation and emits no executable.
 Its `Checked` result is not `Built`. The separate compiler/evaluator commands

@@ -67,8 +67,8 @@ def L.first_row_selected(token,arm,body,rows,types,scope): {==}
 def L.lowering_work_exhaustion(token,columns,rows,types,scope): {==}
 def L.irrefutable_lowering_selects_first(): {==}
 def L.exhaustive_matrix_has_no_missing_branch(): {==}
-def L.erased_alias_stays_erased(name,alias,known): {==}
-def L.alias_preserves_descent_and_identity(name,alias): {==}
+def L.erased_alias_stays_erased(name,alias,known,aliases): {==}
+def L.alias_preserves_descent_and_identity(name,alias,aliases): {==}
 
 def L.default_completes_missing_branch(name,fields,ctors,explicit,absent):
   Equal.cong(Bool,List<&2,S.Token>,found =>
