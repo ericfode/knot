@@ -208,13 +208,13 @@ test('outcomes stay separate; a timeout or host failure never becomes Invalid', 
   assert.throws(() => outcome({ exit: null }, 'Checked'), /Unknown expected outcome/);
 });
 
-test('accepted evidence distinguishes field evaluation, declaration inspection and enum Wasm', () => {
+test('accepted evidence distinguishes field evaluation, declaration inspection and fielded Wasm', () => {
   const accepted = acceptedInventory();
   const fields = accepted.classes.find(c => c.feature === 'fields').stages;
   assert.equal(fields.catalog.status, 'observed-in-successful-fixtures');
   assert.equal(fields.check.status, 'observed-in-successful-fixtures');
   assert.equal(fields.eval.status, 'observed-in-successful-fixtures');
-  assert.equal(fields.wasm.status, 'no-positive-fixture-evidence');
+  assert.equal(fields.wasm.status, 'observed-in-successful-fixtures');
   const lambdas = accepted.classes.find(c => c.feature === 'lambdas').stages;
   assert.equal(lambdas.wasm.status, 'no-positive-fixture-evidence');
   assert.ok(accepted.fixtures.some(f => Object.values(f.stages).some(s => s.outcome === 'Unsupported')));
@@ -286,7 +286,7 @@ test('semantic mutant: bypassing the intrinsic cut is killed by dependency obser
 });
 
 test('semantic mutant: conflating Unsupported with Invalid is killed by classification', async () => {
-  const m = await mutant('census.mjs', "3: 'Unsupported'", "3: 'Invalid'");
+  const m = await mutant('evidence.mjs', "3: 'Unsupported'", "3: 'Invalid'");
   assert.equal(outcome({ exit: 3 }, 'Built'), 'Unsupported');
   assert.throws(() => assert.equal(m.outcome({ exit: 3 }, 'Built'), 'Unsupported'), assert.AssertionError);
 });
