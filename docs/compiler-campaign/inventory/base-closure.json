@@ -5947,7 +5947,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 586,
+          "declarations": 585,
           "base": 93,
           "base_intrinsics": 27,
           "foreign": 7
@@ -8820,19 +8820,15 @@
               "List",
               "Result",
               "U32",
-              "U32.is_eq",
-              "Unit",
               "src/catalog.quantity",
               "src/check.enum_at",
               "src/core.Checked",
               "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.binder",
               "src/scope.extend",
               "src/syntax.Error",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -9478,6 +9474,7 @@
               "String",
               "U32",
               "U32.is_eq",
+              "Unit",
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
@@ -9506,6 +9503,7 @@
               "src/core.invalid",
               "src/patterns.branch",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
@@ -12939,8 +12937,10 @@
               "src/core.exhausted",
               "src/patterns.Fields",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": [
@@ -13081,7 +13081,6 @@
               "src/patterns.Fields",
               "src/patterns.fields",
               "src/patterns.finish",
-              "src/patterns.resolved",
               "src/scope.Scope",
               "src/scope.branch",
               "src/syntax.Error",
@@ -13117,25 +13116,6 @@
               "U32",
               "U32.is_eq",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/patterns.resolved",
-            "file": "src/patterns.bend",
-            "via": "src/patterns.open_fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "Unit",
-              "src/scope.Scope",
-              "src/scope.binder",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -14035,19 +14015,20 @@
           {
             "key": "src/scope.binder",
             "file": "src/scope.bend",
-            "via": "src/check.binding_body",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool.not",
               "Bool.or",
+              "List",
               "Result",
               "String",
               "String.contains",
               "Unit",
+              "src/core.Binding",
               "src/core.invalid",
-              "src/scope.Scope",
               "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -15951,7 +15932,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.header_lines",
+            "via": "src/scope.binder",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16559,7 +16540,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 586,
+          "declarations": 585,
           "base": 93,
           "base_intrinsics": 25,
           "foreign": 7
@@ -19432,19 +19413,15 @@
               "List",
               "Result",
               "U32",
-              "U32.is_eq",
-              "Unit",
               "src/catalog.quantity",
               "src/check.enum_at",
               "src/core.Checked",
               "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.binder",
               "src/scope.extend",
               "src/syntax.Error",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -20090,6 +20067,7 @@
               "String",
               "U32",
               "U32.is_eq",
+              "Unit",
               "src/catalog.field_signature",
               "src/catalog.find_constructor",
               "src/catalog.find_function",
@@ -20118,6 +20096,7 @@
               "src/core.invalid",
               "src/patterns.branch",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
@@ -23551,8 +23530,10 @@
               "src/core.exhausted",
               "src/patterns.Fields",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": [
@@ -23693,7 +23674,6 @@
               "src/patterns.Fields",
               "src/patterns.fields",
               "src/patterns.finish",
-              "src/patterns.resolved",
               "src/scope.Scope",
               "src/scope.branch",
               "src/syntax.Error",
@@ -23729,25 +23709,6 @@
               "U32",
               "U32.is_eq",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/patterns.resolved",
-            "file": "src/patterns.bend",
-            "via": "src/patterns.open_fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "Unit",
-              "src/scope.Scope",
-              "src/scope.binder",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -24647,19 +24608,20 @@
           {
             "key": "src/scope.binder",
             "file": "src/scope.bend",
-            "via": "src/check.binding_body",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool.not",
               "Bool.or",
+              "List",
               "Result",
               "String",
               "String.contains",
               "Unit",
+              "src/core.Binding",
               "src/core.invalid",
-              "src/scope.Scope",
               "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -26563,7 +26525,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.header_lines",
+            "via": "src/scope.binder",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27171,7 +27133,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 516,
+          "declarations": 515,
           "base": 79,
           "base_intrinsics": 27,
           "foreign": 7
@@ -29103,13 +29065,10 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "U32.is_eq",
               "src/catalog.quantity",
               "src/check.enum_at",
-              "src/scope.binder",
               "src/scope.extend",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -29536,6 +29495,7 @@
               "src/core.internal",
               "src/core.invalid",
               "src/patterns.branch",
+              "src/scope.binder",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
@@ -31759,6 +31719,8 @@
               "U32.add",
               "U32.is_ge",
               "src/core.exhausted",
+              "src/scope.binder",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": [
@@ -31842,7 +31804,6 @@
             "dependencies": [
               "src/patterns.fields",
               "src/patterns.finish",
-              "src/patterns.resolved",
               "src/scope.branch",
               "src/syntax.bind"
             ],
@@ -31869,19 +31830,6 @@
               "Bool.or",
               "U32.is_eq",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/patterns.resolved",
-            "file": "src/patterns.bend",
-            "via": "src/patterns.open_fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/scope.binder",
-              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -32500,7 +32448,7 @@
           {
             "key": "src/scope.binder",
             "file": "src/scope.bend",
-            "via": "src/check.binding_body",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33806,7 +33754,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.header_lines",
+            "via": "src/scope.binder",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -34292,7 +34240,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 627,
+          "declarations": 626,
           "base": 134,
           "base_intrinsics": 31,
           "foreign": 7
@@ -37222,19 +37170,16 @@
               "List",
               "Result",
               "U32",
-              "U32.is_eq",
               "Unit",
               "src/catalog.quantity",
               "src/check.enum_at",
               "src/core.Checked",
               "src/core.Datatype",
               "src/scope.Scope",
-              "src/scope.binder",
               "src/scope.extend",
               "src/syntax.Error",
               "src/syntax.Token",
-              "src/syntax.bind",
-              "src/syntax.choose"
+              "src/syntax.bind"
             ],
             "dynamic_calls": [
               "next"
@@ -37863,6 +37808,7 @@
               "Result",
               "U32",
               "U32.is_eq",
+              "Unit",
               "src/catalog.ConstructorRef",
               "src/catalog.FunctionRef",
               "src/catalog.field_signature",
@@ -37895,6 +37841,7 @@
               "src/patterns.Fields",
               "src/patterns.branch",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/scope.find_level",
               "src/scope.live_scope",
               "src/scope.lookup",
@@ -41288,13 +41235,16 @@
               "U32",
               "U32.add",
               "U32.is_ge",
+              "Unit",
               "src/core.Binding",
               "src/core.Term",
               "src/core.exhausted",
               "src/patterns.Fields",
               "src/scope.Scope",
+              "src/scope.binder",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.bind",
               "src/syntax.choose"
             ],
             "dynamic_calls": [
@@ -41429,14 +41379,12 @@
               "List",
               "Result",
               "U32",
-              "Unit",
               "src/core.Binding",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/patterns.Fields",
               "src/patterns.fields",
               "src/patterns.finish",
-              "src/patterns.resolved",
               "src/scope.Scope",
               "src/scope.branch",
               "src/syntax.Error",
@@ -41472,25 +41420,6 @@
               "U32",
               "U32.is_eq",
               "src/syntax.choose"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/patterns.resolved",
-            "file": "src/patterns.bend",
-            "via": "src/patterns.open_fields",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "Unit",
-              "src/scope.Scope",
-              "src/scope.binder",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -42387,18 +42316,19 @@
           {
             "key": "src/scope.binder",
             "file": "src/scope.bend",
-            "via": "src/check.binding_body",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "Bool.not",
               "Bool.or",
+              "List",
               "Result",
               "String.contains",
               "Unit",
+              "src/core.Binding",
               "src/core.invalid",
-              "src/scope.Scope",
               "src/scope.bound",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -44290,7 +44220,7 @@
           {
             "key": "String.contains",
             "file": "Base",
-            "via": "src/imports.header_lines",
+            "via": "src/scope.binder",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

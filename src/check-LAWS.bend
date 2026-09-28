@@ -54,8 +54,8 @@ law no_checker_budget:
 # An unbound dotted binder is a reference to the seed; a bound one rebinds.
 law dotted_binder_rebinds_only_a_bound_name:
   for +at: S.At
-  {(E.binder(E.Scope{Nil{},0,Nil{},True{},Nil{}},S.Token{"a.b",at}),
-    E.binder(E.Scope{[C.Binding{S.Token{"a.b",at},0,1,0,True{},None{}}],1,Nil{},True{},Nil{}},S.Token{"a.b",at}),
-    E.binder(E.Scope{Nil{},0,Nil{},True{},Nil{}},S.Token{"ab",at}))
+  {(E.binder(Nil{},S.Token{"a.b",at}),
+    E.binder([C.Binding{S.Token{"a.b",at},0,1,0,True{},None{}}],S.Token{"a.b",at}),
+    E.binder(Nil{},S.Token{"ab",at}))
    == (Fail{S.Invalid{"check","dotted-binder",at}},Done{Unit{}},Done{Unit{}})
    : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}

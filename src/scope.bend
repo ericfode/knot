@@ -58,13 +58,10 @@ def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
     case Con{C.Binding{name,level,q,type_id,param,known},tail}:
       Bool.or(String.eq(S.text(name),S.text(token)),bound(tail,token))
 
-# The seed resolves a binder before binding it and reads an unbound dotted name
-# as a reference, so a dotted binder can only rebind a name already in scope.
-def binder(scope: Scope, +token: S.Token) -> Result<S.Error,Unit>:
-  match scope:
-    case Scope{bindings,level,from,live,smaller}:
-      S.choose(Result<S.Error,Unit>,Bool.or(Bool.not(String.contains(S.text(token),".")),bound(bindings,token)),u =>
-        Done{Unit{}},u => C.invalid(Unit,"dotted-binder",token))
+# The seed resolves a binder first: an unbound dotted name is a reference.
+def binder(bindings: List<&2,C.Binding>, +token: S.Token) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,Bool.or(Bool.not(String.contains(S.text(token),".")),bound(bindings,token)),u =>
+    Done{Unit{}},u => C.invalid(Unit,"dotted-binder",token))
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:

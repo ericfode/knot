@@ -141,10 +141,8 @@ def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>,
 def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
     case C.Checked{term,+type_id,uses}:
-      # An erased let reads its name as a name; any other let binder is resolved.
-      S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,U32.is_eq(q,0),u => Done{Unit{}},u => E.binder(scope,token)),v =>
       S.bind(C.Datatype,C.Checked,enum_at(types,type_id),definition =>
-        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id)))))
+        S.bind(Unit,C.Checked,G.quantity(token,q,definition),u => next(E.extend(scope,token,q,type_id))))
 
 def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, types: List<&2,C.Datatype>, +scope: E.Scope, +wanted: Maybe<&2,U32>, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding wanted:
@@ -183,10 +181,12 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           call_body(call,token,wanted,current,scope,params => run(n,Arguments{args,params,token},catalog,current,scope))))
     case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
+      # The seed reads an erased let's binder as a name, unresolved.
+      S.bind(Unit,C.Checked,S.choose(Result<S.Error,Unit>,U32.is_eq(q,0),u => Done{Unit{}},u => E.binder(bindings,token)),v =>
         S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))
+              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q)))))))
     case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{types,sigs} _:
       S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
         match_body(binding,token,arms,types,scope,wanted,level =>
