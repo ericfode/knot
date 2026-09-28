@@ -346,6 +346,33 @@
     },
     {
       "expected": {
+        "argv": [
+          "src/compile-cli.bend",
+          "generation.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "executor": "node"
+      },
+      "name": "host-refused-argv",
+      "observed": {
+        "argv": [
+          "src/compile-cli.bend",
+          "generation.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "executor": "node"
+      }
+    },
+    {
+      "expected": {
         "probes": {
           "gc-global-import": {
             "memory": {
@@ -824,7 +851,7 @@
     "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
     "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
-    "tests/compiler-bootstrap/check.py": "400786d135f75839386e0596fb17348583cc346d61287fb0d9128311920092f4",
+    "tests/compiler-bootstrap/check.py": "c1507662a6f30eabd6e661932264ed9515effa3b27461dcec9611802d6cd76d4",
     "tests/compiler-bootstrap/host.mjs": "3fbafc58fc3bf0a03869083efcbbc49a4f4e0bc735e2797bd61429bce1ac6982",
     "tests/compiler-bootstrap/manifest.json": "85b003e4da5d47d9de34db134f6b1024226a9b2628a3f5354ebeba61a7c0ecdb",
     "tests/compiler-checker/cases.json": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
@@ -927,7 +954,8 @@
       "name": "not-run-after-reached",
       "outcome": "rejected",
       "violations": [
-        "e2e2.self-parse: not run although prerequisite e2e2.compile is reached"
+        "e2e2.self-parse: not run although prerequisite e2e2.compile is reached",
+        "e2e2.compile: executed argv None is not ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
       ]
     },
     {
@@ -939,6 +967,28 @@
       "outcome": "rejected",
       "violations": [
         "e2e2.compile: argv is not the one generation argv"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "e2e2.compile: executed argv",
+      "killed_for_reason": true,
+      "name": "parser-blocker-argv-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: executed argv ['../c1', 'src/parse-cli.bend', 'generation.wasm'] is not ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "e2e3.a2: executed argv",
+      "killed_for_reason": true,
+      "name": "a2-blocker-argv-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: executed argv ['../c1', 'src/compile-cli.bend', 'generation.wasm'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
       ]
     },
     {
@@ -961,7 +1011,8 @@
       "outcome": "rejected",
       "violations": [
         "generation contracts differ between e2e3.a2 and e2e3.a3",
-        "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+        "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
       ]
     },
     {
@@ -979,6 +1030,9 @@
         "e2e3.a3: maxima [] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
         "e2e3.a3: entry, bundle root or target differs from src/CONTRACT.json",
         "e2e2.compile: argv is not the one generation argv",
+        "e2e2.compile: executed argv ['../c1', 'src/parse-cli.bend', 'generation.wasm'] is not ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: executed argv ['../c1', 'src/compile-cli.bend', 'generation.wasm'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "e2e3.a2: artifact of 4096 bytes exceeds output_bytes 1048576",
         "e2e3.a3: artifact of 4096 bytes exceeds output_bytes 1048576"
       ]
@@ -998,6 +1052,9 @@
         "e2e3.a3: maxima [65536, 512, 512, 4096, 65536] are not src/CONTRACT.json maximum_overrides [65536, 4096, 4096, 4096, 1048576]",
         "e2e3.a3: entry, bundle root or target differs from src/CONTRACT.json",
         "e2e2.compile: argv is not the one generation argv",
+        "e2e2.compile: executed argv ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '512', '512', '4096', '65536'] is not ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: executed argv ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '512', '512', '4096', '65536'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm', '65536', '512', '512', '4096', '65536'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "e2e3.a2: artifact of 4096 bytes exceeds output_bytes 1048576",
         "e2e3.a3: artifact of 4096 bytes exceeds output_bytes 1048576"
       ]
@@ -1039,6 +1096,50 @@
     {
       "exit": 1,
       "expected_exit": 1,
+      "expected_violation": "e2e3.a2: executed argv",
+      "killed_for_reason": true,
+      "name": "a2-result-argv-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: executed argv ['../c1', 'src/compile-cli.bend', 'generation.wasm'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "e2e3.a2: executed argv",
+      "killed_for_reason": true,
+      "name": "a2-result-executor-forged",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a2: executed argv ['../check-cli', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "e2e3.a3: executed argv",
+      "killed_for_reason": true,
+      "name": "a3-result-argv-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "e2e3.a3: executed argv",
+      "killed_for_reason": true,
+      "name": "a3-result-argv-missing",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: executed argv None is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
       "expected_violation": "seed-reserved",
       "killed_for_reason": true,
       "name": "argv-seed-reserved",
@@ -1047,7 +1148,9 @@
         "e2e3.a2: argv ['--threads', '1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "e2e3.a2: argv uses seed-reserved flags ['--threads']",
         "e2e3.a3: argv ['--threads', '1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
-        "e2e3.a3: argv uses seed-reserved flags ['--threads']"
+        "e2e3.a3: argv uses seed-reserved flags ['--threads']",
+        "e2e3.a2: executed argv ['../c1', '--threads', '1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['--threads', '1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
       ]
     },
     {
@@ -1180,12 +1283,73 @@
     {
       "exit": 1,
       "expected_exit": 1,
+      "expected_violation": "e2e3.a3: executed argv",
+      "killed_for_reason": true,
+      "name": "a3-io-abi-pending-argv-bare",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
       "expected_violation": "diagnostics differ from C1",
       "killed_for_reason": true,
       "name": "diagnostic-tail",
       "outcome": "rejected",
       "violations": [
         "e2e3.conformance: a3 diagnostics differ from C1 at tests/subsets/s1/affine-reuse.bend"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "are not a2 and a3",
+      "killed_for_reason": true,
+      "name": "conformance-a3-missing",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.conformance: generations ['a2'] are not a2 and a3",
+        "e2e3.conformance: a3 diagnostics differ from C1 at the case count"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "are not a2 and a3",
+      "killed_for_reason": true,
+      "name": "conformance-a2-missing",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.conformance: generations ['a3'] are not a2 and a3",
+        "e2e3.conformance: a2 diagnostics differ from C1 at the case count"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "are not a2 and a3",
+      "killed_for_reason": true,
+      "name": "conformance-generations-empty",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.conformance: generations [] are not a2 and a3",
+        "e2e3.conformance: a2 diagnostics differ from C1 at the case count",
+        "e2e3.conformance: a3 diagnostics differ from C1 at the case count"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "expected_violation": "are not a2 and a3",
+      "killed_for_reason": true,
+      "name": "conformance-generations-absent",
+      "outcome": "rejected",
+      "violations": [
+        "e2e3.conformance: generations [] are not a2 and a3",
+        "e2e3.conformance: a2 diagnostics differ from C1 at the case count",
+        "e2e3.conformance: a3 diagnostics differ from C1 at the case count"
       ]
     },
     {
@@ -1331,6 +1495,9 @@
         "e2e3.a3: argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "e2e3.a3: module loading False differs from src/CONTRACT.json (True)",
         "e2e2.compile: argv is not the one generation argv",
+        "e2e2.compile: executed argv ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', '--bundle', 'lib', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: executed argv ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', '--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "loader audit is unavailable; module loading requires a recorded or blocked audit"
       ]
     },
@@ -1348,6 +1515,9 @@
         "e2e3.a3: argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not the one generation argv ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "e2e3.a3: module loading True differs from src/CONTRACT.json (False)",
         "e2e2.compile: argv is not the one generation argv",
+        "e2e2.compile: executed argv ['../c1', '--bundle', 'lib', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', 'src/parse-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a2: executed argv ['../c1', '--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['../c1', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
+        "e2e3.a3: executed argv ['--bundle', 'lib', 'src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576'] is not ['src/compile-cli.bend', 'generation.wasm', '65536', '4096', '4096', '4096', '1048576']",
         "audit recorded although src/CONTRACT.json advertises no --audit-bundle"
       ]
     }
