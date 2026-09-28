@@ -710,7 +710,8 @@ so their `A`-typed nodes are `none`.
 lane and requires:
 - every golden source's hash, and a byte-identical re-execution of the seed and
   eval-cli observations frozen in `golden/expectations.json` (a stdout that is not
-  UTF-8 kept as hex; a D20 golden's Bun cross-check too);
+  UTF-8 kept as hex; a native-lane Program's Bun lane and each frozen Book
+  invocation's eval-cli answer too);
 - the registry re-derived from the literals snapshot;
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;

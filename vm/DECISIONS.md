@@ -202,13 +202,16 @@ follows it (§5, §10, §11) without a new image header word.
    The bootstrap gate enforces D4 only on `src/`, so it passes, but its corpus now
    records these outcomes: its `progress.json` and `reference.json` receipts drift
    semantically, and this increment leaves them unrefreshed as shared receipts.
-   Measured by the gate runner on this branch after merging main (`481bb31`)
-   against main's committed receipt, the parse histogram moves from 785 to 876
-   files: `Parsed` 144 to 162, `Unsupported lex literal` 185 to 210,
-   `Unsupported parse declaration-form` 239 to 280, `parameter-type` 57 to 58,
+   Measured by the gate runner on this branch in review round 4 (after `fc17357`)
+   against main's committed receipt, the parse histogram moves from 785 to 882
+   files: `Parsed` 144 to 162, `Unsupported lex literal` 185 to 213,
+   `Unsupported parse declaration-form` 239 to 282, `parameter-type` 57 to 59,
    `Invalid parse expected-=` 2 to 6 and `Invalid parse function-result` 8 to 10.
    Exactly these six goldens account for the new Invalid rows; the 23 goldens of
-   review round 1, the 3 of round 2 and the 4 of round 3 all end Unsupported. **When the coordinator refreshes these
+   review round 1, the 3 of round 2, the 4 of round 3 and the 5 of round 4 all
+   end Unsupported. The six rows added since round 3's count of 876 (three `lex
+   literal`, two `declaration-form`, one `parameter-type`) are round 4's five
+   goldens and round 3's later `print-non-scalar-wide`. **When the coordinator refreshes these
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
