@@ -4,13 +4,13 @@ Profile `knot-structural-terms-1`, seed Bend 2.0.29 at
 `574b6d39a235b539eb19a5c532993a0abb3d11ad`. This extends the declaration catalog
 and preserves the `knot-enum-1` source-to-Wasm subprofile.
 
-Extend the existing monomorphic catalog with constructor arguments and flat
+Extend the existing monomorphic catalog with constructor arguments and nested
 constructor patterns whose fields are plain or `+` binders, including ordered
 multi-scrutinee matches. Rows preserve source order; duplicate constructor
 rows select the first body. Every argument is
 checked against its field's type and demand; erased arguments are checked but
-not executed. Constructor expressions still require an expected type. Nested
-constructor patterns and recursion remain explicit later capabilities.
+not executed. Constructor expressions still require an expected type. Nested constructor rows specialize their fields before selecting a body;
+structural recursion follows its separate descent contract.
 
 A pattern field receives the product of declaration quantity and scrutinee
 quantity. A `+` pattern mark may promote quantity 1 over Data to quantity 2;

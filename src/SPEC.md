@@ -3,7 +3,7 @@
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
 [the field contract](../research/compiler-fields/SPEC.md). That extension accepts
-constructor arguments and flat field binders, validates quantities and ordered
+constructor arguments and nested constructor patterns, validates quantities and ordered
 matching, and evaluates finite live-field trees. It does not provide owned
 runtime storage. The default emitter rejects every fielded book after body
 checking. The separately selected `knot-fields-wasm-1` profile below lowers those
@@ -13,8 +13,7 @@ The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
 adds structural self-calls to checking and evaluation: the first checked argument
 must be a reference to a field of parameter 0, directly or through further
 matches. Other self-calls report `Unsupported check recursive-call`; forward
-and mutual calls retain their existing classification. Nested patterns and
-structured host arguments remain unsupported. Recursive Wasm lowering is not
+and mutual calls retain their existing classification. Structured host arguments remain unsupported. Recursive Wasm lowering is not
 yet a qualified capability of `knot-fields-wasm-1`.
 References to nullary-only checking below describe the retained enum subprofile.
 
@@ -147,7 +146,7 @@ consulted 2026-09-26. Only the stated MVP subset is used.
 This profile accepts the same completely checked acyclic books as
 `knot-structural-terms-1`: monomorphic constructor fields, flat field patterns,
 parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
-checker bypass. Recursion, nested patterns, imports and the other unsupported
+checker bypass. Recursion, imports and the other unsupported
 forms remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
 a checked book, as does the original `wasm.emit` entry. `emit` still selects
 `Enum{}`; `check.enum_profile` and its existing capability law remain unchanged.
