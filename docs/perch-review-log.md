@@ -1135,3 +1135,29 @@ binder position (let, arm, field, reusable, typed) against earlier, later and
 other-module constructors. Give every recorded digest a reader and a
 changed-byte control. Run the manifest preflight after growing a file already
 near its group bound. No elapsed time was measured.
+
+## 2026-09-28 — Modules review round 4: canonical spellings, quoted bodies, result types, outputs
+
+The coordinator's six confirmed findings are addressed after seed or literal
+freezes; see [the review record](../tests/compiler-modules/REVIEW-ROUND-4.md).
+They were missed defects. Containment and identity compared relative spellings
+that normalization cannot make canonical when they climb above the working
+directory; the seed compares realpaths. A pre-lexer line classifier judged text
+inside a multi-line string. The result-type rule reported Invalid for any
+continuation, unlike its parameter twin. The output guard checked only the entry
+string. Checking the containment repair against the seed's rule
+(`realpath(BEND_LIB) + "/"`) exposed two more spellings, `--bundle .` and
+`--bundle /`; both were frozen (`c19600f`, `dba4614`) before repair. Reviewing
+the function tail exposed a spaced `- >` arrow Knot accepted and the seed
+rejects, frozen with the result-type cases.
+
+One avoidable rework: the documentation commit edited `src/CONTRACT.json`, whose
+digest the census records, after `census:approve` had run, so the census gate
+reported a stale inventory on `6062ec4`. `npm run census` then `census --check`
+after the last contract or source edit prevents it.
+
+Prevention: enumerate path spellings by basis (absolute, relative,
+climbing, `.`, `/`) for every identity, containment and write decision, and
+derive each rule from the seed's realpath comparison. Freeze multi-line lexical
+constructs beside any line-level classifier. Give every classifier that says
+Invalid a seed probe for each token that can follow. No elapsed time was measured.
