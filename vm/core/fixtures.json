@@ -601,6 +601,48 @@
     "cause": "heap"
    },
    "basis": "about 32,000 Activations of 32 bytes fill 1 MiB"
+  },
+  {
+   "name": "nat-pred-frames",
+   "image": "core/nat-pred-big",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 24,
+    "heap": 4294967296
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 3,
+    "cause": "frames",
+    "calls": 1,
+    "top": 65560,
+    "bump": 16842800
+   },
+   "basis": "Section 5: the image ends at byte 4,664, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752. A cell is 2 header words plus its payload, rounded to a power of two of at least 4 words (check-core's `cell`). Boot pushes Top(0) (3 words, section 6), so top = F0 + 12, and materializes the pool's Big 2^31 + 1 (payload 1: 16 B). main's entry is a tail entry below Top (section 6.2): no Call frame; its Activation (owner, depth and 2 slots: payload 4, 6 words, so 8) is 32 B, so bump = H0 + 48. Eval Let pushes Bind (top F0 + 24); its Return pops it and pushes Scope (F0 + 24). Eval Case selects Succ (section 6.1: selection allocates nothing), pushes Scope(depth), and only then allocates the predecessor 2^31, a Big of 16 B (vm-spec D17: the allocation follows the push). Completed, the run ends at H0 + 64, which check-core's section 5 model (`ceiling_run`) also gives for this plan. With a 24-byte frame region the Case's Scope needs F0 + 36: Exhausted kind 3 (frames) before anything is written, so the predecessor is never made: top = F0 + 24 = 65,560 and bump = H0 + 48 = 16,842,800. A VM that made the predecessor before the push would stop with bump H0 + 64"
+  },
+  {
+   "name": "nat-pred-heap",
+   "image": "core/nat-pred-big",
+   "argv": [
+    "main",
+    "1000000"
+   ],
+   "limits": {
+    "frames": 16777216,
+    "heap": 48
+   },
+   "dump": {
+    "outcome": "Exhausted",
+    "kind": 2,
+    "cause": "heap",
+    "calls": 1,
+    "top": 65572,
+    "bump": 16842800
+   },
+   "basis": "Section 5: the image ends at byte 4,664, so F0 = 65,536 and H0 = F0 + 16 MiB = 16,842,752. A cell is 2 header words plus its payload, rounded to a power of two of at least 4 words (check-core's `cell`). Boot pushes Top(0) (3 words, section 6), so top = F0 + 12, and materializes the pool's Big 2^31 + 1 (payload 1: 16 B). main's entry is a tail entry below Top (section 6.2): no Call frame; its Activation (owner, depth and 2 slots: payload 4, 6 words, so 8) is 32 B, so bump = H0 + 48. Eval Let pushes Bind (top F0 + 24); its Return pops it and pushes Scope (F0 + 24). Eval Case selects Succ (section 6.1: selection allocates nothing), pushes Scope(depth), and only then allocates the predecessor 2^31, a Big of 16 B (vm-spec D17: the allocation follows the push). Completed, the run ends at H0 + 64, which check-core's section 5 model (`ceiling_run`) also gives for this plan. With a 48-byte heap the pool Big and the Activation fill it (a cell may end at HL); the Case's Scope is pushed (top = F0 + 36 = 65,572), and the predecessor's 16 B are Exhausted kind 2 (heap) with bump = H0 + 48 = 16,842,800, as the section 5 model stopped at the heap limit gives. A VM that made the predecessor before the push would stop with top F0 + 24"
   }
  ],
  "admitted": {
@@ -1082,6 +1124,24 @@
      "calls": 2
     },
     "basis": "The control: let c = Chr{id(2^31)} in case c: Chr{w} -> U32.is_eq(w, 2^31). The Big code passes the inspection, and its value reaches the prim unchanged through Chr and the Case: True{} (Bool is type 0) after 2 entries. This pins the value, not the cell: a VM that re-boxed the code would also pass"
+   },
+   {
+    "name": "nat-pred-big",
+    "image": "core/nat-pred-big",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t1\t1\tOn{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 1
+    },
+    "basis": "vm-spec D17's shape: main = let n = 2^31 + 1 in case n: Zero -> Off{}, Succ{p} -> On{} (Nat is type 0, Flag type 1, representation Nat 0). Section 6.1 selects Succ and binds the predecessor 2^31, a Big; the arm is On{} after the one entry of main. The control for the two limited rows nat-pred-frames and nat-pred-heap"
    }
   ]
  }

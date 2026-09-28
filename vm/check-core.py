@@ -12,9 +12,10 @@ Checks, in order:
   invocation vm-expected.json freezes beside them (SPEC section 8's walk);
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
-  frame exhaustion, invocation errors), state-dump rows and lowered limits;
+  frame exhaustion, invocation errors), state-dump rows and lowered limits
+  (among them where a Nat Case's predecessor is made against its Scope push);
   and Books whose frozen run the reference evaluation (vm/evaluate.py) must
-  also give (Chr's operand);
+  also give (Chr's operand, a Big predecessor);
 - the ceiling fixtures: Books and a Program whose bump pointer ends near or
   exactly at 4 GiB, described exactly or completed, or Exhausted kind 2 (heap)
   where a cell or the text would end beyond it. Each row's bump pointer and
@@ -236,7 +237,8 @@ def cell(payload: int) -> int:
 
 
 class Beyond(Exception):
-    """A cell that would end beyond 4 GiB (section 5): the machine stops, bump unchanged."""
+    """A cell that would end beyond 4 GiB, or a lowered heap limit (section 5): the machine
+    stops, bump unchanged."""
 
     def __init__(self, bump: int):
         super().__init__(bump)
@@ -246,7 +248,7 @@ class Beyond(Exception):
 TERMINAL = 'terminal'  # a Program's terminal continuation
 
 
-def ceiling_run(plan: dict, image: bytes) -> tuple[int, str | None]:
+def ceiling_run(plan: dict, image: bytes, heap_bytes: int = 1 << 32) -> tuple[int, str | None]:
     """(bump, line) when a ceiling image finishes, from SPEC section 5 alone.
 
     The heap starts at H0: the image at byte 4096, the frame region from the next 64 KiB
@@ -258,15 +260,17 @@ def ceiling_run(plan: dict, image: bytes) -> tuple[int, str | None]:
     continuation `Emit{x}`. Nothing is freed (choice 1), so the bump pointer is the sum.
     A cell may end exactly at 4 GiB; one that would end beyond raises `Beyond`. A String
     here is its code count, since only sizes reach the heap. A Book's line is section 8's
-    rendering, by the reference evaluation's `describe`; a Program's Emit has none."""
+    rendering, by the reference evaluation's `describe`; a Program's Emit has none. A heap
+    lowered to `heap_bytes` (section 5's test limit) ends at H0 + heap_bytes instead."""
     rep, fns = plan['representation'], plan['functions']
     big, scon = cell(1), cell(4)  # a Big scalar; a String cell (type, tag, Char, tail)
     end = 4096 + len(image)
     require(end % 65536, 'the image does not end on a 64 KiB boundary, where "next" reads two ways')
     heap = [(end // 65536 + 1) * 65536 + (16 << 20)]
+    limit = min(1 << 32, heap[0] + heap_bytes)
 
     def take(n: int):
-        if heap[0] + n > 1 << 32:
+        if heap[0] + n > limit:
             raise Beyond(heap[0])
         heap[0] += n
 
@@ -780,12 +784,20 @@ def main() -> int:
              'argv': [staged(by_name[n]['image']), *by_name[n]['argv']], 'trace': 'yields'} for n in fixtures['dumps']]
     jobs += [{'id': l['name'], 'wasm': str(test), 'files': {staged(l['image']): str(sandbox / staged(l['image']))},
               'argv': [staged(l['image']), *l['argv']], 'limits': l['limits']} for l in fixtures['limited']]
+    for l in fixtures['limited']:  # a pinned bump under a lowered heap: section 5's model stops there too
+        if l['dump'].get('cause') == 'heap' and 'bump' in l['dump']:
+            plan, image = json.loads((HERE / f"{l['image']}.plan.json").read_text()), (HERE / f"{l['image']}.kimg").read_bytes()
+            try:
+                stop = ceiling_run(plan, image, l['limits']['heap'])
+            except Beyond as beyond:
+                stop = beyond.bump
+            require(stop == l['dump']['bump'], f"limited {l['name']}: frozen bump {l['dump']['bump']}, section 5 gives {stop}")
     dumped = harness(jobs)
     dumps = []
     for name, want in [*fixtures['dumps'].items(), *((l['name'], l['dump']) for l in fixtures['limited'])]:
         got, state = dumped[name], dumped[name]['state']
         seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'],
-                'calls': state['calls'], 'yields': got['yields']}
+                'calls': state['calls'], 'yields': got['yields'], 'top': state['top'], 'bump': state['bump']}
         require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
         dumps.append({'name': name, **{k: seen[k] for k in want}})
     record['fixtures'] = {'runs': core, 'dumps': dumps}
