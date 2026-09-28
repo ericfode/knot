@@ -264,7 +264,12 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual('blocked', got[-1]['status'])
 
     def test_all_registered_gates_and_required_edges(self):
-        self.assertEqual(15, len(run.GATES))
+        names = [g.name for g in run.GATES]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertLessEqual({'frontend', 'checker', 'structural', 'fields', 'wasm', 'wasm-trust',
+                              'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
+                              'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
+                              'bootstrap', 'classification', 'modules'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})

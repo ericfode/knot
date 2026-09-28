@@ -23,7 +23,7 @@
  // Parser
 -export type Parse = { book: Book; dir: string; str: string; pos: number; stk: Array<[Name, number]>; frs: number; ns: string; al: Record<Name, Name>; };
 +export type ParseObserver = {
-+  declaration?: (kind: string, name: Name, beg: number, end: number, term?: Body, tele?: LTerm[]) => void;
++  declaration?: (kind: string, name: Name, beg: number, end: number, term?: Body, tele?: LTerm[], bodyBeg?: number) => void;
 +  call?: (term: LTerm, beg: number, end: number) => void;
 +  externalLaw?: (name: Name, resolved: Name, beg: number, end: number) => Def | undefined;
 +  externalConstructor?: (name: Name, fields: number) => Ctr | null;
@@ -232,7 +232,7 @@
    const law = tld?.$ === "Def" && tld.v === null && tld.b !== true && !tld.i ? tld : undefined;
    const k   = law ? q : parse_fresh(p, nm);
    const un  = parse_take(p, "?") || u;
-@@ -2396,25 +2282,28 @@
+@@ -2396,25 +2282,29 @@
    const tele = parse_tele(p, ")", tk);
    parse_skip(p);
    let def: Def;
@@ -258,24 +258,26 @@
    }
    def.u ||= un;
    parse_eat(p, ":");
++  const bodyBeg = p.pos; // Knot: exclusive signature end, before body trivia.
    if (parse_at_word(p, "import")) {
 -    if (def.x > 0) {
 +    if (def.x > 0 && Number.isFinite(def.x)) {
        parse_fail(p, "a body (a template is not foreign)");
      }
      def.i = [];
-@@ -2432,18 +2321,24 @@
+@@ -2432,18 +2322,24 @@
      }
    } else {
      const vars = tele.map((cell): PVar => ({ $: "PVar", k: cell[1], i: cell[2], q: Lone(), s: cell[4] }));
 -    def.v = term_higher(term_lower(term_higher(body_flatten(parse_body(p), vars, () => p.frs++))));
+-  }
 +    const body = parse_body(p);
 +    p.observer?.declaration?.(law ? "law_fill" : "definition", nm, p.declBeg ?? 0,
-+      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]));
++      p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, body, signature ? [signature] : tele.map((cell) => cell[3]), bodyBeg);
 +    def.v = term_higher(term_lower(term_higher(body_flatten(body, vars, () => p.frs++))));
-   }
++  }
 +  if (def.i) p.observer?.declaration?.("foreign_definition", nm, p.declBeg ?? 0,
-+    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]));
++    p.pos === p.skipEnd ? p.tokenEnd ?? p.pos : p.pos, undefined, signature ? [signature] : tele.map((cell) => cell[3]), bodyBeg);
    book.order.push(k);
  }
  
@@ -292,7 +294,7 @@
      p.frs = 0;
      parse_close(p, 0);
      if (parse_take(p, "@")) {
-@@ -2487,6 +2382,8 @@
+@@ -2487,6 +2383,8 @@
          cs.push(ctr);
          book.ctrs[c] = ctr;
        }
@@ -301,7 +303,7 @@
        book.order.push(k);
        continue;
      }
-@@ -2529,6 +2426,8 @@
+@@ -2529,6 +2427,8 @@
        const T = cls.reduceRight((T, [all, q, c, i, A, s]) =>
          all ? All(q, c, i, A, T, s) : App(App(Ref("Exists", s), A, s), Lam(c, i, T, s), s), parse_block(p));
        const n = cls.findIndex((c) => !c[0]);

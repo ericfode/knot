@@ -1,0 +1,5519 @@
+{
+  "suite": "compiler-generics",
+  "increment": "6: generics and quantity arguments (S2)",
+  "basis": "Frozen before implementation (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "commands": {
+    "cwd": "repository root",
+    "env": {
+      "BEND_NO_TELEMETRY": "1"
+    },
+    "check_only": "bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-generics/fixtures/<case>.bend --check-only",
+    "run": "bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-generics/fixtures/<case>.bend",
+    "call": "bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts .local/compiler-generics/wrappers/<case>--<entry>--<args>.bend",
+    "wrapper": "import <fixture, relative to the wrapper> as F; def main() -> F.<result>: F.<entry>(F.<arg>{}, ...)",
+    "regenerate": "python3 tests/compiler-generics/regen.py [--write]"
+  },
+  "requirements": {
+    "agree": "Knot checks the fixture (exit 0), and for every call in observations its evaluator and its emitted Wasm return the recorded result tag.",
+    "agree-or-unsupported": "Either agree, or exit 3 with an Unsupported diagnostic and no artifact. Invalid (exit 2) is never acceptable: the seed accepts.",
+    "unsupported": "Exit 3; stderr starts with the pinned diagnostic; no artifact is written.",
+    "reject": "Never Checked or Built; no artifact is written. With exit pinned, only that outcome class qualifies; with diagnostic pinned, stderr starts with it. Otherwise exit 2 or 3."
+  },
+  "cases": [
+    {
+      "name": "box-unbox",
+      "file": "fixtures/box-unbox.bend",
+      "class": "positive",
+      "feature": "generic-datatypes",
+      "intent": "One erased type parameter, one instantiation, one generic match.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "box-instances",
+      "file": "fixtures/box-instances.bend",
+      "class": "positive",
+      "feature": "instantiation",
+      "intent": "unbox instantiated at Flag, Color and Box<A>; unbox2 forwards its own type parameter.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "both",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "pair-swap",
+      "file": "fixtures/pair-swap.bend",
+      "class": "positive",
+      "feature": "generic-datatypes",
+      "intent": "Two type parameters permuted by swap; fst drops the other affine field.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "second",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Color"
+        },
+        {
+          "name": "first",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "opt-default",
+      "file": "fixtures/opt-default.bend",
+      "class": "positive",
+      "feature": "generic-datatypes",
+      "intent": "A Maybe-like option; or_else drops the default when a value is present.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "pick",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "seq-parity",
+      "file": "fixtures/seq-parity.bend",
+      "class": "positive",
+      "feature": "recursive-generics",
+      "intent": "A List-like family walked by structural recursion under an erased type parameter.",
+      "twin": null,
+      "requires": [
+        "fields",
+        "recursion"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Parity"
+        },
+        {
+          "name": "count",
+          "params": [
+            "Flag"
+          ],
+          "result": "Parity"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed. Blocked until increment 1 (recursion) is available."
+      }
+    },
+    {
+      "name": "quantity-parity",
+      "file": "fixtures/quantity-parity.bend",
+      "class": "positive",
+      "feature": "quantity-polymorphism",
+      "intent": "One Kind(a) walk instantiated at &2 over Data and at &1 over a Type family; compact <&2,Flag> spelling.",
+      "twin": null,
+      "requires": [
+        "fields",
+        "recursion"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Parity"
+        },
+        {
+          "name": "data",
+          "params": [
+            "Flag"
+          ],
+          "result": "Parity"
+        },
+        {
+          "name": "boxed",
+          "params": [
+            "Flag"
+          ],
+          "result": "Parity"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed. Blocked until increment 1 (recursion) is available."
+      }
+    },
+    {
+      "name": "quantity-meet",
+      "file": "fixtures/quantity-meet.bend",
+      "class": "positive",
+      "feature": "quantity-meet",
+      "intent": "Kind(a <&> b) at &2 and &2 is Data, so a + binder reuses the pair.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "keep",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "quantity-short-form",
+      "file": "fixtures/quantity-short-form.bend",
+      "class": "positive",
+      "feature": "quantity-polymorphism",
+      "intent": "Seq<Flag> is Seq<&1, Flag> and +Seq<Flag> is Seq<&2, Flag>, which a + binder may reuse.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "single",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "double",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "reusable-generic",
+      "file": "fixtures/reusable-generic.bend",
+      "class": "positive",
+      "feature": "reusable-binders",
+      "intent": "A + binder at an erased Data type is copied into both fields of a pair.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "echo",
+          "params": [
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "data-cell",
+      "file": "fixtures/data-cell.bend",
+      "class": "positive",
+      "feature": "data-families",
+      "intent": "A Data family over a Data parameter is Data; a + binder reads it twice.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "hold",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "erased-value-arg",
+      "file": "fixtures/erased-value-arg.bend",
+      "class": "positive",
+      "feature": "erasure",
+      "intent": "An erased value argument is checked, not run; two erased uses and one live use of c are allowed.",
+      "twin": null,
+      "requires": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "spend",
+          "params": [
+            "Flag",
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "generic-let",
+      "file": "fixtures/generic-let.bend",
+      "class": "edge",
+      "feature": "generic-datatypes",
+      "intent": "A local binding annotated with an applied generic type, Box<Flag>.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "hold",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "shadow-type-name",
+      "file": "fixtures/shadow-type-name.bend",
+      "class": "edge",
+      "feature": "binding-and-scope",
+      "intent": "A type parameter named Flag shadows the datatype Flag; pick runs at Color.",
+      "twin": null,
+      "requires": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "paint",
+          "params": [
+            "Color"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed. Type names resolve to binders, not display names."
+      }
+    },
+    {
+      "name": "quantity-zero",
+      "file": "fixtures/quantity-zero.bend",
+      "class": "edge",
+      "feature": "quantity-polymorphism",
+      "intent": "The seed accepts a Data element type at Kind(&0) when abstract code uses the element once.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "zero",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid (D7 fixes the seed as reference): Knot must not reject &0 instantiation as Invalid."
+      }
+    },
+    {
+      "name": "quantity-data-fits-type",
+      "file": "fixtures/quantity-data-fits-type.bend",
+      "class": "edge",
+      "feature": "quantity-polymorphism",
+      "intent": "Data fits Kind(&1): a Data element type instantiates an affine quantity.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "one",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "forward-generic-types",
+      "file": "fixtures/forward-generic-types.bend",
+      "class": "edge",
+      "feature": "binding-and-scope",
+      "intent": "Families named before their declaration: a plain family in short form, a Kind(a) family fully spelled.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "late",
+          "params": [
+            "Flag",
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "phantom-type",
+      "file": "fixtures/phantom-type.bend",
+      "class": "edge",
+      "feature": "phantom-parameters",
+      "intent": "Tagged<A> stores no A; retag changes only the erased type index.",
+      "twin": null,
+      "requires": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "cross",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "erased-interleaved",
+      "file": "fixtures/erased-interleaved.bend",
+      "class": "edge",
+      "feature": "erasure",
+      "intent": "Erased parameters between live ones; only live positions carry values.",
+      "twin": null,
+      "requires": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Color"
+        },
+        {
+          "name": "last",
+          "params": [
+            "Flag",
+            "Color",
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "middle",
+          "params": [
+            "Flag",
+            "Color",
+            "Flag"
+          ],
+          "result": "Color"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed. Host ordinals are the live arguments only; erased positions are omitted."
+      }
+    },
+    {
+      "name": "closure-apply",
+      "file": "fixtures/closure-apply.bend",
+      "class": "boundary",
+      "feature": "stage-boundary",
+      "intent": "A generic higher-order apply over a top-level function value.",
+      "twin": null,
+      "requires": [
+        "closures"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t",
+        "knot_expected": true,
+        "justification": "Seed-valid, but function values are closures (increment 7); the first unsupported form is the arrow type in the parameter list of apply, which tests/compiler-structural/function-field already pins as parameter-type."
+      }
+    },
+    {
+      "name": "template-twice",
+      "file": "fixtures/template-twice.bend",
+      "class": "boundary",
+      "feature": "stage-boundary",
+      "intent": "A ~ template parameter applied twice.",
+      "twin": null,
+      "requires": [
+        "templates"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t",
+        "knot_expected": true,
+        "justification": "Seed-valid, but templates belong to S3; the first unsupported form is the ~ binder in the parameter list of twice. Code reconciled by the coordinator to the classify increment's template-binder (src/parse.bend template_parameter, tests/subsets/classification-cases.json); the originally proposed 'template' prefix could never match."
+      }
+    },
+    {
+      "name": "match-erased-type",
+      "file": "fixtures/match-erased-type.bend",
+      "class": "boundary",
+      "feature": "erasure",
+      "intent": "A match on an erased type parameter whose only arm is a variable binds and inspects nothing.",
+      "twin": null,
+      "requires": [
+        "variable-pattern"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree-or-unsupported",
+        "justification": "Seed-valid, so erased-scrutinee is not a valid reason; variable patterns are increment 3, so Unsupported is allowed and Invalid is not (D4)."
+      }
+    },
+    {
+      "name": "alias-type",
+      "file": "fixtures/alias-type.bend",
+      "class": "boundary",
+      "feature": "type-aliases",
+      "intent": "A type-returning definition used as a parameter type: Wrap(Flag) unfolds to Box<Flag>.",
+      "twin": null,
+      "requires": [
+        "fields",
+        "type-level-definition"
+      ],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "run",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree-or-unsupported",
+        "justification": "Seed-valid type-level computation; increment 6 may defer it as Unsupported but may never report it Invalid (D4)."
+      }
+    },
+    {
+      "name": "affine-dup-type",
+      "file": "fixtures/affine-dup-type.bend",
+      "class": "negative",
+      "feature": "reusable-binders",
+      "intent": "An affine value of an erased Type is copied into both fields.",
+      "twin": "reusable-generic",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- observed : x (consumed more than once)\n",
+        "Location: dup\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+        "knot_expected": true,
+        "justification": "The seed rejects the second use of affine x; the enum profile already names this affine-reuse."
+      }
+    },
+    {
+      "name": "affine-dup-data",
+      "file": "fixtures/affine-dup-data.bend",
+      "class": "negative",
+      "feature": "reusable-binders",
+      "intent": "-A: Data alone does not make x reusable; only a + binder does.",
+      "twin": "reusable-generic",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- observed : x (consumed more than once)\n",
+        "Location: dup\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+        "knot_expected": true,
+        "justification": "Data licenses copies only through a + binder; an unmarked x stays affine even at a Data type."
+      }
+    },
+    {
+      "name": "reusable-type-param",
+      "file": "fixtures/reusable-type-param.bend",
+      "class": "negative",
+      "feature": "reusable-binders",
+      "intent": "A + binder whose type is an erased parameter of kind Type.",
+      "twin": "reusable-generic",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "Location: dup\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t",
+        "knot_expected": true,
+        "justification": "A + binder requires a Data type; reusable-type is the existing code for a reusable parameter whose type is not Data."
+      }
+    },
+    {
+      "name": "reusable-kind-var",
+      "file": "fixtures/reusable-kind-var.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A + binder at Kind(a): the quantity a is not known to be &2.",
+      "twin": "reusable-generic",
+      "requires": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Kind(a)\n",
+        "Location: keep\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t",
+        "knot_expected": true,
+        "justification": "Kind(a) is not known to be Data, so the + binder has a non-Data type (reusable-type), whatever a callee later passes."
+      }
+    },
+    {
+      "name": "meet-not-reusable",
+      "file": "fixtures/meet-not-reusable.bend",
+      "class": "negative",
+      "feature": "quantity-meet",
+      "intent": "Kind(&2 <&> &1) is Kind(&1) = Type, so +p is rejected.",
+      "twin": "quantity-meet",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "Location: both\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t",
+        "knot_expected": true,
+        "justification": "The quantity meet of &2 and &1 is &1, so the pair type is Type and a + binder on it is reusable-type."
+      }
+    },
+    {
+      "name": "erased-value-live",
+      "file": "fixtures/erased-value-live.bend",
+      "class": "negative",
+      "feature": "erasure",
+      "intent": "An erased value of generic type is returned live.",
+      "twin": "erased-value-arg",
+      "requires": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : -w\n- observed : w\n",
+        "Location: leak\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t",
+        "knot_expected": true,
+        "justification": "The seed rejects live use of the erased binder w; the enum profile already names this erased-live."
+      }
+    },
+    {
+      "name": "erased-type-live",
+      "file": "fixtures/erased-type-live.bend",
+      "class": "negative",
+      "feature": "erasure",
+      "intent": "An erased type argument is passed to a live Type parameter at runtime.",
+      "twin": null,
+      "requires": [
+        "live-type-parameter"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : -A\n- observed : A\n",
+        "Location: pass\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "justification": "The seed rejects the erased A in a live argument position. A live Type parameter may itself be outside increment 6, so Invalid or Unsupported both qualify; Checked never does."
+      }
+    },
+    {
+      "name": "erased-scrutinee",
+      "file": "fixtures/erased-scrutinee.bend",
+      "class": "negative",
+      "feature": "erasure",
+      "intent": "An erased generic box is inspected by a live match.",
+      "twin": "box-unbox",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "a live scrutinee (a - scrutinee matches only in a dead region)\n",
+        "Location: peek\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-scrutinee\t",
+        "knot_expected": true,
+        "justification": "The seed rejects a live match on an erased binder; the enum profile already names this erased-scrutinee."
+      }
+    },
+    {
+      "name": "rigid-mismatch",
+      "file": "fixtures/rigid-mismatch.bend",
+      "class": "negative",
+      "feature": "generic-datatypes",
+      "intent": "Distinct type parameters are rigid: a value of A is not a value of B.",
+      "twin": null,
+      "requires": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : B\n- observed : A\n",
+        "Location: coerce\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "knot_expected": true,
+        "justification": "The seed compares the rigid variables A and B and rejects the return; that is a type mismatch."
+      }
+    },
+    {
+      "name": "wrong-type-arg",
+      "file": "fixtures/wrong-type-arg.bend",
+      "class": "negative",
+      "feature": "instantiation",
+      "intent": "The explicit type argument Color disagrees with the Flag in the box.",
+      "twin": "box-unbox",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Color\n- observed : Flag\n",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "knot_expected": true,
+        "justification": "Instantiating at Color makes the box field expect Color; On{} is a Flag, a type mismatch."
+      }
+    },
+    {
+      "name": "ghost-bad",
+      "file": "fixtures/ghost-bad.bend",
+      "class": "negative",
+      "feature": "erasure",
+      "intent": "An erased argument is still type-checked: On{} is not a Color.",
+      "twin": "erased-value-arg",
+      "requires": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Color\n- observed : Flag\n",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "knot_expected": true,
+        "justification": "Erased arguments are checked but not run; the erased w expects Color and receives a Flag."
+      }
+    },
+    {
+      "name": "phantom-mismatch",
+      "file": "fixtures/phantom-mismatch.bend",
+      "class": "negative",
+      "feature": "phantom-parameters",
+      "intent": "Tagged<Flag> is not Tagged<Color>, although both have the same runtime layout.",
+      "twin": "phantom-type",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Tagged<Color>\n- observed : Tagged<Flag>\n",
+        "Location: cross\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "knot_expected": true,
+        "justification": "Type indices are compared even when erased from the representation; a uniform boxed layout must not identify them."
+      }
+    },
+    {
+      "name": "quantity-invariant",
+      "file": "fixtures/quantity-invariant.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "Seq<&2, Flag> does not fit Seq<&1, Flag>: datatype quantity arguments are invariant.",
+      "twin": "quantity-short-form",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Seq<&1, Flag>\n- observed : Seq<&2, Flag>\n",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t",
+        "knot_expected": true,
+        "justification": "The seed compares quantity arguments of a family by equality; there is no &2-to-&1 subsumption for Seq."
+      }
+    },
+    {
+      "name": "kind-type-for-data",
+      "file": "fixtures/kind-type-for-data.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A Type element (Box<Flag>) does not fit Kind(&2).",
+      "twin": "quantity-data-fits-type",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "head_or(&2, Box<Flag>,",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "knot_expected": true,
+        "justification": "Kind(a) instantiation is increment 6, so Knot must report Invalid; no existing code names a kind-argument mismatch, so the code is open."
+      }
+    },
+    {
+      "name": "type-arity",
+      "file": "fixtures/type-arity.bend",
+      "class": "negative",
+      "feature": "generic-datatypes",
+      "intent": "A one-parameter family applied to two type arguments.",
+      "twin": "box-unbox",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Box with 1 parameter\n",
+        "Location: open\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "knot_expected": true,
+        "justification": "Type application arity is increment 6, so Knot must report Invalid; no existing code names it, so the code is open."
+      }
+    },
+    {
+      "name": "data-holds-type",
+      "file": "fixtures/data-holds-type.bend",
+      "class": "negative",
+      "feature": "data-families",
+      "intent": "A Data family with a field of a Type parameter.",
+      "twin": "data-cell",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "Location: Cell\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tdata-field-kind\t",
+        "knot_expected": true,
+        "justification": "A Data declaration may hold only Data fields; the structural checkpoint already names this data-field-kind."
+      }
+    },
+    {
+      "name": "forward-short-form",
+      "file": "fixtures/forward-short-form.bend",
+      "class": "negative",
+      "feature": "binding-and-scope",
+      "intent": "A forward Kind(a) family written in short form.",
+      "twin": "forward-generic-types",
+      "requires": [
+        "fields"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Wide with 2 parameters\n",
+        "Location: early\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "knot_expected": true,
+        "justification": "A family named before its declaration must spell every parameter; this is an increment 6 rule, so Invalid, with the code open."
+      }
+    },
+    {
+      "name": "alias-misuse",
+      "file": "fixtures/alias-misuse.bend",
+      "class": "negative",
+      "feature": "type-aliases",
+      "intent": "A + binder behind an alias that unfolds to a Type family.",
+      "twin": "alias-type",
+      "requires": [
+        "fields",
+        "type-level-definition"
+      ],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Data\n- observed : Type\n",
+        "Location: keep\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "justification": "Generic misuse hidden behind an alias (an S2 exit gate). Increment 6 may report the type-level definition Unsupported, but must never check the program."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "box-unbox",
+        "source_sha256": "7363aecf8413c2abea8fb90f2ea9c30b41d7e0b71bfdfbe7eca6981db8bee5c7",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/box-unbox.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/box-unbox.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/box-unbox.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-unbox--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-unbox.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-unbox--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-unbox.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-unbox--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-unbox.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-unbox--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-unbox.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "box-instances",
+        "source_sha256": "5e633ddf43750ccf5ec553ba5e410ee9221ffbb8823010c4bba41079f6bb9808",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/box-instances.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/box-instances.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/box-instances.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "both",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/box-instances--both--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/box-instances.bend as F\n\ndef main() -> F.Color:\n  F.both(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/box-instances--both--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/box-instances.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "pair-swap",
+        "source_sha256": "5972ec4e523abdf08a67027a4b16686011c964b911c2151126d3bdf596db95a9",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/pair-swap.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/pair-swap.bend"
+          ],
+          "exit": 0,
+          "stdout": "Green{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/pair-swap.bend"
+            ],
+            "exit": 0,
+            "stdout": "Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "second",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--second--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Color:\n  F.second(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--second--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "first",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/pair-swap--first--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/pair-swap.bend as F\n\ndef main() -> F.Flag:\n  F.first(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/pair-swap--first--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/pair-swap.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "opt-default",
+        "source_sha256": "2de121478b4a3bafd0b162d3fd7fc1a13df613fec3b3e4f3a0ed392474d41ded",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/opt-default.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/opt-default.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/opt-default.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/opt-default--pick--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/opt-default.bend as F\n\ndef main() -> F.Color:\n  F.pick(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/opt-default--pick--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/opt-default.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "seq-parity",
+        "source_sha256": "ac48a1656e28a53d57f0b6ebb7124947758355b9fd56f0eef2aa458a55d53841",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Parity": [
+            "Even",
+            "Odd"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/seq-parity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/seq-parity.bend"
+          ],
+          "exit": 0,
+          "stdout": "Odd{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/seq-parity.bend"
+            ],
+            "exit": 0,
+            "stdout": "Odd{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Odd",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "count",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/seq-parity--count--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/seq-parity.bend as F\n\ndef main() -> F.Parity:\n  F.count(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/seq-parity--count--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/seq-parity.Odd{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Odd",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "count",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/seq-parity--count--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/seq-parity.bend as F\n\ndef main() -> F.Parity:\n  F.count(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/seq-parity--count--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/seq-parity.Even{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Even",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "quantity-parity",
+        "source_sha256": "8c949440f0f3d3aa3abf7acd6f97593aa97ae72a73ce527128c40098fcc6855e",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Parity": [
+            "Even",
+            "Odd"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-parity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-parity.bend"
+          ],
+          "exit": 0,
+          "stdout": "Odd{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/quantity-parity.bend"
+            ],
+            "exit": 0,
+            "stdout": "Odd{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Odd",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "data",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-parity--data--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-parity.bend as F\n\ndef main() -> F.Parity:\n  F.data(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-parity--data--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-parity.Odd{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Odd",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "data",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-parity--data--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-parity.bend as F\n\ndef main() -> F.Parity:\n  F.data(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-parity--data--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-parity.Even{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Even",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "boxed",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-parity--boxed--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-parity.bend as F\n\ndef main() -> F.Parity:\n  F.boxed(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-parity--boxed--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-parity.Even{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Even",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "boxed",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-parity--boxed--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-parity.bend as F\n\ndef main() -> F.Parity:\n  F.boxed(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-parity--boxed--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-parity.Odd{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Parity",
+              "constructor": "Odd",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "quantity-meet",
+        "source_sha256": "7c12eb04b3e3983fcdb7c916b55ae7cdbb124608c1d46eedd6fe84054ad29c24",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-meet.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-meet.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/quantity-meet.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "keep",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-meet--keep--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-meet.bend as F\n\ndef main() -> F.Color:\n  F.keep(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-meet--keep--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-meet.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "quantity-short-form",
+        "source_sha256": "a2e5e819c3ece650f0a1b3a7075c83e90d19ca2b51175f7a5429dd57f7cafd63",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-short-form.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-short-form.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/quantity-short-form.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "single",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-short-form--single--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.single(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-short-form--single--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-short-form.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "single",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-short-form--single--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.single(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-short-form--single--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-short-form.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "double",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-short-form--double--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.double(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-short-form--double--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-short-form.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "double",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-short-form--double--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.double(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-short-form--double--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-short-form.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "reusable-generic",
+        "source_sha256": "e95208111c7eef16c8948376bb1b21eab9de8dc17bc28e0b38de4a726b62755e",
+        "enums": {
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-generic.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-generic.bend"
+          ],
+          "exit": 0,
+          "stdout": "Green{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/reusable-generic.bend"
+            ],
+            "exit": 0,
+            "stdout": "Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "echo",
+            "arguments": [
+              "Red"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/reusable-generic--echo--Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/reusable-generic.bend as F\n\ndef main() -> F.Color:\n  F.echo(F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/reusable-generic--echo--Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/reusable-generic.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "echo",
+            "arguments": [
+              "Green"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/reusable-generic--echo--Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/reusable-generic.bend as F\n\ndef main() -> F.Color:\n  F.echo(F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/reusable-generic--echo--Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/reusable-generic.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "echo",
+            "arguments": [
+              "Blue"
+            ],
+            "ordinals": [
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/reusable-generic--echo--Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/reusable-generic.bend as F\n\ndef main() -> F.Color:\n  F.echo(F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/reusable-generic--echo--Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/reusable-generic.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "data-cell",
+        "source_sha256": "9b6dc62ed2a04e1ed88eff2c3702e7938b21c107c1b1c7463ae41f6abf8c9b72",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/data-cell.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/data-cell.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/data-cell.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "hold",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/data-cell--hold--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/data-cell.bend as F\n\ndef main() -> F.Flag:\n  F.hold(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/data-cell--hold--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/data-cell.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "hold",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/data-cell--hold--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/data-cell.bend as F\n\ndef main() -> F.Flag:\n  F.hold(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/data-cell--hold--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/data-cell.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "erased-value-arg",
+        "source_sha256": "01a25fc89d40273f333c7ae6a0d00076d4e5215690c80b65249d9d436bf96f33",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-value-arg.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-value-arg.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/erased-value-arg.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "Off",
+              "Red"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.Off{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "Off",
+              "Green"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.Off{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "Off",
+              "Blue"
+            ],
+            "ordinals": [
+              0,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.Off{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--Off-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "On",
+              "Red"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.On{}, F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "On",
+              "Green"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.On{}, F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "spend",
+            "arguments": [
+              "On",
+              "Blue"
+            ],
+            "ordinals": [
+              1,
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-value-arg.bend as F\n\ndef main() -> F.Color:\n  F.spend(F.On{}, F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-value-arg--spend--On-Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-value-arg.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "generic-let",
+        "source_sha256": "f61d4593d8d43cb785180d8bd22dfa49c6601a520f91118b2ad5cb3a137b721c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/generic-let.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/generic-let.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/generic-let.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "hold",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/generic-let--hold--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/generic-let.bend as F\n\ndef main() -> F.Flag:\n  F.hold(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/generic-let--hold--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/generic-let.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "hold",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/generic-let--hold--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/generic-let.bend as F\n\ndef main() -> F.Flag:\n  F.hold(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/generic-let--hold--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/generic-let.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "shadow-type-name",
+        "source_sha256": "148ddb7b51b967da45d1033ed2616ab4c9dd26644b47816c7909d6f658dd1cc2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/shadow-type-name.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/shadow-type-name.bend"
+          ],
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/shadow-type-name.bend"
+            ],
+            "exit": 0,
+            "stdout": "Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "paint",
+            "arguments": [
+              "Red"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/shadow-type-name--paint--Red.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/shadow-type-name.bend as F\n\ndef main() -> F.Color:\n  F.paint(F.Red{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/shadow-type-name--paint--Red.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/shadow-type-name.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "paint",
+            "arguments": [
+              "Green"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/shadow-type-name--paint--Green.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/shadow-type-name.bend as F\n\ndef main() -> F.Color:\n  F.paint(F.Green{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/shadow-type-name--paint--Green.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/shadow-type-name.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "paint",
+            "arguments": [
+              "Blue"
+            ],
+            "ordinals": [
+              2
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/shadow-type-name--paint--Blue.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/shadow-type-name.bend as F\n\ndef main() -> F.Color:\n  F.paint(F.Blue{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/shadow-type-name--paint--Blue.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/shadow-type-name.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "quantity-zero",
+        "source_sha256": "633b901cd64cff0a49023da3fcb274e98c556c3532680403cb9d42c6448727ce",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-zero.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-zero.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/quantity-zero.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "zero",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-zero--zero--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-zero.bend as F\n\ndef main() -> F.Flag:\n  F.zero(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-zero--zero--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-zero.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "zero",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-zero--zero--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-zero.bend as F\n\ndef main() -> F.Flag:\n  F.zero(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-zero--zero--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-zero.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "quantity-data-fits-type",
+        "source_sha256": "15183483a70bc85bb4feac1d18079610b4436287714136bfa3df86267d65e513",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-data-fits-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-data-fits-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/quantity-data-fits-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "one",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-data-fits-type--one--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-data-fits-type.bend as F\n\ndef main() -> F.Flag:\n  F.one(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-data-fits-type--one--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-data-fits-type.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "one",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/quantity-data-fits-type--one--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/quantity-data-fits-type.bend as F\n\ndef main() -> F.Flag:\n  F.one(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/quantity-data-fits-type--one--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/quantity-data-fits-type.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "forward-generic-types",
+        "source_sha256": "ffaa3545a0685bed5ca5cbceb2bec3b070b88ec1c9ef3c40930d10e0d0c1a22c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/forward-generic-types.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/forward-generic-types.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/forward-generic-types.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "late",
+            "arguments": [
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/forward-generic-types--late--Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/forward-generic-types.bend as F\n\ndef main() -> F.Flag:\n  F.late(F.Off{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/forward-generic-types--late--Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/forward-generic-types.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "late",
+            "arguments": [
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/forward-generic-types--late--Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/forward-generic-types.bend as F\n\ndef main() -> F.Flag:\n  F.late(F.Off{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/forward-generic-types--late--Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/forward-generic-types.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "late",
+            "arguments": [
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/forward-generic-types--late--On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/forward-generic-types.bend as F\n\ndef main() -> F.Flag:\n  F.late(F.On{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/forward-generic-types--late--On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/forward-generic-types.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "late",
+            "arguments": [
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/forward-generic-types--late--On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/forward-generic-types.bend as F\n\ndef main() -> F.Flag:\n  F.late(F.On{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/forward-generic-types--late--On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/forward-generic-types.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "phantom-type",
+        "source_sha256": "5f7ebb710906a4b8bf41c43c05145b428d51c367996b85776941bc1e970c1179",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/phantom-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/phantom-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/phantom-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "cross",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/phantom-type--cross--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/phantom-type.bend as F\n\ndef main() -> F.Flag:\n  F.cross(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/phantom-type--cross--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/phantom-type.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "cross",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/phantom-type--cross--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/phantom-type.bend as F\n\ndef main() -> F.Flag:\n  F.cross(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/phantom-type--cross--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/phantom-type.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "erased-interleaved",
+        "source_sha256": "b879aa29ef3d206d4b8f396ba146b6f249da0b98c73b8db4a8e1e1e136281a6c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-interleaved.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-interleaved.bend"
+          ],
+          "exit": 0,
+          "stdout": "Green{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/erased-interleaved.bend"
+            ],
+            "exit": 0,
+            "stdout": "Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Red",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Red-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Red{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Red-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Red",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Red-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Red{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Red-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Green",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Green-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Green{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Green-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Green",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Green-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Green{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Green-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Blue",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              2,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Blue-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Blue{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Blue-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "Off",
+              "Blue",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              2,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Blue-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.Off{}, F.Blue{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--Off-Blue-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Red",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Red-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Red{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Red-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Red",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Red-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Red{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Red-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Green",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Green-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Green{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Green-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Green",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Green-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Green{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Green-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Blue",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              2,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Blue-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Blue{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Blue-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "last",
+            "arguments": [
+              "On",
+              "Blue",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              2,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--last--On-Blue-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Flag:\n  F.last(F.On{}, F.Blue{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--last--On-Blue-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Red",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Red-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Red{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Red-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Red",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Red-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Red{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Red-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Green",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Green-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Green{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Green-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Green",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Green-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Green{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Green-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Blue",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              2,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Blue-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Blue{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Blue-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "Off",
+              "Blue",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              2,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Blue-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.Off{}, F.Blue{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--Off-Blue-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Red",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Red-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Red{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Red-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Red",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Red-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Red{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Red-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Red{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Red",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Green",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Green-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Green{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Green-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Green",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Green-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Green{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Green-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Green{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Green",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Blue",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              2,
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Blue-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Blue{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Blue-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "middle",
+            "arguments": [
+              "On",
+              "Blue",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              2,
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Blue-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/erased-interleaved.bend as F\n\ndef main() -> F.Color:\n  F.middle(F.On{}, F.Blue{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/erased-interleaved--middle--On-Blue-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/erased-interleaved.Blue{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Color",
+              "constructor": "Blue",
+              "tag": 2
+            }
+          }
+        ]
+      },
+      {
+        "case": "closure-apply",
+        "source_sha256": "1c9624204a93f3103ab03cc4e01feb7a85ddf2fb5d9f00e9f97f03d61904dc39",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/closure-apply.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/closure-apply.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/closure-apply.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/closure-apply--run--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/closure-apply.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/closure-apply--run--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/closure-apply.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/closure-apply--run--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/closure-apply.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/closure-apply--run--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/closure-apply.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "template-twice",
+        "source_sha256": "e785375040c151fe24f2c8499e3016067a3913422c2e432dc179cbbc21f39221",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/template-twice.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/template-twice.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/template-twice.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/template-twice--run--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/template-twice.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/template-twice--run--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/template-twice.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/template-twice--run--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/template-twice.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/template-twice--run--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/template-twice.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "match-erased-type",
+        "source_sha256": "0ff8c32966ae143e0e88470d54e25d3ca41bd8962f990a08102b7a5011db4f06",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/match-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/match-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/match-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/match-erased-type--run--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/match-erased-type.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/match-erased-type--run--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/match-erased-type.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/match-erased-type--run--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/match-erased-type.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/match-erased-type--run--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/match-erased-type.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "alias-type",
+        "source_sha256": "1eb19695f67807ce039f9acb83d272d361893801abf2d6570e8bdfeeea3002cd",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/alias-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/alias-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/fixtures/alias-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/alias-type--run--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/alias-type.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/alias-type--run--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/alias-type.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/wrappers/alias-type--run--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/fixtures/alias-type.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/wrappers/alias-type--run--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/fixtures/alias-type.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "affine-dup-type",
+        "source_sha256": "e6c1dcda6ed3ed40266fcad2f474112f7988997f3c7eb0e0639f7b422561f80f",
+        "enums": {
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/affine-dup-type.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nContext:\n- A : Type\nLocation: dup\n 9 | \n10>| def dup(-A: Type, x: A) -> Pair<A, A>:\n   |                   ^\n11 |   Pair{x, x}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/affine-dup-type.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nContext:\n- A : Type\nLocation: dup\n 9 | \n10>| def dup(-A: Type, x: A) -> Pair<A, A>:\n   |                   ^\n11 |   Pair{x, x}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "affine-dup-data",
+        "source_sha256": "150fccee98e9b08ee7013390a059a73c3e0953468d64d7e677246697bd6faa12",
+        "enums": {
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/affine-dup-data.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nContext:\n- A : Data\nLocation: dup\n 9 | \n10>| def dup(-A: Data, x: A) -> Pair<A, A>:\n   |                   ^\n11 |   Pair{x, x}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/affine-dup-data.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nContext:\n- A : Data\nLocation: dup\n 9 | \n10>| def dup(-A: Data, x: A) -> Pair<A, A>:\n   |                   ^\n11 |   Pair{x, x}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "reusable-type-param",
+        "source_sha256": "be2bf6430f066339f2d084a0fe0e3a55bc61f06729074b85486def6798cebac0",
+        "enums": {
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-type-param.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- A : Type\nLocation: dup\n 9 | \n10>| def dup(-A: Type, +x: A) -> Pair<A, A>:\n   |                       ^\n11 |   Pair{x, x}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-type-param.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- A : Type\nLocation: dup\n 9 | \n10>| def dup(-A: Type, +x: A) -> Pair<A, A>:\n   |                       ^\n11 |   Pair{x, x}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "reusable-kind-var",
+        "source_sha256": "5469afc439bbe68772ddb6c33ace367c8e8233b3176d6f01779f1b4922788329",
+        "enums": {
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-kind-var.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Kind(a)\nContext:\n- a : Quant\n- A : Kind(a)\nLocation: keep\n6 | \n7>| def keep(a, -A: Kind(a), +x: A) -> A:\n  |                              ^\n8 |   x\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/reusable-kind-var.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Kind(a)\nContext:\n- a : Quant\n- A : Kind(a)\nLocation: keep\n6 | \n7>| def keep(a, -A: Kind(a), +x: A) -> A:\n  |                              ^\n8 |   x\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "meet-not-reusable",
+        "source_sha256": "ec3d188424353484f2d74fff3ebdd189fff3bf23378fb1f482c9f48337c2085c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/meet-not-reusable.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: both\n18 | \n19>| def both(+p: Pair<&2, &1, Color, Flag>) -> Color:\n   |              ^^^^^^^\n20 |   fst(&2, &1, Color, Flag, p)\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/meet-not-reusable.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: both\n18 | \n19>| def both(+p: Pair<&2, &1, Color, Flag>) -> Color:\n   |              ^^^^^^^\n20 |   fst(&2, &1, Color, Flag, p)\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "erased-value-live",
+        "source_sha256": "18bb9465bb597caed9b28ae9f07208918f5ec8ff3f2f351ce1b3e1657fd6991b",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-value-live.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : -w\n- observed : w\nContext:\n- A : Type\nLocation: leak\n5 | \n6>| def leak(-A: Type, -w: A) -> A:\n  |                     ^\n7 |   w\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-value-live.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : -w\n- observed : w\nContext:\n- A : Type\nLocation: leak\n5 | \n6>| def leak(-A: Type, -w: A) -> A:\n  |                     ^\n7 |   w\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "erased-type-live",
+        "source_sha256": "4a08cca5ed9ea1dd17c74f943408a9bef907304ac096eccd6b89a26012907a89",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-type-live.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : -A\n- observed : A\nLocation: pass\n13 | \n14>| def pass(-A: Type, x: Flag) -> Flag:\n   |           ^\n15 |   keep(A, x)\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-type-live.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : -A\n- observed : A\nLocation: pass\n13 | \n14>| def pass(-A: Type, x: Flag) -> Flag:\n   |           ^\n15 |   keep(A, x)\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "erased-scrutinee",
+        "source_sha256": "b807ba3691168b95f1b7629b9d0f2ffc70af0b089039d0828f855b7b2b070420",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-scrutinee.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nContext:\n- A : Type\nLocation: peek\n10 |   match b:\n11>|     case Box{v}:\n   |          ^^^^^^\n12 |       v\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/erased-scrutinee.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nContext:\n- A : Type\nLocation: peek\n10 |   match b:\n11>|     case Box{v}:\n   |          ^^^^^^\n12 |       v\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "rigid-mismatch",
+        "source_sha256": "0c1b893acda449b7fb7257f0f6d980ff37012df1eeb3c3b2afa5e670f49e4d1a",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/rigid-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : B\n- observed : A\nContext:\n- A : Type\n- B : Type\n- x : A\nLocation: coerce\n6 | def coerce(-A: Type, -B: Type, x: A) -> B:\n7>|   x\n  |   ^\n8 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/rigid-mismatch.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : B\n- observed : A\nContext:\n- A : Type\n- B : Type\n- x : A\nLocation: coerce\n6 | def coerce(-A: Type, -B: Type, x: A) -> B:\n7>|   x\n  |   ^\n8 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "wrong-type-arg",
+        "source_sha256": "7b70a1bcaac7f4f2441adc0d667e3ae06efb4396f9a80b2cfed5c6a7c4514b40",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/wrong-type-arg.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Color\n- observed : Flag\nLocation: main\n19 | def main() -> Flag:\n20>|   unbox(Color, Box{On{}})\n   |                    ^^^^\n21 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/wrong-type-arg.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Color\n- observed : Flag\nLocation: main\n19 | def main() -> Flag:\n20>|   unbox(Color, Box{On{}})\n   |                    ^^^^\n21 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "ghost-bad",
+        "source_sha256": "134c5d3b9a8a001ce7672c9f6a711fdd1ecf2600928cfd8a2f9aed9a66b8a663",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/ghost-bad.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Color\n- observed : Flag\nLocation: main\n14 | def main() -> Flag:\n15>|   ghost(Color, On{}, On{})\n   |                ^^^^\n16 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/ghost-bad.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Color\n- observed : Flag\nLocation: main\n14 | def main() -> Flag:\n15>|   ghost(Color, On{}, On{})\n   |                ^^^^\n16 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "phantom-mismatch",
+        "source_sha256": "91ad9536da9904c58657aa5d32dcacef79970b176046c9054c84704a19de7afc",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Color": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/phantom-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Tagged<Color>\n- observed : Tagged<Flag>\nContext:\n- x : Flag\nLocation: cross\n22 | def cross(x: Flag) -> Flag:\n23>|   read(Color, mark(x))\n   |               ^^^^^^^\n24 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/phantom-mismatch.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Tagged<Color>\n- observed : Tagged<Flag>\nContext:\n- x : Flag\nLocation: cross\n22 | def cross(x: Flag) -> Flag:\n23>|   read(Color, mark(x))\n   |               ^^^^^^^\n24 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "quantity-invariant",
+        "source_sha256": "8b07e624831a28ad17d7926a2c1602e9f3378925bc91abde96e64d9c3cecbb15",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-invariant.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Seq<&1, Flag>\n- observed : Seq<&2, Flag>\nLocation: main\n23 | def main() -> Flag:\n24>|   once(make(On{}))\n   |        ^^^^^^^^^^\n25 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/quantity-invariant.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Seq<&1, Flag>\n- observed : Seq<&2, Flag>\nLocation: main\n23 | def main() -> Flag:\n24>|   once(make(On{}))\n   |        ^^^^^^^^^^\n25 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "kind-type-for-data",
+        "source_sha256": "590d60b32b89dfaff5279306f03a59120b99d715695a7a79b2e12ebd0d49487d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/kind-type-for-data.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n25 | def main() -> Flag:\n26>|   unbox(Flag, head_or(&2, Box<Flag>, Link{Box{On{}}, End{}}, Box{Off{}}))\n   |                           ^^^^^^^^\n27 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/kind-type-for-data.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n25 | def main() -> Flag:\n26>|   unbox(Flag, head_or(&2, Box<Flag>, Link{Box{On{}}, End{}}, Box{Off{}}))\n   |                           ^^^^^^^^\n27 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "type-arity",
+        "source_sha256": "c5e8097d68d567fbeb8e2ab713acf26ede252ac126c73d381c76c90908dbb306",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/type-arity.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Box with 1 parameter\n- observed : Box<Flag, Flag>\nLocation: open\n13 | \n14>| def open(b: Box<Flag, Flag>) -> Flag:\n   |             ^^^^^^^^\n15 |   unbox(Flag, b)\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/type-arity.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Box with 1 parameter\n- observed : Box<Flag, Flag>\nLocation: open\n13 | \n14>| def open(b: Box<Flag, Flag>) -> Flag:\n   |             ^^^^^^^^\n15 |   unbox(Flag, b)\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "data-holds-type",
+        "source_sha256": "3b26afd895b8b71e13c11d2cb3d8e0eec5d618594fdf1c94ce7b1b14cfcf9321",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/data-holds-type.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- A : Type\nLocation: Cell\n6 | type Cell<-A: Type> is Data:\n7>|   Cell{value: A}\n  |               ^\n8 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/data-holds-type.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nContext:\n- A : Type\nLocation: Cell\n6 | type Cell<-A: Type> is Data:\n7>|   Cell{value: A}\n  |               ^\n8 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "forward-short-form",
+        "source_sha256": "7840a7f1e5c7b0947749d76e67f54ee24322320d49f63be031473305fc1c01cd",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/forward-short-form.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Wide with 2 parameters\n- observed : Wide<Flag>\nContext:\n- x : Flag\nLocation: early\n5 | \n6>| def early(x: Flag, q: Wide<Flag>) -> Flag:\n  |                       ^^^^^^^^^\n7 |   x\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/forward-short-form.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Wide with 2 parameters\n- observed : Wide<Flag>\nContext:\n- x : Flag\nLocation: early\n5 | \n6>| def early(x: Flag, q: Wide<Flag>) -> Flag:\n  |                       ^^^^^^^^^\n7 |   x\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "alias-misuse",
+        "source_sha256": "47018634346db62f65df9006fa514c7bc42991e1ef18786d64cc91977486c0ca",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/alias-misuse.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: keep\n11 | \n12>| def keep(+b: Wrap(Flag)) -> Flag:\n   |              ^^^^^^^^^^\n13 |   On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/fixtures/alias-misuse.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: keep\n11 | \n12>| def keep(+b: Wrap(Flag)) -> Flag:\n   |              ^^^^^^^^^^\n13 |   On{}\n"
+        },
+        "calls": []
+      }
+    ]
+  }
+}

@@ -8,11 +8,57 @@ Generated offline by `npm run census`; verified by `npm run census:check` and
 |---|---|
 | [implementation.json](implementation.json) | Per-file imports, hashes, per-declaration feature classes, references and captures; class definitions and package pins |
 | [base-closure.json](base-closure.json) | Frontend and compiler roots; JS/native cuts, value-reference slice, complete static dependency closure and dependency edges |
-| [accepted.json](accepted.json) | Fixed fixtures and gate hashes; stage-specific positive evidence and exact expected failure classifications |
+| [accepted.json](accepted.json) | Discovered suites, fixed fixtures and gate hashes; gated evidence, separate frozen requirements, failures and unknown-format reports |
 | [hosts.json](hosts.json) | Reachable foreign effects, intrinsic/representation requirements, full Base trust inventory and emitted Wasm capabilities |
+| [selfhost.json](selfhost.json) | Compiler/frontend evidenced and requirement coverage counts; pending fixtures per class, ranked missing classes and declaration gaps |
 
 No timestamp, checkout path or unverified model rating enters a generated
 manifest. Census parses source; the executed gates below supply separate evidence.
+
+## Current census-2 meter
+
+Run `npm run census:meter` for a read-only summary. The generated manifest uses
+the JS runtime/type closure, including package/Base dependencies, excluding
+law/proof files. Filled laws in ordinary files remain counted when they implement
+runtime functions. A declaration needs its own feature classes plus its file's
+import classes. Each stage counts only declarations with no missing classes.
+Evidenced counts admit only suites whose mapped gate is registered and invokes
+a program in that suite directory. The second count includes that evidence
+plus frozen ungated requirements. It measures planned class coverage.
+
+| Closure | Declarations | Compiler / package / Base | Evidenced check / Wasm | Covered by evidence + frozen requirements check / Wasm |
+|---|---:|---|---|---|
+| `src/compile-cli.main` | 328 | 242 / 14 / 72 | 0 / 0 | 93 / 93 |
+| `src/lex.tokenize`, `src/parse.parse` | 87 | 48 / 0 / 39 | 0 / 0 | 55 / 55 |
+
+The largest compiler blockers are `types.base` (320 declarations), `imports.base`
+(256), `generics` (236), `imports.local` (224) and `quantities.arguments` (222).
+The frontend's largest blocker is `types.base` (86). These are overlapping
+counts, not additive work estimates. Full rankings and per-declaration gaps are
+in `selfhost.json`. Even complete class coverage would not qualify combinations,
+host capabilities or a bootstrap.
+
+The accepted inventory now discovers all 14 registered gates and reads **171
+fixtures across seven suites**, covering 140 distinct files. It has 13 classes
+with check/evaluator evidence and 12 with Wasm evidence. Recursion has check/eval
+witnesses; fields have executed Wasm witnesses. `deep-call` evaluator exhaustion
+and `arena-overflow` Wasm exhaustion are retained and excluded from positive
+evidence. No unknown suite format is present in this checkout.
+
+There are also **162 frozen requirements across four ungated suites**: baseslice
+40, closures 42, generics 40 and literals 40. Their requirements never enter the
+accepted evidence arrays. `selfhost.json.requirements` names the pending suites
+and the fixtures for each class and stage. Nest and modules already have reviewed
+adapters; they follow the same gate rule when their fixtures arrive. Unknown
+future formats are reported rather than inferred. See the
+[round 2 verification](census-2-round-2.md) for current gates and the
+[first census-2 checkpoint](census-2.md) for historical evidence.
+
+## Original census checkpoint (historical)
+
+The following counts and receipts describe the first census increment before
+the reviewed compiler wave. They are retained as historical evidence; the
+generated manifests and census-2 report above describe the current checkout.
 
 | Scope | Files | Declaration events | Unique declarations | Definitions | Used classes |
 |---|---:|---:|---:|---:|---:|

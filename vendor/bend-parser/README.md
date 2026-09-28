@@ -17,6 +17,9 @@ Changes to the upstream module:
   and `book_load` section. The module cannot resolve or load user imports.
 - Add an optional `ParseObserver`. Record declaration spans and original bodies
   before match flattening; observe explicit call suffixes, including `f()`.
+- Definitions also report `bodyBeg` immediately after the parser consumes the
+  body delimiter. The adapter exposes its UTF-8 position as `body_start` for
+  signature interfaces. This additive observation changes no parse semantics.
 - Track the last consumed token around the existing trivia skipper, preserving
   ranges without counting comments before the following declaration.
 - Add optional **dependency-context hooks** for imported law fills, constructor
@@ -45,6 +48,9 @@ is the implementation; `law_location` preserves the law separately, so interveni
 declarations do not leak into a method's body. Imported fills retain their source
 alias, e.g. `L.proof`. Positions use one-based lines and UTF-8 columns, zero-based
 UTF-8 byte offsets, and exclusive ends.
+The optional `body_start` is the exclusive head end, before body trivia; law
+statements and datatypes have no omitted body. Consumers do not scan colons or
+quotes to infer it.
 
 The import-header recognizer in the adapter is extracted from pinned
 `book_load`'s real import grammar. It retains every original source offset while
@@ -90,13 +96,16 @@ check. Primary source uses the declaration's exact byte span and its adjacent
 contract comment. Matching laws, local datatype declarations, static callees,
 function values, and a bounded number of same-file callers are separate context.
 
-Helper context is bounded to 16 declarations, 12 files, 4 callers, and 48,000
+Legacy helper context is bounded to 48 declarations, 12 files, 4 callers, and 48,000
 source bytes. Truncation and unresolved names are explicit. Context receipts
 contain working-tree file hashes. Aggregate results retain per-unit answers,
 findings and source lines. All selected local helper sources are parsed before
 the first request; a malformed helper or failed provider unit fails the aggregate.
 Files with no function/law units do not manufacture successful method coverage.
 Committed `scan` continues to use its committed graph and source snapshot.
+The compiler's opt-in `interfaces-v1` policy follows the separate
+[interface-context contract](../../tests/perch-context/CONTRACT.md), including
+verified offline packages and marked overflow signatures.
 
 ## Validation and update
 

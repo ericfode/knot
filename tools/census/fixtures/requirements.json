@@ -1,0 +1,24 @@
+{
+  "basis": "Literal review before the round 2 repair; source fixtures and the meter denominator are reused unchanged.",
+  "suite": "closures",
+  "directory": "tests/compiler-closures",
+  "source": "lambda.bend",
+  "fixture": "fixtures/lambda.bend",
+  "requirement": {"require": "agree"},
+  "reference": {"check_only": {"exit": 0}, "calls": [{"exit": 0, "result": {"tag": 0}}]},
+  "expected": {
+    "ungated_evidence": [],
+    "requirement_fixtures": ["closures:tests/compiler-closures/fixtures/lambda.bend"],
+    "ungated_suites": ["baseslice", "closures", "generics", "literals"]
+  },
+  "meter": {
+    "requirements": {"check": ["lambdas"], "wasm": ["lambdas"]},
+    "covered_by_requirements": {"check": 3, "wasm": 2},
+    "missing_requirements": {"check": [], "wasm": [{"feature": "fields", "declarations": 1}]},
+    "per_declaration": {
+      "src/control.C": {"check": [], "wasm": ["fields"]},
+      "src/control.a": {"check": [], "wasm": []},
+      "src/control.b": {"check": [], "wasm": []}
+    }
+  }
+}
