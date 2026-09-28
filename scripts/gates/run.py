@@ -77,7 +77,7 @@ def git(root: Path, *args: str) -> bytes:
 
 def excluded(name: str) -> bool:
     parts = Path(name).parts
-    return (any(p == '.env' or p.startswith('.env.') or p == '.git' for p in parts)
+    return (any(p.lower() == '.env' or p.lower().startswith('.env.') or p == '.git' for p in parts)
             or parts[0] in ('.toolchain', 'node_modules', '.local', 'build'))
 
 
