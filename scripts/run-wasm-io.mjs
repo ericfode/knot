@@ -158,7 +158,10 @@ export async function runIO({modulePath, sandbox, args = []}) {
   function confined(name) {
     const parts = name.split('/');
     if (path.isAbsolute(name) || parts.includes('..') ||
-        parts.some(p => p === '.env' || p.startsWith('.env.'))) bad('sandbox', 'path refused');
+        parts.some(p => {
+          const q = p.toLowerCase();
+          return q === '.env' || q.startsWith('.env.');
+        })) bad('sandbox', 'path refused');
     let current = root;
     for (const part of parts.filter(p => p && p !== '.')) {
       current = path.join(current, part);
@@ -248,7 +251,7 @@ export async function runIO({modulePath, sandbox, args = []}) {
       if (invalid !== 0) return fail(out, 'EINVAL', id);
       const bytes = range(p, n);
       if (bytes.length > MAX_TRANSFER) exhausted('memory');
-      if (h.mode === 'r') return fail(out, 'EBADF', id);
+      if (h.mode === 'r' && bytes.length > 0) return fail(out, 'EBADF', id);
       try { writeAll(h.fd, bytes); }
       catch (error) {
         if (error instanceof Fault) throw error;

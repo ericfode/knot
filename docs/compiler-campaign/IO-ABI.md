@@ -1,9 +1,13 @@
 # Knot IO ABI: `knot-io-1`
 
 This is milestone 10's **host boundary**, qualified independently of Knot
-lowering. The frozen authority is
+lowering. Under D14 the Wasm VM imports this ABI to execute serialized Knot
+images. The ABI has no dependency on image, heap, closure or native Wasm
+lowering layouts. The frozen authority is
 [`tests/compiler-io/FIXTURES.md`](../../tests/compiler-io/FIXTURES.md), including
-its Darwin error table and scalar-value precondition. No compiler capability
+its Darwin error table and scalar-value precondition, extended by the
+[review-2 literals and seed witnesses](../../tests/compiler-io/host/REVIEW-2.md).
+No compiler capability
 is added by this increment. IO source still needs the compiler executors'
 strings, generics, closures, Base recognition and capability checks.
 
@@ -86,7 +90,7 @@ record. Effects finish synchronously before the next guest instruction.
 | `close` | `handle` | Consumes the handle. OS close errors are ignored, as in Base. |
 | `exhausted` | `kind` | Runtime diagnostic, not a Base effect: 1 = step budget, 2 = allocation budget. Stops with `Exhausted`, exit 4. |
 
-**Byte-list packing is part of lowering.** A `List<&2,U32>` cannot be narrowed
+**Byte-list packing belongs to the guest.** A `List<&2,U32>` cannot be narrowed
 unchecked. Scan the complete list, accumulating `invalid |= element >> 8`, and
 copy each low byte into a fresh buffer. Only after the scan call `write_bytes`.
 Thus byte lists cross as byte ranges, with one scalar validation flag; no list
@@ -109,8 +113,9 @@ mode. An unknown mode returns 22 before attempting filesystem access. An empty
 path then returns 2. New files use mode 0644 subject to umask. `w` creates and
 truncates; `a` creates and appends. A directory opens for `r`, fails with 21
 under `w`/`a`, and fails with 21 on every read. Reading a write-only handle
-returns 9. Writing a read-only handle returns 9. Invalid byte elements return
-22 before checking the handle's direction.
+returns 9. A nonempty write to a read-only handle returns 9. An empty write
+returns `Done` without a syscall, including on read-only directory handles.
+Invalid byte elements return 22 before checking the handle's direction.
 
 | Darwin errno | Message |
 | --- | --- |
@@ -140,7 +145,11 @@ inconclusive; it never establishes source rejection or conformance.
 
 The host resolves one existing directory as its root. All guest paths must be
 relative, contain no `..` component, and contain no `.env` or `.env.*`
-component. It refuses symlinks in any component, multiply-linked regular files,
+component under a case-insensitive comparison. This includes `.ENV`, `.Env`,
+`sub/.Env.local` and `SUB/.env.LOCAL` in every supported mode, before an open
+can read, truncate or append. The lexical check also refuses nonexistent
+secret paths and applies on case-sensitive filesystems. It refuses symlinks
+in any component, multiply-linked regular files,
 and special files; only regular files and directories are supported. Final
 opens use `O_NOFOLLOW`. Parent traversal, absolute paths and symlink escapes
 are `HostFailure io sandbox`, distinct from the six language-visible errors.
@@ -168,21 +177,20 @@ Unexpected traps remain host failures, never alleged source errors or inferred
 arena exhaustion. The CLI initializes its exit status to 5 and clears it only
 with an explicit completed host result.
 
-## Lowering decision: direct imports inside a trampoline
+## Guest execution under D14
 
-Use **direct host calls in a defunctionalized continuation machine**. The pinned
+The VM makes **direct host calls from its guest execution machine**. The pinned
 Base defines `IO(A)` in continuation-passing form:
 `IO(A) = forall R. (A -> IO.OP<R>) -> IO.OP<R>`, and `IO.OP<R>` has only
 `Emit{value: R}` and `Halt{code, message}`. In particular, `Emit` is the terminal
 value, **not** an effect request. Foreign Base effects call the imports above;
 `IO.pure`, `IO.bind` and the chosen closures are ordinary checked Base code.
 
-Lower `IO` construction to inert closure records. Lower closure application,
-including the nested continuation introduced by `IO.bind`, to machine state:
-`(code tag, environment, continuation frames, value)`. A Wasm dispatch loop
-performs one transition at a time. Binding pushes a frame and selects the first
-action; its result selects the continuation and supplies the value. Direct
-calls to an import return a value for that frame. `Halt` calls `die`; terminal
+IO construction must remain inert. The VM owns closure application, including
+the nested continuation introduced by `IO.bind`, and its explicit call and
+continuation state. Its dispatch loop performs transitions; imports return
+results to the guest's continuation. No guest frame, closure layout or
+serialized instruction crosses this ABI. `Halt` calls `die`; terminal
 `Emit` returns from `knot_main` after discarding its value. Dropped actions and
 unchosen closures never become machine states and execute no effects.
 
@@ -190,10 +198,11 @@ Neither walking a left-associated bind nor applying a right-associated
 continuation may recurse through Wasm or JavaScript calls. The machine must
 also trampoline **construction/application** of CPS closures: eliminating only
 the final effect loop would leave a 100,000-deep pure bind chain vulnerable.
-The pending frames occupy guest heap storage. Budget checks report exhaustion;
-they must not silently cut the chain short. This follows D3's defunctionalized
-closure choice, keeps the host free of Bend semantics, and gives closure
-lowering one target for both IO and pure continuation dispatch.
+The pending frames occupy guest storage. Budget checks report exhaustion;
+they must not silently cut the chain short. The VM design fixes its own
+representation and proves/tests its transitions. Direct native Wasm emission
+may use D3's defunctionalized closures on the speed track and call the same
+imports; that lowering is not a prerequisite for this host or D14 self-hosting.
 
 The compiler follow-up must recognize only the hash-pinned Base foreign
 identities, fully check its supported source forms, validate reachable host
@@ -284,13 +293,34 @@ Its existing IO/sugar adapter warnings remain explicit; host conformance does
 not promote either suite to accepted compiler features. No source, import or
 feature-class approval changed.
 
-No Bend declaration or law changed; style preflight has **0 changed Bend
-targets**. There is no live review or automatic style-pass claim. The existing
-proof entry points continue to run inside their deterministic gates.
+The original host increment changed no Bend declarations. Review 2 adds one
+independent seed fixture (seven definitions, no new laws). Its bounded offline
+preflight has zero structural blockers, complete role context and composition,
+and zero provider requests. This is not a live style rating or an automatic
+style pass. The existing proof entries still run inside their gates.
 
-Next: implement checked IO lowering and run **all 103 agree runs** through
-Knot-produced Wasm, plus the complete frozen Invalid/Unsupported compiler
-checks. This increment does not exercise the four remaining agree fixtures
+Review 2 adds four empty-write Wasm observations and 12 fresh seed observations
+(interpreter/native/emitted JS), 21 secret-path controls (seven spellings by
+three modes), and 14 oracle controls. Twelve synthetic fault controls cover
+stdout/stderr/merged output, exits 0/1, and either pass of `--write`; two
+ordinary-result controls preserve non-fault exit 0/1 observations. Three new
+semantic mutants restore case-sensitive filtering, restore empty-write errno 9,
+and allow seed memory faults to be frozen. All are killed by the fixed
+controls, not by an infrastructure failure. The original 86 runs, six CLI
+runs, 19 boundary controls and six mutants remain unchanged.
+
+`regen.py` aborts on any seed stream containing `bend: memory fault` before
+writing expectations. Such faults are lane exhaustion, never expected program
+behavior. Existing IO oracles remain bounded to completing JS-lane runs;
+compiler-sized C1 inputs use the native lane under D14. Before CLI budgets
+grow, its owner must replace the post-write `List.length(bytes)` and audit
+similar output-sized non-tail traversals. Host repair does not raise budgets.
+
+Next: connect the VM's checked image execution to `knot_io`, and run **all 103
+agree runs** plus the review-2 cases through compiler-produced images and the
+VM. Retain the complete frozen Invalid/Unsupported compiler checks and add an
+independent IO evaluator comparison when that lane exists. This increment
+does not exercise the four remaining agree fixtures
 (`mini-driver`, `bind-order`, `bind-lazy`, `result-bind`), general captured
 closures, source quantity rejection, or an IO evaluator lane. Add allocator
 ownership/reclamation evidence, broader OS error witnesses and stronger

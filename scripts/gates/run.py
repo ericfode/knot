@@ -237,6 +237,7 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
+        result['review'] = record['review_counts']
     return result
 
 

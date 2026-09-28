@@ -18,6 +18,7 @@ RECEIPT = HERE / 'receipts/host.json'
 PLAN = json.loads((HERE / 'host/PLAN.json').read_text())
 sys.path.insert(0, str(HERE / 'host'))
 from programs import fixture, TEMPLATE
+from review import run as review_checks
 
 spec = importlib.util.spec_from_file_location('frozen_io_records', HERE / 'regen.py')
 frozen = importlib.util.module_from_spec(spec)
@@ -226,6 +227,9 @@ def main():
         print(f'io-host {name}: {len(rows)} field-exact runs', flush=True)
     bounds = controls()
     killed = mutants(witnesses)
+    review = review_checks(sys.modules[__name__])
+    review_counts = {name: len(review[name]) for name in
+                     ('seed_runs', 'empty_write', 'secret_paths', 'oracle_controls', 'mutants')}
     # Verify that every promised errno has an observed, seed-matched report.
     outputs = '\n'.join(json.dumps(r['observed'], ensure_ascii=False) for f in records for r in f['runs'])
     for code in PLAN['errno']:
@@ -233,7 +237,8 @@ def main():
     source_names = ['scripts/run-wasm-io.mjs', 'tests/compiler-io/host-check.py',
                     'tests/compiler-io/expectations.json', 'tests/compiler-io/regen.py',
                     *('tests/compiler-io/host/' + n for n in
-                      ('PLAN.json', 'runtime.wat', 'programs.py', 'invoke.mjs'))]
+                      ('PLAN.json', 'runtime.wat', 'programs.py', 'invoke.mjs', 'review.py',
+                       'empty-write.bend', 'review-expectations.json', 'review-seed.json', 'REVIEW-2.md'))]
     receipt = {'schema': 1, 'status': 'pass', 'profile': 'knot-io-1',
                'boundary': PLAN['boundary'],
                'sources': {n: sha((ROOT / n).read_bytes()) for n in source_names},
@@ -246,11 +251,14 @@ def main():
                'errno': PLAN['errno'],
                'stress': PLAN['stress'], 'fixtures': records,
                'host_boundaries': bounds, 'mutants': killed,
-               'style': {'changed_bend_targets': 0, 'status': 'not-applicable'}}
+               'review': review, 'review_counts': review_counts,
+               'style': {'changed_bend_targets': 1, 'status': 'preflight-only; live review pending',
+                         'structural_blockers': review['preflight']['structural_blockers']}}
     RECEIPT.parent.mkdir(exist_ok=True)
     RECEIPT.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n')
     print(f'io-host: {len(records)} fixtures, {len(witnesses)} runs, '
           f'{len(cli_records)} CLI runs, {len(bounds)} host controls, {len(killed)} mutants killed')
+    print(f'io-host review-2: {review_counts}')
     return 0
 
 
