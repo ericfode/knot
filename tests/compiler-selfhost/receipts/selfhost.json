@@ -1,0 +1,2882 @@
+{
+  "schema": 1,
+  "suite": "compiler-selfhost",
+  "increment": "joint",
+  "status": "passed",
+  "seed": {
+    "reproduced": true,
+    "summary": "62 cases (33 seed-valid, 29 seed-rejected), 187 calls and 7 io runs on 2 lanes, 0 reviewed lane disagreements"
+  },
+  "knot": {
+    "lane": "native",
+    "builds": [
+      {
+        "entry": "src/check-cli.bend",
+        "exit": 0,
+        "sha256": "3de5c99f92028797819566e1cbf4e51a748e1eb8cf2c2731904dfd3831b94fa9"
+      },
+      {
+        "entry": "src/eval-cli.bend",
+        "exit": 0,
+        "sha256": "84d4e48a41d957b33c86ab48a9e77c2062e2868fc27884e9fa72fb62d518512e"
+      }
+    ]
+  },
+  "available": [
+    "fields",
+    "recursion"
+  ],
+  "cases": [
+    {
+      "case": "nested-self-call",
+      "owner": "descent-2",
+      "requirements": [
+        "SF-18"
+      ],
+      "require": "agree",
+      "status": "pass",
+      "blocked_by": [],
+      "meets_requirement": true,
+      "problems": [],
+      "outcomes": [
+        "Success"
+      ],
+      "first_blocker": "Success",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nested-self-call/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Checked\n<sha256 a5063d403b79c7c487b6923432d46a65a033f00def97023d5130b870400f5218>\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "at",
+            "arguments": [
+              "P0"
+            ],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "at",
+              "65536",
+              "0"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t1\tHigh{}\n",
+            "stderr": ""
+          },
+          {
+            "entry": "at",
+            "arguments": [
+              "P1"
+            ],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "at",
+              "65536",
+              "1"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t0\tLow{}\n",
+            "stderr": ""
+          },
+          {
+            "entry": "at",
+            "arguments": [
+              "P2"
+            ],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "at",
+              "65536",
+              "2"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t0\tLow{}\n",
+            "stderr": ""
+          },
+          {
+            "entry": "at",
+            "arguments": [
+              "P3"
+            ],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "at",
+              "65536",
+              "3"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t1\tHigh{}\n",
+            "stderr": ""
+          },
+          {
+            "entry": "at",
+            "arguments": [
+              "P4"
+            ],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "at",
+              "65536",
+              "4"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t2\tGap{}\n",
+            "stderr": ""
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "argv": [
+              "./.local/compiler-selfhost/knot/eval",
+              "tests/compiler-selfhost/fixtures/nested-self-call/main.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stdout": "Evaluated\t3\t1\tHigh{}\n",
+            "stderr": ""
+          }
+        ]
+      }
+    },
+    {
+      "case": "nested-self-call-mistyped",
+      "owner": "descent-2",
+      "requirements": [
+        "SF-18"
+      ],
+      "require": "reject",
+      "status": "pass",
+      "blocked_by": [],
+      "meets_requirement": true,
+      "problems": [],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tcheck\ttype-mismatch\t424:428:19:48",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nested-self-call-mistyped/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t424:428:19:48\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/nested-self-call-mistyped/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tcheck\ttype-mismatch\t424:428:19:48\n"
+        }
+      }
+    },
+    {
+      "case": "nested-self-call-list",
+      "owner": "descent-2",
+      "requirements": [
+        "SF-18"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t125:131:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t125:131:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nested-self-call-list/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t125:131:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "nested-self-call-list-suffix",
+      "owner": "descent-2",
+      "requirements": [
+        "SF-18"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t95:101:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t95:101:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t95:101:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nested-self-call-list-suffix/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t95:101:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/nested-self-call-list-suffix/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t95:101:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "layout-call-args",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t527:528:23:26"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t527:528:23:26",
+      "d4_gap": true,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-call-args/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t527:528:23:26\n"
+        }
+      }
+    },
+    {
+      "case": "layout-call-args-comma",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: at 17:26 != 18:14",
+        "eval: at 17:26 != 18:14"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t374:375:17:26",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-call-args-comma/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t374:375:17:26\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-call-args-comma/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t374:375:17:26\n"
+        }
+      }
+    },
+    {
+      "case": "layout-def-header",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-02"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\tparameter\t450:451:18:31"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\tparameter\t450:451:18:31",
+      "d4_gap": true,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-def-header/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\tparameter\t450:451:18:31\n"
+        }
+      }
+    },
+    {
+      "case": "layout-def-header-comma",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-02"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: at 6:31 != 7:12",
+        "eval: at 6:31 != 7:12"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\tparameter\t148:149:6:31",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-def-header-comma/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\tparameter\t148:149:6:31\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-def-header-comma/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\tparameter\t148:149:6:31\n"
+        }
+      }
+    },
+    {
+      "case": "layout-braces",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t454:455:19:18"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t454:455:19:18",
+      "d4_gap": true,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-braces/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t454:455:19:18\n"
+        }
+      }
+    },
+    {
+      "case": "layout-braces-comma",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: at 11:16 != 12:11",
+        "eval: at 11:16 != 12:11"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t231:232:11:16",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-braces-comma/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t231:232:11:16\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-braces-comma/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t231:232:11:16\n"
+        }
+      }
+    },
+    {
+      "case": "layout-brackets",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "base",
+        "generics",
+        "lists"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t136:142:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t136:142:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-brackets/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t136:142:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "layout-brackets-comma",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "base",
+        "generics",
+        "lists"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t76:82:2:0 != Invalid\tparse\texpected-term",
+        "eval: Unsupported\tparse\tdeclaration-form\t76:82:2:0 != Invalid\tparse\texpected-term"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t76:82:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-brackets-comma/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t76:82:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-brackets-comma/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t76:82:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "layout-dedent-close",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t497:498:23:7"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t497:498:23:7",
+      "d4_gap": true,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-dedent-close/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t497:498:23:7\n"
+        }
+      }
+    },
+    {
+      "case": "layout-dedent-close-extra",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t272:273:12:7 != Invalid\tparse\tend-of-body",
+        "eval: Invalid\tparse\texpected-term\t272:273:12:7 != Invalid\tparse\tend-of-body"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t272:273:12:7",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-dedent-close-extra/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t272:273:12:7\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-dedent-close-extra/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t272:273:12:7\n"
+        }
+      }
+    },
+    {
+      "case": "layout-comments",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01",
+        "SF-03"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t406:407:20:9"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t406:407:20:9",
+      "d4_gap": true,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-comments/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t406:407:20:9\n"
+        }
+      }
+    },
+    {
+      "case": "layout-choose-ladder",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-04"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tparameter-type\t305:306:16:32"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tparameter-type\t305:306:16:32",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-choose-ladder/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t305:306:16:32\n"
+        }
+      }
+    },
+    {
+      "case": "layout-choose-ladder-comma",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-04"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tparameter-type\t224:225:15:32 != Invalid\tparse\texpected-term",
+        "eval: Unsupported\tparse\tparameter-type\t224:225:15:32 != Invalid\tparse\texpected-term"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tparameter-type\t224:225:15:32",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-choose-ladder-comma/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t224:225:15:32\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-choose-ladder-comma/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t224:225:15:32\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-rows",
+      "owner": "literals",
+      "requirements": [
+        "SF-05",
+        "SF-06"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t149:155:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t149:155:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-rows/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t149:155:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-rows-missing-zero",
+      "owner": "literals",
+      "requirements": [
+        "SF-05",
+        "SF-06"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t60:66:2:0 != Invalid\tcheck\tmissing-arm",
+        "eval: Unsupported\tparse\tdeclaration-form\t60:66:2:0 != Invalid\tcheck\tmissing-arm"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t60:66:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-rows-missing-zero/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t60:66:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/fuel-rows-missing-zero/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t60:66:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-wildcard-first",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t154:160:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t154:160:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-wildcard-first/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t154:160:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-wildcard-first-reuse",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\taffine-reuse",
+        "eval: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\taffine-reuse"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t80:86:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-wildcard-first-reuse/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/fuel-wildcard-first-reuse/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-string-columns",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t889:890:48:18"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t889:890:48:18",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-string-columns/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t889:890:48:18\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-string-columns-arity",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t805:806:47:18 != Invalid\tcheck\tpattern-arity",
+        "eval: Unsupported\tlex\tliteral\t805:806:47:18 != Invalid\tcheck\tpattern-arity"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t805:806:47:18",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-string-columns-arity/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t805:806:47:18\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/fuel-string-columns-arity/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t805:806:47:18\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-continuation",
+      "owner": "literals",
+      "requirements": [
+        "SF-06"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t733:734:41:22"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t733:734:41:22",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-continuation/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t733:734:41:22\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-continuation-capture",
+      "owner": "literals",
+      "requirements": [
+        "SF-06"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t634:635:39:22 != Invalid\tcheck\taffine-reuse",
+        "eval: Unsupported\tlex\tliteral\t634:635:39:22 != Invalid\tcheck\taffine-reuse"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t634:635:39:22",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-continuation-capture/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t634:635:39:22\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/fuel-continuation-capture/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t634:635:39:22\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-four-columns",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t183:189:4:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t183:189:4:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-four-columns/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t183:189:4:0\n"
+        }
+      }
+    },
+    {
+      "case": "fuel-four-columns-column-type",
+      "owner": "literals",
+      "requirements": [
+        "SF-05"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t75:81:2:0 != Invalid\tcheck\tpattern-type",
+        "eval: Unsupported\tparse\tdeclaration-form\t75:81:2:0 != Invalid\tcheck\tpattern-type"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t75:81:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/fuel-four-columns-column-type/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t75:81:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/fuel-four-columns-column-type/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t75:81:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-nested-ctors",
+      "owner": "modules",
+      "requirements": [
+        "SF-08"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "packages",
+        "nest",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t224:230:4:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t224:230:4:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-nested-ctors/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t224:230:4:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-nested-ctors-foreign",
+      "owner": "modules",
+      "requirements": [
+        "SF-08"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "packages",
+        "nest",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t115:121:3:0 != Invalid\tcheck\tpattern-type",
+        "eval: Unsupported\tparse\tdeclaration-form\t115:121:3:0 != Invalid\tcheck\tpattern-type"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t115:121:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-nested-ctors-foreign/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t115:121:3:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/qualified-nested-ctors-foreign/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t115:121:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-fields",
+      "owner": "generics",
+      "requirements": [
+        "SF-09"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "packages",
+        "nest",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t157:163:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t157:163:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-fields/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t157:163:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-fields-unknown",
+      "owner": "generics",
+      "requirements": [
+        "SF-09"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "packages",
+        "nest",
+        "generics",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t78:84:2:0 != Invalid\tcheck\tunknown-type",
+        "eval: Unsupported\tparse\tdeclaration-form\t78:84:2:0 != Invalid\tcheck\tunknown-type"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t78:84:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-fields-unknown/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/qualified-fields-unknown/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t78:84:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-collision",
+      "owner": "generics",
+      "requirements": [
+        "INT-02"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "generics"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t160:166:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t160:166:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-collision/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t160:166:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "qualified-collision-bare",
+      "owner": "generics",
+      "requirements": [
+        "INT-02"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "generics"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t85:91:2:0 != Invalid\tcheck\tunknown-function",
+        "eval: Unsupported\tparse\tdeclaration-form\t85:91:2:0 != Invalid\tcheck\tunknown-function"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t85:91:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/qualified-collision-bare/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/qualified-collision-bare/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t85:91:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "cross-module-hof",
+      "owner": "integrate-1",
+      "requirements": [
+        "SF-21"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "generics",
+        "closures",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t146:152:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t146:152:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/cross-module-hof/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t146:152:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "cross-module-hof-type-arg",
+      "owner": "integrate-1",
+      "requirements": [
+        "SF-21"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "generics",
+        "closures",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t88:94:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t88:94:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t88:94:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/cross-module-hof-type-arg/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t88:94:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/cross-module-hof-type-arg/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t88:94:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "rose-tree",
+      "owner": "generics",
+      "requirements": [
+        "SF-10"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t113:119:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t113:119:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/rose-tree/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t113:119:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "rose-tree-kids",
+      "owner": "generics",
+      "requirements": [
+        "SF-10"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t58:64:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t58:64:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t58:64:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/rose-tree-kids/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t58:64:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/rose-tree-kids/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t58:64:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "mutual-term-bind",
+      "owner": "generics",
+      "requirements": [
+        "SF-10"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t136:142:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t136:142:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/mutual-term-bind/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t136:142:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "mutual-term-bind-defs",
+      "owner": "generics",
+      "requirements": [
+        "SF-10"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "generics",
+        "literals",
+        "nat-columns",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t83:89:2:0 != Invalid\tcheck\tforward-live-call",
+        "eval: Unsupported\tparse\tdeclaration-form\t83:89:2:0 != Invalid\tcheck\tforward-live-call"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t83:89:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/mutual-term-bind-defs/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t83:89:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/mutual-term-bind-defs/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t83:89:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "io-load-continuation",
+      "owner": "core-io",
+      "requirements": [
+        "SF-13"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "closures",
+        "generics",
+        "products",
+        "do",
+        "literals",
+        "nest",
+        "lists"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "no Knot lane runs io programs yet"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t1154:1155:28:62",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-load-continuation/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1154:1155:28:62\n"
+        }
+      }
+    },
+    {
+      "case": "io-load-continuation-type",
+      "owner": "core-io",
+      "requirements": [
+        "SF-13"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "closures",
+        "generics",
+        "products",
+        "do",
+        "literals",
+        "nest",
+        "lists"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t1036:1037:26:62 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tlex\tliteral\t1036:1037:26:62 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t1036:1037:26:62",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-load-continuation-type/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1036:1037:26:62\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/io-load-continuation-type/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1036:1037:26:62\n"
+        }
+      }
+    },
+    {
+      "case": "io-fuel-loader",
+      "owner": "core-io",
+      "requirements": [
+        "SF-13"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "closures",
+        "generics",
+        "products",
+        "do",
+        "literals",
+        "nest",
+        "lists",
+        "nat-columns"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "no Knot lane runs io programs yet"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t1385:1386:34:62",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-fuel-loader/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1385:1386:34:62\n"
+        }
+      }
+    },
+    {
+      "case": "io-fuel-loader-missing-zero",
+      "owner": "core-io",
+      "requirements": [
+        "SF-13"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "closures",
+        "generics",
+        "products",
+        "do",
+        "literals",
+        "nest",
+        "lists",
+        "nat-columns"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t1220:1221:32:62 != Invalid\tcheck\tmissing-arm",
+        "eval: Unsupported\tlex\tliteral\t1220:1221:32:62 != Invalid\tcheck\tmissing-arm"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t1220:1221:32:62",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-fuel-loader-missing-zero/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1220:1221:32:62\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/io-fuel-loader-missing-zero/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t1220:1221:32:62\n"
+        }
+      }
+    },
+    {
+      "case": "io-do-imported",
+      "owner": "sugar",
+      "requirements": [
+        "SF-14",
+        "SF-22"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "modules",
+        "do",
+        "literals",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "no Knot lane runs io programs yet"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t208:209:7:25",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-do-imported/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t208:209:7:25\n"
+        }
+      }
+    },
+    {
+      "case": "io-do-imported-statement",
+      "owner": "sugar",
+      "requirements": [
+        "SF-14",
+        "SF-22"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "io",
+        "modules",
+        "do",
+        "literals",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tlex\tliteral\t207:208:7:25 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tlex\tliteral\t207:208:7:25 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tlex\tliteral\t207:208:7:25",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/io-do-imported-statement/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t207:208:7:25\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/io-do-imported-statement/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tlex\tliteral\t207:208:7:25\n"
+        }
+      }
+    },
+    {
+      "case": "list-literal-imported",
+      "owner": "sugar",
+      "requirements": [
+        "SF-22"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t121:127:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t121:127:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-literal-imported/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t121:127:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-literal-imported-element",
+      "owner": "sugar",
+      "requirements": [
+        "SF-22"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t80:86:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-literal-imported-element/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/list-literal-imported-element/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-generic-field",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t204:210:4:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t204:210:4:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-generic-field/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t204:210:4:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-generic-field-element",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t79:85:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t79:85:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t79:85:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-generic-field-element/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/list-generic-field-element/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t79:85:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-lambda-body",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "closures",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t65:71:2:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t65:71:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-lambda-body/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t65:71:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-lambda-body-scalar",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "closures",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t80:86:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t80:86:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-lambda-body-scalar/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/list-lambda-body-scalar/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t80:86:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-of-results",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t156:162:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t156:162:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-of-results/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t156:162:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "list-of-results-element",
+      "owner": "sugar",
+      "requirements": [
+        "SF-16"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "lists",
+        "generics",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t66:72:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t66:72:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t66:72:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/list-of-results-element/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t66:72:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/list-of-results-element/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t66:72:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "template-qualified-arg",
+      "owner": "sugar",
+      "requirements": [
+        "SF-17"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "templates",
+        "generics",
+        "closures",
+        "lists",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t138:144:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t138:144:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/template-qualified-arg/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t138:144:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "template-qualified-arg-type",
+      "owner": "sugar",
+      "requirements": [
+        "SF-17"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "templates",
+        "generics",
+        "closures",
+        "lists",
+        "nest"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t94:100:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t94:100:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t94:100:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/template-qualified-arg-type/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t94:100:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/template-qualified-arg-type/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t94:100:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "scale-catalog",
+      "owner": "selfsource",
+      "requirements": [
+        "SCALE-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "catalog",
+        "spine"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Exhausted\tparse\tbudget\t9755:9756:764:7"
+      ],
+      "outcomes": [
+        "Exhausted"
+      ],
+      "first_blocker": "Exhausted\tparse\tbudget\t9755:9756:764:7",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/scale-catalog/main.bend"
+          ],
+          "exit": 4,
+          "stdout": "",
+          "stderr": "Exhausted\tparse\tbudget\t9755:9756:764:7\n"
+        }
+      }
+    },
+    {
+      "case": "scale-bundle",
+      "owner": "selfsource",
+      "requirements": [
+        "SCALE-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "modules",
+        "catalog",
+        "spine"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t123:129:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t123:129:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/scale-bundle/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t123:129:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "nat-65536",
+      "owner": "literals",
+      "requirements": [
+        "SCALE-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t100:106:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t100:106:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nat-65536/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t100:106:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "nat-65536-as-word",
+      "owner": "literals",
+      "requirements": [
+        "SCALE-05"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t69:75:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t69:75:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t69:75:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/nat-65536-as-word/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/nat-65536-as-word/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t69:75:2:0\n"
+        }
+      }
+    },
+    {
+      "case": "u32-nat-roundtrip",
+      "owner": "literals",
+      "requirements": [
+        "SCALE-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "nat-word"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t125:131:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t125:131:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/u32-nat-roundtrip/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t125:131:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "u32-bitwise-edges",
+      "owner": "literals",
+      "requirements": [
+        "BS-05"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "u32-bits"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t141:147:3:0"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t141:147:3:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/u32-bitwise-edges/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t141:147:3:0\n"
+        }
+      }
+    },
+    {
+      "case": "u32-bitwise-word-count",
+      "owner": "literals",
+      "requirements": [
+        "BS-05"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "base",
+        "literals",
+        "u32-bits"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tdeclaration-form\t86:92:2:0 != Invalid\tcheck\ttype-mismatch",
+        "eval: Unsupported\tparse\tdeclaration-form\t86:92:2:0 != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tdeclaration-form\t86:92:2:0",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/u32-bitwise-word-count/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t86:92:2:0\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/u32-bitwise-word-count/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tdeclaration-form\t86:92:2:0\n"
+        }
+      }
+    }
+  ],
+  "counts": {
+    "status": {
+      "pass": 2,
+      "fail": 0,
+      "blocked": 60
+    },
+    "by_owner": {
+      "core-io": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 4
+      },
+      "descent-2": {
+        "pass": 2,
+        "fail": 0,
+        "blocked": 2
+      },
+      "generics": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 8
+      },
+      "integrate-1": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 2
+      },
+      "literals": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 15
+      },
+      "modules": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 2
+      },
+      "selfsource": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 15
+      },
+      "sugar": {
+        "pass": 0,
+        "fail": 0,
+        "blocked": 12
+      }
+    },
+    "d4_gaps": [
+      "layout-braces",
+      "layout-call-args",
+      "layout-comments",
+      "layout-dedent-close",
+      "layout-def-header"
+    ],
+    "blocked_meeting_requirement": []
+  },
+  "judge_mutants": [
+    {
+      "name": "blocked-counted-as-pass",
+      "rejected": true,
+      "first_violation": "nested-self-call-list: recorded pass, recomputed blocked"
+    },
+    {
+      "name": "failure-relabelled-blocked",
+      "rejected": true,
+      "first_violation": "nested-self-call: recorded blocked, recomputed fail"
+    },
+    {
+      "name": "dropped-knot-call",
+      "rejected": true,
+      "first_violation": "nested-self-call: recorded pass, recomputed fail"
+    },
+    {
+      "name": "flipped-evaluated-tag",
+      "rejected": true,
+      "first_violation": "nested-self-call: recorded pass, recomputed fail"
+    },
+    {
+      "name": "crash-while-blocked",
+      "rejected": true,
+      "first_violation": "nested-self-call-list: blocked by ['base', 'generics', 'literals'] but Knot reported ['Crash']"
+    },
+    {
+      "name": "reworded-diagnostic",
+      "rejected": true,
+      "first_violation": "nested-self-call-mistyped: recorded pass, recomputed fail"
+    },
+    {
+      "name": "shifted-position",
+      "rejected": true,
+      "first_violation": "nested-self-call-mistyped: recorded pass, recomputed fail"
+    },
+    {
+      "name": "stale-needs",
+      "rejected": true,
+      "first_violation": "the receipt was taken under other needs"
+    },
+    {
+      "name": "seed-not-reproduced",
+      "rejected": true,
+      "first_violation": "the seed observations were not reproduced"
+    },
+    {
+      "name": "unreviewed-lane-disagreement",
+      "rejected": true,
+      "first_violation": "nested-self-call: an unreviewed seed lane disagreement"
+    },
+    {
+      "name": "dropped-native-lane",
+      "rejected": true,
+      "first_violation": "nested-self-call: a seed call lacks a lane"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "reject-every-self-call",
+      "file": "src/check.bend",
+      "old": "Bool.and(U32.is_eq(index,current),Bool.not(E.descends(items,smaller)))",
+      "new": "U32.is_eq(index,current)",
+      "mutated_sha256": "4b5d78be3945f58eef30ee70effe3cd62a02dc3801e62ded2a77a6e1ebf0a5bf",
+      "typecheck": "All terms check.\n",
+      "builds": [
+        {
+          "entry": ".local/compiler-selfhost/knot/mutants/reject-every-self-call/src/check-cli.bend",
+          "exit": 0,
+          "sha256": "43edf031eeb16c29215c1b53166bfe5b337eda85e6a5d6a19218e9847626bdee"
+        }
+      ],
+      "witness": "nested-self-call",
+      "status": "fail",
+      "problems": [
+        "check: Unsupported\tcheck\trecursive-call\t573:577:32:37"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "killed": true
+    },
+    {
+      "name": "admit-mistyped-constant",
+      "file": "src/check.bend",
+      "old": "S.choose(Result<S.Error,C.Checked>,U32.is_eq(type_id,target),u => Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}",
+      "new": "S.choose(Result<S.Error,C.Checked>,True{},u => Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}",
+      "mutated_sha256": "65c259dc6b563cdd911a6f4238fec97511d521fcae2fe7c97a2ac2b0b4c8d926",
+      "typecheck": "All terms check.\n",
+      "builds": [
+        {
+          "entry": ".local/compiler-selfhost/knot/mutants/admit-mistyped-constant/src/check-cli.bend",
+          "exit": 0,
+          "sha256": "e468f1f8d373e2fafc768056da642f5d56bb5820a28b687515f4e86feffe2835"
+        },
+        {
+          "entry": ".local/compiler-selfhost/knot/mutants/admit-mistyped-constant/src/eval-cli.bend",
+          "exit": 0,
+          "sha256": "cf5fff617c80d014cfa00348aa077e4076430ceb037920faee587e4056a39d85"
+        }
+      ],
+      "witness": "nested-self-call-mistyped",
+      "status": "fail",
+      "problems": [
+        "check: Success != Invalid\tcheck\ttype-mismatch",
+        "eval: Success != Invalid\tcheck\ttype-mismatch"
+      ],
+      "outcomes": [
+        "Success"
+      ],
+      "killed": true
+    },
+    {
+      "name": "unreversed-fields",
+      "file": "src/eval.bend",
+      "old": "Done{Return{Object{type_id,tag,List.reverse(&2,Value,values)},frames}}",
+      "new": "Done{Return{Object{type_id,tag,values},frames}}",
+      "mutated_sha256": "7aae46ea120fa542319f3ddfb2fb430db58576098e009e1cb66f7e4df03d1c40",
+      "typecheck": "All terms check.\n",
+      "builds": [
+        {
+          "entry": ".local/compiler-selfhost/knot/mutants/unreversed-fields/src/check-cli.bend",
+          "exit": 0,
+          "sha256": "3de5c99f92028797819566e1cbf4e51a748e1eb8cf2c2731904dfd3831b94fa9"
+        },
+        {
+          "entry": ".local/compiler-selfhost/knot/mutants/unreversed-fields/src/eval-cli.bend",
+          "exit": 0,
+          "sha256": "b2295767c8540f923dec3f6935d160b84258df478e4b3fe013b04842f8e55ae6"
+        }
+      ],
+      "witness": "nested-self-call",
+      "status": "fail",
+      "problems": [
+        "at['P0']: InternalFailure\teval\tpattern-arity != High (tag 1)",
+        "at['P1']: Evaluated\t3\t2\tGap{} != Low (tag 0)",
+        "at['P2']: Evaluated\t3\t2\tGap{} != Low (tag 0)",
+        "at['P3']: Evaluated\t3\t2\tGap{} != High (tag 1)",
+        "main[]: Evaluated\t3\t2\tGap{} != High (tag 1)"
+      ],
+      "outcomes": [
+        "InternalFailure",
+        "Success"
+      ],
+      "killed": true
+    }
+  ],
+  "inputs": {
+    "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
+    "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
+    "tests/compiler-selfhost/check.py": "68248aa8e80a7d1780a0e5551fa72eedf7f97d4d25a197a023cddbf84831f136",
+    "tests/compiler-selfhost/regen.py": "0790205b560fbfab2febd9c863a062af762dfd9846d10f55ed34e6d95a71043f",
+    "tests/compiler-selfhost/expectations.json": "d28913f98db2d304de1b0b5d281a40987758cf979ac682b118d454fc2e9bd5c4"
+  }
+}

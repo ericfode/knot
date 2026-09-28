@@ -41,6 +41,17 @@ are independent of that store's location. It writes only its own
 `tests/perch-context/receipts/context.json` in scratch. It makes no provider
 requests and retains the pinned rubric and composition-byte cap.
 
+The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
+
+- It first reproduces 62 frozen cases on the seed's interpreter and native lanes.
+- It then runs Knot's `check-cli` and `eval-cli` on each case.
+- A case is blocked while a reviewed need is unavailable. A blocked case never
+  counts as passing. It fails the gate only by crashing, timing out, or reporting
+  a host or internal failure.
+- The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
+- An increment that lands a need flips it in `expectations.json`, and the gate
+  then holds that increment to its cases.
+
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
 

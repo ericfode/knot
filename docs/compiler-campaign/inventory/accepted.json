@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "617b29fdf743c15f3da19288592eb589b55a215029b464427aa7ac7661a0c533",
+    "sha256": "d4fdbbece2e1607a0ac95831e2bcfc1eb3e02cb1ca852a7a5b518d42e84eacad",
     "gates": [
       {
         "name": "frontend",
@@ -230,6 +230,19 @@
             "sha256": "5c20ea02a6a3a075af56ee6df9a8830c3585692be140147084b9194b483030c8"
           }
         ]
+      },
+      {
+        "name": "selfhost",
+        "argv": [
+          "python3",
+          "tests/compiler-selfhost/check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-selfhost/check.py",
+            "sha256": "68248aa8e80a7d1780a0e5551fa72eedf7f97d4d25a197a023cddbf84831f136"
+          }
+        ]
       }
     ]
   },
@@ -432,6 +445,24 @@
       "fixtures": 19
     },
     {
+      "suite": "tests/compiler-selfhost",
+      "directory": "tests/compiler-selfhost",
+      "status": "unrecognized-suite",
+      "gate": null,
+      "admission": "excluded",
+      "manifests": [
+        {
+          "file": "tests/compiler-selfhost/expectations.json",
+          "sha256": "d28913f98db2d304de1b0b5d281a40987758cf979ac682b118d454fc2e9bd5c4"
+        }
+      ],
+      "gates": [
+        "selfhost"
+      ],
+      "fixtures": 0,
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
       "suite": "catalog",
       "directory": "tests/compiler-structural",
       "status": "recognized",
@@ -534,6 +565,11 @@
   "reports": [
     {
       "directory": "tests/compiler-io",
+      "status": "unrecognized-suite",
+      "detail": "No reviewed adapter for this suite path"
+    },
+    {
+      "directory": "tests/compiler-selfhost",
       "status": "unrecognized-suite",
       "detail": "No reviewed adapter for this suite path"
     },

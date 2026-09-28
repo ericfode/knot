@@ -68,6 +68,8 @@ GATES = (
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
     Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
          ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
+         ('tests/compiler-selfhost/receipts/selfhost.json',)),
 )
 
 
@@ -228,6 +230,12 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
             raise ValueError('Bootstrap receipt violates its stage verdict')
         result.update(corpus=record['corpus']['files'], stages=len(stages),
                       reached=sum(s['status'] == 'reached' for s in stages))
+    if gate.name == 'selfhost':
+        status = record['counts']['status']
+        if status['fail'] or not status['pass'] or record['seed']['reproduced'] is not True:
+            raise ValueError('Selfhost receipt violates its verdict')
+        result.update(cases=len(record['cases']), passed=status['pass'], blocked=status['blocked'],
+                      d4_gaps=len(record['counts']['d4_gaps']), judge_mutants=len(record['judge_mutants']))
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
