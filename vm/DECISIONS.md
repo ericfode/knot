@@ -278,6 +278,38 @@ follows it (§5, §10, §11) without a new image header word.
    the evaluator mutant `nat-predecessor-narrowed` (31 bits kept) survives every
    other golden and dies by `nat-case-big`, and §12 binds vm-model's zero-leak
    audit to both.
+18. **Every read is inspected, over a stated extent.** Review round 6 found §6's
+   inspection partial and evaluate.py stricter than the text. §6 listed Case
+   scrutinees, prim reads, rendered words, Action operands and the final IO.OP,
+   but not Construct; it said Chr yields its code word unchanged and gave Succ no
+   rule for a non-Big pointer; and §9 said four conversions and `append`'s `b`
+   are moved, without saying they are read. evaluate.py inspects the Succ and Chr
+   operand, the moved words and every String whole (`eq`, `append`'s `b`,
+   `reverse`, `length`, `is_empty`), so through a `none`-typed `id` it answered
+   `HostFailure image ill-typed` where a VM following the text answers `On{}`,
+   `True{}` or `False{}`. A copy of evaluate.py that followed the text (Chr and the
+   four conversions return their operand, `append` conses onto `b` unread) passed
+   the gate with the identical summary (.local/vm-spec/f7-text-before.log). We
+   adopt the stricter rule, so that an ill-typed word never survives into a value
+   the VM later trusts. §6 now lists every inspection point, the Succ and Chr
+   operand among them, and says what is not inspected; checking a word is
+   shallow, and a String's extent is whole, each cell and its Char word. §9's
+   table gives every prim's operand types, extent and moves, and inspection
+   precedes computation and allocation. §8's phase 3 reads a Halt's code and
+   whole message, and §10 reads an Action's whole String before the scalar check.
+   The list also names §7's check of an Enter's target, and a byte List's whole
+   extent for `File.write_bytes`; the reference evaluation performs only
+   `IO.print`, so vm-io owes that List's control and mutant (§12).
+   Eighteen run controls freeze those points by literal review, the reviewer's
+   seven probes among them (each Succ discarded by a `let`, as the Chr is, so that
+   only its read can halt), with the calls §7 counts: 2 for Succ and Chr, whose
+   construction is free; 3 for a prim, which sits in its Base function; 4 for a
+   Halt; and 5 for the print. Eighteen evaluator mutants read less than an extent
+   and exactly as much on well-typed words. Each survives every golden and every
+   other control, and each dies by its own inspection control
+   (.local/vm-spec/f7-mutants.log). The text-following copy now fails at
+   `run control inspect-chr` (.local/vm-spec/f7-text-after.log). No golden,
+   expectation or evaluate.py line changed.
 
 ## Findings that need an owner
 
