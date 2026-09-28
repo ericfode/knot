@@ -40,7 +40,7 @@ Commas and spaces separate scrutinees and row patterns.
 ## Proof inventory
 
 The complete `src/matrix-PROOF.bend` imports the earlier proof chain and fills
-every matrix law (21 in round 2, 25 after round 4), with no added axiom, unsafe
+every matrix law (21 in round 2, 24 in round 3, 31 after round 4), with no added axiom, unsafe
 declaration or proof hole.
 `src/PROOF.bend` additionally fills the comma-scrutinee parser law.
 
