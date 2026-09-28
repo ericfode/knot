@@ -122,5 +122,39 @@
       "E2E-3": "not started",
       "E2E-4": "device record interpreter qualified on Metal; compiler emission not started"
     }
+  },
+  "reviews": {
+    "method": "scope, gates and semantics lenses, each blocking/major finding adversarially verified (coordinator review workflow, 2026-09-27)",
+    "classify": {
+      "blocking": 0,
+      "confirmed_major": [
+        "seed-rejected forms now Unsupported instead of Invalid: non-leading ~ binder, 0x import without hex digits, == and => after a constructor (still rejected; precision regression, no unsound acceptance)",
+        "seed-accepted forms still Invalid (D4 gaps): comma-separated multi-scrutinee match, ../ and absolute imports, generic type application before the generic header",
+        "malformed-after-prefix inputs are untested by the frontend gate"
+      ],
+      "disposition": "merged; D4 gaps assigned to nest (comma scrutinees), modules (../, absolute, hex rule) and a classify-2 parser fix (template binder, ==/=>, early generic application) after nest and modules land"
+    },
+    "recursion": {
+      "blocking": 0,
+      "confirmed_major": [
+        "descent family preflight excluded the newly truncated helper scope.bend::contains",
+        "no bounded Perch group containing the 16 recursion laws fits 48 KB"
+      ],
+      "disposition": "merged; both assigned to perch-context (in flight)"
+    },
+    "fields-wasm": {
+      "blocking": 0,
+      "confirmed_major": [
+        "deep-call's evaluator expectation (Exhausted parse budget) came from Knot's own compile-lane diagnostic, and its Wasm Exhausted acceptance was met by the separate deep-stack fixture; verifier rated it minor (provenance label, no hidden semantic defect)"
+      ],
+      "fixed_by_coordinator": [
+        "run-wasm.mjs fails closed (3a162ab): a stack overflow escaping to PromiseRejectCallback exited 0 with empty stdout at --stack_size 60-75"
+      ],
+      "disposition": "merged; deep-call is relabelled here as an observed Knot parser-budget control, not a seed or literal expectation"
+    },
+    "notes": [
+      "pre-existing: Bun-lane compiler 'memory fault' after writing large modules (fields-wasm semantics review) must be diagnosed before the whole compiler runs in the Bun lane",
+      "pre-existing: structured Wasm results can come back from the host adapter as enum results; the adapter's enum-only ABI is a documented precondition"
+    ]
   }
 }
