@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 78 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 81 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
@@ -454,8 +454,9 @@ checks read only the image, in that order, before anything else and at zero fuel
 Failures are `HostFailure invoke unknown-export`, `argument-arity`,
 `argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
 invoke result-type`: Knot has no describe spelling for such a result, so the VM
-refuses the request instead of inventing one (§11; golden `result-u32`; the
-reference predicate is `serializer.undescribable`). The VM then pushes Top(phase 0)
+refuses the request instead of inventing one (§11; goldens `result-u32`,
+`result-u32-field`, `result-char` and `result-string`; the reference predicate is
+`serializer.undescribable`). The VM then pushes Top(phase 0)
 and starts with `Enter(FN, ordinals)`. Return to Top(0) halts with the result and
 prints
 
@@ -633,8 +634,10 @@ value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
 `Unsupported invoke result-type` where `main`'s result type is outside §8's
-describe domain (`result-u32`: the seed prints `5`, eval-cli reports the
-`InternalFailure eval result-tag` defect recorded in DECISIONS.md), derived from the
+describe domain (`result-u32`, `result-u32-field`, `result-char`,
+`result-string`: the seed prints `5`, `Box{5}`, `'a'` and `"ab"`, and eval-cli
+reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
+each time), derived from the
 image's type table and never listed as a bound; and the seed's stdout for the Programs
 `foreign-print` and `io-bind`. For those Programs the eval lane is not excused but
 unavailable: both literals `eval-cli` and `check-cli` report

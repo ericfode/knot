@@ -78,7 +78,11 @@ follows it (§5, §10, §11) without a new image header word.
    field makes the invocation `Unsupported invoke result-type` before any entry.
    A bound is a declared domain or budget limit and is always Exhausted; an
    Unsupported result is D4's refusal, never a bound. Of the 76 Book goldens only
-   `result-u32` falls outside the domain, so no other expectation changed.
+   `result-u32` falls outside the domain, so no other expectation changed. Three
+   goldens frozen in round 2 witness a U32 field, Char and String; a `none` field
+   and an arrow are witnessed by describe controls, because neither pinned head
+   produces a checked core for a generic result, and a closure result would add
+   another main-line `Invalid parse function-result` row (finding 5).
 9. **A Case may inspect an erased position.** Review round 2 relaxed §3's
    scrutinee rule from "the slot's type equals the concrete scrutinee type" to
    "the scrutinee type is concrete and the slot's type is it or `none`". Round 1's
@@ -143,11 +147,12 @@ follows it (§5, §10, §11) without a new image header word.
 7. **eval-cli reports an InternalFailure for results it cannot describe.** The
    literals `eval-cli` at `2ea222e` reports `InternalFailure eval result-tag` for a
    Book result that is, or contains, a U32, Char or String, although `check-cli`
-   reports `Checked` and the seed prints the value: golden `result-u32` (seed `5`),
-   `Box{5}` with `type Box is Data: Box{item: U32}` (seed `Box{5}`), `'a'` (seed
-   `'a'`) and `"ab"` (seed `"ab"`). SPEC §11 counts an InternalFailure as a broken
-   invariant; under D4 a result Knot cannot describe is Unsupported, which is what
-   knot-vm-1 reports (`Unsupported invoke result-type`, SPEC §8). Owner: literals.
+   reports `Checked` and the seed prints the value: goldens `result-u32` (seed
+   `5`), `result-u32-field` (`Box{5}` with `type Box is Data: Box{item: U32}`),
+   `result-char` (`'a'`) and `result-string` (`"ab"`). SPEC §11 counts an
+   InternalFailure as a broken invariant; under D4 a result Knot cannot describe
+   is Unsupported, which is what knot-vm-1 reports (`Unsupported invoke
+   result-type`, SPEC §8). Owner: literals.
 8. **eval-cli reports a HostFailure for a closure result.** The closures `eval-cli`
    at `a1d6891` reports `HostFailure invoke function-result` for
    `def main() -> Flag -> Flag: x => On{}`, which its `check-cli` reports `Checked`
