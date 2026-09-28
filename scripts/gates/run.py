@@ -60,6 +60,7 @@ GATES = (
          ('tests/compiler-recursion/receipts/recursion.json',)),
     Gate('fields-wasm', ('python3', 'tests/compiler-fields-wasm/check.py'),
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
+    Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
 )
 
@@ -179,6 +180,11 @@ def output_names(root: Path, gate: Gate) -> set[str]:
 
 
 def counts(root: Path, gate: Gate, stdout: str) -> dict:
+    if gate.name == 'census':
+        record = json.loads(stdout)
+        if record.get('status') != 'current':
+            raise ValueError('Census inventory is not current')
+        return {key: record['compiler'][key] for key in ('files', 'declarations', 'classes')}
     if not gate.outputs:
         match = re.search(r'(?m)^# pass (\d+)\s*$', stdout)
         if not match or 'PASS: eight law rules;' not in stdout:

@@ -35,6 +35,10 @@ inventoried. Neither command rewrites approvals. After an intentional profile
 extension, review the policy diff, regenerate the four manifests, then run checks.
 `--check` additionally rejects any stale manifest, even when source edits add no
 new class. A renamed declaration requires its own reviewed approval.
+`npm run census:approve` extends `approved.json` from the current inventory and
+prints what it added (new files and declarations, widened classes, imports).
+That printed summary and the policy diff are the review; it never lifts a
+forbidden dependency feature.
 
 The seed's hash-pinned `OPERATIONS` table and `tpl_ops` helper are evaluated in
 an empty VM context, with no filesystem, process or network binding. This retains

@@ -396,8 +396,8 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 81,
-          "base": 37,
+          "declarations": 87,
+          "base": 39,
           "base_intrinsics": 9,
           "foreign": 0
         },
@@ -491,7 +491,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -996,6 +996,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -1012,6 +1034,8 @@
               "Nat",
               "Result",
               "String",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -1023,6 +1047,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -1039,7 +1067,62 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -1409,7 +1492,7 @@
           {
             "key": "src/syntax.text",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1527,7 +1610,7 @@
           {
             "key": "String.eq",
             "file": "Base",
-            "via": "src/syntax.matches",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1577,6 +1660,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -1701,8 +1813,8 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 81,
-          "base": 37,
+          "declarations": 87,
+          "base": 39,
           "base_intrinsics": 8,
           "foreign": 0
         },
@@ -1796,7 +1908,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2301,6 +2413,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -2317,6 +2451,8 @@
               "Nat",
               "Result",
               "String",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -2328,6 +2464,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -2344,7 +2484,62 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -2714,7 +2909,7 @@
           {
             "key": "src/syntax.text",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2832,7 +3027,7 @@
           {
             "key": "String.eq",
             "file": "Base",
-            "via": "src/syntax.matches",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2882,6 +3077,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -3006,8 +3230,8 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 61,
-          "base": 25,
+          "declarations": 67,
+          "base": 27,
           "base_intrinsics": 9,
           "foreign": 0
         },
@@ -3067,7 +3291,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3325,6 +3549,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -3335,6 +3574,8 @@
               "Bool.and",
               "Bool.or",
               "Bool.pick",
+              "String.eq",
+              "String.starts_with",
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
@@ -3343,6 +3584,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -3356,7 +3601,49 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -3600,7 +3887,7 @@
           {
             "key": "src/syntax.text",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3671,7 +3958,7 @@
           {
             "key": "String.eq",
             "file": "Base",
-            "via": "src/syntax.matches",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3713,6 +4000,31 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Char.is_eq",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.starts_with"
+            ],
             "dynamic_calls": []
           },
           {
@@ -3796,8 +4108,8 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 95,
-          "base": 51,
+          "declarations": 101,
+          "base": 53,
           "base_intrinsics": 9,
           "foreign": 0
         },
@@ -3918,7 +4230,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3945,7 +4257,7 @@
           {
             "key": "Cmp",
             "file": "Base",
-            "via": "Cmp.is_eq",
+            "via": "String.cmp",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -4464,6 +4776,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -4479,6 +4812,8 @@
               "Maybe",
               "Nat",
               "Result",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -4490,6 +4825,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -4506,7 +4845,61 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -4869,7 +5262,7 @@
           {
             "key": "src/syntax.text",
             "file": "src/syntax.bend",
-            "via": "src/syntax.identifier",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4987,7 +5380,7 @@
           {
             "key": "String.eq",
             "file": "Base",
-            "via": "src/syntax.matches",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5038,6 +5431,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -5297,8 +5719,8 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 304,
-          "base": 70,
+          "declarations": 328,
+          "base": 72,
           "base_intrinsics": 20,
           "foreign": 6
         },
@@ -5406,7 +5828,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5574,7 +5996,7 @@
           {
             "key": "Bool.pick",
             "file": "Base",
-            "via": "src/wasm-bytes.groups",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5614,7 +6036,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5846,7 +6268,7 @@
           {
             "key": "List.length",
             "file": "Base",
-            "via": "src/wasm.emit",
+            "via": "src/compile-cli.output_opened",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5859,7 +6281,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/wasm.lower",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6767,6 +7189,7 @@
               "src/core.Checked",
               "src/core.Parameter",
               "src/core.Signature",
+              "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -6783,14 +7206,21 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
+              "Bool.not",
               "Result",
               "String",
               "U32",
+              "U32.is_eq",
               "src/core.Checked",
               "src/core.Term",
               "src/core.internal",
+              "src/core.unsupported",
+              "src/scope.Scope",
+              "src/scope.descends",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -6806,12 +7236,10 @@
               "Result",
               "String",
               "U32",
-              "U32.is_eq",
               "U32.is_gt",
               "src/catalog.FunctionRef",
               "src/check.bound",
               "src/core.invalid",
-              "src/core.unsupported",
               "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -7027,7 +7455,7 @@
           {
             "key": "src/check.enum_profile",
             "file": "src/check.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.capability",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -8479,6 +8907,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -8495,6 +8945,8 @@
               "Nat",
               "Result",
               "String",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -8506,6 +8958,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -8522,7 +8978,62 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -8800,6 +9311,7 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
+              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -8935,6 +9447,40 @@
               "List",
               "U32",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendants",
+            "file": "src/scope.bend",
+            "via": "src/patterns.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "List.append",
+              "U32",
+              "U32.is_eq",
+              "src/scope.contains",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descends",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Term",
+              "src/scope.contains"
             ],
             "dynamic_calls": []
           },
@@ -9600,7 +10146,7 @@
           {
             "key": "src/wasm-bytes.concat",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.module_bytes",
+            "via": "src/wasm.entry",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9723,7 +10269,7 @@
           {
             "key": "src/wasm-bytes.sized",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm-bytes.section",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9742,7 +10288,7 @@
           {
             "key": "src/wasm-bytes.unsigned",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9806,6 +10352,59 @@
             ]
           },
           {
+            "key": "src/wasm.allocate",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.length",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "U32.is_lt",
+              "U32.mul",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat",
+              "src/wasm.Code",
+              "src/wasm.code",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.memory",
+              "src/wasm.stores"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.allocator",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.sized",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.local_declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.append",
             "file": "src/wasm.bend",
             "via": "src/wasm.after_argument",
@@ -9843,6 +10442,22 @@
               "src/wasm.Mode",
               "src/wasm.function_code",
               "src/wasm.lower"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.boxed",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -9908,6 +10523,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.capability",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/check.enum_profile",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/wasm.Profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.code",
             "file": "src/wasm.bend",
             "via": "src/wasm.lower",
@@ -9940,7 +10573,7 @@
           {
             "key": "src/wasm.constant",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9965,26 +10598,42 @@
             "unsafe": false,
             "dependencies": [
               "List",
-              "List.length",
               "Nat",
               "Result",
               "U32",
-              "U32.from_nat",
-              "src/check.enum_profile",
+              "src/core.Book",
+              "src/syntax.Error",
+              "src/wasm.Profile",
+              "src/wasm.emit_profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.emit_profile",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "U32",
               "src/core.Book",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.unsigned",
-              "src/wasm.Sections",
-              "src/wasm.entries",
-              "src/wasm.module_bytes"
+              "src/wasm.Profile",
+              "src/wasm.capability",
+              "src/wasm.heap_types",
+              "src/wasm.profiled"
             ],
             "dynamic_calls": []
           },
           {
             "key": "src/wasm.entries",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10063,6 +10712,58 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.fielded",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.heap_types",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.fielded_arms",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.finish",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.allocator",
+              "src/wasm.extend_sections",
+              "src/wasm.function_type",
+              "src/wasm.module_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.function_code",
             "file": "src/wasm.bend",
             "via": "src/wasm.body",
@@ -10092,7 +10793,7 @@
           {
             "key": "src/wasm.function_type",
             "file": "src/wasm.bend",
-            "via": "src/wasm.entry",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10111,9 +10812,48 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.heap_sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.module_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.section"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.heap_types",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/syntax.choose",
+              "src/wasm.fielded"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.instruction",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10160,6 +10900,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.load",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.Local",
             "file": "src/wasm.bend",
             "via": "src/wasm.parameters",
@@ -10174,7 +10933,7 @@
           {
             "key": "src/wasm.local_declarations",
             "file": "src/wasm.bend",
-            "via": "src/wasm.function_code",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10222,12 +10981,17 @@
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
+              "List.length",
+              "List.reverse",
+              "Maybe",
               "Nat",
               "Result",
               "String",
               "U32",
               "U32.add",
+              "U32.from_nat",
               "U32.is_eq",
+              "src/core.Binding",
               "src/core.Function",
               "src/core.Parameter",
               "src/core.Term",
@@ -10240,15 +11004,38 @@
               "src/wasm.Mode",
               "src/wasm.after_argument",
               "src/wasm.after_initializer",
+              "src/wasm.allocate",
+              "src/wasm.boxed",
               "src/wasm.branch_code",
               "src/wasm.call_body",
               "src/wasm.called",
               "src/wasm.code",
               "src/wasm.constant",
+              "src/wasm.fielded_arms",
               "src/wasm.instruction",
               "src/wasm.internal",
+              "src/wasm.load",
               "src/wasm.lookup",
               "src/wasm.signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.memory",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.unsigned"
             ],
             "dynamic_calls": []
           },
@@ -10261,7 +11048,9 @@
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "U32",
+              "src/core.Binding",
               "src/core.Parameter",
               "src/core.Term"
             ],
@@ -10270,12 +11059,13 @@
           {
             "key": "src/wasm.module_bytes",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.finish",
+              "Bool",
               "List",
               "Result",
               "U32",
@@ -10284,7 +11074,8 @@
               "src/wasm-bytes.bytes",
               "src/wasm-bytes.concat",
               "src/wasm-bytes.section",
-              "src/wasm.Sections"
+              "src/wasm.Sections",
+              "src/wasm.heap_sections"
             ],
             "dynamic_calls": []
           },
@@ -10308,9 +11099,60 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/wasm.Sections",
+            "key": "src/wasm.present",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Profile",
             "file": "src/wasm.bend",
             "via": "src/wasm.emit",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.profiled",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List",
+              "List.length",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "src/core.Function",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.entries",
+              "src/wasm.finish",
+              "src/wasm.present"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -10338,6 +11180,27 @@
               "src/syntax.Error",
               "src/syntax.choose",
               "src/wasm.internal"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.stores",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "List",
+              "Result",
+              "U32",
+              "U32.add",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
             ],
             "dynamic_calls": []
           },
@@ -10483,6 +11346,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -10851,8 +11743,8 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 304,
-          "base": 70,
+          "declarations": 328,
+          "base": 72,
           "base_intrinsics": 19,
           "foreign": 6
         },
@@ -10960,7 +11852,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11128,7 +12020,7 @@
           {
             "key": "Bool.pick",
             "file": "Base",
-            "via": "src/wasm-bytes.groups",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11168,7 +12060,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11400,7 +12292,7 @@
           {
             "key": "List.length",
             "file": "Base",
-            "via": "src/wasm.emit",
+            "via": "src/compile-cli.output_opened",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11413,7 +12305,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/wasm.lower",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12321,6 +13213,7 @@
               "src/core.Checked",
               "src/core.Parameter",
               "src/core.Signature",
+              "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -12337,14 +13230,21 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
+              "Bool.not",
               "Result",
               "String",
               "U32",
+              "U32.is_eq",
               "src/core.Checked",
               "src/core.Term",
               "src/core.internal",
+              "src/core.unsupported",
+              "src/scope.Scope",
+              "src/scope.descends",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -12360,12 +13260,10 @@
               "Result",
               "String",
               "U32",
-              "U32.is_eq",
               "U32.is_gt",
               "src/catalog.FunctionRef",
               "src/check.bound",
               "src/core.invalid",
-              "src/core.unsupported",
               "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -12581,7 +13479,7 @@
           {
             "key": "src/check.enum_profile",
             "file": "src/check.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.capability",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14033,6 +14931,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -14049,6 +14969,8 @@
               "Nat",
               "Result",
               "String",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -14060,6 +14982,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -14076,7 +15002,62 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -14354,6 +15335,7 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
+              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -14489,6 +15471,40 @@
               "List",
               "U32",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendants",
+            "file": "src/scope.bend",
+            "via": "src/patterns.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "List.append",
+              "U32",
+              "U32.is_eq",
+              "src/scope.contains",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descends",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Term",
+              "src/scope.contains"
             ],
             "dynamic_calls": []
           },
@@ -15154,7 +16170,7 @@
           {
             "key": "src/wasm-bytes.concat",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.module_bytes",
+            "via": "src/wasm.entry",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15277,7 +16293,7 @@
           {
             "key": "src/wasm-bytes.sized",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm-bytes.section",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15296,7 +16312,7 @@
           {
             "key": "src/wasm-bytes.unsigned",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15360,6 +16376,59 @@
             ]
           },
           {
+            "key": "src/wasm.allocate",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.length",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "U32.is_lt",
+              "U32.mul",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat",
+              "src/wasm.Code",
+              "src/wasm.code",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.memory",
+              "src/wasm.stores"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.allocator",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.sized",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.local_declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.append",
             "file": "src/wasm.bend",
             "via": "src/wasm.after_argument",
@@ -15397,6 +16466,22 @@
               "src/wasm.Mode",
               "src/wasm.function_code",
               "src/wasm.lower"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.boxed",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -15462,6 +16547,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.capability",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/check.enum_profile",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/wasm.Profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.code",
             "file": "src/wasm.bend",
             "via": "src/wasm.lower",
@@ -15494,7 +16597,7 @@
           {
             "key": "src/wasm.constant",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15519,26 +16622,42 @@
             "unsafe": false,
             "dependencies": [
               "List",
-              "List.length",
               "Nat",
               "Result",
               "U32",
-              "U32.from_nat",
-              "src/check.enum_profile",
+              "src/core.Book",
+              "src/syntax.Error",
+              "src/wasm.Profile",
+              "src/wasm.emit_profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.emit_profile",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "U32",
               "src/core.Book",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.unsigned",
-              "src/wasm.Sections",
-              "src/wasm.entries",
-              "src/wasm.module_bytes"
+              "src/wasm.Profile",
+              "src/wasm.capability",
+              "src/wasm.heap_types",
+              "src/wasm.profiled"
             ],
             "dynamic_calls": []
           },
           {
             "key": "src/wasm.entries",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15617,6 +16736,58 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.fielded",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.heap_types",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.fielded_arms",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.finish",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.allocator",
+              "src/wasm.extend_sections",
+              "src/wasm.function_type",
+              "src/wasm.module_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.function_code",
             "file": "src/wasm.bend",
             "via": "src/wasm.body",
@@ -15646,7 +16817,7 @@
           {
             "key": "src/wasm.function_type",
             "file": "src/wasm.bend",
-            "via": "src/wasm.entry",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15665,9 +16836,48 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.heap_sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.module_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.section"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.heap_types",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/syntax.choose",
+              "src/wasm.fielded"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.instruction",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15714,6 +16924,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.load",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.Local",
             "file": "src/wasm.bend",
             "via": "src/wasm.parameters",
@@ -15728,7 +16957,7 @@
           {
             "key": "src/wasm.local_declarations",
             "file": "src/wasm.bend",
-            "via": "src/wasm.function_code",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15776,12 +17005,17 @@
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
+              "List.length",
+              "List.reverse",
+              "Maybe",
               "Nat",
               "Result",
               "String",
               "U32",
               "U32.add",
+              "U32.from_nat",
               "U32.is_eq",
+              "src/core.Binding",
               "src/core.Function",
               "src/core.Parameter",
               "src/core.Term",
@@ -15794,15 +17028,38 @@
               "src/wasm.Mode",
               "src/wasm.after_argument",
               "src/wasm.after_initializer",
+              "src/wasm.allocate",
+              "src/wasm.boxed",
               "src/wasm.branch_code",
               "src/wasm.call_body",
               "src/wasm.called",
               "src/wasm.code",
               "src/wasm.constant",
+              "src/wasm.fielded_arms",
               "src/wasm.instruction",
               "src/wasm.internal",
+              "src/wasm.load",
               "src/wasm.lookup",
               "src/wasm.signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.memory",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.unsigned"
             ],
             "dynamic_calls": []
           },
@@ -15815,7 +17072,9 @@
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "U32",
+              "src/core.Binding",
               "src/core.Parameter",
               "src/core.Term"
             ],
@@ -15824,12 +17083,13 @@
           {
             "key": "src/wasm.module_bytes",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.finish",
+              "Bool",
               "List",
               "Result",
               "U32",
@@ -15838,7 +17098,8 @@
               "src/wasm-bytes.bytes",
               "src/wasm-bytes.concat",
               "src/wasm-bytes.section",
-              "src/wasm.Sections"
+              "src/wasm.Sections",
+              "src/wasm.heap_sections"
             ],
             "dynamic_calls": []
           },
@@ -15862,9 +17123,60 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/wasm.Sections",
+            "key": "src/wasm.present",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Profile",
             "file": "src/wasm.bend",
             "via": "src/wasm.emit",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.profiled",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List",
+              "List.length",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "src/core.Function",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.entries",
+              "src/wasm.finish",
+              "src/wasm.present"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -15892,6 +17204,27 @@
               "src/syntax.Error",
               "src/syntax.choose",
               "src/wasm.internal"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.stores",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "List",
+              "Result",
+              "U32",
+              "U32.add",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
             ],
             "dynamic_calls": []
           },
@@ -16037,6 +17370,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -16405,8 +17767,8 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 257,
-          "base": 56,
+          "declarations": 280,
+          "base": 58,
           "base_intrinsics": 20,
           "foreign": 6
         },
@@ -16478,7 +17840,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16580,7 +17942,7 @@
           {
             "key": "Bool.pick",
             "file": "Base",
-            "via": "src/wasm-bytes.groups",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16602,7 +17964,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16727,7 +18089,7 @@
           {
             "key": "List.length",
             "file": "Base",
-            "via": "src/wasm.emit",
+            "via": "src/compile-cli.output_opened",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16737,7 +18099,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/wasm.lower",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -17321,7 +18683,13 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/core.internal"
+              "Bool.and",
+              "Bool.not",
+              "U32.is_eq",
+              "src/core.internal",
+              "src/core.unsupported",
+              "src/scope.descends",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -17334,11 +18702,9 @@
             "unsafe": false,
             "dependencies": [
               "Bool.and",
-              "U32.is_eq",
               "U32.is_gt",
               "src/check.bound",
               "src/core.invalid",
-              "src/core.unsupported",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -17477,7 +18843,7 @@
           {
             "key": "src/check.enum_profile",
             "file": "src/check.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.capability",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18302,6 +19668,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -18312,6 +19693,8 @@
               "Bool.and",
               "Bool.or",
               "Bool.pick",
+              "String.eq",
+              "String.starts_with",
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
@@ -18320,6 +19703,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -18333,7 +19720,49 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -18499,6 +19928,7 @@
             "dependencies": [
               "List.append",
               "src/patterns.value",
+              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace"
             ],
@@ -18602,6 +20032,34 @@
             "dependencies": [
               "Bool.or",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendants",
+            "file": "src/scope.bend",
+            "via": "src/patterns.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List.append",
+              "U32.is_eq",
+              "src/scope.contains",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descends",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/scope.contains"
             ],
             "dynamic_calls": []
           },
@@ -19054,7 +20512,7 @@
           {
             "key": "src/wasm-bytes.concat",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.module_bytes",
+            "via": "src/wasm.entry",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19144,7 +20602,7 @@
           {
             "key": "src/wasm-bytes.sized",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm-bytes.section",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19158,7 +20616,7 @@
           {
             "key": "src/wasm-bytes.unsigned",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19204,6 +20662,47 @@
             ]
           },
           {
+            "key": "src/wasm.allocate",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List.length",
+              "U32.add",
+              "U32.from_nat",
+              "U32.is_lt",
+              "U32.mul",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat",
+              "src/wasm.code",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.memory",
+              "src/wasm.stores"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.allocator",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.sized",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.local_declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.append",
             "file": "src/wasm.bend",
             "via": "src/wasm.after_argument",
@@ -19227,6 +20726,19 @@
               "src/syntax.bind",
               "src/wasm.function_code",
               "src/wasm.lower"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.boxed",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -19275,6 +20787,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.capability",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/check.enum_profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.code",
             "file": "src/wasm.bend",
             "via": "src/wasm.lower",
@@ -19289,7 +20813,7 @@
           {
             "key": "src/wasm.constant",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19308,20 +20832,29 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "List.length",
-              "U32.from_nat",
-              "src/check.enum_profile",
+              "src/wasm.emit_profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.emit_profile",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
               "src/syntax.bind",
-              "src/wasm-bytes.unsigned",
-              "src/wasm.entries",
-              "src/wasm.module_bytes"
+              "src/wasm.capability",
+              "src/wasm.heap_types",
+              "src/wasm.profiled"
             ],
             "dynamic_calls": []
           },
           {
             "key": "src/wasm.entries",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19368,6 +20901,44 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.fielded",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.heap_types",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.fielded_arms",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.finish",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.allocator",
+              "src/wasm.extend_sections",
+              "src/wasm.function_type",
+              "src/wasm.module_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.function_code",
             "file": "src/wasm.bend",
             "via": "src/wasm.body",
@@ -19390,7 +20961,7 @@
           {
             "key": "src/wasm.function_type",
             "file": "src/wasm.bend",
-            "via": "src/wasm.entry",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19404,9 +20975,39 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.heap_sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.module_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.section"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.heap_types",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.add",
+              "src/syntax.choose",
+              "src/wasm.fielded"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.instruction",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19441,9 +21042,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.load",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.local_declarations",
             "file": "src/wasm.bend",
-            "via": "src/wasm.function_code",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19479,28 +21094,49 @@
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "List.length",
+              "List.reverse",
               "U32.add",
+              "U32.from_nat",
               "U32.is_eq",
               "src/syntax.bind",
               "src/syntax.choose",
               "src/wasm.after_argument",
               "src/wasm.after_initializer",
+              "src/wasm.allocate",
+              "src/wasm.boxed",
               "src/wasm.branch_code",
               "src/wasm.call_body",
               "src/wasm.called",
               "src/wasm.code",
               "src/wasm.constant",
+              "src/wasm.fielded_arms",
               "src/wasm.instruction",
               "src/wasm.internal",
+              "src/wasm.load",
               "src/wasm.lookup",
               "src/wasm.signature"
             ],
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.memory",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.unsigned"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.module_bytes",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19509,7 +21145,8 @@
               "src/syntax.bind",
               "src/wasm-bytes.bytes",
               "src/wasm-bytes.concat",
-              "src/wasm-bytes.section"
+              "src/wasm-bytes.section",
+              "src/wasm.heap_sections"
             ],
             "dynamic_calls": []
           },
@@ -19528,6 +21165,36 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.present",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.profiled",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.pick",
+              "List.length",
+              "U32.add",
+              "U32.from_nat",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.entries",
+              "src/wasm.finish",
+              "src/wasm.present"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.signature",
             "file": "src/wasm.bend",
             "via": "src/wasm.lower",
@@ -19539,6 +21206,22 @@
               "U32.sub",
               "src/syntax.choose",
               "src/wasm.internal"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.stores",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "U32.add",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
             ],
             "dynamic_calls": []
           },
@@ -19645,6 +21328,31 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Char.is_eq",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.starts_with"
+            ],
             "dynamic_calls": []
           },
           {
@@ -19931,8 +21639,8 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 342,
-          "base": 108,
+          "declarations": 366,
+          "base": 110,
           "base_intrinsics": 23,
           "foreign": 6
         },
@@ -19977,7 +21685,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -20040,7 +21748,7 @@
           {
             "key": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
             "file": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend",
-            "via": "src/wasm-bytes.concat",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20172,7 +21880,7 @@
           {
             "key": "Bool.and",
             "file": "Base",
-            "via": "Word.and",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20235,7 +21943,7 @@
           {
             "key": "Bool.pick",
             "file": "Base",
-            "via": "src/wasm-bytes.groups",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20275,7 +21983,7 @@
           {
             "key": "Char.is_eq",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "String.starts_with",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20559,7 +22267,7 @@
           {
             "key": "List.length",
             "file": "Base",
-            "via": "src/wasm.emit",
+            "via": "src/compile-cli.output_opened",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20572,7 +22280,7 @@
           {
             "key": "List.reverse",
             "file": "Base",
-            "via": "src/lex.finish",
+            "via": "src/wasm.lower",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21485,6 +23193,7 @@
               "src/core.Checked",
               "src/core.Parameter",
               "src/core.Signature",
+              "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -21501,13 +23210,20 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
+              "Bool.not",
               "Result",
               "U32",
+              "U32.is_eq",
               "src/core.Checked",
               "src/core.Term",
               "src/core.internal",
+              "src/core.unsupported",
+              "src/scope.Scope",
+              "src/scope.descends",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -21522,12 +23238,10 @@
               "Bool.and",
               "Result",
               "U32",
-              "U32.is_eq",
               "U32.is_gt",
               "src/catalog.FunctionRef",
               "src/check.bound",
               "src/core.invalid",
-              "src/core.unsupported",
               "src/scope.Scope",
               "src/syntax.Error",
               "src/syntax.Token",
@@ -21736,7 +23450,7 @@
           {
             "key": "src/check.enum_profile",
             "file": "src/check.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.capability",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23178,6 +24892,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.reply",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.body_end",
+              "src/parse.starts",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.run",
             "file": "src/parse.bend",
             "via": "src/parse.parse",
@@ -23193,6 +24928,8 @@
               "Maybe",
               "Nat",
               "Result",
+              "String.eq",
+              "String.starts_with",
               "U32",
               "U32.is_eq",
               "U32.is_gt",
@@ -23204,6 +24941,10 @@
               "src/parse.invalid",
               "src/parse.parameter",
               "src/parse.prepend",
+              "src/parse.reply",
+              "src/parse.scrutinee",
+              "src/parse.starts",
+              "src/parse.template_parameter",
               "src/parse.term_failure",
               "src/parse.then",
               "src/parse.unsupported",
@@ -23220,7 +24961,61 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
-              "src/syntax.skip_lines"
+              "src/syntax.skip_lines",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.scrutinee",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.starts",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.template_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "src/parse.Parsed",
+              "src/parse.invalid",
+              "src/parse.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -23493,6 +25288,7 @@
               "src/patterns.Fields",
               "src/patterns.value",
               "src/scope.Scope",
+              "src/scope.descendants",
               "src/scope.levels",
               "src/scope.replace",
               "src/syntax.Token"
@@ -23628,6 +25424,40 @@
               "List",
               "U32",
               "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descendants",
+            "file": "src/scope.bend",
+            "via": "src/patterns.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "List",
+              "List.append",
+              "U32",
+              "U32.is_eq",
+              "src/scope.contains",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.descends",
+            "file": "src/scope.bend",
+            "via": "src/check.call_result",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32",
+              "src/core.Term",
+              "src/scope.contains"
             ],
             "dynamic_calls": []
           },
@@ -24282,7 +26112,7 @@
           {
             "key": "src/wasm-bytes.concat",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.module_bytes",
+            "via": "src/wasm.entry",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24402,7 +26232,7 @@
           {
             "key": "src/wasm-bytes.sized",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm-bytes.section",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24421,7 +26251,7 @@
           {
             "key": "src/wasm-bytes.unsigned",
             "file": "src/wasm-bytes.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24484,6 +26314,58 @@
             ]
           },
           {
+            "key": "src/wasm.allocate",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "List.length",
+              "Result",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "U32.is_lt",
+              "U32.mul",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/wasm-bytes.concat",
+              "src/wasm.Code",
+              "src/wasm.code",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.memory",
+              "src/wasm.stores"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.allocator",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.finish",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.sized",
+              "src/wasm.constant",
+              "src/wasm.instruction",
+              "src/wasm.local_declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.append",
             "file": "src/wasm.bend",
             "via": "src/wasm.after_argument",
@@ -24522,6 +26404,22 @@
               "src/wasm.Mode",
               "src/wasm.function_code",
               "src/wasm.lower"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.boxed",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -24587,6 +26485,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.capability",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "Unit",
+              "src/check.enum_profile",
+              "src/core.Datatype",
+              "src/syntax.Error",
+              "src/wasm.Profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.code",
             "file": "src/wasm.bend",
             "via": "src/wasm.lower",
@@ -24619,7 +26535,7 @@
           {
             "key": "src/wasm.constant",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24643,30 +26559,44 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
               "List",
-              "List.length",
               "Nat",
               "Result",
               "U32",
-              "U32.from_nat",
-              "Unit",
-              "src/check.enum_profile",
               "src/core.Book",
-              "src/core.Function",
+              "src/syntax.Error",
+              "src/wasm.Profile",
+              "src/wasm.emit_profile"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.emit_profile",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "U32",
+              "Unit",
+              "src/core.Book",
               "src/syntax.Error",
               "src/syntax.bind",
-              "src/wasm-bytes.unsigned",
-              "src/wasm.Sections",
-              "src/wasm.entries",
-              "src/wasm.module_bytes"
+              "src/wasm.Profile",
+              "src/wasm.capability",
+              "src/wasm.heap_types",
+              "src/wasm.profiled"
             ],
             "dynamic_calls": []
           },
           {
             "key": "src/wasm.entries",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.profiled",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24747,6 +26677,59 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.fielded",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.heap_types",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.fielded_arms",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/core.Term"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.finish",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.allocator",
+              "src/wasm.extend_sections",
+              "src/wasm.function_type",
+              "src/wasm.module_bytes"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.function_code",
             "file": "src/wasm.bend",
             "via": "src/wasm.body",
@@ -24775,7 +26758,7 @@
           {
             "key": "src/wasm.function_type",
             "file": "src/wasm.bend",
-            "via": "src/wasm.entry",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24794,9 +26777,48 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.heap_sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.module_bytes",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "Bool",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.section"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.heap_types",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/syntax.choose",
+              "src/wasm.fielded"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.instruction",
             "file": "src/wasm.bend",
-            "via": "src/wasm.lower",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24843,6 +26865,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/wasm.load",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.lower",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/wasm.Local",
             "file": "src/wasm.bend",
             "via": "src/wasm.parameters",
@@ -24857,7 +26898,7 @@
           {
             "key": "src/wasm.local_declarations",
             "file": "src/wasm.bend",
-            "via": "src/wasm.function_code",
+            "via": "src/wasm.allocator",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24904,11 +26945,16 @@
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
               "List",
+              "List.length",
+              "List.reverse",
+              "Maybe",
               "Nat",
               "Result",
               "U32",
               "U32.add",
+              "U32.from_nat",
               "U32.is_eq",
+              "src/core.Binding",
               "src/core.Function",
               "src/core.Parameter",
               "src/core.Signature",
@@ -24922,15 +26968,38 @@
               "src/wasm.Mode",
               "src/wasm.after_argument",
               "src/wasm.after_initializer",
+              "src/wasm.allocate",
+              "src/wasm.boxed",
               "src/wasm.branch_code",
               "src/wasm.call_body",
               "src/wasm.called",
               "src/wasm.code",
               "src/wasm.constant",
+              "src/wasm.fielded_arms",
               "src/wasm.instruction",
               "src/wasm.internal",
+              "src/wasm.load",
               "src/wasm.lookup",
               "src/wasm.signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.memory",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "List",
+              "Result",
+              "U32",
+              "src/syntax.Error",
+              "src/wasm-bytes.bytes",
+              "src/wasm-bytes.concat",
+              "src/wasm-bytes.unsigned"
             ],
             "dynamic_calls": []
           },
@@ -24943,7 +27012,9 @@
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "U32",
+              "src/core.Binding",
               "src/core.Parameter",
               "src/core.Term"
             ],
@@ -24952,13 +27023,14 @@
           {
             "key": "src/wasm.module_bytes",
             "file": "src/wasm.bend",
-            "via": "src/wasm.emit",
+            "via": "src/wasm.finish",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
               "0xc409b77d3230ca33374caf6b0993f0cb/bytes.finish",
+              "Bool",
               "List",
               "Result",
               "U32",
@@ -24967,7 +27039,8 @@
               "src/wasm-bytes.bytes",
               "src/wasm-bytes.concat",
               "src/wasm-bytes.section",
-              "src/wasm.Sections"
+              "src/wasm.Sections",
+              "src/wasm.heap_sections"
             ],
             "dynamic_calls": []
           },
@@ -24991,9 +27064,61 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/wasm.Sections",
+            "key": "src/wasm.present",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Profile",
             "file": "src/wasm.bend",
             "via": "src/wasm.emit",
+            "kind": "ADT",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.profiled",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.emit_profile",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "Bool.pick",
+              "List",
+              "List.length",
+              "Nat",
+              "Result",
+              "U32",
+              "U32.add",
+              "U32.from_nat",
+              "src/core.Function",
+              "src/syntax.Error",
+              "src/syntax.bind",
+              "src/wasm-bytes.unsigned",
+              "src/wasm.Sections",
+              "src/wasm.entries",
+              "src/wasm.finish",
+              "src/wasm.present"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.Sections",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.profiled",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -25020,6 +27145,27 @@
               "src/syntax.Error",
               "src/syntax.choose",
               "src/wasm.internal"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/wasm.stores",
+            "file": "src/wasm.bend",
+            "via": "src/wasm.allocate",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.Builder",
+              "0xc409b77d3230ca33374caf6b0993f0cb/bytes.empty",
+              "List",
+              "Result",
+              "U32",
+              "U32.add",
+              "src/syntax.Error",
+              "src/wasm-bytes.concat",
+              "src/wasm.instruction",
+              "src/wasm.memory"
             ],
             "dynamic_calls": []
           },
@@ -25166,6 +27312,35 @@
             "unsafe": false,
             "dependencies": [
               "String"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with",
+            "file": "Base",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Char.is_eq",
+              "String",
+              "String.starts_with.if"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "String.starts_with.if",
+            "file": "Base",
+            "via": "String.starts_with",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "String",
+              "String.starts_with"
             ],
             "dynamic_calls": []
           },
@@ -25388,7 +27563,7 @@
           {
             "key": "U32.is_ge",
             "file": "Base",
-            "via": "src/wasm.function_code",
+            "via": "U32.divmod.go.shl",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
