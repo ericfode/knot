@@ -13,7 +13,9 @@ The frontend's generic-header pin was superseded under the coordinator's
 review-round-1 authorization (`5eea108`), and classify-2's pins for `Name<...>`
 in parameter, return and binding types under its later authorization
 (`78c4942`). [Review round 2](#review-round-2) repairs three seed-accepted
-forms the generic path had exposed as Invalid.
+forms the generic path had exposed as Invalid. [Review round 3](#review-round-3)
+repairs one more such form, and three classes of seed-rejected books that the
+generic path had checked.
 
 The mechanism is a type-expression algebra with rigid binder indices. A single
 sequential substitution list instantiates later parameter domains and results.
@@ -39,7 +41,11 @@ body, with erased arguments absent from its live signature.
 | [Value arguments](value-arguments/README.md) | 5 | 5 | Frozen in `58afc10` before the term-argument repair |
 | [Empty families](empty-families/README.md) | 7 | 7 | Frozen in `cfad5c4` before the empty-datatype repair |
 | [Definition references](def-references/README.md) | 7 | 5 | Frozen in `efdca4a` before the def-reference repair |
-| Total | 92 | 185 | 61 seed-valid programs and 31 seed rejections |
+| [Type-level definition names](type-level-names/README.md) | 11 | 8 | Frozen in `d8af22d` before the definition-scope repair |
+| [Marked quantity binders](marked-binders/README.md) | 9 | 3 | Frozen in `8bac386` before the parser repair |
+| [Constructor pattern order](pattern-order/README.md) | 8 | 7 | Frozen in `2345731` before the pattern-order repair; binding variant `d3fe024` |
+| [Token spacing](spacing/README.md) | 18 | 14 | Frozen in `8b26748` before the spacing repair |
+| Total | 138 | 217 | 83 seed-valid programs and 55 seed rejections |
 
 The original `closure-apply` and `template-twice` pins remain. Optional
 `match-erased-type` and `alias-type` remain Unsupported. Five independent literal
@@ -56,6 +62,12 @@ ABI controls inspect erased parameter counts without invoking generic exports.
 | Empty family demoted | `empty-generic-absurd` | Reports Invalid for a seed-valid generic empty family |
 | Empty datatype demoted | `empty-type` | Reports Invalid for a seed-valid monomorphic empty type |
 | Definition reference freed | `def-reference-live` | Reports a seed-valid `one` reference Invalid free-name |
+| Definition scope dropped | `definition-field-later` | Reports a seed-valid type-level definition name Invalid unknown-type |
+| Marked binder as quantity | `marked-reusable-binder` | Accepts the seed-rejected `+a,` binder |
+| Pattern order dropped | `later-family-parameter` | Accepts a seed-rejected pattern above its datatype |
+| Quantity gap glued | `quantity-gap-argument` | Accepts the seed-rejected `& 2` |
+| Meet gap glued | `meet-gap` | Accepts the seed-rejected `< & >` |
+| Closing gap glued | `close-gap-parameter` | Accepts the seed-rejected `Seq<&2,Flag >` |
 
 Each mutant is seed-typechecked and exercised in native and Bun lanes. A parser
 failure, host/internal error, exhausted budget or invalid Wasm cannot count as
@@ -78,21 +90,23 @@ one-page arena and exhaustion policy apply; there is no reclamation or owned
 storage guarantee.
 
 `src/types-PROOF.bend` fills 12 laws, including universal substitution composition
-and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 18 laws,
-including erased evaluator transitions with their one-step fuel adjustment and
-the empty-family boundary. `src/check-PROOF.bend` fills `def_reference`,
+and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 21 laws,
+including erased evaluator transitions with their one-step fuel adjustment, the
+empty-family boundary, `type_level_definition`, `pattern_order` and
+`spaced_quantity`. `src/check-PROOF.bend` fills `def_reference`,
 `src/catalog-PROOF.bend` fills `empty_datatype`, and the frontend proof fills
-`term_argument`; the gate runs the frontend, types, erasure and catalog proof
-entries (the last chains the check laws).
-The complete frontend proof fills the restated generic-header acceptance law.
+`term_argument` and `marked_binder`; the gate runs the frontend, types,
+erasure and catalog proof entries (the last chains the check laws).
+The complete frontend proof fills the restated generic-header acceptance law,
+whose parameter type touches its closing `>`.
 These proofs and finite differential observations are distinct from a universal
 checker-soundness or compiler-correctness theorem. The bounded proof and review
 obligations are in [LAW_REVIEW.md](LAW_REVIEW.md).
 
 Local type/quantity normalization, type-returning definitions, value-indexed
 families, constructor-local type binders, live static arguments, type-variable
-application, pair sugar, function types, templates and general lexicographic
-descent remain Unsupported. This increment covers only the documented S2 subset.
+application, pair sugar, function types, templates, general lexicographic
+descent and gaps inside the seed's glued tokens remain Unsupported. This increment covers only the documented S2 subset.
 The legacy structural catalog
 observer remains monomorphic and reports Unsupported for generic declarations.
 
@@ -101,6 +115,49 @@ extends `generics.bend`; see the dual checker path in
 [COMPILER-CAMPAIGN.md](../../docs/COMPILER-CAMPAIGN.md)), and run live Perch
 semantic and style review. No package, runtime IR, evaluator or Wasm emitter
 implementation changes are part of this increment.
+
+## Review round 3
+
+The branch merges main `90b4052` (`90feb09`: gate runner `CC`/`SDKROOT`; census
+regenerated). Each confirmed finding has a seed-derived fixture frozen in its
+own commit before the repair (D7):
+
+| Finding | Frozen | Repair | Disposition |
+| --- | --- | --- | --- |
+| [blocking] A type-level definition named in a family field (or an earlier signature) was Invalid `unknown-type` | `d8af22d`, 11 fixtures | `287a624`: the type scope binds the book's definitions, and such a name is `Unsupported check type-level-definition` wherever it is declared; law `type_level_definition`; mutant `type-level-definition-unknown` | fixed |
+| A generic constructor pattern above its datatype was Checked | `2345731`, 6 fixtures; binding variant `d3fe024`, 2 fixtures | `2e9646f`: one `visible` order predicate; a later pattern is `Invalid check unknown-constructor`; law `pattern_order`; mutant `pattern-order-forward` | fixed |
+| A constructor pattern above its type (f1, and f6 in a generic-routed book) was Checked | the same corpus (`later-family-unbox`, `later-enum-generic-book`) | `2e9646f` | fixed; the purely monomorphic f7 and late-mono stay with the monomorphic checker's owner (`src/SPEC.md`) |
+| Marked bare binders (`+a,`, `-a,`) were checked, evaluated and compiled | `8bac386`, 9 fixtures | `d7fba74`: only an unmarked bare binder is a quantity; a marked one is `Invalid parse parameter` at the `,`; law `marked_binder`; mutant `marked-binder-quantity` | fixed |
+| `census:test` failed 73/75 on stale literals | — | `6086dfa`: `frontend_definitions` 41→47 (six generics definitions in `parse.bend`) and the recursion Wasm evidence (the two recursive generics fixtures) | fixed; these are assertion changes and need the coordinator's confirmation |
+
+Round 3 adds no definition to `lex.bend`, `parse.bend` or `syntax.bend`, so
+`frontend_definitions` stays 47; `npm run -s census:test` passes 75 of 75.
+Registering `census:test` in `scripts/gates/run.py` (runner-owned) would keep
+these literals from going stale silently; it is recommended, not done here.
+
+**Token spacing (found by this round's sweep, not a confirmed finding).** The
+seed lexes `&2`, the meet `<&>` and, in most lists, a closing `>` as glued
+tokens. Knot's lexer splits symbols and drops spaces, so the generic parser
+checked books with `& 2`, `< & >` or `Seq<&2,Flag >` that the seed rejects;
+main reported them Unsupported. [The spacing corpus](spacing/README.md) was
+frozen in `8b26748` (18 fixtures); the repair reports every gap inside a
+glued token as `Unsupported parse spacing`, with law `spaced_quantity` and
+mutants `quantity-gap-glued`, `meet-gap-glued` and `close-gap-glued`. The seed
+accepts a gap before the `>` of a single-argument list; Knot does not
+reproduce that position-dependent rule, and the four seed-valid forms are
+pinned Unsupported. The restated `generic_header` law now gives its parameter
+type and closing `>` touching spans. The monomorphic forms of the class,
+`On {}` and `- >`, are `Checked` on main as well and stay with the frontend's
+owner.
+
+Every repair keeps D4: no program that the seed accepts becomes Invalid.
+Before each repair, the native `parse` and `check` CLIs ran over every tracked
+Bend file and the review probes; after it, only the targeted probes and the
+new fixtures changed outcome.
+
+The round-0 summaries `receipts/gates.json`,
+`receipts/gates-resource-exhaustion.json` and
+`receipts/preflight-before-dispatch.json` remain historical evidence.
 
 ## Review round 2
 
@@ -154,17 +211,13 @@ them a new or changed declaration except the pre-existing `check.bend::run`
 and `generics.bend::run`), and an unavailable cross-group composition. No
 style rating is claimed.
 
-**New observation, not repaired.** The seed resolves a constructor pattern
-only against datatypes declared earlier in the file: `case On{}:` above `type
-Flag` fails with `a declared constructor (unknown: On)`. Knot accepts such
-books (`Checked`) in both checkers. Main already accepts the monomorphic form;
-the generic form (`case Box{value}` above a generic `Box`) was `Unsupported
-parse` on main and is `Checked` here. This is acceptance of a seed-rejected
-program, recorded for the coordinator with its probes in the handoff.
-
-The round-0 summaries `receipts/gates.json`,
-`receipts/gates-resource-exhaustion.json` and
-`receipts/preflight-before-dispatch.json` are historical evidence.
+**New observation (repaired in [round 3](#review-round-3)).** The seed
+resolves a constructor pattern only against datatypes declared earlier in the
+file: `case On{}:` above `type Flag` fails with `a declared constructor
+(unknown: On)`. Knot accepted such books (`Checked`) in both checkers. Main
+already accepts the monomorphic form; the generic form (`case Box{value}`
+above a generic `Box`) was `Unsupported parse` on main and `Checked` at the
+end of round 2.
 
 ## Review round 1
 

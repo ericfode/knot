@@ -5,6 +5,7 @@ import ./core.bend as C
 import ./generic-catalog.bend as G
 import ./type-erasure.bend as E
 import ./wasm.bend as W
+import ./type-parse.bend as P
 import ./type-erasure-LAWS.bend as L
 
 def L.empty_family(token,q,kind,params,generic): {==}
@@ -25,6 +26,11 @@ def L.pattern_order(families,token,reference,found,later):
     {S.choose(Result<S.Error,G.ConstructorRef>,_,u => Done{reference},u =>
       C.invalid(G.ConstructorRef,"unknown-constructor",token))
      == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
+  {==}
+def L.spaced_quantity(token,value,rest,gap):
+  %Equal.sym(Bool,P.glued(token,value),False{},gap) :
+    {S.choose(Result<S.Error,P.Parsed>,_,u => P.literal(token,value,rest),u => P.spaced(Con{value,rest}))
+     == Fail{S.Unsupported{"parse","spacing",S.at(value)}} : Result<S.Error,P.Parsed>}
   {==}
 def L.nominal_identity(index): {==}
 def L.application_erases_argument(function,argument): {==}

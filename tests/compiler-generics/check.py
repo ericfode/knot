@@ -45,7 +45,7 @@ try {
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
            HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
            HERE / 'def-references', HERE / 'type-level-names', HERE / 'marked-binders',
-           HERE / 'pattern-order')
+           HERE / 'pattern-order', HERE / 'spacing')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
@@ -115,12 +115,24 @@ MUTANTS = (
      'new': 'S.choose(Result<S.Error,ConstructorRef>,True{},u =>',
      'witness': 'later-family-parameter', 'phase': 'check',
      'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'quantity-gap-glued', 'file': 'type-parse.bend',
+     'old': 'glued(token,value)', 'new': 'True{}',
+     'witness': 'quantity-gap-argument', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'meet-gap-glued', 'file': 'type-parse.bend',
+     'old': 'Bool.and(glued(a,b),glued(b,c))', 'new': 'True{}',
+     'witness': 'meet-gap', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'close-gap-glued', 'file': 'type-parse.bend',
+     'old': 'u => Bool.not(flush(from,h))', 'new': 'u => False{}',
+     'witness': 'close-gap-parameter', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
                 'def-reference-free', 'type-level-definition-unknown', 'marked-binder-quantity',
-                'pattern-order-forward'}
+                'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued'}
 
 
 def require(condition, detail):

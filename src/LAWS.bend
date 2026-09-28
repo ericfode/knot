@@ -23,13 +23,15 @@ law no_parser_budget:
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
 
 # Parser-only header acceptance; the catalog separately requires constructors.
+# The parameter type touches the closing `>`, as lexed from `Type>`.
 law generic_header:
   for +at: S.At
   {P.run(32n,P.Header{S.Token{"type",at},S.Token{"Box",at}},
-      [S.Token{"<",at},S.Token{"-",at},S.Token{"A",at},S.Token{":",at},S.Token{"Type",at},
-       S.Token{">",at},S.Token{"is",at},S.Token{"Type",at},S.Token{":",at},S.Token{"<eof>",at}])
+      [S.Token{"<",at},S.Token{"-",at},S.Token{"A",at},S.Token{":",at},S.Token{"Type",S.At{13,17,1,13}},
+       S.Token{">",S.At{17,18,1,17}},S.Token{"is",at},S.Token{"Type",at},S.Token{":",at},S.Token{"<eof>",at}])
     == Done{P.Parsed{S.Generic{S.Token{"Box",at},
-      [S.TypedParameter{S.Token{"A",at},0,S.TypeKind{S.Token{"Type",at},S.Quantity{S.Token{"Type",at},1}}}],
+      [S.TypedParameter{S.Token{"A",at},0,
+        S.TypeKind{S.Token{"Type",S.At{13,17,1,13}},S.Quantity{S.Token{"Type",S.At{13,17,1,13}},1}}}],
       S.TypeKind{S.Token{"Type",at},S.Quantity{S.Token{"Type",at},1}},Nil{}},[S.Token{"<eof>",at}]}}
     : Result<S.Error,P.Parsed>}
 

@@ -34,6 +34,27 @@ def unsupported_suffix(+tokens: List<&2,S.Token>) -> Bool:
 def invalid(ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
   Fail{S.Invalid{"parse",code,S.here(ts)}}
 
+# The seed lexes `&2`, `<&>` and a list's closing `>` as glued tokens; Knot
+# lexes symbols apart and drops spaces. A gap inside one is Unsupported.
+def glued(+a: S.Token, +b: S.Token) -> Bool:
+  match a b:
+    case S.Token{x,S.At{p,q,l,c}} S.Token{y,S.At{r,s,m,d}}: U32.is_eq(q,r)
+
+def spaced(ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  Fail{S.Unsupported{"parse","spacing",S.here(ts)}}
+
+# Only the token just before `mark` can end where it begins.
+def flush(+ts: List<&2,S.Token>, +mark: S.Token) -> Bool:
+  match ts:
+    case Nil{}: False{}
+    case Con{+h,+t}: S.choose(Bool,glued(h,mark),u => True{},u => flush(t,mark))
+
+# `rest` closes, after a gap, the list whose item began at `from`.
+def apart(+from: List<&2,S.Token>, +rest: List<&2,S.Token>) -> Bool:
+  match rest:
+    case Con{+h,+t}: S.choose(Bool,S.matches(h,">"),u => Bool.not(flush(from,h)),u => False{})
+    case Nil{}: False{}
+
 def finish(+value: S.Node, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   S.choose(Result<S.Error,Parsed>,unsupported_suffix(tokens),u =>
     Fail{S.Unsupported{"parse","type-expression",S.here(tokens)}},u => Done{Parsed{value,tokens}})
@@ -68,9 +89,10 @@ def literal(+token: S.Token, +value: S.Token, +rest: List<&2,S.Token>) -> Result
   S.choose(Result<S.Error,Parsed>,S.matches(value,"2"),u => Done{Parsed{S.Quantity{token,2},rest}},u =>
     invalid(Con{value,rest},"quantity-literal"))))
 
-def read_quantity(token: S.Token, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+def read_quantity(+token: S.Token, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match tokens:
-    case Con{value,rest}: literal(token,value,rest)
+    case Con{+value,+rest}:
+      S.choose(Result<S.Error,Parsed>,glued(token,value),u => literal(token,value,rest),u => spaced(tokens))
     case Nil{}: invalid(tokens,"quantity-literal")
 
 # Type arguments and Kind expressions share the same bounded tree grammar.
@@ -108,15 +130,18 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n Tail{+value}:
       match tokens:
         case Con{+a,Con{+b,Con{+c,+t}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(a,"<"),Bool.and(S.matches(b,"&"),S.matches(c,">"))),u =>
-            then(run(n,Expression{1},t),right => rest => Done{Parsed{S.Meet{a,value,right},rest}}),u =>
+          S.choose(Result<S.Error,Parsed>,meet_prefix(tokens),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(glued(a,b),glued(b,c)),u =>
+              then(run(n,Expression{1},t),right => rest => Done{Parsed{S.Meet{a,value,right},rest}}),u =>
+              spaced(tokens)),u =>
             finish(value,tokens))
         case _: finish(value,tokens)
     case 1n+ +n Items{}:
       match tokens:
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,">"),u => Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(run(n,Expression{1},tokens),arg => rest => run(n,ItemTail{arg},rest)))
+            then(run(n,Expression{1},tokens),arg => +rest =>
+              S.choose(Result<S.Error,Parsed>,apart(tokens,rest),u => spaced(rest),u => run(n,ItemTail{arg},rest))))
         case _: invalid(tokens,"type-arguments")
     case 1n+ +n ItemTail{+head}:
       match tokens:
@@ -148,7 +173,8 @@ def parameter_parts(+fuel: Nat, +bare: Bool, +quantity: U32,
     case Con{+name,Con{+colon,+rest}}:
       S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
-        then(expression(fuel,rest),typ => end => parameter_node(bare,name,quantity,typ,end)),u =>
+        then(expression(fuel,rest),typ => +end =>
+          S.choose(Result<S.Error,Parsed>,apart(rest,end),u => spaced(end),u => parameter_node(bare,name,quantity,typ,end))),u =>
       S.choose(Result<S.Error,Parsed>,Bool.and(bare,Bool.or(S.matches(colon,","),Bool.or(S.matches(colon,")"),S.matches(colon,">")))),u =>
         S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,1),u =>
           Done{Parsed{S.TypedParameter{name,0,S.QuantType{name}},Con{colon,rest}}},u =>

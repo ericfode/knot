@@ -6,6 +6,7 @@ import ./generic-catalog.bend as G
 import ./type-erasure.bend as E
 import ./eval.bend as V
 import ./wasm.bend as W
+import ./type-parse.bend as P
 
 # The generic catalog keeps the monomorphic catalog's empty-datatype boundary.
 law empty_family:
@@ -39,6 +40,15 @@ law pattern_order:
   for later: {G.visible(token,G.declaration(reference)) == False{} : Bool}
   {G.pattern_constructor(families,token)
     == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
+
+# A gap inside `&2` is Unsupported, never read as the glued literal.
+law spaced_quantity:
+  for +token: S.Token
+  for +value: S.Token
+  for +rest: List<&2,S.Token>
+  for gap: {P.glued(token,value) == False{} : Bool}
+  {P.read_quantity(token,Con{value,rest})
+    == Fail{S.Unsupported{"parse","spacing",S.at(value)}} : Result<S.Error,P.Parsed>}
 
 law nominal_identity:
   for +index: U32

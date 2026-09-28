@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 114,
+          "declarations": 118,
           "base": 39,
           "base_intrinsics": 9,
           "foreign": 0
@@ -1659,6 +1659,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -1757,6 +1776,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -1903,9 +1953,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -1955,9 +2007,12 @@
               "String",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -1990,14 +2045,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -2039,6 +2097,24 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },
@@ -2375,7 +2451,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 114,
+          "declarations": 118,
           "base": 39,
           "base_intrinsics": 8,
           "foreign": 0
@@ -3635,6 +3711,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -3733,6 +3828,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -3879,9 +4005,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -3931,9 +4059,12 @@
               "String",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -3966,14 +4097,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -4015,6 +4149,24 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },
@@ -4351,7 +4503,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 92,
+          "declarations": 96,
           "base": 27,
           "base_intrinsics": 9,
           "foreign": 0
@@ -5116,6 +5268,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.not",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -5182,6 +5349,31 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -5269,9 +5461,11 @@
               "src/syntax.choose",
               "src/syntax.identifier",
               "src/syntax.matches",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -5294,8 +5488,11 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "src/syntax.choose",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -5318,14 +5515,17 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -5359,6 +5559,18 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.here"
             ],
             "dynamic_calls": []
           },
@@ -5598,7 +5810,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 128,
+          "declarations": 132,
           "base": 53,
           "base_intrinsics": 9,
           "foreign": 0
@@ -6913,6 +7125,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -7007,6 +7237,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -7146,9 +7407,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -7196,9 +7459,12 @@
               "Result",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -7230,14 +7496,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -7277,6 +7546,23 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },
@@ -7748,7 +8034,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 527,
+          "declarations": 531,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -15546,6 +15832,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -15644,6 +15949,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -15790,9 +16126,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -15842,9 +16180,12 @@
               "String",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -15877,14 +16218,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -15926,6 +16270,24 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },
@@ -17768,7 +18130,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 527,
+          "declarations": 531,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -25566,6 +25928,25 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -25664,6 +26045,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -25810,9 +26222,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -25862,9 +26276,12 @@
               "String",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -25897,14 +26314,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -25946,6 +26366,24 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },
@@ -27788,7 +28226,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 458,
+          "declarations": 462,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -32706,6 +33144,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.not",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -32772,6 +33225,31 @@
               "src/syntax.choose",
               "src/syntax.here",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -32859,9 +33337,11 @@
               "src/syntax.choose",
               "src/syntax.identifier",
               "src/syntax.matches",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -32884,8 +33364,11 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "src/syntax.choose",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -32908,14 +33391,17 @@
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -32949,6 +33435,18 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.here"
             ],
             "dynamic_calls": []
           },
@@ -34237,7 +34735,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 565,
+          "declarations": 569,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -42034,6 +42532,24 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/type-parse.apart",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.not",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches",
+              "src/type-parse.flush"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/type-parse.application_prefix",
             "file": "src/type-parse.bend",
             "via": "src/type-parse.run",
@@ -42128,6 +42644,37 @@
               "src/syntax.here",
               "src/type-parse.Parsed",
               "src/type-parse.unsupported_suffix"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.flush",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.apart",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.glued",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_eq",
+              "src/syntax.At",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -42267,9 +42814,11 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.expression",
               "src/type-parse.invalid",
               "src/type-parse.parameter_node",
+              "src/type-parse.spaced",
               "src/type-parse.then"
             ],
             "dynamic_calls": []
@@ -42317,9 +42866,12 @@
               "Result",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.choose",
               "src/type-parse.Parsed",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
-              "src/type-parse.literal"
+              "src/type-parse.literal",
+              "src/type-parse.spaced"
             ],
             "dynamic_calls": []
           },
@@ -42351,14 +42903,17 @@
               "src/syntax.matches",
               "src/type-parse.Mode",
               "src/type-parse.Parsed",
+              "src/type-parse.apart",
               "src/type-parse.application_prefix",
               "src/type-parse.apply",
               "src/type-parse.expect",
               "src/type-parse.finish",
+              "src/type-parse.glued",
               "src/type-parse.invalid",
               "src/type-parse.meet_prefix",
               "src/type-parse.prepend",
               "src/type-parse.read_quantity",
+              "src/type-parse.spaced",
               "src/type-parse.starts",
               "src/type-parse.then"
             ],
@@ -42398,6 +42953,23 @@
               "src/syntax.identifier",
               "src/syntax.matches",
               "src/type-parse.starts"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/type-parse.spaced",
+            "file": "src/type-parse.bend",
+            "via": "src/type-parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.here",
+              "src/type-parse.Parsed"
             ],
             "dynamic_calls": []
           },

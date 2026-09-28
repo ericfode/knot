@@ -21,6 +21,16 @@ is a quantity parameter. A marked one, `+a,` or `-a,`, is a parameter missing
 its type. The seed rejects it where it expects `:`, and Knot reports `Invalid
 parse parameter` at the same token (law `marked_binder`).
 
+The seed lexes the quantity literal `&2`, the meet `<&>` and, in most lists,
+a closing `>` as glued tokens. Knot's lexer emits each symbol separately and
+drops spaces, so the type parser checks source adjacency. A gap inside `&2`
+(law `spaced_quantity`) or `<&>`, or before a `>` that closes a type-argument
+list or a header parameter type, is `Unsupported parse spacing`. The seed
+accepts a gap before the `>` of a single-argument list and rejects it
+elsewhere. Knot does not reproduce that position-dependent rule, so every
+closing gap is Unsupported. A bare header binder may still precede a spaced
+`>` (`type Seq<a >`).
+
 - `Name<..>` instantiates a family. A short application fills every omitted
   leading quantity with `&1`; prefix `+` fills all of them with `&2`, including
   written ones. Both need the family's declaration first.
