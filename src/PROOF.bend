@@ -60,6 +60,12 @@ def L.spaced_result_arrow():
 def L.binding_type_application(at,rest):
   {==}
 
+def L.parameter_type_operator(at,rest):
+  {==}
+
+def L.binding_type_operator(at,rest):
+  {==}
+
 def L.local_import(at,rest):
   {==}
 

@@ -742,6 +742,15 @@ MUTANTS += [
      'old': 'S.bind(S.Token,Qualified,local(token,names,bound),t =>\n        then(',
      'new': 'S.bind(S.Token,Qualified,reference(token,names),t =>\n        then(',
      'witness': 'shadow-parameter-call', 'actual': {'exit': 0}},
+    {'name': 'type-operators-separate', 'file': 'parse.bend',
+     'old': 'Bool.or(starts(ts,"&"),starts(ts,"|"))', 'new': 'False{}',
+     'witness': 'pair-parameter',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tparse\targument-separator\t'}},
+    {'name': 'binding-type-continuation-invalid', 'file': 'parse.bend',
+     'old': 'S.choose(Result<S.Error,Parsed>,continues(tail),u =>',
+     'new': 'S.choose(Result<S.Error,Parsed>,False{},u =>',
+     'witness': 'arrow-let', 'plain': True,
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tparse\texpected-=\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -757,7 +766,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted',
                     'output-guard-files-ignored', 'output-guard-base-ignored', 'output-guard-single-basis',
                     'output-query-ignored', 'output-climb-ignored', 'root-bundle-contains-all',
-                    'call-head-resolved-globally'}
+                    'call-head-resolved-globally', 'type-operators-separate',
+                    'binding-type-continuation-invalid'}
 
 
 def mutants(fixtures):

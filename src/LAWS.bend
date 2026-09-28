@@ -104,6 +104,22 @@ law binding_type_application:
   {P.run(1n,P.AnnotatedBinding{S.Token{"xs",at},1,2},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}})
     == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
 
+law parameter_type_operator:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {(P.parameter(Con{S.Token{"p",at},Con{S.Token{":",at},Con{S.Token{"Light",at},Con{S.Token{"&",at},rest}}}}),
+    P.parameter(Con{S.Token{"p",at},Con{S.Token{":",at},Con{S.Token{"Light",at},Con{S.Token{"|",at},rest}}}}))
+    == (Fail{S.Unsupported{"parse","parameter-type",at}},Fail{S.Unsupported{"parse","parameter-type",at}})
+    : Result<S.Error,P.Parsed> & Result<S.Error,P.Parsed>}
+
+law binding_type_operator:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {(P.run(1n,P.AnnotatedBinding{S.Token{"x",at},1,2},Con{S.Token{"Light",at},Con{S.Token{"&",at},rest}}),
+    P.run(1n,P.AnnotatedBinding{S.Token{"f",at},1,2},Con{S.Token{"Light",at},Con{S.Token{"-",at},rest}}))
+    == (Fail{S.Unsupported{"parse","binding-type",at}},Fail{S.Unsupported{"parse","binding-type",at}})
+    : Result<S.Error,P.Parsed> & Result<S.Error,P.Parsed>}
+
 law local_import:
   for +at: S.At
   for +rest: List<&2,S.Token>

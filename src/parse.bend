@@ -96,10 +96,15 @@ def result_type(+tokens: List<&2,S.Token>, +next: List<&2,S.Token>) -> Result<S.
   S.choose(Result<S.Error,Parsed>,Bool.or(starts(next,":"),Bool.or(starts(next,"\n"),starts(next,"<eof>"))),u =>
     invalid(tokens,"function-result"),u => unsupported(next,"result-type"))
 
+# The seed reads a type as a term, which an application, an arrow or the infix
+# Pair (&) and Or (|) continue. Knot reads one bare name.
+def continues(+ts: List<&2,S.Token>) -> Bool:
+  Bool.or(starts(ts,"("),Bool.or(starts(ts,"-"),Bool.or(starts(ts,"&"),starts(ts,"|"))))
+
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
     case Con{h,t}:
-      S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"<"),Bool.or(S.matches(h,"-"),S.matches(h,"("))),u =>
+      S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"<"),continues(rest)),u =>
         unsupported(rest,"parameter-type"),u => Done{Parsed{S.Parameter{name,quantity,typ},rest}})
     case Nil{}: invalid(rest,"parameter")
 
@@ -308,8 +313,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
             S.choose(Result<S.Error,Parsed>,starts(tail,"<"),u =>
               unsupported(tail,"type-application"),u =>
+            S.choose(Result<S.Error,Parsed>,continues(tail),u =>
+              unsupported(tail,"binding-type"),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(tail,"="),rhs =>
-              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest)))),u =>
+              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest))))),u =>
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:
