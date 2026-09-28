@@ -1,0 +1,240 @@
+{
+  "basis": "Pinned seed expectations frozen before closure implementation; storage and tail-call requirements are reviewed literals from campaign D3.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "profile": "knot-fields-wasm-1",
+  "probes": [
+    {
+      "name": "erased-layout",
+      "file": "probes/erased-layout.bend",
+      "source_sha256": "15856db29b8ca46a792c4444cc06c6dd23373bf60adbd69b7b62cb3084bd75cf",
+      "check_only": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-closures/probes/erased-layout.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "wrapper": null,
+          "wrapper_source": null,
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/probes/erased-layout.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        },
+        {
+          "entry": "run",
+          "ordinals": [
+            0
+          ],
+          "wrapper": ".local/compiler-closures/probes/erased-layout--run--0.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/erased-layout.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.Off{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/erased-layout--run--0.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/erased-layout.Off{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        },
+        {
+          "entry": "run",
+          "ordinals": [
+            1
+          ],
+          "wrapper": ".local/compiler-closures/probes/erased-layout--run--1.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/erased-layout.bend as F\n\ndef main() -> F.Flag:\n  F.run(F.On{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/erased-layout--run--1.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/erased-layout.On{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "deep-tail",
+      "file": "probes/deep-tail.bend",
+      "source_sha256": "1903b67f6c9ba33a4e94ecb19cc22303f9695b500425d22836c78a4c0993f0eb",
+      "check_only": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-closures/probes/deep-tail.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "wrapper": null,
+          "wrapper_source": null,
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/probes/deep-tail.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        },
+        {
+          "entry": "shallow",
+          "ordinals": [
+            0
+          ],
+          "wrapper": ".local/compiler-closures/probes/deep-tail--shallow--0.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/deep-tail.bend as F\n\ndef main() -> F.Flag:\n  F.shallow(F.Off{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/deep-tail--shallow--0.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/deep-tail.Off{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        },
+        {
+          "entry": "shallow",
+          "ordinals": [
+            1
+          ],
+          "wrapper": ".local/compiler-closures/probes/deep-tail--shallow--1.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/deep-tail.bend as F\n\ndef main() -> F.Flag:\n  F.shallow(F.On{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/deep-tail--shallow--1.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/deep-tail.On{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        },
+        {
+          "entry": "deep",
+          "ordinals": [
+            0
+          ],
+          "wrapper": ".local/compiler-closures/probes/deep-tail--deep--0.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/deep-tail.bend as F\n\ndef main() -> F.Flag:\n  F.deep(F.Off{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/deep-tail--deep--0.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/deep-tail.Off{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        },
+        {
+          "entry": "deep",
+          "ordinals": [
+            1
+          ],
+          "wrapper": ".local/compiler-closures/probes/deep-tail--deep--1.bend",
+          "wrapper_source": "import ../../../tests/compiler-closures/probes/deep-tail.bend as F\n\ndef main() -> F.Flag:\n  F.deep(F.On{})\n",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-closures/probes/deep-tail--deep--1.bend"
+          ],
+          "exit": 0,
+          "stdout": "../../../tests/compiler-closures/probes/deep-tail.On{}\n",
+          "stderr": "",
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
+    }
+  ],
+  "arena": {
+    "case": "erased-layout",
+    "entry": "run",
+    "arguments": [
+      1
+    ],
+    "expected_tag": 1,
+    "cell_words": 2,
+    "successful_calls": 8192,
+    "overflow_call": 8193,
+    "diagnostic": "Exhausted\twasm\tarena-overflow\n",
+    "basis": "The closure captures x live, uses w only erased, and occupies [site,x] in the fixed 65536-byte arena. Erased w occupies no slot."
+  },
+  "tail": {
+    "case": "deep-tail",
+    "shallow": "shallow",
+    "deep": "deep",
+    "arguments": [
+      1
+    ],
+    "expected_tag": 1,
+    "node_flags": [
+      "--stack_size=80",
+      "--liftoff-only",
+      "--no-wasm-tier-up"
+    ],
+    "mutant_diagnostic": "Exhausted\twasm\tcall-stack\n",
+    "basis": "2048 affine one-capture wrappers compose identity. Their applications are tail calls and must not grow the Wasm call stack."
+  }
+}
