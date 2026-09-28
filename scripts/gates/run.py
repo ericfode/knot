@@ -63,6 +63,7 @@ GATES = (
     Gate('modules', ('python3', 'tests/compiler-modules/check.py'),
          ('tests/compiler-modules/receipts/modules.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
+    Gate('census:test', ('npm', 'run', '-s', 'census:test')),
     Gate('perch-context', ('python3', 'tests/perch-context/check.py'),
          ('tests/perch-context/receipts/context.json',)),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
@@ -200,6 +201,13 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         if record.get('status') != 'current':
             raise ValueError('Census inventory is not current')
         return {key: record['compiler'][key] for key in ('files', 'declarations', 'classes')}
+    if gate.name == 'census:test':
+        # The census tests pin literals of the source they inventory; a red
+        # test is otherwise invisible to `census --check`.
+        tests, passed = (re.search(rf'(?m)^# {key} (\d+)\s*$', stdout) for key in ('tests', 'pass'))
+        if not (tests and passed and tests[1] == passed[1]):
+            raise ValueError('Missing or incomplete census TAP record')
+        return {'tests': int(tests[1])}
     if not gate.outputs:
         match = re.search(r'(?m)^# pass (\d+)\s*$', stdout)
         if not match or 'PASS: eight law rules;' not in stdout:

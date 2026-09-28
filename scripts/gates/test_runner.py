@@ -268,7 +268,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         self.assertLessEqual({'frontend', 'checker', 'structural', 'fields', 'wasm', 'wasm-trust',
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
-                              'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
+                              'recursion', 'fields-wasm', 'census', 'census:test', 'lint:verify', 'perch-context',
                               'bootstrap', 'classification', 'io-host', 'io-abi-2',
                               'selfhost', 'modules'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
@@ -281,6 +281,18 @@ class ExecutionTests(unittest.TestCase):
             got = run.execute(run.Gate('lint', (sys.executable, '-c', 'print("# pass 3")')),
                               root, root, dict(os.environ), 5)
             self.assertEqual('host-failure', got['status'])
+
+    def test_census_tests_count_only_a_complete_tap_record(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for text, status in (('# tests 79\\n# pass 79\\n# fail 0', 'passed'),
+                                 ('# tests 79\\n# pass 78\\n# fail 0', 'host-failure'),
+                                 ('# pass 79', 'host-failure')):
+                with self.subTest(text=text):
+                    got = run.execute(run.Gate('census:test', (sys.executable, '-c', f'print("{text}")')),
+                                      root, root, dict(os.environ), 5)
+                    self.assertEqual(status, got['status'])
+                    self.assertEqual({'tests': 79} if status == 'passed' else {}, got['counts'])
 
 
 class SemanticMutantTests(unittest.TestCase):

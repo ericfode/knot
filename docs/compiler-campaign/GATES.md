@@ -31,7 +31,11 @@ requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
-`tools/census/approved.json` entry. Gate failures, missing executables,
+`tools/census/approved.json` entry. `census:test` runs `npm run -s census:test`
+and passes only on a complete TAP record (`# tests` equal to `# pass`). Its
+fixture pins literals of the inventoried source, such as the frontend's
+definition count, so a frontend edit must update them; `census --check` alone
+does not see them. Gate failures, missing executables,
 timeouts, blocked dependencies, and malformed/missing completion records exit 1.
 The Perch context increment adds gate 15, `perch-context`: 33 literal context
 controls, eight semantic mutants, one complete seed signature check, and two
