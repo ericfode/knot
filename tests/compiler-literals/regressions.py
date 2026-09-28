@@ -23,6 +23,14 @@ SPACED = oracle.unsupported(
     'parse', 'operator',
     'Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is '
     'operator sugar, which Knot does not check; D4 forbids an Invalid claim.')
+U32_CONSTRUCTOR = oracle.unsupported(
+    'check', 'u32-constructor',
+    "Seed-valid: Base spells U32{data: Word(32n)}, but an installed U32 is unboxed bits "
+    'with no Word representation in Knot (D4).')
+WORD = oracle.unsupported(
+    'load', 'base-function-result',
+    'Seed-valid: Word.zero returns the type-level Word(32n), which the Base loader does not '
+    'lower, so the U32 construction is never reached (D4).')
 
 # name -> (finding, covers, entries, Knot)
 PLAN = {
@@ -32,6 +40,9 @@ PLAN = {
     'offset-spaced-promotion-expression': ('offset adjacency', 'the expression 3n +x', [], SPACED),
     'offset-adjacent': ('offset adjacency control', '1n+ p, 1n+ +p, 1n++p and 3n+ x remain offsets',
                         ['after_space', 'after_promotion', 'after_join', 'sum'], oracle.AGREE),
+    'u32-constructor-pattern': ('u32 constructor', 'case U32{w} on a U32 scrutinee', [], U32_CONSTRUCTOR),
+    'u32-constructor-rebuild': ('u32 constructor', 'case U32{w}: U32{w}', [], U32_CONSTRUCTOR),
+    'u32-constructor-word': ('u32 constructor', 'U32{Word.zero(32n)} without a pattern', [], WORD),
 }
 
 

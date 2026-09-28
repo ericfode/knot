@@ -431,6 +431,159 @@
         "diagnostic_prefix": "Unsupported\tparse\toperator\t",
         "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
       }
+    },
+    {
+      "name": "u32-constructor-pattern",
+      "file": "tests/compiler-literals/regressions/u32-constructor-pattern.bend",
+      "sha256": "d391cbe3459ec4d20812ebca1004a6bcebe9bbda6edf46d5bc3c204a6d99c06a",
+      "finding": "u32 constructor",
+      "covers": "case U32{w} on a U32 scrutinee",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/u32-constructor-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/u32-constructor-pattern.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tu32-constructor\t",
+        "justification": "Seed-valid: Base spells U32{data: Word(32n)}, but an installed U32 is unboxed bits with no Word representation in Knot (D4)."
+      }
+    },
+    {
+      "name": "u32-constructor-rebuild",
+      "file": "tests/compiler-literals/regressions/u32-constructor-rebuild.bend",
+      "sha256": "fd46ac245006fc9296f1f593175902950f27a0f2ab4cf3384cb871ae5412450e",
+      "finding": "u32 constructor",
+      "covers": "case U32{w}: U32{w}",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/u32-constructor-rebuild.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/u32-constructor-rebuild.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tcheck\tu32-constructor\t",
+        "justification": "Seed-valid: Base spells U32{data: Word(32n)}, but an installed U32 is unboxed bits with no Word representation in Knot (D4)."
+      }
+    },
+    {
+      "name": "u32-constructor-word",
+      "file": "tests/compiler-literals/regressions/u32-constructor-word.bend",
+      "sha256": "e77a3006e8d420fb5958e716a9a5a7918338af8063a7886c4e0a424a076b1d3b",
+      "finding": "u32 constructor",
+      "covers": "U32{Word.zero(32n)} without a pattern",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/u32-constructor-word.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/u32-constructor-word.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tload\tbase-function-result\t",
+        "justification": "Seed-valid: Word.zero returns the type-level Word(32n), which the Base loader does not lower, so the U32 construction is never reached (D4)."
+      }
     }
   ]
 }
