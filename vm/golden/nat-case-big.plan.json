@@ -1,0 +1,15 @@
+{
+ "entry":"book",
+ "representation":{"Bool":0,"Nat":1,"U32":2},
+ "types":[
+  {"kind":"data","name":"Bool","constructors":[{"name":"False","fields":[]},{"name":"True","fields":[]}]},
+  {"kind":"data","name":"Nat","constructors":[{"name":"Zero","fields":[]},{"name":"Succ","fields":[1]}]},
+  {"kind":"opaque","name":"U32"}
+ ],
+ "functions":[
+  {"name":"Nat.is_eq","parameters":[1,1],"result":0,"slots":2,"body":["prim",0,26,[["ref",1,0],["ref",1,1]]]},
+  {"name":"U32.to_nat","parameters":[2],"result":1,"slots":1,"body":["prim",1,16,[["ref",2,0]]]},
+  {"name":"check","parameters":[1],"result":0,"slots":2,"body":["case",0,0,1,"tags",[["branch",0,1,0,["value",0,0]],["branch",1,1,1,["call",0,0,[["ref",1,1],["lit",1,"Nat",2147483648]]]]],null]},
+  {"name":"main","parameters":[],"result":0,"slots":0,"body":["call",0,2,[["call",1,1,[["lit",2,"U32",2147483649]]]]]}
+ ]
+}

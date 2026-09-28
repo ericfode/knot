@@ -1117,6 +1117,30 @@
    "stderr": "",
    "basis": "eval-cli",
    "eval_lane": "agree"
+  },
+  "nat-case-big": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tTrue{}\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Exhausted"
+  },
+  "invoke-words": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
   }
  },
  "invocations": {
@@ -1472,6 +1496,216 @@
     "cause": "invoke argument-arity",
     "basis": "eval-cli",
     "eval_lane": "HostFailure"
+   }
+  ],
+  "invoke-words": [
+   {
+    "argv": [
+     "IMAGE",
+     "absent",
+     "1000000",
+     "x"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "absent",
+     "x"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "9",
+     "x"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "01",
+     "0"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "000000000001",
+     "0"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "4294967295",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "invoke argument-range",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "4294967296",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "4294967297",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "+1",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "-1",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     " 1",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "1",
+     ""
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "\u0661",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "1000000",
+     "1_0",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "4294967296",
+     "1",
+     "0"
+    ],
+    "outcome": "HostFailure",
+    "cause": "arguments expected-u32",
+    "basis": "eval-cli",
+    "eval_lane": "HostFailure"
+   },
+   {
+    "argv": [
+     "IMAGE",
+     "two",
+     "0001048576",
+     "1",
+     "0"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t1\t0\tTwo{On{},Off{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
    }
   ]
  }

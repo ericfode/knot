@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 91 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 93 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
 | [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
@@ -261,9 +261,9 @@ A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
 refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its six admitted plan controls (three Cases on a `none` slot,
 among them `list-head-match`, and three whose arms fit their Case, among them
-`first-code`, S's shapes), its seven code-list controls and its eleven run
-controls; vm-model and vm-core MUST run each run control to the outcome
-frozen with it (§7, §12).
+`first-code`, S's shapes), its seven code-list controls and its 23 run
+controls; vm-model and vm-core MUST run each run control, at the fuel frozen with
+it, to the outcome frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -380,7 +380,7 @@ to its post-state. No row runs user code or a second host effect.
 | Return, top Bind | Pop; move the word into slot `depth`; push Scope(`depth`); `depth += 1`; Eval the body. |
 | Return, top Scope | Pop; drop slots `depth-1` down to the saved depth, zeroing them; restore depth; keep returning. |
 | Return, top Call | Pop; drop `act`; `act` = the saved caller; keep returning. |
-| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), bind the fields, `depth += f`. Eval the arm body. |
+| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), then bind the fields (§6.1), `depth += f`. Eval the arm body. |
 | Eval Closure | `dup` the captured slots in order; allocate the Closure; Return it. |
 | Eval Invoke | Push InvokeFunction; Eval the function. |
 | Return, top InvokeFunction | Pop. Live: push InvokeArgument holding the function; Eval the argument. Erased: `Enter(function, [])`. |
@@ -413,13 +413,28 @@ no read leaves a cell.
 ### 6.1 Case selection
 
 The scrutinee is borrowed from its slot and inspected (§6) against the Case's
-scrutinee type, whether its slot is typed so or `none`. For an Object, the
-tag and fields come from its payload; for an immediate of an
-algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
-word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
-its own code word. In key mode, the scalar's value is compared with the keys;
-there is no field. The selected arm is `row[tag]`, or the matching key's arm, or
-else the default. Fields are `dup`ed into consecutive slots in field order.
+scrutinee type, whether its slot is typed so or `none`. Selection reads a tag and
+allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
+type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
+(tag 1), and a Char word is Chr (tag 0). In key mode the scalar's value is
+compared with the keys. The selected arm is `row[tag]`, or the matching key's arm,
+or else the default.
+
+A selected Branch with `f > 0` fields pushes Scope(`depth`) and then binds its
+fields into consecutive slots in field order:
+- An Object's fields, and Chr's field (the Char's own code word), are shared with
+  the scrutinee, which keeps its slot: each is `dup`ed.
+- Succ's field is the predecessor `n - 1`, a word made here and nowhere else: an
+  immediate when `n - 1 < 2^31`, otherwise a Big cell allocated now (rc 1, §5).
+  It is **moved** into its slot, never `dup`ed: the slot owns its one reference,
+  and the Scope pop drops it like any other. A Default or a Zero arm makes no
+  predecessor.
+
+The allocation follows the Scope push, so a frame-region `Exhausted` (kind 3)
+allocates nothing, and a heap `Exhausted` (kind 2) leaves the Scope pushed. Golden
+`nat-case-big` binds the Big predecessor 2^31, which its run frees only if it was
+moved; run control `nat-default-big` takes the Default of a Nat Case on 2^31 + 1
+and allocates nothing (§12).
 
 ### 6.2 Tail position
 
@@ -467,6 +482,15 @@ across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
 4,294,967,295 (`deep-recursion` alone makes about 2 × 10^9 entries).
 `calls` is the total of successful debits, so the initial fuel is `fuel + calls`.
 
+**The boundary.** A run whose entries total `calls` completes with initial fuel
+`calls`; with one unit less, its last entry stops with `Exhausted` kind 1 after
+`calls - 1` debits, and at fuel 0 its first entry stops after none. The operand
+check precedes the fuel test, so an ill-typed Enter is `HostFailure image` at
+fuel 0 too. An Action applied to `k` is debited before its effect, and `k` is a
+separate entry: when the Action's second application meets fuel 0, nothing is
+written; when `k`'s entry does, the effect's output is already written. Eleven
+fuel run controls freeze each side (§12).
+
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
 (the new body is ready to Eval, or the Action's continuation is pending) and
 dispatch returns to `knot_main` with the whole state committed. `knot_main` resets
@@ -476,19 +500,42 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 ## 8. Books, Programs and Actions
 
-**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks read only the image, in this
-order, before anything else and without debiting fuel; steps 1–3 fail as
-`HostFailure invoke` with the cause named:
-1. `FN` is found by name, else `unknown-export`.
-2. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
+**Arguments.** The VM loads and validates the image first (§4); its entry kind
+selects the form of the words after `IMAGE`: a Book takes `FN FUEL [ORDINALS…]`
+and a Program `FUEL -- [ARGS…]`. The form's shape is checked before its words:
+fewer words than it names, or a Program's second word other than `--`, is
+`HostFailure arguments usage`. FUEL and every ORDINAL are **decimal
+u32 words**: one or more ASCII digits `0`–`9` and nothing else (no sign, space,
+separator, radix prefix or other script's digit), with a value at most
+4,294,967,295. Any number of leading zeros is allowed: `01`, `000000000001` and
+4,400 zeros followed by `1` are all 1. Every
+other word, the empty word included, is `HostFailure arguments expected-u32`; a
+value above the maximum is refused, never reduced modulo 2^32 (`4294967296` is
+not 0). This is Base's `U32.read`, which eval-cli applies to its budget and
+ordinals. FN and ARGS are any words, and FUEL any u32, 0 included (§7); eval-cli
+also refuses a budget above its 1,048,576 transitions as `budget-out-of-range`, a
+cap the VM does not share. eval-cli reads its words before its source; the VM
+reads the image first because the entry kind selects the form, so an image §4
+refuses is `HostFailure image` whatever the words.
+
+**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks run in this order, before any
+entry and without debiting fuel; steps 2–4 fail as `HostFailure invoke` with the
+cause named:
+1. FUEL, then each ORDINAL left to right, is a decimal u32 word, else
+   `HostFailure arguments expected-u32`. eval-cli reads every word before it looks
+   `FN` up, so a malformed word refuses the invocation whatever `FN` names
+   (`absent x`) and whatever an earlier ordinal would be refused for
+   (`two F 9 x`).
+2. `FN` is found by name, else `unknown-export`.
+3. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
    erased parameter takes no ordinal. With no ordinal left, `argument-arity`. An
    arrow parameter is `function-argument`. Otherwise the ordinal is a constructor
    tag of the parameter's type: at or beyond its constructor count it is
    `argument-range`, so an opaque type (U32, File) or a `none` parameter refuses
    every ordinal; naming a constructor with a live field, `structured-argument`.
    An admitted ordinal is that nullary constructor's immediate.
-3. Ordinals left over are `argument-arity`.
-4. `FN`'s result type must be **describable**: algebraic, with every live field of
+4. Ordinals left over are `argument-arity`.
+5. `FN`'s result type must be **describable**: algebraic, with every live field of
    every constructor describable in turn. A cycle through algebraic types stays
    describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque type are
    not, so neither are the pinned Char (its U32 field) and String. Otherwise
@@ -496,12 +543,14 @@ order, before anything else and without debiting fuel; steps 1–3 fail as
    result, so the VM refuses the request instead of inventing one (§11; goldens
    `result-u32`, `result-u32-field`, `result-char` and `result-string`).
 
-The reference predicate is `serializer.invocation`. The image keeps less than
+The reference predicate is `serializer.invocation`, with `serializer.decimal` for
+step 1's words; `serializer.arguments` selects the form by entry kind. The image keeps less than
 eval-cli's core, so two eval-cli answers differ by contract: eval-cli admits a U32
 ordinal 0 as the value 0, because its loader models U32 as one nullary constructor
 (`opaque-parameter`), and refuses a constructor whose fields are all erased as
 `structured-argument`, while the image has no erased field (`erased-field`).
-Goldens `invoke-args` and `invoke-arrow` freeze each cause (§12). The VM then
+Goldens `invoke-args` and `invoke-arrow` freeze each cause of steps 2–5, and
+`invoke-words` step 1's words (§12). The VM then
 pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Return to Top(0) halts
 with the result and prints
 
@@ -576,7 +625,8 @@ registry is complete.
   Succ and every conversion check the mathematical result before narrowing:
   above 2^32-1 is `Exhausted` kind 2 (`NatRange`), never U32 wraparound
   (`nat-big` and `u32-to-nat-big` inside the bound; `nat-range`, `nat-mul-range`
-  and `nat-succ-range` beyond it). A Nat Case binds `n-1` (`nat-pred`); Succ adds
+  and `nat-succ-range` beyond it). A Nat Case binds `n-1` (`nat-pred`; a Big
+  predecessor in `nat-case-big`); Succ adds
   one (`nat-succ`); `Nat.cmp` orders (`nat-cmp`).
 - `U32.to_nat`, `U32.from_nat`, `Char.from_u32` and `Char.to_u32` keep the word.
   `Char.is_space` is 9..13 or 32 (`base.bend` 1765–1768; `char-space`).
@@ -702,10 +752,11 @@ the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code
 `a\n` and refuses) build a surrogate without printing it and agree with the seed.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (74 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (75 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
-value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
+value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`,
+`nat-case-big`);
 `Exhausted` kind 2 `NatRange` where the seed's value lies outside the VM's domain
 (`nat-range`, `nat-mul-range`, `nat-succ-range`), each justified in
 [golden/bounds.json](golden/bounds.json), whose entries are all Exhausted;
@@ -755,12 +806,25 @@ lane and requires:
   divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
 - the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
-- each of the 28 frozen Book invocations of `invoke-args` and `invoke-arrow`
-  equal to its literal review and to §8: `serializer.invocation`'s verdict, or the
-  reference evaluation's describe line for the entered function; eval-cli's frozen
-  answer agrees except where a declared `opaque-parameter` or `erased-field`
-  divergence names the image loss the gate derives (five frozen invocation
-  controls);
+- each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
+  `invoke-words` equal to its literal review and to §8: `serializer.invocation`'s
+  verdict, or the reference evaluation's describe line for the entered function;
+  eval-cli's frozen answer agrees except where a declared `opaque-parameter` or
+  `erased-field` divergence names the image loss the gate derives (seven frozen
+  invocation controls, among them reviews that look `FN` up before the words and
+  that reduce `4294967296` to 0). `invoke-words`' 16 rows pass step 1's
+  words, a row's own FUEL word going to eval-cli as its budget: `absent x`, `absent`
+  with FUEL `x`, `two 9 x`, `4294967296`, `4294967297`, `+1`, `-1`, ` 1`, the empty
+  word, U+0661, `1_0` and FUEL `4294967296` are `expected-u32`; `01`,
+  `000000000001` and FUEL `0001048576` enter; `4294967295` is `argument-range`;
+- 13 **argument controls** (`check-spec.py argument_controls`), verdicts by literal
+  review of what no eval-cli row can show: on `invoke-words`' image, `two` and
+  `absent` are `usage` (before the lookup), a 4,401-character ordinal of leading
+  zeros enters (eval-cli agrees, observed but not frozen), and the Program form
+  `5 --` is `expected-u32` (FUEL `--`); on `foreign-print`'s, `5 --` and
+  `0005 -- a --` run, FUEL `x` and `4294967296` are `expected-u32`, and `--`,
+  `5 a`, `x a` (the shape before FUEL) and the Book form `main 5` are `usage`; and
+  a bad magic word is `HostFailure image` whatever the words (`absent x`);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -770,14 +834,17 @@ lane and requires:
   controls; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
-- eleven admitted **run controls** (`check-spec.py run_controls`), each frozen
-  with the run §7 and §8 require, by literal review. Through a `none`-typed identity: a
+- 23 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+  its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
+  review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
   closure invoked live, a live closure invoked erased, the terminal continuation
   invoked erased, a live closure as main's value at phase 1 and an erased closure
   at phase 2, each `HostFailure image` (`ill-typed`) after 2, 2, 4, 2 and 3
   calls. And U32 and File named by one opaque type, `Evaluated 0 0 Off{}` after 1
-  call. A validator mutant in which `none` never fits an arrow refuses the first,
+  call; and a tags-mode Nat Case on the constant 2^31 + 1 whose Succ row is
+  `none` (`nat-default-big`), `Evaluated 1 1 On{}` from its Default after 1 call.
+  A validator mutant in which `none` never fits an arrow refuses the first,
   a generic function instantiated at an arrow type, so `fits` stays loose and §7
   checks the count. Four display controls meet §8's bounds exactly and then pass
   them by one, each after 1 call: the Nat 1,048,575 renders (1,048,576 visits)
@@ -785,15 +852,25 @@ lane and requires:
   successor is named with 15 bytes renders in exactly 16,777,216 bytes, and
   `Pair{a,b}`, one byte longer, is `Exhausted`. Their lines are frozen by SHA-256.
   The seed's value obeys the same bounds (two frozen controls refuse one visit
-  and one byte beyond them);
+  and one byte beyond them). Eleven fuel controls meet §7's boundary:
+  `recursion-map` completes at fuel 6 and stops at 5 after 5 calls; `closure-nested`
+  completes at 4, and its last Invoke stops at 3; `foreign-print` completes at 5,
+  stops at `k` at 4 after writing `vm\n`, and stops at the Action's second
+  application at 3 having written nothing; a Book and a Program stop at fuel 0 after
+  0 calls; and two ill-typed Enters (an erased closure invoked live, a live closure
+  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 49 codec mutants and 4 source mutants killed through a changed image, a decode
+- 64 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe or invocation verdict or a changed observation, and 15 evaluator mutants
-  through a changed or refused expectation, Book value or run control, never a crash;
+  changed describe, invocation or argument verdict or a changed observation, and 21 evaluator mutants
+  through a changed or refused expectation, Book value or run control, never a crash.
+  Five survive every golden and die only by a fuel control: fuel that never runs
+  out, fuel that runs out one entry early, an Action's effect before its debit,
+  the fuel test before the operand check, and a free terminal continuation. A
+  predecessor narrowed to 31 bits dies only by `nat-case-big`;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
@@ -806,7 +883,10 @@ observations, not gate thresholds, and claim no VM speed.
 
 Later increments keep these expectations. vm-model adds checked proof entries for
 the codec round trip, bounded validator soundness, the RC edge audit and zero
-leaks. vm-core adds the iterative loader, validator, CEK machine, state dump and
+leaks. The audit runs on every golden and run control that completes: a
+predecessor `dup`ed rather than moved leaks a cell in `nat-case-big`, and one made
+before its arm is chosen leaks in `nat-default-big`. The reference evaluation has no
+RC, so this gate checks only their values. vm-core adds the iterative loader, validator, CEK machine, state dump and
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.

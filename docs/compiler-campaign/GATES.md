@@ -18,6 +18,12 @@ npm run gates:verify                  # offline wrapper controls and mutants
 npm run gates -- --jobs 2 --keep-scratch
 ```
 
+On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
+passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
+`$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
+under parallel load, which the seed reported as "found no clang". The resolved
+binary is the same compiler the shim forwards to.
+
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
 unless the caller sets it. These guards only catch hangs; no passing receipt
@@ -62,14 +68,15 @@ The vm-spec increment adds gate `vm-spec` (`python3 vm/check-spec.py`), which
 freezes the `knot-image-1`/`knot-vm-1` contract of `vm/SPEC.md` before any VM
 exists. It builds the pinned literals and closures heads' `eval-cli` and
 `check-cli` from `vm/oracles/` with the seed's native lane, re-executes the seed
-and eval-cli on 91 golden sources, and requires the frozen observations byte for
+and eval-cli on 93 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table; 62 refused malformed-image
-controls; 16 expectation, five invocation, two seed-display and two bench
+controls; 16 expectation, seven invocation, two seed-display and two bench
 controls; six admitted plan controls, seven admitted code-list controls and
-eleven run controls with their frozen outcomes; nine describe-domain controls;
-the lowering of one hand-written display; 49 codec, 4 source and 15 evaluator
+23 run controls with their frozen fuel and outcomes; nine describe-domain controls;
+13 argument controls; the lowering of one hand-written display; 64 codec, 4 source
+and 21 evaluator
 mutants; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

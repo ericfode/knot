@@ -13,6 +13,7 @@ code above U+10FFFF, while SPEC section 2 keeps every u32 code in order.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -639,14 +640,41 @@ def undescribable(plan: dict, t) -> str | None:
     return None
 
 
-def invocation(plan: dict, name: str, ordinals: list) -> str | None:
-    """Why SPEC section 8 refuses the Book invocation `name ordinals...`, or None to enter it.
+def decimal(word: str) -> int | None:
+    """A decimal u32 word (SPEC section 8), or None: one or more ASCII digits and nothing
+    else, leading zeros allowed, at most 2^32-1. It is Base's `U32.read`, which eval-cli
+    applies to its budget and ordinals. Leading zeros are dropped before conversion, so a
+    word of any length is read."""
+    digits = word.lstrip('0') or '0'
+    return int(digits) if re.fullmatch('[0-9]+', word) and len(digits) <= 10 and int(digits) <= 0xFFFFFFFF else None
 
-    eval-cli's order: an unknown name; then the live parameters left to right, where a
-    missing ordinal is argument-arity, an arrow is function-argument, a tag at or beyond
-    the type's constructor count is argument-range (an opaque or `none` type has none) and
-    a constructor with a live field is structured-argument; then leftover ordinals; last,
-    an undescribable result. Erased parameters are not in the image, so take no ordinal."""
+
+def arguments(plan: dict, argv: list) -> str | None:
+    """Why SPEC section 8 refuses the words after IMAGE of an admitted image, or None to run
+    it. Its entry kind selects the form: a Book's `FN FUEL ORDINAL...` (`invocation`), or a
+    Program's `FUEL -- ARG...`, whose shape is read before its FUEL word."""
+    if plan['entry'] == 'book':
+        return invocation(plan, argv)
+    if len(argv) < 2 or argv[1] != '--':
+        return 'HostFailure arguments usage'
+    return None if decimal(argv[0]) is not None else 'HostFailure arguments expected-u32'
+
+
+def invocation(plan: dict, argv: list) -> str | None:
+    """Why SPEC section 8 refuses the Book invocation `IMAGE FN FUEL ORDINAL...`, or None to
+    enter it; `argv` is the words after IMAGE.
+
+    eval-cli's order: FUEL and every ordinal are decimal u32 words, checked before FN is
+    read; then an unknown name; then the live parameters left to right, where a missing
+    ordinal is argument-arity, an arrow is function-argument, a tag at or beyond the
+    type's constructor count is argument-range (an opaque or `none` type has none) and a
+    constructor with a live field is structured-argument; then leftover ordinals; last, an
+    undescribable result. Erased parameters are not in the image, so take no ordinal."""
+    if len(argv) < 2:
+        return 'HostFailure arguments usage'
+    if None in map(decimal, argv[1:]):
+        return 'HostFailure arguments expected-u32'
+    name, ordinals = argv[0], [decimal(w) for w in argv[2:]]
     f = next((f for f in plan['functions'] if f['name'] == name), None)
     if f is None:
         return 'HostFailure invoke unknown-export'
