@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T10:52:18.334146+00:00",
+ "date": "2026-09-28T11:39:37.827156+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "2a466e5338533ce4c7f354ea6d717830a03976aa1c303e34cc57efdcaf2dfb9f",
-  "vm/SPEC.md": "d0666796ac67a26f36f9c01137822d14ab7ae847ed1462dc92d35b5b7a31ad11",
+  "vm/DECISIONS.md": "c01fc26e937781c96b3dd8891b82dc9a7996d78bb5f420180a8812abe3fdeb59",
+  "vm/SPEC.md": "64433d1b6ae01bebeab0f7cdc72790ecc5680fe6b5f2b291e8d8d0ecbb1d7c5d",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,8 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "2cad8c30f3ac305c3c5301619e765f60fc6e955850cd8c4724f8c62248cfaca4",
-  "vm/evaluate.py": "87903b603ed5e780c12c6760ba9511988fadf57550c5553bee4624d37de433e3",
+  "vm/check-spec.py": "21726f3ec3f18d0b7bc5fd0422cf557dbe62e1cb54443f0c1e73b51a0774f350",
+  "vm/evaluate.py": "b4c5754ad7b09ad75a355c60aaa0869c0ca951f26735c96f342d36a6e2134c2c",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
@@ -2825,6 +2825,14 @@
    "refused": "invoke-args two 1 0: declared 'opaque-parameter', but eval-cli agrees"
   },
   {
+   "control": "display:seed-visits-beyond-bound",
+   "refused": "seed value: 1048577 visits exceed the display bound"
+  },
+  {
+   "control": "display:seed-bytes-beyond-bound",
+   "refused": "seed value: 16777217 bytes exceed the display bound"
+  },
+  {
    "control": "truncated",
    "refused": "HostFailure image: total"
   },
@@ -3088,6 +3096,10 @@
   "run:phase-one-live",
   "run:phase-two-erased",
   "run:u32-file-alias",
+  "run:display-visits-at-bound",
+  "run:display-visits-beyond-bound",
+  "run:display-bytes-at-bound",
+  "run:display-bytes-beyond-bound",
   "codes:surrogate-pair",
   "codes:u1f600",
   "codes:lone-surrogate",
@@ -3138,6 +3150,32 @@
    "stdout": "Evaluated\t0\t0\tOff{}\n",
    "calls": 1,
    "image_sha256": "a4c1758eed3b8c2427cb34af500e430e40c06d1227654b9f79c4348347431033"
+  },
+  "display-visits-at-bound": {
+   "exit": 0,
+   "stdout_sha256": "84b0be7c71db35d6578783135877b1b67c63a3b8049e435986e256f5779ade0a",
+   "calls": 1,
+   "image_sha256": "55966b543097ab29ebcab7f1cd4398cf3bb4fd347c90915e46f2a97cea7a6c3f"
+  },
+  "display-visits-beyond-bound": {
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "display",
+   "calls": 1,
+   "image_sha256": "8cfa8e0082525f9e3fb055b032bc0b1f776f89ab9d19a8cfefa66949b2c630c2"
+  },
+  "display-bytes-at-bound": {
+   "exit": 0,
+   "stdout_sha256": "e6b0dd0f00875b17a05cf35d5dcdcd0fc4820fb1535e0be6a9e0650d86c2a797",
+   "calls": 1,
+   "image_sha256": "b428dec61169b5a32ec9b0fa2ea261a74532b34fadd6f8e604406519a528b5bd"
+  },
+  "display-bytes-beyond-bound": {
+   "outcome": "Exhausted",
+   "kind": 2,
+   "cause": "display",
+   "calls": 1,
+   "image_sha256": "12f0abce145a2e7e7233025c125b28823188ff056f8f7fff3e9e8654d7b53821"
   }
  },
  "describe": {
@@ -3492,6 +3530,26 @@
    "mutant": "evaluator:u32-sub-saturates",
    "killed": true,
    "by": "u32-sub-wrap: u32-sub-wrap: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:display-visits-exclusive",
+   "killed": true,
+   "by": "run control display-visits-at-bound: {'exit': None, 'stdout_sha256': None, 'calls': 1}"
+  },
+  {
+   "mutant": "evaluator:display-bytes-exclusive",
+   "killed": true,
+   "by": "run control display-bytes-at-bound: {'exit': None, 'stdout_sha256': None, 'calls': 1}"
+  },
+  {
+   "mutant": "evaluator:display-nat-one-visit",
+   "killed": true,
+   "by": "run control display-visits-beyond-bound: {'outcome': None, 'kind': None, 'cause': None, 'calls': 1}"
+  },
+  {
+   "mutant": "evaluator:display-separators-free",
+   "killed": true,
+   "by": "run control display-bytes-beyond-bound: {'outcome': None, 'kind': None, 'cause': None, 'calls': 1}"
   }
  ],
  "code_lists": {

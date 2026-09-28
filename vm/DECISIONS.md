@@ -166,6 +166,21 @@ follows it (§5, §10, §11) without a new image header word.
    `invoke-arrow` (5) freeze every cause beside eval-cli's answers, the reference
    predicate is `serializer.invocation`, and six codec mutants of its order are
    killed.
+14. **A display visit is one rendered constructor.** Review round 5 found §8's
+   "1,048,576 visits and 16 MiB of text" undefined for a Nat word and silent on
+   inclusivity, and the gate's two readings apart: `evaluate.describe` charged a
+   Nat word `n + 1` visits, while `check-spec.described` admitted any Nat up to
+   1,048,576 and counted neither Objects nor bytes, so a Book golden returning
+   `1048576n` was derived as a printed value that the reference evaluation
+   exhausts. For `1,048,576 <= n <= 2,796,201` the readings give different
+   frozen outcomes. §8 now charges one visit per rendered constructor (a Nat word
+   `n` is `n + 1`, its logical view), counts the `tree`'s bytes with separators,
+   and admits both bounds inclusively. `describe` counted no separator bytes and
+   built a Nat's text before its check; both are fixed. `described` applies the
+   same rule to the seed's value. Four run controls meet each bound exactly and
+   pass it by one, two seed controls refuse one visit and one byte beyond, and four
+   evaluator mutants (each bound exclusive, a Nat as one visit, separators free)
+   are killed. No expectation changed.
 
 ## Findings that need an owner
 

@@ -219,28 +219,36 @@ class Machine:
     # ---------------------------------------------------------------- results (section 8)
 
     def describe(self, w, t) -> str:
-        """`Evaluated<TAB>type<TAB>tag<TAB>tree<LF>`, rendered iteratively within the bounds."""
+        """`Evaluated<TAB>type<TAB>tag<TAB>tree<LF>`, rendered iteratively within section 8's
+        bounds. A visit is one rendered constructor, so a Nat word n costs n + 1; the tree's
+        bytes, separators included, are its text. Both bounds are inclusive, and each charge
+        is checked before its text is built."""
         nat = self.rep.get('Nat')
-        out, visits, size, work = [], 0, 0, [(w, t)]
+        out, cost, work = [], [0, 0], [(w, t)]
+
+        def charge(visits: int, size: int):
+            cost[0] += visits
+            cost[1] += size
+            if cost[0] > DISPLAY_VISITS or cost[1] > DISPLAY_BYTES:
+                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})
         while work:
             item = work.pop()
             if isinstance(item, str):
+                charge(0, len(item))
                 out.append(item)
                 continue
             v, u = item
             tag, fields = self.view(v, u)
             if u == nat:
                 zero, succ = (c['name'] for c in self.types[nat]['constructors'])
-                text, visits = f'{succ}{{' * v + f'{zero}{{}}' + '}' * v, visits + v + 1
-            else:
-                ctor = self.types[u]['constructors'][tag]
-                text, visits = ctor['name'] + '{', visits + 1
-                parts = [p for i, f in enumerate(zip(fields, ctor['fields'])) for p in ((',',) if i else ()) + (f,)]
-                work += ['}'] + parts[::-1]
-            size += len(text.encode())
-            if visits > DISPLAY_VISITS or size > DISPLAY_BYTES:
-                raise Halt({'outcome': 'Exhausted', 'kind': 2, 'cause': 'display'})
-            out.append(text)
+                charge(v + 1, v * (len(succ.encode()) + 2) + len(zero.encode()) + 2)
+                out.append(f'{succ}{{' * v + f'{zero}{{}}' + '}' * v)
+                continue
+            ctor = self.types[u]['constructors'][tag]
+            charge(1, len(ctor['name'].encode()) + 1)
+            out.append(ctor['name'] + '{')
+            parts = [p for i, f in enumerate(zip(fields, ctor['fields'])) for p in ((',',) if i else ()) + (f,)]
+            work += ['}'] + parts[::-1]
         return f'Evaluated\t{t}\t{self.view(w, t)[0]}\t{"".join(out)}\n'
 
 

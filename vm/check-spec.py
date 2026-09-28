@@ -34,7 +34,6 @@ BUILD = ROOT / '.local/vm-spec/gate'
 SEED = ROOT / 'scripts/bend-reference'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
 EVAL_BUDGET = '1048576'
-DISPLAY_VISITS = 1_048_576  # SPEC section 8's rendering bound
 VM_FUEL = 1_000_000
 RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
@@ -573,19 +572,21 @@ def result_view(plan: dict, stdout: str):
 
 def described(printed: str, quantities: dict) -> str:
     """The seed's printed value in SPEC section 8's describe spelling: no spaces, erased
-    fields dropped by the golden's own declarations, a Nat as its unary view."""
+    fields dropped by the golden's own declarations, a Nat as its unary view. Section 8's
+    inclusive bounds apply to the rendered tree: one visit per constructor (a Nat n costs
+    n + 1) and its bytes. A value beyond them is refused; its golden declares the bound."""
     s, at = printed.removesuffix('\n'), 0
     token = re.compile(r'(\d+)n|([\w.]+)\{')
 
-    def value():
+    def value() -> tuple:
+        """(text, visits) of the subtree at `at`; the text is None once it cannot fit."""
         nonlocal at
         m = token.match(s, at)
         require(m, f'seed value: cannot read {s[at:at + 30]!r}')
         at = m.end()
         if m[1] is not None:
             n = int(m[1])
-            require(n <= DISPLAY_VISITS, f'seed value: Nat {n} exceeds the display bound')
-            return 'Succ{' * n + 'Zero{}' + '}' * n
+            return ('Succ{' * n + 'Zero{}' + '}' * n if n < reference.DISPLAY_VISITS else None), n + 1
         kids = []
         while not s.startswith('}', at):
             kids.append(value())
@@ -596,11 +597,36 @@ def described(printed: str, quantities: dict) -> str:
         at += 1
         live = quantities.get(m[2], [1] * len(kids))
         require(len(live) == len(kids), f'seed value: {m[2]} has {len(kids)} fields, declared {len(live)}')
-        return m[2] + '{' + ','.join(k for q, k in zip(live, kids) if q) + '}'
+        kept = [k for q, k in zip(live, kids) if q]
+        visits = 1 + sum(v for _, v in kept)
+        if visits > reference.DISPLAY_VISITS or any(t is None for t, _ in kept):
+            return None, visits
+        return m[2] + '{' + ','.join(t for t, _ in kept) + '}', visits
 
-    tree = value()
+    tree, visits = value()
     require(at == len(s), f'seed value: trailing text {s[at:at + 30]!r}')
+    require(visits <= reference.DISPLAY_VISITS, f'seed value: {visits} visits exceed the display bound')
+    require(len(tree.encode()) <= reference.DISPLAY_BYTES,
+            f'seed value: {len(tree.encode())} bytes exceed the display bound')
     return tree
+
+
+def seed_display_controls() -> list:
+    """`described` bounds the seed's printed value as the reference evaluation bounds the
+    VM's (display_controls): the Nat 1,048,575 and a 16,777,214-byte name render exactly at
+    the bounds, and one more visit or byte is refused."""
+    out = []
+    for label, printed, tree in [('visits', '1048575n', 'Succ{' * 1_048_575 + 'Zero{}' + '}' * 1_048_575),
+                                 ('bytes', 'N' * 16_777_214 + '{}', 'N' * 16_777_214 + '{}')]:
+        require(described(printed + '\n', {}) == tree, f'seed display at the {label} bound')
+    for label, printed in [('visits', '1048576n'), ('bytes', 'N' * 16_777_215 + '{}')]:
+        try:
+            described(printed + '\n', {})
+        except AssertionError as refusal:
+            out.append({'control': f'display:seed-{label}-beyond-bound', 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'display control seed-{label}-beyond-bound was admitted')
+    return out
 
 
 NON_SCALAR = 'non-scalar output'
@@ -846,6 +872,9 @@ def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
     """A run control's outcome and call count under the reference evaluation."""
     ev = evaluator or reference
     got = ev.book(plan, 'main', [], VM_FUEL) if plan['entry'] == 'book' else ev.program(plan, VM_FUEL)
+    if 'stdout' in got:
+        # A display control freezes its multi-megabyte line by digest.
+        got['stdout_sha256'] = sha(got['stdout'] if isinstance(got['stdout'], bytes) else got['stdout'].encode())
     return {k: got.get(k) for k in frozen}
 
 
@@ -1123,6 +1152,45 @@ def run_controls(plans: dict) -> list:
           'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
                          'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
+        *display_controls(),
+    ]
+
+
+def display_controls() -> list:
+    """Section 8's inclusive display bounds, each met exactly and then passed by one step, on
+    Book results built from Nat literals (one call each). A visit is one rendered constructor,
+    so the Nat word n costs n + 1: 1,048,575 renders and 1,048,576 is Exhausted. The text
+    bound counts the tree's bytes, separators included: with a 15-byte successor name a level
+    is 17 bytes, and Duo{a,b} with a + b = 986,894 is 3 + 1 + 2 * 6 + 17 * 986,894 + 1 + 1
+    = 16,777,216 bytes in 986,897 visits; Pair's one extra byte is Exhausted."""
+    exhausted = {'outcome': 'Exhausted', 'kind': 2, 'cause': 'display', 'calls': 1}
+
+    def nat(succ):
+        return {'kind': 'data', 'name': 'Nat', 'constructors': [{'name': 'Zero', 'fields': []},
+                                                                {'name': succ, 'fields': [0]}]}
+
+    def unary(n, succ='Succ'):
+        return f'{succ}{{' * n + 'Zero{}' + '}' * n
+
+    def shown(line):
+        return {'exit': 0, 'stdout_sha256': sha(line.encode()), 'calls': 1}
+
+    def word(n):
+        return {'entry': 'book', 'representation': {'Nat': 0}, 'types': [nat('Succ')],
+                'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['lit', 0, 'Nat', n]}]}
+
+    def pair(name, a, b):
+        return {'entry': 'book', 'representation': {'Nat': 0},
+                'types': [nat('S' * 15), {'kind': 'data', 'name': name, 'constructors': [{'name': name, 'fields': [0, 0]}]}],
+                'functions': [{'name': 'main', 'parameters': [], 'result': 1, 'slots': 0,
+                               'body': ['con', 1, 0, [['lit', 0, 'Nat', a], ['lit', 0, 'Nat', b]]]}]}
+    half = 986_894 // 2
+    return [
+        ('display-visits-at-bound', word(1_048_575), shown(f'Evaluated\t0\t1\t{unary(1_048_575)}\n')),
+        ('display-visits-beyond-bound', word(1_048_576), exhausted),
+        ('display-bytes-at-bound', pair('Duo', half, half),
+         shown(f"Evaluated\t1\t0\tDuo{{{unary(half, 'S' * 15)},{unary(half, 'S' * 15)}}}\n")),
+        ('display-bytes-beyond-bound', pair('Pair', half, half), exhausted),
     ]
 
 
@@ -1386,6 +1454,12 @@ EVALUATOR_MUTANTS = [
     ('erased-entry-free', [("        self.debit()\n        if kind == 'closure':",
                             "        if operands or kind != 'closure':\n            self.debit()\n        if kind == 'closure':")]),
     ('u32-sub-saturates', [('lambda: (x - y) & WORD,', 'lambda: max(x - y, 0),')]),
+    # Section 8's display bounds are inclusive, a Nat word n is n + 1 visits, and the tree's
+    # separators are text (display_controls).
+    ('display-visits-exclusive', [('            if cost[0] > DISPLAY_VISITS or', '            if cost[0] >= DISPLAY_VISITS or')]),
+    ('display-bytes-exclusive', [(' or cost[1] > DISPLAY_BYTES:', ' or cost[1] >= DISPLAY_BYTES:')]),
+    ('display-nat-one-visit', [('                charge(v + 1, ', '                charge(1, ')]),
+    ('display-separators-free', [('                charge(0, len(item))', '                charge(0, 0)')]),
 ]
 
 
@@ -1650,7 +1724,8 @@ def main() -> int:
     controls = byte_controls(images, digest) + [
         (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
     admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None]
-    boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources)
+    boundaries = expectation_controls(cases, plans, bounds, sources) + invocation_controls(cases, plans, sources) + \
+        seed_display_controls()
     for label, data, reason, message in controls:
         got = rejected(data, reg, digest)
         require(got is not None and got.startswith(reason) and message in got, f'control {label}: {got}')
