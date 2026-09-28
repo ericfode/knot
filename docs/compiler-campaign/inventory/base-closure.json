@@ -8011,7 +8011,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 768,
+          "declarations": 770,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -10535,7 +10535,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/check.run",
+            "via": "src/literal-types.constructor",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11567,15 +11567,14 @@
               "List",
               "Result",
               "String",
-              "U32",
               "src/catalog.ConstructorRef",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/check.pattern_arity",
               "src/core.Datatype",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
+              "src/literal-types.constructor",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -11758,7 +11757,6 @@
               "U32.is_eq",
               "U32.to_nat",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
@@ -11798,6 +11796,7 @@
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-types.constructor",
               "src/patterns.branch",
               "src/primitive-op.Op",
               "src/primitive.output",
@@ -14283,13 +14282,13 @@
               "U32",
               "U32.is_eq",
               "src/catalog.constructor_named",
-              "src/catalog.find_constructor",
               "src/core.Datatype",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
               "src/literal-matrix.constructor",
               "src/literal-matrix.literal",
+              "src/literal-types.constructor",
               "src/literal-types.is_kind",
               "src/syntax.At",
               "src/syntax.Error",
@@ -14570,6 +14569,31 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.constructor",
+            "file": "src/literal-types.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/catalog.find_constructor",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/literal-types.present",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -14638,6 +14662,25 @@
               "U32",
               "Word.Con",
               "Word.Nil"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.present",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "String",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -22015,7 +22058,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 768,
+          "declarations": 770,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -24539,7 +24582,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/check.run",
+            "via": "src/literal-types.constructor",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25571,15 +25614,14 @@
               "List",
               "Result",
               "String",
-              "U32",
               "src/catalog.ConstructorRef",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/check.pattern_arity",
               "src/core.Datatype",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
+              "src/literal-types.constructor",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -25762,7 +25804,6 @@
               "U32.is_eq",
               "U32.to_nat",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
@@ -25802,6 +25843,7 @@
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-types.constructor",
               "src/patterns.branch",
               "src/primitive-op.Op",
               "src/primitive.output",
@@ -28287,13 +28329,13 @@
               "U32",
               "U32.is_eq",
               "src/catalog.constructor_named",
-              "src/catalog.find_constructor",
               "src/core.Datatype",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
               "src/literal-matrix.constructor",
               "src/literal-matrix.literal",
+              "src/literal-types.constructor",
               "src/literal-types.is_kind",
               "src/syntax.At",
               "src/syntax.Error",
@@ -28574,6 +28616,31 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.constructor",
+            "file": "src/literal-types.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/catalog.find_constructor",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/literal-types.present",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -28642,6 +28709,25 @@
               "U32",
               "Word.Con",
               "Word.Nil"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.present",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "String",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -36019,7 +36105,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 683,
+          "declarations": 685,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -37739,7 +37825,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/check.run",
+            "via": "src/literal-types.constructor",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38392,11 +38478,11 @@
             "unsafe": false,
             "dependencies": [
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/check.pattern_arity",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
+              "src/literal-types.constructor",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -38514,7 +38600,6 @@
               "U32.is_eq",
               "U32.to_nat",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.annotation",
@@ -38548,6 +38633,7 @@
               "src/literal-check.result",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-types.constructor",
               "src/patterns.branch",
               "src/primitive.output",
               "src/scope.find_level",
@@ -40169,12 +40255,12 @@
             "dependencies": [
               "U32.is_eq",
               "src/catalog.constructor_named",
-              "src/catalog.find_constructor",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
               "src/literal-matrix.constructor",
               "src/literal-matrix.literal",
+              "src/literal-types.constructor",
               "src/literal-types.is_kind",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -40355,6 +40441,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.constructor",
+            "file": "src/literal-types.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/catalog.find_constructor",
+              "src/core.unsupported",
+              "src/literal-types.present",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -40406,6 +40509,21 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.present",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.or",
+              "src/literal-types.installed",
+              "src/syntax.matches"
+            ],
             "dynamic_calls": []
           },
           {
@@ -45580,7 +45698,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 806,
+          "declarations": 808,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -48165,7 +48283,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/check.run",
+            "via": "src/literal-types.constructor",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -49180,13 +49298,13 @@
               "Result",
               "src/catalog.ConstructorRef",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/check.pattern_arity",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
+              "src/literal-types.constructor",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
@@ -49365,7 +49483,6 @@
               "src/catalog.FunctionRef",
               "src/catalog.TypeRef",
               "src/catalog.field_signature",
-              "src/catalog.find_constructor",
               "src/catalog.find_function",
               "src/catalog.find_type",
               "src/check.Mode",
@@ -49406,6 +49523,7 @@
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-types.constructor",
               "src/patterns.Fields",
               "src/patterns.branch",
               "src/primitive-op.Op",
@@ -51863,13 +51981,13 @@
               "U32.is_eq",
               "src/catalog.ConstructorRef",
               "src/catalog.constructor_named",
-              "src/catalog.find_constructor",
               "src/core.Datatype",
               "src/core.internal",
               "src/core.invalid",
               "src/core.unsupported",
               "src/literal-matrix.constructor",
               "src/literal-matrix.literal",
+              "src/literal-types.constructor",
               "src/literal-types.is_kind",
               "src/syntax.At",
               "src/syntax.Error",
@@ -52149,6 +52267,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.constructor",
+            "file": "src/literal-types.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "src/catalog.ConstructorRef",
+              "src/catalog.find_constructor",
+              "src/core.Datatype",
+              "src/core.unsupported",
+              "src/literal-types.present",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -52215,6 +52356,25 @@
               "U32",
               "Word.Con",
               "Word.Nil"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.present",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.or",
+              "List",
+              "String",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },

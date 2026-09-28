@@ -1,6 +1,7 @@
 import Base
 import ./syntax.bend as S
 import ./core.bend as C
+import ./catalog.bend as G
 
 def kind_name(kind: U32) -> String:
   match kind:
@@ -36,3 +37,14 @@ def find(types: List<&2,C.Datatype>, +name: String, +index: U32) -> Result<S.Err
 
 def primitive_type(types: List<&2,C.Datatype>, name: String) -> Result<S.Error,U32>:
   find(types,name,0)
+
+def present(types: List<&2,C.Datatype>, +name: String) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{+token,data,ctors},+tail}:
+      Bool.or(Bool.and(installed(token),S.matches(token,name)),present(tail,name))
+
+# Base spells U32{data: Word(32n)}, but an installed U32 is unboxed bits.
+def constructor(+types: List<&2,C.Datatype>, +token: S.Token) -> Result<S.Error,G.ConstructorRef>:
+  S.choose(Result<S.Error,G.ConstructorRef>,Bool.and(S.matches(token,"U32"),present(types,"U32")),u =>
+    C.unsupported(G.ConstructorRef,"u32-constructor",token),u => G.find_constructor(types,token,0))

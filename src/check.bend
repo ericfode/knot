@@ -9,6 +9,7 @@ import ./literal-base.bend as LB
 import ./primitive-op.bend as R
 import ./primitive.bend as O
 import ./literal-matrix.bend as M
+import ./literal-types.bend as T
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -106,7 +107,7 @@ def pattern_arity(+reference: G.ConstructorRef, args: List<&2,S.Node>, +token: S
 def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.ConstructorRef>:
   match node:
     case S.Constructor{+token,+args}:
-      S.bind(G.ConstructorRef,G.ConstructorRef,G.find_constructor(types,token,0),+reference =>
+      S.bind(G.ConstructorRef,G.ConstructorRef,T.constructor(types,token),+reference =>
         S.bind(List<&2,C.Parameter>,G.ConstructorRef,G.field_signature(reference,types),params => pattern_arity(reference,args,token,params)))
     case S.Variable{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
     case S.Promotion{token}: C.unsupported(G.ConstructorRef,"variable-pattern",token)
@@ -245,7 +246,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
-      S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>
+      S.bind(G.ConstructorRef,C.Checked,T.constructor(types,token),+reference =>
         S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),+params =>
           S.bind(C.Checked,C.Checked,constructor(reference,args,token,wanted,params,u => run(n,Arguments{args,params,token},catalog,current,scope)),value => literal_constructor(value,types))))
     case 1n+ +n Expression{S.Call{+token,+args},+wanted} C.Catalog{types,sigs} _:

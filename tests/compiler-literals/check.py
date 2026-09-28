@@ -241,6 +241,9 @@ MUTANTS = [
     {'name': 'spaced-offset', 'file': 'parse.bend',
      'old': 'touches(S.at(token),S.here(tokens))', 'new': 'True{}',
      'fixture': 'offset-spaced-pattern', 'verdict': (0, 'Built\t')},
+    {'name': 'invalid-u32-constructor', 'file': 'literal-types.bend',
+     'old': 'C.unsupported(G.ConstructorRef,"u32-constructor",token)', 'new': 'G.find_constructor(types,token,0)',
+     'fixture': 'u32-constructor-pattern', 'verdict': (2, 'Invalid\tcheck\tunknown-constructor\t')},
 ]
 
 
