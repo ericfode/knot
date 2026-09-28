@@ -1,0 +1,349 @@
+{
+  "schema": 1,
+  "at": "2026-09-28T00:08:40.106692+00:00",
+  "base_commit": "185b7d5ffad5a4e8d59ccc52b95a5b9c83c5330d",
+  "status": "pass",
+  "existing_assertions_changed": false,
+  "environment": {
+    "BEND_NO_TELEMETRY": "1",
+    "Bun_invocations": "--no-env-file injected through local PATH wrapper; no .env read or copied",
+    "lint_cache": "TREE_SITTER_LANGUAGE_PACK_CACHE_DIR=.local/data-lifetime/parser-cache; existing manifest and seven libraries copied, no download"
+  },
+  "gates": [
+    {
+      "name": "frontend",
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/subsets/check_frontend.py",
+      "exit": 0,
+      "counts": {
+        "reference_fixtures": 14,
+        "parser_lanes": 2,
+        "boundary_observations": 24,
+        "filled_laws": 4,
+        "semantic_mutants": 4
+      },
+      "stdout": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four laws and four semantic mutants\n",
+      "stdout_sha256": "d2185e3a322737bcd3c50a08a1f42f058f3208c71edb6b28df49f6b718792e9e",
+      "fresh_receipt": "tests/subsets/receipts/frontend.json",
+      "fresh_receipt_sha256": "b3e892ac0876e4ce676f87f1845d4fbf3541b1432ae1683799ce4bd04b7133de"
+    },
+    {
+      "name": "checker",
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-checker/check.py",
+      "exit": 0,
+      "counts": {
+        "reference_fixtures": 49,
+        "checked_observations": 98,
+        "depth_observations": 10,
+        "catalog_bound_observations": 16,
+        "semantic_mutants": 7
+      },
+      "stdout": "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-r3r7/tests/compiler-checker/receipts/checker.json\n",
+      "stdout_sha256": "353fe870e8169c33bb69cf35c5a25267c24f03b278760e8c436250a3b8932452",
+      "fresh_receipt": "tests/compiler-checker/receipts/checker.json",
+      "fresh_receipt_sha256": "f13ed57717387134514102d5ad88f79491a538c7ab61f7589c81eb3e5a15119d"
+    },
+    {
+      "name": "structural",
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-structural/check.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 16,
+        "boundary_pairs": 4,
+        "semantic_mutants": 7
+      },
+      "stdout": "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-r3r7/tests/compiler-structural/receipts/catalog.json\n",
+      "stdout_sha256": "1f7d64d780e0206b7aa8fa3b18c2ceb1e183c1b87802c3854026c990ca9415e5",
+      "fresh_receipt": "tests/compiler-structural/receipts/catalog.json",
+      "fresh_receipt_sha256": "e181abe0d6c1f150f83c94ce6e1e015ffee33a6093bd33c28b4d8211a2be900b"
+    },
+    {
+      "name": "fields",
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields/check.py",
+      "exit": 0,
+      "counts": {
+        "seed_fixtures": 40,
+        "phase_observations": 240,
+        "budget_probes": 36,
+        "host_probes": 6,
+        "level_inspection_observations": 12,
+        "semantic_mutants": 9
+      },
+      "stdout": "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; /Users/ericfode/src/knot/.claude/worktrees/campaign-r3r7/tests/compiler-fields/receipts/fields.json\n",
+      "stdout_sha256": "fa688e2e3e1d966f49b122e08318c89cd4f92107500ef88038e04a9f338e8e6f",
+      "fresh_receipt": "tests/compiler-fields/receipts/fields.json",
+      "fresh_receipt_sha256": "391095ee866e2f5fe52c94693c13f8fccda8391086dbd1de390db230bb9de386"
+    },
+    {
+      "name": "wasm",
+      "command": "BEND_NO_TELEMETRY=1 python3 tests/compiler-wasm/check.py",
+      "exit": 0,
+      "counts": {
+        "source_programs": 25,
+        "reference_calls_per_lane": 90,
+        "lanes": 2,
+        "rejection_pairs": 64,
+        "boundary_observations": 44,
+        "semantic_mutants": 7
+      },
+      "stdout": "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. /Users/ericfode/src/knot/.claude/worktrees/campaign-r3r7/tests/compiler-wasm/receipts/wasm.json\n",
+      "stdout_sha256": "65c67269cde38a27b671594c6e9a3fc01c79b194d364059c78f55e5c76115b8d",
+      "fresh_receipt": "tests/compiler-wasm/receipts/wasm.json",
+      "fresh_receipt_sha256": "e02045c894a1776ebf8547436720cf5c9450b77721f70ea8388bd0907085b274"
+    },
+    {
+      "name": "trust-wasm",
+      "command": "BEND_NO_TELEMETRY=1 bun tests/compiler-wasm/trust.ts",
+      "exit": 0,
+      "counts": {
+        "checked_entries": 3,
+        "holes": 0,
+        "loaded_files_per_entry": [
+          15,
+          13,
+          18
+        ],
+        "foreign_per_entry": 42,
+        "unsafe_per_entry": 2
+      },
+      "stdout": "[\n  {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/runtime-PROOF.bend\",\n    files: 18,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }\n]\n",
+      "stdout_sha256": "e393862b7caffc4fa0a85fd64de9516d67ea8626a31d99e8196fab4c2b6b4d6b",
+      "fresh_receipt": "research/compiler-wasm/receipts/trust.json",
+      "fresh_receipt_sha256": "bdc9025d73d6e61825f514eedcb9bc4c924a9d71e145da7f3f8fd6b9cd719532"
+    },
+    {
+      "name": "trust-fields",
+      "command": "BEND_NO_TELEMETRY=1 bun tests/compiler-fields/trust.ts",
+      "exit": 0,
+      "counts": {
+        "checked_entries": 4,
+        "holes": 0,
+        "loaded_files_per_entry": [
+          22,
+          12,
+          13,
+          15
+        ],
+        "foreign_per_entry": 42,
+        "unsafe_per_entry": 2
+      },
+      "stdout": "[\n  {\n    entry: \"src/fields-PROOF.bend\",\n    files: 22,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }, {\n    entry: \"src/check-cli.bend\",\n    files: 12,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 13,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/compile-cli.bend\",\n    files: 15,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }\n]\n",
+      "stdout_sha256": "5fe4d646089ed4919d34b97dd6d2e913430db175f90e4ac73dc63ddc7321e7bd",
+      "fresh_receipt": "research/compiler-fields/receipts/trust.json",
+      "fresh_receipt_sha256": "36dd66583e4c8938ed162f699b62727f41812a0c200ea9e68c5237d21aa000cf"
+    },
+    {
+      "name": "trust-structural",
+      "command": "BEND_NO_TELEMETRY=1 bun tests/compiler-structural/trust.ts",
+      "exit": 0,
+      "counts": {
+        "checked_entries": 2,
+        "holes": 0,
+        "loaded_files_per_entry": [
+          20,
+          8
+        ],
+        "foreign_per_entry": 42,
+        "unsafe_per_entry": 2
+      },
+      "stdout": "[\n  {\n    entry: \"src/catalog-PROOF.bend\",\n    files: 20,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }, {\n    entry: \"tests/compiler-structural/observe.bend\",\n    files: 8,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }\n] [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ]\n",
+      "stdout_sha256": "37e3ff049dcbfb1d32528dbbcde7fbbfe2d9907872993dcb6fe714e4cddaa91b",
+      "fresh_receipt": "research/compiler-structural/receipts/trust.json",
+      "fresh_receipt_sha256": "d5e7fd92a503fd988a663c53a7a35f8916ead5d1f1e8cc35307ebc3f2381a766"
+    },
+    {
+      "name": "owned-store",
+      "command": "BEND_NO_TELEMETRY=1 python3 research/owned-store/check.py",
+      "exit": 0,
+      "counts": {
+        "traces_per_lane": 3532,
+        "lanes": 2,
+        "literal_witnesses_per_lane": 15,
+        "filled_equations": 14,
+        "quantity_controls": 5,
+        "max_generation_observations": 4,
+        "semantic_mutants": 6
+      },
+      "stdout": "{\"status\": \"pass\", \"case_count\": 3532, \"literal_witnesses\": 15}\n",
+      "stdout_sha256": "63867712b416f598aabfa79ebb7d43e4e0322caf88ae9d3053b6f68ed69955f9",
+      "fresh_receipt": "research/owned-store/receipts/gate.json",
+      "fresh_receipt_sha256": "c3e247fc7a52c114e0b2ba64562f701b04f066aace23f069e185ec0f0b9c3355"
+    },
+    {
+      "name": "flat-store",
+      "command": "BEND_NO_TELEMETRY=1 python3 research/flat-store/check.py",
+      "exit": 0,
+      "counts": {
+        "instances_per_lane": 3534,
+        "observations_per_lane": 13621,
+        "lanes": 2,
+        "lifecycle_checks_per_lane": 7,
+        "literal_probes": 24,
+        "filled_equations": 15,
+        "semantic_mutants": 9,
+        "wasm_bytes": 1050
+      },
+      "stdout": "{\"status\": \"pass\", \"module_bytes\": 1050, \"module_sha256\": \"0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4\"}\n",
+      "stdout_sha256": "250fb0c47c1f0dc6e9b90ef158b57729808551437fc46c6af8cfada4171d37b1",
+      "fresh_receipt": "research/flat-store/receipts/gate.json",
+      "fresh_receipt_sha256": "1a7af993cd961ca3d70561cd19eb3fd4efcd3a056a44add2c395fe8937515df2"
+    },
+    {
+      "name": "lint-verify-isolated",
+      "command": "BEND_NO_TELEMETRY=1 npm run -s lint:verify",
+      "exit": 0,
+      "counts": {
+        "tests": 103,
+        "passed": 103,
+        "failed": 0,
+        "law_rules": 8
+      },
+      "stdout": "TAP version 13\n# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-e2e88d8b118b168b).\n# Perch 0.3.5: .bend parser enabled (language-pack-1.20-v3+knot-bend-e2e88d8b118b168b).\n# Subtest: pinned installation is repeatable and refuses unknown bundle contents\nok 1 - pinned installation is repeatable and refuses unknown bundle contents\n  ---\n  duration_ms: 245.770583\n  type: 'test'\n  ...\n# Subtest: file checks run real method rules per working-copy declaration with relevant helper and law context\nok 2 - file checks run real method rules per working-copy declaration with relevant helper and law context\n  ---\n  duration_ms: 592.607417\n  type: 'test'\n  ...\n# Subtest: working-copy helper traversal is bounded and reports context limits\nok 3 - working-copy helper traversal is bounded and reports context limits\n  ---\n  duration_ms: 8.319333\n  type: 'test'\n  ...\n# Subtest: datatype context resolves supplied local types without turning them into callees\nok 4 - datatype context resolves supplied local types without turning them into callees\n  ---\n  duration_ms: 9.460083\n  type: 'test'\n  ...\n# Subtest: explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles\nok 5 - explicit aliased datatype context includes transitive types, preserves snapshot and deduplicates cycles\n  ---\n  duration_ms: 47.53575\n  type: 'test'\n  ...\n# Subtest: missing imports and missing datatype declarations remain explicit; malformed imported types reject\nok 6 - missing imports and missing datatype declarations remain explicit; malformed imported types reject\n  ---\n  duration_ms: 38.905416\n  type: 'test'\n  ...\n# Subtest: parsed generic datatype context preserves AST spans and existing function graph references\nok 7 - parsed generic datatype context preserves AST spans and existing function graph references\n  ---\n  duration_ms: 17.196708\n  type: 'test'\n  ...\n# Subtest: datatype dependency file, helper and byte caps stay fail closed\nok 8 - datatype dependency file, helper and byte caps stay fail closed\n  ---\n  duration_ms: 57.299583\n  type: 'test'\n  ...\n# Subtest: direct datatype style context retains one-file cap and composition checks explicit type dependencies\nok 9 - direct datatype style context retains one-file cap and composition checks explicit type dependencies\n  ---\n  duration_ms: 62.115833\n  type: 'test'\n  ...\n# Subtest: real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request\nok 10 - real CLI parses Bend-only scans, imports and method targets; syntax failure sends no model request\n  ---\n  duration_ms: 837.66125\n  type: 'test'\n  ...\n# Subtest: scan parser coverage follows configured selection while retaining required imports and caller context\nok 11 - scan parser coverage follows configured selection while retaining required imports and caller context\n  ---\n  duration_ms: 686.3465\n  type: 'test'\n  ...\n# Subtest: parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures\nok 12 - parallel file checks preserve requests and ordering, isolate budgets, refresh rules and drain failures\n  ---\n  duration_ms: 428.278916\n  type: 'test'\n  ...\n# Subtest: built-in proof requests include the selected working-copy law once and change identity with it\nok 13 - built-in proof requests include the selected working-copy law once and change identity with it\n  ---\n  duration_ms: 213.676792\n  type: 'test'\n  ...\n# Subtest: paired-law omission and missing imports remain explicit without changing selection budgets\nok 14 - paired-law omission and missing imports remain explicit without changing selection budgets\n  ---\n  duration_ms: 50.40325\n  type: 'test'\n  ...\n# Subtest: paired laws stay inside every built-in token budget, chunk and retry preparation\nok 15 - paired laws stay inside every built-in token budget, chunk and retry preparation\n  ---\n  duration_ms: 147.109459\n  type: 'test'\n  ...\n# Subtest: actual pinned parser, provenance, and Base source are available without the toolchain\nok 16 - actual pinned parser, provenance, and Base source are available without the toolchain\n  ---\n  duration_ms: 1.801792\n  type: 'test'\n  ...\n# Subtest: multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls\nok 17 - multiline signatures, quantity binders, ADTs, nested matches, unsafe definitions, and local calls\n  ---\n  duration_ms: 30.019792\n  type: 'test'\n  ...\n# Subtest: static call/value distinction includes zero-argument calls and excludes bound dynamic calls\nok 18 - static call/value distinction includes zero-argument calls and excludes bound dynamic calls\n  ---\n  duration_ms: 26.60625\n  type: 'test'\n  ...\n# Subtest: law and local fill have one target, separate law range, and no intervening declaration leakage\nok 19 - law and local fill have one target, separate law range, and no intervening declaration leakage\n  ---\n  duration_ms: 30.914084\n  type: 'test'\n  ...\n# Subtest: UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia\nok 20 - UTF-8 byte offsets and columns preserve Unicode strings/comments and exclude trailing trivia\n  ---\n  duration_ms: 12.322416\n  type: 'test'\n  ...\n# Subtest: imported laws, constructor patterns, template calls parse with honest dependency diagnostics\nok 21 - imported laws, constructor patterns, template calls parse with honest dependency diagnostics\n  ---\n  duration_ms: 19.480166\n  type: 'test'\n  ...\n# Subtest: imported template-law fills pass ~ arguments recursively; local law arity stays checked\nok 22 - imported template-law fills pass ~ arguments recursively; local law arity stays checked\n  ---\n  duration_ms: 28.130292\n  type: 'test'\n  ...\n# Subtest: dependency-context failure differs from malformed local syntax\nok 23 - dependency-context failure differs from malformed local syntax\n  ---\n  duration_ms: 29.877541\n  type: 'test'\n  ...\n# Subtest: malformed Bend is rejected with no successful partial declaration list\nok 24 - malformed Bend is rejected with no successful partial declaration list\n  ---\n  duration_ms: 33.382208\n  type: 'test'\n  ...\n# Subtest: analysis does not load imports, foreign code, network, or caches\nok 25 - analysis does not load imports, foreign code, network, or caches\n  ---\n  duration_ms: 8.093917\n  type: 'test'\n  ...\n# Subtest: every current nonignored package and research Bend source parses with bounded, exact source ranges\nok 26 - every current nonignored package and research Bend source parses with bounded, exact source ranges\n  ---\n  duration_ms: 874.185125\n  type: 'test'\n  ...\n# Subtest: incremental scans reuse exact answers and parser blobs across commits, including dependent contexts\nok 27 - incremental scans reuse exact answers and parser blobs across commits, including dependent contexts\n  ---\n  duration_ms: 1108.414958\n  type: 'test'\n  ...\n# Subtest: renamed method rules cannot carry an answer under the old question name\nok 28 - renamed method rules cannot carry an answer under the old question name\n  ---\n  duration_ms: 338.061333\n  type: 'test'\n  ...\n# Subtest: renamed and deleted files, and failed dependent rereads, do not retain stale successful units\nok 29 - renamed and deleted files, and failed dependent rereads, do not retain stale successful units\n  ---\n  duration_ms: 811.269958\n  type: 'test'\n  ...\n# Subtest: search reuse includes actual helper context, rule kind, threshold and an empty selection\nok 30 - search reuse includes actual helper context, rule kind, threshold and an empty selection\n  ---\n  duration_ms: 749.317\n  type: 'test'\n  ...\n# Subtest: parser cache corruption is a miss; transient failures never become persistent cache entries\nok 31 - parser cache corruption is a miss; transient failures never become persistent cache entries\n  ---\n  duration_ms: 303.550042\n  type: 'test'\n  ...\n# Subtest: task request is source-blind and exact production request precedes all source judgments\nok 32 - task request is source-blind and exact production request precedes all source judgments\n  ---\n  duration_ms: 85.016125\n  type: 'test'\n  ...\n# Subtest: high potential requires one complete composition Galaxy score, never individual helper novelty\nok 33 - high potential requires one complete composition Galaxy score, never individual helper novelty\n  ---\n  duration_ms: 23.977209\n  type: 'test'\n  ...\n# Subtest: low potential retains baseline standards and makes no composition provider call\nok 34 - low potential retains baseline standards and makes no composition provider call\n  ---\n  duration_ms: 36.1875\n  type: 'test'\n  ...\n# Subtest: missing and uncertain potential stay explicitly advisory without blocking baseline success\nok 35 - missing and uncertain potential stay explicitly advisory without blocking baseline success\n  ---\n  duration_ms: 31.91525\n  type: 'test'\n  ...\n# Subtest: composition failure cannot borrow passing declaration scores; raw family distribution remains visible\nok 36 - composition failure cannot borrow passing declaration scores; raw family distribution remains visible\n  ---\n  duration_ms: 18.089708\n  type: 'test'\n  ...\n# Subtest: full selected files and known collaborator files determine composition scope and identity\nok 37 - full selected files and known collaborator files determine composition scope and identity\n  ---\n  duration_ms: 70.801584\n  type: 'test'\n  ...\n# Subtest: unknown references or bounded full-source overflow withhold composition qualification\nok 38 - unknown references or bounded full-source overflow withhold composition qualification\n  ---\n  duration_ms: 28.317166\n  type: 'test'\n  ...\n# Subtest: task precedence, task byte limit and default generic cohort never establish low potential\nok 39 - task precedence, task byte limit and default generic cohort never establish low potential\n  ---\n  duration_ms: 26.065042\n  type: 'test'\n  ...\n# Subtest: warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity\nok 40 - warm cache reuses exact independent judgments; changed source keeps task answer but changes composition identity\n  ---\n  duration_ms: 47.318167\n  type: 'test'\n  ...\n# Subtest: explicit v4 receipt reuse preserves both extra judgments and validates changed task input\nok 41 - explicit v4 receipt reuse preserves both extra judgments and validates changed task input\n  ---\n  duration_ms: 37.285334\n  type: 'test'\n  ...\n# Subtest: task or collaborator edits during review prevent qualification and cache publication\nok 42 - task or collaborator edits during review prevent qualification and cache publication\n  ---\n  duration_ms: 13.376542\n  type: 'test'\n  ...\n# Subtest: provider failure and model mismatch stop further phases and retain request identity\nok 43 - provider failure and model mismatch stop further phases and retain request identity\n  ---\n  duration_ms: 20.091\n  type: 'test'\n  ...\n# Subtest: project inventory never substitutes an implicit whole-project composition claim\nok 44 - project inventory never substitutes an implicit whole-project composition claim\n  ---\n  duration_ms: 40.244167\n  type: 'test'\n  ...\n# Subtest: configuration and score validation preserve criticality independence and exact uncertainty\nok 45 - configuration and score validation preserve criticality independence and exact uncertainty\n  ---\n  duration_ms: 0.271416\n  type: 'test'\n  ...\n# Subtest: all source rules select actual Bend declarations; packet rules keep file scope\nok 46 - all source rules select actual Bend declarations; packet rules keep file scope\n  ---\n  duration_ms: 306.0305\n  type: 'test'\n  ...\n# Subtest: campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass\nok 47 - campaign retains unrated, stale-helper, missing and unparseable coverage instead of inheriting a pass\n  ---\n  duration_ms: 1.177084\n  type: 'test'\n  ...\n# Subtest: only matching source, context, parser and rubric can carry a baseline target result\nok 48 - only matching source, context, parser and rubric can carry a baseline target result\n  ---\n  duration_ms: 0.778\n  type: 'test'\n  ...\n# Subtest: failed or empty baselines cannot make a campaign look covered\nok 49 - failed or empty baselines cannot make a campaign look covered\n  ---\n  duration_ms: 0.307708\n  type: 'test'\n  ...\n# Subtest: a matching critical baseline still needs Galaxy brain under the historical v3 policy\nok 50 - a matching critical baseline still needs Galaxy brain under the historical v3 policy\n  ---\n  duration_ms: 1.255458\n  type: 'test'\n  ...\n# Subtest: v4 matching declaration ratings do not establish task or composition qualification\nok 51 - v4 matching declaration ratings do not establish task or composition qualification\n  ---\n  duration_ms: 0.284917\n  type: 'test'\n  ...\n# Subtest: v5 inventory retains role-adjusted declaration targets without inventing a composition pass\nok 52 - v5 inventory retains role-adjusted declaration targets without inventing a composition pass\n  ---\n  duration_ms: 0.290708\n  type: 'test'\n  ...\n# Subtest: complete context and composition are structurally unblocked, with no provider or receipt\nok 53 - complete context and composition are structurally unblocked, with no provider or receipt\n  ---\n  duration_ms: 65.62675\n  type: 'test'\n  ...\n# Subtest: a truncated caller context is reported as unpassable and forbids the supporting role\nok 54 - a truncated caller context is reported as unpassable and forbids the supporting role\n  ---\n  duration_ms: 20.27375\n  type: 'test'\n  ...\n# Subtest: an unresolvable collaborator makes composition unavailable and names the reason\nok 55 - an unresolvable collaborator makes composition unavailable and names the reason\n  ---\n  duration_ms: 17.032791\n  type: 'test'\n  ...\n# Subtest: project preflight lists unranked files and single-file groups without ratings\nok 56 - project preflight lists unranked files and single-file groups without ratings\n  ---\n  duration_ms: 75.073791\n  type: 'test'\n  ...\n# Subtest: project preflight, like a live --all run, cannot qualify without an explicit composition group\nok 57 - project preflight, like a live --all run, cannot qualify without an explicit composition group\n  ---\n  duration_ms: 51.621\n  type: 'test'\n  ...\n# Subtest: task handling and empty inventories match the live run\nok 58 - task handling and empty inventories match the live run\n  ---\n  duration_ms: 69.812417\n  type: 'test'\n  ...\n# Subtest: preflight refuses live mode, unknown options and existing output\nok 59 - preflight refuses live mode, unknown options and existing output\n  ---\n  duration_ms: 4.196375\n  type: 'test'\n  ...\n# Subtest: supporting roles scale only three axes, independently of criticality\nok 60 - supporting roles scale only three axes, independently of criticality\n  ---\n  duration_ms: 1.54875\n  type: 'test'\n  ...\n# Subtest: leading and uncertain roles keep level3; truncation cannot establish a supporting exemption\nok 61 - leading and uncertain roles keep level3; truncation cannot establish a supporting exemption\n  ---\n  duration_ms: 29.281792\n  type: 'test'\n  ...\n# Subtest: a helper named helper can be leading; public names do not override the classifier\nok 62 - a helper named helper can be leading; public names do not override the classifier\n  ---\n  duration_ms: 0.119833\n  type: 'test'\n  ...\n# Subtest: missing task keeps potential advisory but always requires whole-composition three-axis evidence\nok 63 - missing task keeps potential advisory but always requires whole-composition three-axis evidence\n  ---\n  duration_ms: 53.934917\n  type: 'test'\n  ...\n# Subtest: composition questions keep the generic form unless per-axis composition wording is configured\nok 64 - composition questions keep the generic form unless per-axis composition wording is configured\n  ---\n  duration_ms: 54.592959\n  type: 'test'\n  ...\n# Subtest: all-support declaration success cannot bypass a weak whole composition\nok 65 - all-support declaration success cannot bypass a weak whole composition\n  ---\n  duration_ms: 19.157625\n  type: 'test'\n  ...\n# Subtest: low potential still grades composition; high potential adds only the Galaxy question\nok 66 - low potential still grades composition; high potential adds only the Galaxy question\n  ---\n  duration_ms: 52.7095\n  type: 'test'\n  ...\n# Subtest: whole-project inventory remains explicit attention without a bounded composition group\nok 67 - whole-project inventory remains explicit attention without a bounded composition group\n  ---\n  duration_ms: 54.620208\n  type: 'test'\n  ...\n# Subtest: role and composition judgments reuse exact requests; contribution policy changes invalidate cache\nok 68 - role and composition judgments reuse exact requests; contribution policy changes invalidate cache\n  ---\n  duration_ms: 46.54275\n  type: 'test'\n  ...\n# Subtest: rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls\nok 69 - rank preflight uses exact parsed units and working-copy helpers; all inputs validate before paid calls\n  ---\n  duration_ms: 222.822167\n  type: 'test'\n  ...\n# Subtest: one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars\nok 70 - one request carries three style questions, two diagnostics and criticality; receipts enforce only the selected bars\n  ---\n  duration_ms: 48.565375\n  type: 'test'\n  ...\n# Subtest: diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output\nok 71 - diagnostic extremes remain advisory for noncritical declarations and remain visible in CLI output\n  ---\n  duration_ms: 54.204917\n  type: 'test'\n  ...\n# Subtest: truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score\nok 72 - truncated context skips diagnostic questions and reports unavailable rather than a fabricated low score\n  ---\n  duration_ms: 15.465\n  type: 'test'\n  ...\n# Subtest: critical and uncertain declarations need both anticipation and payoff with their own target probability\nok 73 - critical and uncertain declarations need both anticipation and payoff with their own target probability\n  ---\n  duration_ms: 24.366209\n  type: 'test'\n  ...\n# Subtest: invalid diagnostic configurations are rejected before any provider request\nok 74 - invalid diagnostic configurations are rejected before any provider request\n  ---\n  duration_ms: 2.930125\n  type: 'test'\n  ...\n# Subtest: partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking\nok 75 - partial transport failure records incomplete coverage, stops requests, and never returns a partial ranking\n  ---\n  duration_ms: 29.087709\n  type: 'test'\n  ...\n# Subtest: a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar\nok 76 - a single existing declaration is assessed without a cohort or alternative; all axes must meet the bar\n  ---\n  duration_ms: 20.558667\n  type: 'test'\n  ...\n# Subtest: all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar\nok 77 - all declaration kinds have criticality and mandatory diagnostics; datatypes retain the ordinary big-brain bar\n  ---\n  duration_ms: 101.522208\n  type: 'test'\n  ...\n# Subtest: uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass\nok 78 - uncertain or truncated criticality cannot lower the bar; Galaxy brain needs its own probability mass\n  ---\n  duration_ms: 0.832208\n  type: 'test'\n  ...\n# Subtest: whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs\nok 79 - whole-project mode covers tracked and new Bend files, reports invalid and empty files, and excludes ignored installs\n  ---\n  duration_ms: 122.112291\n  type: 'test'\n  ...\n# Subtest: command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation\nok 80 - command-local source snapshots parse shared helpers once, preserve import paths, and refresh on the next invocation\n  ---\n  duration_ms: 82.649916\n  type: 'test'\n  ...\n# Subtest: snapshot loads remain inside the workspace and do not discover unrelated sources\nok 81 - snapshot loads remain inside the workspace and do not discover unrelated sources\n  ---\n  duration_ms: 10.952125\n  type: 'test'\n  ...\n# Subtest: explicit reuse avoids paid repeats and invalidates when helper context changes\nok 82 - explicit reuse avoids paid repeats and invalidates when helper context changes\n  ---\n  duration_ms: 91.183708\n  type: 'test'\n  ...\n# Subtest: concurrent responses preserve target attribution and changes during review are disclosed\nok 83 - concurrent responses preserve target attribution and changes during review are disclosed\n  ---\n  duration_ms: 44.879917\n  type: 'test'\n  ...\n# Subtest: missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings\nok 84 - missing credentials, unauthorized responses, malformed scores and model drift cannot produce rankings\n  ---\n  duration_ms: 156.848916\n  type: 'test'\n  ...\n# Subtest: default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results\nok 85 - default workers overlap and stay bounded; serial and out-of-order runs preserve complete review inputs and results\n  ---\n  duration_ms: 25.7645\n  type: 'test'\n  ...\n# Subtest: concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse\nok 86 - concurrent failure stops new dispatch, drains active requests, and saves completed rows in target order for explicit reuse\n  ---\n  duration_ms: 18.759375\n  type: 'test'\n  ...\n# Subtest: jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests\nok 87 - jobs overrides exported concurrency, accepts the bounded maximum, and rejects invalid worker counts before requests\n  ---\n  duration_ms: 59.10175\n  type: 'test'\n  ...\n# Subtest: a changed provider model stops queued work and cannot be mixed with explicitly reused answers\nok 88 - a changed provider model stops queued work and cannot be mixed with explicitly reused answers\n  ---\n  duration_ms: 33.91325\n  type: 'test'\n  ...\n# Subtest: ties share a rank, near ties remain visible, and existing output is rejected before requests\nok 89 - ties share a rank, near ties remain visible, and existing output is rejected before requests\n  ---\n  duration_ms: 1.748334\n  type: 'test'\n  ...\n# Subtest: incremental keeps full current coverage with zero warm requests and honest cached-model provenance\nok 90 - incremental keeps full current coverage with zero warm requests and honest cached-model provenance\n  ---\n  duration_ms: 44.287041\n  type: 'test'\n  ...\n# Subtest: isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents\nok 91 - isolated declaration changes preserve exact unrelated requests while helper changes invalidate dependents\n  ---\n  duration_ms: 39.491958\n  type: 'test'\n  ...\n# Subtest: rubric, requested model and effective endpoint changes invalidate incremental answers\nok 92 - rubric, requested model and effective endpoint changes invalidate incremental answers\n  ---\n  duration_ms: 134.804709\n  type: 'test'\n  ...\n# Subtest: incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage\nok 93 - incremental inventories reflect deletions, renames and new invalid files without inheriting stale coverage\n  ---\n  duration_ms: 90.700583\n  type: 'test'\n  ...\n# Subtest: interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses\nok 94 - interrupted reviews retain only valid fresh-source answers and corrupt cache records become misses\n  ---\n  duration_ms: 77.221584\n  type: 'test'\n  ...\n# Subtest: source-stale and model-drift runs do not seed the persistent cache or claim a clean result\nok 95 - source-stale and model-drift runs do not seed the persistent cache or claim a clean result\n  ---\n  duration_ms: 44.896625\n  type: 'test'\n  ...\n# Subtest: fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests\nok 96 - fresh bypasses and replaces saved low or uncertain ratings; conflicting modes reject before requests\n  ---\n  duration_ms: 77.533083\n  type: 'test'\n  ...\n# Subtest: concurrent cache publication leaves complete independently validated records\nok 97 - concurrent cache publication leaves complete independently validated records\n  ---\n  duration_ms: 51.807084\n  type: 'test'\n  ...\n# Subtest: actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes\nok 98 - actual Perch CLI retains useful evidence without treating blockers or zero coverage as passes\n  ---\n  duration_ms: 768.757958\n  type: 'test'\n  ...\n# Subtest: incremental scan receipts distinguish reused coverage from a fresh provider review\nok 99 - incremental scan receipts distinguish reused coverage from a fresh provider review\n  ---\n  duration_ms: 407.7725\n  type: 'test'\n  ...\n# Subtest: bounded workers refill, preserve order and drain when a task fails\nok 100 - bounded workers refill, preserve order and drain when a task fails\n  ---\n  duration_ms: 5.896041\n  type: 'test'\n  ...\n# Subtest: token memoization is exact under mutation, Unicode and bounded eviction\nok 101 - token memoization is exact under mutation, Unicode and bounded eviction\n  ---\n  duration_ms: 0.237208\n  type: 'test'\n  ...\n# Subtest: provider semaphore bounds nested fan-out and drains arbitrary rejections\nok 102 - provider semaphore bounds nested fan-out and drains arbitrary rejections\n  ---\n  duration_ms: 4.380709\n  type: 'test'\n  ...\n# Subtest: scan checkpoint accounts only for serialized rows when workers finish during append\nok 103 - scan checkpoint accounts only for serialized rows when workers finish during append\n  ---\n  duration_ms: 3.7245\n  type: 'test'\n  ...\n1..103\n# tests 103\n# suites 0\n# pass 103\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3526.644791\nPASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present.\nNo provider contacted. This verifies wiring, not model accuracy or law completeness.\n",
+      "stdout_sha256": "3a6fe335db922eb01fb5a908798bc5307bd8c26cc879b62391e89d3fcac47c7b",
+      "fresh_receipt": null,
+      "fresh_receipt_sha256": null
+    }
+  ],
+  "resolved_attempt": {
+    "command": "npm run -s lint:verify",
+    "exit": 1,
+    "tests": 99,
+    "passed": 88,
+    "failed": 11,
+    "reason": "Parser tried to lock user cache outside sandbox. Rerun with existing parser files in a writable local cache; no assertion, rule, or implementation change.",
+    "stdout_sha256": "434a56ea445707e9cca457b3d0076064bc9e7a829ad96521582e1316352dc98e"
+  },
+  "sources": {
+    "src/AGENTS.md": "61f535ea564327aa060f939d60218a967d704f539f4703d3f322087abd5748f8",
+    "src/CONTRACT.json": "ad392ee8b3990c6332a147aa5152a4db7c2c940fd5981bf3bfa1662c31a51bae",
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/SPEC.md": "f30ec6beb9d60a2b27cea0d328fd0544b27cdc3f874374ff101a428cc1eb697e",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b"
+  },
+  "gate_scripts": {
+    "tests/subsets/check_frontend.py": "0f6270231b787e027df8455bc6af30c917726811a1e637093d116419945e4996",
+    "tests/compiler-checker/check.py": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+    "tests/compiler-structural/check.py": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
+    "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+    "tests/compiler-wasm/check.py": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d",
+    "tests/compiler-wasm/trust.ts": "69c6b2526240ece25fb4a79d68b723214aed124fee0b57a68cdb37d56207351c",
+    "tests/compiler-fields/trust.ts": "fd2b17caf00c08ebd078c2164a5edaa2a8c4ec4a64fa7b76a70777879a04add4",
+    "tests/compiler-structural/trust.ts": "d75e2435fa4379c54bab6ce8b8004bc935eed2242fa7866dee1b29487c566070",
+    "research/owned-store/check.py": "cb78b83fdeae6e91e305ea9c5274a36bb429bc85261833b557c8cec42fe7d5d3",
+    "research/flat-store/check.py": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69"
+  },
+  "tool_versions": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3",
+    "wasm2wat": "1.0.41"
+  },
+  "restored_existing_receipts": [
+    {
+      "path": "research/compiler-fields/receipts/trust.json",
+      "original_sha256": "40c1c1b6ada4f40998b2e16a8c31e4eef57ed2e6f7164e665dfae362ef475bfc",
+      "fresh_sha256": "36dd66583e4c8938ed162f699b62727f41812a0c200ea9e68c5237d21aa000cf"
+    },
+    {
+      "path": "research/compiler-structural/receipts/trust.json",
+      "original_sha256": "cbcefe9d951c16d8936d180e102f88b7528a2834671d2553edb33ec4c82c7561",
+      "fresh_sha256": "d5e7fd92a503fd988a663c53a7a35f8916ead5d1f1e8cc35307ebc3f2381a766"
+    },
+    {
+      "path": "research/compiler-wasm/receipts/trust.json",
+      "original_sha256": "69f80213d382555996efe794bf8f52ffaef24be1ba386bac75c19e45179a4c6d",
+      "fresh_sha256": "bdc9025d73d6e61825f514eedcb9bc4c924a9d71e145da7f3f8fd6b9cd719532"
+    },
+    {
+      "path": "research/flat-store/receipts/bun-oracle.txt.gz",
+      "original_sha256": "02ae10073be4f312fe05214163a4bcb56d057a025d4060a9760d77510078d36e",
+      "fresh_sha256": "5dc19bbba9f2c9520523aaba1a73913671a33f8c68514757ae7ef1c4bc39048a",
+      "decoded_bytes_unchanged": true
+    },
+    {
+      "path": "research/flat-store/receipts/gate.json",
+      "original_sha256": "82c8d7f4ff78b76e27310418b1a6634129244d02f1889681cc24860c68b0a2f3",
+      "fresh_sha256": "1a7af993cd961ca3d70561cd19eb3fd4efcd3a056a44add2c395fe8937515df2"
+    },
+    {
+      "path": "research/flat-store/receipts/native-oracle.txt.gz",
+      "original_sha256": "d482e18d1acc36d7de5c0f1f43795f771e207dcd7feaf67750a5d6ddb2dfc13b",
+      "fresh_sha256": "4a2e87c231bb521f58aab2cc655d949a527468982ca77683f1d3d2db219dec8e",
+      "decoded_bytes_unchanged": true
+    },
+    {
+      "path": "research/owned-store/receipts/bun.txt.gz",
+      "original_sha256": "ea1d710cd75ce9f57b1938ed493110f22228d82791e7eeed629d90db7ac18bd6",
+      "fresh_sha256": "08ee6fbee0926fc30afcf835dd74b57db68e830c455c49f440c979a3306090bf",
+      "decoded_bytes_unchanged": true
+    },
+    {
+      "path": "research/owned-store/receipts/gate.json",
+      "original_sha256": "26d1de292ca5f7b07d9904af75b6089b8b53ccb2fda916c4a2db9460f881fb3b",
+      "fresh_sha256": "c3e247fc7a52c114e0b2ba64562f701b04f066aace23f069e185ec0f0b9c3355"
+    },
+    {
+      "path": "research/owned-store/receipts/inputs.json.gz",
+      "original_sha256": "4058723a372bb8511cf72586ab73629081180b6bc89b676b565a557ebb5ce6f1",
+      "fresh_sha256": "f2b61f374e4acb08561480876a6165ac90adcdbd82ad5a377ee8673cf4096ec5",
+      "decoded_bytes_unchanged": true
+    },
+    {
+      "path": "research/owned-store/receipts/native.txt.gz",
+      "original_sha256": "45d9d6fa22e4b89e67af2436d4704de2232a97ebaf3e162c4cea82fd9ac8c9fc",
+      "fresh_sha256": "94d1806e92597487c13c9dbe3779432e988a92d3c9eacff9976fbac7e852c3e5",
+      "decoded_bytes_unchanged": true
+    },
+    {
+      "path": "tests/compiler-checker/receipts/checker.json",
+      "original_sha256": "e336b3519c95dfd19a30a3e7ae91b93c41a686eb9cfbf30849d7c844204cce54",
+      "fresh_sha256": "f13ed57717387134514102d5ad88f79491a538c7ab61f7589c81eb3e5a15119d"
+    },
+    {
+      "path": "tests/compiler-fields/receipts/fields.json",
+      "original_sha256": "e5f897c092e75a661d813c12ff3db38bf7aca28fee6105f7df2e7481d2c9e660",
+      "fresh_sha256": "391095ee866e2f5fe52c94693c13f8fccda8391086dbd1de390db230bb9de386"
+    },
+    {
+      "path": "tests/compiler-structural/receipts/catalog.json",
+      "original_sha256": "d3fd1473ae4135053d700eb3655e1574618f046b0e3a230667aa57210fb04c6c",
+      "fresh_sha256": "e181abe0d6c1f150f83c94ce6e1e015ffee33a6093bd33c28b4d8211a2be900b"
+    },
+    {
+      "path": "tests/compiler-wasm/receipts/wasm.json",
+      "original_sha256": "d61c3224c591fc1d39ff6cc07826c781d6625d41e90f80ea11ba1f57c35b30e7",
+      "fresh_sha256": "e02045c894a1776ebf8547436720cf5c9450b77721f70ea8388bd0907085b274"
+    },
+    {
+      "path": "tests/subsets/receipts/frontend.json",
+      "original_sha256": "45674d054733caab55bee585d3e395a1b6aa0f8f8ce4c1ca0846dcda2d80de76",
+      "fresh_sha256": "b3e892ac0876e4ce676f87f1845d4fbf3541b1432ae1683799ce4bd04b7133de"
+    }
+  ],
+  "receipt_disposition": "Regenerated results passed. Restore all existing receipts: this research alters no compiler/store implementation. Gzip payloads are byte-identical. JSON changes are run provenance plus pre-existing compiler source hash drift (driver.bend/check-LAWS.bend) already recorded by campaign state; coordinator owns refresh on main. Fresh local copies remain in ignored .local/data-lifetime/regenerated-receipts."
+}
