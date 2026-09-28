@@ -40,7 +40,8 @@ Commas and spaces separate scrutinees and row patterns.
 ## Proof inventory
 
 The complete `src/matrix-PROOF.bend` imports the earlier proof chain and fills
-all 21 matrix laws, with no added axiom, unsafe declaration or proof hole.
+every matrix law (21 in round 2, 25 after round 4), with no added axiom, unsafe
+declaration or proof hole.
 `src/PROOF.bend` additionally fills the comma-scrutinee parser law.
 
 | Family | Quantification and evidence | Limit |
@@ -48,7 +49,8 @@ all 21 matrix laws, with no added axiom, unsafe declaration or proof hole.
 | `specialization_preserves_first_match` | Induction over arbitrary rows, constructor, fields and level; independent `selected` projects row identities directly | Stable identity selection, not full compiler refinement |
 | `selection_congruence` | Both Boolean cases, arbitrary tails | Auxiliary |
 | `irrefutable_specialization`, `irrefutable_default`, `first_row_selected` | Arbitrary relevant inputs; preservation at one step and at a zero-column leaf | No induction over a complete lowering |
-| Default-signature completion and exclusion | Arbitrary constructor tails with membership evidence | Tag-list helpers |
+| `remainder_omits_split`, `remainder_keeps_other` | Arbitrary tag lists, given the split-constructor comparison; replaced the dead default-signature laws in round 4 | One step of the live remainder; coverage follows by induction but is not stated |
+| `remainder_drops_split_rows`, `irrefutable_remainder` | Arbitrary rows, given the comparison; any variable-headed row | One step of the negative matrix |
 | Alias erasure and identity | Arbitrary names and known terms, inhabited Flag scopes | Scope/quantity helpers |
 | `anonymous_reference_is_free` | Every scope and source location | Source lookup only |
 | `default_reference_stays_live`, `empty_reference_stays_live` | Every token, level, type, quantity and liveness | Residual markers preserve ordinary occurrence rules |
@@ -57,7 +59,6 @@ all 21 matrix laws, with no added axiom, unsafe declaration or proof hole.
 | Work exhaustion, terminal budget, one-step leaf | Arbitrary matrix/scope at zero work; arbitrary terminal budget; explicit one-unit leaf | Counter boundary helpers, not an expansion-cost theorem |
 | `irrefutable_lowering_witness` | One overlapping two-column Flag matrix | Ground complete-checker normalization |
 | `exhaustive_matrix_witness` | All four cases of one two-column Flag matrix | Ground complete-checker normalization |
-| `default_completion_witness` | Off explicit and On remaining | Ground helper normalization |
 
 Two requested **general laws remain unmet**: arbitrary irrefutable-first-row
 lowering and arbitrary exhaustive-matrix/no-missing-branch lowering. Both are

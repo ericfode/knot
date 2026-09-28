@@ -92,8 +92,11 @@ activation and affine reuse through a nested alias. A type error, timeout,
 missing import, invalid module or host failure is not a semantic kill.
 
 Proof scope: stable row-identity selection is universal over source row lists;
-irrefutable-column preservation, first-leaf selection, alias identity/erasure
-default completion and exhaustion are quantified helper laws. Two complete checker normalizations
+irrefutable-column preservation, first-leaf selection, alias identity/erasure,
+one step of the live split's remainder (the split constructor leaves the
+remaining tags and its rows leave the negative matrix; other tags and variable
+rows stay) and work exhaustion are quantified helper laws. They do not state
+the general exhaustive-lowering law. Two complete checker normalizations
 exercise an overlapping irrefutable row and an exhaustive 2-by-2 matrix. Those
 full-tree witnesses, now `irrefutable_lowering_witness` and
 `exhaustive_matrix_witness`, are concrete. The general irrefutable-first-row and

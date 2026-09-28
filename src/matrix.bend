@@ -94,24 +94,10 @@ def constructors(rows: List<&2,S.Node>, +seen: List<&2,S.Token>) -> List<&2,S.To
         Con{token,constructors(tail,Con{token,seen})})
     case Con{head,tail}: constructors(tail,seen)
 
-def has_default(rows: List<&2,S.Node>) -> Bool:
-  match rows:
-    case Nil{}: False{}
-    case Con{S.Arm{arm,S.Sequence{Con{S.Variable{token},rest}},body},tail}: True{}
-    case Con{S.Arm{arm,S.Sequence{Con{S.Promotion{token},rest}},body},tail}: True{}
-    case Con{head,tail}: has_default(tail)
-
-def defaults(ctors: List<&2,C.Constructor>, +seen: List<&2,S.Token>) -> List<&2,S.Token>:
+def declared(ctors: List<&2,C.Constructor>) -> List<&2,S.Token>:
   match ctors:
     case Nil{}: Nil{}
-    case Con{C.Constructor{+token,fields},+tail}:
-      S.choose(List<&2,S.Token>,named(seen,token),u => defaults(tail,seen),u => Con{token,defaults(tail,seen)})
-
-def signature(definition: C.Datatype, +explicit: List<&2,S.Token>, use_default: Bool) -> List<&2,S.Token>:
-  match definition:
-    case C.Datatype{token,data,ctors}:
-      S.choose(List<&2,S.Token>,use_default,u =>
-        List.append(&2,S.Token,explicit,defaults(ctors,explicit)),u => explicit)
+    case Con{C.Constructor{token,fields},tail}: Con{token,declared(tail)}
 
 def fresh(params: List<&2,C.Parameter>, +level: U32, +at: S.At) -> List<&2,S.Node>:
   match params:
@@ -173,7 +159,7 @@ def without(rows: List<&2,S.Node>, +ctor: S.Token) -> List<&2,S.Node>:
 def available(column: S.Node, definition: C.Datatype) -> List<&2,S.Token>:
   match column definition:
     case S.Remainder{token,level,tags} _: tags
-    case _ C.Datatype{token,data,ctors}: defaults(ctors,Nil{})
+    case _ C.Datatype{token,data,ctors}: declared(ctors)
 
 def column_binding(+column: S.Node, +scope: E.Scope) -> Result<S.Error,C.Binding>:
   match column scope:

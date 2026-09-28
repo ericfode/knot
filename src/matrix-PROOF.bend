@@ -77,16 +77,20 @@ def L.exhaustive_matrix_witness(): {==}
 def L.erased_alias_stays_erased(name,alias,known): {==}
 def L.alias_preserves_descent_and_identity(name,alias): {==}
 
-def L.default_completes_missing_branch(name,fields,ctors,explicit,absent):
+def L.remainder_omits_split(head,tail,ctor,split):
   Equal.cong(Bool,List<&2,S.Token>,found =>
-    S.choose(List<&2,S.Token>,found,u => M.defaults(ctors,explicit),u => Con{name,M.defaults(ctors,explicit)}),
-    M.named(explicit,name),False{},absent)
-
-def L.default_does_not_repeat_explicit_branch(name,fields,ctors,explicit,present):
+    S.choose(List<&2,S.Token>,found,u => M.remaining(tail,ctor),u => Con{head,M.remaining(tail,ctor)}),
+    S.matches(head,S.text(ctor)),True{},split)
+def L.remainder_keeps_other(head,tail,ctor,other):
   Equal.cong(Bool,List<&2,S.Token>,found =>
-    S.choose(List<&2,S.Token>,found,u => M.defaults(ctors,explicit),u => Con{name,M.defaults(ctors,explicit)}),
-    M.named(explicit,name),True{},present)
-def L.default_completion_witness(): {==}
+    S.choose(List<&2,S.Token>,found,u => M.remaining(tail,ctor),u => Con{head,M.remaining(tail,ctor)}),
+    S.matches(head,S.text(ctor)),False{},other)
+def L.remainder_drops_split_rows(arm,token,args,rest,body,rows,ctor,split):
+  Equal.cong(Bool,List<&2,S.Node>,found =>
+    S.choose(List<&2,S.Node>,found,u => M.without(rows,ctor),u =>
+      Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},M.without(rows,ctor)}),
+    S.matches(token,S.text(ctor)),True{},split)
+def L.irrefutable_remainder(arm,name,rest,body,rows,ctor): {==}
 def L.anonymous_reference_is_free(scope,at):
   match scope:
     case E.Scope{bindings,next,open,live,smaller}: {==}

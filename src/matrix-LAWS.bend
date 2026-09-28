@@ -125,26 +125,43 @@ law alias_preserves_descent_and_identity:
   {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1,[flag()]) ==
     Done{E.Scope{[C.Binding{alias,1,1,0,True{},None{}},C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
 
-# Exhaustiveness at each split: every declaration absent from the explicit
-# column is retained by the default matrix, in declaration order.
-law default_completes_missing_branch:
-  for +name: S.Token
-  for fields: List<&2,C.Parameter>
-  for +ctors: List<&2,C.Constructor>
-  for +explicit: List<&2,S.Token>
-  for absent: {M.named(explicit,name) == False{} : Bool}
-  {M.defaults(Con{C.Constructor{name,fields},ctors},explicit) == Con{name,M.defaults(ctors,explicit)} : List<&2,S.Token>}
+# Exhaustiveness at each split: the positive matrix takes the split
+# constructor, the remainder keeps every other available constructor in order,
+# and the negative matrix drops only rows headed by the split constructor.
+law remainder_omits_split:
+  for +head: S.Token
+  for +tail: List<&2,S.Token>
+  for +ctor: S.Token
+  for split: {S.matches(head,S.text(ctor)) == True{} : Bool}
+  {M.remaining(Con{head,tail},ctor) == M.remaining(tail,ctor) : List<&2,S.Token>}
 
-law default_does_not_repeat_explicit_branch:
-  for +name: S.Token
-  for fields: List<&2,C.Parameter>
-  for +ctors: List<&2,C.Constructor>
-  for +explicit: List<&2,S.Token>
-  for present: {M.named(explicit,name) == True{} : Bool}
-  {M.defaults(Con{C.Constructor{name,fields},ctors},explicit) == M.defaults(ctors,explicit) : List<&2,S.Token>}
+law remainder_keeps_other:
+  for +head: S.Token
+  for +tail: List<&2,S.Token>
+  for +ctor: S.Token
+  for other: {S.matches(head,S.text(ctor)) == False{} : Bool}
+  {M.remaining(Con{head,tail},ctor) == Con{head,M.remaining(tail,ctor)} : List<&2,S.Token>}
 
-law default_completion_witness:
-  {M.signature(flag(),[token("Off")],True{}) == [token("Off"),token("On")] : List<&2,S.Token>}
+law remainder_drops_split_rows:
+  for +arm: S.Token
+  for +token: S.Token
+  for +args: List<&2,S.Node>
+  for +rest: List<&2,S.Node>
+  for +body: S.Node
+  for +rows: List<&2,S.Node>
+  for +ctor: S.Token
+  for split: {S.matches(token,S.text(ctor)) == True{} : Bool}
+  {M.without(Con{S.Arm{arm,S.Sequence{Con{S.Constructor{token,args},rest}},body},rows},ctor) == M.without(rows,ctor) : List<&2,S.Node>}
+
+law irrefutable_remainder:
+  for +arm: S.Token
+  for +name: S.Token
+  for +rest: List<&2,S.Node>
+  for +body: S.Node
+  for +rows: List<&2,S.Node>
+  for +ctor: S.Token
+  {M.without(Con{S.Arm{arm,S.Sequence{Con{S.Variable{name},rest}},body},rows},ctor) ==
+    Con{S.Arm{arm,S.Sequence{Con{S.Variable{name},rest}},body},M.without(rows,ctor)} : List<&2,S.Node>}
 
 law anonymous_reference_is_free:
   for scope: E.Scope

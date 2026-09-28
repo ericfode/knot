@@ -126,8 +126,8 @@
     "compiler": {
       "files": 33,
       "declarations": 576,
-      "unique_declarations": 482,
-      "definitions": 349,
+      "unique_declarations": 481,
+      "definitions": 347,
       "classes": 41
     },
     "frontend_files": {
@@ -53929,7 +53929,7 @@
     },
     {
       "file": "src/matrix-LAWS.bend",
-      "sha256": "5f22c7c14f69ca578913a7833a9de43768e2a4d47a840e70dfb7f623ed71dd3d",
+      "sha256": "0d2ba888331974a694fd7a5f561a72d336a71f639ebfef93363cb8381f0a848d",
       "imports": [
         {
           "module": "Base",
@@ -54994,13 +54994,60 @@
           }
         },
         {
-          "id": "src/matrix-LAWS.bend::default_completes_missing_branch:law",
-          "name": "default_completes_missing_branch",
-          "key": "src/matrix-LAWS.default_completes_missing_branch",
+          "id": "src/matrix-LAWS.bend::remainder_omits_split:law",
+          "name": "remainder_omits_split",
+          "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law",
           "lines": [
-            130,
+            131,
             136
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "List",
+            "True",
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-LAWS.bend::remainder_keeps_other:law",
+          "name": "remainder_keeps_other",
+          "key": "src/matrix-LAWS.remainder_keeps_other",
+          "kind": "law",
+          "lines": [
+            138,
+            143
           ],
           "features": [
             "calls",
@@ -55020,20 +55067,18 @@
             "Con",
             "False",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "type_references": [
             "Bool",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "captures": [],
           "execution": {
@@ -55043,13 +55088,13 @@
           }
         },
         {
-          "id": "src/matrix-LAWS.bend::default_does_not_repeat_explicit_branch:law",
-          "name": "default_does_not_repeat_explicit_branch",
-          "key": "src/matrix-LAWS.default_does_not_repeat_explicit_branch",
+          "id": "src/matrix-LAWS.bend::remainder_drops_split_rows:law",
+          "name": "remainder_drops_split_rows",
+          "key": "src/matrix-LAWS.remainder_drops_split_rows",
           "kind": "law",
           "lines": [
-            138,
-            144
+            145,
+            154
           ],
           "features": [
             "calls",
@@ -55069,20 +55114,23 @@
             "Con",
             "List",
             "True",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Constructor",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "type_references": [
             "Bool",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.without",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "captures": [],
           "execution": {
@@ -55092,38 +55140,41 @@
           }
         },
         {
-          "id": "src/matrix-LAWS.bend::default_completion_witness:law",
-          "name": "default_completion_witness",
-          "key": "src/matrix-LAWS.default_completion_witness",
+          "id": "src/matrix-LAWS.bend::irrefutable_remainder:law",
+          "name": "irrefutable_remainder",
+          "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law",
           "lines": [
-            146,
-            147
+            156,
+            164
           ],
           "features": [
             "calls",
             "constructors",
+            "dependent",
             "equality",
             "fields",
             "generics",
             "laws",
-            "literals.list",
-            "literals.string",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "references": [
             "Con",
             "List",
-            "Nil",
-            "True",
-            "src/matrix-LAWS.flag",
-            "src/matrix-LAWS.token",
-            "src/matrix.signature",
-            "src/syntax.Token"
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable"
           ],
           "type_references": [
-            "List"
+            "List",
+            "src/matrix.without",
+            "src/syntax.Node",
+            "src/syntax.Token"
           ],
           "captures": [],
           "execution": {
@@ -55138,8 +55189,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law",
           "lines": [
-            149,
-            152
+            166,
+            169
           ],
           "features": [
             "calls",
@@ -55187,8 +55238,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law",
           "lines": [
-            154,
-            161
+            171,
+            178
           ],
           "features": [
             "calls",
@@ -55237,8 +55288,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law",
           "lines": [
-            163,
-            170
+            180,
+            187
           ],
           "features": [
             "calls",
@@ -55288,8 +55339,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law",
           "lines": [
-            174,
-            185
+            191,
+            202
           ],
           "features": [
             "calls",
@@ -55343,8 +55394,8 @@
           "key": "src/matrix-LAWS.void",
           "kind": "definition",
           "lines": [
-            187,
-            187
+            204,
+            204
           ],
           "features": [
             "calls",
@@ -55381,8 +55432,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law",
           "lines": [
-            189,
-            191
+            206,
+            208
           ],
           "features": [
             "calls",
@@ -55429,8 +55480,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law",
           "lines": [
-            193,
-            195
+            210,
+            212
           ],
           "features": [
             "calls",
@@ -55476,8 +55527,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law",
           "lines": [
-            198,
-            199
+            215,
+            216
           ],
           "features": [
             "calls",
@@ -55515,8 +55566,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law",
           "lines": [
-            201,
-            202
+            218,
+            219
           ],
           "features": [
             "calls",
@@ -55554,8 +55605,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law",
           "lines": [
-            205,
-            210
+            222,
+            227
           ],
           "features": [
             "calls",
@@ -55606,8 +55657,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law",
           "lines": [
-            212,
-            217
+            229,
+            234
           ],
           "features": [
             "calls",
@@ -55660,8 +55711,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law",
           "lines": [
-            219,
-            226
+            236,
+            243
           ],
           "features": [
             "calls",
@@ -55717,7 +55768,7 @@
     },
     {
       "file": "src/matrix-PROOF.bend",
-      "sha256": "2e450a94a409c9ba080ff6aaab87cdcf719b6b6c62ff8f9606a3d2520bf3e7c1",
+      "sha256": "8377a98d14362cae885743d39763ca9a250d88c18270719c60181c20494fe7bd",
       "imports": [
         {
           "module": "Base",
@@ -56411,9 +56462,9 @@
           }
         },
         {
-          "id": "src/matrix-PROOF.bend::L.default_completes_missing_branch:law_fill",
-          "name": "L.default_completes_missing_branch",
-          "key": "src/matrix-LAWS.default_completes_missing_branch",
+          "id": "src/matrix-PROOF.bend::L.remainder_omits_split:law_fill",
+          "name": "L.remainder_omits_split",
+          "key": "src/matrix-LAWS.remainder_omits_split",
           "kind": "law_fill",
           "lines": [
             80,
@@ -56438,46 +56489,44 @@
             "Bool",
             "Con",
             "Equal.cong",
-            "False",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
+            "True",
+            "src/matrix.remaining",
             "src/syntax.Token",
-            "src/syntax.choose"
+            "src/syntax.choose",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "type_references": [
             "Bool",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "captures": [
             {
-              "offset": 6963,
+              "offset": 6939,
               "names": [
-                "ctors",
-                "explicit",
-                "name"
+                "ctor",
+                "head",
+                "tail"
               ]
             },
             {
-              "offset": 7008,
+              "offset": 6984,
               "names": [
-                "ctors",
-                "explicit"
+                "ctor",
+                "tail"
               ]
             },
             {
-              "offset": 7040,
+              "offset": 7012,
               "names": [
-                "ctors",
-                "explicit",
-                "name"
+                "ctor",
+                "head",
+                "tail"
               ]
             }
           ],
@@ -56490,13 +56539,90 @@
           }
         },
         {
-          "id": "src/matrix-PROOF.bend::L.default_does_not_repeat_explicit_branch:law_fill",
-          "name": "L.default_does_not_repeat_explicit_branch",
-          "key": "src/matrix-LAWS.default_does_not_repeat_explicit_branch",
+          "id": "src/matrix-PROOF.bend::L.remainder_keeps_other:law_fill",
+          "name": "L.remainder_keeps_other",
+          "key": "src/matrix-LAWS.remainder_keeps_other",
           "kind": "law_fill",
           "lines": [
-            85,
-            88
+            84,
+            87
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Equal.cong",
+            "False",
+            "List",
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.choose",
+            "src/syntax.matches",
+            "src/syntax.text"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/matrix.remaining",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
+          ],
+          "captures": [
+            {
+              "offset": 7185,
+              "names": [
+                "ctor",
+                "head",
+                "tail"
+              ]
+            },
+            {
+              "offset": 7230,
+              "names": [
+                "ctor",
+                "tail"
+              ]
+            },
+            {
+              "offset": 7258,
+              "names": [
+                "ctor",
+                "head",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Equal.cong"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/matrix-PROOF.bend::L.remainder_drops_split_rows:law_fill",
+          "name": "L.remainder_drops_split_rows",
+          "key": "src/matrix-LAWS.remainder_drops_split_rows",
+          "kind": "law_fill",
+          "lines": [
+            88,
+            92
           ],
           "features": [
             "calls",
@@ -56519,44 +56645,55 @@
             "Equal.cong",
             "List",
             "True",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Constructor",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
             "src/syntax.Token",
-            "src/syntax.choose"
+            "src/syntax.choose",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "type_references": [
             "Bool",
             "List",
-            "src/core.Constructor",
-            "src/core.Parameter",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token"
+            "src/matrix.without",
+            "src/syntax.Node",
+            "src/syntax.Token",
+            "src/syntax.matches",
+            "src/syntax.text"
           ],
           "captures": [
             {
-              "offset": 7246,
+              "offset": 7456,
               "names": [
-                "ctors",
-                "explicit",
-                "name"
+                "args",
+                "arm",
+                "body",
+                "ctor",
+                "rest",
+                "rows",
+                "token"
               ]
             },
             {
-              "offset": 7291,
+              "offset": 7500,
               "names": [
-                "ctors",
-                "explicit"
+                "ctor",
+                "rows"
               ]
             },
             {
-              "offset": 7323,
+              "offset": 7526,
               "names": [
-                "ctors",
-                "explicit",
-                "name"
+                "args",
+                "arm",
+                "body",
+                "ctor",
+                "rest",
+                "rows",
+                "token"
               ]
             }
           ],
@@ -56569,40 +56706,40 @@
           }
         },
         {
-          "id": "src/matrix-PROOF.bend::L.default_completion_witness:law_fill",
-          "name": "L.default_completion_witness",
-          "key": "src/matrix-LAWS.default_completion_witness",
+          "id": "src/matrix-PROOF.bend::L.irrefutable_remainder:law_fill",
+          "name": "L.irrefutable_remainder",
+          "key": "src/matrix-LAWS.irrefutable_remainder",
           "kind": "law_fill",
           "lines": [
-            89,
-            89
+            93,
+            93
           ],
           "features": [
             "calls",
             "constructors",
+            "dependent",
             "equality",
             "fields",
             "generics",
-            "literals.string",
             "proofs",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "references": [
             "Con",
             "List",
-            "Nil",
-            "True",
-            "src/matrix-LAWS.flag",
-            "src/matrix-LAWS.token",
-            "src/matrix.signature",
-            "src/syntax.Token"
+            "src/matrix.without",
+            "src/syntax.Arm",
+            "src/syntax.Node",
+            "src/syntax.Sequence",
+            "src/syntax.Token",
+            "src/syntax.Variable"
           ],
           "type_references": [
             "List",
-            "src/matrix-LAWS.flag",
-            "src/matrix-LAWS.token",
-            "src/matrix.signature",
+            "src/matrix.without",
+            "src/syntax.Node",
             "src/syntax.Token"
           ],
           "captures": [],
@@ -56618,8 +56755,8 @@
           "key": "src/matrix-LAWS.anonymous_reference_is_free",
           "kind": "law_fill",
           "lines": [
-            90,
-            92
+            94,
+            96
           ],
           "features": [
             "calls",
@@ -56671,8 +56808,8 @@
           "key": "src/matrix-LAWS.default_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            93,
-            93
+            97,
+            97
           ],
           "features": [
             "calls",
@@ -56721,8 +56858,8 @@
           "key": "src/matrix-LAWS.empty_reference_stays_live",
           "kind": "law_fill",
           "lines": [
-            94,
-            94
+            98,
+            98
           ],
           "features": [
             "calls",
@@ -56772,8 +56909,8 @@
           "key": "src/matrix-LAWS.pending_binder_witnesses_nothing",
           "kind": "law_fill",
           "lines": [
-            95,
-            98
+            99,
+            102
           ],
           "features": [
             "calls",
@@ -56825,7 +56962,7 @@
           ],
           "captures": [
             {
-              "offset": 7825,
+              "offset": 8115,
               "names": [
                 "known",
                 "pending",
@@ -56850,8 +56987,8 @@
           "key": "src/matrix-LAWS.erased_empty_is_not_dead",
           "kind": "law_fill",
           "lines": [
-            99,
-            99
+            103,
+            103
           ],
           "features": [
             "calls",
@@ -56897,8 +57034,8 @@
           "key": "src/matrix-LAWS.live_empty_is_dead",
           "kind": "law_fill",
           "lines": [
-            100,
-            100
+            104,
+            104
           ],
           "features": [
             "calls",
@@ -56943,8 +57080,8 @@
           "key": "src/matrix-LAWS.introduced_empty_witness",
           "kind": "law_fill",
           "lines": [
-            101,
-            101
+            105,
+            105
           ],
           "features": [
             "calls",
@@ -56989,8 +57126,8 @@
           "key": "src/matrix-LAWS.pending_empty_witness",
           "kind": "law_fill",
           "lines": [
-            102,
-            102
+            106,
+            106
           ],
           "features": [
             "calls",
@@ -57035,8 +57172,8 @@
           "key": "src/matrix-LAWS.let_alias_available",
           "kind": "law_fill",
           "lines": [
-            103,
-            103
+            107,
+            107
           ],
           "features": [
             "calls",
@@ -57086,8 +57223,8 @@
           "key": "src/matrix-LAWS.terminal_expansion_preserves_budget",
           "kind": "law_fill",
           "lines": [
-            104,
-            104
+            108,
+            108
           ],
           "features": [
             "calls",
@@ -57140,8 +57277,8 @@
           "key": "src/matrix-LAWS.leaf_expansion_spends_one",
           "kind": "law_fill",
           "lines": [
-            105,
-            105
+            109,
+            109
           ],
           "features": [
             "calls",
@@ -57196,7 +57333,7 @@
     },
     {
       "file": "src/matrix.bend",
-      "sha256": "33036091e36e2476a3c8bc059bf0631835708e73f3c901abc02993b11856f2f4",
+      "sha256": "bb7ee6220d4e3a84399be1d08b318e41bc77cd1ad5fce7e289e4d23e7fc2b869",
       "imports": [
         {
           "module": "Base",
@@ -58127,13 +58264,13 @@
           }
         },
         {
-          "id": "src/matrix.bend::has_default:definition",
-          "name": "has_default",
-          "key": "src/matrix.has_default",
+          "id": "src/matrix.bend::declared:definition",
+          "name": "declared",
+          "key": "src/matrix.declared",
           "kind": "definition",
           "lines": [
             97,
-            102
+            100
           ],
           "features": [
             "calls",
@@ -58145,68 +58282,6 @@
             "patterns.variable",
             "quantities.affine",
             "quantities.arguments",
-            "recursion",
-            "types.base"
-          ],
-          "references": [
-            "Bool",
-            "Con",
-            "False",
-            "List",
-            "Nil",
-            "True",
-            "src/matrix.has_default",
-            "src/syntax.Arm",
-            "src/syntax.Node",
-            "src/syntax.Promotion",
-            "src/syntax.Sequence",
-            "src/syntax.Variable"
-          ],
-          "type_references": [
-            "Bool",
-            "List",
-            "src/syntax.Node"
-          ],
-          "captures": [],
-          "execution": {
-            "references": [
-              "src/matrix.has_default"
-            ],
-            "types": [
-              "Con",
-              "False",
-              "Nil",
-              "True",
-              "src/syntax.Arm",
-              "src/syntax.Promotion",
-              "src/syntax.Sequence",
-              "src/syntax.Variable"
-            ],
-            "dynamic_calls": []
-          }
-        },
-        {
-          "id": "src/matrix.bend::defaults:definition",
-          "name": "defaults",
-          "key": "src/matrix.defaults",
-          "kind": "definition",
-          "lines": [
-            104,
-            108
-          ],
-          "features": [
-            "calls",
-            "captures",
-            "constructors",
-            "fields",
-            "generics",
-            "lambdas",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "quantities.reusable",
             "recursion",
             "types.base"
           ],
@@ -58215,38 +58290,18 @@
             "List",
             "Nil",
             "src/core.Constructor",
-            "src/matrix.defaults",
-            "src/matrix.named",
-            "src/syntax.Token",
-            "src/syntax.choose"
+            "src/matrix.declared",
+            "src/syntax.Token"
           ],
           "type_references": [
             "List",
             "src/core.Constructor",
             "src/syntax.Token"
           ],
-          "captures": [
-            {
-              "offset": 5089,
-              "names": [
-                "seen",
-                "tail"
-              ]
-            },
-            {
-              "offset": 5114,
-              "names": [
-                "seen",
-                "tail",
-                "token"
-              ]
-            }
-          ],
+          "captures": [],
           "execution": {
             "references": [
-              "src/matrix.defaults",
-              "src/matrix.named",
-              "src/syntax.choose"
+              "src/matrix.declared"
             ],
             "types": [
               "Con",
@@ -58257,78 +58312,13 @@
           }
         },
         {
-          "id": "src/matrix.bend::signature:definition",
-          "name": "signature",
-          "key": "src/matrix.signature",
-          "kind": "definition",
-          "lines": [
-            110,
-            114
-          ],
-          "features": [
-            "calls",
-            "captures",
-            "constructors",
-            "fields",
-            "generics",
-            "lambdas",
-            "matches",
-            "patterns.variable",
-            "quantities.affine",
-            "quantities.arguments",
-            "quantities.reusable",
-            "types.base"
-          ],
-          "references": [
-            "Bool",
-            "List",
-            "List.append",
-            "src/core.Datatype",
-            "src/matrix.defaults",
-            "src/syntax.Token",
-            "src/syntax.choose"
-          ],
-          "type_references": [
-            "Bool",
-            "List",
-            "src/core.Datatype",
-            "src/syntax.Token"
-          ],
-          "captures": [
-            {
-              "offset": 5362,
-              "names": [
-                "ctors",
-                "explicit"
-              ]
-            },
-            {
-              "offset": 5433,
-              "names": [
-                "explicit"
-              ]
-            }
-          ],
-          "execution": {
-            "references": [
-              "List.append",
-              "src/matrix.defaults",
-              "src/syntax.choose"
-            ],
-            "types": [
-              "src/core.Datatype"
-            ],
-            "dynamic_calls": []
-          }
-        },
-        {
           "id": "src/matrix.bend::fresh:definition",
           "name": "fresh",
           "key": "src/matrix.fresh",
           "kind": "definition",
           "lines": [
-            116,
-            120
+            102,
+            106
           ],
           "features": [
             "calls",
@@ -58392,8 +58382,8 @@
           "key": "src/matrix.specialize",
           "kind": "definition",
           "lines": [
-            122,
-            133
+            108,
+            119
           ],
           "features": [
             "calls",
@@ -58439,7 +58429,7 @@
           ],
           "captures": [
             {
-              "offset": 6012,
+              "offset": 5305,
               "names": [
                 "args",
                 "arm",
@@ -58452,7 +58442,7 @@
               ]
             },
             {
-              "offset": 6126,
+              "offset": 5419,
               "names": [
                 "ctor",
                 "fields",
@@ -58489,8 +58479,8 @@
           "key": "src/matrix.default_rows",
           "kind": "definition",
           "lines": [
-            135,
-            142
+            121,
+            128
           ],
           "features": [
             "calls",
@@ -58549,8 +58539,8 @@
           "key": "src/matrix.variable_column",
           "kind": "definition",
           "lines": [
-            145,
-            154
+            131,
+            140
           ],
           "features": [
             "calls",
@@ -58600,27 +58590,27 @@
           ],
           "captures": [
             {
-              "offset": 7521,
+              "offset": 6814,
               "names": [
                 "level",
                 "open"
               ]
             },
             {
-              "offset": 7549,
+              "offset": 6842,
               "names": [
                 "level",
                 "next"
               ]
             },
             {
-              "offset": 7588,
+              "offset": 6881,
               "names": [
                 "binding"
               ]
             },
             {
-              "offset": 7607,
+              "offset": 6900,
               "names": [
                 "token"
               ]
@@ -58656,8 +58646,8 @@
           "key": "src/matrix.promote",
           "kind": "definition",
           "lines": [
-            156,
-            157
+            142,
+            143
           ],
           "features": [
             "calls",
@@ -58685,7 +58675,7 @@
           ],
           "captures": [
             {
-              "offset": 8101,
+              "offset": 7394,
               "names": [
                 "body",
                 "level",
@@ -58693,7 +58683,7 @@
               ]
             },
             {
-              "offset": 8134,
+              "offset": 7427,
               "names": [
                 "body"
               ]
@@ -58717,8 +58707,8 @@
           "key": "src/matrix.remaining",
           "kind": "definition",
           "lines": [
-            159,
-            163
+            145,
+            149
           ],
           "features": [
             "calls",
@@ -58751,14 +58741,14 @@
           ],
           "captures": [
             {
-              "offset": 8349,
+              "offset": 7642,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 8375,
+              "offset": 7668,
               "names": [
                 "ctor",
                 "head",
@@ -58786,8 +58776,8 @@
           "key": "src/matrix.without",
           "kind": "definition",
           "lines": [
-            165,
-            171
+            151,
+            157
           ],
           "features": [
             "calls",
@@ -58826,14 +58816,14 @@
           ],
           "captures": [
             {
-              "offset": 8671,
+              "offset": 7964,
               "names": [
                 "ctor",
                 "tail"
               ]
             },
             {
-              "offset": 8695,
+              "offset": 7988,
               "names": [
                 "args",
                 "arm",
@@ -58868,8 +58858,8 @@
           "key": "src/matrix.available",
           "kind": "definition",
           "lines": [
-            173,
-            176
+            159,
+            162
           ],
           "features": [
             "calls",
@@ -58886,9 +58876,8 @@
           ],
           "references": [
             "List",
-            "Nil",
             "src/core.Datatype",
-            "src/matrix.defaults",
+            "src/matrix.declared",
             "src/syntax.Node",
             "src/syntax.Remainder",
             "src/syntax.Token"
@@ -58902,10 +58891,9 @@
           "captures": [],
           "execution": {
             "references": [
-              "src/matrix.defaults"
+              "src/matrix.declared"
             ],
             "types": [
-              "Nil",
               "src/core.Datatype",
               "src/syntax.Remainder"
             ],
@@ -58918,8 +58906,8 @@
           "key": "src/matrix.column_binding",
           "kind": "definition",
           "lines": [
-            178,
-            181
+            164,
+            167
           ],
           "features": [
             "calls",
@@ -58971,8 +58959,8 @@
           "key": "src/matrix.split",
           "kind": "definition",
           "lines": [
-            183,
-            195
+            169,
+            181
           ],
           "features": [
             "bindings",
@@ -59040,7 +59028,7 @@
           ],
           "captures": [
             {
-              "offset": 9799,
+              "offset": 9086,
               "names": [
                 "column",
                 "columns",
@@ -59055,7 +59043,7 @@
               ]
             },
             {
-              "offset": 9946,
+              "offset": 9233,
               "names": [
                 "column",
                 "columns",
@@ -59071,7 +59059,7 @@
               ]
             },
             {
-              "offset": 10039,
+              "offset": 9326,
               "names": [
                 "column",
                 "columns",
@@ -59125,8 +59113,8 @@
           "key": "src/matrix.alias_column",
           "kind": "definition",
           "lines": [
-            197,
-            200
+            183,
+            186
           ],
           "features": [
             "calls",
@@ -59178,8 +59166,8 @@
           "key": "src/matrix.variable_step",
           "kind": "definition",
           "lines": [
-            202,
-            210
+            188,
+            196
           ],
           "features": [
             "calls",
@@ -59228,7 +59216,7 @@
           ],
           "captures": [
             {
-              "offset": 10976,
+              "offset": 10263,
               "names": [
                 "columns",
                 "rows",
@@ -59237,7 +59225,7 @@
               ]
             },
             {
-              "offset": 11119,
+              "offset": 10406,
               "names": [
                 "columns",
                 "name",
@@ -59248,7 +59236,7 @@
               ]
             },
             {
-              "offset": 11198,
+              "offset": 10485,
               "names": [
                 "columns",
                 "rows",
@@ -59282,8 +59270,8 @@
           "key": "src/matrix.column_step",
           "kind": "definition",
           "lines": [
-            212,
-            222
+            198,
+            208
           ],
           "features": [
             "calls",
@@ -59341,7 +59329,7 @@
           ],
           "captures": [
             {
-              "offset": 11802,
+              "offset": 11089,
               "names": [
                 "column",
                 "rows",
@@ -59353,7 +59341,7 @@
               ]
             },
             {
-              "offset": 11898,
+              "offset": 11185,
               "names": [
                 "column",
                 "rows",
@@ -59364,19 +59352,7 @@
               ]
             },
             {
-              "offset": 11962,
-              "names": [
-                "column",
-                "rows",
-                "scope",
-                "tail",
-                "token",
-                "types",
-                "work"
-              ]
-            },
-            {
-              "offset": 12030,
+              "offset": 11249,
               "names": [
                 "column",
                 "rows",
@@ -59388,7 +59364,19 @@
               ]
             },
             {
-              "offset": 12123,
+              "offset": 11317,
+              "names": [
+                "column",
+                "rows",
+                "scope",
+                "tail",
+                "token",
+                "types",
+                "work"
+              ]
+            },
+            {
+              "offset": 11410,
               "names": [
                 "column",
                 "token"
@@ -59425,8 +59413,8 @@
           "key": "src/matrix.step",
           "kind": "definition",
           "lines": [
-            226,
-            229
+            212,
+            215
           ],
           "features": [
             "calls",
@@ -59466,13 +59454,13 @@
           ],
           "captures": [
             {
-              "offset": 12581,
+              "offset": 11868,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 12612,
+              "offset": 11899,
               "names": [
                 "columns",
                 "rows",
@@ -59503,8 +59491,8 @@
           "key": "src/matrix.remarked",
           "kind": "definition",
           "lines": [
-            233,
-            237
+            219,
+            223
           ],
           "features": [
             "calls",
@@ -59541,14 +59529,14 @@
           ],
           "captures": [
             {
-              "offset": 13098,
+              "offset": 12385,
               "names": [
                 "mark",
                 "q"
               ]
             },
             {
-              "offset": 13124,
+              "offset": 12411,
               "names": [
                 "q"
               ]
@@ -59576,8 +59564,8 @@
           "key": "src/matrix.alias_bound",
           "kind": "definition",
           "lines": [
-            239,
-            245
+            225,
+            231
           ],
           "features": [
             "bindings",
@@ -59626,7 +59614,7 @@
           ],
           "captures": [
             {
-              "offset": 13533,
+              "offset": 12820,
               "names": [
                 "actual",
                 "bindings",
@@ -59643,7 +59631,7 @@
               ]
             },
             {
-              "offset": 13611,
+              "offset": 12898,
               "names": [
                 "actual",
                 "bindings",
@@ -59684,8 +59672,8 @@
           "key": "src/matrix.alias",
           "kind": "definition",
           "lines": [
-            247,
-            250
+            233,
+            236
           ],
           "features": [
             "calls",
@@ -59725,7 +59713,7 @@
           ],
           "captures": [
             {
-              "offset": 14000,
+              "offset": 13287,
               "names": [
                 "mark",
                 "scope",
@@ -59752,8 +59740,8 @@
           "key": "src/matrix.Expansion",
           "kind": "datatype",
           "lines": [
-            253,
-            254
+            239,
+            240
           ],
           "features": [
             "fields",
@@ -59784,8 +59772,8 @@
           "key": "src/matrix.thread",
           "kind": "definition",
           "lines": [
-            256,
-            259
+            242,
+            245
           ],
           "features": [
             "calls",
@@ -59836,8 +59824,8 @@
           "key": "src/matrix.expanded",
           "kind": "definition",
           "lines": [
-            261,
-            263
+            247,
+            249
           ],
           "features": [
             "constructors",
@@ -59869,8 +59857,8 @@
           "key": "src/matrix.opened",
           "kind": "definition",
           "lines": [
-            265,
-            267
+            251,
+            253
           ],
           "features": [
             "constructors",
@@ -59902,8 +59890,8 @@
           "key": "src/matrix.at_level",
           "kind": "definition",
           "lines": [
-            269,
-            271
+            255,
+            257
           ],
           "features": [
             "calls",
@@ -59949,8 +59937,8 @@
           "key": "src/matrix.reference",
           "kind": "definition",
           "lines": [
-            273,
-            276
+            259,
+            262
           ],
           "features": [
             "calls",
@@ -60005,8 +59993,8 @@
           "key": "src/matrix.residual",
           "kind": "definition",
           "lines": [
-            278,
-            283
+            264,
+            269
           ],
           "features": [
             "calls",
@@ -60055,7 +60043,7 @@
           ],
           "captures": [
             {
-              "offset": 15286,
+              "offset": 14573,
               "names": [
                 "binding",
                 "column",
@@ -60089,8 +60077,8 @@
           "key": "src/matrix.expand",
           "kind": "definition",
           "lines": [
-            287,
-            305
+            273,
+            291
           ],
           "features": [
             "calls",
@@ -60160,7 +60148,7 @@
           ],
           "captures": [
             {
-              "offset": 15945,
+              "offset": 15232,
               "names": [
                 "n",
                 "scope",
@@ -60169,7 +60157,7 @@
               ]
             },
             {
-              "offset": 16123,
+              "offset": 15410,
               "names": [
                 "body",
                 "level",
@@ -60181,7 +60169,7 @@
               ]
             },
             {
-              "offset": 16179,
+              "offset": 15466,
               "names": [
                 "level",
                 "mark",
@@ -60189,7 +60177,7 @@
               ]
             },
             {
-              "offset": 16187,
+              "offset": 15474,
               "names": [
                 "level",
                 "mark",
@@ -60198,7 +60186,7 @@
               ]
             },
             {
-              "offset": 16374,
+              "offset": 15661,
               "names": [
                 "column",
                 "n",
@@ -60212,7 +60200,7 @@
               ]
             },
             {
-              "offset": 16411,
+              "offset": 15698,
               "names": [
                 "binding",
                 "column",
@@ -60227,7 +60215,7 @@
               ]
             },
             {
-              "offset": 16490,
+              "offset": 15777,
               "names": [
                 "binding",
                 "column",
@@ -60243,7 +60231,7 @@
               ]
             },
             {
-              "offset": 16587,
+              "offset": 15874,
               "names": [
                 "binding",
                 "column",
@@ -60258,7 +60246,7 @@
               ]
             },
             {
-              "offset": 16658,
+              "offset": 15945,
               "names": [
                 "binding",
                 "column",
@@ -60271,7 +60259,7 @@
               ]
             },
             {
-              "offset": 16670,
+              "offset": 15957,
               "names": [
                 "binding",
                 "column",
@@ -60285,7 +60273,7 @@
               ]
             },
             {
-              "offset": 16764,
+              "offset": 16051,
               "names": [
                 "column",
                 "left",
@@ -60298,7 +60286,7 @@
               ]
             },
             {
-              "offset": 16836,
+              "offset": 16123,
               "names": [
                 "column",
                 "pattern",
@@ -60307,7 +60295,7 @@
               ]
             },
             {
-              "offset": 16848,
+              "offset": 16135,
               "names": [
                 "column",
                 "negative",
