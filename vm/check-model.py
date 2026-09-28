@@ -3,8 +3,8 @@
 
 Builds vm/model.bend's three entries (run, RC audit, soundness sweep) with the
 seed's native lane and requires:
-- every golden image to be the one vm-spec froze, and each LAWS.bend fixture to
-  equal its image's words;
+- every golden image to be its frozen plan's encoding, and each LAWS.bend
+  fixture to equal its image's words;
 - the model's prim and foreign tables to equal registry.json;
 - every golden run to agree with vm/golden/vm-expected.json (SPEC section 11);
 - literal fuel controls (SPEC section 7): fuel 0 exhausts every golden at its
@@ -87,12 +87,14 @@ def words(data: bytes) -> list:
 # ------------------------------------------------------------------ inputs
 
 def check_inputs(expected: dict) -> dict:
-    """Goldens are vm-spec's frozen images; LAWS.bend's fixtures are their words."""
-    spec = json.loads((HERE / 'receipts/spec.json').read_text())
-    frozen = {f['name']: f['image_sha256'] for f in spec['fixtures']}
-    require(set(frozen) == set(expected['cases']), 'golden set differs from vm-spec')
-    for name, digest in frozen.items():
-        require(sha((GOLDEN / f'{name}.kimg').read_bytes()) == digest, f'{name}.kimg is not the frozen image')
+    """Goldens are the encodings of vm-spec's frozen plans (vm/receipts/spec.json
+    is vm-spec's own output, absent while that gate runs); LAWS.bend's fixtures
+    are their words."""
+    names = sorted(p.stem for p in GOLDEN.glob('*.kimg'))
+    require(names == sorted(expected['cases']), 'golden images differ from vm-expected.json')
+    for name in names:
+        plan = json.loads((GOLDEN / f'{name}.plan.json').read_text())
+        require((GOLDEN / f'{name}.kimg').read_bytes() == codec.encode(plan, DIGEST), f'{name}.kimg is not its plan')
     laws = (HERE / 'LAWS.bend').read_text()
     fixtures = {}
     for name, body in re.findall(r'^def (\w+)\(\) -> List<&2,U32>:\n  \[([0-9,\s]+)\]', laws, re.M):

@@ -56,8 +56,8 @@ outputs and the seed-native measurements pinned by digest in
 
 The vm-model increment adds gate `vm-model` (`python3 vm/check-model.py`). It
 builds `vm/model.bend`, the Bend model of `knot-vm-1` ([vm/MODEL.md](../../vm/MODEL.md)),
-with the seed's native lane and requires: the goldens to be vm-spec's frozen
-images and the `vm/LAWS.bend` fixtures their words; the model's prim and
+with the seed's native lane and requires: the goldens to be their frozen
+plans' encodings and the `vm/LAWS.bend` fixtures their words; the model's prim and
 foreign tables to equal `vm/registry.json`; all 78 golden runs to agree with
 `vm/golden/vm-expected.json`; literal fuel and inspection controls; the 61
 frozen refusal controls and a child-at-parent boundary refused with
