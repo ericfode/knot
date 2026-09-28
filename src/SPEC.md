@@ -140,6 +140,9 @@ and bare `import Base`. It never fetches packages. Named package pointers report
 alias/declaration combinations report `Invalid`; other file failures remain
 `HostFailure`. Parent-relative imports in the legacy single-file parser now
 report `Unsupported parse import`, correcting the former D4 misclassification.
+As in the seed, one empty segment may follow a leading `./` or hash head
+(`.//x.bend`, `0x<hash>//x.bend`); normalization makes it the module that the
+single-slash spelling names. Any other empty segment is `Invalid load import-path`.
 
 An explicit machine suspends import headers while dependencies load. Active
 paths detect back edges; completed paths suppress repeated loads in diamonds.
@@ -163,7 +166,11 @@ Qualification produces one ordinary ordered book. Every user declaration is
 checked, including unused imported definitions. Base names become book-global
 at their import event, with independent type/function and constructor namespaces.
 Declaration order governs duplicates and live calls, as in the frozen seed.
-Fresh declarations check both bare and qualified names. Installing Base rejects
+Fresh declarations check both bare and qualified names against every earlier
+declaration of the same category, including the file's own: in a sibling module
+`m`, `def m.f` after `def f` (qualified `m.f`) reports `Invalid load
+duplicate-global`, while the reverse order is accepted. Exact duplicates within
+one file report the same code in the bundle lanes. Installing Base rejects
 same-category collisions with user names already loaded; Base selection never
 lets a user declaration shadow a Base dependency. Pattern and let binders,
 including reusable and typed ones, are resolved and rejected only when they name a
@@ -174,6 +181,11 @@ declaration order before checking. A call head is resolved as a variable: a
 parameter, field or let binder shadows a module function of the same name, so
 calling it reports `Invalid check unknown-function` in a module (the bare name
 names no qualified function) and `Invalid check not-callable` in the entry.
+The seed resolves a binder before binding it, and an unbound dotted name is a
+reference. In both lanes a dotted let, typed-let or field binder must therefore
+rebind a name already in scope, or it reports `Invalid check dotted-binder`; an
+erased let reads its name as a name, and a dotted arm binder remains
+`Unsupported check variable-pattern`.
 The downstream checker, evaluator and emitters have no module-specific bypass.
 
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
@@ -208,31 +220,44 @@ the entry, a loaded module or the Base path, compared as equal spellings on one
 basis or, across bases, as an absolute spelling that ends with the relative one
 (otherwise `HostFailure arguments source-is-output`).
 
-Single-file deltas. The module rules also reach the single-file lanes in these
-diagnostics: a let or arm binder named like an earlier constructor reports
-`Invalid check constructor-pattern-binder` (previously accepted for let binders,
-`Unsupported check variable-pattern` for arms); a field binder named like a
-later constructor is accepted (previously Invalid); the declaration-order binder
-walk is bounded at 65,536 work steps (`Exhausted check`, not expected under the
-65,536-byte source cap). A result type longer than one name, such as
-`-> IO(Unit)`, `-> (T)`, `-> A -> B` or `-> A & B`, reports
-`Unsupported parse result-type` (previously `Invalid parse function-result`), and a
-spaced `- >` arrow, which the seed rejects, reports `Invalid parse function-result`
-(previously accepted). Parent-relative imports report `Unsupported parse import`
-(previously `Invalid parse declaration-name`). A `&` or `|` after a parameter or
-field type reports `Unsupported parse parameter-type` (previously `Invalid parse
-argument-separator`), as an application or arrow there already did; an
-application, arrow, `&` or `|` after a typed-let type reports
-`Unsupported parse binding-type` (previously `Invalid parse expected-=`). The
-coordinator's decision to accept these deltas or split them out is pending;
-[review round 5](../tests/compiler-modules/REVIEW-ROUND-5.md#single-file-deltas)
-lists each with its seed evidence, frozen fixture and authorization.
-
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 96 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 99 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
+
+### Single-file deltas (accepted by the coordinator, 2026-09-28)
+
+The module rules also reach the single-file lanes. The coordinator accepted each
+change below on 2026-09-28, because each moves Knot toward the seed's verdict and
+is pinned by seed-derived fixtures:
+
+- A let or arm binder named like an earlier constructor reports
+  `Invalid check constructor-pattern-binder` (previously accepted for let
+  binders, `Unsupported check variable-pattern` for arms).
+- A field binder named like a later constructor is accepted (previously Invalid).
+- The declaration-order binder walk is bounded at 65,536 work steps
+  (`Exhausted check`, not expected under the 65,536-byte source cap).
+- A result type longer than one name, such as `-> IO(Unit)`, `-> (T)`,
+  `-> A -> B` or `-> A & B`, reports `Unsupported parse result-type`
+  (previously `Invalid parse function-result`).
+- A spaced `- >` arrow, which the seed rejects, reports
+  `Invalid parse function-result` (previously accepted).
+- Parent-relative imports report `Unsupported parse import` (previously
+  `Invalid parse declaration-name`).
+- A `&` or `|` after a parameter or field type reports
+  `Unsupported parse parameter-type` (previously `Invalid parse
+  argument-separator`), as an application or arrow there already did.
+- An application, arrow, `&` or `|` after a typed-let type reports
+  `Unsupported parse binding-type` (previously `Invalid parse expected-=`).
+- An unbound dotted let, typed-let or field binder, which the seed rejects,
+  reports `Invalid check dotted-binder` (previously accepted). Added by review
+  round 6 under the same rule.
+
+[Review round 5](../tests/compiler-modules/REVIEW-ROUND-5.md#single-file-deltas)
+lists the first eight with their seed evidence, frozen fixtures and
+authorization; [review round 6](../tests/compiler-modules/REVIEW-ROUND-6.md)
+adds the last.
 
 ## Binding and quantity semantics
 

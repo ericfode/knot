@@ -10,7 +10,7 @@ fixture, expectation and pinned host observation is unchanged.
 | --- | --- | --- | --- |
 | `census:test` red at branch head (blocking) | — | `e05d1f8`, `f7b2239` | **Fixed.** a50bbb5 added `adjacent` and `result_type` to `src/parse.bend`, but the census fixture still pinned 41 frontend definitions. The literal is now 43 (lex 6, parse 22, syntax 15), and 44 after this round's `continues`. The gate runner now registers `census:test`, which passes only on a complete TAP record, so the next frontend edit cannot leave it red unnoticed. |
 | A module-local binder shadowing a module function is called as that function (blocking) | `021453a` | `ed0e7d1` | **Fixed.** A parameter, field binder or let binder named `flip` in `lib/m` made `flip(b)` call `lib/m.flip`: Checked, Lit{} and, for two of them, Wasm returning 1. The seed rejects all three. Each now reports `Invalid check unknown-function`. The entry keeps `Invalid check not-callable`, and an unshadowed module call still runs to Lit. |
-| Single-file behavior changed beyond the charter (major) | — | — | **Open: awaiting the coordinator's decision.** The table under [Single-file deltas](#single-file-deltas) lists each change with its seed evidence, frozen fixture, authorization and recommendation. Reverting any change marked as a repair would restore a confirmed unsound acceptance or D4 violation. |
+| Single-file behavior changed beyond the charter (major) | — | — | **Open at this round; accepted by the coordinator on 2026-09-28 (see [round 6](REVIEW-ROUND-6.md)).** The table under [Single-file deltas](#single-file-deltas) lists each change with its seed evidence, frozen fixture, authorization and recommendation. Reverting any change marked as a repair would restore a confirmed unsound acceptance or D4 violation. |
 | `&` and `|` types are Invalid where the seed accepts them (major) | `d1ea242` | `730d228` | **Fixed, with one part disputed.** Parameters, constructor fields and typed lets now report `Unsupported parse parameter-type` or `binding-type`. In a typed let, the `->` arrow and an application are reported the same way. The disputed part: seed-rejected programs without a `Pair` or `Or` declaration become `Unsupported`, not the finding's `Invalid`. See [Mechanism](#mechanism). |
 
 ## Mechanism
@@ -45,6 +45,12 @@ checker rule for it. This conservative choice matches round 4's
 `-> Light & Light`, which is Unsupported whether or not Base is imported.
 
 ## Single-file deltas
+
+**Decision, 2026-09-28:** the coordinator accepted every row below, because each
+moves Knot toward the seed and is pinned by seed-derived fixtures. It is recorded
+in `src/SPEC.md`, `SPEC.md` and `src/CONTRACT.json` (`legacy_commands_decision`);
+[round 6](REVIEW-ROUND-6.md) adds one row. The text below is the evidence as it
+stood before the decision.
 
 These are the single-file CLI changes the branch makes relative to `main`. The
 coordinator decides for each whether to accept it or to split it into its own

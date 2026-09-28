@@ -16,7 +16,9 @@ head included, so it shadows a global of the same spelling. The later compiler
 phases have no module-specific bypass.
 
 Imports accept `./path.bend`, `../path.bend`, plain `path.bend`, and lowercase
-`0x<hash>/path.bend`, each with `as Name`. Bare `import Base` loads the pinned
+`0x<hash>/path.bend`, each with `as Name`. As in the seed, one empty segment may
+follow the leading `./` or hash head (`.//path.bend`, `0x<hash>//path.bend`); it
+names the module that the single-slash spelling names. Bare `import Base` loads the pinned
 Base source. Named package pointers report `Unsupported load named-package`.
 Malformed imports, absent bundle entries, cycles and alias/declaration collisions
 report `Invalid`. File access failures other than missing imported files remain
@@ -132,8 +134,31 @@ the lexer or parser reports it. A result type other than one bare name reports
 `Unsupported parse result-type`; a missing name or colon stays `Invalid parse
 function-result`, and the arrow's two tokens must be adjacent.
 
+Review-round-6 fixtures (`review-round6.json`) freeze three seed rules. A
+declaration is fresh only when neither its spelling nor its qualified name is
+already registered, and each declaration registers before the next: a sibling
+module's `def m.f` after its own `def f` is `Invalid load duplicate-global`, the
+reverse order is accepted, and exact duplicates within one file report the same
+code in the bundle lanes. One empty segment after a leading `./` or hash head is
+accepted, and every other empty segment stays `Invalid load import-path`. The
+seed resolves a binder before binding it, so an unbound dotted let, typed-let or
+field binder is `Invalid check dotted-binder` in both lanes, while a dotted
+binder that rebinds a name in scope, and an erased let's dotted name, are
+accepted.
+
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.
 Qualification and Base reachability are separate mechanisms with bounded
 composition groups. Offline Perch preflight records structural context limits;
 the coordinator owns live semantic and style review.
+
+## Single-file deltas (accepted by the coordinator, 2026-09-28)
+
+The single-file CLIs share the parser and checker with the bundle lanes, so the
+module rules change some of their diagnostics. The coordinator accepted every
+change on 2026-09-28: each moves Knot toward the seed's verdict and is pinned by
+seed-derived fixtures. The [compiler specification](../../src/SPEC.md) lists
+them. Rounds 3 to 5 made the first eight
+([decision table](REVIEW-ROUND-5.md#single-file-deltas)); round 6 adds
+`Invalid check dotted-binder` for an unbound dotted let, typed-let or field
+binder, which was accepted and which the seed rejects.

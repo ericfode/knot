@@ -1196,3 +1196,38 @@ Prevention:
 - Run the full census test suite after any source edit.
 
 No elapsed time was measured.
+
+## 2026-09-28 — Modules review round 6: own-file names, rooted imports, dotted binders
+
+Evidence: [review round 6](../tests/compiler-modules/REVIEW-ROUND-6.md),
+`review-round6.json`. Three code findings, all fixed after one seed freeze
+(`4d2e605`); the round-5 single-file deltas were accepted by the coordinator.
+
+Missed defects:
+- `qualify.fresh` compared a declaration only with earlier files. The seed's
+  table also holds the file's own earlier declarations, so a sibling module's
+  bare `m.f` after its own `f` escaped. Earlier rounds froze collisions across
+  files and with Base, and exact duplicates, but never a bare spelling equal
+  to a qualified name in the same file.
+- The import grammar was written from the seed's regex without its two
+  preprocessing steps (strip one `./` or hash head, then normalize), so the
+  one extra slash they admit was Invalid.
+- Dotted binders were accepted on main and in both lanes. The review's
+  suggested parser rule, like the nest increment's, would have rejected the
+  seed-accepted case where a dotted binder rebinds a bound name. Freezing
+  seed controls for that case before repairing exposed this; the rule went
+  to the checker instead.
+
+Rework: the first dotted-binder repair (`ee187a8`) pushed the `checking`
+manifest composition 595 bytes over its bound, which only the offline
+manifest preflight showed. `3424eb7` moved the test to the binding sites.
+Running the manifest preflight before each commit of a checker edit
+prevents this.
+
+Prevention:
+- When mirroring a seed rule, read the code that feeds it (preprocessing,
+  normalization, the binder stack) as well as the rule itself.
+- For a naming rule, probe the seed with the name already bound in scope,
+  not only with the name free.
+
+No elapsed time was measured.
