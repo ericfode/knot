@@ -1161,3 +1161,38 @@ climbing, `.`, `/`) for every identity, containment and write decision, and
 derive each rule from the seed's realpath comparison. Freeze multi-line lexical
 constructs beside any line-level classifier. Give every classifier that says
 Invalid a seed probe for each token that can follow. No elapsed time was measured.
+
+## 2026-09-28 — Modules review round 5: census tests, call heads, type operators
+
+The coordinator's four confirmed findings are recorded in
+[the review record](../tests/compiler-modules/REVIEW-ROUND-5.md). Three are
+fixed after seed freezes. The fourth, acknowledgement of the single-file
+deltas, is left to the coordinator with a per-delta evidence table.
+
+Missed defects:
+- Round 4 edited `src/parse.bend` without running `npm run census:test`. Its
+  fixture pins the frontend's definition count, and the runner ran only
+  `census --check`, so two full runner passes reported green over a red test.
+  The runner now registers `census:test`.
+- The qualifier resolved a call head through `reference` while it resolved a
+  variable through `local`. Round 3's binder work tested binders in every
+  position but never used a bound name as a call head.
+- Round 4 fixed the continuation rule for the result type only. Its parameter
+  and typed-let twins kept reporting `Invalid` for `&`, `|`, `->` and
+  applications the seed accepts. That is the same class of defect in the
+  neighbouring positions of the same parser.
+
+Rework: `f7b2239` changed `scripts/gates/run.py`, whose digest the census
+inventory records, without regenerating it. So `census --check` and
+`census:test` were red at that commit and at the next freeze until `ed0e7d1`.
+Running `npm run census` after any runner or contract edit prevents this.
+
+Prevention:
+- When a rule is fixed in one syntactic position, probe the seed at every
+  sibling position that reads the same form (parameter, field, typed let,
+  result).
+- When a name-resolution rule changes, probe a bound name in every expression
+  position (variable, call head, constructor field).
+- Run the full census test suite after any source edit.
+
+No elapsed time was measured.

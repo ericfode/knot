@@ -12,6 +12,10 @@ judged against the constructors declared before them.
 [Review round 4](REVIEW-ROUND-4.md) records six more: relative spellings that
 climb above the working directory, import lines inside string literals, longer
 result types, a guarded compile output and the corrected single-file claims.
+[Review round 5](REVIEW-ROUND-5.md) records four more: the census tests, now a
+registered gate; call heads read in their lexical scope; `&`, `|`, application
+and arrow types reported Unsupported; and the single-file deltas awaiting the
+coordinator's decision.
 The earlier [verification receipt](receipts/verification.json) and preflight
 receipts without `review-round2` remain historical evidence for the first round.
 
@@ -73,28 +77,31 @@ case-insensitive filesystem. Round 3 adds 26 seed fixtures in `review-round3/`,
 five of them also through the single-file CLIs, and six literal adapter-pin
 controls. Round 4 adds 23 seed fixtures in `review-round4/`, ten of them also
 through the single-file CLIs and ten run from their own directory with literal
-entry and bundle spellings, and eleven literal output-guard cases.
+entry and bundle spellings, and eleven literal output-guard cases. Round 5 adds
+18 seed fixtures in `review-round5/`, seven of them also through the single-file
+CLIs: shadowed call heads with their controls, and type continuations.
 
 ```sh
 BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/regen.py
 BEND_NO_TELEMETRY=1 python3 tests/compiler-modules/check.py
 BEND_NO_TELEMETRY=1 npm run -s gates
 BEND_NO_TELEMETRY=1 npm run -s gates:verify
+BEND_NO_TELEMETRY=1 npm run -s census:test   # also a runner gate since round 5
 ```
 
-The module gate checks 112 fixtures and 120 seed calls, both native and Bun:
-224 checks, 240 evaluations, 224 compilations, 68 Wasm observations, 28 identical
-Wasm pairs, 168 preserved outputs, 60 trust audits, 90 single-file observations,
+The module gate checks 130 fixtures and 138 seed calls, both native and Bun:
+260 checks, 276 evaluations, 260 compilations, 70 Wasm observations, 29 identical
+Wasm pairs, 202 preserved outputs, 62 trust audits, 132 single-file observations,
 22 pin observations, six corrupted-Base observations, 22 output-guard observations
-and six adapter-pin controls. All 36 semantic mutants are independently
-seed-typechecked and killed. The four complete proof entries check 95 filled
-laws: loader/path 34, qualification 26, Base selection 20 and pin helpers 15.
+and six adapter-pin controls. All 39 semantic mutants are independently
+seed-typechecked and killed. The four complete proof entries check 96 filled
+laws: loader/path 34, qualification 27, Base selection 20 and pin helpers 15.
 These are helper/transition proofs, not a general compiler-correctness theorem.
 
 Offline preflight covers every compiler declaration through 23 bounded manifest
-groups with zero structural blockers (1,402 declaration occurrences, all 23
-compositions available). The direct nine-file round-4 review (261 declarations)
-has 46 truncated contexts and an oversized combined composition: 47 blockers. Deliberately invalid
+groups with zero structural blockers (1,410 declaration occurrences, all 23
+compositions available). The direct six-file round-5 review (170 declarations)
+has 12 truncated contexts and an oversized combined composition: 13 blockers. Deliberately invalid
 binder fixtures fail parsing as expected. No live style ratings or style pass
 are claimed; live Perch remains with the coordinator.
 

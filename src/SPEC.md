@@ -97,7 +97,7 @@ syntax errors, and add 17 precision controls with fixed seed commands and output
 including malformed suffixes after recognized prefixes. All 29 cases fix complete
 Knot diagnostics including locations. The hash
 fixture uses a frozen local cache; it does not claim a published package.
-Twelve checked classification laws quantify over source locations and unconsumed
+Fifteen checked classification laws quantify over source locations and unconsumed
 suffixes; they are classification laws, not a parser soundness theorem or feature
 support. The destructuring law excludes `==` and `=>`; both report
 `Invalid parse end-of-body`. A `~` after an ordinary binder reports
@@ -106,6 +106,10 @@ later binders and body are not validated. Generic parameter types retain the
 existing `parameter-type` code, which also covers other unsupported parameter
 type forms. Return types and binding annotations use `type-application` at `<`.
 These applications are recognized even before their generic datatype declaration.
+The seed reads a type as a term, which an application, an arrow and the infix
+Pair (`&`) and Or (`|`) continue; after a parameter or field type these report
+`parameter-type`, after a typed-let type `binding-type`, and after a result
+type `result-type`.
 
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).
@@ -166,7 +170,10 @@ including reusable and typed ones, are resolved and rejected only when they name
 constructor registered before them in load order (loaded globals, all of Base once
 imported, and earlier datatypes of the file), independently of Base reachability.
 Single-file books apply the same rule to let, arm and flat field binders in
-declaration order before checking.
+declaration order before checking. A call head is resolved as a variable: a
+parameter, field or let binder shadows a module function of the same name, so
+calling it reports `Invalid check unknown-function` in a module (the bare name
+names no qualified function) and `Invalid check not-callable` in the entry.
 The downstream checker, evaluator and emitters have no module-specific bypass.
 
 Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
@@ -211,11 +218,19 @@ walk is bounded at 65,536 work steps (`Exhausted check`, not expected under the
 `-> IO(Unit)`, `-> (T)`, `-> A -> B` or `-> A & B`, reports
 `Unsupported parse result-type` (previously `Invalid parse function-result`), and a
 spaced `- >` arrow, which the seed rejects, reports `Invalid parse function-result`
-(previously accepted). Parent-relative imports report `Unsupported parse import`.
+(previously accepted). Parent-relative imports report `Unsupported parse import`
+(previously `Invalid parse declaration-name`). A `&` or `|` after a parameter or
+field type reports `Unsupported parse parameter-type` (previously `Invalid parse
+argument-separator`), as an application or arrow there already did; an
+application, arrow, `&` or `|` after a typed-let type reports
+`Unsupported parse binding-type` (previously `Invalid parse expected-=`). The
+coordinator's decision to accept these deltas or split them out is pending;
+[review round 5](../tests/compiler-modules/REVIEW-ROUND-5.md#single-file-deltas)
+lists each with its seed evidence, frozen fixture and authorization.
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 95 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 96 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 

@@ -11,7 +11,9 @@ all of its declarations, including unreachable definitions. An import header
 suspends its file while dependencies load. Active paths detect cycles; completed
 paths suppress repeat loads. Aliases belong to the importing file. Names become
 ordinary qualified tokens before catalog construction, body checking, evaluation
-or emission. The later compiler phases have no module-specific bypass.
+or emission. A lexical binder keeps its bare name wherever it is read, a call
+head included, so it shadows a global of the same spelling. The later compiler
+phases have no module-specific bypass.
 
 Imports accept `./path.bend`, `../path.bend`, plain `path.bend`, and lowercase
 `0x<hash>/path.bend`, each with `as Name`. Bare `import Base` loads the pinned
