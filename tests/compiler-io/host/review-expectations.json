@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "authority": "Review round 2: confirmed seed semantics and literal sandbox policy, fixed before host repair. Extends only host conformance; the original frozen suite is unchanged.",
+  "seed_fixture": "tests/compiler-io/host/empty-write.bend",
+  "seed_lanes": ["interpreter", "native", "js"],
+  "empty_write": [
+    {
+      "name": "file",
+      "argv": ["file.txt", "r"],
+      "inputs": {"file.txt": "hello\n"},
+      "directories": [],
+      "expected": {"exit": 0, "stdout": "write Done\nread Done hello\n\n", "stderr": "", "files": {"file.txt": "hello\n"}, "directories": []}
+    },
+    {
+      "name": "empty-file",
+      "argv": ["empty.txt", "r"],
+      "inputs": {"empty.txt": ""},
+      "directories": [],
+      "expected": {"exit": 0, "stdout": "write Done\nread Done \n", "stderr": "", "files": {"empty.txt": ""}, "directories": []}
+    },
+    {
+      "name": "directory",
+      "argv": ["dir", "r"],
+      "inputs": {},
+      "directories": ["dir"],
+      "expected": {"exit": 0, "stdout": "write Done\nread Fail 21 Is a directory\n", "stderr": "", "files": {}, "directories": ["dir"]}
+    },
+    {
+      "name": "dot-directory",
+      "argv": [".", "r"],
+      "inputs": {},
+      "directories": [],
+      "expected": {"exit": 0, "stdout": "write Done\nread Fail 21 Is a directory\n", "stderr": "", "files": {}, "directories": []}
+    }
+  ],
+  "secret_paths": [".env", ".ENV", ".Env", "sub/.ENV.local", "sub/.Env.local", "SUB/.env.LOCAL", "./.eNv"],
+  "secret_modes": ["r", "w", "a"],
+  "secret_outcome": {"status": "HostFailure", "code": "sandbox", "exit": 5},
+  "secret_stderr": "HostFailure\tio\tsandbox\n",
+  "oracle_fault": {"marker": "bend: memory fault (machine stack overflow?)", "outcome_prefix": "Exhausted\tseed\tmemory-fault"},
+  "mutants": ["case-sensitive-secret", "empty-write-ebadf", "freeze-seed-memory-fault"]
+}
