@@ -154,6 +154,7 @@ def main():
             directory = BUILD / name; directory.mkdir(exist_ok=True)
             for source in (ROOT / 'src').glob('*.bend'):
                 shutil.copy2(source, directory / source.name)
+            shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
             target = directory / file; source = target.read_text()
             require(source.count(old) == 1, (name, 'mutation must be unique'))
             target.write_text(source.replace(old, new))

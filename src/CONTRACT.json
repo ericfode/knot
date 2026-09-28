@@ -230,7 +230,7 @@
     "audit_arguments": "--audit-bundle ROOT source",
     "legacy_commands": "Existing single-file forms retain their diagnostics, limits and exit codes; parent-relative imports now report Unsupported parse import.",
     "bundle": "Explicit frozen local directory standing in for BEND_LIB; no network or named-package resolution.",
-    "identity": "Lexically normalized filesystem path; symlink and case aliases excluded.",
+    "identity": "Lexically normalized filesystem path after a host query checks exact directory-entry spelling and no symlink components; ambiguous paths report Unsupported load path-identity. Entry and bundle roots are queried before normalization.",
     "namespaces": "Local modules relative to entry directory; bundle modules relative to bundle root; aliases are file-local.",
     "declaration_order": "Dependency-first ordered stream; all user definitions checked, including unused definitions; completed paths are loaded once and active back edges rejected.",
     "base": {
@@ -239,7 +239,7 @@
       "bytes": 67190,
       "declarations": 466,
       "pin": "Runtime Bend SHA-256 over bounded ASCII input, before inventory construction.",
-      "registration": "Book-global from first import event, with distinct type/function and constructor namespaces.",
+      "registration": "Book-global from first import event, with distinct type/function and constructor namespaces. Both bare and qualified user declarations, and the later Base inventory, reject same-category collisions.",
       "slice": "Transitive dependencies of every user declaration; selected Base source is parsed and checked in the combined book.",
       "trust_inventory": "After combined checking, audit records BasePin, Module paths, BaseChecked names and exact BaseUnchecked complement.",
       "unsupported": "Reachable features outside the language yield specific Unsupported reasons; no unchecked acceptance or substitute prelude."
@@ -253,7 +253,8 @@
     "unsupported": {
       "named_packages": "load named-package",
       "absolute_imports": "load absolute-import",
-      "mixed_entry_bundle_path_basis": "load mixed-path-roots"
+      "mixed_entry_bundle_path_basis": "load mixed-path-roots",
+      "noncanonical_path_identity": "load path-identity"
     },
     "proof_entries": [
       "src/load-PROOF.bend",
@@ -261,9 +262,9 @@
       "src/base-load-PROOF.bend",
       "src/base-pin-PROOF.bend"
     ],
-    "proof_laws": 68,
+    "proof_laws": 81,
     "proof_boundary": "Path, scope, transition, selection and digest helper laws; not whole-graph confluence, SHA-256 refinement or compiler correctness.",
-    "foreign_effects": "Existing IO arguments/print and file open/read/close/write only; no realpath, environment lookup or network added.",
+    "foreign_effects": "Existing IO/file effects plus src/path-host.bend::inspect, a minimal native/Bun filesystem identity query. It observes component spelling and symlinks only; classification stays in Bend. No environment lookup or network is added.",
     "wasm_profile": "Existing enum emitter; importing a book adds no fielded or recursive Wasm capability."
   }
 }

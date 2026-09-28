@@ -9152,6 +9152,20 @@
           "quantities.arguments",
           "types.base"
         ],
+        "src/imports.bend::foreign:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
         "src/imports.bend::header_lines:definition": [
           "bindings",
           "calls",
@@ -9213,6 +9227,10 @@
         {
           "module": "./load.bend",
           "file": "src/load.bend"
+        },
+        {
+          "module": "./path-host.bend",
+          "file": "src/path-host.bend"
         }
       ],
       "declarations": {
@@ -9397,6 +9415,93 @@
           "laws",
           "literals.nat",
           "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::base_term_collision_is_invalid:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::base_constructor_collision_is_invalid:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::column_zero_foreign_body_is_unsupported:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::module_import_after_declaration_is_invalid:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::ambiguous_host_path_is_unsupported:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::canonical_host_path_can_load:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-LAWS.bend::path_query_failure_is_a_host_failure:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.tuple",
+          "literals.u32",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
@@ -9599,6 +9704,90 @@
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
+        ],
+        "src/load-PROOF.bend::L.base_term_collision_is_invalid:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.base_constructor_collision_is_invalid:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.column_zero_foreign_body_is_unsupported:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.module_import_after_declaration_is_invalid:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.ambiguous_host_path_is_unsupported:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.canonical_host_path_can_load:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load-PROOF.bend::L.path_query_failure_is_a_host_failure:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
         ]
       }
     },
@@ -9635,6 +9824,10 @@
         {
           "module": "./base-pin.bend",
           "file": "src/base-pin.bend"
+        },
+        {
+          "module": "./path-host.bend",
+          "file": "src/path-host.bend"
         }
       ],
       "declarations": {
@@ -9741,14 +9934,44 @@
           "quantities.affine",
           "quantities.arguments"
         ],
-        "src/load.bend::install_base:definition": [
-          "bindings",
+        "src/load.bend::overlaps:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/load.bend::collides:definition": [
           "calls",
           "constructors",
           "fields",
           "matches",
+          "matches.multi",
           "patterns.variable",
           "quantities.affine",
+          "types.base"
+        ],
+        "src/load.bend::install_base:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
           "quantities.reusable",
           "types.base"
         ],
@@ -9898,6 +10121,36 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/load.bend::read_canonical:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "io",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/load.bend::read_source:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "io",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/load.bend::received:definition": [
           "constructors",
           "fields",
@@ -9959,6 +10212,16 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/load.bend::step_state:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
         "src/load.bend::checked_base:definition": [
           "calls",
           "constructors",
@@ -9991,16 +10254,6 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
-          "types.base"
-        ],
-        "src/load.bend::step_state:definition": [
-          "constructors",
-          "fields",
-          "generics",
-          "matches",
-          "patterns.variable",
-          "quantities.affine",
-          "quantities.arguments",
           "types.base"
         ],
         "src/load.bend::step_body:definition": [
@@ -10077,12 +10330,60 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/load.bend::begin:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "io",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/load.bend::entry_path:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "io",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/load.bend::load_roots:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "generics",
+          "higher-order",
+          "io",
+          "lambdas",
+          "literals.nat",
+          "matches",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/load.bend::load:definition": [
           "calls",
           "generics",
           "higher-order",
           "io",
-          "literals.nat",
+          "literals.string",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
@@ -10379,6 +10680,94 @@
           "quantities.affine",
           "quantities.arguments",
           "types.base"
+        ],
+        "src/qualify-LAWS.bend::qualified_global_cannot_be_declared:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-LAWS.bend::qualified_constructor_cannot_be_declared:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-LAWS.bend::local_constructor_is_not_a_pattern_binder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-LAWS.bend::global_constructor_is_not_a_pattern_binder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-LAWS.bend::term_name_can_be_a_pattern_binder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-LAWS.bend::promoted_constructor_is_not_a_pattern_binder:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
         ]
       }
     },
@@ -10618,6 +11007,88 @@
           "proofs",
           "quantities.affine",
           "quantities.arguments",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.qualified_global_cannot_be_declared:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.qualified_constructor_cannot_be_declared:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.local_constructor_is_not_a_pattern_binder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.global_constructor_is_not_a_pattern_binder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.term_name_can_be_a_pattern_binder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify-PROOF.bend::L.promoted_constructor_is_not_a_pattern_binder:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ]
       }
@@ -11085,7 +11556,21 @@
           "quantities.arguments",
           "types.base"
         ],
-        "src/qualify.bend::walk:definition": [
+        "src/qualify.bend::pattern:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/qualify.bend::walk_in:definition": [
           "calls",
           "captures",
           "constructors",
@@ -11101,6 +11586,27 @@
           "patterns.nested",
           "patterns.variable",
           "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/qualify.bend::walk:definition": [
+          "calls",
+          "constructors",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/qualify.bend::prefixed:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
@@ -11137,6 +11643,66 @@
           "types.base"
         ]
       }
+    },
+    "src/path-host.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        }
+      ],
+      "declarations": {
+        "src/path-host.bend::inspect:foreign_definition": [
+          "calls",
+          "foreign",
+          "generics",
+          "io",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/path-host.bend::classified:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.tuple",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/path-host.bend::check:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "generics",
+          "higher-order",
+          "io",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    }
+  },
+  "dependency_feature_exceptions": {
+    "src/path-host.bend": {
+      "sha256": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
+      "features": [
+        "foreign"
+      ],
+      "reason": "Compiler modules review round 2, coordinator option b: minimal filesystem identity query; no source-language semantics in the host."
     }
   }
 }

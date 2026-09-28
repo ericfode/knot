@@ -22,12 +22,19 @@ report `Invalid`. File access failures other than missing imported files remain
 Path identity uses normalized filesystem paths, with imported local namespaces
 relative to the entry directory and bundle namespaces relative to the bundle.
 Dot and parent segments are eliminated before identity or namespace decisions.
-The profile excludes symlink and case aliases, as does the frozen oracle. No
-claim of filesystem-realpath or case-folding equivalence is made. Absolute
+The host query rejects symlink components and non-exact directory-entry spellings
+with `Unsupported load path-identity`, including case aliases on insensitive
+filesystems. Entry and bundle roots are queried before lexical normalization;
+user paths are queried before reading. Base's toolchain symlink is intentional
+and is instead constrained by the pinned content digest. The query observes
+filesystem metadata only; it does not resolve module names or parse source.
+Missing paths retain the existing missing-file classification; query failures
+remain HostFailure. This assumes stable files during loading, not race-resistant
+file-descriptor identity. No realpath alias equivalence is implemented. Absolute
 import spellings outside the profile report `Unsupported load absolute-import`.
 Entry and bundle paths must use the same absolute/relative basis; a mixed basis
 reports `Unsupported load mixed-path-roots` until the host boundary can supply
-canonical paths without expanding the existing effect inventory.
+canonical module identities across both path bases.
 
 Base is the unmodified 67,190-byte source from Bend 2.0.29 at `574b6d3`, SHA-256
 `22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b`. The loader
@@ -37,7 +44,10 @@ implementation. The seed's arithmetic lowering and host file primitives remain
 trusted. No substitute prelude or synthesized Base implementation is used.
 
 All 466 Base declarations participate in book-global name registration at their
-import event. The reachable dependency closure starts from every user definition,
+import event. Name registration rejects both bare and qualified collisions in
+the same category; Base imported later checks the accumulated user symbols.
+The dependency slice does not shadow Base names with user declarations.
+The reachable dependency closure starts from every user definition,
 with separate type/function and constructor references and lexical binder scope.
 Only that Base slice is parsed, checked and lowered. Source order is retained.
 Uncheckable reachable Base syntax reports its specific `Unsupported` reason;
@@ -67,6 +77,13 @@ presence and cycle reporting. Laws cover loader transitions, canonical paths,
 name scopes, Base dependency selection and pin boundaries. They are checked
 helper/transition laws, not a theorem of compiler correctness or whole-graph
 confluence.
+
+Review-round-2 fixtures freeze symlink/case aliases, Base namespace collisions
+in both import orders, ordinary/reusable constructor-named binders and a
+column-zero foreign body. Constructor binder rejection uses resolved names
+and the full registered constructor inventory, even when Base is not in the
+selected slice. Quoted foreign bodies remain Unsupported regardless of column;
+non-string module imports after declarations remain Invalid.
 
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.

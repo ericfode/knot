@@ -28,6 +28,13 @@ local cache (`BEND_LIB`, otherwise `~/.bend/lib`). Cache misses fail without a
 fetch. Package proof entries and test harnesses are outside the candidate runtime
 scope. No environment file is read.
 
+The module loader's authorized path-identity query has a `foreign` exception
+pinned to `src/path-host.bend` and its exact SHA-256 in `approved.json`. Ordinary
+`census:approve` does not grant or refresh that exception. Four literal policy
+controls retain the default ban, exact-byte boundary, file boundary and other
+forbidden features. The C/JS adapters are host metadata queries; compiler
+semantics remain in Bend.
+
 `approved.json` is the review boundary. Both generation and `--check` reject new
 classes per declaration, new source files and new imports. They also reject arrays,
 foreign definitions, holes, floating literals, unsafe declarations, parallel binds

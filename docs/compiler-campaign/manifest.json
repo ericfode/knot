@@ -134,7 +134,13 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/load.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend",
+        "src/path-host.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through checking to evaluation or Wasm, including all CLI entries; phase implementations enter as interfaces.",
@@ -313,7 +319,10 @@
         "src/syntax.bend"
       ],
       "task": "tests/compiler-modules/SPEC.md",
-      "notes": "Import headers and lexical canonical path resolution."
+      "notes": "Import headers and lexical canonical path resolution.",
+      "selected_files": [
+        "src/imports.bend"
+      ]
     },
     {
       "name": "module-qualification",
@@ -324,7 +333,12 @@
         "src/syntax.bend"
       ],
       "task": "tests/compiler-modules/SPEC.md",
-      "notes": "Per-file aliases, ordered registration and lexical scope."
+      "notes": "Per-file aliases, ordered registration and lexical scope.",
+      "selected_files": [
+        "src/qualify.bend",
+        "src/qualify-LAWS.bend",
+        "src/qualify-PROOF.bend"
+      ]
     },
     {
       "name": "module-base-slice",
@@ -337,7 +351,12 @@
         "src/parse.bend"
       ],
       "task": "tests/compiler-modules/SPEC.md",
-      "notes": "Complete Base inventory and checked reachable declaration partition."
+      "notes": "Complete Base inventory and checked reachable declaration partition.",
+      "selected_files": [
+        "src/base-load.bend",
+        "src/base-load-LAWS.bend",
+        "src/base-load-PROOF.bend"
+      ]
     },
     {
       "name": "module-base-pin",
@@ -348,7 +367,12 @@
         "src/syntax.bend"
       ],
       "task": "tests/compiler-modules/SPEC.md",
-      "notes": "ASCII SHA-256 verification of the unmodified pinned Base input."
+      "notes": "ASCII SHA-256 verification of the unmodified pinned Base input.",
+      "selected_files": [
+        "src/base-pin.bend",
+        "src/base-pin-LAWS.bend",
+        "src/base-pin-PROOF.bend"
+      ]
     },
     {
       "name": "module-loading",
@@ -362,10 +386,28 @@
         "src/imports.bend",
         "src/qualify.bend",
         "src/base-load.bend",
-        "src/base-pin.bend"
+        "src/base-pin.bend",
+        "src/path-host.bend"
       ],
       "task": "tests/compiler-modules/SPEC.md",
-      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary."
+      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary.",
+      "selected_files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend"
+      ]
+    },
+    {
+      "name": "module-path-host",
+      "files": [
+        "src/path-host.bend",
+        "src/syntax.bend"
+      ],
+      "selected_files": [
+        "src/path-host.bend"
+      ],
+      "task": "tests/compiler-modules/SPEC.md",
+      "notes": "Host path identity observation and separate Unsupported or HostFailure classification; the OS implementations are trusted foreign adapters."
     }
   ],
   "context": "interfaces-v1"

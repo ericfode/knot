@@ -157,6 +157,7 @@ def main():
         for name,file,old_text,new_text,witness,export,args,expected,kind in MUTANTS:
             directory=BUILD/name;directory.mkdir(exist_ok=True)
             for source in (ROOT/'src').glob('*.bend'):shutil.copy2(source,directory/source.name)
+            shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
             target=directory/file;text=target.read_text();require(text.count(old_text)==1,(name,'unique mutation'));target.write_text(text.replace(old_text,new_text))
             entry='eval-cli.bend' if kind in ('eval','fuel') else 'compile-cli.bend'
             typecheck=successful([SEED,directory/entry,'--check-only']);require(typecheck['stdout'].strip()==HOST_CHECKS[entry]['stdout'].strip(),typecheck)

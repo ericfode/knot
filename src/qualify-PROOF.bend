@@ -18,3 +18,10 @@ def L.alias_ambiguity_is_invalid(at): {==}
 def L.inventory_keeps_unused_functions(at,first,second): {==}
 def L.inventory_separates_namespaces(at): {==}
 def L.exhaustion_is_separate(node,position,names,bound): {==}
+
+def L.qualified_global_cannot_be_declared(at): {==}
+def L.qualified_constructor_cannot_be_declared(at): {==}
+def L.local_constructor_is_not_a_pattern_binder(at): {==}
+def L.global_constructor_is_not_a_pattern_binder(at): {==}
+def L.term_name_can_be_a_pattern_binder(at): {==}
+def L.promoted_constructor_is_not_a_pattern_binder(at): {==}

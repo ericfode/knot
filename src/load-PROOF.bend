@@ -48,3 +48,11 @@ def L.duplicate_alias_is_invalid():
 
 def L.parent_import_is_recognized_without_loading(at,rest):
   {==}
+
+def L.base_term_collision_is_invalid(): {==}
+def L.base_constructor_collision_is_invalid(): {==}
+def L.column_zero_foreign_body_is_unsupported(): {==}
+def L.module_import_after_declaration_is_invalid(): {==}
+def L.ambiguous_host_path_is_unsupported(): {==}
+def L.canonical_host_path_can_load(): {==}
+def L.path_query_failure_is_a_host_failure(message): {==}

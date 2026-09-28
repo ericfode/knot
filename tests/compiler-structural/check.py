@@ -175,6 +175,7 @@ def main():
             directory.mkdir(exist_ok=True)
             for source in sources:
                 shutil.copy2(source, directory / source.name)
+            shutil.copytree(ROOT / 'src/host', directory / 'host', dirs_exist_ok=True)
             changed = directory / file
             text = changed.read_text()
             require(text.count(before) == 1, (name, 'mutation must be unique'))

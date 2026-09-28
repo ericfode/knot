@@ -533,10 +533,10 @@
           "$ROOT/.local/compiler-modules/gate/check"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "8dfe011b9ac5aaf0361eb5372160a43d5285212a13e7b331d967e33f2bedfdcd"
+      "sha256": "8467a8da63becfde20a82fa52b5047ddc3dcfe6f4353dd462e83022a0cfe72ad"
     },
     {
       "lane": "native",
@@ -550,10 +550,10 @@
           "$ROOT/.local/compiler-modules/gate/eval"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "9c21b1a160d8ca148983a0772551a7f306fc42fc5926969a0526f802264ba575"
+      "sha256": "9df622dd3b55cd62af0e5572ec26d0906f315965a03750ad80b4e7e946d95572"
     },
     {
       "lane": "native",
@@ -567,10 +567,10 @@
           "$ROOT/.local/compiler-modules/gate/compile"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "7485b89538b293ee70ceebb810c8175926dba5aa21411b09e18758bc4d05588a"
+      "sha256": "2d26d899745a1bdc7b4c3554c5638d7b641e762f4a22af38a9c9b4a6857b267e"
     },
     {
       "lane": "bun",
@@ -584,10 +584,10 @@
           "$ROOT/.local/compiler-modules/gate/check.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "f20c29ff9819d968d615c5b4895a6cb9a60106b9cfb1b17e09a88d8f2ed609b0"
+      "sha256": "33de8fde29000cd7382f9a9256450901f600ca9cc6568e5e8241fb0ee7799405"
     },
     {
       "lane": "bun",
@@ -601,10 +601,10 @@
           "$ROOT/.local/compiler-modules/gate/eval.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "b0fed39a81f395082686a06242d8c6dfd3eb94c6ef83148f0d16e1a94d56768a"
+      "sha256": "ecac1f4491dd0f31fb70af89e7aaf24256bedebbd8b7992899606b759f8c1c57"
     },
     {
       "lane": "bun",
@@ -618,10 +618,10 @@
           "$ROOT/.local/compiler-modules/gate/compile.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_configured\n- module_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
-      "sha256": "164eb4c8d42f1dcbfb88b4151c1fb1065e023e085f55d782ccc561a108346b74"
+      "sha256": "8c702c38138dd2c37fe29501766934f26b35fbd2870ba5462e3d3133772bc1fc"
     }
   ],
   "date": "<normalized-date>",
@@ -14029,17 +14029,1629 @@
           "tag": 1
         }
       ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+              "$ROOT/.local/compiler-modules/gate/symlink-directory-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+              "$ROOT/.local/compiler-modules/gate/symlink-directory-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "symlink-directory",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/identity/symlink.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+              "$ROOT/.local/compiler-modules/gate/case-alias-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+              "$ROOT/.local/compiler-modules/gate/case-alias-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tload\tpath-identity\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "case-alias",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/case.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/identity/case.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "byte_identical": true,
+      "file": "../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round2/identity/lib/flag.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round2/identity/control.bend"
+            ],
+            "result": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/identity/lib/flag.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/identity/control.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nlib/flag.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call1(call0(v0.0))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+              "$ROOT/.local/compiler-modules/gate/canonical-control-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t107\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "7f8e320fa1d75841877f9d75aa16187a07f9f3444ec3b95dad65bc5254c72545",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/canonical-control-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":107}\n"
+              }
+            }
+          ]
+        },
+        "native": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round2/identity/lib/flag.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round2/identity/control.bend"
+            ],
+            "result": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/identity/lib/flag.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/identity/control.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nlib/flag.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call1(call0(v0.0))\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+              "$ROOT/.local/compiler-modules/gate/canonical-control-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t107\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "7f8e320fa1d75841877f9d75aa16187a07f9f3444ec3b95dad65bc5254c72545",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/canonical-control-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":107}\n"
+              }
+            }
+          ]
+        }
+      },
+      "name": "canonical-control",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/identity/control.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/identity/control.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-first-collision-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-first-collision-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t39:42:5:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "base-first-collision",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a1/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/a1/main.bend",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n4 | \n5>| def not(x: Flag) -> Flag:\n  |     ^^^\n6 |   match x:\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-last-collision-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-last-collision-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t0:0:0:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "base-last-collision",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a2/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/a2/main.bend",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Bool.not)\n- observed : 'Bool.not'\nLocation:\n424 | \n425>| def Bool.not(b: Bool) -> Bool:\n    |     ^^^^^^^^\n426 |   match b:\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-body-shadow-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-body-shadow-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tload\tduplicate-global\t6:9:3:4\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "base-body-shadow",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a5/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/a5/main.bend",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n2 | \n3>| def not(b: Bool) -> Bool:\n  |     ^^^\n4 |   b\n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "byte_identical": true,
+      "file": "../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round2/a4/Bool.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round2/a4/main.bend"
+            ],
+            "result": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-modules/gate/check.js",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/a4/Bool.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/a4/main.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nBool.not(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->1=v1.1\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+              "$ROOT/.local/compiler-modules/gate/no-base-control-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t70\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "7441bc43affccf2b92aa09f741730aaf1de31ba659fb34a4f6803c69beb01625",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/no-base-control-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":70}\n"
+              }
+            }
+          ]
+        },
+        "native": {
+          "artifact_preserved": false,
+          "audit": {
+            "checked_base": [],
+            "modules": [
+              "$ROOT/.local/compiler-modules/gate/review-round2/a4/Bool.bend",
+              "$ROOT/.local/compiler-modules/gate/review-round2/a4/main.bend"
+            ],
+            "result": {
+              "argv": [
+                "$ROOT/.local/compiler-modules/gate/check",
+                "--audit-bundle",
+                "$ROOT/tests/compiler-modules/bundle/lib",
+                "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend"
+              ],
+              "exit": 0,
+              "stderr": "",
+              "stdout": "BasePin\t22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/a4/Bool.bend\nModule\t$ROOT/.local/compiler-modules/gate/review-round2/a4/main.bend\n\n"
+            },
+            "unchecked_base": []
+          },
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nBool.not(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->1=v1.1\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+              "$ROOT/.local/compiler-modules/gate/no-base-control-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t70\n"
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t1\t1\tLit{}\n"
+              },
+              "value": {
+                "constructor": "Lit",
+                "tag": 1,
+                "type_id": 1
+              }
+            }
+          ],
+          "sha256": "7441bc43affccf2b92aa09f741730aaf1de31ba659fb34a4f6803c69beb01625",
+          "wasm": [
+            {
+              "arguments": [],
+              "expected_tag": 1,
+              "export": "main",
+              "result": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "$ROOT/.local/compiler-modules/gate/no-base-control-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":70}\n"
+              }
+            }
+          ]
+        }
+      },
+      "name": "no-base-control",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/a4/main.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/a4/main.bend",
+          "stderr": "",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+              "$ROOT/.local/compiler-modules/gate/local-ctor-binder-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+              "$ROOT/.local/compiler-modules/gate/local-ctor-binder-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t119:122:10:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "local-ctor-binder",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g3/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/g3/main.bend",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{Off}: Off\n   |              ^^^\n11 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-ctor-binder-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-ctor-binder-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t126:130:12:13\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "base-ctor-binder",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g2/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/g2/main.bend",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{True}: True\n   |              ^^^^\n13 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+              "$ROOT/.local/compiler-modules/gate/foreign-column-zero-bun.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+              "$ROOT/.local/compiler-modules/gate/foreign-column-zero-native.wasm"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 3,
+                "stderr": "Unsupported\tcheck\tforeign-definition\t0:0:8:0\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "foreign-column-zero",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/l1/main.bend"
+          ],
+          "constructor": "Lit",
+          "exit": 0,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/l1/main.bend",
+          "stderr": "All terms check, but 1 def relies on unsafe or foreign code:\n- tick\n",
+          "stdout": "Lit{}\n",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-promoted-ctor-binder-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+              "$ROOT/.local/compiler-modules/gate/base-promoted-ctor-binder-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t127:131:12:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "base-promoted-ctor-binder",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g2-promoted/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/g2-promoted/main.bend",
+          "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{+True}: True\n   |              ^^^^^\n13 | \n",
+          "stdout": ""
+        }
+      ]
+    },
+    {
+      "file": "../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/check.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-modules/gate/compile.js",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+              "$ROOT/.local/compiler-modules/gate/local-promoted-ctor-binder-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-modules/gate/eval.js",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/check",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-modules/gate/compile",
+              "--bundle",
+              "$ROOT/tests/compiler-modules/bundle/lib",
+              "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+              "$ROOT/.local/compiler-modules/gate/local-promoted-ctor-binder-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+            "stdout": ""
+          },
+          "evaluations": [
+            {
+              "arguments": [],
+              "export": "main",
+              "result": {
+                "argv": [
+                  "$ROOT/.local/compiler-modules/gate/eval",
+                  "--bundle",
+                  "$ROOT/tests/compiler-modules/bundle/lib",
+                  "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+                  "main",
+                  "65536"
+                ],
+                "exit": 2,
+                "stderr": "Invalid\tcheck\tconstructor-pattern-binder\t120:123:10:14\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "wasm": []
+        }
+      },
+      "name": "local-promoted-ctor-binder",
+      "reference": [
+        {
+          "arguments": [],
+          "argv": [
+            "bun",
+            "<ROOT>.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "<ROOT>/.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+          ],
+          "exit": 1,
+          "export": "main",
+          "run": "../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend",
+          "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{+Off}: Off\n   |              ^^^^\n11 | \n",
+          "stdout": ""
+        }
+      ]
     }
   ],
   "inputs": {
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
-    "src/CONTRACT.json": "7e2b1cbd926ddcf15e90d5750c020daea88502e8d2b525b044a7a77fdbeb0e2b",
-    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
-    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
-    "src/SPEC.md": "2edc685790d7abee5ec55ac461c979d156336fddd7968fdfe38896bea105abb3",
+    "src/CONTRACT.json": "bea1e2e42976648448cb2369a226d7e38eaf6d6803092c1ad78af9d500ae3dad",
+    "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
+    "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
+    "src/SPEC.md": "76908e1550d2b102c9d27f6a1e7d8e2fddb6b3706329dc226955b9e5f8acc294",
     "src/base-load-LAWS.bend": "bc474ba56a21d9bba54c413d6543325e6596f2ae7469b426adcf02af0810a009",
     "src/base-load-PROOF.bend": "ee43281f8668b287cab6b7eb415f748533392fe98e40c30c94433529c55031df",
-    "src/base-load.bend": "b0bdd7ba2778e45dc996d8d1724a2757a93b7c90cc0e2fccfbf77d0e3f84516d",
+    "src/base-load.bend": "1be1d62fd627e77a59a930d401a1572988d60385cb4e60eb0d2d83181cef4941",
     "src/base-pin-LAWS.bend": "ded60e2d77e229559df6f5db2b95eaeca90933f3f0ac7ed212ce05c6d2362465",
     "src/base-pin-PROOF.bend": "eeaf454f5623a6252f5ff9afcd857f5802e6f1a725a995e9ace367f2462096a3",
     "src/base-pin.bend": "3ec5617dfc03bf5d9f45d6511eaf017a39263eee48df547ed293d76ebc7f8f2b",
@@ -14059,17 +15671,20 @@
     "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
     "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
     "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
-    "src/imports.bend": "bfda95d1ab39b457acc73aec03373714a94c95d3e291373a0437e89e50ecfbd1",
+    "src/host/path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "src/host/path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2",
+    "src/imports.bend": "830dbdf122e0af757229052ae066c96f61da0167d13302f126cd95d850efb3e2",
     "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
-    "src/load-LAWS.bend": "6406caf05f1bcd4a98b8a668285eefa27e28e216ed7a16589d52c449ab2137c5",
-    "src/load-PROOF.bend": "971fc83d73e4be67ccaea2116103b892e3309ecd54f7740ccc8ed7932cbe3065",
-    "src/load.bend": "bce84fc9b1fc95c19031da456d79a92e038bca444d922ef1f9082dacbfeac440",
+    "src/load-LAWS.bend": "933219d33bf7be3e99b4df26921be47b1e55c86e51fd1f9631dfa510400df4f1",
+    "src/load-PROOF.bend": "3438774c25a32823bbc162e8edde4419068830987aecf6c4fad2e3c81b5cd94e",
+    "src/load.bend": "07e57ed03bfb6019843f4bc9036ab11f9d926dc59c5c2a0ed6fc1274cc59be02",
     "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "e6fd0a207022a08a47791972d5951857defffbbc600bc088febe5ff54119a532",
+    "src/parse.bend": "a24453c8c3aba71a867dc0da7531edc8834a8d0f130d5ce5b7cf48435387bc37",
+    "src/path-host.bend": "bec2cf1c8f5490c3e57f321a362bb28f883c66c3a391f62b707356f84aa0c065",
     "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
-    "src/qualify-LAWS.bend": "801c15ceb436466d755d54d80a47e38cdb6634758fceb53e3dc647f92edc727f",
-    "src/qualify-PROOF.bend": "3695a3f41d9d0ea472504530d85394a1fd2f96fb609a8b1c5c23954a8e0b28f1",
-    "src/qualify.bend": "6c547a48bb0b6aee02222797231e4cb36cd69953d7f781228a65c899445cfdb2",
+    "src/qualify-LAWS.bend": "f1aeafd31dc3a51fde89a007ea6275df6c13da6578a2577b89781e90023b2d51",
+    "src/qualify-PROOF.bend": "f7535616cb1be2c85ad8ae88e1c0f128a2ea928050263bbee49489c0163c3ff8",
+    "src/qualify.bend": "d11543d3f252265f775c5ecd6adbc292c137323d4b12fc2c552b68926defe4ed",
     "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
     "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
     "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
@@ -14103,7 +15718,7 @@
     "tests/compiler-modules/calls/qualified-names--see-On.bend": "9e738bd0ae8b5c05d834fcfe826937d892fafb9a6bd0b408661696cf30e358e2",
     "tests/compiler-modules/calls/same-bare-names--flip-Off.bend": "e0203f2259705da01787406a9dea8942e84a783b86941d3852ca912b72fd5da0",
     "tests/compiler-modules/calls/same-bare-names--flip-On.bend": "7c4ddd88dd2dffb23861030e8a840deeea9f0df28e371459daea4ded56871f67",
-    "tests/compiler-modules/check.py": "b1258772cc7db82dd535f6c5e03af2f7aa5f3dec000fdb719b5ee19578f3b3ee",
+    "tests/compiler-modules/check.py": "5a20491894a73961fb184c12302b94cb26c316f19035f558783029002d20d7ac",
     "tests/compiler-modules/expectations.json": "5497e5bb60f0d4c944517834952d30a4e2f1ba0c55545f5c07595439e1607374",
     "tests/compiler-modules/fixtures/alias-member-definition.bend": "ca6d12c52f130625895c5d871272ae519e2bb1081e4d34b711fe45e62a1de67b",
     "tests/compiler-modules/fixtures/alias-name-reuse.bend": "2b0f660ff0844d17fbc9d4b8639e175bc36a0b520755a0315a0960fdc58c0a53",
@@ -14165,6 +15780,7 @@
     "tests/compiler-modules/fixtures/transitive-chain.bend": "e4f6cec4652c77b3309def70212b8fedc8adc81b674c8e04e1c91177a2dbc899",
     "tests/compiler-modules/fixtures/two-aliases-one-file.bend": "9a1967d76033c879030e0e6b2332c5221cae929b05e76a8105329e69732acfcf",
     "tests/compiler-modules/fixtures/unused-invalid-module.bend": "c6e306a111791a2c37d706032dd08f373b7e9adec6fd0c0e22c7a9e28c25ded3",
+    "tests/compiler-modules/host-check-expectations.json": "72c9204257fc3c78729a6c0a68a9ea8e193fa4327671b84ab2494b7af16376e2",
     "tests/compiler-modules/pin-expectations.json": "b320b20e53bfe2697155c26b8a3569728c151d0e67cae2fcace4341d562f35a6",
     "tests/compiler-modules/pin.bend": "78670d0ed1f7f78146784d11f6b3126f0aee0312bdb45125830dc62c931dcc9f",
     "tests/compiler-modules/probes.json": "f2d4a7ecd92d4b43bc17ce07766a298ec08ca11ca65d755e659a0901778cd916",
@@ -14178,7 +15794,28 @@
     "tests/compiler-modules/regressions/constructor-names-base-type.bend": "e8cb6503bb63e41ae779420c589b28f3da0487b01da3fd5e3e37d8e2df947961",
     "tests/compiler-modules/regressions/large-comment.bend": "be0cf0beaf37153d3db56a903c688980e078bb34cccac8d41a3f7c27e955a129",
     "tests/compiler-modules/regressions/many-blank-lines.bend": "56a9157a9e5b5a18d27b2e88c59e89b7d290962740b4296a06f2b36c21766c76",
-    "tests/compiler-modules/regressions/type-names-base-constructor.bend": "377d2f5304f4ed09ce568d8fa506117a86ddc769bd23e0e2d9c101726d6a32b3"
+    "tests/compiler-modules/regressions/type-names-base-constructor.bend": "377d2f5304f4ed09ce568d8fa506117a86ddc769bd23e0e2d9c101726d6a32b3",
+    "tests/compiler-modules/review-round2.json": "de2ad717ae6a0708898f070e0b44cfbfef87d96e8d1b19d479b83d9b26f44f14",
+    "tests/compiler-modules/review-round2/a1/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "tests/compiler-modules/review-round2/a1/main.bend": "c6cb4faef2cc5daf4663b2e5ebf132a4f86363b22d6c1b920cc3be136dc04029",
+    "tests/compiler-modules/review-round2/a2/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "tests/compiler-modules/review-round2/a2/main.bend": "d29ef96dc13eeec001345477adceb17ab76e6fac6a4e4d92b8799793b688ca57",
+    "tests/compiler-modules/review-round2/a4/Bool.bend": "74efaaa1153cc87e86d51eccfe0c20e7b0785f5194ac709aeecbdecc7108ba2b",
+    "tests/compiler-modules/review-round2/a4/main.bend": "887f120cab4dfa47c3624b8b2854309e4ae230935ee602dbfde736824d003a7b",
+    "tests/compiler-modules/review-round2/a5/Bool.bend": "ec144b73e7bb3bf64860c1d4ad68eebe777c0ae1ee4b001ffd6edf6c900fe3af",
+    "tests/compiler-modules/review-round2/a5/main.bend": "f36e1eb2ca9d645f8d0c9f27d4ecb313a337ae05aa98f622a3ef2d85150d1c5e",
+    "tests/compiler-modules/review-round2/g2-promoted/main.bend": "6b814e1517010651a0e81e1df8f02bbfa73bd95e93ea2d9974130af1c27f5a9b",
+    "tests/compiler-modules/review-round2/g2/main.bend": "2a9327d3ef4b635923c7a2a4f34f009ee86149a43455a5c6e1c2673f9fdbdd71",
+    "tests/compiler-modules/review-round2/g3-promoted/lib/m.bend": "8e07f7ef5a7672a1aba2a57c35e99e347959f919b1772cc0667b294896b4ae5f",
+    "tests/compiler-modules/review-round2/g3-promoted/main.bend": "e6f6c155effe4f83d23836a9c94e976d716a732b92229b08b19a690b280e8274",
+    "tests/compiler-modules/review-round2/g3/lib/m.bend": "b48ec9b36a486d27c3e513a13986c09bf255ce0eb4a14268e898908eaf2dd051",
+    "tests/compiler-modules/review-round2/g3/main.bend": "9936a129dbad1a07a6a6a011aadf08ea88e3e485d5ccb0381ac8c1c057f3957f",
+    "tests/compiler-modules/review-round2/identity/case.bend": "6c29441b5ded2ae0488413bd625b70425c6c337cbfbf8f2aa30f1408682d71ae",
+    "tests/compiler-modules/review-round2/identity/control.bend": "afed1fd2eaeeda15bc38dff58c78e1e945acc3a6d65818d3562322942f7bdcac",
+    "tests/compiler-modules/review-round2/identity/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "tests/compiler-modules/review-round2/identity/symlink.bend": "9abeace7c3d9528e08a137133b3d1a0eaf42838182c12844e7a16e67bffa3a4f",
+    "tests/compiler-modules/review-round2/l1/main.bend": "e264e70db9e812338fb238f370cb61b086ead528ffdc2001b0340ae914346087",
+    "tests/compiler-modules/review-round2/l1/tick.js": "025da2132f205b78788b8d96eb9344648807c3552510f57e7892478af92107d3"
   },
   "mutants": [
     {
@@ -14194,7 +15831,7 @@
           "$ROOT/.local/compiler-modules/gate/diamond-loaded-twice/mutant.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
       "file": "load.bend",
@@ -14211,10 +15848,10 @@
           "$ROOT/tests/compiler-modules/fixtures/diamond.bend"
         ],
         "exit": 2,
-        "stderr": "Invalid\tcheck\tduplicate-global\t5:9:1:5\n",
+        "stderr": "Invalid\tload\tduplicate-global\t5:9:1:5\n",
         "stdout": ""
       },
-      "sha256": "76371e145b00fbf96d0a4374925a22743ca10cc1b2ca4958c3ccd458c0daf142",
+      "sha256": "69ccb620c167ac7a110375543146259826a0eb734e22cfd4c7bba47cbf62865c",
       "typecheck": {
         "argv": [
           "bun",
@@ -14224,7 +15861,7 @@
         ],
         "exit": 0,
         "stderr": "",
-        "stdout": "All terms check.\n"
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       },
       "witness": "diamond"
     },
@@ -14242,7 +15879,7 @@
           "$ROOT/.local/compiler-modules/gate/relative-to-entry/mutant.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
       "file": "imports.bend",
@@ -14262,7 +15899,7 @@
         "stderr": "Invalid\tload\tmissing-module\t0:0:0:0\n",
         "stdout": ""
       },
-      "sha256": "344f22c6b47c4bdd194e58b907b510ebf9f1715a1a7daee04238f4afcc51840f",
+      "sha256": "b3fe749b663f04510a1f5988e4e545388fee7b924467e26a4ac6efb33def3996",
       "typecheck": {
         "argv": [
           "bun",
@@ -14272,7 +15909,7 @@
         ],
         "exit": 0,
         "stderr": "",
-        "stdout": "All terms check.\n"
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       },
       "witness": "nested-paths"
     },
@@ -14289,7 +15926,7 @@
           "$ROOT/.local/compiler-modules/gate/absent-hash-accepted/mutant.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
       "file": "load.bend",
@@ -14309,7 +15946,7 @@
         "stderr": "",
         "stdout": "Checked\nmain()->0=v0.1\n\n"
       },
-      "sha256": "34f2ef5e336ade0c3fac4d6b8b0694f83f91ada6277a62cab180abffff5b7bdc",
+      "sha256": "1048073236b12e7f9e532cbc9746799f4f74f45039a1dbd653cd68a1bba74964",
       "typecheck": {
         "argv": [
           "bun",
@@ -14319,7 +15956,7 @@
         ],
         "exit": 0,
         "stderr": "",
-        "stdout": "All terms check.\n"
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       },
       "witness": "hash-absent-package"
     },
@@ -14336,7 +15973,7 @@
           "$ROOT/.local/compiler-modules/gate/cycle-ignored/mutant.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
       "file": "load.bend",
@@ -14356,7 +15993,7 @@
         "stderr": "",
         "stdout": "Checked\nmain()->2=v2.1\n\n"
       },
-      "sha256": "c0161b9202f34e179fd1d7e4ad3d9b105d4e530dd3e3eacfe2d19be4f36dbc0a",
+      "sha256": "6f70fd115e8cf9e50b7caf32fe4277c6434c294d98d5a631776a2d68eee7d218",
       "typecheck": {
         "argv": [
           "bun",
@@ -14366,7 +16003,7 @@
         ],
         "exit": 0,
         "stderr": "",
-        "stdout": "All terms check.\n"
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       },
       "witness": "import-cycle"
     },
@@ -14383,7 +16020,7 @@
           "$ROOT/.local/compiler-modules/gate/alias-reexported/mutant.js"
         ],
         "exit": 0,
-        "stderr": "",
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
         "stdout": ""
       },
       "file": "qualify.bend",
@@ -14403,7 +16040,7 @@
         "stderr": "",
         "stdout": "Checked\nlib/flag.flip(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nlib/left.left(1:0)->0=call0($0:0)\nsee(1:0)->1=case $0 [0=>v1.0;1=>v1.1]\nmain()->1=call2(call1(v0.0))\n\n"
       },
-      "sha256": "6ce8cf6b90ed8534434932a1444abb34dd9e34c5ad887e55a0e907c617a173de",
+      "sha256": "98f4d45944d897ef82d26b374192df6cfe44a8ca30b55cc5733f949856363946",
       "typecheck": {
         "argv": [
           "bun",
@@ -14413,9 +16050,436 @@
         ],
         "exit": 0,
         "stderr": "",
-        "stdout": "All terms check.\n"
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
       },
       "witness": "alias-not-reexported"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/path-identity-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/path-identity-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "path-host.bend",
+      "name": "path-identity-ignored",
+      "new": "S.choose(Result<S.Error,Unit>,True{},u => Done{Unit{}},u =>",
+      "old": "S.choose(Result<S.Error,Unit>,canonical,u => Done{Unit{}},u =>",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/path-identity-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tcheck\ttype-mismatch\t157:163:14:6\n",
+        "stdout": ""
+      },
+      "sha256": "6ebecf729794877c054891220c53ff9c0c9cec9dbded13b4a5a58fa76325be0d",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/path-identity-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "symlink-directory"
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/qualified-freshness-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/qualified-freshness-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "qualify.bend",
+      "name": "qualified-freshness-ignored",
+      "new": "contains(globals,S.text(token))",
+      "old": "Bool.or(contains(globals,S.text(token)),contains(globals,prefix(ns,S.text(token))))",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/qualified-freshness-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a1/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nBool.not(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->1=v1.1\n\n"
+      },
+      "sha256": "2c6aca0128bf788263aab7bfef2b636964ef61bb6d8609dbb1c1023198892430",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/qualified-freshness-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "base-first-collision"
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/base-collision-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/base-collision-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "load.bend",
+      "name": "base-collision-ignored",
+      "new": "S.choose(Result<S.Error,State>,False{},u =>",
+      "old": "S.choose(Result<S.Error,State>,collides(globals,names),u =>",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/base-collision-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/a2/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nBool.not(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\nmain()->1=v1.1\n\n"
+      },
+      "sha256": "60cbd5fc5b3e3ca7c389e8248f9ad9ce73026bef810499f7d37e3c6f79ecacab",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/base-collision-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "base-last-collision"
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/pattern-constructor-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/pattern-constructor-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "qualify.bend",
+      "name": "pattern-constructor-ignored",
+      "new": "False{}",
+      "old": "Bool.and(known(S.text(resolved),names),contains(ctors,S.text(resolved)))",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/pattern-constructor-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nlib/m.open(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->2=v2.1\n\n"
+      },
+      "sha256": "2842ef63107bbf65c44b4eac0ad0f48060ba170d4b91d9947f4f3c71c4acc084",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/pattern-constructor-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "local-ctor-binder"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tload\timport-after-declaration\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/foreign-body-uses-column/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/foreign-body-uses-column/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "imports.bend",
+      "name": "foreign-body-uses-column",
+      "new": "Bool.not(String.starts_with(line,\"import\")),u =>\n          Fail{S.Unsupported",
+      "old": "foreign(parts),u =>\n          Fail{S.Unsupported",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/foreign-body-uses-column/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/l1/main.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tload\timport-after-declaration\t0:0:8:0\n",
+        "stdout": ""
+      },
+      "sha256": "2afd3409138732a9b3fceb38f6f52cc5bcfdd8f8f0ebbbda47b598f40af246a4",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/foreign-body-uses-column/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "foreign-column-zero"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/host-symlink-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/host-symlink-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "host/path-identity.js",
+      "name": "host-symlink-ignored",
+      "new": "if (false) return io_done(false);",
+      "old": "if (stat.isSymbolicLink()) return io_done(false);",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/host-symlink-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tcheck\ttype-mismatch\t157:163:14:6\n",
+        "stdout": ""
+      },
+      "sha256": "cc52f8b4841b56107f78711f857216cc1181b779be28ecc5c204017b3f682d2f",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/host-symlink-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "symlink-directory"
+    },
+    {
+      "actual": {
+        "diagnostic_prefix": "Invalid\tcheck\ttype-mismatch\t",
+        "exit": 2
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/host-case-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/host-case-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "host/path-identity.js",
+      "name": "host-case-ignored",
+      "new": "if (false) return io_done(false);",
+      "old": "if (!exact) return io_done(false);",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/host-case-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/identity/case.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tcheck\ttype-mismatch\t157:163:14:6\n",
+        "stdout": ""
+      },
+      "sha256": "6cd83cf20810ad485795d5f5a3eeb1313b47c040550d9a9c6bb27cc79f36277c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/host-case-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "case-alias"
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/pattern-global-ctors-dropped/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/pattern-global-ctors-dropped/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "qualify.bend",
+      "name": "pattern-global-ctors-dropped",
+      "new": "prefixed(namespace,ctors_in(items))",
+      "old": "List.append(&2,String,ctors,prefixed(namespace,ctors_in(items)))",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/pattern-global-ctors-dropped/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g2/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nopen(1:1)->0=case $0 [0(1 $1:0;)=>$1:0]\nmain()->0=v0.0\n\n"
+      },
+      "sha256": "28751c4b7ea4bbdff82ba65654930cc31f5790f7c0db5e94b722f29728869f62",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/pattern-global-ctors-dropped/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "base-ctor-binder"
+    },
+    {
+      "actual": {
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/promoted-constructor-ignored/check-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-modules/gate/promoted-constructor-ignored/mutant.js"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n",
+        "stdout": ""
+      },
+      "file": "qualify.bend",
+      "name": "promoted-constructor-ignored",
+      "new": "Done{Qualified{S.Promotion{token},[S.text(token)]}}",
+      "old": "pattern(token,S.Promotion{token},names,ctors)",
+      "outcome": "semantic-kill",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-modules/gate/promoted-constructor-ignored/mutant.js",
+          "--bundle",
+          "$ROOT/tests/compiler-modules/bundle/lib",
+          "$ROOT/tests/compiler-modules/../../.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Checked\nlib/m.open(1:1)->0=case $0 [0(2 $1:0;)=>$1:0]\nmain()->2=v2.1\n\n"
+      },
+      "sha256": "86b179cbacd9bbf398c6e5d0ae171300d15bd6390a723c7a06e305f4edb85333",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/promoted-constructor-ignored/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check, but 5 defs rely on unsafe or foreign code:\n- module_arguments\n- audit_arguments\n- select\n- dispatch\n- main\n"
+      },
+      "witness": "local-promoted-ctor-binder"
     }
   ],
   "pin": [
@@ -14922,6 +16986,176 @@
     "stderr": "",
     "stdout": "Verified modules fixtures: 42 fixtures, 50 seed calls (31 accepted, 19 rejected)\n"
   },
+  "review_reference": [
+    {
+      "name": "symlink-directory",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/identity/symlink.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "identity/symlink.bend"
+    },
+    {
+      "name": "case-alias",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/identity/case.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "identity/case.bend"
+    },
+    {
+      "name": "canonical-control",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/identity/control.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "identity/control.bend"
+    },
+    {
+      "name": "base-first-collision",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/a1/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n4 | \n5>| def not(x: Flag) -> Flag:\n  |     ^^^\n6 |   match x:\n",
+        "stdout": ""
+      },
+      "run": "a1/main.bend"
+    },
+    {
+      "name": "base-last-collision",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/a2/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Bool.not)\n- observed : 'Bool.not'\nLocation:\n424 | \n425>| def Bool.not(b: Bool) -> Bool:\n    |     ^^^^^^^^\n426 |   match b:\n",
+        "stdout": ""
+      },
+      "run": "a2/main.bend"
+    },
+    {
+      "name": "base-body-shadow",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/a5/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a fresh name (duplicate declaration: not)\n- observed : 'not'\nLocation:\n2 | \n3>| def not(b: Bool) -> Bool:\n  |     ^^^\n4 |   b\n",
+        "stdout": ""
+      },
+      "run": "a5/main.bend"
+    },
+    {
+      "name": "no-base-control",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/a4/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Lit{}\n"
+      },
+      "run": "a4/main.bend"
+    },
+    {
+      "name": "local-ctor-binder",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/g3/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{Off}: Off\n   |              ^^^\n11 | \n",
+        "stdout": ""
+      },
+      "run": "g3/main.bend"
+    },
+    {
+      "name": "base-ctor-binder",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/g2/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{True}: True\n   |              ^^^^\n13 | \n",
+        "stdout": ""
+      },
+      "run": "g2/main.bend"
+    },
+    {
+      "name": "foreign-column-zero",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/l1/main.bend"
+        ],
+        "exit": 0,
+        "stderr": "All terms check, but 1 def relies on unsafe or foreign code:\n- tick\n",
+        "stdout": "Lit{}\n"
+      },
+      "run": "l1/main.bend"
+    },
+    {
+      "name": "base-promoted-ctor-binder",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/g2-promoted/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- message  : a braced constructor pattern (True is a constructor: write True{}, or rename the binder)\nLocation:\n11 |   match b:\n12>|     case Box{+True}: True\n   |              ^^^^^\n13 | \n",
+        "stdout": ""
+      },
+      "run": "g2-promoted/main.bend"
+    },
+    {
+      "name": "local-promoted-ctor-binder",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-modules/gate/review-round2/g3-promoted/main.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- message  : a braced constructor pattern (Off is a constructor: write Off{}, or rename the binder)\nLocation:\n 9 |   match b:\n10>|     case Box{+Off}: Off\n   |              ^^^^\n11 | \n",
+        "stdout": ""
+      },
+      "run": "g3-promoted/main.bend"
+    }
+  ],
   "seed": {
     "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
     "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",

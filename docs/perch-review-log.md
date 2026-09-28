@@ -1069,3 +1069,28 @@ zero semantic. An intervening loaded-host run exhausted three native-build
 budgets; it remains a failed run. A one-worker retry passed without changing
 any limit. All 33 context controls and eight semantic mutants pass, and the
 literal manifest command has zero blockers and no provider requests.
+
+## 2026-09-27 — Modules review round 2: identity and global inventory
+
+The coordinator's four confirmed findings are fixed with seed-frozen regressions:
+symlink/case aliases must be Unsupported before typechecking; declarations must
+check both bare and qualified names; Base imported later must reject collisions;
+pattern binders must see the complete constructor inventory; and quoted foreign
+bodies remain Unsupported at column zero. Independent probes also exposed the
+same binder defect for reusable `+Off` and `+True`, frozen before repair.
+See [the review record](../tests/compiler-modules/REVIEW-ROUND-2.md) and the
+[seed expectations](../tests/compiler-modules/review-round2.json).
+
+Prevention: cross filesystem aliases with canonical controls, both import orders
+with names in each category, and constructor visibility with an empty Base slice.
+Include ordinary and reusable binder parser nodes. Resolve names before comparing
+constructors; reachability must not decide user-source validity.
+
+The authorized host query exposes one new foreign boundary. Initial integration
+runs caught exact CLI/trust-verdict assertions and scratch source copies that
+assumed Bend-only inputs. Seed-derived assertion amendments retain exact named
+foreign dependencies; no language outcome is relaxed. Copy the complete host
+adapter closure when building mutants. Recompute local import closure after
+merging context manifests, retaining bounded selected mechanisms and interface
+collaborators. The full manifest then has zero offline structural blockers;
+this is not a live semantic/style verdict.
