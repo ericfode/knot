@@ -72,3 +72,16 @@ law legacy_literal_boundary:
   for +token: S.Token
   {L.legacy(1n,[S.Literal{token,0,7,Nil{}}]) ==
     Fail{S.Unsupported{"parse","term-form",S.at(token)}} : Result<S.Error,Unit>}
+
+law char_literal_reads_back:
+  for token: S.Token
+  {L.quoted(P.quoted([39],39),token) == Done{L.Quoted{[39],"","'\\''"}} : Result<S.Error,L.Quoted>}
+
+law text_literal_reads_back:
+  for token: S.Token
+  {L.quoted(P.quoted([0,9,10,13,34,39,92,127,55357,1114112],34),token) ==
+    Done{L.Quoted{[0,9,10,13,34,39,92,127,55357,1114112],"","\"\\0\\t\\n\\r\\\"'\\\\\\u{7f}\\u{d83d}\\u{110000}\""}} : Result<S.Error,L.Quoted>}
+
+law glyph_boundaries:
+  {[P.glyph(31,34),P.glyph(32,34),P.glyph(55295,34),P.glyph(55296,34),P.glyph(57343,34),P.glyph(57344,34),P.glyph(1114111,34),P.glyph(1114112,34)] ==
+    ["\\u{1f}"," ",SCon{Char.from_u32(55295),SNil{}},"\\u{d800}","\\u{dfff}",SCon{Char.from_u32(57344),SNil{}},SCon{Char.from_u32(1114111),SNil{}},"\\u{110000}"] : List<&2,String>}

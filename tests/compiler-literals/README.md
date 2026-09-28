@@ -15,9 +15,11 @@ patterns on datatype scrutinees, literal field patterns, zero offsets and two
 agreeing controls. Round 3 (13 books): escapes before `{`, and the seed's
 `+` promotion of a matrix column (every row and field of the column, but not
 a binder row's view of a parent whose field alone is promoted), with nine
-seed-invalid controls. All three freezes are verified
-against seed 2.0.29, commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on
-every gate run.
+seed-invalid controls. [The result freeze](results.json), committed as
+`60a4795` before its fix, adds five books and 61 calls whose results are
+U32, Char, String, Nat or records with primitive fields, each with the
+display Knot must print. All four freezes are verified against seed 2.0.29,
+commit `574b6d39a235b539eb19a5c532993a0abb3d11ad`, on every gate run.
 
 ## Mechanism
 
@@ -74,6 +76,19 @@ lists for text, then reconstructs source values. Code-list traversals are
 tail calls with accumulators (`count`, `onto` = reverse-append, and `equal`),
 so the Bun and native evaluator lanes reach the same bounds. It never interprets Wasm or
 the emitted instruction graph.
+
+The evaluator prints `Evaluated<TAB>type<TAB>word<TAB>display`. A value of an
+installed primitive type displays as the seed's literal for it, the text that
+reads back as the value: `300`, `3n`, `'a'`, `"a\n"`. `quoted` in
+`primitive-eval.bend` inverts the reader's escape table: `\0 \t \n \r \\`,
+the quote escaped only inside its own kind of literal (`'\''` but `"'"`),
+`\u{hex}` in lowercase for controls, DEL, surrogates and codes past U+10FFFF,
+and raw UTF-8 for every other code. Escaped surrogate pairs stay two codes, as
+in the seed. Records keep Knot's live-field frame `Name{a,b}`; only the leaves
+follow the seed. The word column is a U32 or Char value's bits and otherwise a
+constructor tag. Before this fix the evaluator read a scalar's bits as a
+constructor index: `#U32{}` or `Chr{}` with exit 0 for bits 0, and
+`InternalFailure eval result-tag` otherwise.
 
 ## Base trust boundary
 
@@ -160,6 +175,7 @@ Run with network disabled and `BEND_NO_TELEMETRY=1`:
 python3 tests/compiler-literals/regen.py
 python3 tests/compiler-literals/supplemental.py
 python3 tests/compiler-literals/regressions.py
+python3 tests/compiler-literals/results.py
 python3 tests/compiler-literals/check.py
 npm run -s gates
 npm run -s gates:verify
@@ -173,9 +189,12 @@ The new gate builds native and Bun versions of check/eval/compile. It requires:
 - 34 byte-identical native/Bun module pairs and 68 complete Base trust audits.
 - 106 rejected-compilation output-preservation probes and 106 additional
   compilations proving no artifact is created at an absent output path.
+- 5 result books and 61 frozen displays: 122 exact evaluator displays across
+  both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
+  Node host observes enum results only, so these calls have no Wasm lane.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 28 filled laws; 15 type-correct semantic
-  mutants: five Wasm value kills, nine verdict kills and three evaluator kills.
+- Three complete proof entries, 32 filled laws; 18 type-correct semantic
+  mutants: five Wasm value kills, nine verdict kills and six evaluator kills.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
@@ -192,7 +211,10 @@ seed's Invalid; the broad `\X{` arm rejects the escape-brace book as
 `Invalid lex escape`; disabling column promotion rejects promoted-column as
 `Invalid check affine-reuse`; and keeping the refinement for a binder row
 compiles the seed-invalid affine-default-scrutinee to `Built`. The evaluator-only `append-reversed` mutant changes no emitted byte;
-its evaluator answers No for `"ab" ++ ""` = `"ab"`. A compiler failure,
+its evaluator answers No for `"ab" ++ ""` = `"ab"`. Three display mutants
+are killed by an exact wrong display: skipping the primitive dispatch prints
+`'\0'` as `Chr{}` again, escaping both quotes everywhere prints `'"'` as
+`'\"'`, and dropping DEL from the escaped range prints `'\u{7f}'` raw. A compiler failure,
 timeout, malformed Wasm or any other verdict is not a kill. Only the Bun lanes
 are mutated; both unmodified lanes are covered by all differential
 observations.
@@ -219,7 +241,9 @@ pass is claimed.
 
 Broaden the source and host boundaries only with new seed freezes. Priorities
 are constructor patterns for Char, broader nested matrices and recursion,
-primitive/structured host observations, and owned storage/reclamation. General
+primitive/structured Wasm host observations and host arguments (a U32 host
+argument is still read as an ordinal of U32's one constructor), and owned
+storage/reclamation. General
 compiler correctness, all-input intrinsic refinement, R3/R7 storage acceptance,
 and self-hosting remain unproved. Operator sugar and F32 need their own scoped
 acceptance work.

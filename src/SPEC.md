@@ -437,9 +437,21 @@ the exact remainder of all 466 seed declarations. This does not claim checked
 Base-body proofs for the lowered operations.
 
 The independent evaluator interprets Literal, Intrinsic and Default core
-terms. Nat remains unary source data and String remains SNil/SCon data. The new
-Wasm profile uses an instruction graph, a Wasm dispatcher and explicit source
-frames/returns. Every function body is emitted and executed at invocation time.
+terms. Nat remains unary source data and String remains SNil/SCon data.
+Its result line is `Evaluated<TAB>type<TAB>word<TAB>display`. A value of an
+installed primitive type displays as the seed's literal for it: `300`, `3n`,
+`'a'` and `"a\n"`, with the seed's escapes (named escapes, each quote escaped
+only inside its own kind of literal, `\u{hex}` for controls, DEL, surrogates
+and codes past U+10FFFF, raw UTF-8 otherwise). This holds inside records
+too; other data keeps the live-field frame `Name{a,b}`, which differs from the
+seed's `Name{a, b}` in separators, omitted erased fields and module
+qualification. The word is
+a U32 or Char value's bits and otherwise the constructor tag, so it is not an
+ordinal for a primitive result. The display budget and 65,536-character cap
+still apply.
+
+The new Wasm profile uses an instruction graph, a Wasm dispatcher and explicit
+source frames/returns. Every function body is emitted and executed at invocation time.
 U32/Char use i32 bits; Nat uses Zero/Succ cells, String uses tag/head/tail cells.
 Unsigned division/remainder, zero divisors, logical right shift and counts of
 at least 32 match the frozen seed algebra. This is not a binary Nat ABI.
@@ -461,11 +473,13 @@ Primitive Nat/String traversals in the evaluator are tail calls with
 accumulators, so both evaluator lanes reach the same bounds without host
 stack depth.
 
-Three complete new proof entries check 27 helper laws. They cover the required
+Three complete new proof entries check 32 helper laws. They cover the required
 arithmetic guard equations, String traversal order and length, literal
-decoding, core transitions and matrix expansion; they do not prove
-whole-compiler correctness or all-input intrinsic refinement. The registered
-literals gate compares 325 accepted calls in both evaluator and compiler lanes,
-and kills twelve type-correct semantic mutants.
+decoding and display round trips, core transitions and matrix expansion; they
+do not prove whole-compiler correctness or all-input intrinsic refinement. The
+registered literals gate compares the frozen accepted calls in both evaluator
+and compiler lanes, compares 61 frozen primitive and record result displays in
+both evaluator lanes, and kills 18 type-correct semantic mutants. The Wasm host
+observes enum results only, so result displays have no Wasm lane.
 Live Perch review remains a coordinator gate; offline preflight alone is not a
 style pass. Existing compiler gates and their frozen expectations are retained.

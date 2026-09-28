@@ -238,16 +238,40 @@ def constructor_name(ctors: List<&2,C.Constructor>, +tag: U32) -> Result<S.Error
     case Con{C.Constructor{+head,fields},+tail}:
       S.choose(Result<S.Error,String>,U32.is_eq(tag,0),u => Done{S.text(head)},u => constructor_name(tail,U32.sub(tag,1)))
 
-def result_name(types: List<&2,C.Datatype>, +index: U32, +tag: U32) -> Result<S.Error,String>:
+def datatype(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
   match types:
-    case Nil{}: internal(String,"result-type")
-    case Con{C.Datatype{name,data,+ctors},+tail}:
-      S.choose(Result<S.Error,String>,U32.is_eq(index,0),u => constructor_name(ctors,tag),u => result_name(tail,U32.sub(index,1),tag))
+    case Nil{}: internal(C.Datatype,"result-type")
+    case Con{+head,+tail}:
+      S.choose(Result<S.Error,C.Datatype>,U32.is_eq(index,0),u => Done{head},u => datatype(tail,U32.sub(index,1)))
+
+def type_of(value: Value) -> U32:
+  match value:
+    case Value{type_id,tag}: type_id
+    case Object{type_id,tag,fields}: type_id
 
 type Display is Data:
   One{value: Value}
   Many{values: List<&2,Value>}
   Text{text: String}
+
+# 7, 7n, 'a' and "a": Char is the one kind whose Bits are quoted.
+def literal(value: P.Datum, +char: Bool) -> String:
+  match value:
+    case P.Bits{+word}: S.choose(String,char,u => P.quoted([word],39),u => U32.show(word))
+    case P.Count{count}: String.append(U32.show(count),"n")
+    case P.Codes{codes}: P.quoted(codes,34)
+
+# An installed primitive shows the seed literal that reads back as it; any
+# other value shows its constructor around its live fields.
+def shape(primitive: Maybe<&2,U32>, definition: C.Datatype, +value: Value) -> Result<S.Error,List<&2,Display>>:
+  match primitive definition value:
+    case Some{k} _ _:
+      +kind = L.kind_name(k)
+      S.bind(P.Datum,List<&2,Display>,datum(value,kind),d => Done{[Text{literal(d,String.eq(kind,"Char"))}]})
+    case None{} C.Datatype{token,data,ctors} Value{type_id,tag}:
+      S.bind(String,List<&2,Display>,constructor_name(ctors,tag),name => Done{[Text{String.append(name,"{}")}]})
+    case None{} C.Datatype{token,data,ctors} Object{type_id,tag,fields}:
+      S.bind(String,List<&2,Display>,constructor_name(ctors,tag),name => Done{[Text{String.append(name,"{")},Many{fields},Text{"}"}]})
 
 # A worklist bounds total inspection, including expansion of shared subtrees.
 # Parts stay reversed until completion; the character budget bounds that output.
@@ -259,12 +283,10 @@ def render(fuel: Nat, pending: List<&2,Display>, +types: List<&2,C.Datatype>, +c
       +size = String.length(text)
       S.choose(Result<S.Error,String>,Nat.is_le(size,capacity),u =>
         render(n,tail,types,Nat.sub(capacity,size),Con{text,parts}),u => Fail{S.Exhausted{"inspect",S.At{0,0,0,0}}})
-    case 1n+n Con{One{Value{type_id,tag}},+tail}:
-      S.bind(String,String,result_name(types,type_id,tag),name =>
-        render(n,Con{Text{String.append(name,"{}")},tail},types,capacity,parts))
-    case 1n+n Con{One{Object{type_id,tag,+fields}},+tail}:
-      S.bind(String,String,result_name(types,type_id,tag),name =>
-        render(n,Con{Text{String.append(name,"{")},Con{Many{fields},Con{Text{"}"},tail}}},types,capacity,parts))
+    case 1n+n Con{One{+value},+tail}:
+      S.bind(C.Datatype,String,datatype(types,type_of(value)),+definition =>
+        S.bind(List<&2,Display>,String,shape(L.kind(definition),definition,value),items =>
+          render(n,List.append(&2,Display,items,tail),types,capacity,parts)))
     case 1n+n Con{Many{Nil{}},tail}: render(n,tail,types,capacity,parts)
     case 1n+n Con{Many{Con{head,Nil{}}},tail}: render(n,Con{One{head},tail},types,capacity,parts)
     case 1n+n Con{Many{Con{head,rest}},tail}:

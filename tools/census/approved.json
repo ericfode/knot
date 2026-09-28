@@ -3355,7 +3355,7 @@
           "recursion",
           "types.base"
         ],
-        "src/eval.bend::result_name:definition": [
+        "src/eval.bend::datatype:definition": [
           "calls",
           "captures",
           "constructors",
@@ -3365,12 +3365,19 @@
           "literals.string",
           "literals.u32",
           "matches",
-          "patterns.nested",
           "patterns.variable",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "recursion",
+          "types.base"
+        ],
+        "src/eval.bend::type_of:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
           "types.base"
         ],
         "src/eval.bend::Display:datatype": [
@@ -3380,6 +3387,40 @@
           "quantities.arguments",
           "types.base",
           "types.data"
+        ],
+        "src/eval.bend::literal:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/eval.bend::shape:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.string",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
         ],
         "src/eval.bend::render:definition": [
           "bindings",
@@ -12322,6 +12363,20 @@
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
+        ],
+        "src/literal-core-LAWS.bend::primitive_fields_display_as_literals:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
         ]
       }
     },
@@ -12421,6 +12476,19 @@
           "proofs",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-core-PROOF.bend::L.primitive_fields_display_as_literals:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
           "types.base"
         ]
       }
@@ -12663,6 +12731,49 @@
           "literals.u32",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-LAWS.bend::char_literal_reads_back:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-LAWS.bend::text_literal_reads_back:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-LAWS.bend::glyph_boundaries:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
           "types.base"
         ]
       }
@@ -13667,6 +13778,46 @@
           "proofs",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.char_literal_reads_back:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.text_literal_reads_back:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/literal-PROOF.bend::L.glyph_boundaries:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
           "types.base"
         ]
       }
@@ -15380,6 +15531,91 @@
           "patterns.nested",
           "patterns.variable",
           "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::letter:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.char",
+          "matches",
+          "patterns.nested",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::raw:definition": [
+          "calls",
+          "literals.u32",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::hex:definition": [
+          "annotations",
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "lambdas",
+          "literals.nat",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::spelled:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.char",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::glyph:definition": [
+          "calls",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::quote:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/primitive-eval.bend::quoted:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",

@@ -1,14 +1,15 @@
 # Literal laws
 
 Contract: [README.md](README.md), unchanged [expectations.json](expectations.json),
-the separately committed [supplemental.json](supplemental.json) and the
-review-round-1 to round-3 [regressions.json](regressions.json). No law
-changes the seed oracle or weakens an existing compiler gate.
+the separately committed [supplemental.json](supplemental.json), the
+review-round-1 to round-3 [regressions.json](regressions.json) and the result
+displays in [results.json](results.json). No law changes the seed oracle or
+weakens an existing compiler gate.
 
 | Family | Laws | Proof entry | Obligation |
 | --- | --- | --- | --- |
-| Algebra and reading | 17 | `src/literal-PROOF.bend` | Division/remainder by zero; wide left/right shifts with explicit `n >= 32` evidence; inhabited boundary 32; String append order, length count and a length-mismatch inequality through the accumulator traversals; an escape before `{` stays an escape; surrogate and scalar sequences; decimal maximum/overflow; full-bit signed LEB; NUL; legacy literal capability boundary |
-| Core source machine | 6 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; intrinsic argument state; default selection and scope; one String cell |
+| Algebra and reading | 20 | `src/literal-PROOF.bend` | Division/remainder by zero; wide left/right shifts with explicit `n >= 32` evidence; inhabited boundary 32; String append order, length count and a length-mismatch inequality through the accumulator traversals; an escape before `{` stays an escape; surrogate and scalar sequences; decimal maximum/overflow; full-bit signed LEB; NUL; legacy literal capability boundary; the displayed Char `'\''` and a String of every escape class read back through the reader as their codes; raw/escaped glyphs on both sides of each boundary |
+| Core source machine | 7 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; intrinsic argument state; default selection and scope; one String cell; a record's Char, U32, Nat and String fields display as their literals inside the `Name{a,b}` frame |
 | Pattern matrix | 5 | `src/literal-matrix-PROOF.bend` | Zero/one offset, Nat/String constructor expansion and stable distinct numeric test order |
 
 Every declaration is a `law` with a filled implementation in its complete proof
@@ -16,7 +17,10 @@ entry. The wide-shift proofs use congruence over the guard's Bool decision. The
 boundary law supplies a concrete witness for the antecedent. Default scope is
 proved by cases over both evaluator value shapes. The remaining equations
 reduce definitionally on their stated inputs; they do not assert an induction
-that has not been proved.
+that has not been proved. The display round trips are concrete: `quoted` is a
+section of the reader on the listed codes, not on every code, and raw
+non-ASCII output is outside Knot's ASCII reader. The display law fails on the
+pre-fix evaluator with `InternalFailure eval result-tag`.
 
 The law subjects are the actual reader, primitive evaluator, source transition
 and matrix helpers. The gate runs each complete proof entry with the pinned
@@ -40,7 +44,8 @@ both compiler lanes, then kills signed-compare, trapping-divide, masked-shift,
 merged-surrogates, offset-off-by-one, spaced-offset, invalid-u32-constructor,
 append-reversed, inferred-let-literal, kept-zero-offset,
 internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape,
-unlifted-promoted-column and refined-default-binder mutants. Mutants retain types and must produce the
+unlifted-promoted-column, refined-default-binder, constructor-tag-display,
+quote-blind-escape and raw-delete mutants. Mutants retain types and must produce the
 designated runtime disagreement or classification change; a broken compiler or
 incomplete observation is not a successful mutation test. A deliberately false
 `append_order` (expecting `[97,99,98]`) is rejected by the proof entry.

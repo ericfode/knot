@@ -21,3 +21,6 @@ def L.decimal_overflow(token): {==}
 def L.signed_bits(): {==}
 def L.nul_is_a_character(token): {==}
 def L.legacy_literal_boundary(token): {==}
+def L.char_literal_reads_back(token): {==}
+def L.text_literal_reads_back(token): {==}
+def L.glyph_boundaries(): {==}

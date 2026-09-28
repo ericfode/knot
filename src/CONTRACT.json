@@ -289,7 +289,8 @@
     "frozen_expectations": [
       "tests/compiler-literals/expectations.json",
       "tests/compiler-literals/supplemental.json",
-      "tests/compiler-literals/regressions.json"
+      "tests/compiler-literals/regressions.json",
+      "tests/compiler-literals/results.json"
     ],
     "reader": "ASCII source; decimal U32/Nat; quoted code lists; 1-8 digit Unicode escapes preserve arbitrary U32 codes including surrogates and NUL.",
     "patterns": "Stable first-match primitive matrix; numeric/Char default required; Nat and String constructor expansion; all leaves checked; Nat offsets 0..256, with `+` adjacent to the literal; `0n+t` reads as t, as in the seed. A literal or Nat offset arm on a datatype scrutinee is Invalid pattern-type.",
@@ -362,18 +363,19 @@
       "other_traps": "HostFailure, exit 5"
     },
     "fixed_primitive_work_limit": 1048576,
+    "result_display": "eval prints Evaluated<TAB>type<TAB>word<TAB>display. An installed primitive displays as the seed's literal (300, 3n, 'a', \"a\\n\"), also inside records; other data displays Name{live fields} with ',' separators. The word is a U32 or Char value's bits, otherwise the constructor tag. The inspection budget and 65,536-character cap apply.",
     "abi_deviation": "64 MiB heap/stacks and an explicit instruction machine support frozen unary 65536n and deep non-tail self-recursion without a binary Nat representation or host-stack dependence.",
     "proof_entries": [
       "src/literal-PROOF.bend",
       "src/literal-core-PROOF.bend",
       "src/literal-matrix-PROOF.bend"
     ],
-    "proof_laws": 27,
-    "proof_boundary": "Arithmetic guards, reader cases, core transitions and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
+    "proof_laws": 32,
+    "proof_boundary": "Arithmetic guards, reader cases, literal display round trips, core transitions and pattern expansion; no whole-compiler, all-input intrinsic or memory refinement proof.",
     "unmet": [
       "R3/R7 owned storage and reclamation",
       "broader recursion",
-      "primitive/structured host observations",
+      "primitive/structured Wasm host observations and host arguments",
       "self-hosting"
     ],
     "style": "Offline preflight only; live review and ratings belong to coordinator."

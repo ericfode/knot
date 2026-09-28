@@ -50,3 +50,13 @@ law text_cell:
   for +frames: List<&2,E.Frame>
   {E.step(E.TextBuild{id,char_id,Con{code,tail},value,frames},C.Book{Nil{},Nil{}}) ==
     Done{E.TextBuild{id,char_id,tail,E.Object{id,1,[E.Value{char_id,code},value]},frames}} : Result<S.Error,E.State>}
+
+law primitive_fields_display_as_literals:
+  {E.display(32n,E.One{E.Object{0,0,[E.Value{1,39},E.Value{2,300},E.Object{3,1,[E.Object{3,1,[E.Value{3,0}]}]},
+      E.Object{4,1,[E.Value{1,97},E.Value{4,0}]}]}},
+    [C.Datatype{S.Token{"Mix",S.At{0,3,1,5}},True{},[C.Constructor{S.Token{"Mix",S.At{0,3,2,2}},Nil{}}]},
+     C.Datatype{S.Token{"Char",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"Chr",S.At{0,0,0,0}},Nil{}}]},
+     C.Datatype{S.Token{"U32",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"#U32",S.At{0,0,0,0}},Nil{}}]},
+     C.Datatype{S.Token{"Nat",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"Zero",S.At{0,0,0,0}},Nil{}}]},
+     C.Datatype{S.Token{"String",S.At{0,0,0,0}},True{},[C.Constructor{S.Token{"SNil",S.At{0,0,0,0}},Nil{}}]}]) ==
+    Done{"Mix{'\\'',300,2n,\"a\"}"} : Result<S.Error,String>}

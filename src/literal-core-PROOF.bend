@@ -11,3 +11,4 @@ def L.default_scope(value,body,env,frames):
     case E.Value{typ,tag}: {==}
     case E.Object{typ,tag,fields}: {==}
 def L.text_cell(id,char_id,code,tail,value,frames): {==}
+def L.primitive_fields_display_as_literals(): {==}

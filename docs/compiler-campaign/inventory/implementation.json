@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 65,
-      "declarations": 1114,
-      "unique_declarations": 943,
-      "definitions": 698,
+      "declarations": 1132,
+      "unique_declarations": 957,
+      "definitions": 708,
       "classes": 42
     },
     "frontend_files": {
@@ -57178,7 +57178,7 @@
     },
     {
       "file": "src/eval.bend",
-      "sha256": "e5f7879114f33e54b76a95d7011b45b2571e79e254d979fb94c4a7e9b615e43f",
+      "sha256": "ec23013d576af51d687cff600dacbe725c4674797434c6d8fd8b9ed0708558e3",
       "imports": [
         {
           "module": "Base",
@@ -59459,9 +59459,9 @@
           }
         },
         {
-          "id": "src/eval.bend::result_name:definition",
-          "name": "result_name",
-          "key": "src/eval.result_name",
+          "id": "src/eval.bend::datatype:definition",
+          "name": "datatype",
+          "key": "src/eval.datatype",
           "kind": "definition",
           "lines": [
             241,
@@ -59477,7 +59477,6 @@
             "literals.string",
             "literals.u32",
             "matches",
-            "patterns.nested",
             "patterns.variable",
             "quantities.affine",
             "quantities.arguments",
@@ -59487,41 +59486,37 @@
           ],
           "references": [
             "Con",
+            "Done",
             "List",
             "Nil",
             "Result",
-            "String",
             "U32",
             "U32.is_eq",
             "U32.sub",
             "src/core.Datatype",
-            "src/eval.constructor_name",
+            "src/eval.datatype",
             "src/eval.internal",
-            "src/eval.result_name",
             "src/syntax.Error",
             "src/syntax.choose"
           ],
           "type_references": [
             "List",
             "Result",
-            "String",
             "U32",
             "src/core.Datatype",
             "src/syntax.Error"
           ],
           "captures": [
             {
-              "offset": 14728,
+              "offset": 14703,
               "names": [
-                "ctors",
-                "tag"
+                "head"
               ]
             },
             {
-              "offset": 14761,
+              "offset": 14719,
               "names": [
                 "index",
-                "tag",
                 "tail"
               ]
             }
@@ -59530,17 +59525,52 @@
             "references": [
               "U32.is_eq",
               "U32.sub",
-              "src/eval.constructor_name",
+              "src/eval.datatype",
               "src/eval.internal",
-              "src/eval.result_name",
               "src/syntax.choose"
             ],
             "types": [
               "Con",
+              "Done",
               "Nil",
               "String",
-              "U32",
-              "src/core.Datatype"
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/eval.bend::type_of:definition",
+          "name": "type_of",
+          "key": "src/eval.type_of",
+          "kind": "definition",
+          "lines": [
+            247,
+            250
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "U32",
+            "src/eval.Object",
+            "src/eval.Value"
+          ],
+          "type_references": [
+            "U32",
+            "src/eval.Value"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/eval.Object",
+              "src/eval.Value"
             ],
             "dynamic_calls": []
           }
@@ -59551,8 +59581,8 @@
           "key": "src/eval.Display",
           "kind": "datatype",
           "lines": [
-            247,
-            250
+            252,
+            255
           ],
           "features": [
             "fields",
@@ -59582,13 +59612,194 @@
           }
         },
         {
+          "id": "src/eval.bend::literal:definition",
+          "name": "literal",
+          "key": "src/eval.literal",
+          "kind": "definition",
+          "lines": [
+            258,
+            262
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "Nil",
+            "String",
+            "String.append",
+            "U32.show",
+            "src/primitive-eval.Bits",
+            "src/primitive-eval.Codes",
+            "src/primitive-eval.Count",
+            "src/primitive-eval.Datum",
+            "src/primitive-eval.quoted",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "String",
+            "src/primitive-eval.Datum"
+          ],
+          "captures": [
+            {
+              "offset": 15163,
+              "names": [
+                "word"
+              ]
+            },
+            {
+              "offset": 15188,
+              "names": [
+                "word"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.append",
+              "U32.show",
+              "src/primitive-eval.quoted",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "String",
+              "U32",
+              "src/primitive-eval.Bits",
+              "src/primitive-eval.Codes",
+              "src/primitive-eval.Count"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/eval.bend::shape:definition",
+          "name": "shape",
+          "key": "src/eval.shape",
+          "kind": "definition",
+          "lines": [
+            266,
+            274
+          ],
+          "features": [
+            "bindings",
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.string",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "List",
+            "Maybe",
+            "Nil",
+            "None",
+            "Result",
+            "Some",
+            "String",
+            "String.append",
+            "String.eq",
+            "U32",
+            "src/core.Datatype",
+            "src/eval.Display",
+            "src/eval.Many",
+            "src/eval.Object",
+            "src/eval.Text",
+            "src/eval.Value",
+            "src/eval.constructor_name",
+            "src/eval.datum",
+            "src/eval.literal",
+            "src/literal-types.kind_name",
+            "src/primitive-eval.Datum",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Maybe",
+            "Result",
+            "U32",
+            "src/core.Datatype",
+            "src/eval.Display",
+            "src/eval.Value",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 15704,
+              "names": [
+                "kind"
+              ]
+            },
+            {
+              "offset": 16074,
+              "names": [
+                "fields"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "String.append",
+              "String.eq",
+              "src/eval.constructor_name",
+              "src/eval.datum",
+              "src/eval.literal",
+              "src/literal-types.kind_name",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "Con",
+              "Done",
+              "Nil",
+              "None",
+              "Some",
+              "String",
+              "src/core.Datatype",
+              "src/eval.Many",
+              "src/eval.Object",
+              "src/eval.Text",
+              "src/eval.Value"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/eval.bend::render:definition",
           "name": "render",
           "key": "src/eval.render",
           "kind": "definition",
           "lines": [
-            254,
-            271
+            278,
+            293
           ],
           "features": [
             "bindings",
@@ -59617,6 +59828,7 @@
             "Done",
             "Fail",
             "List",
+            "List.append",
             "List.reverse",
             "Nat",
             "Nat.is_le",
@@ -59624,7 +59836,6 @@
             "Nil",
             "Result",
             "String",
-            "String.append",
             "String.concat",
             "String.length",
             "Succ",
@@ -59632,12 +59843,13 @@
             "src/core.Datatype",
             "src/eval.Display",
             "src/eval.Many",
-            "src/eval.Object",
             "src/eval.One",
             "src/eval.Text",
-            "src/eval.Value",
+            "src/eval.datatype",
             "src/eval.render",
-            "src/eval.result_name",
+            "src/eval.shape",
+            "src/eval.type_of",
+            "src/literal-types.kind",
             "src/syntax.At",
             "src/syntax.Error",
             "src/syntax.Exhausted",
@@ -59655,7 +59867,7 @@
           ],
           "captures": [
             {
-              "offset": 15491,
+              "offset": 16734,
               "names": [
                 "capacity",
                 "n",
@@ -59667,20 +59879,20 @@
               ]
             },
             {
-              "offset": 15721,
+              "offset": 16956,
               "names": [
                 "capacity",
                 "n",
                 "parts",
                 "tail",
-                "types"
+                "types",
+                "value"
               ]
             },
             {
-              "offset": 15927,
+              "offset": 17053,
               "names": [
                 "capacity",
-                "fields",
                 "n",
                 "parts",
                 "tail",
@@ -59690,14 +59902,17 @@
           ],
           "execution": {
             "references": [
+              "List.append",
               "List.reverse",
               "Nat.is_le",
               "Nat.sub",
-              "String.append",
               "String.concat",
               "String.length",
+              "src/eval.datatype",
               "src/eval.render",
-              "src/eval.result_name",
+              "src/eval.shape",
+              "src/eval.type_of",
+              "src/literal-types.kind",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -59711,10 +59926,8 @@
               "U32",
               "Zero",
               "src/eval.Many",
-              "src/eval.Object",
               "src/eval.One",
               "src/eval.Text",
-              "src/eval.Value",
               "src/syntax.At",
               "src/syntax.Exhausted"
             ],
@@ -59727,8 +59940,8 @@
           "key": "src/eval.display",
           "kind": "definition",
           "lines": [
-            273,
-            274
+            295,
+            296
           ],
           "features": [
             "calls",
@@ -59782,8 +59995,8 @@
           "key": "src/eval.identity",
           "kind": "definition",
           "lines": [
-            276,
-            279
+            298,
+            301
           ],
           "features": [
             "calls",
@@ -59831,8 +60044,8 @@
           "key": "src/eval.describe",
           "kind": "definition",
           "lines": [
-            281,
-            284
+            303,
+            306
           ],
           "features": [
             "calls",
@@ -59875,7 +60088,7 @@
           ],
           "captures": [
             {
-              "offset": 16903,
+              "offset": 17995,
               "names": [
                 "value"
               ]
@@ -66232,7 +66445,7 @@
     },
     {
       "file": "src/literal-core-LAWS.bend",
-      "sha256": "c7a7c999ffae0541f5d4d77588925def26bfe98e98996c62cffd6d9119e0154b",
+      "sha256": "aa431abdf8eeae87157e63da892ce3dcefb15910357b06be3ff4a863a97351f4",
       "imports": [
         {
           "module": "Base",
@@ -66276,6 +66489,7 @@
         "imports.local",
         "laws",
         "literals.list",
+        "literals.nat",
         "literals.string",
         "literals.u32",
         "quantities.affine",
@@ -66619,12 +66833,62 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/literal-core-LAWS.bend::primitive_fields_display_as_literals:law",
+          "name": "primitive_fields_display_as_literals",
+          "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
+          "kind": "law",
+          "lines": [
+            54,
+            62
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "String",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/eval.Object",
+            "src/eval.One",
+            "src/eval.Value",
+            "src/eval.display",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/literal-core-PROOF.bend",
-      "sha256": "d18d2ce4dce495a8c8b83160589f48cc19a9cb8a901f06a644089e85b72e9c7b",
+      "sha256": "7d8652d9baa110e11019df5d2164fe6a63dae3c98e4cfbf8e0332412adfe4804",
       "imports": [
         {
           "module": "Base",
@@ -66654,6 +66918,7 @@
         "generics",
         "imports.base",
         "imports.local",
+        "literals.nat",
         "literals.string",
         "literals.u32",
         "matches",
@@ -67003,12 +67268,64 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/literal-core-PROOF.bend::L.primitive_fields_display_as_literals:law_fill",
+          "name": "L.primitive_fields_display_as_literals",
+          "key": "src/literal-core-LAWS.primitive_fields_display_as_literals",
+          "kind": "law_fill",
+          "lines": [
+            14,
+            14
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.nat",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "String",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/eval.Object",
+            "src/eval.One",
+            "src/eval.Value",
+            "src/eval.display",
+            "src/syntax.At",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "String",
+            "src/eval.display",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/literal-LAWS.bend",
-      "sha256": "2681105946a433a85343447089600e898efe79389b68bce1e16ace503ce6e815",
+      "sha256": "f025d9bdad664893236ca744b6ac548a0af0e715c6a434280fb2649b4e82f94b",
       "imports": [
         {
           "module": "Base",
@@ -67780,6 +68097,148 @@
             "src/syntax.Error",
             "src/syntax.Token",
             "src/syntax.at"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::char_literal_reads_back:law",
+          "name": "char_literal_reads_back",
+          "key": "src/literal-LAWS.char_literal_reads_back",
+          "kind": "law",
+          "lines": [
+            76,
+            78
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::text_literal_reads_back:law",
+          "name": "text_literal_reads_back",
+          "key": "src/literal-LAWS.text_literal_reads_back",
+          "kind": "law",
+          "lines": [
+            80,
+            83
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-LAWS.bend::glyph_boundaries:law",
+          "name": "glyph_boundaries",
+          "key": "src/literal-LAWS.glyph_boundaries",
+          "kind": "law",
+          "lines": [
+            85,
+            87
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "literals.u32",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Char.from_u32",
+            "Con",
+            "List",
+            "Nil",
+            "SCon",
+            "SNil",
+            "String",
+            "src/primitive-eval.glyph"
+          ],
+          "type_references": [
+            "List"
           ],
           "captures": [],
           "execution": {
@@ -71611,7 +72070,7 @@
     },
     {
       "file": "src/literal-PROOF.bend",
-      "sha256": "342842465ea894aa5ab8c3ec95e701ebe7cf72f4c3b91099b2808ea57556e508",
+      "sha256": "4fa4ee46addd71b5b5b48a4959920fc2e93eaa3eef1c23085e6ebff49bc3fa38",
       "imports": [
         {
           "module": "Base",
@@ -72419,6 +72878,148 @@
             "src/syntax.Error",
             "src/syntax.Token",
             "src/syntax.at"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.char_literal_reads_back:law_fill",
+          "name": "L.char_literal_reads_back",
+          "key": "src/literal-LAWS.char_literal_reads_back",
+          "kind": "law_fill",
+          "lines": [
+            24,
+            24
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.text_literal_reads_back:law_fill",
+          "name": "L.text_literal_reads_back",
+          "key": "src/literal-LAWS.text_literal_reads_back",
+          "kind": "law_fill",
+          "lines": [
+            25,
+            25
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Done",
+            "Nil",
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Result",
+            "src/literal.Quoted",
+            "src/literal.quoted",
+            "src/primitive-eval.quoted",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/literal-PROOF.bend::L.glyph_boundaries:law_fill",
+          "name": "L.glyph_boundaries",
+          "key": "src/literal-LAWS.glyph_boundaries",
+          "kind": "law_fill",
+          "lines": [
+            26,
+            26
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Char.from_u32",
+            "Con",
+            "List",
+            "Nil",
+            "SCon",
+            "SNil",
+            "String",
+            "src/primitive-eval.glyph"
+          ],
+          "type_references": [
+            "Char.from_u32",
+            "List",
+            "String",
+            "src/primitive-eval.glyph"
           ],
           "captures": [],
           "execution": {
@@ -89894,7 +90495,7 @@
     },
     {
       "file": "src/primitive-eval.bend",
-      "sha256": "9ca441339c3c15aacece90cf41f1e57882ad8187d388f991486aa51ea5568d63",
+      "sha256": "38cbf74f3933332d66529abf752de44b50baa8639e6f80d17efc273aa188be0e",
       "imports": [
         {
           "module": "Base",
@@ -89916,6 +90517,8 @@
         }
       ],
       "features": [
+        "annotations",
+        "bindings",
         "calls",
         "captures",
         "constructors",
@@ -89925,6 +90528,9 @@
         "imports.base",
         "imports.local",
         "lambdas",
+        "literals.char",
+        "literals.list",
+        "literals.nat",
         "literals.string",
         "literals.u32",
         "matches",
@@ -90802,6 +91408,433 @@
               "src/primitive-op.WShr",
               "src/primitive-op.WSub",
               "src/syntax.Internal"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::letter:definition",
+          "name": "letter",
+          "key": "src/primitive-eval.letter",
+          "kind": "definition",
+          "lines": [
+            111,
+            118
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.char",
+            "matches",
+            "patterns.nested",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Char",
+            "Char.from_u32",
+            "Chr",
+            "False",
+            "Maybe",
+            "None",
+            "Some",
+            "True",
+            "U32",
+            "U32.is_eq",
+            "WCon",
+            "WNil",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Char",
+            "Maybe",
+            "U32"
+          ],
+          "captures": [
+            {
+              "offset": 5914,
+              "names": [
+                "code"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Char.from_u32",
+              "U32.is_eq",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Chr",
+              "False",
+              "None",
+              "Some",
+              "True",
+              "U32",
+              "WCon",
+              "WNil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::raw:definition",
+          "name": "raw",
+          "key": "src/primitive-eval.raw",
+          "kind": "definition",
+          "lines": [
+            120,
+            122
+          ],
+          "features": [
+            "calls",
+            "literals.u32",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Bool.or",
+            "U32",
+            "U32.is_ge",
+            "U32.is_gt",
+            "U32.is_le",
+            "U32.is_lt",
+            "U32.is_ne"
+          ],
+          "type_references": [
+            "Bool",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "Bool.or",
+              "U32.is_ge",
+              "U32.is_gt",
+              "U32.is_le",
+              "U32.is_lt",
+              "U32.is_ne"
+            ],
+            "types": [
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::hex:definition",
+          "name": "hex",
+          "key": "src/primitive-eval.hex",
+          "kind": "definition",
+          "lines": [
+            125,
+            131
+          ],
+          "features": [
+            "annotations",
+            "bindings",
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "lambdas",
+            "literals.nat",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool.pick",
+            "Char.from_u32",
+            "Nat",
+            "SCon",
+            "String",
+            "Succ",
+            "U32",
+            "U32.add",
+            "U32.div",
+            "U32.is_lt",
+            "U32.mod",
+            "Zero",
+            "src/primitive-eval.hex",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Nat",
+            "String",
+            "U32"
+          ],
+          "captures": [
+            {
+              "offset": 6489,
+              "names": [
+                "next"
+              ]
+            },
+            {
+              "offset": 6499,
+              "names": [
+                "code",
+                "n",
+                "next"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Bool.pick",
+              "Char.from_u32",
+              "U32.add",
+              "U32.div",
+              "U32.is_lt",
+              "U32.mod",
+              "src/primitive-eval.hex",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "SCon",
+              "Succ",
+              "U32",
+              "Zero"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::spelled:definition",
+          "name": "spelled",
+          "key": "src/primitive-eval.spelled",
+          "kind": "definition",
+          "lines": [
+            133,
+            137
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.char",
+            "literals.list",
+            "literals.nat",
+            "literals.string",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Char",
+            "Char.from_u32",
+            "Chr",
+            "Con",
+            "Maybe",
+            "Nil",
+            "None",
+            "SCon",
+            "SNil",
+            "Some",
+            "String",
+            "String.concat",
+            "U32",
+            "src/primitive-eval.hex",
+            "src/primitive-eval.raw",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Char",
+            "Maybe",
+            "String",
+            "U32"
+          ],
+          "captures": [
+            {
+              "offset": 6703,
+              "names": [
+                "code"
+              ]
+            },
+            {
+              "offset": 6741,
+              "names": [
+                "code"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "Char.from_u32",
+              "String.concat",
+              "src/primitive-eval.hex",
+              "src/primitive-eval.raw",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Chr",
+              "Con",
+              "Nat",
+              "Nil",
+              "None",
+              "SCon",
+              "SNil",
+              "Some",
+              "String",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::glyph:definition",
+          "name": "glyph",
+          "key": "src/primitive-eval.glyph",
+          "kind": "definition",
+          "lines": [
+            139,
+            140
+          ],
+          "features": [
+            "calls",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "String",
+            "U32",
+            "src/primitive-eval.letter",
+            "src/primitive-eval.spelled"
+          ],
+          "type_references": [
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/primitive-eval.letter",
+              "src/primitive-eval.spelled"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::quote:definition",
+          "name": "quote",
+          "key": "src/primitive-eval.quote",
+          "kind": "definition",
+          "lines": [
+            143,
+            146
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Char.from_u32",
+            "Con",
+            "List",
+            "Nil",
+            "SCon",
+            "String",
+            "String.append",
+            "String.reverse",
+            "U32",
+            "src/primitive-eval.glyph",
+            "src/primitive-eval.quote"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Char.from_u32",
+              "String.append",
+              "String.reverse",
+              "src/primitive-eval.glyph",
+              "src/primitive-eval.quote"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "SCon"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/primitive-eval.bend::quoted:definition",
+          "name": "quoted",
+          "key": "src/primitive-eval.quoted",
+          "kind": "definition",
+          "lines": [
+            148,
+            149
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Char.from_u32",
+            "List",
+            "SCon",
+            "SNil",
+            "String",
+            "U32",
+            "src/primitive-eval.quote"
+          ],
+          "type_references": [
+            "List",
+            "String",
+            "U32"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Char.from_u32",
+              "src/primitive-eval.quote"
+            ],
+            "types": [
+              "SCon",
+              "SNil"
             ],
             "dynamic_calls": []
           }

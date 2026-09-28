@@ -96,6 +96,13 @@ def value(r, call):
     require(m and int(m[2]) == call['tag'] and m[3] == call['constructor'] + '{}', (call, r))
 
 
+def displayed(r, call):
+    """A result call prints its frozen display after the Evaluated identity, byte for byte."""
+    require(r['exit'] == 0 and r['stderr'] == '', r)
+    m = re.fullmatch(r'Evaluated\t[0-9]+\t[0-9]+\t(.*)\n', r['stdout'], re.S)
+    require(m and m[1] == call['display'], (call, r))
+
+
 def wasm(path, call):
     return run(['node', HOST, PROFILE, path, call['export'], *call['arguments']])
 
@@ -209,6 +216,44 @@ def fixture(f, lanes, base, pin):
     return item
 
 
+def result_fixture(f, lanes):
+    """Both lanes check and build identical modules and print every frozen display.
+
+    The Node host observes enum results only (CONTRACT literals.wasm.host_boundary),
+    so a primitive or record result makes no Wasm call here.
+    """
+    source = ROOT / f['file']
+    require(digest(source) == f['sha256'], ('fixture changed', f['file']))
+    item = {'name': f['name'], 'file': f['file'], 'expected': {'outcome': 'display'}, 'lanes': {},
+            'reference_calls': len(f['calls']), 'wasm_calls': 'not observable: enum-only host boundary'}
+    binaries = {}
+    for lane, commands in lanes.items():
+        output = BUILD / f'{f["name"]}-{lane}.wasm'
+        output.unlink(missing_ok=True)
+        check = run([*commands['check'], source])
+        compiled = run([*commands['compile'], source, output])
+        require(check['exit'] == 0 and check['stderr'] == '' and check['stdout'].startswith('Checked\n'), check)
+        require(compiled['exit'] == 0 and compiled['stderr'] == '', compiled)
+        binaries[lane] = output.read_bytes()
+        require(binaries[lane].startswith(b'\0asm\x01\0\0\0') and
+                compiled['stdout'] == f'Built\t{len(binaries[lane])}\n', compiled)
+        ev = {'check': check, 'compile': compiled, 'sha256': digest(output), 'displays': []}
+        for call in f['calls']:
+            result = run([*commands['eval'], source, call['export'], 1048576, *call['arguments']])
+            displayed(result, call)
+            ev['displays'].append({'export': call['export'], 'arguments': call['arguments'],
+                                   'expected_display': call['display'], 'result': result})
+        item['lanes'][lane] = ev
+    a, b = item['lanes'].values()
+    for phase in ('check', 'compile'):
+        require(observed(a[phase]) == observed(b[phase]), (f['name'], phase, a[phase], b[phase]))
+    require([observed(r['result']) for r in a['displays']] ==
+            [observed(r['result']) for r in b['displays']], (f['name'], 'display lane mismatch'))
+    require(binaries['native'] == binaries['bun'], (f['name'], 'binary lane mismatch'))
+    item['byte_identical'] = True
+    return item
+
+
 # Fixed before mutant execution. Compiler validation/build failure is never a kill.
 # A `verdict` mutant is killed when it changes a frozen book's classification.
 MUTANTS = [
@@ -277,6 +322,17 @@ MUTANTS = [
     {'name': 'refined-default-binder', 'file': 'literal-matrix.bend',
      'old': 'C.Binding{token,level,q,typ,param,None{}}', 'new': 'C.Binding{token,level,q,typ,param,known}',
      'fixture': 'affine-default-scrutinee', 'verdict': (0, 'Built\t')},
+    # Display mutants: the frozen wrong display is the kill; any other output is not.
+    {'name': 'constructor-tag-display', 'file': 'eval.bend', 'lane': 'eval',
+     'old': 'shape(L.kind(definition),definition,value)', 'new': 'shape(None{},definition,value)',
+     'fixture': 'result-char', 'export': 'sample', 'arguments': [0], 'wrong_display': 'Chr{}'},
+    {'name': 'quote-blind-escape', 'file': 'primitive-eval.bend', 'lane': 'eval',
+     'old': 'S.choose(Maybe<&2,Char>,U32.is_eq(code,mark),',
+     'new': 'S.choose(Maybe<&2,Char>,Bool.or(U32.is_eq(code,34),U32.is_eq(code,39)),',
+     'fixture': 'result-char', 'export': 'sample', 'arguments': [4], 'wrong_display': "'\\\"'"},
+    {'name': 'raw-delete', 'file': 'primitive-eval.bend', 'lane': 'eval',
+     'old': 'Bool.and(U32.is_ge(code,32),U32.is_ne(code,127))', 'new': 'U32.is_ge(code,32)',
+     'fixture': 'result-char', 'export': 'sample', 'arguments': [12], 'wrong_display': "'\x7f'"},
 ]
 
 
@@ -314,11 +370,16 @@ def killed_by_value(m, f, compiler, folder):
 
 def evaluated_wrong(m, f, folder):
     call = next(c for c in f['calls'] if c['export'] == m['export'] and c['arguments'] == m['arguments'])
-    require(m['wrong_tag'] != call['tag'], m)
+    shown = 'wrong_display' in m
+    require(m['wrong_display'] != call['display'] if shown else m['wrong_tag'] != call['tag'], m)
     evaluator = folder / 'eval.js'
-    record = {'expected_tag': call['tag'], 'eval_build': built(folder / 'eval-cli.bend', evaluator)}
+    record = {'expected_display' if shown else 'expected_tag': call['display' if shown else 'tag'],
+              'eval_build': built(folder / 'eval-cli.bend', evaluator)}
     evaluated = run(['bun', evaluator, '--bundle', BUNDLE, ROOT / f['file'],
                      call['export'], 1048576, *call['arguments']])
+    if shown:
+        displayed(evaluated, {**call, 'display': m['wrong_display']})
+        return {**record, 'eval': evaluated}
     wrong = re.fullmatch(r'Evaluated\t[0-9]+\t([0-9]+)\t[^\n]+\n', evaluated['stdout'])
     require(evaluated['exit'] == 0 and evaluated['stderr'] == '' and
             wrong and int(wrong[1]) == m['wrong_tag'], evaluated)
@@ -387,20 +448,23 @@ def main():
     manifest = json.loads((HERE / 'expectations.json').read_text())
     supplemental = json.loads((HERE / 'supplemental.json').read_text())
     regressions = json.loads((HERE / 'regressions.json').read_text())
+    results = json.loads((HERE / 'results.json').read_text())
     inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HOST,
               Path(__file__), HERE / 'expectations.json', HERE / 'regen.py', HERE / 'supplemental.json',
-              HERE / 'supplemental.py', HERE / 'regressions.json', HERE / 'regressions.py', HERE / 'FIXTURES.md',
+              HERE / 'supplemental.py', HERE / 'regressions.json', HERE / 'regressions.py',
+              HERE / 'results.json', HERE / 'results.py', HERE / 'FIXTURES.md',
               ROOT / 'tests/compiler-modules/host-check-expectations.json', *sorted((ROOT / 'src/host').glob('*'))]
     inputs += sorted((HERE / 'fixtures').glob('*.bend')) + sorted((HERE / 'supplemental').glob('*.bend'))
-    inputs += sorted((HERE / 'regressions').glob('*.bend'))
+    inputs += sorted((HERE / 'regressions').glob('*.bend')) + sorted((HERE / 'results').glob('*.bend'))
     record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'seed': manifest['seed'], 'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}
     try:
         record['reference_verification'] = success(['python3', HERE / 'regen.py'])
         record['supplemental_verification'] = success(['python3', HERE / 'supplemental.py'])
         record['regression_verification'] = success(['python3', HERE / 'regressions.py'])
-        require(supplemental['seed_sha256'] == manifest['seed']['sha256'] == regressions['seed_sha256'],
-                'Seed identity differs')
+        record['result_verification'] = success(['python3', HERE / 'results.py'])
+        require(supplemental['seed_sha256'] == manifest['seed']['sha256'] == regressions['seed_sha256'] ==
+                results['seed_sha256'], 'Seed identity differs')
         record['tools'] = {tool: success([tool, '--version'])['stdout'].strip() for tool in ('bun', 'node', 'python3')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
         record['base'] = base_inventory()
@@ -413,8 +477,10 @@ def main():
         record['fixtures'] = []
         for f in [*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']]:
             record['fixtures'].append(fixture(f, lanes, record['base'], manifest['seed']['sha256']['bend2/base.bend']))
+        record['results'] = [result_fixture(f, lanes) for f in results['fixtures']]
         record['boundaries'] = boundaries(lanes)
-        record['mutants'] = mutants([*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']])
+        record['mutants'] = mutants([*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures'],
+                                     *results['fixtures']])
         require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()), 'Inputs changed during literals gate')
         fs = record['fixtures']
         ls = [lane for f in fs for lane in f['lanes'].values()]
@@ -432,10 +498,15 @@ def main():
             'no_artifact_probes': sum('no_artifact' in l for l in ls),
             'trust_audits': sum('audit' in l for l in ls),
             'boundary_probes': len(record['boundaries']), 'proof_entries': len(record['proofs']),
-            'proof_laws': 28, 'semantic_mutants': len(record['mutants']),
+            'proof_laws': 32, 'semantic_mutants': len(record['mutants']),
             'mutant_wasm_observations': sum('wasm' in m for m in record['mutants']),
             'mutant_verdict_observations': sum('verdict' in m for m in record['mutants']),
             'mutant_eval_observations': sum(m.get('eval') is not None for m in record['mutants']),
+            'result_fixtures': len(record['results']),
+            'result_calls': sum(r['reference_calls'] for r in record['results']),
+            'result_display_observations': sum(len(l['displays']) for r in record['results']
+                                               for l in r['lanes'].values()),
+            'result_byte_identity_pairs': sum(r['byte_identical'] for r in record['results']),
         }
         record['status'] = 'passed'
     except Exception as error:

@@ -103,3 +103,47 @@ def apply(op: R.Op, args: List<&2,Datum>) -> Result<S.Error,Datum>:
     case R.SEmpty{} Con{Codes{Nil{}},Nil{}}: boolean(True{})
     case R.SEmpty{} Con{Codes{Con{head,tail}},Nil{}}: boolean(False{})
     case _ _: Fail{S.Internal{"eval","primitive-arguments"}}
+
+# A code prints as the seed spells it inside a literal, which reads back as
+# the code. `letter` inverts the reader's escape table; a quote is escaped only
+# inside its own literal. Controls, DEL, surrogates and codes past U+10FFFF
+# print as \u{hex}; every other code prints raw.
+def letter(+code: U32, +mark: U32) -> Maybe<&2,Char>:
+  match code:
+    case 0: Some{'0'}
+    case 9: Some{'t'}
+    case 10: Some{'n'}
+    case 13: Some{'r'}
+    case 92: Some{'\\'}
+    case _: S.choose(Maybe<&2,Char>,U32.is_eq(code,mark),u => Some{Char.from_u32(code)},u => None{})
+
+def raw(+code: U32) -> Bool:
+  Bool.and(Bool.and(U32.is_ge(code,32),U32.is_ne(code,127)),
+    Bool.and(Bool.or(U32.is_lt(code,55296),U32.is_gt(code,57343)),U32.is_le(code,1114111)))
+
+# Lowercase, without leading zeros; eight digits cover every U32.
+def hex(fuel: Nat, +code: U32, digits: String) -> String:
+  match fuel:
+    case 0n: digits
+    case 1n+n:
+      +low = U32.mod(code,16)
+      +next : String = SCon{Char.from_u32(U32.add(low,Bool.pick(U32,U32.is_lt(low,10),48,87))),digits}
+      S.choose(String,U32.is_lt(code,16),u => next,u => hex(n,U32.div(code,16),next))
+
+def spelled(escape: Maybe<&2,Char>, +code: U32) -> String:
+  match escape:
+    case Some{c}: SCon{'\\',SCon{c,SNil{}}}
+    case None{}:
+      S.choose(String,raw(code),u => SCon{Char.from_u32(code),SNil{}},u => String.concat(["\\u{",hex(8n,code,SNil{}),"}"]))
+
+def glyph(+code: U32, +mark: U32) -> String:
+  spelled(letter(code,mark),code)
+
+# Glyphs are prepended reversed and the text is reversed once: a tail call.
+def quote(codes: List<&2,U32>, +mark: U32, reversed: String) -> String:
+  match codes:
+    case Nil{}: String.reverse(SCon{Char.from_u32(mark),reversed})
+    case Con{code,tail}: quote(tail,mark,String.append(String.reverse(glyph(code,mark)),reversed))
+
+def quoted(codes: List<&2,U32>, +mark: U32) -> String:
+  quote(codes,mark,SCon{Char.from_u32(mark),SNil{}})
