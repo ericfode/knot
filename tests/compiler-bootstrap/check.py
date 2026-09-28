@@ -260,6 +260,10 @@ def generation_problems(p, manifest) -> list[str]:
         c = contracts[sid]
         problems += [f'{sid}: {x}' for x in contract_problems(c, bundles.get(c['entry']), manifest)]
     by_id = {s['id']: s for s in p['stages']}
+    c = contracts[GENERATIONS[0]]
+    parser = [*(['--bundle', c['root']] if c['modules'] else []), PARSER, c['target']['output'], *map(str, c['maxima'])]
+    if by_id['e2e2.compile']['status'] != 'not-run' and by_id['e2e2.compile'].get('args') != parser:
+        problems.append('e2e2.compile: argv is not the one generation argv')
     for sid in GENERATIONS:
         s, c = by_id[sid], contracts[sid]
         if s['status'] != 'not-run' and s.get('args') != c['argv']:
@@ -921,8 +925,8 @@ def reached_chain(progress) -> dict:
 
 def mutants(progress, manifest) -> list[dict]:
     """Scratch copies with substituted recorded fields; the judge must reject
-    each for its named reason. The first nine mutate the real receipt; the
-    rest mutate the reached chain, whose unmutated copy must pass."""
+    each for its named reason. The first ten mutate the real receipt; the
+    rest mutate the reached chain, whose unmutated copies must pass."""
     folder = ROOT / BUILD / 'judge'
     folder.mkdir(parents=True, exist_ok=True)
 
@@ -1001,6 +1005,9 @@ def mutants(progress, manifest) -> list[dict]:
             if not c['modules']:
                 c['modules'], c['argv'] = True, ['--bundle', c['root'], *c['argv']]
             step(p, sid)['args'] = list(c['argv'])
+        parser = step(p, 'e2e2.compile')
+        if parser.get('args', ['--bundle'])[0] != '--bundle':
+            parser['args'] = ['--bundle', LIB, *parser['args']]
         b, base = p['bundles'][COMPILER], manifest['base']
         loaded = [x for x in b['order'] if x.endswith('.bend') and x != base['path']]
         p['audit'] = {'status': 'recorded', 'args': ['--audit-bundle', LIB, b['entry']], 'modules': loaded[drop:],
@@ -1020,6 +1027,8 @@ def mutants(progress, manifest) -> list[dict]:
         ('own-source-invalid', 1, 'reports its own source', lambda p: invalid(p['own_source'][0])),
         ('reached-disagreement', 1, 'reached without exact agreement', disagree),
         ('not-run-after-reached', 1, 'not run although prerequisite', silent_skip),
+        ('parser-argv-bare', 1, 'e2e2.compile: argv is not the one generation argv',
+         lambda p: step(p, 'e2e2.compile').update(args=step(p, 'e2e2.compile')['args'][:2])),
     )
     chain = (
         ('reached-chain', 0, None, lambda p: None),
