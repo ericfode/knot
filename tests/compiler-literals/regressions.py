@@ -125,6 +125,13 @@ PLAN = {
                             'string_doubled', 'string_tail', 'u32_twice'], oracle.AGREE),
     'affine-scrutinee': ('promoted split binder control', 'the scrutinee used twice in a `case x` arm '
                          'after case 0n', [], AFFINE),
+    'promoted-column': ('promoted split binder', 'one `+` row promotes its column and fields in every '
+                        'row: fields and the scrutinee used twice in plain rows over Nat, String, U32 '
+                        'and Char, an inner `1n+ +q`, and an unreachable `+y`',
+                        ['nat_offset', 'nat_successor', 'nat_deep', 'nat_inner', 'nat_unreached',
+                         'string_tail', 'string_whole', 'u32_twice', 'char_same'], oracle.AGREE),
+    'affine-column': ('promoted split binder control', 'case 1n+p with p used twice before a plain '
+                      'case x', [], AFFINE),
 }
 
 

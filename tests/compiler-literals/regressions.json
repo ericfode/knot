@@ -8,6 +8,47 @@
   },
   "fixtures": [
     {
+      "name": "affine-column",
+      "file": "tests/compiler-literals/regressions/affine-column.bend",
+      "sha256": "dec694debdcb56f89cc4d55a8c501d4513b6ad90fca88ff82d6fd3a526cf6adb",
+      "finding": "promoted split binder control",
+      "covers": "case 1n+p with p used twice before a plain case x",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-column.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : p\n- observed : p (consumed more than once)\nLocation: offset\n15 |     case 0n: No{}\n16>|     case 1n+p: answer(Nat.is_eq(Nat.add(p, p), 4n))\n   |             ^\n17 |     case x: No{}\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/affine-column.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : p\n- observed : p (consumed more than once)\nLocation: offset\n15 |     case 0n: No{}\n16>|     case 1n+p: answer(Nat.is_eq(Nat.add(p, p), 4n))\n   |             ^\n17 |     case x: No{}\n"
+      },
+      "knot_expected": {
+        "outcome": "Invalid",
+        "exit": 2,
+        "artifact": false,
+        "diagnostic_prefix": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "Seed-invalid (\"consumed more than once\"): a binder or field without `+` over a split column is affine, so two uses are a reuse."
+      }
+    },
+    {
       "name": "affine-scrutinee",
       "file": "tests/compiler-literals/regressions/affine-scrutinee.bend",
       "sha256": "cd360ff1ba6444a5281ae30c2b6480efca77179d91979e87d4a712dfcf87b5ed",
@@ -2561,6 +2602,997 @@
         "artifact": false,
         "diagnostic_prefix": "Invalid\tcheck\tpattern-type\t",
         "justification": "Seed-invalid (\"a constructor of\" the scrutinee type): a literal or a Nat offset pattern spells a constructor of its primitive type, never of the scrutinee type."
+      }
+    },
+    {
+      "name": "promoted-column",
+      "file": "tests/compiler-literals/regressions/promoted-column.bend",
+      "sha256": "0ed16faeb64123ed2f14d60a1491931e057f5848ef11b078fa90e9fbbd26b984",
+      "finding": "promoted split binder",
+      "covers": "one `+` row promotes its column and fields in every row: fields and the scrutinee used twice in plain rows over Nat, String, U32 and Char, an inner `1n+ +q`, and an unreachable `+y`",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Size": [
+          "Empty",
+          "One",
+          "Two",
+          "Three"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/promoted-column.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/promoted-column.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_offset",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_offset(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_offset",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_offset-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_offset(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_offset-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_offset",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_offset(F.Two{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_offset",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_offset(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_offset-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_successor",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_successor(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_successor",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_successor-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_successor(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_successor-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_successor",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_successor(F.Two{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_successor",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_successor(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_successor-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_deep",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_deep(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_deep",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_deep-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_deep(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_deep-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_deep",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_deep(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_deep",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_deep(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_deep-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_inner",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_inner(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_inner",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_inner-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_inner(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_inner-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_inner",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_inner(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_inner",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_inner(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_inner-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unreached",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unreached(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unreached",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unreached(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unreached",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unreached(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "nat_unreached",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.nat_unreached(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-nat_unreached-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_tail-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_tail-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_tail-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_tail-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_tail-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_tail-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_tail",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_tail-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_tail(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_tail-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_whole",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_whole-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_whole(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_whole-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_whole",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_whole-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_whole(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_whole-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_whole",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_whole-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_whole(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_whole-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "string_whole",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-string_whole-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.string_whole(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-string_whole-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-u32_twice-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-u32_twice-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "u32_twice",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.u32_twice(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-u32_twice-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "char_same",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-char_same-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.char_same(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-char_same-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "char_same",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "One"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-char_same-One.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.char_same(F.One{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-char_same-One.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "char_same",
+          "arguments": [
+            2
+          ],
+          "argument_constructors": [
+            "Two"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-char_same-Two.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.char_same(F.Two{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-char_same-Two.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "char_same",
+          "arguments": [
+            3
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/promoted-column-char_same-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/promoted-column.bend as F\n\ndef main() -> F.Answer:\n  F.char_same(F.Three{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/promoted-column-char_same-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/promoted-column.No{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
       }
     },
     {
