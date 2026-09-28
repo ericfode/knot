@@ -43,7 +43,7 @@ try {
 }
 '''
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
-           HERE / 'bare-families', HERE / 'value-arguments')
+           HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 ENV = {**os.environ, 'BEND_NO_TELEMETRY': '1',
@@ -82,10 +82,20 @@ MUTANTS = (
      'new': 'Fail{S.Invalid{"parse","term-argument",S.at(h)}}',
      'witness': 'value-argument-parameter', 'phase': 'check',
      'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tterm-argument\t'}},
+    {'name': 'empty-family-invalid', 'file': 'generic-catalog.bend',
+     'old': 'C.unsupported(Family,"empty-datatype",token)',
+     'new': 'C.invalid(Family,"empty-datatype",token)',
+     'witness': 'empty-generic-absurd', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tempty-datatype\t'}},
+    {'name': 'empty-datatype-invalid', 'file': 'catalog.bend',
+     'old': 'C.unsupported(C.Datatype,"empty-datatype",name)',
+     'new': 'C.invalid(C.Datatype,"empty-datatype",name)',
+     'witness': 'empty-type', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tcheck\tempty-datatype\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
-                'term-argument-invalid'}
+                'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid'}
 
 
 def require(condition, detail):

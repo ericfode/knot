@@ -36,6 +36,8 @@ digits, underscores or dots. Keywords cannot be identifiers.
 
 - Named, nonempty, monomorphic `type T is Type:` and `type T is Data:`
   declarations containing nullary constructors such as `Off{}` and `On{}`.
+  An empty datatype, which the pinned reference accepts as the domain of
+  absurd elimination, reports Unsupported `empty-datatype`.
 - Top-level functions with explicit parameter and result types. A parameter
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
   parameter must have a `Data` type. Dropping an affine parameter is allowed.

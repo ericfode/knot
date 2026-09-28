@@ -7,6 +7,7 @@ import ./type-erasure.bend as E
 import ./wasm.bend as W
 import ./type-erasure-LAWS.bend as L
 
+def L.empty_family(token,q,kind,params,generic): {==}
 def L.nominal_identity(index): {==}
 def L.application_erases_argument(function,argument): {==}
 def L.parameter_retains_quantity(token,q,typ): {==}

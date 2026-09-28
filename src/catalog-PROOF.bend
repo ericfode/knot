@@ -22,5 +22,8 @@ def L.data_field_preserves_metadata(token,index,data,name,ctors):
     case False{}: {==}
     case True{}: {==}
 
+def L.empty_datatype(name,data):
+  {==}
+
 def L.field_capability_is_not_acceptance(token,head,tail,rest):
   {==}

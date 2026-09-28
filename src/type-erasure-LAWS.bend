@@ -7,6 +7,16 @@ import ./type-erasure.bend as E
 import ./eval.bend as V
 import ./wasm.bend as W
 
+# The generic catalog keeps the monomorphic catalog's empty-datatype boundary.
+law empty_family:
+  for token: S.Token
+  for q: T.Expr
+  for kind: T.Expr
+  for params: List<&2,G.Parameter>
+  for generic: Bool
+  {G.header_kind(G.Typed{T.Sort{q},kind},token,params,Nil{},generic)
+    == Fail{S.Unsupported{"check","empty-datatype",S.at(token)}} : Result<S.Error,G.Family>}
+
 law nominal_identity:
   for +index: U32
   {E.type_id(T.Family{index}) == index : U32}

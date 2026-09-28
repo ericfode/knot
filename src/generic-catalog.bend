@@ -335,11 +335,12 @@ def constructor_headers(nodes: List<&2,S.Node>, +count: U32) -> Result<S.Error,L
         S.bind(List<&2,Constructor>,List<&2,Constructor>,constructor_headers(tail,U32.add(count,1)),rest => Done{Con{Constructor{token,Nil{}},rest}}))
     case _: C.internal(List<&2,Constructor>,"generic-constructor-node")
 
+# A family without constructors is Unsupported, like the monomorphic catalog's.
 def header_kind(typed: Typed, +token: S.Token, +params: List<&2,Parameter>, +ctors: List<&2,S.Node>, generic: Bool) -> Result<S.Error,Family>:
   match typed:
     case Typed{+kind,domain}:
       S.choose(Result<S.Error,Family>,is_sort(kind),u =>
-        S.choose(Result<S.Error,Family>,Nat.is_eq(List.length(&2,S.Node,ctors),0n),u => C.invalid(Family,"empty-datatype",token),u =>
+        S.choose(Result<S.Error,Family>,Nat.is_eq(List.length(&2,S.Node,ctors),0n),u => C.unsupported(Family,"empty-datatype",token),u =>
           S.bind(List<&2,Constructor>,Family,constructor_headers(ctors,0),cs => Done{Family{token,params,kind,cs,generic}})),u => C.unsupported(Family,"dependent-kind",token))
 
 def header_parameters(nodes: List<&2,S.Node>) -> Result<S.Error,Unit>:
