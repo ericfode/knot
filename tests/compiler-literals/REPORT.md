@@ -85,9 +85,10 @@ literal, as the `Succ{...}` control does.
 
 Each successor takes three levels of the 4096-deep bundle checker budget
 (Offset, Succ constructor, its argument). `1364n+n` checks and agrees with
-the seed in the evaluator and Wasm (a 29984-byte module); `1365n+n`,
-`2000n+n` and `100000n+n` are `Exhausted check budget` in both lanes, where
-the `Nat.add` lowering checked them (seed: Yes). No frozen book and no Knot
+the seed in the evaluator and Wasm, native and Bun (a 29984-byte module,
+byte-identical across lanes); `1365n+n`, `2000n+n` and `100000n+n` are
+`Exhausted check budget` for check and eval in both lanes, where the
+`Nat.add` lowering checked them (seed: Yes). No frozen book and no Knot
 source uses an expression offset above 3; pattern offsets stop at 256 in
 both. The expansion also costs code proportional to k, as the seed's does.
 
