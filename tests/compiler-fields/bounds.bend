@@ -9,11 +9,11 @@ import ../../src/diagnostic.bend as D
 def show(result: Result<S.Error,P.Fields>) -> String:
   match result:
     case Fail{e}: D.error(e)
-    case Done{P.Fields{E.Scope{bindings,next,open,live},fields,args}}:
+    case Done{P.Fields{E.Scope{bindings,next,open,live,smaller},fields,args}}:
       String.append("Next ",U32.show(next))
 
 def add(level: U32) -> Result<S.Error,P.Fields>:
-  P.add(E.Scope{Nil{},level,Nil{},True{}},S.Token{"v",S.At{0,0,1,0}},1,0,
+  P.add(E.Scope{Nil{},level,Nil{},True{},Nil{}},S.Token{"v",S.At{0,0,1,0}},1,0,
     scope => binding => term => Done{P.Fields{scope,[binding],[term]}})
 
 def text(result: Result<S.Error,String>) -> String:

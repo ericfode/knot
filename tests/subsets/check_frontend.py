@@ -43,10 +43,114 @@ def successful(argv):
     return result
 
 
+def classified(actual, expected):
+    require(actual['exit'] == expected['exit'], actual)
+    require(actual['stdout'] == '', actual)
+    require(actual['stderr'].strip() == expected['diagnostic'], actual)
+
+
+def classification(record, manifest, lanes, source_paths):
+    # A frozen local cache exercises the seed's hash loader without a hub request.
+    module = manifest['hash_import']
+    require(digest(HERE / module['module']) == module['module_sha256'], module)
+    require(module['manifest'] == module['module_sha256'] + ' module.bend\n', module)
+    require(module['package'] == '0x' + hashlib.sha256(module['manifest'].encode()).hexdigest()[:32], module)
+    library = BUILD / 'classification-lib'
+    package = library / module['package']
+    package.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(HERE / module['module'], package / 'module.bend')
+    (package / 'manifest').write_text(module['manifest'])
+    require({str(p.relative_to(HERE)) for p in (HERE / 'classification').glob('*.bend')} ==
+            {c['file'] for c in manifest['cases']} | {module['module']},
+            'Classification fixture/manifest coverage mismatch')
+    record['fixtures'] = []
+    for case in manifest['cases']:
+        path = HERE / case['file']
+        ref = run(['env', f'BEND_LIB={library}', 'BEND_NO_TELEMETRY=1', SEED, path])
+        expected = case['reference']
+        require(ref['exit'] == expected['exit'], ref)
+        if expected['exit'] == 0:
+            require(ref['stdout'].strip() == expected['value'] and ref['stderr'] == '', ref)
+        else:
+            require(expected['diagnostic_contains'] in ref['stderr'], ref)
+        item = {'file': case['file'], 'reference': ref, 'lanes': {}}
+        for name, command in lanes.items():
+            actual = run([*command, path])
+            classified(actual, case['knot'])
+            item['lanes'][name] = actual
+        record['fixtures'].append(item)
+
+    record['downstream_builds'] = []
+    record['downstream'] = []
+    for phase in ('check', 'eval', 'compile'):
+        for lane in ('bun', 'native'):
+            output = BUILD / ('classification-' + phase + ('.js' if lane == 'bun' else ''))
+            built = successful([SEED, ROOT / 'src' / (phase + '-cli.bend'), '-o', output])
+            record['downstream_builds'].append({'phase': phase, 'lane': lane, 'build': built,
+                                                'sha256': digest(output)})
+            command = ['bun', output] if lane == 'bun' else [output]
+            for case in manifest['cases']:
+                arguments = [HERE / case['file']]
+                artifact = BUILD / 'classification-rejected.wasm'
+                if phase == 'eval':
+                    arguments += ['main', '65536']
+                if phase == 'compile':
+                    artifact.write_bytes(b'prior artifact\n')
+                    arguments.append(artifact)
+                actual = run([*command, *arguments])
+                classified(actual, case['knot'])
+                if phase == 'compile':
+                    require(artifact.read_bytes() == b'prior artifact\n', actual)
+                record['downstream'].append({'phase': phase, 'lane': lane, 'file': case['file'],
+                                              'output_preserved': phase == 'compile', **actual})
+
+    record['mutants'] = []
+    mutations = [
+        ('generic-invalid', 'unsupported(tokens,"generic-datatype")',
+         'invalid(tokens,"generic-datatype")', 'generic'),
+        ('match-invalid', 'unsupported(tokens,"match-scrutinees")',
+         'invalid(tokens,"match-scrutinees")', 'match'),
+        ('template-invalid', 'unsupported(ts,"template-binder")',
+         'invalid(ts,"template-binder")', 'template'),
+        ('destructure-invalid', 'unsupported(ts,"destructuring-binding")',
+         'invalid(ts,"destructuring-binding")', 'destructure'),
+        ('import-invalid', 'unsupported(Con{name,tokens},"import")',
+         'invalid(Con{name,tokens},"import")', 'local-import'),
+        ('malformed-unsupported', 'Fail{S.Invalid{"parse",code,S.here(ts)}}',
+         'Fail{S.Unsupported{"parse",code,S.here(ts)}}', 'template-malformed'),
+        ('expected-unsupported', 'S.Invalid{"parse",String.append("expected-",word),S.at(h)}',
+         'S.Unsupported{"parse",String.append("expected-",word),S.at(h)}', 'generic-malformed'),
+    ]
+    for label, before, after, witness in mutations:
+        directory = BUILD / label
+        directory.mkdir(exist_ok=True)
+        for p in source_paths:
+            shutil.copyfile(p, directory / p.name)
+        target = directory / 'parse.bend'
+        source = target.read_text()
+        require(source.count(before) == 1, f'Classification mutation anchor: {label}')
+        target.write_text(source.replace(before, after))
+        checked = successful([SEED, directory / 'parse-cli.bend', '--check-only'])
+        require(checked['stdout'].strip() == 'All terms check.', checked)
+        output = directory / 'cli.js'
+        built = successful([SEED, directory / 'parse-cli.bend', '-o', output])
+        case = next(c for c in manifest['cases'] if Path(c['file']).stem == witness)
+        actual = run(['bun', output, HERE / case['file']])
+        require(actual['exit'] == (2 if case['knot']['exit'] == 3 else 3), actual)
+        require(actual['stdout'] == '' and
+                actual['stderr'].split('\t', 1)[1] == case['knot']['diagnostic'].split('\t', 1)[1] + '\n', actual)
+        record['mutants'].append({'name': label, 'before': before, 'after': after,
+                                  'typecheck': checked, 'build': built,
+                                  'mutated_sha256': digest(target), 'witness': case['file'],
+                                  'expected': case['knot'], 'actual': actual,
+                                  'outcome': 'semantic-kill'})
+
+
 def main():
     BUILD.mkdir(parents=True, exist_ok=True)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((HERE / 'frontend-cases.json').read_text())
+    classification_manifest = json.loads((HERE / 'classification-cases.json').read_text())
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'scope': 'Parser checkpoint, not checked source-to-Wasm compilation',
               'seed_revision': manifest['seed_revision'], 'status': 'incomplete'}
@@ -55,6 +159,7 @@ def main():
         fixture_paths = sorted((HERE / 's1').glob('*.bend'))
         paths = source_paths + fixture_paths + [HERE / 'frontend-cases.json',
                 HERE / 'lexer-observe.bend', Path(__file__)]
+        paths += sorted((HERE / 'classification').glob('*.bend')) + [HERE / 'classification-cases.json']
         record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in paths}
         record['tools'] = {name: successful([name, '--version'])['stdout'].strip()
                            for name in ('bun', 'node', 'python3')}
@@ -163,11 +268,17 @@ def main():
                 require(actual['stdout'].strip() != 'Parsed\t' + manifest['cases'][0]['tree'], actual)
                 item.update({'killed_by': 'unchanged Flag tree observation', 'result': actual})
             record['mutants'].append(item)
+        record['classification'] = {}
+        classification(record['classification'], classification_manifest, lanes, source_paths)
         require(all(digest(ROOT / p) == h for p, h in record['inputs'].items()),
                 'Inputs changed during the gate')
         record['status'] = 'passed'
         print(f"PASS: {len(record['fixtures'])} reference fixtures, two parser lanes, "
-              f"{len(record['boundaries'])} boundary observations, four laws and four semantic mutants")
+              f"{len(record['boundaries'])} boundary observations, four boundary laws, six classification laws "
+              f"and four semantic mutants; "
+              f"{len(record['classification']['fixtures'])} classification fixtures in two lanes, "
+              f"{len(record['classification']['mutants'])} classification mutants, "
+              f"{len(record['classification']['downstream'])} downstream rejection observations")
     except Exception as error:
         record['status'] = 'failed'
         record['failure'] = str(error)

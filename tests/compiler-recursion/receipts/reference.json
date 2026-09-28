@@ -1,0 +1,314 @@
+{
+  "date": "2026-09-27T23:38:59.819610+00:00",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed",
+  "frozen_inputs": {
+    "tests/compiler-recursion/fixtures/add.bend": "e123fed65190aa4460bbd21ad82de0f6d6cf79cf2c3747e9a3fa34f0a93fbd24",
+    "tests/compiler-recursion/fixtures/after-let.bend": "f68a22f6b50a4ee80f220848bdbf5fba5f0791897cb8bd050f30bd2b898c5f5e",
+    "tests/compiler-recursion/fixtures/computed.bend": "6bdd0c955058cd9e63c6e7c918a71a45237208ef61f8f7ea9fdc4eb095a39eda",
+    "tests/compiler-recursion/fixtures/deep-input.bend": "33ed66442b3db562d311df09b31fa43d1458791775a49edd409a954ee3dcf998",
+    "tests/compiler-recursion/fixtures/deep.bend": "2881538c3abb517f2eb82c052a90bffa88f3bb201648205beea70b2df6ee76df",
+    "tests/compiler-recursion/fixtures/direct.bend": "0fc28a947a1dbd42f57231cd285ddb19c7314683841f825a02b254b2e18fea02",
+    "tests/compiler-recursion/fixtures/even.bend": "3511007717f5bb8f5e12514a7e133984b2665fc3cd54d390d7ecf9febb73ab41",
+    "tests/compiler-recursion/fixtures/first-parameter.bend": "ad32451581720603e9d75c00498f884c5fd73e9ac2aac3efb4d7a41fd3ea6e96",
+    "tests/compiler-recursion/fixtures/length.bend": "2a473085fead71d45116ab59f33b10f059f7d25b00790dd52031a901b675ccc4",
+    "tests/compiler-recursion/fixtures/mirror.bend": "78c9177fba5e9462326025b09781204a4b7b89786fc7b19f692b85858b3d09fb",
+    "tests/compiler-recursion/fixtures/mutual.bend": "db229b6b80a0175af909d13dd4dfb6a7b2172aba03cb0494219c0c282144b1a4",
+    "tests/compiler-recursion/fixtures/ordered-calls.bend": "4bfa2844b2bce35465b1e1c2e47792fbd78cdab01e61dd1786aab753e790b1a3",
+    "tests/compiler-recursion/fixtures/other-parameter.bend": "c5252c14ba1f2dc4ad12c496321fe247d279c19434e9162c6d1d6340976c42e5",
+    "tests/compiler-recursion/fixtures/rebuilt-constructor.bend": "7ba3e48f12a5c309e3ed215ccded13e7e4dd0126c594d0d7ea125bbd0c1edeb5",
+    "tests/compiler-recursion/fixtures/rebuilt-parent.bend": "7f9ee29b2ce6e2f8fc607fc1a6aff54035f54475d312e0da7928ab8de6e3bcaa",
+    "tests/compiler-recursion/fixtures/same-parameter.bend": "3aa67d0b3ccb3d9d545404959036d2eaa0871f63cb17700a638eead095fb2e4c",
+    "tests/compiler-recursion/fixtures/second-descent.bend": "c80d1224a2d05935d2614029f169f74ed6bc00c0b640f1d6a852f4f7d996d6d6",
+    "tests/compiler-recursion/fixtures/shadow-field.bend": "2f016ad017775613d7cfd2d0dab6b68930de1a2f27b42eab938d8ae92008c41c",
+    "tests/compiler-recursion/fixtures/shadow-let.bend": "568cdf41693687228d467d2cd1c9329b697d2f0b3fd6b41f6b816b67b4d3cb2e",
+    "tests/compiler-recursion/cases.json": "774029cc4dcc2b5f3cb907aa43f16fcbf524537a6c9db943375b7fd3350ebb47"
+  },
+  "baseline_implementation": {
+    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
+    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
+    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b"
+  },
+  "observations": [
+    {
+      "case": "even",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/even.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{On{}, Off{}, On{}, Off{}, On{}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "add",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/add.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{0n, 3n, 3n, 5n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "mirror",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/mirror.bend"
+        ],
+        "exit": 0,
+        "stdout": "Fork{Fork{Leaf{Off{}}, Leaf{On{}}}, Leaf{Off{}}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "length",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/length.bend"
+        ],
+        "exit": 0,
+        "stdout": "Results{0n, 3n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "direct",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/direct.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/first-parameter.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "ordered-calls",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/ordered-calls.bend"
+        ],
+        "exit": 0,
+        "stdout": "1n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "shadow-field",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/shadow-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "after-let",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/after-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "deep",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/deep.bend"
+        ],
+        "exit": 0,
+        "stdout": "0n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "deep-input",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/deep-input.bend"
+        ],
+        "exit": 0,
+        "stdout": "64n\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "same-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/same-parameter.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\nLocation: f\n4 | def f(n: Peano) -> Peano:\n5>|   f(n)\n  |   ^\n6 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "other-parameter",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/other-parameter.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\n- p : Peano\nLocation: f\n6 |     case Zero{}: n\n7>|     case Succ{p}: f(p,Zero{})\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "rebuilt-parent",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(n)\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "rebuilt-constructor",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(Succ{p})\n  |                   ^\n8 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "computed",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/computed.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n 8 |     case Zero{}: Zero{}\n 9>|     case Succ{p}: f(g(p))\n   |                   ^\n10 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "shadow-let",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/shadow-let.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\n- p : Peano\nLocation: f\n 8 |       p : Peano = Succ{p}\n 9>|       f(p)\n   |       ^\n10 | def main() -> Peano:\n"
+      }
+    },
+    {
+      "case": "mutual",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/mutual.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : g\nContext:\n- n : Peano\nLocation: f\n4 | def f(n: Peano) -> Peano:\n5>|   g(n)\n  |   ^\n6 | def g(n: Peano) -> Peano:\n"
+      }
+    },
+    {
+      "case": "second-descent",
+      "result": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-recursion/tests/compiler-recursion/fixtures/second-descent.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

@@ -69,15 +69,16 @@ def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
 
 def callable(reference: G.FunctionRef, +token: S.Token, +current: U32, scope: E.Scope) -> Result<S.Error,G.FunctionRef>:
   match reference scope:
-    case G.FunctionRef{+index,+sig} E.Scope{bindings,next,from,live}:
+    case G.FunctionRef{+index,+sig} E.Scope{bindings,next,from,live,smaller}:
       S.choose(Result<S.Error,G.FunctionRef>,bound(bindings,token),u => C.invalid(G.FunctionRef,"not-callable",token),u =>
-        S.choose(Result<S.Error,G.FunctionRef>,U32.is_eq(index,current),u => C.unsupported(G.FunctionRef,"recursive-call",token),u =>
-          S.choose(Result<S.Error,G.FunctionRef>,Bool.and(live,U32.is_gt(index,current)),u => C.invalid(G.FunctionRef,"forward-live-call",token),u => Done{G.FunctionRef{index,sig}})))
+        S.choose(Result<S.Error,G.FunctionRef>,Bool.and(live,U32.is_gt(index,current)),u => C.invalid(G.FunctionRef,"forward-live-call",token),u => Done{G.FunctionRef{index,sig}}))
 
-def call_result(value: C.Checked, token: S.Token, index: U32, +result: U32) -> Result<S.Error,C.Checked>:
-  match value:
-    case C.Checked{C.Sequence{items},ignored,uses}: Done{C.Checked{C.Application{token,index,result,items},result,uses}}
-    case _: C.internal(C.Checked,"arguments-result")
+def call_result(value: C.Checked, +token: S.Token, +index: U32, +result: U32, current: U32, scope: E.Scope) -> Result<S.Error,C.Checked>:
+  match value scope:
+    case C.Checked{C.Sequence{+items},ignored,+uses} E.Scope{bindings,next,open,live,smaller}:
+      S.choose(Result<S.Error,C.Checked>,Bool.and(U32.is_eq(index,current),Bool.not(E.descends(items,smaller))),u =>
+        C.unsupported(C.Checked,"recursive-call",token),u => Done{C.Checked{C.Application{token,index,result,items},result,uses}})
+    case _ _: C.internal(C.Checked,"arguments-result")
 
 def prepend_argument(head: C.Checked, tail: C.Checked, token: S.Token) -> Result<S.Error,C.Checked>:
   match head tail:
@@ -137,11 +138,11 @@ def case_result(branches: C.Checked, inspected: C.Checked, +token: S.Token, leve
     case _ _ None{}: C.internal(C.Checked,"uninferred-match")
     case _ _ _: C.internal(C.Checked,"match-result")
 
-def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>, next: List<&2,C.Parameter> -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>, current: U32, scope: E.Scope, next: List<&2,C.Parameter> -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match reference:
     case G.FunctionRef{+index,C.Signature{name,params,+result}}:
       S.bind(C.Checked,C.Checked,next(params),value =>
-        S.bind(C.Checked,C.Checked,call_result(value,token,index,result),checked => expected(token,wanted,checked)))
+        S.bind(C.Checked,C.Checked,call_result(value,token,index,result,current,scope),checked => expected(token,wanted,checked)))
 
 def binding_body(initial: C.Checked, +token: S.Token, +q: U32, types: List<&2,C.Datatype>, +scope: E.Scope, next: E.Scope -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match initial:
@@ -183,8 +184,8 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Expression{S.Call{+token,+args},+wanted} C.Catalog{types,sigs} _:
       S.bind(G.FunctionRef,C.Checked,G.find_function(sigs,token,0),reference =>
         S.bind(G.FunctionRef,C.Checked,callable(reference,token,current,scope),call =>
-          call_body(call,token,wanted,params => run(n,Arguments{args,params,token},catalog,current,scope))))
-    case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live}:
+          call_body(call,token,wanted,current,scope,params => run(n,Arguments{args,params,token},catalog,current,scope))))
+    case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
         S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
@@ -213,7 +214,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
     case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
       Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
-    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live}:
+    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live,smaller}:
       S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
         variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)))
     case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _ _:

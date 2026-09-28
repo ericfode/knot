@@ -16,3 +16,21 @@ def L.no_character_budget(c,tail):
 
 def L.no_parser_budget(tokens):
   {==}
+
+def L.generic_header(at,rest):
+  {==}
+
+def L.multiple_scrutinees(at,rest):
+  {==}
+
+def L.template_binder(at,rest):
+  {==}
+
+def L.destructuring_binding(at,fields,rest):
+  {==}
+
+def L.local_import(at,rest):
+  {==}
+
+def L.hash_import(at,rest):
+  {==}

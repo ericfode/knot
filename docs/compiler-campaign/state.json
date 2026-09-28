@@ -4,16 +4,123 @@
   "charter": "docs/COMPILER-CAMPAIGN.md",
   "baseline": {
     "main": "f324221",
-    "gates_passing": ["frontend", "checker", "structural", "fields", "wasm", "trust x3", "owned-store", "flat-store", "lint:verify"],
+    "gates_passing": [
+      "frontend",
+      "checker",
+      "structural",
+      "fields",
+      "wasm",
+      "trust x3",
+      "owned-store",
+      "flat-store",
+      "lint:verify"
+    ],
     "accepted_profile": "knot-enum-1 (nullary enums; fields checked/evaluated but not emitted)",
     "stale_receipts": "six compiler receipts record old input hashes for src/driver.bend and src/check-LAWS.bend"
   },
   "landed": [
-    {"id": "bench-1", "commit": "f324221", "summary": "benchmark framework (bench/), 35 tests, native/Bun compile + Wasm runtime metrics"}
+    {
+      "id": "bench-1",
+      "commit": "f324221",
+      "summary": "benchmark framework (bench/), 35 tests, native/Bun compile + Wasm runtime metrics"
+    },
+    {
+      "id": "gates",
+      "commit": "8eae659",
+      "summary": "isolated gate runner (npm run gates / gates:refresh / gates:verify) with receipt drift classification"
+    },
+    {
+      "id": "perch-manifest",
+      "commit": "d630e5c",
+      "summary": "manifest/group style review and compiler baseline: 16 groups, 317 structural blockers (310 truncated contexts, 7 unavailable compositions)"
+    },
+    {
+      "id": "classify",
+      "commit": "5e5b220",
+      "summary": "seed-accepted generic headers, multi-scrutinee matches, templates, destructuring, local/hash imports classified Unsupported at parse"
+    },
+    {
+      "id": "recursion",
+      "commit": "624228e",
+      "summary": "first-parameter structural self-calls in checker and evaluator; 19 fixtures, 16 laws"
+    },
+    {
+      "id": "fields-wasm",
+      "commit": "3868b11",
+      "summary": "knot-fields-wasm-1: fielded constructors as bounded bump-arena cells; enum modules byte-identical; Exhausted classification"
+    },
+    {
+      "id": "census",
+      "commit": "5f2926b",
+      "summary": "offline feature/import inventory with approvals; now a registered gate"
+    },
+    {
+      "id": "gpu-runtime",
+      "commit": "94fd69e",
+      "summary": "knot-device-records-1 R4/R6 record interpreter; Metal-qualified by the coordinator (16 device cases, 9/9 WGSL mutants, 38-case before/after agreement)"
+    },
+    {
+      "id": "r3r7",
+      "commit": "edb67a9",
+      "summary": "data-lifetime decision packet; D10 adopts unique Type + RC Data"
+    }
   ],
-  "in_flight": [],
-  "decisions": ["D1..D9 in docs/COMPILER-CAMPAIGN.md"],
+  "in_flight": [
+    {
+      "id": "nest",
+      "branch": "campaign/nest",
+      "state": "fixtures frozen (1357be3); implementation next"
+    },
+    {
+      "id": "modules",
+      "branch": "campaign/modules",
+      "state": "fixtures frozen (074b549); implementation next"
+    },
+    {
+      "id": "literals",
+      "branch": "campaign/literals",
+      "state": "fixtures frozen (5a7bd5f); waits for modules"
+    },
+    {
+      "id": "generics",
+      "branch": "campaign/generics",
+      "state": "fixtures frozen (66e8337); waits for modules and literals"
+    }
+  ],
+  "decisions": [
+    "D1..D10 in docs/COMPILER-CAMPAIGN.md"
+  ],
   "open_user_decisions": [
     "Whether leading declarations keep the level-3 Anticipation/Payoff bar under rubric v8"
-  ]
+  ],
+  "current": {
+    "gates": 14,
+    "gates_list": [
+      "frontend",
+      "checker",
+      "structural",
+      "fields",
+      "wasm",
+      "wasm-trust",
+      "fields-trust",
+      "structural-trust",
+      "owned-store",
+      "flat-store",
+      "recursion",
+      "fields-wasm",
+      "census",
+      "lint:verify"
+    ],
+    "accepted_profiles": [
+      "knot-enum-1 (default emitter)",
+      "knot-structural-recursion-1 (checker/evaluator)",
+      "knot-fields-wasm-1 (explicit emitter profile)"
+    ],
+    "tiers": {
+      "E2E-1": "partial: fielded and recursive programs run in Wasm with a bump arena; nested patterns and owned reclamation open",
+      "E2E-2": "not started",
+      "E2E-3": "not started",
+      "E2E-4": "device record interpreter qualified on Metal; compiler emission not started"
+    }
+  }
 }
