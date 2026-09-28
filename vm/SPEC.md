@@ -661,7 +661,9 @@ bound. Expected values are never regenerated from a candidate VM.
 
 **Non-scalar output (D20).** The program's own value decides it, never a seed
 lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
-values) yields the Strings a Program passes to `IO.print`, in order. When one holds
+values) yields the Strings a Program passes to output effects, in order. It
+implements `IO.print`, the only effect the goldens use; any other foreign or a
+Halt fails the gate and counts as neither agreement nor D20. When one String holds
 a non-scalar Char, the VM writes the earlier Strings and refuses that one as
 `HostFailure io abi` (§10); the golden is `divergent-by-contract (non-scalar
 output)`, neither seed agreement nor a bound. Otherwise the case is ordinary seed

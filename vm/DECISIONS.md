@@ -2,7 +2,8 @@
 
 D15–D18 were adopted at `454bf30` in `docs/COMPILER-CAMPAIGN.md`. The wording below
 is what [SPEC.md](SPEC.md) implements; it refines the adopted rows without
-changing their direction. This executor does not edit the campaign decision table.
+changing their direction. This executor does not edit the campaign decision table,
+except the D20 row, rewritten at the coordinator's round-4 direction.
 D19, adopted on main after this branch's base (`b926a3c`), replaces the 2,048-page
 (128 MiB) memory bound with a declared 65,536-page (4 GiB) maximum; the spec
 follows it (§5, §10, §11) without a new image header word.
