@@ -389,26 +389,36 @@ to its post-state. No row runs user code or a second host effect.
 | Enter | §7. |
 
 **Completing a gathered node.**
-- Construct: Nat Succ yields `n + 1`, `Exhausted` kind 2 (`NatRange`) above
-  2^32-1, allocating a Big if needed and then dropping the operand; Char Chr yields
-  its code word unchanged; any other constructor allocates an Object that takes the
-  operands. Return the result.
-- Intrinsic: compute the prim (§9), allocating its result, then drop the operands
-  in operand order, except an operand the prim moves into its result (§9), which
-  is neither dropped nor duplicated. Return the result.
+- Construct: Nat Succ first inspects its operand as a Nat, and Char Chr its
+  operand as a U32 (below). An Object or a Closure there (class 0 or 1), like any
+  cell but a Big, halts with `HostFailure image` (`ill-typed`) before the
+  `NatRange` test or any allocation. Then Succ yields `n + 1`, `Exhausted` kind 2
+  (`NatRange`) above 2^32-1, allocating a Big if needed and then dropping the
+  operand, and Chr yields its code word unchanged. Any other constructor inspects
+  nothing and allocates an Object that takes the operands. Return the result.
+- Intrinsic: inspect every operand over its §9 extent, in operand order; then
+  compute the prim (§9), allocating its result, then drop the operands in operand
+  order, except an operand the prim moves into its result (§9), which is neither
+  dropped nor duplicated. Return the result.
 - Foreign: allocate an Action that takes the operands. Return it.
 - Application: `Enter(function, operands)`.
 
 **Inspection.** A `none`-typed value may be instantiated at any type (§3), so the
-validator cannot exclude every ill-typed word. Every word the VM inspects is
-therefore first checked against the type it is read at: a Case scrutinee (§6.1),
-every word a prim reads (String cells included), every word §8 renders, every
-Action operand §10 converts, and the final IO.OP (§8). An algebraic type admits an
-immediate naming one of its nullary constructors, or an Object (class 0) whose
-`type` is that type and whose tag names a constructor with fields; Nat, U32 and
-Char admit an immediate or a Big cell (class 2), and File an immediate. A mismatch
-halts with `HostFailure image` (`ill-typed`) before the step changes any state;
-no read leaves a cell.
+validator cannot exclude every ill-typed word. The VM therefore checks a word
+against the type it is read at, at exactly these points: a Case scrutinee (§6.1);
+the operand of Succ and of Chr (above); every operand of every prim, over the
+extent §9's table gives it, the moved operands included; every word §8 renders;
+every Action operand §10 converts; and the final IO.OP with a Halt's code and
+message (§8). Nothing else is inspected: a Let, a Reference, any other Construct,
+a Foreign, a Closure's captures and an Enter's operands move or share their words
+unread. An algebraic type admits an immediate naming one of its nullary
+constructors, or an Object (class 0) whose `type` is that type and whose tag
+names a constructor with fields; Nat, U32 and Char admit an immediate or a Big
+cell (class 2), and File an immediate. Checking a word is shallow: it reads the
+word and, for a cell, its class and an Object's `type` and tag. The one deeper
+read is a String's **whole** extent: each SCon cell and its Char word, head to
+tail, to SNil. A mismatch halts with `HostFailure image` (`ill-typed`) before the
+step changes any state; no read leaves a cell.
 
 ### 6.1 Case selection
 
@@ -584,7 +594,7 @@ The VM pushes Top(phase 1) and starts with `Enter(main, [])`. Returns to Top:
 |---|---|
 | 1 | set phase 2; `Enter(w, [])` applies the erased `R` |
 | 2 | set phase 3; `Enter(w, [terminal])` |
-| 3 | `w` must be an IO.OP Object (else `HostFailure image`, `ill-typed`): Emit ends with exit 0, Halt calls the host's `die` with its code and message. Drop `w` first. |
+| 3 | `w` must be an IO.OP Object, and a Halt's code a U32 and its message a String over its whole extent (§6); else `HostFailure image` (`ill-typed`). Emit ends with exit 0, its field unread; Halt calls the host's `die` with its code and message. Drop `w` first. |
 
 `IO.pure`, `IO.bind` and `IO.die` are ordinary Base code; `IO.die` returns `Halt`
 directly. Emit is not an effect request. Program images require the Unit, String
@@ -637,6 +647,29 @@ registry is complete.
   `nat-show-codes` observe `append`, `reverse` and `show` through their character
   codes, not through `String.eq`.
 
+**Inspection.** Before a prim computes or allocates anything, §6 inspects each
+operand at the type and over the extent below, in operand order. A scalar's
+extent is its word; a String's is whole: each SCon cell and its Char word, head
+to tail, to SNil. The first ill-typed word halts with `HostFailure image`
+(`ill-typed`). No prim reads less than its extent, whatever its answer or its
+moves: a moved operand is inspected like any other, `append` reads the `b` it
+neither copies nor drops, and `eq` and `is_empty` read both lists to their ends
+although the answer may be known sooner.
+
+| Ids | Prims | Operands, read at | Extent | Moved |
+|---|---|---|---|---|
+| 0–15 | U32 `add` … `shrn` | `U32, U32`; `not` one `U32`; `shln`, `shrn` `U32, Nat` | each word | — |
+| 16 | `U32.to_nat` | `U32` | the word | the operand |
+| 17 | `U32.from_nat` | `Nat` | the word | the operand |
+| 18 | `Char.from_u32` | `U32` | the word | the operand |
+| 19 | `Char.to_u32` | `Char` | the word | the operand |
+| 20, 21 | `Char.is_eq`; `Char.is_space` | `Char, Char`; `Char` | each word | — |
+| 22–31 | Nat `add` … `is_ge` | `Nat, Nat` | each word | — |
+| 32, 33 | `U32.show`; `Nat.show` | `U32`; `Nat` | the word | — |
+| 34 | `String.eq` | `String, String` | `a` whole, then `b` whole | — |
+| 35 | `String.append` | `String, String` | `a` whole, then `b` whole | `b` |
+| 36–38 | `String.reverse`, `length`, `is_empty` | `String` | whole | — |
+
 **Ownership.** Every prim borrows its operands, and §6 drops them after the result
 is allocated, except for these moves, which consume the operand into the result:
 `String.append(a,b)` moves `b`, whose reference becomes the result's tail, and
@@ -679,9 +712,11 @@ Foreign rows in `registry.json`: 0 `IO.args`, 1 `IO.print`, 2 `File.open`,
 3 `File.read`, 4 `File.write_bytes`, 5 `File.close`, 6 `File.read_bytes`,
 7 modules `inspect`. Each row's `output` names the representation `X` of its
 `IO(X)` result; the gate re-derives it from the Base declarations (`inspect`'s
-comes from its pinned declaration). Applying an Action inspects (§6) and converts
-its operands, calls the host, builds the exact pinned Base Result, pair and handle
-view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
+comes from its pinned declaration). Applying an Action inspects (§6) every
+operand before it converts any: a String over its whole extent, so an ill-typed
+cell anywhere in it halts as `ill-typed` even after a non-scalar Char. Then it
+converts its operands, calls the host, builds the exact pinned Base Result, pair
+and handle view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded as
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
@@ -834,7 +869,7 @@ lane and requires:
   controls; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
-- 23 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 41 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -858,19 +893,42 @@ lane and requires:
   stops at `k` at 4 after writing `vm\n`, and stops at the Action's second
   application at 3 having written nothing; a Book and a Program stop at fuel 0 after
   0 calls; and two ill-typed Enters (an erased closure invoked live, a live closure
-  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`;
+  at phase 1) meet fuel 0 after 2 calls and stay `HostFailure image`. Eighteen
+  inspection controls (`inspection_controls`) pass a closure `λ`, or a Pair Object,
+  through the identity to one inspection point each (§6, §9's table); each halts
+  with `HostFailure image` (`ill-typed`). After 2 calls (main, id): a discarded
+  `Chr{id(λ)}`, `Succ{id(Pair{Off{},On{}})}` and `Succ{id(λ)}`. After 3 (main, id,
+  the prim's Base function): each move prim on `id(λ)`; `String.append("x", id(λ))`,
+  whose `b` it moves; `append(SCon{id(λ), SNil{}}, "y")`, and `length` and
+  `reverse` of that String, whose Char words they copy or count;
+  `is_empty(SCon{'a', id(λ)})`; and `eq` past a differing code (`"a"` against
+  `SCon{'b', id(λ)}`) and past either list's end (`""` against `SCon{'a', id(λ)}`,
+  and the reverse). After 4 (main, the erased `R`, `k`'s closure, id): a Program's
+  Halt whose code is `id(λ)`, or whose message is `SCon{'a', id(λ)}`. After 5,
+  having written nothing: `IO.print(SCon{Chr{55296}, id(λ)})`, whose whole String
+  is read before the scalar check, so the cause is not `io abi`;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
 - 64 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 21 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 39 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
-  Five survive every golden and die only by a fuel control: fuel that never runs
-  out, fuel that runs out one entry early, an Action's effect before its debit,
-  the fuel test before the operand check, and a free terminal continuation. A
-  predecessor narrowed to 31 bits dies only by `nat-case-big`;
+  Five survive every golden and die by a fuel control: fuel that never runs
+  out, fuel that runs out one entry early, an Action's effect before its debit
+  (which the print inspection control also counts, after 4 calls), the fuel test
+  before the operand check, and a free terminal continuation. A
+  predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
+  than their inspection extent, and exactly as much on a well-typed word, so they
+  survive every golden and every other control and each dies only by its
+  inspection control: Chr passing its operand through; Succ passing an Object, or
+  a Closure; each move prim returning its operand unread; `append` moving `b`
+  unread, or copying `a`'s Char words unread; `length` and `reverse` leaving the
+  Char words unread; `is_empty` reading one cell; `eq` stopping at the first
+  difference, or reading one list only one cell past the other's length (either
+  way round); a Halt's code, or its message, unread; and a print that checks each
+  Char as it reads it;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

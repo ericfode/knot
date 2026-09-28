@@ -1263,7 +1263,100 @@ def run_controls(plans: dict) -> list:
                                    ['default', ['value', 1, 1]]]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t1\t1\tOn{}\n', 'calls': 1}),
     ]
-    return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}})]
+    return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}}),
+            *inspection_controls(plans)]
+
+
+def inspection_controls(plans: dict) -> list:
+    """Section 6's inspection points and section 9's extents, by literal review. A generic
+    `id` (parameter and result `none`) delivers a closure, or a Pair Object, to a position
+    typed Nat, U32, Char or String; the first read of that word halts with HostFailure image
+    (`ill-typed`), and a `let` discards every other result, so only the read can halt.
+    - Construction is free: a Succ or Chr halts after 2 calls (main, id).
+    - A prim sits in its Base function: 3 calls (main, id, the function). A moved operand is
+      read like any other. A String is read whole, each cell and its Char word: `append`
+      reads the `b` it moves and the Chars of the `a` it copies, `length` and `reverse` each
+      Char, `is_empty` past its first cell, and `eq` past a differing code and past either
+      list's end.
+    - A Program's Halt with a closure for its code or its message's tail halts after 4 (main,
+      the erased R, k's closure, id). IO.print of a surrogate followed by a closure halts
+      after 5 (main, id, IO.print, both applications of the Action), writing nothing: the
+      whole String is read before the scalar check, so the cause is not `io abi`."""
+    nat, u32, char, string, boolean, flag, pair, arrow = range(8)
+    types = [*plans['string-codes']['types'][:4], plans['string-eq']['types'][0], plans['value-on']['types'][0],
+             {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [flag, flag]}]},
+             {'kind': 'arrow', 'domain': flag, 'result': flag}]
+    rep = {'Nat': nat, 'U32': u32, 'Char': char, 'String': string, 'Bool': boolean}
+    prims = {p['id']: p for p in codec.registry()['prims']}
+    ident = {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}
+    fp = plans['foreign-print']       # 1 U32, 2 Char and 3 String here too; 4 IO.OP, 6 k's arrow, 7 IO(Unit)
+    identity = ['closure', arrow, 1, 1, [], ['ref', flag, 0]]
+    unit_identity = ['closure', len(fp['types']), 1, 1, [], ['ref', 0, 0]]
+
+    def via_id(t, value=identity):
+        return ['call', t, 0, [value]]
+
+    def text(*cells, tail=None):
+        """A String: a literal, or SCon cells (a code or a node each) ending in `tail`."""
+        if tail is None:
+            return ['lit', string, 'String', list(cells)]
+        for c in reversed(cells):
+            tail = ['con', string, 1, [c if isinstance(c, list) else ['lit', char, 'Char', c], tail]]
+        return tail
+
+    def base(p):
+        ins = [rep[name] for name in prims[p]['inputs']]
+        out = rep[prims[p]['output']]
+        return {'name': prims[p]['name'], 'parameters': ins, 'result': out, 'slots': len(ins),
+                'body': ['prim', out, p, [['ref', t, i] for i, t in enumerate(ins)]]}
+
+    def applied(p, *operands):
+        return ['call', rep[prims[p]['output']], 1, list(operands)]
+
+    def book(body, result=flag, prim=None):
+        main = {'name': 'main', 'parameters': [], 'result': result, 'slots': int(body[0] == 'let'), 'body': body}
+        return {'entry': 'book', 'representation': rep, 'types': types,
+                'functions': [ident, *([base(prim)] if prim is not None else []), main]}
+
+    def dropped(node, result=flag):
+        return ['let', result, 0, node, ['value', result, 1]]
+
+    def program(body, *functions):
+        return {'entry': 'program', 'representation': fp['representation'],
+                'types': fp['types'] + [{'kind': 'arrow', 'domain': 0, 'result': 0}],
+                'functions': [ident, *functions, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
+
+    def halting(code, message):
+        """main = λ@R. λk. Halt{code, message}"""
+        return program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], ['con', 4, 1, [code, message]]]])
+
+    def ill(calls, **more):
+        return {**ILL_TYPED, **more, 'calls': calls}
+    snil, closure_tail = ['value', string, 0], via_id(string)
+    return [
+        ('inspect-chr', book(dropped(['con', char, 0, [via_id(u32)]])), ill(2)),
+        ('inspect-succ-object',
+         book(dropped(['con', nat, 1, [via_id(nat, ['con', pair, 0, [['value', flag, 0], ['value', flag, 1]]])]])),
+         ill(2)),
+        ('inspect-succ-closure', book(dropped(['con', nat, 1, [via_id(nat)]])), ill(2)),
+        ('inspect-u32-to-nat', book(dropped(applied(16, via_id(u32))), prim=16), ill(3)),
+        ('inspect-u32-from-nat', book(dropped(applied(17, via_id(nat))), prim=17), ill(3)),
+        ('inspect-char-from-u32', book(dropped(applied(18, via_id(u32))), prim=18), ill(3)),
+        ('inspect-char-to-u32', book(dropped(applied(19, via_id(char))), prim=19), ill(3)),
+        ('inspect-append-b', book(dropped(applied(35, text(120), closure_tail), boolean), boolean, 35), ill(3)),
+        ('inspect-append-char', book(dropped(applied(35, text(via_id(char), tail=snil), text(121))), prim=35), ill(3)),
+        ('inspect-length-char', book(applied(37, text(via_id(char), tail=snil)), nat, 37), ill(3)),
+        ('inspect-reverse-char', book(dropped(applied(36, text(via_id(char), tail=snil))), prim=36), ill(3)),
+        ('inspect-is-empty', book(applied(38, text(97, tail=closure_tail)), boolean, 38), ill(3)),
+        ('inspect-eq-code', book(applied(34, text(97), text(98, tail=closure_tail)), boolean, 34), ill(3)),
+        ('inspect-eq-a-ends', book(applied(34, text(), text(97, tail=closure_tail)), boolean, 34), ill(3)),
+        ('inspect-eq-b-ends', book(applied(34, text(97, tail=closure_tail), text()), boolean, 34), ill(3)),
+        ('inspect-halt-code', halting(via_id(u32, unit_identity), text()), ill(4)),
+        ('inspect-halt-message', halting(['lit', u32, 'U32', 1], text(97, tail=via_id(string, unit_identity))), ill(4)),
+        ('inspect-print-after-surrogate',
+         program(['call', 7, 1, [text(0xD800, tail=via_id(string, unit_identity))]], fp['functions'][0]),
+         ill(5, stdout='')),
+    ]
 
 
 def fuel_controls(plans: dict) -> list:
@@ -1697,6 +1790,57 @@ EVALUATOR_MUTANTS = [
                                     '        if kind not in takes or not takes[kind]():')]),
     ('terminal-entry-free', [("        self.debit()\n        if kind == 'closure':",
                               "        if kind != 'terminal':\n            self.debit()\n        if kind == 'closure':")]),
+    # Sections 6, 8, 9 and 10 (inspection_controls): each reads less than its inspection extent
+    # and is exact on well-typed words, so no golden changes; each dies by one inspection control.
+    ('chr-passes-operand', [("        if t == self.rep.get('Char'):\n            return self.word(operands[0])",
+                             "        if t == self.rep.get('Char'):\n            return operands[0]")]),
+    *[(f'succ-admits-{kind}', [('            return self.nat(self.word(operands[0]) + 1)',
+                                f"            if isinstance(operands[0], tuple) and operands[0][0] == '{tag}':\n"
+                                '                return operands[0]\n'
+                                '            return self.nat(self.word(operands[0]) + 1)')])
+      for kind, tag in (('object', 'obj'), ('closure', 'closure'))],
+    *[(f'{name}-unread', [('        if p in (16, 17, 18, 19):\n            return self.word(a[0])',
+                           f'        if p in (16, 17, 18, 19):\n            return a[0] if p == {p} else self.word(a[0])')])
+      for p, name in ((16, 'u32-to-nat'), (17, 'u32-from-nat'), (18, 'char-from-u32'), (19, 'char-to-u32'))],
+    ('append-b-unread', [('            return self.string(s + self.codes(a[1]))',
+                          '            out = a[1]\n            for code in reversed(s):\n'
+                          "                out = ('obj', self.rep['String'], 1, (code, out))\n            return out")]),
+    *[(name, [('        s = self.codes(a[0])\n', f'{body}        s = self.codes(a[0])\n')]) for name, body in (
+        # The cells' Char words are copied or counted unread.
+        ('append-a-chars-unread', "        if p == 35:\n            cells, x = [], a[0]\n"
+                                  "            while (cell := self.view(x, self.rep['String']))[0]:\n"
+                                  '                cells, x = cells + [cell[1][0]], cell[1][1]\n'
+                                  '            return self.string(cells + self.codes(a[1]))\n'),
+        ('length-chars-unread', "        if p == 37:\n            n, x = 0, a[0]\n"
+                                "            while (cell := self.view(x, self.rep['String']))[0]:\n"
+                                '                n, x = n + 1, cell[1][1]\n            return n\n'),
+        ('reverse-chars-unread', "        if p == 36:\n            cells, x = [], a[0]\n"
+                                 "            while (cell := self.view(x, self.rep['String']))[0]:\n"
+                                 '                cells, x = [cell[1][0]] + cells, cell[1][1]\n'
+                                 '            return self.string(cells)\n'),
+        ('is-empty-reads-one-cell', "        if p == 38:\n            return int(self.view(a[0], self.rep['String'])[0] == 0)\n"),
+        ('eq-stops-at-difference', "        if p == 34:\n            x, y = a\n            while True:\n"
+                                   "                (i, f), (j, g) = self.view(x, self.rep['String']), self.view(y, self.rep['String'])\n"
+                                   "                if i != j or i and self.view(f[0], self.rep['Char']) != self.view(g[0], self.rep['Char']):\n"
+                                   '                    return 0\n                if i == 0:\n                    return 1\n'
+                                   '                x, y = f[1], g[1]\n'),
+        # One list is read whole, the other only one cell past the first one's length.
+        *[(name,
+           f'        if p == 34:\n            {a}, {b}, rest = self.codes(a[{i}]), [], a[{1 - i}]\n'
+           f"            while len({b}) <= len({a}) and (cell := self.view(rest, self.rep['String']))[0]:\n"
+           f"                {b}, rest = {b} + [self.view(cell[1][0], self.rep['Char'])[1][0]], cell[1][1]\n"
+           f'            return int({a} == {b})\n')
+          for name, a, b, i in (('eq-reads-b-one-past-a', 'x', 'y', 0), ('eq-reads-a-one-past-b', 'y', 'x', 1))])],
+    ('halt-code-unread', [("{'halt': m.word(fields[0]),", "{'halt': fields[0],")]),
+    ('halt-message-unread', [("'message': m.codes(fields[1])}", "'message': fields[1]}")]),
+    # A print that checks each Char as it reads refuses the surrogate before the ill-typed cell.
+    ('print-checks-while-reading', [('        codes = self.codes(operands[0])\n',
+                                     '        codes, s = [], operands[0]\n'
+                                     "        while not codes or self.policy != 'vm' or scalar(codes[-1]):\n"
+                                     "            tag, fields = self.view(s, self.rep['String'])\n"
+                                     '            if tag == 0:\n                break\n'
+                                     "            codes.append(self.view(fields[0], self.rep['Char'])[1][0])\n"
+                                     '            s = fields[1]\n')]),
 ]
 
 
