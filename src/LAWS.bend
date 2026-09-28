@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./lex.bend as L
 import ./parse.bend as P
+import ./type-parse.bend as T
 
 # These are focused frontend boundary laws, not parser/checker soundness.
 law empty_source:
@@ -90,6 +91,18 @@ law return_type_application:
     == P.run(n,P.TypedResult{S.Token{"main",at},S.Sequence{Nil{}}},
     Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
     : Result<S.Error,P.Parsed>}
+
+# After a type argument only `,` and `>` continue the list. Any other token
+# makes the argument a term (`Tag<On{}>`): Unsupported, never Invalid.
+law term_argument:
+  for +n: Nat
+  for +head: S.Node
+  for +token: S.Token
+  for +rest: List<&2,S.Token>
+  for close: {S.matches(token,">") == False{} : Bool}
+  for comma: {S.matches(token,",") == False{} : Bool}
+  {T.run(1n+n,T.ItemTail{head},Con{token,rest})
+    == Fail{S.Unsupported{"parse","term-argument",S.at(token)}} : Result<S.Error,T.Parsed>}
 
 law local_import:
   for +at: S.At

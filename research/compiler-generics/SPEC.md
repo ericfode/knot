@@ -64,7 +64,10 @@ use closed monomorphic enum signatures only.
 Unsupported: type-returning definitions and aliases, local type or quantity
 bindings, live type or quantity parameters and arguments, value-indexed
 families, constructor-local type parameters, type-variable application, pair
-type sugar, function types and templates. Empty type-argument lists are
-Invalid, like the seed. Laws in `types-LAWS.bend` and `type-erasure-LAWS.bend`
-are proved; corpus agreement is finite differential evidence, not a
-checker-soundness or compiler-correctness theorem.
+type sugar, function types and templates. A type argument followed by
+anything but `,` or `>` is a term, as in the value-indexed application
+`Tag<On{}>`: `Unsupported parse term-argument` (law `term_argument`).
+Empty type-argument lists are Invalid, like the seed. Laws in
+`types-LAWS.bend`, `type-erasure-LAWS.bend` and `LAWS.bend` are proved;
+corpus agreement is finite differential evidence, not a checker-soundness or
+compiler-correctness theorem.

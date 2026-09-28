@@ -36,7 +36,8 @@ body, with erased arguments absent from its live signature.
 | Kind and representation boundaries | 15 | 26 | Seed probes and literal Unsupported boundaries |
 | Local type-value and dispatch boundaries | 9 | 9 | Fixed before their corresponding boundary repairs |
 | [Bare family names](bare-families/README.md) | 7 | 3 | Frozen in `0c4eb10` before the arity repair |
-| Total | 73 | 168 | 44 seed-valid programs and 29 seed rejections |
+| [Value arguments](value-arguments/README.md) | 5 | 5 | Frozen in `58afc10` before the term-argument repair |
+| Total | 78 | 173 | 49 seed-valid programs and 29 seed rejections |
 
 The original `closure-apply` and `template-twice` pins remain. Optional
 `match-erased-type` and `alias-type` remain Unsupported. Five independent literal
@@ -49,6 +50,7 @@ ABI controls inspect erased parameter counts without invoking generic exports.
 | Wrong quantity meet | `meet-not-reusable` | Accepts an invalid reusable quantity |
 | Missing arity check | `type-arity` | Accepts excess type arguments |
 | Bare quantity default | `bare-family-parameter` | Accepts a bare all-quantity family name |
+| Term argument demoted | `value-argument-parameter` | Reports Invalid for a seed-valid `Tag<On{}>` |
 
 Each mutant is seed-typechecked and exercised in native and Bun lanes. A parser
 failure, host/internal error, exhausted budget or invalid Wasm cannot count as

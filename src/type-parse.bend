@@ -74,6 +74,8 @@ def read_quantity(token: S.Token, tokens: List<&2,S.Token>) -> Result<S.Error,Pa
     case Nil{}: invalid(tokens,"quantity-literal")
 
 # Type arguments and Kind expressions share the same bounded tree grammar.
+# An argument not followed by `,` or `>` is a term, as in `Tag<On{}>`:
+# value-indexed families are Unsupported, so no separator error remains.
 def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match fuel mode:
     case 0n _: Fail{S.Exhausted{"parse",S.here(tokens)}}
@@ -122,7 +124,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(h,">"),u => Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
             then(run(n,Items{},t),tail => rest => prepend(head,tail,rest)),u =>
-            invalid(tokens,"type-argument-separator")))
+            Fail{S.Unsupported{"parse","term-argument",S.at(h)}}))
         case _: invalid(tokens,"type-arguments")
 
 def expression(fuel: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
