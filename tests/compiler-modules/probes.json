@@ -1,0 +1,225 @@
+{
+  "schema": "knot-modules-probes-1",
+  "date": "2026-09-28T00:49:32.916468+00:00",
+  "purpose": "Additional reviewed module boundaries. Identity, absolute-import and mixed-root expectations are fixed before their loader repairs. The raw-source-cap expectation comes from prior literal review and SPEC before its guard, and is recorded here after that guard landed. Original fixtures, regressions and bundle remain unchanged. The separate 0xab store is a frozen seed cache; this probe does not assert a content-addressed publication identity.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "implementation_at_freeze": {
+    "src/load.bend": "65bd46783d35af1996db5268e0e336eef8ef056eccc4d80cb465dc492add80cf",
+    "src/imports.bend": "5f794dedd265ae177a78193673dfee694b5a725063385fd438479e5fe0d4091c"
+  },
+  "sources": {
+    "probes/absolute-import.bend": "94fc72b05cd4bdb2b8dcf624cd1191677b29a70125c44e640ed509b67650ebd7",
+    "probes/bundle/lib/0xab/entry.bend": "ad997b441e026ad2e5e39dc9d1a6a20889ac79648fe09e1aa725ee8c96b0cb14",
+    "probes/bundle/lib/0xab/mark.bend": "4471020842b8e26a3750dbc63f4303016134abbecdbbff47d0e89be538176915",
+    "probes/oversize-header.bend": "68b43d9ebe7c5e6a1c27691bb560929649ecfb08a078d6ccec6bd97c9b5a86b6",
+    "probes/path-roots.bend": "03e53e66e8513febdfbfc523fc2f7b59c6a9f14916fb99a853aa3a566f85d906"
+  },
+  "fixtures": [
+    {
+      "name": "local-hash-one-identity",
+      "file": "probes/bundle/lib/0xab/entry.bend",
+      "bundle": "probes/bundle/lib",
+      "modules": [
+        "probes/bundle/lib/0xab/mark.bend"
+      ],
+      "loaded_files": [
+        "probes/bundle/lib/0xab/entry.bend",
+        "probes/bundle/lib/0xab/mark.bend"
+      ],
+      "result": {
+        "type": "0xab/mark.Mark",
+        "constructors": [
+          "0xab/mark.Mark"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "probes/bundle/lib/0xab/entry.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/probes/bundle/lib/0xab/entry.bend"
+          ],
+          "exit": 0,
+          "stdout": "0xab/mark.Mark{}\n",
+          "stderr": "",
+          "constructor": "0xab/mark.Mark",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "name": "raw-source-cap",
+      "file": "probes/oversize-header.bend",
+      "modules": [
+        "Base"
+      ],
+      "result": {
+        "type": "Probe",
+        "constructors": [
+          "ProbeCtor"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "outcome": "Exhausted",
+        "exit": 4,
+        "diagnostic_prefix": "Exhausted\tlex\tbudget\t"
+      },
+      "literal_review": "The raw character budget applies before stripping import headers/comments. The 70174-byte entry exceeds default 65536. Seed reads the whole entry and rejects its unused ill-typed definition; exhaustion makes no source-validity claim. This expectation was stated in prior review and tests/compiler-modules/SPEC.md before the source guard landed; this freeze records that prior contract after the guard implementation.",
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "probes/oversize-header.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/probes/oversize-header.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Probe\n- observed : OtherProbe\nLocation: unused\n 9 | def unused() -> Probe:\n10>|   OtherProbeCtor{}\n   |   ^^^^^^^^^^^^^^^^\n11 | \n"
+        }
+      ]
+    },
+    {
+      "name": "absolute-import-boundary",
+      "file": "probes/absolute-import.bend",
+      "modules": [],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "absolute-import",
+        "diagnostic_prefix": "Unsupported\tload\tabsolute-import\t",
+        "justification": "Pinned seed bend.ts book_load ok regex accepts leading /; absolute imports remain outside Knot module mode and report Unsupported before resolution, regardless of target existence."
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "probes/absolute-import.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/probes/absolute-import.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : no such file: /knot_modules_scope_probe/abs.bend\nLocation:\n1>| import /knot_modules_scope_probe/abs.bend as M\n  |        ^\n2 | \n"
+        }
+      ]
+    },
+    {
+      "name": "mixed-relative-entry",
+      "file": "probes/path-roots.bend",
+      "modules": [],
+      "entry_mode": "relative",
+      "bundle_mode": "absolute",
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "mixed-path-roots",
+        "diagnostic_prefix": "Unsupported\tload\tmixed-path-roots\t",
+        "justification": "The entry is accepted by the seed. Knot explicitly reports mixed relative/absolute source and bundle roots Unsupported until its host realpath capability is available; no source-language rejection is claimed."
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "probes/path-roots.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/probes/path-roots.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    },
+    {
+      "name": "mixed-relative-bundle",
+      "file": "probes/path-roots.bend",
+      "modules": [],
+      "entry_mode": "absolute",
+      "bundle_mode": "relative",
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "knot_expected"
+      },
+      "knot_expected": {
+        "exit": 3,
+        "outcome": "Unsupported",
+        "phase": "load",
+        "code": "mixed-path-roots",
+        "diagnostic_prefix": "Unsupported\tload\tmixed-path-roots\t",
+        "justification": "The entry is accepted by the seed. Knot explicitly reports mixed relative/absolute source and bundle roots Unsupported until its host realpath capability is available; no source-language rejection is claimed."
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "probes/path-roots.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/probes/path-roots.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ]
+    }
+  ]
+}

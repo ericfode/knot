@@ -21,8 +21,9 @@ References to nullary-only checking below describe the retained enum subprofile.
 This is the first executable path toward S1, not the complete S1 stage or a
 self-hosted compiler. The implementation is Bend 2, built by Bend 2.0.29 at
 `574b6d39a235b539eb19a5c532993a0abb3d11ad`. The same revision's kernel interpreter
-is the behavioral reference. The implementation may import its Base; accepted
-programs do not import Base or any other module.
+is the behavioral reference. The implementation imports its Base. The original
+single-file commands retain their import rejection; explicit `--bundle ROOT`
+commands additionally load user modules and a checked reachable Base slice.
 
 ## Accepted language
 
@@ -84,7 +85,7 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
 | `~name:` in a function parameter list | `parse` | `template-binder` |
 | Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
-| `import ./...` or `import 0x.../...` | `parse` | `import` |
+| `import ./...`, `import ../...` or `import 0x.../...` | `parse` | `import` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
@@ -103,6 +104,64 @@ now follows declaration checking. Selecting the default enum emission profile
 still reports `Unsupported check constructor-fields` for a checked fielded book.
 Known invalid declarations or bodies can report Invalid first. Declaration
 inspection itself does not imply execution or a structured host ABI.
+
+## Imported books and pinned Base
+
+The [module contract](../tests/compiler-modules/SPEC.md) adds these explicit
+argument forms; all existing single-file forms and exit codes are retained:
+
+```text
+check-cli --bundle ROOT source
+check-cli --audit-bundle ROOT source
+eval-cli --bundle ROOT source function transition-budget [live-ordinals...]
+compile-cli --bundle ROOT source output [characters parser-depth checker-depth emitter-depth output-bytes]
+```
+
+`ROOT` is an existing frozen package directory, standing in for `BEND_LIB`.
+The loader accepts local `./`, `../` and unprefixed paths, lowercase hash paths,
+and bare `import Base`. It never fetches packages. Named package pointers report
+`Unsupported load named-package`. Missing imported files, cycles and invalid
+alias/declaration combinations report `Invalid`; other file failures remain
+`HostFailure`. Parent-relative imports in the legacy single-file parser now
+report `Unsupported parse import`, correcting the former D4 misclassification.
+
+An explicit machine suspends import headers while dependencies load. Active
+paths detect back edges; completed paths suppress repeated loads in diamonds.
+Paths are normalized lexically before assigning module identity. Local names
+are relative to the entry directory; bundle names are relative to `ROOT`.
+Aliases are file-local. Symlink and case aliases are outside this profile.
+Absolute import spellings report `Unsupported load absolute-import`; mixed
+absolute/relative entry and bundle roots report `Unsupported load mixed-path-roots`.
+
+Qualification produces one ordinary ordered book. Every user declaration is
+checked, including unused imported definitions. Base names become book-global
+at their import event, with independent type/function and constructor namespaces.
+Declaration order governs duplicates and live calls, as in the frozen seed.
+The downstream checker, evaluator and emitters have no module-specific bypass.
+
+Base is the unmodified 67,190-byte `base.bend` from the pinned seed, SHA-256
+`22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b`.
+The loader verifies this digest in Bend before inventorying 466 declarations.
+Only the dependency closure reachable from all user declarations is parsed,
+checked and lowered. A required Base form outside the current language reports
+its specific `Unsupported` reason. `--audit-bundle` first checks the entire
+combined book, then prints the Base pin, loaded paths, checked Base declarations
+and their exact unchecked complement. This is an explicit D2 trust inventory,
+not whole-Base acceptance or proof of unchecked declarations.
+
+Loading is bounded by 1,024 machine transitions and the existing per-file
+character/parser limits. The character cap applies before import-header removal.
+Base reads are capped at 131,072 ASCII bytes and constrained by the exact digest.
+Base dependency traversal has a finite work bound. User and traversal bound
+failures report `Exhausted`; Base identity/encoding failures report
+`HostFailure load base-pin`. The default Wasm emitter remains the enum profile. No additional
+foreign effects, fielded Wasm support or recursive Wasm support are introduced.
+
+The [module gate](../tests/compiler-modules/README.md) compares frozen seed
+expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
+entries check 68 path, scope, loader-transition, Base-selection and digest-boundary
+laws. These are helper/transition laws; whole-graph order independence and
+compiler correctness are not proved.
 
 ## Binding and quantity semantics
 
@@ -253,7 +312,8 @@ Build the Bend entries with `scripts/bend-reference src/compile-cli.bend -o
 .local/compiler-wasm/compile-cli` and the corresponding `eval-cli.bend` entry.
 Native and Bun-generated JS are tested seed hosts. The compiler implementation
 imports pinned Base and the published ByteOutput package
-`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`; accepted source imports nothing.
+`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`. Source imports require the explicit
+module command forms above.
 
 `compile-cli source output [characters parser-depth checker-depth emitter-depth
 output-bytes]` writes actual Wasm bytes with Bend's File.write_bytes. Defaults

@@ -44,6 +44,15 @@ def configured(+source: String, +path: String, result: Result<S.Error,Options>) 
           S.choose(IO(Unit),String.eq(source,path),u => D.fail(S.Host{"arguments","source-is-output"}),u =>
             D.load(source,input,book => compile(book,path,options)))
 
+def module_configured(+root: String, +source: String, +path: String, result: Result<S.Error,Options>) -> IO(Unit):
+  match result:
+    case Fail{e}: D.fail(e)
+    case Done{+options}:
+      match options:
+        case Options{input,depth,bytes}:
+          S.choose(IO(Unit),String.eq(source,path),u => D.fail(S.Host{"arguments","source-is-output"}),u =>
+            D.bundle(source,root,input,book => compile(book,path,options)))
+
 def budgets(chars: String, +parser: String, +checker: String, +depth: String, +bytes: String) -> Result<S.Error,Options>:
   S.bind(Nat,Options,D.natural(U32.read(chars),65536),c =>
     S.bind(Nat,Options,D.natural(U32.read(parser),4096),p =>
@@ -59,5 +68,23 @@ def arguments(args: List<String>) -> IO(Unit):
       configured(source,path,budgets(chars,parser,checker,depth,bytes))
     case _: D.fail(S.Host{"arguments","expected source output [characters parser-depth checker-depth emitter-depth output-bytes]"})
 
+def module_arguments(+root: String, args: List<String>) -> IO(Unit):
+  match args:
+    case Con{source,Con{path,Nil{}}}:
+      module_configured(root,source,path,Done{Options{D.Limits{65536n,512n,512n},4096n,65536}})
+    case Con{source,Con{path,Con{chars,Con{parser,Con{checker,Con{depth,Con{bytes,Nil{}}}}}}}}:
+      module_configured(root,source,path,budgets(chars,parser,checker,depth,bytes))
+    case _: D.fail(S.Host{"arguments","expected --bundle root source output [characters parser-depth checker-depth emitter-depth output-bytes]"})
+
+def select(flag: String, root: String, rest: List<String>, module: Bool) -> IO(Unit):
+  match module:
+    case True{}: module_arguments(root,rest)
+    case False{}: arguments(Con{flag,Con{root,rest}})
+
+def dispatch(args: List<String>) -> IO(Unit):
+  match args:
+    case Con{+flag,Con{root,rest}}: select(flag,root,rest,String.eq(flag,"--bundle"))
+    case _: arguments(args)
+
 def main() -> IO(Unit):
-  IO.bind(List<String>,Unit,IO.args(),arguments)
+  IO.bind(List<String>,Unit,IO.args(),dispatch)

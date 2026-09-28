@@ -1,0 +1,4872 @@
+{
+  "schema": 1,
+  "command": "style-preflight",
+  "mode": "manifest",
+  "manifest": {
+    "path": "docs/compiler-campaign/manifest.json",
+    "sha256": "2f71ea58da955f2fd0567338026f6228a60137f3c048ced282172906ffd8115b",
+    "groups": [
+      "syntax-core",
+      "frontend-lexing",
+      "frontend-parsing",
+      "diagnostics",
+      "catalog",
+      "scope-patterns",
+      "checking",
+      "evaluation",
+      "wasm-codec",
+      "wasm-emission",
+      "driver-pipeline",
+      "frontend-laws",
+      "checker-laws",
+      "runtime-laws",
+      "catalog-laws",
+      "fields-laws",
+      "recursion-laws",
+      "module-import-paths",
+      "module-qualification",
+      "module-base-slice",
+      "module-base-pin",
+      "module-loading"
+    ],
+    "selected_groups": [
+      "module-loading"
+    ],
+    "scope": "selected-group"
+  },
+  "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+  "rubric_version": 8,
+  "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+  "preflight_snapshot": {
+    "requested_paths": 10,
+    "parse_calls": 10
+  },
+  "source_snapshot": [
+    {
+      "path": "docs/compiler-campaign/manifest.json",
+      "source_sha256": "2f71ea58da955f2fd0567338026f6228a60137f3c048ced282172906ffd8115b"
+    },
+    {
+      "path": "perch-style.json",
+      "source_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693"
+    },
+    {
+      "path": "src/base-load.bend",
+      "source_sha256": "b0bdd7ba2778e45dc996d8d1724a2757a93b7c90cc0e2fccfbf77d0e3f84516d"
+    },
+    {
+      "path": "src/base-pin.bend",
+      "source_sha256": "3ec5617dfc03bf5d9f45d6511eaf017a39263eee48df547ed293d76ebc7f8f2b"
+    },
+    {
+      "path": "src/imports.bend",
+      "source_sha256": "bfda95d1ab39b457acc73aec03373714a94c95d3e291373a0437e89e50ecfbd1"
+    },
+    {
+      "path": "src/lex.bend",
+      "source_sha256": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3"
+    },
+    {
+      "path": "src/load-LAWS.bend",
+      "source_sha256": "6406caf05f1bcd4a98b8a668285eefa27e28e216ed7a16589d52c449ab2137c5"
+    },
+    {
+      "path": "src/load-PROOF.bend",
+      "source_sha256": "971fc83d73e4be67ccaea2116103b892e3309ecd54f7740ccc8ed7932cbe3065"
+    },
+    {
+      "path": "src/load.bend",
+      "source_sha256": "bce84fc9b1fc95c19031da456d79a92e038bca444d922ef1f9082dacbfeac440"
+    },
+    {
+      "path": "src/parse.bend",
+      "source_sha256": "e6fd0a207022a08a47791972d5951857defffbbc600bc088febe5ff54119a532"
+    },
+    {
+      "path": "src/qualify.bend",
+      "source_sha256": "6c547a48bb0b6aee02222797231e4cb36cd69953d7f781228a65c899445cfdb2"
+    },
+    {
+      "path": "src/syntax.bend",
+      "source_sha256": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+    },
+    {
+      "path": "tests/compiler-modules/SPEC.md",
+      "source_sha256": "bcd4befc0f3008077a60ff985d35a63a39915a9fa05b455869ac8a161b5bc919"
+    }
+  ],
+  "summary": {
+    "groups": 1,
+    "groups_completed": 1,
+    "units": 287,
+    "files": 10,
+    "truncated_units": 33,
+    "supporting_role_impossible": 33,
+    "compositions_available": 0
+  },
+  "structural_blockers": 34,
+  "provider_requests": 0,
+  "provider_responses": 0,
+  "source_freshness": {
+    "status": "current",
+    "changed_sources": []
+  },
+  "groups": [
+    {
+      "name": "module-loading",
+      "files": [
+        "src/load.bend",
+        "src/load-LAWS.bend",
+        "src/load-PROOF.bend",
+        "src/syntax.bend",
+        "src/lex.bend",
+        "src/parse.bend",
+        "src/imports.bend",
+        "src/qualify.bend",
+        "src/base-load.bend",
+        "src/base-pin.bend"
+      ],
+      "notes": "Bounded import stack, completed-path reuse, cycles, user books and Base input boundary.",
+      "schema": 1,
+      "command": "style-preflight",
+      "mode": "targets",
+      "provider_requests": 0,
+      "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+      "rubric_version": 8,
+      "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+      "task": {
+        "origin": "task-file",
+        "path": "tests/compiler-modules/SPEC.md",
+        "sha256": "bcd4befc0f3008077a60ff985d35a63a39915a9fa05b455869ac8a161b5bc919",
+        "bytes": 4909,
+        "available": true,
+        "reason": null
+      },
+      "summary": {
+        "units": 287,
+        "files": 10,
+        "unranked_files": 0,
+        "empty_files": 0,
+        "truncated_units": 33,
+        "truncated_by_limit": {
+          "caller-or-byte-limit": 10,
+          "context-file-limit": 11,
+          "context-helper-limit": 12
+        },
+        "supporting_role_impossible": 33,
+        "role_gap_units_by_reason": {
+          "context-file-limit": 11,
+          "context-helper-limit": 12,
+          "truncated-context": 33
+        },
+        "max_state_bytes": 44513,
+        "composition_available": false,
+        "composition_reasons": [
+          "composition_byte_limit"
+        ]
+      },
+      "structural_blockers": 34,
+      "inventory": null,
+      "composition": {
+        "required": "always",
+        "available": false,
+        "reasons": [
+          "composition_byte_limit"
+        ],
+        "selected_files": [
+          "src/load.bend",
+          "src/load-LAWS.bend",
+          "src/load-PROOF.bend",
+          "src/syntax.bend",
+          "src/lex.bend",
+          "src/parse.bend",
+          "src/imports.bend",
+          "src/qualify.bend",
+          "src/base-load.bend",
+          "src/base-pin.bend"
+        ],
+        "context_files": 10,
+        "source_bytes": 83512,
+        "byte_limit": 48000,
+        "unresolved_by_reason": {},
+        "unresolved": []
+      },
+      "file_groups": null,
+      "units": [
+        {
+          "target": "src/load.bend::Receipt",
+          "kind": "bend_datatype",
+          "line": 10,
+          "state_bytes": 8847,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::State",
+          "kind": "bend_datatype",
+          "line": 13,
+          "state_bytes": 8232,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Symbols",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Decl",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Input",
+          "kind": "bend_datatype",
+          "line": 16,
+          "state_bytes": 8283,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Step",
+          "kind": "bend_datatype",
+          "line": 20,
+          "state_bytes": 8755,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "I.Import",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Alias",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::Origin",
+          "kind": "bend_datatype",
+          "line": 26,
+          "state_bytes": 7231,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::Action",
+          "kind": "bend_datatype",
+          "line": 30,
+          "state_bytes": 8993,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "S.Error",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Import",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Alias",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.Symbols",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Decl",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::base_path",
+          "kind": "bend_definition",
+          "line": 36,
+          "state_bytes": 8692,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::base_hash",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 8043,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::known",
+          "kind": "bend_definition",
+          "line": 42,
+          "state_bytes": 12156,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::cyclic",
+          "kind": "bend_definition",
+          "line": 46,
+          "state_bytes": 12160,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::enter",
+          "kind": "bend_definition",
+          "line": 50,
+          "state_bytes": 11154,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::has_base",
+          "kind": "bend_definition",
+          "line": 55,
+          "state_bytes": 11083,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::base_names",
+          "kind": "bend_definition",
+          "line": 59,
+          "state_bytes": 11093,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::symbols",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 8539,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::install_base",
+          "kind": "bend_definition",
+          "line": 68,
+          "state_bytes": 20648,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::leave",
+          "kind": "bend_definition",
+          "line": 74,
+          "state_bytes": 13464,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::parsed",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 9178,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::body",
+          "kind": "bend_definition",
+          "line": 85,
+          "state_bytes": 44074,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/qualify.bend",
+              "name": "Names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "is_pattern",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "local",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "done",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "constructor_token",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "then",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "sequence",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "reference",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "annotation",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "introduced",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declared",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "following",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step_at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "identifier_text",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "member",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "contains",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "prefix",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::joined",
+          "kind": "bend_definition",
+          "line": 90,
+          "state_bytes": 9556,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::sliced",
+          "kind": "bend_definition",
+          "line": 95,
+          "state_bytes": 10720,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::finish",
+          "kind": "bend_definition",
+          "line": 101,
+          "state_bytes": 44513,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/lex.bend",
+              "name": "State",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "finish",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "S.at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.here",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.skip_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.matches",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.column",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "then",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.identifier",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "expect",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_call",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "body_end",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "unsupported",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "template_parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "term_failure",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "reply",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "starts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_type",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_function",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "scrutinee",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_match",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::read_result",
+          "kind": "bend_definition",
+          "line": 107,
+          "state_bytes": 8664,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::read_pair",
+          "kind": "bend_definition",
+          "line": 112,
+          "state_bytes": 9478,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::opened",
+          "kind": "bend_definition",
+          "line": 118,
+          "state_bytes": 11580,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::read",
+          "kind": "bend_definition",
+          "line": 128,
+          "state_bytes": 12411,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::received",
+          "kind": "bend_definition",
+          "line": 131,
+          "state_bytes": 8625,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::stopped",
+          "kind": "bend_definition",
+          "line": 136,
+          "state_bytes": 11922,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_header",
+          "kind": "bend_definition",
+          "line": 141,
+          "state_bytes": 11200,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::within",
+          "kind": "bend_definition",
+          "line": 147,
+          "state_bytes": 7834,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_source",
+          "kind": "bend_definition",
+          "line": 153,
+          "state_bytes": 24069,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::checked_base",
+          "kind": "bend_definition",
+          "line": 161,
+          "state_bytes": 21422,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_base",
+          "kind": "bend_definition",
+          "line": 166,
+          "state_bytes": 28283,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-pin.bend",
+              "name": "add",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "rounds",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "schedule",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "constants",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "added",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "ctor",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "alpha",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "digit",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::step_target",
+          "kind": "bend_definition",
+          "line": 171,
+          "state_bytes": 12376,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_state",
+          "kind": "bend_definition",
+          "line": 179,
+          "state_bytes": 10694,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::step_body",
+          "kind": "bend_definition",
+          "line": 184,
+          "state_bytes": 15567,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::plan",
+          "kind": "bend_definition",
+          "line": 192,
+          "state_bytes": 31852,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "normalize",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_parts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "segments",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::delivered",
+          "kind": "bend_definition",
+          "line": 210,
+          "state_bytes": 9155,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::run",
+          "kind": "bend_definition",
+          "line": 215,
+          "state_bytes": 33463,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "read_pair",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "normalize",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory_parts",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::start",
+          "kind": "bend_definition",
+          "line": 227,
+          "state_bytes": 14477,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::load",
+          "kind": "bend_definition",
+          "line": 232,
+          "state_bytes": 32813,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/load.bend",
+              "name": "P.parse",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.qualify",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "parsed",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Target",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Target",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hashed",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "read_pair",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load.bend::tree",
+          "kind": "bend_definition",
+          "line": 237,
+          "state_bytes": 8715,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::lines",
+          "kind": "bend_definition",
+          "line": 241,
+          "state_bytes": 7737,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load.bend::describe",
+          "kind": "bend_definition",
+          "line": 246,
+          "state_bytes": 9942,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::completed_module_is_not_read_again",
+          "kind": "bend_law",
+          "line": 10,
+          "state_bytes": 30426,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load-LAWS.bend::active_module_is_a_cycle",
+          "kind": "bend_law",
+          "line": 23,
+          "state_bytes": 30203,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/imports.bend",
+              "name": "join",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "directory",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "bundle_prefix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "without_suffix",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "relative_path",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "B.Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "joined",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Slice",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "Use",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "references",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "visit",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "dependencies",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-load.bend",
+              "name": "nodes",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "I.Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "Header",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "header_lines",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "split",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "install_base",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "verified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/base-pin.bend",
+              "name": "hash",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "symbols",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.term_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/load.bend",
+              "name": "Q.ctor_names",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "scan",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "run",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "declarations",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "Qualified",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "walk",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/qualify.bend",
+              "name": "result",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "hash_head",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/imports.bend",
+              "name": "first",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/load-LAWS.bend::source_failure_is_preserved",
+          "kind": "bend_law",
+          "line": 35,
+          "state_bytes": 23079,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::raw_input_is_bounded_before_header_removal",
+          "kind": "bend_law",
+          "line": 44,
+          "state_bytes": 23025,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::empty_namespace_is_entry_relative",
+          "kind": "bend_law",
+          "line": 52,
+          "state_bytes": 16309,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::nested_namespace_is_importer_relative",
+          "kind": "bend_law",
+          "line": 56,
+          "state_bytes": 16336,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::parent_paths_have_one_identity",
+          "kind": "bend_law",
+          "line": 60,
+          "state_bytes": 16325,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::hash_paths_use_the_bundle",
+          "kind": "bend_law",
+          "line": 64,
+          "state_bytes": 16294,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::package_relative_paths_keep_identity",
+          "kind": "bend_law",
+          "line": 68,
+          "state_bytes": 16329,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::bundle_identity_is_independent_of_import_spelling",
+          "kind": "bend_law",
+          "line": 72,
+          "state_bytes": 16360,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::absolute_import_is_unsupported",
+          "kind": "bend_law",
+          "line": 76,
+          "state_bytes": 18877,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::mixed_path_roots_are_unsupported",
+          "kind": "bend_law",
+          "line": 80,
+          "state_bytes": 14428,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::package_escape_is_invalid",
+          "kind": "bend_law",
+          "line": 84,
+          "state_bytes": 16314,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::namespace_is_lexically_canonical",
+          "kind": "bend_law",
+          "line": 88,
+          "state_bytes": 11021,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::duplicate_alias_is_invalid",
+          "kind": "bend_law",
+          "line": 91,
+          "state_bytes": 18882,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-LAWS.bend::parent_import_is_recognized_without_loading",
+          "kind": "bend_law",
+          "line": 95,
+          "state_bytes": 31161,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.completed_module_is_not_read_again",
+          "kind": "bend_law_fill",
+          "line": 4,
+          "state_bytes": 6160,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.active_module_is_a_cycle",
+          "kind": "bend_law_fill",
+          "line": 7,
+          "state_bytes": 5981,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.source_failure_is_preserved",
+          "kind": "bend_law_fill",
+          "line": 10,
+          "state_bytes": 5828,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.raw_input_is_bounded_before_header_removal",
+          "kind": "bend_law_fill",
+          "line": 13,
+          "state_bytes": 5863,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.empty_namespace_is_entry_relative",
+          "kind": "bend_law_fill",
+          "line": 16,
+          "state_bytes": 5723,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.nested_namespace_is_importer_relative",
+          "kind": "bend_law_fill",
+          "line": 19,
+          "state_bytes": 5758,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.parent_paths_have_one_identity",
+          "kind": "bend_law_fill",
+          "line": 22,
+          "state_bytes": 5733,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.hash_paths_use_the_bundle",
+          "kind": "bend_law_fill",
+          "line": 25,
+          "state_bytes": 5692,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.package_relative_paths_keep_identity",
+          "kind": "bend_law_fill",
+          "line": 28,
+          "state_bytes": 5749,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.bundle_identity_is_independent_of_import_spelling",
+          "kind": "bend_law_fill",
+          "line": 31,
+          "state_bytes": 5806,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.absolute_import_is_unsupported",
+          "kind": "bend_law_fill",
+          "line": 34,
+          "state_bytes": 5697,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.mixed_path_roots_are_unsupported",
+          "kind": "bend_law_fill",
+          "line": 37,
+          "state_bytes": 5693,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.package_escape_is_invalid",
+          "kind": "bend_law_fill",
+          "line": 40,
+          "state_bytes": 5712,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.namespace_is_lexically_canonical",
+          "kind": "bend_law_fill",
+          "line": 43,
+          "state_bytes": 5646,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.duplicate_alias_is_invalid",
+          "kind": "bend_law_fill",
+          "line": 46,
+          "state_bytes": 5694,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/load-PROOF.bend::L.parent_import_is_recognized_without_loading",
+          "kind": "bend_law_fill",
+          "line": 49,
+          "state_bytes": 5831,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::At",
+          "kind": "bend_datatype",
+          "line": 3,
+          "state_bytes": 7023,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Error",
+          "kind": "bend_datatype",
+          "line": 6,
+          "state_bytes": 7033,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Token",
+          "kind": "bend_datatype",
+          "line": 13,
+          "state_bytes": 7379,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::Node",
+          "kind": "bend_datatype",
+          "line": 18,
+          "state_bytes": 7007,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::text",
+          "kind": "bend_definition",
+          "line": 31,
+          "state_bytes": 7224,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::at",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 7099,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::column",
+          "kind": "bend_definition",
+          "line": 39,
+          "state_bytes": 6948,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::line",
+          "kind": "bend_definition",
+          "line": 43,
+          "state_bytes": 6945,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::here",
+          "kind": "bend_definition",
+          "line": 47,
+          "state_bytes": 7173,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::matches",
+          "kind": "bend_definition",
+          "line": 52,
+          "state_bytes": 7508,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::alpha",
+          "kind": "bend_definition",
+          "line": 55,
+          "state_bytes": 7816,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::digit",
+          "kind": "bend_definition",
+          "line": 60,
+          "state_bytes": 7327,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::word",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 7722,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::reserved",
+          "kind": "bend_definition",
+          "line": 66,
+          "state_bytes": 7831,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::choose",
+          "kind": "bend_definition",
+          "line": 76,
+          "state_bytes": 7293,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::bind",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 7111,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::identifier_text",
+          "kind": "bend_definition",
+          "line": 86,
+          "state_bytes": 8760,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::identifier",
+          "kind": "bend_definition",
+          "line": 91,
+          "state_bytes": 8903,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/syntax.bend::skip_lines",
+          "kind": "bend_definition",
+          "line": 94,
+          "state_bytes": 7890,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::Mode",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 5746,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::State",
+          "kind": "bend_datatype",
+          "line": 9,
+          "state_bytes": 9289,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/lex.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/lex.bend::normal",
+          "kind": "bend_definition",
+          "line": 12,
+          "state_bytes": 11725,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::step_at",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 12222,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::step",
+          "kind": "bend_definition",
+          "line": 49,
+          "state_bytes": 12862,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::finish",
+          "kind": "bend_definition",
+          "line": 55,
+          "state_bytes": 7682,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::scan",
+          "kind": "bend_definition",
+          "line": 67,
+          "state_bytes": 14184,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/lex.bend::tokenize",
+          "kind": "bend_definition",
+          "line": 77,
+          "state_bytes": 14185,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::Parsed",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 7476,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/parse.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/parse.bend::Mode",
+          "kind": "bend_datatype",
+          "line": 7,
+          "state_bytes": 17368,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/parse.bend",
+              "name": "S.Token",
+              "reason": "context-file-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/parse.bend::invalid",
+          "kind": "bend_definition",
+          "line": 27,
+          "state_bytes": 10878,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::unsupported",
+          "kind": "bend_definition",
+          "line": 30,
+          "state_bytes": 10836,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::starts",
+          "kind": "bend_definition",
+          "line": 33,
+          "state_bytes": 19769,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::scrutinee",
+          "kind": "bend_definition",
+          "line": 38,
+          "state_bytes": 20977,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::then",
+          "kind": "bend_definition",
+          "line": 43,
+          "state_bytes": 19180,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::prepend",
+          "kind": "bend_definition",
+          "line": 49,
+          "state_bytes": 19200,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::wrap_call",
+          "kind": "bend_definition",
+          "line": 54,
+          "state_bytes": 19731,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::wrap_type",
+          "kind": "bend_definition",
+          "line": 63,
+          "state_bytes": 19309,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::wrap_function",
+          "kind": "bend_definition",
+          "line": 69,
+          "state_bytes": 19262,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::wrap_match",
+          "kind": "bend_definition",
+          "line": 75,
+          "state_bytes": 19221,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::expect",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 20389,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::parameter_end",
+          "kind": "bend_definition",
+          "line": 88,
+          "state_bytes": 11049,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::parameter_parts",
+          "kind": "bend_definition",
+          "line": 95,
+          "state_bytes": 13379,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::parameter",
+          "kind": "bend_definition",
+          "line": 105,
+          "state_bytes": 24088,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::template_parameter",
+          "kind": "bend_definition",
+          "line": 113,
+          "state_bytes": 22696,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::body_end",
+          "kind": "bend_definition",
+          "line": 120,
+          "state_bytes": 20996,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::reply",
+          "kind": "bend_definition",
+          "line": 127,
+          "state_bytes": 21499,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::term_failure",
+          "kind": "bend_definition",
+          "line": 134,
+          "state_bytes": 20958,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::run",
+          "kind": "bend_definition",
+          "line": 144,
+          "state_bytes": 30603,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/parse.bend::parse",
+          "kind": "bend_definition",
+          "line": 307,
+          "state_bytes": 30604,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::Import",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 8732,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::Header",
+          "kind": "bend_datatype",
+          "line": 7,
+          "state_bytes": 7753,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::Target",
+          "kind": "bend_datatype",
+          "line": 10,
+          "state_bytes": 6654,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::split_chars",
+          "kind": "bend_definition",
+          "line": 14,
+          "state_bytes": 8716,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::split",
+          "kind": "bend_definition",
+          "line": 22,
+          "state_bytes": 9536,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::first",
+          "kind": "bend_definition",
+          "line": 25,
+          "state_bytes": 8470,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::member",
+          "kind": "bend_definition",
+          "line": 30,
+          "state_bytes": 6803,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::word_tail",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 9090,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::plain",
+          "kind": "bend_definition",
+          "line": 42,
+          "state_bytes": 10403,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::lower_hex",
+          "kind": "bend_definition",
+          "line": 47,
+          "state_bytes": 8732,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::hash_head",
+          "kind": "bend_definition",
+          "line": 54,
+          "state_bytes": 9618,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::hashed",
+          "kind": "bend_definition",
+          "line": 57,
+          "state_bytes": 11757,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::names",
+          "kind": "bend_definition",
+          "line": 60,
+          "state_bytes": 10087,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::relative",
+          "kind": "bend_definition",
+          "line": 65,
+          "state_bytes": 10474,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::without_suffix",
+          "kind": "bend_definition",
+          "line": 71,
+          "state_bytes": 7213,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::valid_parts",
+          "kind": "bend_definition",
+          "line": 74,
+          "state_bytes": 11717,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::valid",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 14076,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::parent",
+          "kind": "bend_definition",
+          "line": 85,
+          "state_bytes": 8738,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::segments",
+          "kind": "bend_definition",
+          "line": 91,
+          "state_bytes": 9451,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::normalize",
+          "kind": "bend_definition",
+          "line": 99,
+          "state_bytes": 10950,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::directory_parts",
+          "kind": "bend_definition",
+          "line": 103,
+          "state_bytes": 6432,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::directory",
+          "kind": "bend_definition",
+          "line": 108,
+          "state_bytes": 10335,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::beside",
+          "kind": "bend_definition",
+          "line": 111,
+          "state_bytes": 11237,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::join",
+          "kind": "bend_definition",
+          "line": 114,
+          "state_bytes": 11738,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::parents",
+          "kind": "bend_definition",
+          "line": 117,
+          "state_bytes": 6470,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::relative_parts",
+          "kind": "bend_definition",
+          "line": 122,
+          "state_bytes": 8705,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::relative_path",
+          "kind": "bend_definition",
+          "line": 128,
+          "state_bytes": 11871,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::bundle_prefix",
+          "kind": "bend_definition",
+          "line": 131,
+          "state_bytes": 8861,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::resolve",
+          "kind": "bend_definition",
+          "line": 134,
+          "state_bytes": 15729,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::words",
+          "kind": "bend_definition",
+          "line": 144,
+          "state_bytes": 9867,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::import_words",
+          "kind": "bend_definition",
+          "line": 153,
+          "state_bytes": 15719,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::alias",
+          "kind": "bend_definition",
+          "line": 168,
+          "state_bytes": 7645,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::push_import",
+          "kind": "bend_definition",
+          "line": 172,
+          "state_bytes": 10381,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::join_lines",
+          "kind": "bend_definition",
+          "line": 179,
+          "state_bytes": 6404,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::body_lines",
+          "kind": "bend_definition",
+          "line": 184,
+          "state_bytes": 7629,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::header_lines",
+          "kind": "bend_definition",
+          "line": 189,
+          "state_bytes": 18316,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/imports.bend::header",
+          "kind": "bend_definition",
+          "line": 206,
+          "state_bytes": 18317,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::Alias",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 7951,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::Symbols",
+          "kind": "bend_datatype",
+          "line": 6,
+          "state_bytes": 7107,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::Parts",
+          "kind": "bend_datatype",
+          "line": 8,
+          "state_bytes": 7315,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::Names",
+          "kind": "bend_datatype",
+          "line": 10,
+          "state_bytes": 7661,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::Qualified",
+          "kind": "bend_datatype",
+          "line": 12,
+          "state_bytes": 7531,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/qualify.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/qualify.bend::Position",
+          "kind": "bend_datatype",
+          "line": 14,
+          "state_bytes": 10409,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::contains",
+          "kind": "bend_definition",
+          "line": 19,
+          "state_bytes": 7873,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::part",
+          "kind": "bend_definition",
+          "line": 24,
+          "state_bytes": 6827,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::split",
+          "kind": "bend_definition",
+          "line": 28,
+          "state_bytes": 9705,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::alias",
+          "kind": "bend_definition",
+          "line": 34,
+          "state_bytes": 8900,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::member",
+          "kind": "bend_definition",
+          "line": 40,
+          "state_bytes": 9810,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::prefix",
+          "kind": "bend_definition",
+          "line": 45,
+          "state_bytes": 9862,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::expand",
+          "kind": "bend_definition",
+          "line": 48,
+          "state_bytes": 9351,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::retoken",
+          "kind": "bend_definition",
+          "line": 53,
+          "state_bytes": 7553,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::invalid",
+          "kind": "bend_definition",
+          "line": 57,
+          "state_bytes": 9201,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::known",
+          "kind": "bend_definition",
+          "line": 60,
+          "state_bytes": 7756,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::fallback",
+          "kind": "bend_definition",
+          "line": 64,
+          "state_bytes": 7915,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::resolved",
+          "kind": "bend_definition",
+          "line": 67,
+          "state_bytes": 11096,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::reference",
+          "kind": "bend_definition",
+          "line": 72,
+          "state_bytes": 17492,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::local",
+          "kind": "bend_definition",
+          "line": 78,
+          "state_bytes": 16861,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::fresh",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 13306,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::constructors",
+          "kind": "bend_definition",
+          "line": 87,
+          "state_bytes": 13780,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::declarations",
+          "kind": "bend_definition",
+          "line": 95,
+          "state_bytes": 14617,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::constructors_in",
+          "kind": "bend_definition",
+          "line": 108,
+          "state_bytes": 9883,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::names_in",
+          "kind": "bend_definition",
+          "line": 114,
+          "state_bytes": 9379,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::declaration_names",
+          "kind": "bend_definition",
+          "line": 122,
+          "state_bytes": 9380,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::terms_in",
+          "kind": "bend_definition",
+          "line": 127,
+          "state_bytes": 8898,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::ctors_in",
+          "kind": "bend_definition",
+          "line": 134,
+          "state_bytes": 9247,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::term_names",
+          "kind": "bend_definition",
+          "line": 140,
+          "state_bytes": 8899,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::ctor_names",
+          "kind": "bend_definition",
+          "line": 145,
+          "state_bytes": 9248,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::introduced",
+          "kind": "bend_definition",
+          "line": 150,
+          "state_bytes": 12591,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::following",
+          "kind": "bend_definition",
+          "line": 156,
+          "state_bytes": 13363,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::is_pattern",
+          "kind": "bend_definition",
+          "line": 163,
+          "state_bytes": 9695,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::declared",
+          "kind": "bend_definition",
+          "line": 168,
+          "state_bytes": 12815,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::constructor_token",
+          "kind": "bend_definition",
+          "line": 172,
+          "state_bytes": 17117,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::annotation",
+          "kind": "bend_definition",
+          "line": 177,
+          "state_bytes": 17223,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::done",
+          "kind": "bend_definition",
+          "line": 182,
+          "state_bytes": 11615,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::then",
+          "kind": "bend_definition",
+          "line": 185,
+          "state_bytes": 11779,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::sequence",
+          "kind": "bend_definition",
+          "line": 190,
+          "state_bytes": 12065,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::prepend",
+          "kind": "bend_definition",
+          "line": 195,
+          "state_bytes": 12146,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::walk",
+          "kind": "bend_definition",
+          "line": 200,
+          "state_bytes": 21554,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::result",
+          "kind": "bend_definition",
+          "line": 244,
+          "state_bytes": 9179,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/qualify.bend::qualify",
+          "kind": "bend_definition",
+          "line": 250,
+          "state_bytes": 23843,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::Decl",
+          "kind": "bend_datatype",
+          "line": 6,
+          "state_bytes": 8138,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::Piece",
+          "kind": "bend_datatype",
+          "line": 9,
+          "state_bytes": 7533,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::Selected",
+          "kind": "bend_datatype",
+          "line": 12,
+          "state_bytes": 8265,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-load.bend::Use",
+          "kind": "bend_datatype",
+          "line": 15,
+          "state_bytes": 7956,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::Slice",
+          "kind": "bend_datatype",
+          "line": 18,
+          "state_bytes": 8438,
+          "truncated": true,
+          "limit_reasons": [
+            "context-file-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/base-load.bend",
+              "name": "S.Node",
+              "reason": "context-file-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-load.bend::member",
+          "kind": "bend_definition",
+          "line": 21,
+          "state_bytes": 8260,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::word",
+          "kind": "bend_definition",
+          "line": 26,
+          "state_bytes": 10183,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::header",
+          "kind": "bend_definition",
+          "line": 32,
+          "state_bytes": 10809,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::ctor",
+          "kind": "bend_definition",
+          "line": 38,
+          "state_bytes": 11741,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::added",
+          "kind": "bend_definition",
+          "line": 45,
+          "state_bytes": 6963,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::line_in",
+          "kind": "bend_definition",
+          "line": 50,
+          "state_bytes": 12372,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::finish_piece",
+          "kind": "bend_definition",
+          "line": 56,
+          "state_bytes": 7212,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::finish",
+          "kind": "bend_definition",
+          "line": 61,
+          "state_bytes": 8471,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::extend",
+          "kind": "bend_definition",
+          "line": 66,
+          "state_bytes": 12872,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::index_line",
+          "kind": "bend_definition",
+          "line": 71,
+          "state_bytes": 14379,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::index",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 15215,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::merge",
+          "kind": "bend_definition",
+          "line": 90,
+          "state_bytes": 9248,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::coalesce",
+          "kind": "bend_definition",
+          "line": 100,
+          "state_bytes": 9517,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::lines",
+          "kind": "bend_definition",
+          "line": 105,
+          "state_bytes": 9069,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::inventory",
+          "kind": "bend_definition",
+          "line": 113,
+          "state_bytes": 16620,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::names",
+          "kind": "bend_definition",
+          "line": 116,
+          "state_bytes": 6736,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::term_names",
+          "kind": "bend_definition",
+          "line": 121,
+          "state_bytes": 6647,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::ctor_names",
+          "kind": "bend_definition",
+          "line": 126,
+          "state_bytes": 6861,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::lookup",
+          "kind": "bend_definition",
+          "line": 132,
+          "state_bytes": 9427,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::lookup_use",
+          "kind": "bend_definition",
+          "line": 140,
+          "state_bytes": 9821,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::has",
+          "kind": "bend_definition",
+          "line": 149,
+          "state_bytes": 7663,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::identity",
+          "kind": "bend_definition",
+          "line": 155,
+          "state_bytes": 7248,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::dependencies",
+          "kind": "bend_definition",
+          "line": 160,
+          "state_bytes": 11614,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::parameters",
+          "kind": "bend_definition",
+          "line": 169,
+          "state_bytes": 11033,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::fields",
+          "kind": "bend_definition",
+          "line": 175,
+          "state_bytes": 10581,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::pattern_names",
+          "kind": "bend_definition",
+          "line": 181,
+          "state_bytes": 8981,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::pattern_scope",
+          "kind": "bend_definition",
+          "line": 188,
+          "state_bytes": 11541,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::free",
+          "kind": "bend_definition",
+          "line": 194,
+          "state_bytes": 11610,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::annotation",
+          "kind": "bend_definition",
+          "line": 197,
+          "state_bytes": 10892,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::references",
+          "kind": "bend_definition",
+          "line": 203,
+          "state_bytes": 14950,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::base_error",
+          "kind": "bend_definition",
+          "line": 237,
+          "state_bytes": 7785,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::empty_type",
+          "kind": "bend_definition",
+          "line": 242,
+          "state_bytes": 8483,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::nonempty",
+          "kind": "bend_definition",
+          "line": 248,
+          "state_bytes": 8935,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::parsed",
+          "kind": "bend_definition",
+          "line": 253,
+          "state_bytes": 10161,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::tokens",
+          "kind": "bend_definition",
+          "line": 259,
+          "state_bytes": 34014,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::parse",
+          "kind": "bend_definition",
+          "line": 264,
+          "state_bytes": 39314,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/lex.bend",
+              "name": "S.word",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "alpha",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "reserved",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter_end",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-load.bend::selected",
+          "kind": "bend_definition",
+          "line": 272,
+          "state_bytes": 9329,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::nodes",
+          "kind": "bend_definition",
+          "line": 278,
+          "state_bytes": 8675,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::constructors",
+          "kind": "bend_definition",
+          "line": 283,
+          "state_bytes": 9140,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::declarations",
+          "kind": "bend_definition",
+          "line": 289,
+          "state_bytes": 9553,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::put_selection",
+          "kind": "bend_definition",
+          "line": 297,
+          "state_bytes": 9006,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::partition",
+          "kind": "bend_definition",
+          "line": 304,
+          "state_bytes": 10811,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::visit_tree",
+          "kind": "bend_definition",
+          "line": 310,
+          "state_bytes": 17248,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-load.bend::visit_decl",
+          "kind": "bend_definition",
+          "line": 316,
+          "state_bytes": 40648,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/parse.bend",
+              "name": "template_parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "term_failure",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "reply",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "starts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_type",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_function",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "scrutinee",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_match",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step_at",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/syntax.bend",
+              "name": "identifier_text",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-load.bend::visit",
+          "kind": "bend_definition",
+          "line": 327,
+          "state_bytes": 41176,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/parse.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.identifier",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "expect",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_call",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "body_end",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "unsupported",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "template_parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "term_failure",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "reply",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "starts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_type",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_function",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "scrutinee",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_match",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step_at",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-load.bend::slice",
+          "kind": "bend_definition",
+          "line": 337,
+          "state_bytes": 41428,
+          "truncated": true,
+          "limit_reasons": [
+            "context-helper-limit"
+          ],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": [
+            {
+              "path": "src/parse.bend",
+              "name": "S.column",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "then",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "prepend",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "invalid",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "S.identifier",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "expect",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_call",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "body_end",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "unsupported",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "template_parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "parameter",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "term_failure",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "reply",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "starts",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_type",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_function",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "scrutinee",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/parse.bend",
+              "name": "wrap_match",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "Mode",
+              "reason": "context-helper-limit"
+            },
+            {
+              "path": "src/lex.bend",
+              "name": "step_at",
+              "reason": "context-helper-limit"
+            }
+          ]
+        },
+        {
+          "target": "src/base-pin.bend::Digest",
+          "kind": "bend_datatype",
+          "line": 4,
+          "state_bytes": 6852,
+          "truncated": true,
+          "limit_reasons": [],
+          "diagnostics_available": false,
+          "supporting_role_possible": false,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::Packing",
+          "kind": "bend_datatype",
+          "line": 7,
+          "state_bytes": 6668,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::initial",
+          "kind": "bend_definition",
+          "line": 10,
+          "state_bytes": 6380,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::constants",
+          "kind": "bend_definition",
+          "line": 13,
+          "state_bytes": 6788,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::rotate",
+          "kind": "bend_definition",
+          "line": 23,
+          "state_bytes": 6921,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::sum0",
+          "kind": "bend_definition",
+          "line": 26,
+          "state_bytes": 6812,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::sum1",
+          "kind": "bend_definition",
+          "line": 29,
+          "state_bytes": 6811,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::sigma0",
+          "kind": "bend_definition",
+          "line": 32,
+          "state_bytes": 6885,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::sigma1",
+          "kind": "bend_definition",
+          "line": 35,
+          "state_bytes": 6887,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::choose",
+          "kind": "bend_definition",
+          "line": 38,
+          "state_bytes": 6453,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::majority",
+          "kind": "bend_definition",
+          "line": 41,
+          "state_bytes": 6393,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::nth",
+          "kind": "bend_definition",
+          "line": 44,
+          "state_bytes": 6514,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::schedule",
+          "kind": "bend_definition",
+          "line": 51,
+          "state_bytes": 7772,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::round",
+          "kind": "bend_definition",
+          "line": 58,
+          "state_bytes": 7879,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::rounds",
+          "kind": "bend_definition",
+          "line": 65,
+          "state_bytes": 8164,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::add",
+          "kind": "bend_definition",
+          "line": 70,
+          "state_bytes": 6271,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::compress",
+          "kind": "bend_definition",
+          "line": 75,
+          "state_bytes": 10898,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::word",
+          "kind": "bend_definition",
+          "line": 78,
+          "state_bytes": 6300,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::absorb",
+          "kind": "bend_definition",
+          "line": 81,
+          "state_bytes": 11178,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::unpack",
+          "kind": "bend_definition",
+          "line": 87,
+          "state_bytes": 6274,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::blocks",
+          "kind": "bend_definition",
+          "line": 91,
+          "state_bytes": 12082,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::octets",
+          "kind": "bend_definition",
+          "line": 97,
+          "state_bytes": 6533,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::zeros",
+          "kind": "bend_definition",
+          "line": 100,
+          "state_bytes": 6429,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::padded",
+          "kind": "bend_definition",
+          "line": 106,
+          "state_bytes": 7823,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::ascii",
+          "kind": "bend_definition",
+          "line": 110,
+          "state_bytes": 16263,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::nibble",
+          "kind": "bend_definition",
+          "line": 118,
+          "state_bytes": 6512,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::hex_word",
+          "kind": "bend_definition",
+          "line": 121,
+          "state_bytes": 7183,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::show",
+          "kind": "bend_definition",
+          "line": 126,
+          "state_bytes": 7470,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::hash",
+          "kind": "bend_definition",
+          "line": 132,
+          "state_bytes": 17892,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::expected",
+          "kind": "bend_definition",
+          "line": 135,
+          "state_bytes": 6213,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::verified",
+          "kind": "bend_definition",
+          "line": 138,
+          "state_bytes": 8491,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        },
+        {
+          "target": "src/base-pin.bend::verify",
+          "kind": "bend_definition",
+          "line": 144,
+          "state_bytes": 18527,
+          "truncated": false,
+          "limit_reasons": [],
+          "diagnostics_available": true,
+          "supporting_role_possible": true,
+          "role_context_gaps": []
+        }
+      ],
+      "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."
+    }
+  ],
+  "note": "Qualification covers exactly the selected manifest groups, each with its own declaration and composition obligations. Shared declarations count once per group. Local collaborators retain the existing bounded context and closure checks. Structural preflight is not a style rating or semantic acceptance."
+}

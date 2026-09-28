@@ -5,6 +5,7 @@ import ./lex.bend as L
 import ./parse.bend as P
 import ./check.bend as K
 import ./diagnostic.bend as D
+import ./load.bend as M
 
 type Limits is Data:
   Limits{characters: Nat, parser: Nat, checker: Nat}
@@ -54,6 +55,33 @@ def opened(limits: Limits, result: Result<&1,&1,U32 & String,File>, next: C.Book
 
 def load(path: String, limits: Limits, next: C.Book -> IO(Unit)) -> IO(Unit):
   IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(limits,result,next))
+
+def loaded(depth: Nat, result: Result<S.Error,M.Receipt>, next: C.Book -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{error}: fail(error)
+    case Done{receipt}: checked(K.check(depth,M.tree(receipt)),next)
+
+def bundle(path: String, root: String, limits: Limits, next: C.Book -> IO(Unit)) -> IO(Unit):
+  match limits:
+    case Limits{characters,parser,+checker}:
+      M.load(path,root,characters,parser,result => loaded(checker,result,next))
+
+def select_load(root: Maybe<&2,String>, path: String, limits: Limits, next: C.Book -> IO(Unit)) -> IO(Unit):
+  match root:
+    case None{}: load(path,limits,next)
+    case Some{directory}: bundle(path,directory,limits,next)
+
+def print(text: String) -> IO(Unit):
+  IO.print(text)
+
+def audited(result: Result<S.Error,M.Receipt>) -> IO(Unit):
+  match result:
+    case Fail{error}: fail(error)
+    case Done{+receipt}:
+      checked(K.check(512n,M.tree(receipt)),book => print(M.describe(receipt)))
+
+def audit(path: String, root: String) -> IO(Unit):
+  M.load(path,root,65536n,512n,audited)
 
 def natural(value: Maybe<&2,U32>, +cap: U32) -> Result<S.Error,Nat>:
   match value:

@@ -1,0 +1,250 @@
+import Base
+import ./syntax.bend as S
+import ./lex.bend as L
+import ./parse.bend as P
+import ./imports.bend as I
+import ./qualify.bend as Q
+import ./base-load.bend as B
+import ./base-pin.bend as H
+
+type Receipt is Data:
+  Receipt{tree: S.Node, files: List<&2,String>, checked_base: List<&2,String>, unchecked_base: List<&2,String>}
+
+type State is Data:
+  State{done: List<&2,String>, active: List<&2,String>, reversed: List<&2,S.Node>, globals: Q.Symbols, base: List<&2,B.Decl>, has_base: Bool}
+
+type Input is Data:
+  Contents{text: String}
+  ReadError{error: S.Error}
+
+type Step is Data:
+  Visit{path: String, namespace: String, entry: Bool}
+  Imports{path: String, namespace: String, remaining: List<&2,I.Import>, aliases: List<&2,Q.Alias>, body: String}
+  Source{path: String, namespace: String, result: Input}
+  BaseSource{result: Input}
+
+type Origin is Data:
+  UserSource{path: String, namespace: String}
+  PinnedBase{}
+
+type Action is Data:
+  Stopped{error: S.Error}
+  Finished{receipt: Receipt}
+  Advance{tasks: List<&2,Step>, state: State}
+  Read{path: String, cap: U32, missing: Bool, origin: Origin, tasks: List<&2,Step>, state: State}
+
+def base_path() -> String:
+  ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend"
+
+def base_hash() -> String:
+  H.expected()
+
+def known(path: String, state: State) -> Bool:
+  match state:
+    case State{done,active,reversed,globals,base,has_base}: I.member(path,done)
+
+def cyclic(path: String, state: State) -> Bool:
+  match state:
+    case State{done,active,reversed,globals,base,has_base}: I.member(path,active)
+
+def enter(path: String, state: State) -> State:
+  match state:
+    case State{done,active,reversed,globals,base,has_base}:
+      State{done,Con{path,active},reversed,globals,base,has_base}
+
+def has_base(state: State) -> Bool:
+  match state:
+    case State{done,active,reversed,globals,base,loaded}: loaded
+
+def base_names(state: State) -> Q.Symbols:
+  match state:
+    case State{done,active,reversed,globals,base,loaded}: globals
+
+def symbols(left: Q.Symbols, right: Q.Symbols) -> Q.Symbols:
+  match left right:
+    case Q.Symbols{lt,lc} Q.Symbols{rt,rc}:
+      Q.Symbols{List.append(&2,String,lt,rt),List.append(&2,String,lc,rc)}
+
+def install_base(+text: String, state: State) -> State:
+  match state:
+    case State{done,active,reversed,globals,base,loaded}:
+      +inventory = B.inventory(text)
+      State{done,active,reversed,symbols(globals,Q.Symbols{B.term_names(inventory),B.ctor_names(inventory)}),inventory,True{}}
+
+def leave(path: String, +tree: S.Node, state: State) -> Result<S.Error,State>:
+  match tree state:
+    case S.Sequence{items} State{done,Con{head,active},reversed,globals,base,loaded}:
+      Done{State{Con{path,done},active,List.append(&2,S.Node,List.reverse(&2,S.Node,items),reversed),
+        symbols(globals,Q.Symbols{Q.term_names(tree),Q.ctor_names(tree)}),base,loaded}}
+    case _ _: Fail{S.Internal{"load","module-stack"}}
+
+def parsed(value: P.Parsed) -> S.Node:
+  match value:
+    case P.Parsed{tree,rest}: tree
+
+def body(+characters: Nat, +depth: Nat, +namespace: String, +aliases: List<&2,Q.Alias>,
+  +globals: Q.Symbols, text: String) -> Result<S.Error,S.Node>:
+  S.bind(List<&2,S.Token>,S.Node,L.tokenize(characters,text),tokens =>
+    S.bind(P.Parsed,S.Node,P.parse(depth,tokens),tree => Q.qualify(namespace,aliases,globals,parsed(tree))))
+
+def joined(base: S.Node, root: S.Node) -> Result<S.Error,S.Node>:
+  match base root:
+    case S.Sequence{left} S.Sequence{right}: Done{S.Sequence{List.append(&2,S.Node,left,right)}}
+    case _ _: Fail{S.Internal{"load","expected-book"}}
+
+def sliced(+root: S.Node, +files: List<&2,String>, value: Result<S.Error,B.Slice>) -> Result<S.Error,Receipt>:
+  match value:
+    case Fail{error}: Fail{error}
+    case Done{B.Slice{base,+checked,+unchecked}}:
+      S.bind(S.Node,Receipt,joined(base,root),tree => Done{Receipt{tree,files,checked,unchecked}})
+
+def finish(depth: Nat, state: State) -> Result<S.Error,Receipt>:
+  match state:
+    case State{done,active,reversed,globals,base,loaded}:
+      +root : S.Node = S.Sequence{List.reverse(&2,S.Node,reversed)}
+      sliced(root,List.reverse(&2,String,done),B.slice(depth,base,root))
+
+def read_result(result: Result<&1,&1,U32 & String,String>, next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{(code,message)}: next(Fail{S.Host{"read",String.concat([U32.show(code),"\t",message])}})
+    case Done{text}: next(Done{text})
+
+def read_pair(pair: File & Result<&1,&1,U32 & String,String>, next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  (file,result) = pair
+  do IO<Unit>:
+    File.close(file)
+    read_result(result,next)
+
+def opened(result: Result<&1,&1,U32 & String,File>, cap: U32, +missing: Bool,
+  next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  match result:
+    case Fail{(+code,message)}:
+      next(S.choose(Result<S.Error,String>,Bool.and(missing,Bool.or(U32.is_eq(code,2),U32.is_eq(code,20))),u =>
+        Fail{S.Invalid{"load","missing-module",S.At{0,0,0,0}}},u =>
+        Fail{S.Host{"open",String.concat([U32.show(code),"\t",message])}}))
+    case Done{file}:
+      IO.bind(File & Result<&1,&1,U32 & String,String>,Unit,File.read(file,cap),pair => read_pair(pair,next))
+
+def read(path: String, +cap: U32, +missing: Bool, next: Result<S.Error,String> -> IO(Unit)) -> IO(Unit):
+  IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(result,cap,missing,next))
+
+def received(result: Result<S.Error,String>) -> Input:
+  match result:
+    case Fail{error}: ReadError{error}
+    case Done{text}: Contents{text}
+
+def stopped(result: Result<S.Error,Receipt>) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{receipt}: Finished{receipt}
+
+def step_header(result: Result<S.Error,I.Header>, +path: String, +namespace: String,
+  tail: List<&2,Step>, state: State) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{I.Header{imports,body}}: Advance{Con{Imports{path,namespace,imports,Nil{},body},tail},state}
+
+def within(budget: Nat, text: String) -> Bool:
+  match budget text:
+    case _ SNil{}: True{}
+    case 0n SCon{c,tail}: False{}
+    case 1n+n SCon{c,tail}: within(n,tail)
+
+def step_source(result: Input, +path: String, +namespace: String, +characters: Nat,
+  +tail: List<&2,Step>, +state: State) -> Action:
+  match result:
+    case ReadError{error}: Stopped{error}
+    case Contents{+text}:
+      S.choose(Action,within(characters,text),u => step_header(I.header(text),path,namespace,tail,state),u =>
+        Stopped{S.Exhausted{"lex",S.At{0,0,0,0}}})
+
+def checked_base(result: Result<S.Error,String>, tail: List<&2,Step>, state: State) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{text}: Advance{tail,install_base(text,state)}
+
+def step_base(result: Input, tail: List<&2,Step>, state: State) -> Action:
+  match result:
+    case ReadError{error}: Stopped{error}
+    case Contents{text}: checked_base(H.verify(text),tail,state)
+
+def step_target(result: Result<S.Error,I.Target>, +alias: String, +path: String, +namespace: String,
+  +remaining: List<&2,I.Import>, +aliases: List<&2,Q.Alias>, +text: String,
+  tail: List<&2,Step>, state: State) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{I.Target{target,+space}}:
+      Advance{Con{Visit{target,space,False{}},Con{Imports{path,namespace,remaining,Con{Q.Alias{alias,space},aliases},text},tail}},state}
+
+def step_state(result: Result<S.Error,State>, tail: List<&2,Step>) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{after}: Advance{tail,after}
+
+def step_body(result: Result<S.Error,S.Node>, +path: String, +state: State,
+  tail: List<&2,Step>) -> Action:
+  match result:
+    case Fail{error}: Stopped{error}
+    case Done{tree}: step_state(leave(path,tree,state),tail)
+
+# The stack contains suspended import headers; active and done distinguish a
+# back edge from a shared dependency. Only the Base inventory is sliced.
+def plan(tasks: List<&2,Step>, +state: State, +bundle: String, +characters: Nat, +depth: Nat) -> Action:
+  match tasks:
+    case Nil{}: stopped(finish(depth,state))
+    case Con{Visit{+path,+namespace,+entry},+tail}:
+      S.choose(Action,cyclic(path,state),u => Stopped{S.Invalid{"load","cycle",S.At{0,0,0,0}}},u =>
+      S.choose(Action,known(path,state),u => Advance{tail,state},u =>
+        Read{path,65537,Bool.not(entry),UserSource{path,namespace},tail,enter(path,state)}))
+    case Con{Source{path,namespace,result},tail}: step_source(result,path,namespace,characters,tail,state)
+    case Con{BaseSource{result},tail}: step_base(result,tail,state)
+    case Con{Imports{+path,+namespace,Nil{},aliases,text},+tail}:
+      step_body(body(characters,depth,namespace,aliases,base_names(state),text),path,state,tail)
+    case Con{Imports{+path,+namespace,Con{I.Import{+target,+alias},+rest},+aliases,+text},+tail}:
+      +resume : Step = Imports{path,namespace,rest,aliases,text}
+      S.choose(Action,String.eq(target,"Base"),u =>
+        S.choose(Action,has_base(state),u => Advance{Con{resume,tail},state},u =>
+          Read{base_path(),131073,False{},PinnedBase{},Con{resume,tail},state}),u =>
+        step_target(I.resolve(path,namespace,bundle,target),alias,path,namespace,rest,aliases,text,tail,state))
+
+def delivered(origin: Origin, result: Input) -> Step:
+  match origin:
+    case UserSource{path,namespace}: Source{path,namespace,result}
+    case PinnedBase{}: BaseSource{result}
+
+def run(fuel: Nat, action: Action, +bundle: String, +characters: Nat, +depth: Nat,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  match fuel action:
+    case _ Stopped{error}: next(Fail{error})
+    case _ Finished{receipt}: next(Done{receipt})
+    case 0n _: next(Fail{S.Exhausted{"load",S.At{0,0,0,0}}})
+    case 1n+ +n Advance{tasks,state}:
+      run(n,plan(tasks,state,bundle,characters,depth),bundle,characters,depth,next)
+    case 1n+ +n Read{path,cap,missing,+origin,+tasks,+state}:
+      read(path,cap,missing,result =>
+        run(n,plan(Con{delivered(origin,received(result)),tasks},state,bundle,characters,depth),bundle,characters,depth,next))
+
+def start(+path: String, +bundle: String) -> Action:
+  S.choose(Action,Bool.xor(String.starts_with(path,"/"),String.starts_with(bundle,"/")),u =>
+    Stopped{S.Unsupported{"load","mixed-path-roots",S.At{0,0,0,0}}},u =>
+    Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}})
+
+def load(+path: String, +bundle: String, characters: Nat, depth: Nat,
+  next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):
+  run(1024n,start(path,bundle),
+    I.normalize(bundle),characters,depth,next)
+
+def tree(receipt: Receipt) -> S.Node:
+  match receipt:
+    case Receipt{root,files,checked,unchecked}: root
+
+def lines(+prefix: String, names: List<&2,String>) -> String:
+  match names:
+    case Nil{}: ""
+    case Con{name,rest}: String.concat([prefix,name,"\n",lines(prefix,rest)])
+
+def describe(receipt: Receipt) -> String:
+  match receipt:
+    case Receipt{root,files,checked,unchecked}:
+      String.concat(["BasePin\t",base_hash(),"\n",lines("Module\t",files),
+        lines("BaseChecked\t",checked),lines("BaseUnchecked\t",unchecked)])
