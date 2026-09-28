@@ -1,0 +1,176 @@
+{
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "meet-short-form",
+      "file": "fixtures/meet-short-form.bend",
+      "class": "positive",
+      "feature": "quantity-meet-short-form",
+      "intent": "A two-quantity family short form containing a compact one-quantity application.",
+      "needs": [
+        "fields"
+      ],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "fail",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "S2 resolves the two omitted quantities before substituting the nested type arguments."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "meet-short-form",
+        "source_sha256": "4f19f2553b7e8ad1df3900ee55668965806d4f0254cfcabd4f078b65652917d5",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ],
+          "Error": [
+            "Stop"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/supplemental/fixtures/meet-short-form.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/supplemental/fixtures/meet-short-form.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/meet-short-form--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/meet-short-form--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/meet-short-form--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/meet-short-form--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "fail",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": ".local/compiler-generics/supplemental-wrappers/meet-short-form--fail--.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.bend as F\n\ndef main() -> F.Flag:\n  F.fail()\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/supplemental-wrappers/meet-short-form--fail--.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/supplemental/fixtures/meet-short-form.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/supplemental/fixtures/meet-short-form.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
