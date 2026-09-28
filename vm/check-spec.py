@@ -967,12 +967,16 @@ def byte_controls(images: dict, digest: bytes) -> list:
         ('function-root-shared', word_patch(capture, swap + 8 + 5, body), 'function root'),
         ('child-not-record', word_patch(capture, body + 4, word(capture, body + 4) + 1), 'child offset'),
         ('child-after-parent', word_patch(capture, body + 4, body + 6), 'child after parent'),
-        ('oversize', second + oversize, 'exhausted image-size'),
-        ('oversize-and-bad-magic', word_patch(second, 0, 0) + oversize, 'exhausted image-size'),
-        ('oversize-and-misaligned', second + oversize + b'\0', 'exhausted image-size'),
         ('unused-constant', unused_constant(hit), 'noncanonical'),
     ]
-    return [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in out]
+    # Section 4.1 and D16: an image above 16 MiB is Exhausted kind 2, even when also malformed.
+    exhausted = [
+        ('oversize', second + oversize, 'image-size'),
+        ('oversize-and-bad-magic', word_patch(second, 0, 0) + oversize, 'image-size'),
+        ('oversize-and-misaligned', second + oversize + b'\0', 'image-size'),
+    ]
+    return [(label, data, 'HostFailure image: ' + reason, '') for label, data, reason in out] + \
+        [(label, data, 'Exhausted 2 ' + cause, '') for label, data, cause in exhausted]
 
 
 def unused_constant(image: bytes) -> bytes:
