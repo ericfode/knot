@@ -87,6 +87,49 @@ Later additions the same day:
 | D18 | The literals increment's Knot-emitted instruction machine (`knot-literals-wasm-1`) is superseded as the self-hosting VM. It stays in the bundle as a frozen native profile, and its opcode DSL seeds the later `vm-emit` speed track. | Enum-only ABI, no `knot_io`, no closures, no reclamation, a 32,768-instruction cap and unary Nat. |
 | D19 | The VM's linear-memory maximum is 65,536 pages (4 GiB, the wasm32 limit), declared in the image and VM contract. Exhausting the declared budget is `Exhausted` kind 2 (heap), reproducibly on every host. This replaces the 2,048-page (128 MiB) bound that the io-host increment chose and the VM design adopted. The `knot_io` host's module-memory check is raised to match. | That bound was a conservative guess, not a platform limit: Node 22.22.3 accepts a 65,536-page maximum and grows a memory to 2 GiB on this host. A declared budget keeps heap exhaustion deterministic without starving self-compilation. User question, 2026-09-27: "why is this the case 'Memory is capped at 128 MiB (2,048 pages)'". |
 
+### Dual checker path (proposed by the generics increment, review round 1)
+
+Recorded for the coordinator to adopt as a decision; it is not one yet.
+
+- **Now.** Two checkers exist. `src/check-dispatch.bend` is the only checking
+  entry (`check-cli`, `driver`). A book with generic syntax (a generic
+  datatype, a typed result or a typed parameter) goes to `generics.bend`; every
+  other book goes to `check.bend`, whose pinned diagnostics stay unchanged.
+  `check.bend` does not import the generic checker.
+- **Known split.** Acceptance is decided per book. `walk(-x: Flag, n: Peano)`
+  recursing on `n` is `Unsupported check recursive-call` alone (first-parameter
+  descent), but is Checked when an unrelated declaration with generic syntax
+  shares the book (first-live-parameter descent). Both answers are sound; only
+  the capability differs.
+- **Which checker to extend.** Knot's own bundle S writes `List<&2,...>` and
+  `Result<...>` throughout, so S is checked only by `generics.bend`.
+  Self-hosting increments (closures, literals, descent-2, modules, the Base
+  slice, sugar) extend `generics.bend`. A capability added only to `check.bend`
+  never reaches S. `check.bend` changes only to keep its existing pins.
+- **Evidence for convergence.** A scratch build that sends every book to
+  `generics.bend` matches the dispatching build byte for byte (exit, stdout,
+  stderr) on 645 of the 648 tracked `tests/**/*.bend` files. All three
+  differences are rejections by both checkers:
+  - `compiler-fields/fixtures/nested-pattern.bend`: `Unsupported duplicate-arm`
+    (monomorphic arm pre-pass) versus `Unsupported nested-field-pattern`;
+  - `compiler-fields/fixtures/pattern-arity.bend`: `Invalid pattern-arity` at
+    the arm's constructor versus at the scrutinee binder;
+  - `compiler-generics/dispatch-boundaries/fixtures/monomorphic-type-application.bend`:
+    `Unsupported type-expression` versus `Invalid type-arity` (the seed rejects).
+- **Convergence plan.**
+  1. Give `generics.bend` the monomorphic arm pre-pass order and constructor
+     locations, so the two fields fixtures agree; decide the
+     `monomorphic-type-application` pin.
+  2. Authorize retargeting the eight existing mutants anchored in `check.bend`
+     term checking to their `generics.bend` counterparts: checker
+     (`accept-missing-arm`, `accept-wrong-reference-type`), fields
+     (`discard-parent-demand`, `refine-by-spelling`), recursion
+     (`admit-any-self-call`), selfhost (`reject-every-self-call`,
+     `admit-mistyped-constant`). Structural's `field-capability-accepted`
+     stays: `enum_profile` remains in `check.bend`.
+  3. Route every book to `generics.bend`, retire `check.bend`'s term checker,
+     scope and match code, and delete `check-dispatch.bend`.
+
 ## Milestone ladder
 
 Increments are bounded at 1 to 3 agent-days each. Each has deterministic gates first, then Perch.
