@@ -77,7 +77,16 @@ digits, underscores or dots. Keywords cannot be identifiers.
   remain invalid at the pinned seed. A `+` row makes a lambda-case binder (a
   parameter or field) reusable together with every alias of its level; a let
   binder and its aliases keep the let's declared quantity under any row, so a
-  second use of a `+` alias of an affine let is affine reuse.
+  second use of a `+` alias of an affine let is affine reuse. A `+` mark, on a
+  row or a field binder or inherited from a promoted parent, may raise a
+  binder past its type's kind while it waits on the match frontier. As in the
+  seed, the kind is judged only where the frontier binds the binder: when it
+  leaves the frontier undestructured, ahead of a later matched binder (a flat
+  match, a matrix split or a zero-row match), or at a body that is not a match
+  (a let included). A promoted `Type`-kind binder that is destructured first is
+  never bound; its fields carry the promoted quantity and face the same rule.
+  A binder that the frontier binds at a `Type` kind reports `Invalid check
+  reusable-type`.
   Constructor columns follow binder order and close earlier parameters.
   Variable-only columns leave that frontier open, so they may be reordered.
   Local bindings close the outer frontier; matched constructors cannot be

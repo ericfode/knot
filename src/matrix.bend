@@ -224,19 +224,18 @@ def remarked(bindings: List<&2,C.Binding>, +level: U32, +mark: U32) -> List<&2,C
 
 # A `+` row's mark reaches only a lambda-case binder (a parameter or field), as
 # in the seed. A let binder and its aliases keep the let's declared quantity.
-def alias_bound(binding: C.Binding, +token: S.Token, +row: U32, scope: E.Scope, +types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
+# Its kind is judged later, where the frontier binds it (P.bound).
+def alias_bound(binding: C.Binding, +token: S.Token, +row: U32, scope: E.Scope) -> Result<S.Error,E.Scope>:
   match binding scope:
-    case C.Binding{name,+level,q,+type_id,+param,known} E.Scope{bindings,next,open,live,smaller}:
+    case C.Binding{name,+level,q,type_id,+param,known} E.Scope{bindings,next,open,live,smaller}:
       +mark = S.choose(U32,param,u => row,u => 1)
       +actual = P.quantity(q,1,mark)
-      S.bind(C.Datatype,E.Scope,G.type_at(types,type_id),definition =>
-        S.bind(Unit,E.Scope,G.quantity(token,actual,definition),u =>
-          Done{E.Scope{Con{C.Binding{token,level,actual,type_id,param,known},remarked(bindings,level,mark)},next,open,live,smaller}}))
+      Done{E.Scope{Con{C.Binding{token,level,actual,type_id,param,known},remarked(bindings,level,mark)},next,open,live,smaller}}
 
-def alias(+scope: E.Scope, token: S.Token, level: U32, mark: U32, types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
+def alias(+scope: E.Scope, token: S.Token, level: U32, mark: U32) -> Result<S.Error,E.Scope>:
   match scope:
     case E.Scope{bindings,next,open,live,smaller}:
-      S.bind(C.Binding,E.Scope,E.find_level(bindings,level),binding => alias_bound(binding,token,mark,scope,types))
+      S.bind(C.Binding,E.Scope,E.find_level(bindings,level),binding => alias_bound(binding,token,mark,scope))
 
 
 type Expansion is Data:
@@ -280,7 +279,7 @@ def expand(fuel: Nat, +node: S.Node, +types: List<&2,C.Datatype>, +scope: E.Scop
       S.bind(S.Node,Expansion,step(token,columns,rows,work,types,scope),tree =>
         expand(n,tree,types,scope,U32.sub(work,1)))
     case 1n+ +n S.Alias{+token,+level,+mark,body}:
-      S.bind(E.Scope,Expansion,alias(scope,token,level,mark,types),bound =>
+      S.bind(E.Scope,Expansion,alias(scope,token,level,mark),bound =>
         thread(expand(n,body,types,bound,work),tree => left => Done{Expansion{S.Alias{token,level,mark,tree},left}}))
     case 1n+ +n S.Decision{+token,+column,+pattern,+yes,+no}:
       S.bind(C.Binding,Expansion,column_binding(column,scope),+binding =>

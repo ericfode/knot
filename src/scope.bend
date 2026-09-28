@@ -147,6 +147,13 @@ def after(ids: List<&2,U32>, +level: U32) -> List<&2,U32>:
     case Con{head,+tail}:
       S.choose(List<&2,U32>,U32.is_eq(head,level),u => tail,u => after(tail,level))
 
+# The frontier ahead of a level: the binders a match on that level binds first.
+def ahead(ids: List<&2,U32>, +level: U32) -> List<&2,U32>:
+  match ids:
+    case Nil{}: Nil{}
+    case Con{+head,tail}:
+      S.choose(List<&2,U32>,U32.is_eq(head,level),u => Nil{},u => Con{head,ahead(tail,level)})
+
 def levels(bindings: List<&2,C.Binding>) -> List<&2,U32>:
   match bindings:
     case Nil{}: Nil{}

@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./core.bend as C
 import ./scope.bend as E
+import ./patterns.bend as P
 import ./matrix.bend as M
 import ./check.bend as K
 
@@ -127,13 +128,13 @@ law erased_alias_stays_erased:
   for +name: S.Token
   for +alias: S.Token
   for +known: Maybe<&2,C.Term>
-  {M.alias(E.Scope{[C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]},alias,1,2,[flag()]) ==
+  {M.alias(E.Scope{[C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]},alias,1,2) ==
     Done{E.Scope{[C.Binding{alias,1,0,0,True{},known},C.Binding{name,1,0,0,True{},known}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
 
 law alias_preserves_descent_and_identity:
   for +name: S.Token
   for +alias: S.Token
-  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1,[flag()]) ==
+  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1) ==
     Done{E.Scope{[C.Binding{alias,1,1,0,True{},None{}},C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
 
 # A `+` row raises a lambda-case binder with every alias of its level, and
@@ -141,7 +142,7 @@ law alias_preserves_descent_and_identity:
 law parameter_alias_promotes:
   for +name: S.Token
   for +alias: S.Token
-  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,2,[flag()]) ==
+  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,2) ==
     Done{E.Scope{[C.Binding{alias,1,2,0,True{},None{}},C.Binding{name,1,2,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
 
 law let_alias_keeps_quantity:
@@ -149,8 +150,50 @@ law let_alias_keeps_quantity:
   for +alias: S.Token
   for +mark: U32
   for +known: Maybe<&2,C.Term>
-  {M.alias(E.Scope{[C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}},alias,0,mark,[flag()]) ==
+  {M.alias(E.Scope{[C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}},alias,0,mark) ==
     Done{E.Scope{[C.Binding{alias,0,1,0,False{},known},C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}}} : Result<S.Error,E.Scope>}
+
+# A `+` binder's kind is judged where the frontier binds it: never by a match
+# on the binder itself, but by a match on a later binder or at a leaf body.
+def mode() -> C.Datatype:
+  C.Datatype{token("Mode"),False{},[C.Constructor{token("Lo"),Nil{}},C.Constructor{token("Hi"),Nil{}}]}
+def promoted(name: S.Token) -> C.Binding: C.Binding{name,0,2,0,True{},None{}}
+def frontier(name: S.Token, other: S.Token) -> E.Scope:
+  E.Scope{[C.Binding{other,1,1,0,True{},None{}},promoted(name)],2,[0,1],True{},Nil{}}
+
+law destructured_promotion_is_unbound:
+  for +name: S.Token
+  for +other: S.Token
+  {P.advance(frontier(name,other),0,[mode()]) == Done{Unit{}} : Result<S.Error,Unit>}
+
+law later_match_binds_promotion:
+  for +name: S.Token
+  for +other: S.Token
+  {P.advance(frontier(name,other),1,[mode()]) == Fail{S.Invalid{"check","reusable-type",S.at(name)}} : Result<S.Error,Unit>}
+
+law leaf_binds_promotion:
+  for +name: S.Token
+  {P.close(E.Scope{[promoted(name)],1,[0],True{},Nil{}},[mode()]) ==
+    Fail{S.Invalid{"check","reusable-type",S.at(name)}} : Result<S.Error,E.Scope>}
+
+law leaf_closes_frontier:
+  for +name: S.Token
+  {P.close(E.Scope{[promoted(name)],1,[0],True{},Nil{}},[flag()]) ==
+    Done{E.Scope{[promoted(name)],1,Nil{},True{},Nil{}}} : Result<S.Error,E.Scope>}
+
+# The whole checker on `match m: case +y: ...` at a Type kind: destructuring y
+# leaves m unbound and checks; returning y binds m at a leaf and is rejected.
+def by_mode(body: S.Node) -> Result<S.Error,C.Checked>:
+  K.run(64n,K.Expression{S.Match{token("match"),S.Variable{token("m")},[S.Arm{token("case"),S.Promotion{token("y")},body}]},Some{0}},
+    C.Catalog{[mode()],Nil{}},0,E.parameters([C.Parameter{token("m"),1,0}],0,Nil{}))
+def mode_arm(+name: String) -> S.Node: S.Arm{token("case"),ctor(name),ctor(name)}
+
+law destructured_promotion_witness:
+  {by_mode(S.Match{token("match"),S.Variable{token("y")},[mode_arm("Lo"),mode_arm("Hi")]}) ==
+    Done{C.Checked{C.Case{token("match"),0,0,[C.Branch{0,Nil{},C.Value{token("Lo"),0,0}},C.Branch{1,Nil{},C.Value{token("Hi"),0,1}}]},0,Nil{}}} : Result<S.Error,C.Checked>}
+
+law bound_promotion_witness:
+  {by_mode(S.Variable{token("y")}) == Fail{S.Invalid{"check","reusable-type",S.At{0,0,1,0}}} : Result<S.Error,C.Checked>}
 
 # Exhaustiveness at each split: the positive matrix takes the split
 # constructor, the remainder keeps every other available constructor in order,

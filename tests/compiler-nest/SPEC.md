@@ -168,6 +168,29 @@ let/alias generator over random seeds 0 to 1,499 and requires seed and Knot
 agreement on acceptance and on every evaluated call. `parameter_alias_promotes`
 and `let_alias_keeps_quantity` in `src/matrix-LAWS.bend` state the rule.
 
+`round8-expectations.json` freezes 37 round-8 programs and 150 seed calls
+before the Type-kind promotion repair. The seed judges a `+` binder's kind only
+where the match frontier binds it. Seventeen seed-accepted programs promote a
+`Type`-kind parameter or field and destructure it first (with field reuse,
+rebuilt parents, nested and multi-column matches, an inherited field, an empty
+datatype and four reviewer generator hits) and are accepted. Fourteen
+seed-rejected programs let the frontier bind a promoted `Type` binder: at a
+leaf, a default or wildcard row, a let, an inherited field used directly, and
+ahead of a later flat match, zero-row match or matrix split; they report
+`Invalid check reusable-type`. Two destructurings inside a default region stay
+`Unsupported check default-scrutinee`, and four `Data`-kind twins are
+accepted. `round8.py` checks both compiler lanes, evaluator and Wasm
+agreement, rejection in every phase, the matrix and lowering proof entries
+and five type-correct semantic mutants: judging the kind at the promotion and
+at a field's binding (the finding), and dropping the leaf, split and zero-row
+binding sites. `typekind.py` replays the reviewer's Type-kind generator over
+random seeds 0 to 2,999, requires seed and Knot agreement on acceptance, and
+evaluates one seeded probe call of every agreed acceptance that promotes a
+`Type`-kind binder. `destructured_promotion_is_unbound`,
+`later_match_binds_promotion`, `leaf_binds_promotion`, `leaf_closes_frontier`,
+`destructured_promotion_witness` and `bound_promotion_witness` in
+`src/matrix-LAWS.bend` state the rule.
+
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
 constructor sets through such nested source matches is a subsequent increment;

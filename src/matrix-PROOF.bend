@@ -80,6 +80,12 @@ def L.erased_alias_stays_erased(name,alias,known): {==}
 def L.alias_preserves_descent_and_identity(name,alias): {==}
 def L.parameter_alias_promotes(name,alias): {==}
 def L.let_alias_keeps_quantity(name,alias,mark,known): {==}
+def L.destructured_promotion_is_unbound(name,other): {==}
+def L.later_match_binds_promotion(name,other): {==}
+def L.leaf_binds_promotion(name): {==}
+def L.leaf_closes_frontier(name): {==}
+def L.destructured_promotion_witness(): {==}
+def L.bound_promotion_witness(): {==}
 
 def L.remainder_omits_split(head,tail,ctor,split):
   Equal.cong(Bool,List<&2,S.Token>,found =>

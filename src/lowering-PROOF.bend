@@ -309,7 +309,7 @@ def expanded(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>, +scope: E.Sco
           selected_step(M.step(token,columns,rows,work,types,scope),tree => M.expand(n,tree,types,scope,U32.sub(work,1)),body,
             +tree => q => expanded(n,tree,types,scope,U32.sub(work,1),body,q),stepped(token,columns,rows,work,types,scope,body,p))
         case S.Alias{+token,+level,+mark,+rest}:
-          selected_bind(E.Scope,M.alias(scope,token,level,mark,types),
+          selected_bind(E.Scope,M.alias(scope,token,level,mark),
             bound => M.thread(M.expand(n,rest,types,bound,work),tree => left => Done{M.Expansion{S.Alias{token,level,mark,tree},left}}),body,
             +bound => threaded(M.expand(n,rest,types,bound,work),tree => left => Done{M.Expansion{S.Alias{token,level,mark,tree},left}},body,
               tree => left => q => q,expanded(n,rest,types,bound,work,body,p)))
