@@ -50,6 +50,18 @@ law raw_input_is_bounded_before_header_removal:
   {L.step_source(L.Contents{"import Base\n"},path,namespace,0n,tail,state)
     == L.Stopped{S.Exhausted{"lex",S.At{0,0,0,0}}} : L.Action}
 
+law budget_counts_utf8_bytes:
+  {(L.within("\u{E9}",1n),L.within("\u{E9}",2n),L.within("\u{1F600}",3n),L.within("\u{1F600}",4n))
+    == (False{},True{},False{},True{}) : Bool & Bool & Bool & Bool}
+
+law multibyte_source_is_bounded_by_bytes:
+  for path: String
+  for namespace: String
+  for tail: List<&2,L.Step>
+  for state: L.State
+  {L.step_source(L.Contents{"import Base # \u{E9}\n"},path,namespace,16n,tail,state)
+    == L.Stopped{S.Exhausted{"lex",S.At{0,0,0,0}}} : L.Action}
+
 law empty_namespace_is_entry_relative:
   {I.resolve("source/main.bend","","bundle","./lib/flag.bend")
     == Done{I.Target{"source/lib/flag.bend","lib/flag"}} : Result<S.Error,I.Target>}

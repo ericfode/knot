@@ -13,6 +13,12 @@ def L.source_failure_is_preserved(error,path,namespace,characters,tail,state):
 def L.raw_input_is_bounded_before_header_removal(path,namespace,tail,state):
   {==}
 
+def L.budget_counts_utf8_bytes():
+  {==}
+
+def L.multibyte_source_is_bounded_by_bytes(path,namespace,tail,state):
+  {==}
+
 def L.empty_namespace_is_entry_relative():
   {==}
 

@@ -557,13 +557,19 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'old': 'pattern(token,S.Promotion{token},names,ctors)',
      'new': 'Done{Qualified{S.Promotion{token},[S.text(token)]}}',
      'witness': 'local-promoted-ctor-binder', 'actual': {'exit': 0}},
+    {'name': 'source-budget-counts-characters', 'file': 'load.bend',
+     'old': '+cost = width(Char.to_u32(c))',
+     'new': '+cost : Nat = 1n',
+     'witness': 'multibyte-entry-tail',
+     'actual': {'exit': 3, 'diagnostic_prefix': 'Unsupported\tload\theader-character\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
                     'path-identity-ignored', 'qualified-freshness-ignored', 'base-collision-ignored',
                     'pattern-constructor-ignored', 'foreign-body-uses-column',
                     'host-symlink-ignored', 'host-case-ignored',
-                    'pattern-global-ctors-dropped', 'promoted-constructor-ignored'}
+                    'pattern-global-ctors-dropped', 'promoted-constructor-ignored',
+                    'source-budget-counts-characters'}
 
 
 def mutants(fixtures):

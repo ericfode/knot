@@ -170,18 +170,26 @@ def step_header(result: Result<S.Error,I.Header>, +path: String, +namespace: Str
     case Fail{error}: Stopped{error}
     case Done{I.Header{imports,body}}: Advance{Con{Imports{path,namespace,imports,Nil{},body},tail},state}
 
-def within(budget: Nat, text: String) -> Bool:
-  match budget text:
-    case _ SNil{}: True{}
-    case 0n SCon{c,tail}: False{}
-    case 1n+n SCon{c,tail}: within(n,tail)
+def width(+code: U32) -> Nat:
+  S.choose(Nat,U32.is_lt(code,128),u => 1n,u =>
+  S.choose(Nat,U32.is_lt(code,2048),u => 2n,u =>
+  S.choose(Nat,U32.is_lt(code,65536),u => 3n,u => 4n)))
+
+# The budget counts UTF-8 bytes. Decoding never shortens input (a malformed
+# subpart becomes one three-byte U+FFFD), so text within the budget was read whole.
+def within(text: String, +budget: Nat) -> Bool:
+  match text:
+    case SNil{}: True{}
+    case SCon{c,tail}:
+      +cost = width(Char.to_u32(c))
+      S.choose(Bool,Nat.is_le(cost,budget),u => within(tail,Nat.sub(budget,cost)),u => False{})
 
 def step_source(result: Input, +path: String, +namespace: String, +characters: Nat,
   +tail: List<&2,Step>, +state: State) -> Action:
   match result:
     case ReadError{error}: Stopped{error}
     case Contents{+text}:
-      S.choose(Action,within(characters,text),u => step_header(I.header(text),path,namespace,tail,state),u =>
+      S.choose(Action,within(text,characters),u => step_header(I.header(text),path,namespace,tail,state),u =>
         Stopped{S.Exhausted{"lex",S.At{0,0,0,0}}})
 
 def step_state(result: Result<S.Error,State>, tail: List<&2,Step>) -> Action:
