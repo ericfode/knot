@@ -178,7 +178,7 @@ override them in the directions noted, but never to `Invalid`:
 | `unreachable-free-name` | Accepted, with the seed's results | The seed drops the row before resolving names | `Unsupported check unreachable-arm` |
 | `empty-type` | Accepted | Base case of exhaustiveness; `src/catalog.bend` currently rejects it as `Invalid empty-datatype` | `Unsupported check empty-datatype` |
 | `closure-parameter` | `Unsupported\tparse\tparameter-type\t` | Closures are milestone 7; the code is frozen for `function-field.bend` in `tests/compiler-structural` | none |
-| `generic-box-pattern` | `Unsupported\tparse\ttype-parameters\t` | Generics are milestone 6; the code is new | reconcile if increment 0 names the form first |
+| `generic-box-pattern` | `Unsupported\tparse\tgeneric-datatype\t` | Generics are milestone 6 | reconciled to increment 0's code for the same header |
 
 ## What the implementer wires
 
