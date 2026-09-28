@@ -1,18 +1,19 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T12:49:44+00:00",
+ "date": "2026-09-28T15:01:12+00:00",
  "status": "passed",
  "sources": {
-  "model/word.bend": "db4630ef0eb09411c00565873c6eb4ef314215842cd1866fcceade011eacef84",
-  "model/decode.bend": "5f2ebd0a1d58ff16191810b8bac4910c4e76cc4919b19725c6233572ef86b955",
-  "model/validate.bend": "ec35d74933e2385b5a9359e1b52f54a1bcdac6a95d5a7d90bdb8d128860d3860",
-  "model/encode.bend": "3f0096fc798e87031c7d2d4de477c7e0b4eba3534b03510e772c60ab5fc64c0e",
-  "model/memory.bend": "546c321d9c7418e70bd27fa42b16cc74e4f4627867008b31f9c182319166e9ea",
-  "model/machine.bend": "979dd53dbb7d43c776325b9d667a8f195384ea1190913b50b15201ede75f6c92",
-  "model/audit.bend": "4c4d9edbc4986460b17d87bc8ac1dd33b69fd8e46dbbe44c90ac4b5b53fc07e0",
-  "model-cli.bend": "09a62fd3fb4a6c49501dc10a988ac2c9e17b6434e6dccf0a0a024b0a11ae85a1",
+  "model/word.bend": "a8c68780225f05f11ddb2ba8b94ca3e0d0c18e9b888cab6d9ebb1b74e91ef6fc",
+  "model/decode.bend": "be532fa946a7b028ab49d4b7feb7cbb318f6ebedcdc96c510aec4ba9460ecda9",
+  "model/validate.bend": "5dd4dde9b94404ee85b2bcebf9de1d87649000045af91ea34d3caecf120c0ce8",
+  "model/encode.bend": "fc63bc38f60bce9d2193e7dd4602defd0905c0aab2fb5d7a7c8e0f3f605514f3",
+  "model/memory.bend": "38d81506f9dad12968b14ec5cdf93e48da4644983aaefb1770d2ee4e232df137",
+  "model/machine.bend": "35af9ab1c33c40d493f2b8a3d2d48964646c58ee6384db9e13bb2fabb26ffc00",
+  "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
+  "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
   "model-audit.bend": "3675cf28ae8fb11574c2f67d74bd8c5f3046c67a26a2ed26b13582835e1df5a2",
   "model-sweep.bend": "bef3f6c9166a51878eb5b05621f423c55cee50909f190a6d5a49441f2d9fa6b2",
+  "model-lanes.bend": "aa73565b26d180a7b570d7e9d60b49b3249cc33cc2c065fb19340f2f5bb501f4",
   "LAWS.bend": "8bbc21f67c5c4bfe563e1b3f85e0b3341c227d59d6a3e3139a82451b3641df89",
   "PROOF.bend": "d778cf46e3a3d29e09cacf85660d9f14522e02df0dbe6ee5b26e35ca0639331a"
  },
@@ -27,6 +28,10 @@
   "prims": 39,
   "foreign": 8
  },
+ "connectives": {
+  "sources": 10,
+  "choices": 70
+ },
  "seed": {
   "char-pick": "On{}",
   "char-pick-big": "On{}",
@@ -36,6 +41,41 @@
   "key-below-max": "On{}",
   "char-key-max": "On{}",
   "char-key-max-miss": "Off{}"
+ },
+ "lanes": {
+  "rows": 9,
+  "base_misread": [
+   "0:0",
+   "0:1",
+   "0:2",
+   "0:3",
+   "0:5",
+   "1:5",
+   "1:6",
+   "2:5",
+   "3:0",
+   "3:1",
+   "3:2",
+   "3:3",
+   "3:5",
+   "4:5",
+   "4:6",
+   "5:5",
+   "6:0",
+   "6:1",
+   "6:2",
+   "6:3",
+   "6:5",
+   "6:6",
+   "7:5",
+   "7:6",
+   "8:0",
+   "8:1",
+   "8:2",
+   "8:3",
+   "8:5",
+   "8:6"
+  ]
  },
  "goldens": {
   "value-off": {
@@ -401,6 +441,14 @@
   "invoke-arrow": {
    "exit": 0,
    "outcome": "Evaluated\t0\t1\tOn{}"
+  },
+  "nat-case-big": {
+   "exit": 0,
+   "outcome": "Evaluated\t0\t1\tTrue{}"
+  },
+  "invoke-words": {
+   "exit": 0,
+   "outcome": "Evaluated\t1\t0\tTwo{On{},Off{}}"
   }
  },
  "invocations": {
@@ -431,11 +479,27 @@
   "invoke-arrow:feed 1000000 1 0 0": "HostFailure\tinvoke\tfunction-argument",
   "invoke-arrow:feed 1000000 1": "HostFailure\tinvoke\targument-arity",
   "invoke-arrow:feed 1000000 2 0": "HostFailure\tinvoke\targument-range",
-  "invoke-arrow:feed 1000000": "HostFailure\tinvoke\targument-arity"
+  "invoke-arrow:feed 1000000": "HostFailure\tinvoke\targument-arity",
+  "invoke-words:absent 1000000 x": "HostFailure\targuments\texpected-u32",
+  "invoke-words:absent x": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 9 x": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 01 0": "Evaluated\t1\t0\tTwo{On{},Off{}}",
+  "invoke-words:two 1000000 000000000001 0": "Evaluated\t1\t0\tTwo{On{},Off{}}",
+  "invoke-words:two 1000000 4294967295 0": "HostFailure\tinvoke\targument-range",
+  "invoke-words:two 1000000 4294967296 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 4294967297 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 +1 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 -1 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000  1 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 1 ": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 \u0661 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 1000000 1_0 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 4294967296 1 0": "HostFailure\targuments\texpected-u32",
+  "invoke-words:two 0001048576 1 0": "Evaluated\t1\t0\tTwo{On{},Off{}}"
  },
  "fuel": {
-  "agree": 88,
-  "total": 88,
+  "agree": 90,
+  "total": 90,
   "differ": []
  },
  "inspection": {
@@ -445,6 +509,21 @@
   "inspect-chr-closure": "HostFailure\timage\till-typed",
   "inspect-chr-used": "HostFailure\timage\till-typed",
   "inspect-before-charge": "HostFailure\timage\till-typed"
+ },
+ "arguments": {
+  "book-without-fuel": "HostFailure\targuments\tusage",
+  "book-usage-before-lookup": "HostFailure\targuments\tusage",
+  "book-long-zeros": "audit\tpassed\t7\tDescribed\t0\t1",
+  "book-program-form": "HostFailure\targuments\texpected-u32",
+  "program-runs": "audit\tpassed\t14\tEmitted\t0\t5",
+  "program-args": "audit\tpassed\t14\tEmitted\t0\t5",
+  "program-fuel-word": "HostFailure\targuments\texpected-u32",
+  "program-fuel-beyond": "HostFailure\targuments\texpected-u32",
+  "program-without-fuel": "HostFailure\targuments\tusage",
+  "program-without-separator": "HostFailure\targuments\tusage",
+  "program-shape-before-fuel": "HostFailure\targuments\tusage",
+  "program-book-form": "HostFailure\targuments\tusage",
+  "image-before-words": "HostFailure\timage\tmagic"
  },
  "controls": {
   "truncated": "HostFailure image: total",
@@ -514,7 +593,7 @@
  "admitted_kinds": {
   "plan": 6,
   "codes": 7,
-  "run": 11,
+  "run": 23,
   "model": 10
  },
  "admitted": {
@@ -598,6 +677,10 @@
    "outcome": "audit\tpassed\t7\tDescribed\t0\t1",
    "calls": 1
   },
+  "run:nat-default-big": {
+   "outcome": "audit\tpassed\t8\tDescribed\t0\t1",
+   "calls": 1
+  },
   "run:display-visits-at-bound": {
    "outcome": "audit\tpassed\t3\tDescribed\t0\t1",
    "calls": 1
@@ -613,6 +696,50 @@
   "run:display-bytes-beyond-bound": {
    "outcome": "audit\tpassed\t7\tExhausted\t1\t1",
    "calls": 1
+  },
+  "run:fuel-book-exact": {
+   "outcome": "audit\tpassed\t50\tDescribed\t0\t6",
+   "calls": 6
+  },
+  "run:fuel-book-short": {
+   "outcome": "audit\tpassed\t41\tExhausted\t4\t5",
+   "calls": 5
+  },
+  "run:fuel-invoke-exact": {
+   "outcome": "audit\tpassed\t21\tDescribed\t0\t4",
+   "calls": 4
+  },
+  "run:fuel-invoke-short": {
+   "outcome": "audit\tpassed\t19\tExhausted\t2\t3",
+   "calls": 3
+  },
+  "run:fuel-program-exact": {
+   "outcome": "audit\tpassed\t14\tEmitted\t0\t5",
+   "calls": 5
+  },
+  "run:fuel-continuation-short": {
+   "outcome": "audit\tpassed\t13\tExhausted\t0\t4",
+   "calls": 4
+  },
+  "run:fuel-action-short": {
+   "outcome": "audit\tpassed\t12\tExhausted\t1\t3",
+   "calls": 3
+  },
+  "run:fuel-zero-book": {
+   "outcome": "audit\tpassed\t1\tExhausted\t0\t0",
+   "calls": 0
+  },
+  "run:fuel-zero-program": {
+   "outcome": "audit\tpassed\t1\tExhausted\t0\t0",
+   "calls": 0
+  },
+  "run:fuel-zero-ill-typed-invoke": {
+   "outcome": "audit\tpassed\t12\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:fuel-zero-ill-typed-phase": {
+   "outcome": "audit\tpassed\t8\tHostFailure\t1\t2",
+   "calls": 2
   },
   "model:char-pick": {
    "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
@@ -1090,6 +1217,16 @@
    "transitions": 15,
    "live": 0,
    "calls": 3
+  },
+  "nat-case-big": {
+   "transitions": 25,
+   "live": 0,
+   "calls": 4
+  },
+  "invoke-words": {
+   "transitions": 13,
+   "live": 0,
+   "calls": 2
   }
  },
  "sweep": {
@@ -1261,6 +1398,13 @@
    "unsound": 0,
    "differ": 0
   },
+  "invoke-words": {
+   "mutations": 381,
+   "admitted": 48,
+   "refused": 333,
+   "unsound": 0,
+   "differ": 0
+  },
   "io-bind": {
    "mutations": 1194,
    "admitted": 95,
@@ -1286,6 +1430,13 @@
    "mutations": 570,
    "admitted": 70,
    "refused": 500,
+   "unsound": 0,
+   "differ": 0
+  },
+  "nat-case-big": {
+   "mutations": 699,
+   "admitted": 90,
+   "refused": 609,
    "unsound": 0,
    "differ": 0
   },
@@ -1750,7 +1901,7 @@
     "goldens:nat-show",
     "goldens:recursion-tail"
    ],
-   "kills": 42,
+   "kills": 48,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1759,16 +1910,16 @@
    "breaks": "drop above one keeps its count",
    "killed": true,
    "by": [
+    "admitted:run:fuel-book-exact",
     "audit:string-append",
     "audit:string-reverse",
     "audit:u32-show",
     "audit:u32-not",
     "audit:nat-show",
     "audit:recursion-map",
-    "audit:nat-big",
-    "audit:u32-sub-wrap"
+    "audit:nat-big"
    ],
-   "kills": 14,
+   "kills": 16,
    "law": null,
    "crashes": 0
   },
@@ -1800,7 +1951,7 @@
     "admitted:plan:key-arms-none",
     "admitted:codes:surrogate-pair"
    ],
-   "kills": 101,
+   "kills": 112,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1813,12 +1964,12 @@
     "admitted:plan:first-code",
     "admitted:plan:first-code-none-case",
     "admitted:run:u32-file-alias",
+    "admitted:run:nat-default-big",
+    "admitted:run:fuel-book-exact",
     "admitted:model:char-pick",
-    "admitted:model:char-pick-big",
-    "admitted:model:char-match",
-    "audit:let"
+    "admitted:model:char-pick-big"
    ],
-   "kills": 18,
+   "kills": 20,
    "law": null,
    "crashes": 0
   },
@@ -1836,7 +1987,7 @@
     "goldens:char-space",
     "goldens:recursion-map"
    ],
-   "kills": 28,
+   "kills": 33,
    "law": "recursion_map_runs",
    "crashes": 0
   },
@@ -1854,7 +2005,7 @@
     "goldens:case-on",
     "goldens:unpack"
    ],
-   "kills": 182,
+   "kills": 198,
    "law": null,
    "crashes": 0
   },
@@ -1872,7 +2023,7 @@
     "goldens:closure-captures",
     "goldens:io-bind"
    ],
-   "kills": 26,
+   "kills": 29,
    "law": null,
    "crashes": 0
   },
@@ -1936,7 +2087,7 @@
     "fuel:erased-let",
     "fuel:erased-argument"
    ],
-   "kills": 87,
+   "kills": 95,
    "law": null,
    "crashes": 0
   },
@@ -2057,9 +2208,11 @@
    "by": [
     "admitted:run:live-closure-invoked-erased",
     "admitted:run:terminal-invoked-erased",
-    "admitted:run:phase-one-live"
+    "admitted:run:phase-one-live",
+    "admitted:run:fuel-zero-ill-typed-invoke",
+    "admitted:run:fuel-zero-ill-typed-phase"
    ],
-   "kills": 3,
+   "kills": 5,
    "law": null,
    "crashes": 2
   },
@@ -2073,11 +2226,11 @@
     "invocations:invoke-args:size 1000000 0",
     "invocations:invoke-args:real 1000000 0",
     "invocations:invoke-args:real 1000000 1",
-    "admitted:plan:case-none-parameter",
-    "admitted:plan:case-none-let",
-    "admitted:plan:list-head-match"
+    "invocations:invoke-words:two 1000000 01 0",
+    "invocations:invoke-words:two 1000000 000000000001 0",
+    "invocations:invoke-words:two 0001048576 1 0"
    ],
-   "kills": 126,
+   "kills": 144,
    "law": null,
    "crashes": 0
   },
@@ -2228,6 +2381,71 @@
    "kills": 1,
    "law": null,
    "crashes": 0
+  },
+  {
+   "mutant": "separator-unchecked",
+   "breaks": "a Program's second word need not be `--`",
+   "killed": true,
+   "by": [
+    "arguments:program-without-separator",
+    "arguments:program-shape-before-fuel",
+    "arguments:program-book-form"
+   ],
+   "kills": 3,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "usage-as-word",
+   "breaks": "a missing word is expected-u32, not usage",
+   "killed": true,
+   "by": [
+    "arguments:book-without-fuel",
+    "arguments:book-usage-before-lookup",
+    "arguments:program-without-fuel",
+    "arguments:program-without-separator",
+    "arguments:program-shape-before-fuel",
+    "arguments:program-book-form"
+   ],
+   "kills": 6,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "or-through-base",
+   "breaks": "W.or is Base's Bool.or",
+   "killed": true,
+   "by": [
+    "connectives:base"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "xor-through-base",
+   "breaks": "W.xor is Base's Bool.xor",
+   "killed": true,
+   "by": [
+    "connectives:base"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  }
+ ],
+ "harness_mutants": [
+  {
+   "mutant": "fuel-ignored",
+   "breaks": "each run control runs at 1,000,000, not its frozen fuel",
+   "by": [
+    "run:fuel-action-short",
+    "run:fuel-book-short",
+    "run:fuel-continuation-short",
+    "run:fuel-invoke-short",
+    "run:fuel-zero-book",
+    "run:fuel-zero-program"
+   ]
   }
  ]
 }
