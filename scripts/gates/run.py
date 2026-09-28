@@ -63,7 +63,15 @@ GATES = (
     Gate('modules', ('python3', 'tests/compiler-modules/check.py'),
          ('tests/compiler-modules/receipts/modules.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
+    Gate('perch-context', ('python3', 'tests/perch-context/check.py'),
+         ('tests/perch-context/receipts/context.json',)),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('bootstrap', ('python3', 'tests/compiler-bootstrap/check.py'),
+         ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
+    Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
+         ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
+         ('tests/compiler-io/receipts/host.json',)),
     Gate('literals', ('python3', 'tests/compiler-literals/check.py'),
          ('tests/compiler-literals/receipts/literals.json',)),
 )
@@ -75,7 +83,7 @@ def git(root: Path, *args: str) -> bytes:
 
 def excluded(name: str) -> bool:
     parts = Path(name).parts
-    return (any(p == '.env' or p.startswith('.env.') or p == '.git' for p in parts)
+    return (any(p.lower() == '.env' or p.lower().startswith('.env.') or p == '.git' for p in parts)
             or parts[0] in ('.toolchain', 'node_modules', '.local', 'build'))
 
 
@@ -170,6 +178,7 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                dependencies, 'tree-sitter-language-pack')
     temp = run_dir / 'tmp'
     temp.mkdir()
+    env.setdefault('KNOT_GATE_TIMEOUT_SCALE', os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '4'))
     env.update(BEND_NO_TELEMETRY='1', BEND_LIB=str(library), BEND_HUB='offline://disabled',
                BEND_ORIGIN='offline://disabled', PYTHONDONTWRITEBYTECODE='1',
                TREE_SITTER_LANGUAGE_PACK_CACHE_DIR=str(run_dir / 'cache'),
@@ -217,6 +226,16 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         result['bound_observations'] = sum(len(row[field]['stdout'].splitlines()) for row in record['bounds'])
     if gate.name == 'owned-store':
         result.update(cases=record['case_count'], literal_witnesses=record['literal_witnesses'], execution_lanes=2)
+    if gate.name == 'bootstrap':
+        stages = record['stages']
+        if (any(record['verdict'].values()) or any(s['status'] == 'reached' and (s['disagree'] or s['agree'] != s['corpus'])
+                                                  for s in stages)
+                or any(not ((b['exit'] is None and b.get('outcome') == 'Exhausted')
+                            or (b['exit'], b['stderr'].split('\t', 1)[0]) in ((3, 'Unsupported'), (4, 'Exhausted')))
+                       for b in (s['blocker'] for s in stages if s['status'] == 'blocked'))):
+            raise ValueError('Bootstrap receipt violates its stage verdict')
+        result.update(corpus=record['corpus']['files'], stages=len(stages),
+                      reached=sum(s['status'] == 'reached' for s in stages))
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
@@ -235,6 +254,10 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
                       pin_observations=len(record['pin']),
                       tampered_base_observations=len(record['tampered_base']),
                       proof_entries=len(record['proofs']))
+    if gate.name == 'io-host':
+        for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
+            result[key] = record[key]
+        result['review'] = record['review_counts']
     return result
 
 

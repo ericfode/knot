@@ -7,7 +7,8 @@ import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { BEND_PARSER_PROFILE } from './perch-bend.mjs';
-import { bendDeclarationSource, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
+import { bendDeclarationSource, bendImportKind, createBendReview, createBendSourceSnapshot } from './perch-bend-context.mjs';
+import { INTERFACE_CONTEXT, fitInterfaceContext, prepareInterfaceComposition } from './perch-context-interfaces.mjs';
 import { DEFAULT_PERCH_JOBS as DEFAULT_CONCURRENCY, MAX_PERCH_JOBS as MAX_CONCURRENCY, mapConcurrent } from './perch-throughput.mjs';
 import { createStyleAnswerCache, styleEndpoint } from './perch-style-cache.mjs';
 import { book_nil, parse_book } from '../vendor/bend-parser/bend.mts';
@@ -16,6 +17,8 @@ import baseSource from '../vendor/bend-parser/base-source.mjs';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PREFLIGHT_CONCURRENCY = 32;
 const hash = value => createHash('sha256').update(value).digest('hex');
+// Local read handles stay outside serialized candidates and request identities.
+const sourceSnapshots = new WeakMap();
 const DEFAULT_SCOPE = 'Existing project code. Rate each declaration against its own purpose and supplied contract. No alternative implementation is required. Judge the quality of its representation and reading experience, not the difficulty of an unrelated task.';
 const inside = (root, path) => {
   const rel = relative(root, path);
@@ -141,6 +144,7 @@ export async function prepareStyleComposition(candidates, cohort, config, root =
   validatePotential(config);
   snapshot ??= await createBendSourceSnapshot(root);
   const selected = readingOrder ?? [...new Set(candidates.map(c => c.path ?? c.target.split('::')[0]))].sort();
+  if (snapshot.contextPolicy === INTERFACE_CONTEXT) return prepareInterfaceComposition(selected, cohort, config, root, snapshot, knownBuiltins(), hash(baseSource));
   const collaborators = candidates.flatMap(c => (c.context?.files ?? []).map(f => f.path));
   const paths = readingOrder
     ? [...selected, ...[...new Set(collaborators)].filter(path => !selected.includes(path)).sort()]
@@ -344,6 +348,7 @@ export function assessStyle(rows, config) {
 }
 
 async function datatypeContext(file, path, declaration, root, snapshot) {
+  if (snapshot.contextPolicy === INTERFACE_CONTEXT) return file.review.forUnit(declaration.name);
   // Retain the existing one-file datatype budget. Actual type dependencies now
   // resolve locally or produce explicit limits, rather than a blanket warning.
   file.datatypeReview ??= await createBendReview({ root, path, source: file.source,
@@ -390,9 +395,11 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT, 
       if (selected.size > config.max_units) throw new Error(`Style run limited to ${config.max_units} units; narrow targets or raise max_units`);
       const context = declaration.syntax_kind === 'bend_datatype' ? await datatypeContext(file, path, declaration, realRoot, snapshot)
         : await file.review.forUnit(declaration.qualified_name);
-      const state = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
+      const prefix = { cohort: cohort?.trim() || DEFAULT_SCOPE, name: declaration.qualified_name,
         path, declaration_kind: declaration.syntax_kind,
-        source: bendDeclarationSource(file.source, declaration), ...context.seen };
+        source: bendDeclarationSource(file.source, declaration) };
+      if (snapshot.contextPolicy === INTERFACE_CONTEXT) await fitInterfaceContext(context, snapshot, prefix);
+      const state = { ...prefix, ...context.seen };
       const encodedState = JSON.stringify(state);
       if (Buffer.byteLength(encodedState) > 60000) throw new Error(`Style context too large: ${identity}`);
       candidates.push({ target: identity, path, kind: declaration.syntax_kind,
@@ -402,6 +409,7 @@ export async function prepareStyleTargets(targets, cohort, config, root = ROOT, 
     }
   }
   if (!candidates.length) throw new Error('Ranking needs at least one parsed unit');
+  sourceSnapshots.set(candidates, snapshot);
   return candidates;
 }
 
@@ -437,7 +445,7 @@ export async function prepareStyleInventory(cohort, config, root = ROOT, snapsho
   return { candidates, inventory: { discovered_files: paths, empty_files, unranked } };
 }
 
-export async function changedStyleSources(candidates, root = ROOT) {
+export async function changedStyleSources(candidates, root = ROOT, snapshot = sourceSnapshots.get(candidates)) {
   const files = new Map();
   const remember = (path, expected) => {
     if (files.has(path) && files.get(path) !== expected) throw new Error(`Source changed during style preflight: ${path}`);
@@ -451,7 +459,7 @@ export async function changedStyleSources(candidates, root = ROOT) {
   }
   const changed = [];
   for (const [path, expected] of files) {
-    const actual = await readFile(resolve(root, path)).then(hash).catch(() => null);
+    const actual = await (snapshot ? snapshot.readCurrent(path) : readFile(resolve(root, path))).then(hash).catch(() => null);
     if (actual !== expected) changed.push(path);
   }
   return changed;
@@ -464,7 +472,9 @@ function compositionPreflight(prepared) {
   const { context } = prepared.candidate;
   return { available: prepared.available, reasons: prepared.reasons, selected_files: context.selected_files,
     context_files: context.files.length, source_bytes: context.source_bytes, byte_limit: context.limits.bytes,
-    unresolved_by_reason: tally(context.unresolved.map(ref => ref.reason)), unresolved: context.unresolved };
+    unresolved_by_reason: tally(context.unresolved.map(ref => ref.reason)), unresolved: context.unresolved,
+    ...(context.profile ? { context_policy: context.profile, representations: context.representations,
+      state_sha256: prepared.candidate.state_sha256 } : {}) };
 }
 
 async function readStyleReport(path) {
@@ -472,7 +482,7 @@ async function readStyleReport(path) {
   return JSON.parse((path.endsWith('.gz') ? gunzipSync(bytes) : bytes).toString('utf8'));
 }
 
-async function prepareStyleSelection({ all = false, targets, taskPath, cohort }, root, snapshot = null, policy = null) {
+async function prepareStyleSelection({ all = false, targets, taskPath, cohort, contextPolicy = null, packageStore = null }, root, snapshot = null, policy = null) {
   const text = policy?.text ?? await readFile(resolve(root, 'perch-style.json'), 'utf8');
   const config = policy?.config ?? JSON.parse(text);
   assessStyle([], config);
@@ -482,7 +492,7 @@ async function prepareStyleSelection({ all = false, targets, taskPath, cohort },
     path: taskPath ?? null, sha256: taskText === undefined ? null : hash(taskText), bytes: Buffer.byteLength(taskText ?? ''),
     available: taskAvailable, reason: !taskText?.trim() ? 'missing_task_context' : !taskAvailable ? 'task_byte_limit' : null };
   const effectiveCohort = taskAvailable ? taskText : config.potential_profundity ? undefined : cohort;
-  snapshot ??= await createBendSourceSnapshot(root);
+  snapshot ??= await createBendSourceSnapshot(root, { contextPolicy, packageStore });
   const { candidates, inventory } = all ? await prepareStyleInventory(effectiveCohort, config, root, snapshot)
     : { candidates: await prepareStyleTargets(targets, effectiveCohort, config, root, snapshot), inventory: null };
   return { text, config, taskText, taskAvailable, task, snapshot, candidates, inventory };
@@ -503,13 +513,14 @@ async function readStyleManifest(path, root) {
   const manifest = JSON.parse(text);
   const object = value => value && typeof value === 'object' && !Array.isArray(value);
   if (!object(manifest) || manifest.schema !== 1 || !Array.isArray(manifest.groups) || !manifest.groups.length
-      || Object.keys(manifest).some(key => !['schema', 'groups'].includes(key))) throw new Error('Expected manifest schema 1 with nonempty groups');
+      || Object.keys(manifest).some(key => !['schema', 'groups', 'context'].includes(key))) throw new Error('Expected manifest schema 1 with nonempty groups');
+  if (manifest.context !== undefined && manifest.context !== INTERFACE_CONTEXT) throw new Error('Unknown manifest context policy');
   const names = new Set(), groups = [];
   for (const group of manifest.groups) {
     if (!object(group) || typeof group.name !== 'string' || !group.name.trim() || names.has(group.name)
         || !Array.isArray(group.files) || !group.files.length
         || group.notes !== undefined && typeof group.notes !== 'string'
-        || Object.keys(group).some(key => !['name', 'files', 'task', 'notes'].includes(key))) {
+        || Object.keys(group).some(key => !['name', 'files', 'task', 'notes', 'selected_files'].includes(key))) {
       throw new Error('Manifest groups need unique nonempty names, nonempty files, optional task and string notes');
     }
     names.add(group.name);
@@ -520,11 +531,28 @@ async function readStyleManifest(path, root) {
       if (files.includes(canonical)) throw new Error(`Duplicate manifest file in ${group.name}: ${file}`);
       files.push(canonical);
     }
+    let selectedFiles;
+    if (group.selected_files !== undefined) {
+      if (manifest.context !== INTERFACE_CONTEXT || !Array.isArray(group.selected_files) || !group.selected_files.length) {
+        throw new Error('Selected files need the interfaces-v1 context policy and a nonempty selection');
+      }
+      selectedFiles = [];
+      for (const input of group.selected_files) {
+        const file = await workspacePath(input, 'selected file');
+        if (!files.includes(file) || selectedFiles.includes(file)) throw new Error('Selected files must be distinct members of the group inventory');
+        selectedFiles.push(file);
+      }
+    }
     groups.push({ name: group.name, files,
+      ...(selectedFiles ? { selected_files: selectedFiles } : {}),
       ...(group.task === undefined ? {} : { task: await workspacePath(group.task, 'task') }),
       ...(group.notes === undefined ? {} : { notes: group.notes }) });
   }
-  return { path, sha256: hash(text), groups };
+  if (manifest.context === INTERFACE_CONTEXT) {
+    const covered = new Set(groups.flatMap(g => g.selected_files ?? g.files));
+    if (groups.flatMap(g => g.files).some(file => !covered.has(file))) throw new Error('Manifest context inventory contains a file never selected in full');
+  }
+  return { path, sha256: hash(text), groups, contextPolicy: manifest.context ?? null };
 }
 
 /** Manifest groups reuse the explicit-target gate; only their composition order differs. */
@@ -535,7 +563,7 @@ async function runStyleManifest(args, {
   const offline = args.includes('--preflight');
   if (offline === args.includes('--live')) throw new Error('Choose --preflight (offline) or --live (provider review), not both');
   const switches = offline ? ['--preflight', '--json'] : ['--live', '--json', '--incremental', '--fresh'];
-  const prefixes = ['--manifest=', '--group=', '--output=', ...(offline ? [] : ['--jobs=', '--reuse='])];
+  const prefixes = ['--manifest=', '--group=', '--output=', '--package-store=', ...(offline ? [] : ['--jobs=', '--reuse='])];
   if (args.some(x => !switches.includes(x) && !prefixes.some(prefix => x.startsWith(prefix)))) {
     throw new Error('Manifest mode accepts named groups, not --all, explicit targets or task/cohort overrides; unknown option');
   }
@@ -545,6 +573,7 @@ async function runStyleManifest(args, {
     return values[0];
   };
   const manifestPath = single('--manifest='), groupName = single('--group='), output = single('--output='), reuse = single('--reuse=');
+  const packageStore = single('--package-store=');
   const jobs = single('--jobs=');
   if (Number(args.includes('--incremental')) + Number(args.includes('--fresh')) + Number(reuse !== undefined) > 1) {
     throw new Error('Choose only one of --incremental, --fresh, or --reuse');
@@ -563,14 +592,25 @@ async function runStyleManifest(args, {
   const text = await readFile(resolve(root, 'perch-style.json'), 'utf8'), config = JSON.parse(text);
   assessStyle([], config);
   if (!config.style_role) throw new Error('Manifest qualification requires a rubric with composition targets');
-  const snapshot = await createBendSourceSnapshot(root), prepared = [];
+  if (packageStore && manifest.contextPolicy !== INTERFACE_CONTEXT) throw new Error('Package stores require interfaces-v1 context');
+  const snapshot = await createBendSourceSnapshot(root, { contextPolicy: manifest.contextPolicy, packageStore }), prepared = [];
   let selectedUnits = 0;
   for (const group of selected) {
-    const selection = await prepareStyleSelection({ targets: group.files, taskPath: group.task }, root, snapshot, { text, config });
+    if (manifest.contextPolicy === INTERFACE_CONTEXT) {
+      for (const path of group.files) {
+        const file = await snapshot.load(path);
+        for (const ref of file.analysis.references.filter(r => r.kind === 'import' && bendImportKind(r.module) === 'local')) {
+          const dependency = await snapshot.resolveImport(path, ref.module);
+          if (!group.files.includes(dependency.path)) throw new Error(`Manifest local import closure: ${group.name}: ${path} needs ${ref.module}`);
+        }
+      }
+    }
+    const selectedFiles = group.selected_files ?? group.files;
+    const selection = await prepareStyleSelection({ targets: selectedFiles, taskPath: group.task }, root, snapshot, { text, config });
     selectedUnits += selection.candidates.length;
     if (selectedUnits > config.max_units) throw new Error(`Style run limited to ${config.max_units} units; narrow groups or raise max_units`);
     selection.composition = await prepareStyleComposition(selection.candidates, selection.taskAvailable ? selection.taskText : null,
-      config, root, snapshot, group.files);
+      config, root, snapshot, selectedFiles);
     prepared.push({ group, selection });
   }
   const fileIdentity = (path, source_sha256) => ({ path, source_sha256, context: { files: [] } });
@@ -578,6 +618,7 @@ async function runStyleManifest(args, {
     ...prepared.flatMap(({ selection }) => [...selection.candidates,
       ...selection.composition.candidate.context.files.map(file => fileIdentity(file.path, file.source_sha256)),
       ...(selection.task.path ? [fileIdentity(selection.task.path, selection.task.sha256)] : [])])];
+  sourceSnapshots.set(watched, snapshot);
   const sourceFiles = new Map(watched.flatMap(candidate => [candidate, ...candidate.context.files])
     .map(file => [file.path, file.source_sha256]));
   const preflightChanged = await changedStyleSources(watched, root);
@@ -596,7 +637,7 @@ async function runStyleManifest(args, {
   let dispatchFailure = null;
   for (const { group, selection } of prepared) {
     const old = prior?.groups.find(item => item.name === group.name);
-    const childArgs = [offline ? '--preflight' : '--live', '--json', ...group.files,
+    const childArgs = [offline ? '--preflight' : '--live', '--json', ...(group.selected_files ?? group.files),
       ...(group.task ? [`--task=${group.task}`] : []),
       ...args.filter(x => ['--incremental', '--fresh'].includes(x) || x.startsWith('--jobs=')),
       ...(old ? [`--reuse=${reuse}`] : [])];
@@ -610,7 +651,8 @@ async function runStyleManifest(args, {
       dispatchFailure = { group: group.name, reason: error.message };
       break;
     }
-    groups.push({ name: group.name, files: group.files, notes: group.notes ?? null, ...report });
+    groups.push({ name: group.name, files: group.files, notes: group.notes ?? null,
+      ...(group.selected_files ? { selected_files: group.selected_files } : {}), ...report });
     if (!offline && code === 1) break;
   }
   const changed_sources = await changedStyleSources(watched, root);
@@ -685,7 +727,7 @@ export async function runStylePreflight(args, { root = ROOT, stdout = text => co
     if (args.includes('--live')) throw new Error('Preflight never contacts a provider; --live is not allowed');
     return runStyleManifest(['--preflight', ...args], { root, stdout });
   }
-  const known = x => ['--preflight', '--json', '--all'].includes(x) || ['--cohort=', '--task=', '--output='].some(p => x.startsWith(p));
+  const known = x => ['--preflight', '--json', '--all'].includes(x) || ['--cohort=', '--task=', '--output=', '--context=', '--package-store='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown preflight option; --preflight never contacts a provider');
   const all = args.includes('--all'), targets = args.filter(x => !x.startsWith('--'));
   if (all === targets.length > 0) throw new Error('Use --preflight with either --all or explicit targets');
@@ -697,12 +739,14 @@ export async function runStylePreflight(args, { root = ROOT, stdout = text => co
     return values[0];
   };
   const cohort = single('--cohort=', true), taskPath = single('--task='), output = single('--output=');
+  const contextPolicy = single('--context='), packageStore = single('--package-store=');
+  if (packageStore && contextPolicy !== INTERFACE_CONTEXT) throw new Error('Package stores require interfaces-v1 context');
   const outputPath = output ? resolve(root, output) : null;
   if (outputPath && await lstat(outputPath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; })) {
     throw new Error('Preflight output already exists; choose a new path');
   }
   const { text, config, taskText, taskAvailable, task, snapshot, candidates, inventory } = selection
-    ?? await prepareStyleSelection({ all, targets, taskPath, cohort }, root);
+    ?? await prepareStyleSelection({ all, targets, taskPath, cohort, contextPolicy, packageStore }, root);
   if (!candidates.length) throw new Error('No rankable parsed declarations');
 
   const units = candidates.map(candidate => {
@@ -715,7 +759,9 @@ export async function runStylePreflight(args, { root = ROOT, stdout = text => co
       limit_reasons: [...new Set(notes.filter(ref => ref.reason.endsWith('-limit')).map(ref => ref.reason))],
       diagnostics_available: !candidate.context?.truncated,
       supporting_role_possible: !limited,
-      role_context_gaps: unknown.map(({ path, name, reason }) => ({ path, name, reason })) };
+      role_context_gaps: unknown.map(({ path, name, reason }) => ({ path, name, reason })),
+      ...(candidate.context?.profile === INTERFACE_CONTEXT ? { context_policy: INTERFACE_CONTEXT,
+        summarized: candidate.context.summarized, source_bytes: candidate.context.source_bytes } : {}) };
   });
   const byFile = new Map();
   for (const candidate of candidates) {
@@ -843,11 +889,17 @@ export async function runStyleRanking(args, {
   const taskPath = args.find(x => x.startsWith('--task='))?.slice(7);
   const output = args.find(x => x.startsWith('--output='))?.slice(9);
   const reuse = args.find(x => x.startsWith('--reuse='))?.slice(8);
+  const contextPolicy = args.find(x => x.startsWith('--context='))?.slice(10);
+  const packageStore = args.find(x => x.startsWith('--package-store='))?.slice(16);
   const incremental = args.includes('--incremental'), fresh = args.includes('--fresh');
   const all = args.includes('--all');
   const concurrency = Number(args.find(x => x.startsWith('--jobs='))?.slice(7) ?? env.PERCH_JOBS ?? DEFAULT_CONCURRENCY);
-  const known = x => ['--live', '--json', '--all', '--incremental', '--fresh'].includes(x) || ['--cohort=', '--task=', '--output=', '--jobs=', '--reuse='].some(p => x.startsWith(p));
+  const known = x => ['--live', '--json', '--all', '--incremental', '--fresh'].includes(x) || ['--cohort=', '--task=', '--output=', '--jobs=', '--reuse=', '--context=', '--package-store='].some(p => x.startsWith(p));
   if (args.some(x => x.startsWith('--') && !known(x))) throw new Error('Unknown style option');
+  if (packageStore && contextPolicy !== INTERFACE_CONTEXT) throw new Error('Package stores require interfaces-v1 context');
+  for (const key of ['--context=', '--package-store=']) if (args.includes(key) || args.filter(x => x.startsWith(key)).length > 1) {
+    throw new Error(`Supply at most one nonempty ${key.slice(0, -1)}`);
+  }
   if (!args.includes('--live')) throw new Error('Use --live file.bend::name, file.bend, or --live --all to rank project Bend declarations (or --preflight for the offline structural check)');
   if (Number(incremental) + Number(fresh) + Number(reuse !== undefined) > 1) throw new Error('Choose only one of --incremental, --fresh, or --reuse');
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > MAX_CONCURRENCY) throw new Error(`Concurrency must be 1..${MAX_CONCURRENCY}`);
@@ -867,11 +919,11 @@ export async function runStyleRanking(args, {
     await mkdir(dirname(outputPath), { recursive: true });
   }
   const { text, config, taskText, taskAvailable, task, snapshot: sourceSnapshot, candidates, inventory } = selection
-    ?? await prepareStyleSelection({ all, targets, taskPath, cohort }, root);
+    ?? await prepareStyleSelection({ all, targets, taskPath, cohort, contextPolicy, packageStore }, root);
   if (!candidates.length) throw new Error('No rankable parsed declarations');
   const composition = selection?.composition ?? (config.potential_profundity && !all ? await prepareStyleComposition(candidates, taskAvailable ? taskText : null, config, root, sourceSnapshot)
     : { available: false, reasons: ['explicit_selected_group_required'], candidate: null });
-  const preflightChanged = await changedStyleSources(candidates, root);
+  const preflightChanged = await changedStyleSources(candidates, root, sourceSnapshot);
   if (preflightChanged.length) throw new Error(`Source changed during style preflight: ${preflightChanged.join(', ')}`);
   if (loadEnv) {
     try { process.loadEnvFile(resolve(root, '.env')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -991,7 +1043,7 @@ export async function runStyleRanking(args, {
   if (failure) rows = [];
   const evaluated = performance.now();
   const compositionFiles = (composition.candidate?.context.files ?? []).map(file => ({ ...file, context: { files: [] } }));
-  const changed_sources = await changedStyleSources([...candidates, ...compositionFiles], root);
+  const changed_sources = await changedStyleSources([...candidates, ...compositionFiles], root, sourceSnapshot);
   if (taskPath !== undefined && await readFile(resolve(root, taskPath)).then(hash).catch(() => null) !== task.sha256) changed_sources.push(taskPath);
   const freshnessChecked = performance.now();
   const resolvedModels = new Set([...reused.values(), ...completed_rows.values()].map(row => row.model));

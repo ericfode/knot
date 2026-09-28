@@ -130,8 +130,12 @@ def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match value:
     case S.Constructor{token,items}:
-      S.choose(Result<S.Error,Parsed>,starts(ts,"="),u =>
-        unsupported(ts,"destructuring-binding"),u => body_end(value,ts))
+      match ts:
+        case Con{+head,+tail}:
+          S.choose(Result<S.Error,Parsed>,S.matches(head,"="),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.or(starts(tail,"="),starts(tail,">")),u =>
+              body_end(value,ts),u => unsupported(ts,"destructuring-binding")),u => body_end(value,ts))
+        case Nil{}: body_end(value,ts)
     case _: body_end(value,ts)
 
 def operator_tail(ts: List<&2,S.Token>) -> Bool:
@@ -205,7 +209,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
-            then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest)),u =>
+            # A parameter tail is reachable only after an ordinary binder.
+            S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
+              invalid(t,"parameter"),u =>
+              then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
             S.choose(Result<S.Error,Parsed>,S.matches(h,"+"),u => unsupported(tokens,"operator"),u => invalid(tokens,"argument-separator"))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
@@ -275,8 +282,12 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),Bool.and(S.identifier(typ),S.matches(colon,":")))),u =>
-            then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),S.identifier(typ))),u =>
+            S.choose(Result<S.Error,Parsed>,S.matches(colon,"<"),u =>
+              unsupported(Con{colon,body},"type-application"),u =>
+            S.choose(Result<S.Error,Parsed>,S.matches(colon,":"),u =>
+              then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)),u =>
+              invalid(tokens,"function-result"))),u =>
             invalid(tokens,"function-result"))
         case _: invalid(tokens,"function-result")
     case 1n+ +n FunctionTail{token,other}:
@@ -300,8 +311,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+typ,+tail}:
           S.choose(Result<S.Error,Parsed>,S.identifier(typ),u =>
+            S.choose(Result<S.Error,Parsed>,starts(tail,"<"),u =>
+              unsupported(tail,"type-application"),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(tail,"="),rhs =>
-              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest))),u =>
+              then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,Some{typ},value,column},rest)))),u =>
             unsupported(tokens,"binding-type"))
         case _: invalid(tokens,"binding-type")
     case 1n+ +n BindingTail{+token,+quantity,+annotation,+value,+column}:

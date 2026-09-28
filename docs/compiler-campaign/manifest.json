@@ -110,7 +110,7 @@
         "src/primitive-op.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Binary byte and LEB construction; published ByteOutput is an explicit unresolved external dependency."
+      "notes": "Binary byte and LEB construction; ByteOutput resolves from its verified local published closure."
     },
     {
       "name": "wasm-emission",
@@ -131,7 +131,13 @@
         "src/literal-types.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Enum terms to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
+      "notes": "Enum and fielded terms to binary Wasm; checker collaborators enter as interfaces.",
+      "selected_files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/wasm-bytes.bend",
+        "src/wasm.bend"
+      ]
     },
     {
       "name": "driver-pipeline",
@@ -176,7 +182,14 @@
         "src/primitive-wasm.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
+      "notes": "Source through checking to evaluation or Wasm, including all CLI entries; phase implementations enter as interfaces.",
+      "selected_files": [
+        "src/driver.bend",
+        "src/parse-cli.bend",
+        "src/check-cli.bend",
+        "src/eval-cli.bend",
+        "src/compile-cli.bend"
+      ]
     },
     {
       "name": "frontend-laws",
@@ -216,7 +229,12 @@
         "src/literal-types.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Checker boundary and scope laws. Earlier proof-entry imports are retained in the closed local family, even when not referenced by a term."
+      "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
+      "selected_files": [
+        "src/check-LAWS.bend",
+        "src/scope.bend",
+        "src/check-PROOF.bend"
+      ]
     },
     {
       "name": "runtime-laws",
@@ -247,7 +265,13 @@
         "src/literal.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Source-machine and codec laws, including the earlier proof-entry chain. Oversize and external ByteOutput context remain blockers."
+      "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
+      "selected_files": [
+        "src/runtime-LAWS.bend",
+        "src/eval.bend",
+        "src/wasm-bytes.bend",
+        "src/runtime-PROOF.bend"
+      ]
     },
     {
       "name": "catalog-laws",
@@ -280,7 +304,12 @@
         "src/literal.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
-      "notes": "Catalog kind laws and their complete chained proof entry; the full family exceeds the composition bound."
+      "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
+      "selected_files": [
+        "src/catalog-LAWS.bend",
+        "src/catalog.bend",
+        "src/catalog-PROOF.bend"
+      ]
     },
     {
       "name": "fields-laws",
@@ -315,7 +344,12 @@
         "src/literal.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
-      "notes": "Field quantities, reconstruction, source-machine and inspection laws with the full earlier proof-entry chain. The family exceeds the composition bound."
+      "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
+      "selected_files": [
+        "src/fields-LAWS.bend",
+        "src/patterns.bend",
+        "src/fields-PROOF.bend"
+      ]
     },
     {
       "name": "recursion-laws",
@@ -352,7 +386,11 @@
         "src/literal.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
-      "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+      "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
+      "selected_files": [
+        "src/recursion-LAWS.bend",
+        "src/recursion-PROOF.bend"
+      ]
     },
     {
       "name": "module-import-paths",
@@ -558,5 +596,6 @@
       "task": "tests/compiler-literals/README.md",
       "notes": "Arithmetic guards, escapes, overflow and bit-preserving constants with checked proofs."
     }
-  ]
+  ],
+  "context": "interfaces-v1"
 }

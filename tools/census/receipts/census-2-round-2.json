@@ -1,0 +1,472 @@
+{
+  "schema": 1,
+  "increment": "census-2",
+  "review_round": 2,
+  "status": "passed",
+  "merge_commit": "4aaffbd4c63d469f2763a88d04bde69d530c4288",
+  "merged_main": "fa31fec064ba0993ed31205fd4b4fdc00df5d761",
+  "scope": "Gate registration admits evidence; ungated frozen outcomes remain requirements. No Knot language or Bend source change.",
+  "sources": {
+    "tools/census/census.mjs": "eeb60cd34ee35090f211c39e6627b9ae4b656f45c750d5270fbc7d0018909045",
+    "tools/census/evidence.mjs": "c826612ac56a1a2dc023b82aa229e1a07016f35ccc2757ba5de305e0af88d4f2",
+    "tools/census/gates.py": "1ec2b26515c6eabfcb3d65775af00a17e35c3c3336f80c7258cc8ed89bc7754b",
+    "tools/census/meter.mjs": "9a938da3bc052fb9d9f6c6d0c94cd19c52c2f05ff3a0652950cefca8ac36c2ec",
+    "tools/census/tests/census.test.mjs": "5e08f88651ca7141ae28c048319b8994b6c87fbe7eaac88fb7cd1f5805835fdb",
+    "tools/census/tests/evidence.test.mjs": "9e5ce607c8dd2637c79d5144125b587a055f6acd1d4bdd7499ae9993fe5840ef",
+    "tools/census/tests/requirements.test.mjs": "6608953de6d04bf91d6547f4e3d05c4e9d5964150179e8de59ca2a105f460060",
+    "tools/census/fixtures/requirements.json": "605465fd1e88c13eb956fadce0e1a106e6ae8ad4bd906146041566bed9858184",
+    "tools/census/fixtures/meter.json": "9764fa7568078f45aa60cd59e209c0e2977f51fde21e0d4a6a86d04a34295200"
+  },
+  "manifests": {
+    "docs/compiler-campaign/inventory/accepted.json": "be837774845f870023efc9be9f4cab2d63e685b4bafd3f7be61a718d8d1e64e0",
+    "docs/compiler-campaign/inventory/base-closure.json": "396b379cdaf9e3980147cd469e52296e9980f30832c1373123b0f1a99a142a04",
+    "docs/compiler-campaign/inventory/hosts.json": "7575cc97362b37a9c411dbf2006ce3416d7be64dc6461f61a7cab45e903d13de",
+    "docs/compiler-campaign/inventory/implementation.json": "361324115c51a9e2e932ca13405940ab39fad01a2fd1570eee2643e53fc17900",
+    "docs/compiler-campaign/inventory/selfhost.json": "d2513c340b6e5bde9662c5cd725491e6f37d0596c8d8042071ef7d74c12230ed"
+  },
+  "before": {
+    "census_tests": {
+      "passed": 64,
+      "failed": 4
+    },
+    "new_controls": {
+      "passed": 0,
+      "failed": 6
+    }
+  },
+  "verification": {
+    "census_check": {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s census:check",
+      "exit": 0,
+      "manifests": 5
+    },
+    "census_tests": {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s census:test",
+      "exit": 0,
+      "tests": 75,
+      "passed": 75,
+      "failed": 0,
+      "seed_checks": 3,
+      "semantic_mutants_killed": 8
+    },
+    "requirement_tests": {
+      "command": "BEND_NO_TELEMETRY=1 node --test tools/census/tests/requirements.test.mjs",
+      "exit": 0,
+      "tests": 7,
+      "passed": 7,
+      "failed": 0
+    },
+    "runner_tests": {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s gates:verify",
+      "exit": 0,
+      "tests": 18,
+      "passed": 18,
+      "semantic_mutants_killed": 6
+    },
+    "gates": {
+      "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+      "exit": 0,
+      "passed": 14,
+      "elapsed_seconds": 98.971041,
+      "summary": ".local/gates/run-owhyycy3/summary.json",
+      "summary_sha256": "27271a77cf0428e747c70871588eb42fd9bc6c299141c1529c9f4b13bd211924",
+      "snapshot_sha256": "85b5f623cf5b070ed2eaf01bb2506f72bcb22fb9d0ea35d9ad10af0836c35de6",
+      "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+      "results": [
+        {
+          "command": [
+            "python3",
+            "tests/subsets/check_frontend.py"
+          ],
+          "counts": {
+            "boundaries": 24,
+            "fixtures": 14,
+            "lane_observations": 28,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "frontend",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-checker/check.py"
+          ],
+          "counts": {
+            "bound_observations": 16,
+            "bounds": 2,
+            "budgets": 10,
+            "fixtures": 49,
+            "lane_observations": 98,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "checker",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-structural/check.py"
+          ],
+          "counts": {
+            "bounds": 4,
+            "fixtures": 16,
+            "lane_observations": 64,
+            "mutants": 7
+          },
+          "exit_code": 0,
+          "name": "structural",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields/check.py"
+          ],
+          "counts": {
+            "bound_observations": 12,
+            "bounds": 2,
+            "budgets": 36,
+            "fixtures": 40,
+            "host_boundaries": 6,
+            "lane_observations": 240,
+            "mutants": 9
+          },
+          "exit_code": 0,
+          "name": "fields",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 44,
+            "execution_lanes": 2,
+            "fixtures": 25,
+            "mutants": 7,
+            "reference_calls": 90,
+            "rejects": 64
+          },
+          "exit_code": 0,
+          "name": "wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-wasm/trust.ts"
+          ],
+          "counts": {
+            "entries": 3,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "wasm-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-fields/trust.ts"
+          ],
+          "counts": {
+            "entries": 4,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "fields-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "bun",
+            "tests/compiler-structural/trust.ts"
+          ],
+          "counts": {
+            "entries": 2,
+            "proof_holes": 0
+          },
+          "exit_code": 0,
+          "name": "structural-trust",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/owned-store/check.py"
+          ],
+          "counts": {
+            "cases": 3532,
+            "execution_lanes": 2,
+            "literal_witnesses": 15,
+            "mutants": 6
+          },
+          "exit_code": 0,
+          "name": "owned-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "research/flat-store/check.py"
+          ],
+          "counts": {
+            "bun": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            },
+            "mutants": 9,
+            "native": {
+              "installed_boundary_states": 2,
+              "instances": 3534,
+              "lifecycle_checks": 7,
+              "observations": 13621
+            }
+          },
+          "exit_code": 0,
+          "name": "flat-store",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-recursion/check.py"
+          ],
+          "counts": {
+            "fixtures": 19,
+            "mutants": 3
+          },
+          "exit_code": 0,
+          "name": "recursion",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "python3",
+            "tests/compiler-fields-wasm/check.py"
+          ],
+          "counts": {
+            "boundaries": 30,
+            "fixtures": 8,
+            "mutants": 4
+          },
+          "exit_code": 0,
+          "name": "fields-wasm",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "node",
+            "tools/census/census.mjs",
+            "--check"
+          ],
+          "counts": {
+            "classes": 40,
+            "declarations": 425,
+            "files": 30
+          },
+          "exit_code": 0,
+          "name": "census",
+          "status": "passed"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "-s",
+            "lint:verify"
+          ],
+          "counts": {
+            "law_rules": 8,
+            "tests": 127
+          },
+          "exit_code": 0,
+          "name": "lint:verify",
+          "status": "passed"
+        }
+      ],
+      "receipt_counts": {
+        "identical": 63,
+        "semantic": 0,
+        "volatile-only": 17
+      },
+      "additional_completion_records": {
+        "frontend": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream rejection observations",
+        "recursion": "Recursion gate passed: 19 seed fixtures, 114 native/Bun phase observations, 4 fuel probes, 3 semantic mutants",
+        "fields-wasm": "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. $ROOT/.local/gates/run-owhyycy3/worktree/tests/compiler-fields-wasm/receipts/fields-wasm.json"
+      },
+      "post_run_changes": "Documentation and this receipt; an integration-test tolerance change was followed by a fresh 75/75 census:test run. Census executable source hashes match the gate snapshot."
+    },
+    "proofs": [
+      {
+        "receipt": "tests/subsets/receipts/frontend.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-checker/receipts/checker.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/check-PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-structural/receipts/catalog.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/catalog-PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-fields/receipts/fields.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/fields-PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-wasm/receipts/wasm.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/runtime-PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-recursion/receipts/recursion.json",
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/recursion-PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "tests/compiler-fields-wasm/receipts/fields-wasm.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/compiler-fields-wasm/PROOF.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "research/owned-store/receipts/gate.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/research/owned-store/PROOF.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      {
+        "receipt": "research/flat-store/receipts/gate.json",
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/research/flat-store/PROOF.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    ],
+    "preflight": {
+      "status": "not-applicable",
+      "changed_bend_files": 0,
+      "applicable_blockers": 0,
+      "provider_requests": 0,
+      "new_laws": 0,
+      "live_review": "coordinator"
+    }
+  },
+  "new_mutant": {
+    "file": "tools/census/census.mjs",
+    "before": "records.filter(r => r.admission === 'evidence')",
+    "after": "records",
+    "syntax_check": "passed",
+    "outcome": "semantic-kill",
+    "witness": "tools/census/fixtures/requirements.json",
+    "expected_evidence": [],
+    "mutant_evidence": [
+      "closures:tests/compiler-closures/fixtures/lambda.bend"
+    ]
+  },
+  "inventory": {
+    "accepted_fixtures": 171,
+    "requirements": {
+      "baseslice": 40,
+      "closures": 42,
+      "generics": 40,
+      "literals": 40
+    },
+    "meter": {
+      "compiler": {
+        "declarations": 328,
+        "compiler": 242,
+        "packages": 14,
+        "base": 72,
+        "check": 0,
+        "wasm": 0,
+        "covered_by_requirements": {
+          "check": 93,
+          "wasm": 93
+        }
+      },
+      "frontend": {
+        "declarations": 87,
+        "compiler": 48,
+        "packages": 0,
+        "base": 39,
+        "check": 0,
+        "wasm": 0,
+        "covered_by_requirements": {
+          "check": 55,
+          "wasm": 55
+        }
+      }
+    },
+    "original_evidence_preserved": true,
+    "approval_policy_changed": false,
+    "shared_receipts_changed": false
+  },
+  "logs": {
+    ".local/census-2-review-before.log": "a1a84a55767b2976cbfae216c418ad6a07824eb8fd0f41902497ac2d7c78b3d8",
+    ".local/census-2-review-controls-before.log": "847423e8284f7cd36d07660534ff134739b166c515fae66295ef5bc429ac356c",
+    ".local/census-2-review-tests-final.log": "6a67db7ae9def4e738f724c93d010a8593dce665e73dfda7ba5022ca511622c8",
+    ".local/census-2-review-requirements-final.log": "07c71c8d99d52b603f9eeb75c7653ae6a636c7a44c09275cd59063f95b3827b1",
+    ".local/census-2-review-gates-verify.log": "bbe9af6d9b7387145bb70c4f7e34261879d79a94058f6d2ffa38289ca88fd167"
+  },
+  "limits": [
+    "Registered gate contracts and fresh gate execution remain distinct evidence.",
+    "Frozen requirement coverage is inclusive of gated evidence and does not establish implementation.",
+    "Class coverage does not establish feature interactions, host ABI support or self-hosting."
+  ]
+}

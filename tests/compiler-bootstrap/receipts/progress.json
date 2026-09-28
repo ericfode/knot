@@ -1,0 +1,555 @@
+{
+  "bundles": {
+    "src/compile-cli.bend": {
+      "entry": "src/compile-cli.bend",
+      "files": {
+        ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+        "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend": "b1c672949a72bcbc37509e31a1a20715eb73813904a50157328ded9ed0069ff1",
+        "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+        "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+        "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+        "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+        "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+        "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+        "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+        "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
+        "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+        "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+        "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+        "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+        "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3"
+      },
+      "unresolved": []
+    },
+    "src/parse-cli.bend": {
+      "entry": "src/parse-cli.bend",
+      "files": {
+        ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+        "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+        "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+        "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+        "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
+        "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1"
+      },
+      "unresolved": []
+    }
+  },
+  "compiler_entry": "src/compile-cli.bend",
+  "controls": [
+    {
+      "expected": {
+        "agree": 622,
+        "disagree": 1
+      },
+      "name": "comparator-one-byte",
+      "observed": {
+        "agree": 622,
+        "disagree": 1
+      }
+    },
+    {
+      "expected": {
+        "abi": "knot-bytes-0",
+        "agree": 1,
+        "disagree": 1
+      },
+      "name": "host-bytes-abi-replay",
+      "observed": {
+        "abi": "knot-bytes-0",
+        "agree": 1,
+        "disagree": 1
+      }
+    },
+    {
+      "expected": {
+        "abi": "knot-io",
+        "outcome": "Unsupported"
+      },
+      "name": "host-io-seam",
+      "observed": {
+        "abi": "knot-io",
+        "outcome": "Unsupported"
+      }
+    },
+    {
+      "expected": {
+        "abi": null,
+        "outcome": "HostFailure"
+      },
+      "name": "host-invalid-module",
+      "observed": {
+        "abi": null,
+        "outcome": "HostFailure"
+      }
+    }
+  ],
+  "corpus": {
+    "files": 623,
+    "reference_sha256": "fb03a9ee0b67d81970696ec77b517336a9899336b1f53ea1702d2fa7f399be73"
+  },
+  "harness": "tests/compiler-bootstrap/check.py",
+  "inputs": {
+    "scripts/bend-reference": "50f5b1843feef0e6120d11c71b60b7147fc94c5328e61e2ad5ac9f3e4a3bd3a3",
+    "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
+    "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
+    "tests/compiler-bootstrap/check.py": "f46ffe6bfff4aa51321e3372549723fdcc5def6c9754a8ce233e66952bc47cd4",
+    "tests/compiler-bootstrap/host.mjs": "ff0efc6edf6e50c4ecf209ce71901bc1a36a0f7137f41edc452ddfa856f22278",
+    "tests/compiler-checker/cases.json": "bc7b249e2cb2a12e35dc52e08d2a94c025d6cb2bf7c7edefa665b325870e0456",
+    "tests/compiler-wasm/cases.json": "bd3e3f19d0cf82d17077232e5cb54f8f4120e9c6d1d93faa91174cded2b9290d"
+  },
+  "mutants": [
+    {
+      "exit": 0,
+      "expected_exit": 0,
+      "name": "unmutated",
+      "outcome": "accepted",
+      "violations": [
+        "Judge passed"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "blocker-invalid",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: knot blocker is Invalid; only Unsupported or Exhausted may block"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "blocker-invalid-word-only",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: knot blocker is Unclassified; only Unsupported or Exhausted may block"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "blocker-invalid-exit-only",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: knot blocker is Unclassified; only Unsupported or Exhausted may block"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "blocker-host-crash",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: knot blocker is HostCrash; only Unsupported or Exhausted may block"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "blocker-signal",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.compile: knot blocker is HostCrash; only Unsupported or Exhausted may block"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "own-source-invalid",
+      "outcome": "rejected",
+      "violations": [
+        "src/LAWS.bend: Knot's parser reports its own source Invalid (D4)"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "reached-disagreement",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.reference: reached without exact agreement (622/623, 1 disagree)"
+      ]
+    },
+    {
+      "exit": 1,
+      "expected_exit": 1,
+      "name": "not-run-after-reached",
+      "outcome": "rejected",
+      "violations": [
+        "e2e2.self-parse: not run although prerequisite e2e2.compile is reached"
+      ]
+    }
+  ],
+  "own_source": [
+    {
+      "exit": 3,
+      "path": "src/LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t214:215:9:19\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/PROOF.bend",
+      "stderr": "Unsupported\tlex\tliteral\t600:601:35:40\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/catalog-LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1049:1050:33:92\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/catalog-PROOF.bend",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/catalog.bend",
+      "stderr": "Unsupported\tlex\tliteral\t707:708:21:73\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/check-LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t459:460:18:21\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/check-PROOF.bend",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/check-cli.bend",
+      "stderr": "Unsupported\tlex\tliteral\t375:376:13:44\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/check.bend",
+      "stderr": "Unsupported\tlex\tliteral\t818:819:19:109\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/checked-display.bend",
+      "stderr": "Unsupported\tlex\tliteral\t176:177:8:16\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/compile-cli.bend",
+      "stderr": "Unsupported\tlex\tliteral\t341:342:12:60\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/core.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1652:1653:36:17\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/diagnostic.bend",
+      "stderr": "Unsupported\tlex\tliteral\t155:156:7:37\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/driver.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1460:1461:41:60\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/eval-cli.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1205:1206:34:26\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/eval.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1504:1505:24:18\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/fields-LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t2359:2360:73:48\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/fields-PROOF.bend",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/lex.bend",
+      "stderr": "Unsupported\tlex\tliteral\t559:560:18:58\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/parse-cli.bend",
+      "stderr": "Unsupported\tlex\tliteral\t291:292:10:44\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/parse.bend",
+      "stderr": "Unsupported\tlex\tliteral\t938:939:28:17\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/patterns.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1245:1246:25:57\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/recursion-LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t3863:3864:104:23\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/recursion-PROOF.bend",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/runtime-LAWS.bend",
+      "stderr": "Unsupported\tlex\tliteral\t489:490:17:74\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/runtime-PROOF.bend",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/scope.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1214:1215:29:87\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/syntax.bend",
+      "stderr": "Unsupported\tlex\tliteral\t1958:1959:67:22\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/wasm-bytes.bend",
+      "stderr": "Unsupported\tlex\tliteral\t325:326:9:43\n"
+    },
+    {
+      "exit": 3,
+      "path": "src/wasm.bend",
+      "stderr": "Unsupported\tlex\tliteral\t2119:2120:56:18\n"
+    }
+  ],
+  "parser_entry": "src/parse-cli.bend",
+  "schema": 1,
+  "seed": {
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "launcher": "scripts/bend-reference",
+    "version": "2.0.29"
+  },
+  "seed_builds": {
+    "C1": {
+      "entry": "src/compile-cli.bend",
+      "lane": "native",
+      "sha256": "5e1d61bbb4e85fcc0bc814a61c58ee90da9b1d2e28c824112089d98992f9c73c"
+    },
+    "parse-cli": {
+      "entry": "src/parse-cli.bend",
+      "lane": "native",
+      "sha256": "c6e6243530e2ee7951ae61dbd2ba46ff1f90805c76a34ecbe5c58231a0a51800"
+    },
+    "parse-cli.js": {
+      "entry": "src/parse-cli.bend",
+      "lane": "bun",
+      "sha256": "9f1717509ef7c3ef956e28046a9293af6a55d6f038cf3fe9f44b9ad5867ce218"
+    }
+  },
+  "stages": [
+    {
+      "agree": 623,
+      "corpus": 623,
+      "disagree": 0,
+      "first_disagreement": null,
+      "id": "e2e2.reference",
+      "lanes": [
+        "native",
+        "bun"
+      ],
+      "outcomes": {
+        "Exhausted\tparse\tbudget": 1,
+        "Invalid\tparse\tdeclaration-name": 2,
+        "Invalid\tparse\tend-of-body": 7,
+        "Invalid\tparse\texpected-": 1,
+        "Invalid\tparse\texpected-:": 1,
+        "Invalid\tparse\texpected-=": 2,
+        "Invalid\tparse\texpected-is": 1,
+        "Invalid\tparse\tfunction-result": 8,
+        "Invalid\tparse\tparameter": 6,
+        "Parsed": 142,
+        "Unsupported\tlex\tliteral": 171,
+        "Unsupported\tparse\tbare-quantity-field": 2,
+        "Unsupported\tparse\tdeclaration-form": 169,
+        "Unsupported\tparse\tdestructuring-binding": 7,
+        "Unsupported\tparse\tgeneric-datatype": 32,
+        "Unsupported\tparse\timport": 3,
+        "Unsupported\tparse\tmatch-scrutinees": 1,
+        "Unsupported\tparse\tparameter-type": 49,
+        "Unsupported\tparse\ttemplate-binder": 11,
+        "Unsupported\tparse\tterm-form": 3,
+        "Unsupported\tparse\ttype-application": 4
+      },
+      "status": "reached",
+      "tier": "E2E-2"
+    },
+    {
+      "agree": 0,
+      "artifact_created": false,
+      "blocker": {
+        "argv": [
+          "./.local/compiler-bootstrap/c1",
+          "src/parse-cli.bend",
+          ".local/compiler-bootstrap/parse-cli.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 3,
+        "source": "knot",
+        "stderr": "Unsupported\tlex\tliteral\t291:292:10:44\n",
+        "stdout": ""
+      },
+      "corpus": 1,
+      "disagree": 0,
+      "id": "e2e2.compile",
+      "status": "blocked",
+      "tier": "E2E-2"
+    },
+    {
+      "agree": 0,
+      "corpus": 623,
+      "disagree": 0,
+      "id": "e2e2.self-parse",
+      "prerequisite": "e2e2.compile",
+      "status": "not-run",
+      "tier": "E2E-2"
+    },
+    {
+      "agree": 57,
+      "calls": 90,
+      "corpus": 57,
+      "disagree": 0,
+      "first_disagreement": null,
+      "id": "e2e3.c1",
+      "lane": "native",
+      "modules": {
+        "argument-order": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+        "branch-locals": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+        "branch-maximum": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+        "data-argument": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+        "data-promote": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+        "data-reuse": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+        "duplicate-parameters": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+        "erased-affine-copy": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+        "erased-binding": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+        "erased-cost": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+        "erased-forward": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+        "erased-forward-call": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+        "flag": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+        "forward-type": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+        "high-function-index": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+        "high-local-index": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+        "high-tags": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+        "matched-duplicate": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+        "matched-return": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+        "mixed-types": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+        "nested-match": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+        "renamed": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+        "reordered-arms": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+        "shadowing": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+        "three-colors": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880"
+      },
+      "programs": 25,
+      "rejects": 32,
+      "status": "reached",
+      "tier": "E2E-3"
+    },
+    {
+      "agree": 0,
+      "artifact_created": false,
+      "blocker": {
+        "argv": [
+          "./.local/compiler-bootstrap/c1",
+          "src/compile-cli.bend",
+          ".local/compiler-bootstrap/a2.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 3,
+        "source": "knot",
+        "stderr": "Unsupported\tlex\tliteral\t341:342:12:60\n",
+        "stdout": ""
+      },
+      "corpus": 1,
+      "disagree": 0,
+      "id": "e2e3.a2",
+      "status": "blocked",
+      "tier": "E2E-3"
+    },
+    {
+      "agree": 0,
+      "corpus": 1,
+      "disagree": 0,
+      "id": "e2e3.a3",
+      "prerequisite": "e2e3.a2",
+      "status": "not-run",
+      "tier": "E2E-3"
+    },
+    {
+      "agree": 0,
+      "corpus": 1,
+      "disagree": 0,
+      "id": "e2e3.fixpoint",
+      "prerequisite": "e2e3.a3",
+      "status": "not-run",
+      "tier": "E2E-3"
+    },
+    {
+      "agree": 0,
+      "corpus": 114,
+      "disagree": 0,
+      "id": "e2e3.conformance",
+      "prerequisite": "e2e3.a3",
+      "status": "not-run",
+      "tier": "E2E-3"
+    }
+  ],
+  "status": "passed",
+  "tiers": {
+    "E2E-2": {
+      "first_blocker": {
+        "classification": "Unsupported\tlex\tliteral\t291:292:10:44",
+        "source": "knot",
+        "stage": "e2e2.compile"
+      },
+      "reached": [
+        "e2e2.reference"
+      ]
+    },
+    "E2E-3": {
+      "first_blocker": {
+        "classification": "Unsupported\tlex\tliteral\t341:342:12:60",
+        "source": "knot",
+        "stage": "e2e3.a2"
+      },
+      "reached": [
+        "e2e3.c1"
+      ]
+    }
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3"
+  },
+  "verdict": {
+    "failed_controls": [],
+    "surviving_mutants": [],
+    "violations": []
+  }
+}

@@ -100,7 +100,7 @@ whole-repository trials. Bounded workers, command-local source/rule snapshots
 and batched Git reads preserve review inputs. See the
 [throughput measurements and limits](perch-throughput-2026-09-26.md).
 
-The context includes exact local callees and referenced values, transitive
+The legacy context includes exact local callees and referenced values, transitive
 explicit relative imports within the workspace, direct same-file callers,
 datatypes, and corresponding law statements. Parsed datatype references resolve
 locally and through explicit imported aliases; referenced types are followed
@@ -122,6 +122,19 @@ maximum-size (16 KB) task; 64 overflowed `src/check-cli.bend` and
 The
 [datatype-context repair evidence](perch-execution/role-v5-2026-09-27/datatype-context/README.md)
 records the changed request identities; earlier reviews remain historical.
+
+Compiler style review now opts into the specified
+[`interfaces-v1` context rule](perch-style.md#interface-context-rule-interfaces-v1).
+It replaces the datatype one-file cap with transitive referenced types, resolves
+verified published packages from local stores, and supplies marked collaborator
+and overflow helper/caller signatures. Its manifest still selects every compiler
+file in full somewhere and closes each local import inventory. The 48,000-byte
+source cap, rubric v8 and all targets remain unchanged. Use
+`--context=interfaces-v1` for explicit style targets and
+`--package-store=DIR` to override the default `BEND_LIB` (or `~/.bend/lib`)
+candidate store. Every candidate still needs the seed's publish-hash check. The compiler
+manifest selects the policy itself. Semantic `lint` and legacy style invocations
+retain their established context contract and controls. No package is fetched.
 
 Working-copy built-in checks also receive the already-selected paired law text
 in a dedicated `laws` field. Each selected law appears once, including when its

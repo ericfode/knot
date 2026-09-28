@@ -1,0 +1,848 @@
+{
+  "build": {
+    "argv": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/parse-cli.bend",
+      "-o",
+      "$ROOT/.local/compiler-classification/parse.js"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "date": "<normalized-date>",
+  "fixtures": [
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22",
+        "exit": 2
+      },
+      "file": "classification/template-nonleading.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-nonleading.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tparameter\t57:58:5:22\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(a: Flag, ~x: Flag) -> Flag:\n  |                       ^\n6 |   x\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22",
+        "exit": 2
+      },
+      "file": "classification/template-nonleading-malformed.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-nonleading-malformed.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tparameter\t57:58:5:22\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-malformed.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(a: Flag, ~x:) -> Flag:\n  |                       ^\n6 |   x\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23",
+        "exit": 2
+      },
+      "file": "classification/template-nonleading-erased.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-nonleading-erased.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tparameter\t58:59:5:23\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-erased.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(-a: Flag, ~x: Flag) -> Flag:\n  |                        ^\n6 |   x\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23",
+        "exit": 2
+      },
+      "file": "classification/template-nonleading-reusable.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-nonleading-reusable.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tparameter\t58:59:5:23\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-reusable.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(+a: Flag, ~x: Flag) -> Flag:\n  |                        ^\n6 |   x\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13",
+        "exit": 3
+      },
+      "file": "classification/template-leading-pair.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-leading-pair.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-leading-pair.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13",
+        "exit": 3
+      },
+      "file": "classification/template-after-prefix.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/template-after-prefix.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-after-prefix.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n4 | \n5>| def constant(~x:) -> Flag:\n  |                 ^\n6 |   x\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "file": "classification/destructure-equality.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/destructure-equality.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-equality.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '='\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} == x\n   |               ^\n10 |   value\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "file": "classification/destructure-arrow.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/destructure-arrow.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-arrow.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a lambda binder (one name: k => body)\n- observed : ' '\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} => x\n   |                 ^\n10 |   value\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "file": "classification/destructure-equality-malformed.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/destructure-equality-malformed.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-equality-malformed.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '='\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} ==\n   |               ^\n10 |   value\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "file": "classification/destructure-arrow-malformed.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/destructure-arrow-malformed.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-arrow-malformed.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a lambda binder (one name: k => body)\n- observed : '\n'\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} =>\n   |                 ^\n10 |   value\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14",
+        "exit": 3
+      },
+      "file": "classification/destructure-after-prefix.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/destructure-after-prefix.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-after-prefix.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n11 | \n12>| def main() -> Flag:\n   | ^^^\n13 |   take(Cell{On{}})\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17",
+        "exit": 3
+      },
+      "file": "classification/application-parameter.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-parameter.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-parameter.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18",
+        "exit": 3
+      },
+      "file": "classification/application-return.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-return.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttype-application\t53:54:5:18\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-return.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "[]\n"
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10",
+        "exit": 3
+      },
+      "file": "classification/application-binding.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-binding.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttype-application\t65:66:6:10\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-binding.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17",
+        "exit": 3
+      },
+      "file": "classification/application-parameter-after-prefix.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-parameter-after-prefix.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\tparameter-type\t52:53:5:17\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-parameter-after-prefix.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n4 | \n5>| def take(xs: List<) -> Flag:\n  |                   ^\n6 |   On{}\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18",
+        "exit": 3
+      },
+      "file": "classification/application-return-after-prefix.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-return-after-prefix.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttype-application\t53:54:5:18\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-return-after-prefix.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() -> List<:\n  |                    ^\n6 |   Nil{}\n",
+        "stdout": ""
+      }
+    },
+    {
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10",
+        "exit": 3
+      },
+      "file": "classification/application-binding-after-prefix.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-classification/parse.js",
+            "$ROOT/tests/subsets/classification/application-binding-after-prefix.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\ttype-application\t65:66:6:10\n",
+          "stdout": ""
+        }
+      },
+      "reference": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-binding-after-prefix.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n5 | def main() -> Flag:\n6>|   xs: List< = Nil{}\n  |             ^\n7 |   On{}\n",
+        "stdout": ""
+      }
+    }
+  ],
+  "generated_sha256": "9f1717509ef7c3ef956e28046a9293af6a55d6f038cf3fe9f44b9ad5867ce218",
+  "inputs": {
+    "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
+    "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-classification/check.py": "5c20ea02a6a3a075af56ee6df9a8830c3585692be140147084b9194b483030c8",
+    "tests/subsets/check_frontend.py": "1c9241b2d8e4001ce4beeb170ce3e0d1e6b704d1a98feca0d627851b15651d7d",
+    "tests/subsets/classification-cases.json": "bcdd834433989baf93038cfa53026aea5ece5975b1bf8d4bfa39864e3270622c",
+    "tests/subsets/classification/application-binding-after-prefix.bend": "ec0f431d89bdf0c80f2425ae5b3ac45624e86c1a5e69448ed09b7055d5b27a91",
+    "tests/subsets/classification/application-binding.bend": "077e81a60d8e4e8a724ff8199e4ccda92ef5348f6cde64ca85137fd85a20294d",
+    "tests/subsets/classification/application-parameter-after-prefix.bend": "e31406e1bfe62e3cfec190038a9a943e2c18ab56b9df5ae3e5b8ffd4885faef0",
+    "tests/subsets/classification/application-parameter.bend": "a6732313a9a28f2d6529d9aa42ec1679310be273047f91cffee9a278add99e28",
+    "tests/subsets/classification/application-return-after-prefix.bend": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec",
+    "tests/subsets/classification/application-return.bend": "8f78e510562ae976e93621cb8b8a268f72982db988324552b676ab6971b436f1",
+    "tests/subsets/classification/destructure-after-prefix.bend": "c8ecbd11055ce79403ba44a1bd0ff8526ccff263c2eee27a77a4fe8f18cd10d7",
+    "tests/subsets/classification/destructure-arrow-malformed.bend": "5d053c09548fd7adc6be4e0263e3614fe5a504e280cac9c1ff70aa481371eff6",
+    "tests/subsets/classification/destructure-arrow.bend": "eebecf75c69fcb1e07cb00063c818ac2e791e28969d571f8df0093cfe93e6f3c",
+    "tests/subsets/classification/destructure-equality-malformed.bend": "f410c28a63657cc3b57b542db87cb8fcbd408da23cff727a781c2dc2da285fd9",
+    "tests/subsets/classification/destructure-equality.bend": "9714c019351bc4acb95fa6208aaaa4f1d12e6d135f6396017995f19db5ae882e",
+    "tests/subsets/classification/template-after-prefix.bend": "925eeb336266751600e84fb1c50a49e91d4ff9d3fcec10942cf541f72f3c70dc",
+    "tests/subsets/classification/template-leading-pair.bend": "11a504bcec3c58719a62359b6658482535d6a4ba7ac0c880059207c92670adb0",
+    "tests/subsets/classification/template-nonleading-erased.bend": "635dd5b4e54591af3cc5a70efef7d7811b13118cda04acc0e615c83f5b694906",
+    "tests/subsets/classification/template-nonleading-malformed.bend": "5704f5c156763a19a4bbd30f1d29184b2013854adbcbe751a5f55bce74096c1b",
+    "tests/subsets/classification/template-nonleading-reusable.bend": "2f690542b3a0fea4bacdde27f08facd400fdc496332e45be636a51856de09d70",
+    "tests/subsets/classification/template-nonleading.bend": "8a42cef188fcfdd9043e73cae88ad691de6ac4a016b4a5a33b1505ad30575a85"
+  },
+  "mutants": [
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/nonleading-template/parse.js",
+          "$ROOT/tests/subsets/classification/template-nonleading.bend"
+        ],
+        "exit": 3,
+        "stderr": "Unsupported\tparse\ttemplate-binder\t57:58:5:22\n",
+        "stdout": ""
+      },
+      "after": "False{}",
+      "before": "Bool.and(parameters,starts(t,\"~\"))",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/nonleading-template/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/nonleading-template/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22",
+        "exit": 2
+      },
+      "mutated_sha256": "d8531658b0b28a78a58e123e19dac96ae8bd48c81a4f8373b9e9f7eb8eb08530",
+      "name": "nonleading-template",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/nonleading-template/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/template-nonleading.bend"
+    },
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/equality-as-binding/parse.js",
+          "$ROOT/tests/subsets/classification/destructure-equality.bend"
+        ],
+        "exit": 3,
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      "after": "starts(tail,\">\")",
+      "before": "Bool.or(starts(tail,\"=\"),starts(tail,\">\"))",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/equality-as-binding/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/equality-as-binding/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "mutated_sha256": "c4a2ba3bac0ec866adaf12d558589023d5e6ac002de9fff1e0a6a23966347a82",
+      "name": "equality-as-binding",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/equality-as-binding/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/destructure-equality.bend"
+    },
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/arrow-as-binding/parse.js",
+          "$ROOT/tests/subsets/classification/destructure-arrow.bend"
+        ],
+        "exit": 3,
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      "after": "starts(tail,\"=\")",
+      "before": "Bool.or(starts(tail,\"=\"),starts(tail,\">\"))",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/arrow-as-binding/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/arrow-as-binding/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14",
+        "exit": 2
+      },
+      "mutated_sha256": "9a756238d90aae51b9cb6acc753b959d9a909dc1f46794bf712aa0b275b4ff93",
+      "name": "arrow-as-binding",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/arrow-as-binding/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/destructure-arrow.bend"
+    },
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/parameter-application-invalid/parse.js",
+          "$ROOT/tests/subsets/classification/application-parameter.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tparse\tparameter-type\t52:53:5:17\n",
+        "stdout": ""
+      },
+      "after": "invalid(rest,\"parameter-type\")",
+      "before": "unsupported(rest,\"parameter-type\")",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/parameter-application-invalid/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/parameter-application-invalid/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17",
+        "exit": 3
+      },
+      "mutated_sha256": "22e4f877b9920f9a8959249e590369d384aaceb9992f83df58c85727502183fe",
+      "name": "parameter-application-invalid",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/parameter-application-invalid/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/application-parameter.bend"
+    },
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/return-application-invalid/parse.js",
+          "$ROOT/tests/subsets/classification/application-return.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tparse\ttype-application\t53:54:5:18\n",
+        "stdout": ""
+      },
+      "after": "invalid(Con{colon,body},\"type-application\")",
+      "before": "unsupported(Con{colon,body},\"type-application\")",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/return-application-invalid/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/return-application-invalid/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18",
+        "exit": 3
+      },
+      "mutated_sha256": "c87bc96ff6575a054268175fe6bb682b59225a78eaa90fd2914d190bab5d4ef0",
+      "name": "return-application-invalid",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/return-application-invalid/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/application-return.bend"
+    },
+    {
+      "actual": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-classification/binding-application-invalid/parse.js",
+          "$ROOT/tests/subsets/classification/application-binding.bend"
+        ],
+        "exit": 2,
+        "stderr": "Invalid\tparse\ttype-application\t65:66:6:10\n",
+        "stdout": ""
+      },
+      "after": "invalid(tail,\"type-application\")",
+      "before": "unsupported(tail,\"type-application\")",
+      "build": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/binding-application-invalid/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-classification/binding-application-invalid/parse.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10",
+        "exit": 3
+      },
+      "mutated_sha256": "056a68aff3a120e7de3b39fd6993413f85877b1147a23811a0b03a4f84b2c699",
+      "name": "binding-application-invalid",
+      "outcome": "semantic-kill",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-classification/binding-application-invalid/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "classification/application-binding.bend"
+    }
+  ],
+  "proof": {
+    "argv": [
+      "bun",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "src/PROOF.bend"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "All terms check.\n"
+  },
+  "scope": "Parser classification precision; no new executable language capability",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed"
+}
