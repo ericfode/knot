@@ -74,6 +74,64 @@ def run_book(+plan: M.Plan, +booted: M.Booted, name: String, budget: String, val
       M.bind(M.Machine,M.Machine,M.book(plan,booted,bytes,f,xs),m =>
         M.concluded(code,M.result_type(plan,bytes),M.run(bound(),code,m))))))
 
+def outcome_name(outcome: M.Outcome) -> String:
+  match outcome:
+    case M.Described{result,tag,tree}: "Described"
+    case M.Emitted{}: "Emitted"
+    case M.Died{code,message}: "Died"
+    case M.Answered{w}: "Answered"
+    case M.Stopped{M.Exhausted{k,c}}: "Exhausted"
+    case M.Stopped{M.Refused{p,c}}: "HostFailure"
+    case M.Stopped{M.Unsupported{p,c}}: "Unsupported"
+    case M.Stopped{M.Internal{c}}: "InternalFailure"
+    case M.Stopped{M.Bound{c}}: "HarnessBound"
+
+def completes(outcome: M.Outcome) -> Bool:
+  match outcome:
+    case M.Described{result,tag,tree}: True{}
+    case M.Emitted{}: True{}
+    case M.Died{code,message}: True{}
+    case _: False{}
+
+def machine_outcome(m: M.Machine) -> M.Outcome:
+  match m:
+    case M.Machine{M.Finished{outcome},stack,heap,meter,out}: outcome
+    case _: M.Stopped{M.Internal{"unfinished machine"}}
+
+# The audit line: whether every transition balanced and a completed run
+# released every mortal cell, the transitions audited, the outcome and the
+# mortal cells still live.
+def audit_report(+code: M.Code, +m: M.Machine, +steps: U32, balanced: Bool) -> IO(Unit):
+  +outcome = machine_outcome(m)
+  +live = M.leaked(code,m)
+  +passed = Bool.and(Bool.and(balanced,M.balanced(code,m)),Bool.or(Bool.not(completes(outcome)),U32.is_eq(live,0)))
+  +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live)])
+  M.choose(IO(Unit),passed,u => IO.print(line),u => IO.die(Unit,6,line))
+
+def audit_settled(+code: M.Code, result: Result<M.Stop,M.Machine>, +steps: U32, balanced: Bool) -> IO(Unit):
+  match result:
+    case Fail{stop}: stopped(stop)
+    case Done{m}: audit_report(code,m,steps,balanced)
+
+def audit_concluded(+code: M.Code, +t: U32, a: M.Audit) -> IO(Unit):
+  match a:
+    case M.Audit{m,+steps,balanced}: audit_settled(code,M.concluded(code,t,m),steps,balanced)
+
+def audit_started(+code: M.Code, +t: U32, result: Result<M.Stop,M.Machine>) -> IO(Unit):
+  match result:
+    case Fail{stop}: stopped(stop)
+    case Done{m}: audit_concluded(code,t,M.audited(bound(),code,m,0))
+
+def audit_book(+plan: M.Plan, +booted: M.Booted, name: String, budget: String, values: List<String>) -> IO(Unit):
+  +bytes = utf8(M.text(name))
+  +code = M.code_of(booted)
+  fuel(U32.read(budget),+f =>
+    audit_started(code,M.result_type(plan,bytes),M.bind(List<&2,U32>,M.Machine,ordinals(values),xs => M.book(plan,booted,bytes,f,xs))))
+
+def audit_program(+plan: M.Plan, +booted: M.Booted, budget: String) -> IO(Unit):
+  +code = M.code_of(booted)
+  fuel(U32.read(budget),f => audit_concluded(code,M.none(),M.audited(bound(),code,M.program(plan,booted,f),0)))
+
 def run_program(+plan: M.Plan, +booted: M.Booted, budget: String) -> IO(Unit):
   fuel(U32.read(budget),f => reported(M.run(bound(),M.code_of(booted),M.program(plan,booted,f))))
 
@@ -81,45 +139,55 @@ def entry_of(plan: M.Plan) -> U32:
   match plan:
     case M.Plan{entry,types,functions,reps}: entry
 
-def started(+plan: M.Plan, +booted: M.Booted, args: List<String>) -> IO(Unit):
-  match args:
-    case Con{+name,Con{budget,values}}:
+def started(audit: Bool, +plan: M.Plan, +booted: M.Booted, args: List<String>) -> IO(Unit):
+  match audit args:
+    case False{} Con{+name,Con{budget,values}}:
       M.choose(IO(Unit),U32.is_eq(entry_of(plan),0),u => run_book(plan,booted,name,budget,values),u => run_program(plan,booted,name))
-    case _: stopped(M.Refused{"arguments","expected FN FUEL or FUEL --"})
+    case True{} Con{+name,Con{budget,values}}:
+      M.choose(IO(Unit),U32.is_eq(entry_of(plan),0),u => audit_book(plan,booted,name,budget,values),u => audit_program(plan,booted,name))
+    case _ _: stopped(M.Refused{"arguments","expected FN FUEL or FUEL --"})
 
-def booted_start(result: Result<M.Stop,M.Booted>, +plan: M.Plan, args: List<String>) -> IO(Unit):
+def booted_start(result: Result<M.Stop,M.Booted>, audit: Bool, +plan: M.Plan, args: List<String>) -> IO(Unit):
   match result:
     case Fail{stop}: stopped(stop)
-    case Done{booted}: started(plan,booted,args)
+    case Done{booted}: started(audit,plan,booted,args)
 
-def settled_start(result: Result<M.Stop,M.Plan>, +bytes: List<&2,U32>, args: List<String>) -> IO(Unit):
+def settled_start(result: Result<M.Stop,M.Plan>, audit: Bool, +bytes: List<&2,U32>, args: List<String>) -> IO(Unit):
   match result:
     case Fail{stop}: stopped(stop)
-    case Done{+plan}: booted_start(M.boot(M.pack(bytes)),plan,args)
+    case Done{+plan}: booted_start(M.boot(M.pack(bytes)),audit,plan,args)
 
-def loaded(+bytes: List<&2,U32>, args: List<String>) -> IO(Unit):
-  settled_start(M.load(bytes),bytes,args)
+def loaded(audit: Bool, +bytes: List<&2,U32>, args: List<String>) -> IO(Unit):
+  settled_start(M.load(bytes),audit,bytes,args)
 
-def read_result(result: Result<&1,&1,U32 & String,List<&2,U32>>, args: List<String>) -> IO(Unit):
+def read_result(result: Result<&1,&1,U32 & String,List<&2,U32>>, audit: Bool, args: List<String>) -> IO(Unit):
   match result:
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\tread\t",U32.show(code),"\t",message]))
-    case Done{bytes}: loaded(bytes,args)
+    case Done{bytes}: loaded(audit,bytes,args)
 
-def read_pair(pair: File & Result<&1,&1,U32 & String,List<&2,U32>>, args: List<String>) -> IO(Unit):
+def read_pair(pair: File & Result<&1,&1,U32 & String,List<&2,U32>>, audit: Bool, args: List<String>) -> IO(Unit):
   (file,result) = pair
   do IO<Unit>:
     File.close(file)
-    read_result(result,args)
+    read_result(result,audit,args)
 
-def opened(result: Result<&1,&1,U32 & String,File>, args: List<String>) -> IO(Unit):
+def opened(result: Result<&1,&1,U32 & String,File>, audit: Bool, args: List<String>) -> IO(Unit):
   match result:
     case Fail{(code,message)}: IO.die(Unit,5,String.concat(["HostFailure\topen\t",U32.show(code),"\t",message]))
-    case Done{file}: IO.bind(File & Result<&1,&1,U32 & String,List<&2,U32>>,Unit,File.read_bytes(file,16777217),pair => read_pair(pair,args))
+    case Done{file}: IO.bind(File & Result<&1,&1,U32 & String,List<&2,U32>>,Unit,File.read_bytes(file,16777217),pair => read_pair(pair,audit,args))
+
+def image(audit: Bool, args: List<String>) -> IO(Unit):
+  match args:
+    case Con{path,rest}: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(result,audit,rest))
+    case Nil{}: stopped(M.Refused{"arguments","expected IMAGE"})
 
 def arguments(args: List<String>) -> IO(Unit):
-  match args:
-    case Con{path,rest}: IO.bind(Result<&1,&1,U32 & String,File>,Unit,File.open(path,"r"),result => opened(result,rest))
-    case Nil{}: stopped(M.Refused{"arguments","expected IMAGE"})
+  image(False{},args)
+
+# vm/model-audit.bend's entry: the RC audit before every transition, reported
+# as one line instead of the run's own output.
+def audit_arguments(args: List<String>) -> IO(Unit):
+  image(True{},args)
 
 def main() -> IO(Unit):
   IO.bind(List<String>,Unit,IO.args(),arguments)

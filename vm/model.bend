@@ -2573,3 +2573,124 @@ def concluded(+code: Code, +t: U32, m: Machine) -> Result<Stop,Machine>:
         bind(Heap,Machine,drop(heap,room(stack),w),heap2 =>
           Done{Machine{Finished{Described{t,tag_of(code,heap,t,w),tree}},stack,heap2,meter,out}}))
     case _: Done{m}
+
+# ---------------------------------------------------------------- the RC audit
+
+def chase(fuel: Nat, +heap: Heap, +p: U32, +marks: Store) -> Store:
+  match fuel:
+    case 0n: marks
+    case 1n+f: choose(Store,U32.is_eq(p,0),u => marks,u => chase(f,heap,load_word(heap,p,0),write(marks,U32.shrn(p,2n),1)))
+
+def free_marks(heads: List<&2,U32>, +heap: Heap, marks: Store) -> Store:
+  match heads:
+    case Nil{}: marks
+    case Con{p,rest}: free_marks(rest,heap,chase(U32.to_nat(memory_words()),heap,p,marks))
+
+def bump_of(heap: Heap) -> U32:
+  match heap:
+    case Heap{memory,bump,free}: bump
+
+def free_of(heap: Heap) -> List<&2,U32>:
+  match heap:
+    case Heap{memory,bump,free}: free
+
+# Cells from `q` to the bump pointer, skipping free cells; a block size below
+# four words means the heap is corrupt and ends the walk.
+def blocks(fuel: Nat, +heap: Heap, +marks: Store, +q: U32, +bump: U32, +found: List<&2,U32>) -> List<&2,U32>:
+  match fuel:
+    case 0n: found
+    case 1n+f:
+      +memory = memory_of(heap)
+      +size = choose(U32,U32.is_eq(read(marks,q),1),u => read(memory,U32.add(q,1)),
+        u => U32.shln(4,U32.to_nat(class_of(U32.add(2,U32.shrn(read(memory,U32.add(q,1)),3n))))))
+      choose(List<&2,U32>,Bool.or(U32.is_ge(q,bump),U32.is_lt(size,4)),u => found,u =>
+        blocks(f,heap,marks,U32.add(q,size),bump,Bool.pick(List<&2,U32>,U32.is_eq(read(marks,q),1),found,Con{U32.shln(q,2n),found})))
+
+def live_cells(+heap: Heap, +base: U32) -> List<&2,U32>:
+  blocks(U32.to_nat(memory_words()),heap,free_marks(free_of(heap),heap,empty()),base,bump_of(heap),Nil{})
+
+def mortal_cells(cells: List<&2,U32>, +heap: Heap) -> List<&2,U32>:
+  match cells:
+    case Nil{}: Nil{}
+    case Con{+c,+rest}: choose(List<&2,U32>,mortal(heap,c),u => Con{c,mortal_cells(rest,heap)},u => mortal_cells(rest,heap))
+
+def all_edges(cells: List<&2,U32>, +heap: Heap) -> List<&2,U32>:
+  match cells:
+    case Nil{}: Nil{}
+    case Con{c,rest}: List.append(&2,U32,edges(heap,c),all_edges(rest,heap))
+
+def frame_roots(frames: List<&2,Frame>) -> List<&2,U32>:
+  match frames:
+    case Nil{}: Nil{}
+    case Con{Gather{node,need,got},rest}: List.append(&2,U32,got,frame_roots(rest))
+    case Con{Call{caller},rest}: Con{caller,frame_roots(rest)}
+    case Con{InvokeArgument{node,f},rest}: Con{f,frame_roots(rest)}
+    case Con{frame,rest}: frame_roots(rest)
+
+def control_roots(control: Control) -> List<&2,U32>:
+  match control:
+    case Return{w}: [w]
+    case Enter{Held{w},ops}: Con{w,ops}
+    case Enter{Callee{f},ops}: ops
+    case Finished{Answered{w}}: [w]
+    case _: Nil{}
+
+# Every owner of a reference: the result register, pending operands, the
+# current Activation and every frame value (SPEC §6).
+def roots(m: Machine) -> List<&2,U32>:
+  match m:
+    case Machine{control,Stack{act,frames,top},heap,meter,out}: Con{act,List.append(&2,U32,control_roots(control),frame_roots(frames))}
+
+def tallied(words: List<&2,U32>, +heap: Heap, +counts: Store) -> Store:
+  match words:
+    case Nil{}: counts
+    case Con{+w,rest}:
+      tallied(rest,heap,choose(Store,mortal(heap,w),u => write(counts,U32.shrn(w,2n),U32.add(read(counts,U32.shrn(w,2n)),1)),u => counts))
+
+def mortal_words(words: List<&2,U32>, +heap: Heap) -> U32:
+  match words:
+    case Nil{}: 0
+    case Con{+w,rest}: U32.add(Bool.pick(U32,mortal(heap,w),1,0),mortal_words(rest,heap))
+
+def matched(cells: List<&2,U32>, +heap: Heap, +counts: Store) -> Bool:
+  match cells:
+    case Nil{}: True{}
+    case Con{+c,rest}: Bool.and(U32.is_eq(rc_of(heap,c),read(counts,U32.shrn(c,2n))),matched(rest,heap,counts))
+
+def counted_total(cells: List<&2,U32>, +counts: Store) -> U32:
+  match cells:
+    case Nil{}: 0
+    case Con{+c,rest}: U32.add(read(counts,U32.shrn(c,2n)),counted_total(rest,counts))
+
+def heap_of(m: Machine) -> Heap:
+  match m:
+    case Machine{control,stack,heap,meter,out}: heap
+
+def base_of(+code: Code) -> U32:
+  heap_base(code_word(code,2))
+
+# The RC audit: each live mortal cell's count equals its owners among the
+# roots and every live cell's edges, and no owner points outside them.
+def balanced(+code: Code, +m: Machine) -> Bool:
+  +heap = heap_of(m)
+  +cells = live_cells(heap,base_of(code))
+  +owners = List.append(&2,U32,roots(m),all_edges(cells,heap))
+  +counts = tallied(owners,heap,empty())
+  +mortals = mortal_cells(cells,heap)
+  Bool.and(matched(mortals,heap,counts),U32.is_eq(counted_total(mortals,counts),mortal_words(owners,heap)))
+
+# Mortal cells still live; zero once a finished run has released its answer.
+def leaked(+code: Code, +m: Machine) -> U32:
+  count(U32,mortal_cells(live_cells(heap_of(m),base_of(code)),heap_of(m)))
+
+type Audit is Data:
+  Audit{machine: Machine, steps: U32, balanced: Bool}
+
+# Runs like `run`, auditing before every transition and after the last.
+def audited(fuel: Nat, +code: Code, +m: Machine, +steps: U32) -> Audit:
+  match fuel:
+    case 0n: Audit{halted(m,Bound{"transitions"}),steps,balanced(code,m)}
+    case 1n+f:
+      choose(Audit,Bool.not(balanced(code,m)),u => Audit{m,steps,False{}},u =>
+      choose(Audit,is_finished(m),u => Audit{m,steps,True{}},u =>
+        audited(f,code,settled(step(code,m),m),U32.add(steps,1))))
