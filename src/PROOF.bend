@@ -86,6 +86,16 @@ def L.dotted_typed_let_binder(at,rest): {==}
 
 def L.unnamed_binder_is_invalid(at,rest): {==}
 
+def L.line_break_in_arguments(at,rest): {==}
+
+def L.line_break_in_parameters(at,rest): {==}
+
+def L.line_break_after_element(at,head,rest): {==}
+
+def L.same_line_arm(at,value,rest): {==}
+
+def L.body_ends_at_line_break(at,value,rest): {==}
+
 def L.template_binder(at,rest):
   {==}
 

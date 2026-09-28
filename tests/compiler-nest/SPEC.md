@@ -202,8 +202,9 @@ refined binder (flat or in a matrix, through an alias, a nested field or an
 enclosing match; `v =`, `+v =`, `-v =`) is `Invalid check annotation-required`;
 a residual, unsplit, later or annotated binder and a call stay inferable. Every
 dotted binder, including a rebound one that the seed accepts, is `Unsupported
-parse dotted-binder`. `round9.py` checks both lanes, evaluator and Wasm
-agreement, rejection in every phase and nine mutants. `fuzz.py` draws lets of
+parse dotted-binder`, a line break in a bracketed list `Unsupported parse
+line-break` and a second arm on an arm's line `same-line-arm`. `round9.py` checks both lanes, evaluator and Wasm
+agreement, rejection in every phase and thirteen mutants. `fuzz.py` draws lets of
 matched binders: 36 false acceptances before the repair, 0 after.
 
 A new source match on a binding narrowed by an earlier default currently

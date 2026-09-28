@@ -136,6 +136,43 @@ law unnamed_binder_is_invalid:
   {P.run(1n,P.BindingStart{1,2},Con{S.Token{"(",at},Con{S.Token{"=",at},rest}})
     == Fail{S.Invalid{"parse","binding-name",at}} : Result<S.Error,P.Parsed>}
 
+# The seed reads a line break inside a bracketed list as whitespace, and a
+# second arm on the line of an arm's body as the next arm; a term here ends at
+# a line break. Both are unsupported, while a line break after a complete body
+# still ends it.
+law line_break_in_arguments:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Arguments{"}",False{}},Con{S.Token{"\n",at},rest})
+    == Fail{S.Unsupported{"parse","line-break",at}} : Result<S.Error,P.Parsed>}
+
+law line_break_in_parameters:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Parameters{")"},Con{S.Token{"\n",at},rest})
+    == Fail{S.Unsupported{"parse","line-break",at}} : Result<S.Error,P.Parsed>}
+
+law line_break_after_element:
+  for +at: S.At
+  for +head: S.Node
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.ListTail{")",head,False{},False{}},Con{S.Token{"\n",at},rest})
+    == Fail{S.Unsupported{"parse","line-break",at}} : Result<S.Error,P.Parsed>}
+
+law same_line_arm:
+  for +at: S.At
+  for +value: S.Node
+  for +rest: List<&2,S.Token>
+  {P.body_end(value,Con{S.Token{"case",at},rest})
+    == Fail{S.Unsupported{"parse","same-line-arm",at}} : Result<S.Error,P.Parsed>}
+
+law body_ends_at_line_break:
+  for +at: S.At
+  for +value: S.Node
+  for +rest: List<&2,S.Token>
+  {P.body_end(value,Con{S.Token{"\n",at},rest})
+    == Done{P.Parsed{value,Con{S.Token{"\n",at},rest}}} : Result<S.Error,P.Parsed>}
+
 law template_binder:
   for +at: S.At
   for +rest: List<&2,S.Token>

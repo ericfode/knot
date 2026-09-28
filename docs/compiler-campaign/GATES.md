@@ -53,8 +53,10 @@ and `nest-round8` the round-8 Type-kind promotions (a `+` binder's kind is
 judged where the match frontier binds it) with the reviewer's 3,000-program
 Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
 unannotated let of a binder that a positive branch refined to a constructor
-needs an annotation) and the dotted-binder stopgap (every dotted binder is
-Unsupported), each in both compiler lanes with its own semantic mutants.
+needs an annotation) the dotted-binder stopgap (every dotted binder is
+Unsupported) and the line-break stopgap (a line break in a bracketed list, or a
+second arm on an arm's line, is Unsupported), each in both compiler lanes with
+its own semantic mutants.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,

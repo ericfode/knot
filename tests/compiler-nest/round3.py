@@ -44,7 +44,7 @@ MUTANTS = [
      'witness': 'line-match', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-term\t'}},
     {'name': 'header-past-colon', 'file': 'parse.bend',
      'old': 'S.matches(h,":"),u => Con{h,t}', 'new': 'False{},u => Con{h,t}',
-     'witness': 'line-row', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tend-of-body\t'}},
+     'witness': 'line-row', 'phase': 'check', 'wrong': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tsame-line-arm\t'}},
 ]
 
 

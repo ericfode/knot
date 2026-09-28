@@ -130,11 +130,14 @@ def template_parameter(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
         unsupported(ts,"template-binder"),u => invalid(ts,"parameter"))
     case _: invalid(ts,"parameter")
 
+# The seed reads a second arm on the line of an arm's body as the next arm.
 def body_end(value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")),u =>
-        Done{Parsed{value,ts}},u => invalid(ts,"end-of-body"))
+        Done{Parsed{value,ts}},u =>
+      S.choose(Result<S.Error,Parsed>,S.matches(h,"case"),u => unsupported(ts,"same-line-arm"),u =>
+        invalid(ts,"end-of-body")))
     case _: invalid(ts,"unexpected-end")
 
 def reply(+value: S.Node, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -205,16 +208,20 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
+          # The seed reads a line break inside any bracketed list as whitespace,
+          # which a term here does not: Parameters, Arguments and ListTail stop at it.
+          S.choose(Result<S.Error,Parsed>,S.matches(h,"\n"),u => unsupported(tokens,"line-break"),u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(String.eq(close,")"),S.matches(h,"~")),u =>
             template_parameter(tokens),u =>
-            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest))))
+            then(parameter(tokens),p => rest => run(n,ListTail{close,p,True{},False{}},rest)))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Arguments{+close,+pattern}:
       match tokens:
         case Con{+h,+t}:
           S.choose(Result<S.Error,Parsed>,S.matches(h,close),u =>
             Done{Parsed{S.Sequence{Nil{}},t}},u =>
-            then(run(n,Term{pattern},tokens),arg => rest => run(n,ListTail{close,arg,False{},pattern},rest)))
+          S.choose(Result<S.Error,Parsed>,S.matches(h,"\n"),u => unsupported(tokens,"line-break"),u =>
+            then(run(n,Term{pattern},tokens),arg => rest => run(n,ListTail{close,arg,False{},pattern},rest))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n ListTail{+close,+head,+parameters,+pattern}:
       match tokens:
@@ -226,7 +233,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
               invalid(t,"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
-            invalid(tokens,"argument-separator")))
+            S.choose(Result<S.Error,Parsed>,S.matches(h,"\n"),u => unsupported(tokens,"line-break"),u =>
+              invalid(tokens,"argument-separator"))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
       match tokens:
