@@ -2,10 +2,10 @@
 
 This is milestone 10's **host boundary**, qualified independently of Knot
 lowering. `knot-io-2` (D17) is `knot-io-1` plus `read_bytes`, `path_identity`
-and exhaustion kind 3; [its delta](#knot-io-2-delta) is below. Everything else
-describes `knot-io-1`, which `knot-io-2` keeps unchanged. Under D14 the Wasm VM imports this ABI to execute serialized Knot
-images. The ABI has no dependency on image, heap, closure or native Wasm
-lowering layouts. The frozen authority is
+and exhaustion kind 3; [its delta](#knot-io-2-delta) is below. The rest
+describes `knot-io-1`; lines marked `knot-io-2` are the only changes to it.
+Under D14 the Wasm VM imports this ABI to execute serialized Knot images. The
+ABI has no dependency on image, heap, closure or native Wasm lowering layouts. The frozen authority is
 [`tests/compiler-io/FIXTURES.md`](../../tests/compiler-io/FIXTURES.md), including
 its Darwin error table and scalar-value precondition, extended by the
 [review-2 literals and seed witnesses](../../tests/compiler-io/host/REVIEW-2.md).

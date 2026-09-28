@@ -348,9 +348,11 @@ def control(name, host=HOST, prefix='controls'):
         kind = 4 if name == 'unknown-exhaustion' else 3
         wat = program(f'(call $exhausted (i32.const {kind}))' +
                       (' (call $print (i32.const 0) (i32.const 0))' if name.endswith('stops') else ''))
+    elif name == 'identity-absolute-escape':
+        # A sibling of the root; like every absolute test path it enters as an argument.
+        wat, args = identity_program('$SANDBOX'), [str(box.resolve().parent / 'unread')]
     else:
         targets = {'identity-parent-escape': '../unread',
-                   'identity-absolute-escape': str(box.parent / 'unread'),
                    'identity-secret-lower': '.env', 'identity-secret-upper': '.ENV',
                    'identity-secret-nested': 'sub/.Env.local',
                    'identity-secret-after-missing': 'missing/.ENV.LOCAL'}
