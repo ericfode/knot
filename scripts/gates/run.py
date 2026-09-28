@@ -217,8 +217,9 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         stages = record['stages']
         if (any(record['verdict'].values()) or any(s['status'] == 'reached' and (s['disagree'] or s['agree'] != s['corpus'])
                                                   for s in stages)
-                or any(s['blocker']['stderr'].split('\t', 1)[0] not in ('Unsupported', 'Exhausted')
-                       for s in stages if s['status'] == 'blocked')):
+                or any(not ((b['exit'] is None and b.get('outcome') == 'Exhausted')
+                            or (b['exit'], b['stderr'].split('\t', 1)[0]) in ((3, 'Unsupported'), (4, 'Exhausted')))
+                       for b in (s['blocker'] for s in stages if s['status'] == 'blocked'))):
             raise ValueError('Bootstrap receipt violates its stage verdict')
         result.update(corpus=record['corpus']['files'], stages=len(stages),
                       reached=sum(s['status'] == 'reached' for s in stages))

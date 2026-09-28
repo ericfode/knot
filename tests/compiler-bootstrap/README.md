@@ -163,7 +163,10 @@ ABI. The IO fixture suite on `campaign/io` defines that ABI. It plugs in by addi
 the host reports `Unsupported host io-abi-pending`, with source `harness`. A
 parser module or compiler module (A2, A3) whose `main` performs IO needs this
 seam. It receives the argv and the declared input and output paths. For A3, the
-inputs are the whole bundle S. The adapter's hash joins the receipt's `inputs`.
+inputs are the whole bundle S. Input paths are relative to the repository root,
+except hash-package entries such as `0xc409…/bytes.bend`, which resolve under
+`BEND_LIB` (default `~/.bend/lib`). Base resolves under `.toolchain`. The
+adapter's hash joins the receipt's `inputs`.
 
 ## Limits
 
@@ -175,6 +178,13 @@ inputs are the whole bundle S. The adapter's hash joins the receipt's `inputs`.
   modules is a known open note in the campaign state.
 - A seed build failure is a harness failure (exit 1), not a stage result. A
   clang flake in the native lane is surfaced, not retried.
+- The per-stage budgets are 600 seconds for each compile and 600 seconds for
+  each host request. Together they can exceed the gate runner's default
+  900-second per-gate timeout. Today the gate takes about 30 seconds. Once
+  self-compiles become slow, raise `--timeout`, so that a stage's `Exhausted`
+  is recorded rather than the runner killing the whole gate.
+- A timeout is recorded as `exit: null, outcome: "Exhausted"`. The judge and the
+  runner's recheck both accept that as a blocker.
 - The receipts change whenever any `.bend` file changes, because the corpus is
   the repository. `npm run gates` reports this as drift. It does not fail on
   drift.
