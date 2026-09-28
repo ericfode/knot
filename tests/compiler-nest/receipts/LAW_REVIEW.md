@@ -223,10 +223,23 @@ it can no longer bridge the gap.
 | `detached_brace` | The same quantification under the hypothesis that the brace does not touch: `Invalid parse detached-brace` at the brace | As above; lexing (a tab stays `Unsupported lex whitespace`) precedes it |
 | `joined_brace_witness` | Ground: `header` joins `case On` / `{}:` and the term step still reports the detached brace at its own offset | Witnesses the regression path, not every header |
 
-Each falsification fails at its law: ignoring the touch, comparing lines,
-shifting the offset by one, confining the rule to patterns, or reporting a
-touching brace Invalid. The `nest-round6` gate kills five type-correct mutants
-of the same rule on the 35 frozen fixtures.
+Falsification (`round6-falsification.txt`). The seed stops at the first
+failing term:
+
+- Comparing lines, shifting the offset by one and negating the predicate
+  falsify `touches_witness`.
+- Reporting a touching brace Invalid falsifies `touching_brace`.
+- Ignoring the touch and confining the rule to patterns stop first at
+  `touching_brace`, but only its proof breaks there. That proof mirrors the
+  parser step, and the law still holds under both mutations. With
+  `touching_brace` removed, each fails at `detached_brace`, whose statement
+  it falsifies: the parser yields `Exhausted` instead of
+  `Invalid parse detached-brace`.
+
+The `nest-round6` gate kills five type-correct mutants of the same rule on
+the 35 frozen fixtures, in both lanes. Among them, `ignore-detached-brace`
+and `touch-patterns-only` are the behavioural forms of the last two
+mutations, killed on w2 and w5.
 
 ### Open proof obligations (coordinator decision D21)
 

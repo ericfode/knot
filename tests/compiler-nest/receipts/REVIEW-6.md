@@ -40,7 +40,18 @@ gap. The seed accepts these forms, and Knot still accepts them:
 - a spaced type declaration `Off {}`;
 - spaces or line breaks inside the braces.
 
-A tab before the brace stays `Unsupported lex whitespace`, as before.
+A tab before the brace (k3) stays `Unsupported lex whitespace`. The required
+fix lists a tab alongside a space, newline and comment and asks for
+`Invalid parse`. This round keeps k3 Unsupported for three reasons:
+
+- the finding's own evidence calls the tab result allowed;
+- the lexer reports every tab outside a comment before the parser runs, so a
+  tab before a brace is never accepted (a tab inside a comment between name
+  and brace is the comment form, which reports `detached-brace`);
+- Unsupported is a non-accepting classification under D4.
+
+Reporting it as `Invalid parse` would need a lexer change to every tab
+position, so that change is left to the coordinator (see *Remaining*).
 
 ### Evidence
 
@@ -59,14 +70,18 @@ A tab before the brace stays `Unsupported lex whitespace`, as before.
   `joined_brace_witness` are filled in `src/PROOF.bend`. All eight
   `src/*PROOF.bend` entries print `All terms check.` on HEAD, and the round-6
   gate reruns `PROOF.bend` and `matrix-PROOF.bend`.
-  `round6-falsification.txt` applies six single mutations of the rule, and each
-  fails at a named law:
-  - ignoring the touch;
-  - comparing lines;
-  - shifting the offset by one;
-  - confining the rule to patterns;
-  - reporting a touching brace Invalid;
-  - negating the predicate.
+  `round6-falsification.txt` applies six single mutations of the rule. The
+  seed stops at the first failing term:
+  - Comparing lines, shifting the offset by one and negating the predicate
+    falsify `touches_witness`.
+  - Reporting a touching brace Invalid falsifies `touching_brace`.
+  - Ignoring the touch and confining the rule to patterns stop first at
+    `touching_brace`. Only its proof breaks there: the proof mirrors the
+    parser step, and the law's statement still holds under both mutations.
+    Rerun with `touching_brace` removed, each fails at `detached_brace`, whose
+    statement it does falsify (`Exhausted` instead of the detached-brace
+    Invalid). Their behavioural forms, `ignore-detached-brace` and
+    `touch-patterns-only`, are killed on w2 and w5 in both lanes.
 - **Mutants.** `nest-round6` kills five type-correct mutants in both lanes (10
   semantic kills): ignore-detached-brace (the finding), touch-by-line,
   touch-past-one, touch-patterns-only and touch-call-parenthesis.
@@ -117,6 +132,14 @@ positions.
 - **To reverse.** If the coordinator prefers a split, a follow-up would restore
   acceptance only at those positions. That restores a known unsound
   acceptance, so this round does not recommend it.
+
+## Remaining for the coordinator
+
+- Ratify closing the main-era forms (above).
+- Decide whether a tab before `{` should move from `Unsupported lex
+  whitespace` to `Invalid parse`.
+- Live Perch review of the changed declarations.
+- Refresh shared receipts after merge.
 
 ## Coordinator decision D21
 
