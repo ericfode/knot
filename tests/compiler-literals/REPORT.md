@@ -4,6 +4,106 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 3
+
+The coordinator's review of `070a091` confirmed three findings: two blocking
+D4 violations and the modules sign-off, which is coordinator action. Commit
+`b6e0a15` froze six seed-derived books in [regressions.json](regressions.json)
+before any code change; `c5c7b25` fixes both D4 defects. The 33 earlier
+regression entries are unchanged (compared entry by entry after `--write`).
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [blocking] an escape followed by `{` is `Invalid lex escape` | Fixed. `glyph` opened a code point on any `\X{` and rejected X other than u/U. The seed's `parse_char` takes the code-point path only when `u{hex}` matches (case-insensitive) and otherwise reads X from its escape table. `glyph` now has its own `\u{` and `\U{` arms, and every other escape falls through to the table. The law `escape_before_brace` pins `"\n{"` as code 10 with `{` left over. | escape-brace (seed-valid, 23 calls) covers the seven escapes before `{` and the controls `"\n}"`, `"ab{"`, `"\u{41}{"` and `"\U{41}{"`; it agrees in both lanes and in Wasm. escape-brace-unknown pins `"\q{"` as `Invalid lex escape`. The `broad-unicode-escape` mutant restores the old arm and is killed (escape-brace becomes `Invalid lex escape`). |
+| [blocking] a promoted binder over a split Nat or String column is `Invalid affine-reuse` | Fixed by propagating the promotion, not by reporting Unsupported. A matrix alias of a split column is rebuilt from that column's fields; a `+x` alias of an affine column counted those affine fields at every use. `check.bend`'s `variable` now passes the rebuild through `promoted`, which drops the field uses of a quantity-2 binding. Fields of a promoted parent already have quantity 2 (`patterns.bend` `quantity`), so only aliases of affine columns change. The evaluator and both emitters distinguish only erased from live quantities, so a copied rebuild needs no runtime change. Two checker laws state both sides: a promoted rebuild is fresh; an affine rebuild keeps its uses. | promoted-split (seed-valid, 29 calls): `1n+ +p` after literal and offset rows, `+x` after `0n`, before `0n` and after `Zero{}`, `+x` after `""`, and `SCon{c, +t}` after `"ab"`, each binder used twice; it agrees in both lanes and in Wasm. Three seed-invalid controls without `+` (`case x`, `case 1n+p`, `case SCon{c, t}`) stay `Invalid check affine-reuse`. The `affine-promoted-rebuild` mutant restores the plain rebuild and is killed (promoted-split becomes `Invalid check affine-reuse`). |
+| [major] modules-owned code, gate and `--bundle` defaults; sign-off and merge order | Disputed as an executor defect. The finding and its verifier both call it coordinator action. The verifier also confirmed that the `e088dea` audit change is not a weakening. This round changes no modules-owned file: `git diff 070a091..c5c7b25` is empty for `base-load`, `load`, `qualify`, the three CLIs, `driver`, `CONTRACT.json` and `tests/compiler-modules`. | Open for the coordinator: modules-owner sign-off on the [literals amendment](../compiler-modules/SPEC.md#literals-amendment) and the raised defaults; merge `campaign/modules` (`0111f13`, an ancestor of this branch) to main before this branch. |
+
+### Differential sweeps
+
+Each sweep compares the seed with Knot check, eval and compile, and with the
+Node run of the emitted Wasm. Scope is stated exactly; nothing outside it is
+claimed. Round 2's sweep covered only the reviewers' probe books, which is
+why it missed the escape defect.
+
+- **Escapes, 200 books.** Leads: the seven seed escapes, `u`, `U` and `q`.
+  Followers: none, `{`, `}`, `u`, `"`, `\`, `a`, a space, `{41}` and `{4g}`.
+  Each pair appears once in a String-length book and once in a Char-code book.
+  - At `070a091` (Bun lane): 21 seed-valid books were `Invalid lex escape`.
+  - At `c5c7b25` (native lane): 67 books agree, with seed, evaluator and Wasm
+    giving the same answer. 133 seed-invalid books are Invalid. No seed-valid
+    book is Invalid, and no seed-invalid book is accepted.
+- **Reviewer's single-column matrix fuzz, replayed.** The same 848 books
+  (identical sources) through the reviewer's `fuzz.py`, retargeted to the fixed
+  build.
+  - The reviewer's run at `070a091` had 54 seed-valid books reported Invalid.
+  - At `c5c7b25` there are none: those 54 moved from exit 2 to `Checked`, and
+    the other 794 verdicts are unchanged (711 checked, 83 Invalid).
+  - No evaluator, Wasm, check/compile or lane mismatch.
+- **A second draw from the same generator,** 848 books (names 0–211 per kind):
+  760 agree and 88 seed-invalid books are Invalid, with no mismatch.
+- **Promoted String and Char binders,** 240 books from a variant generator
+  that adds `+s`, `SCon{c, +t}` and `+c` rows. 106 contain a promoted binder,
+  94 of them seed-valid.
+  - At `070a091`: 38 seed-valid books were Invalid.
+  - At `c5c7b25`: none. 215 agree, 25 seed-invalid books are Invalid, and there
+    is no mismatch.
+
+None of these sweeps covers two-column matrices, nested field patterns or
+syntax outside the generators.
+
+All 13 `src/*PROOF.bend` entries print `All terms check.`. A deliberately
+false `promoted_rebuild_is_fresh` is rejected by `check-PROOF`.
+
+### Gates on the round-3 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `c5c7b25` passed all 20 registered
+gates (exit 0) in 400.3 seconds, with the default four workers. Load average
+was 18.2 at the start and 8.4 at the end. `npm run -s gates:verify` passed 18
+tests. Counts are copied from the runner; categories overlap and are not
+summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1118; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=807; mutants=9; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| literals | agree eval observations=754; agree fixtures=32; artifact preservation probes=96; boundary probes=8; byte identity pairs=32; check observations=160; compile observations=160; eval observations=850; execution lanes=2; fixtures=80; invalid fixtures=33; mutant eval observations=3; mutant verdict observations=8; mutant wasm observations=5; no artifact probes=96; proof entries=3; proof laws=28; reference calls=388; semantic mutants=14; trust audits=64; unsupported fixtures=15; wasm observations=754 |
+
+Receipt drift: identical=64; semantic=16; volatile-only=7. The 15 semantic
+drifts in shared receipts are source-hash and derived-code changes, left for
+the coordinator; they are the same 15 as in round 2. The literals receipt was
+copied from the run's normalized output after every recorded input hash was
+checked against the tree.
+
+### Offline preflight
+
+- The six changed declarations were run with
+  `--task=tests/compiler-literals/README.md`: `glyph`, `promoted`,
+  `variable`, `escape_before_brace`, `promoted_rebuild_is_fresh` and
+  `affine_rebuild_keeps_uses`.
+  - All six have complete context: 0 truncated, 0 role-limited.
+  - Composition is unavailable: 49255 of 48000 bytes, with 73 collaborators
+    outside one group.
+- The compiler-manifest preflight reports 32 groups and 0 structural blockers.
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
 ## Review round 2
 
 The coordinator's review of `3cf9705` confirmed four findings. Reproducing
