@@ -131,6 +131,9 @@ reachable non-prim body that destructures it. A File is a host handle token.
 **Constants.** Kinds 0 U32, 1 Nat, 2 Char, 3 String. The first three have `n = 1`
 and hold the full value. A String holds its exact ordered Chr codes, not UTF-8;
 pure Char admits every u32 (scalar validation happens only at the IO boundary).
+The reference codec's plans spell a String constant as that code list, never as
+text, and `decode` returns every u32 code: a text step would merge a surrogate
+pair or refuse a code above U+10FFFF (§12).
 Literal pools hold source literals only, never computed results.
 
 **Names.** Nonempty UTF-8 without NUL, unused final bytes zero, unique by bytes.
@@ -237,7 +240,7 @@ stack. The validator checks every function, reachable or not:
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its three admitted plan controls (a Case on a `none` slot, among
-them `list-head-match`, S's shape).
+them `list-head-match`, S's shape) and its seven code-list controls (§12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -674,9 +677,13 @@ lane and requires:
   `none`-typed node covered;
 - all 61 refusals of §4 with their frozen reasons, and its three admitted plan
   controls;
-- 35 codec mutants and 3 source mutants killed through a changed image, a changed
-  refusal, a refused admitted control, a changed describe verdict or a changed
-  observation, never a crash;
+- seven admitted code-list controls, each decoding back to its plan through the
+  decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
+  merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
+  and `encode`'s refusal of a String constant spelled as text;
+- 39 codec mutants and 3 source mutants killed through a changed image, a decode
+  that differs from its plan, a changed refusal, a refused admitted control, a
+  changed describe verdict or a changed observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

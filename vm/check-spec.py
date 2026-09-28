@@ -296,18 +296,23 @@ class Display:
         return ('branch', key, binders, self.term())
 
 
-def unescape(raw: str) -> str:
-    table = {'0': '\0', 'n': '\n', 't': '\t', 'r': '\r', '\\': '\\', '"': '"', "'": "'"}
+def unescape(raw: str) -> list:
+    """A displayed String literal's Chr codes; `\\u{hex}` spells any code, surrogates included."""
+    table = {'0': 0, 'n': 10, 't': 9, 'r': 13, '\\': 92, '"': 34, "'": 39}
     out, i = [], 0
     while i < len(raw):
-        if raw[i] == '\\':
+        if raw.startswith('\\u{', i):
+            end = raw.index('}', i)
+            out.append(int(raw[i + 3:end], 16))
+            i = end + 1
+        elif raw[i] == '\\':
             require(raw[i + 1] in table, f'display escape {raw[i:i + 2]!r}')
             out.append(table[raw[i + 1]])
             i += 2
         else:
-            out.append(raw[i])
+            out.append(ord(raw[i]))
             i += 1
-    return ''.join(out)
+    return out
 
 
 def erased_fields(source: str) -> dict:
@@ -822,6 +827,47 @@ def describe_verdicts(controls: list, c=None) -> dict:
     return {label: c.undescribable({'types': types}, t) for label, types, t, _ in controls}
 
 
+# String constants that a text spelling would merge (a UTF-16 surrogate pair beside U+1F600),
+# refuse (above U+10FFFF) or cannot hold (a lone surrogate, the u32 maximum). SPEC section 2
+# keeps every u32 code in order.
+CODE_LISTS = {'surrogate-pair': [0xD83D, 0xDE00], 'u1f600': [0x1F600], 'lone-surrogate': [0xD800],
+              'u10ffff': [0x10FFFF], 'u110000': [0x110000], 'u32-max': [0xFFFFFFFF]}
+
+
+def code_controls(plans: dict) -> list:
+    """(label, plan): `String.eq(a, b)` on string-ne-order's plan with code-list literals."""
+    def eq(a, b):
+        plan = json.loads(json.dumps(plans['string-ne-order']))
+        left, right = plan['functions'][1]['body'][3]
+        left[3], right[3] = a, b
+        return plan
+    return [(f'codes:{label}', eq(codes, [0x61])) for label, codes in CODE_LISTS.items()] + [
+        ('codes:pair-beside-u1f600', eq(CODE_LISTS['surrogate-pair'], CODE_LISTS['u1f600']))]
+
+
+def round_trip(plan: dict, image: bytes, digest: bytes, c=None) -> str | None:
+    """None when `image` decodes to `plan` and survives the decode CLI's JSON text step."""
+    c = c or codec
+    decoded = c.decode(image, digest)
+    if decoded != plan:
+        return 'decodes to another plan'
+    if c.encode(json.loads(json.dumps(decoded)), digest) != image:
+        return 'the JSON text of its decoded plan re-encodes to other bytes'
+    return None
+
+
+def text_spelling(plans: dict, digest: bytes, c=None) -> str | None:
+    """None when the encoder refuses a String constant spelled as text, the lossy spelling."""
+    c = c or codec
+    plan = json.loads(json.dumps(plans['string-ne-order']))
+    plan['functions'][1]['body'][3][0][3] = 'ab'
+    try:
+        c.encode(plan, digest)
+    except ValueError:
+        return None
+    return 'a text-spelled String constant was encoded'
+
+
 # Semantic mutants of the reference codec: (name, [(old, new), ...]). Each must change a
 # committed image, a frozen refusal, an admitted control or a frozen describe verdict; a crash
 # is never a kill.
@@ -844,8 +890,8 @@ CODEC_MUTANTS = [
                               ("for (k, d) in constants]", "for (k, d, *_) in constants]")]),
     ('nat-constant-as-u32', [("        key = (CONSTANT_KINDS.index(kind), tuple(data))",
                               "        key = (CONSTANT_KINDS.index(kind) % 1 if kind == 'Nat' else CONSTANT_KINDS.index(kind), tuple(data))")]),
-    ('string-reversed', [("        data = [ord(c) for c in value] if isinstance(value, str) else (",
-                          "        data = [ord(c) for c in value[::-1]] if isinstance(value, str) else (")]),
+    ('string-reversed', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                          "        data = u32_list(value[::-1]) if kind == 'String' else u32_list([value])")]),
     ('arrow-named', [("            types.append([kind, NONE, opt(t['domain']), opt(t['result'])])",
                       "            types.append([kind, 0, opt(t['domain']), opt(t['result'])])")]),
     ('decoder-skips-digest', [("    if bytes(b for x in w[24:32] for b in x.to_bytes(4, 'little')) != digest:\n"
@@ -891,10 +937,24 @@ CODEC_MUTANTS = [
     ('describe-admits-none', [("            return f'none-typed {at}'", "            continue")]),
     ('describe-admits-arrows', [("        if kind != 'data':\n", "        if kind in ('arrow', 'erased-arrow'):\n"
                                                               "            continue\n        if kind != 'data':\n")]),
+    # Review round 3: a String constant is its code list at every step.
+    ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                                   "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
+                                   "if kind == 'String' else u32_list([value])")]),
+    ('encode-accepts-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
+                              "        data = u32_list([ord(c) for c in value] if isinstance(value, str) else value) "
+                              "if kind == 'String' else u32_list([value])")]),
+    ('decode-string-as-text', [("list(r[2:]) if kind == 'String' else r[2]", "''.join(map(chr, r[2:])) if kind == 'String' else r[2]")]),
+    ('decode-refuses-beyond-unicode', [("        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))\n",
+                                        "        if kind == 'String' and max(r[2:], default=0) > 0x10FFFF:\n"
+                                        "            raise Malformed('string code beyond plan text')\n"
+                                        "        constants.append((kind, list(r[2:]) if kind == 'String' else r[2]))\n")]),
 ]
 
 
 def codec_mutants(plans, images, controls, admitted, describing, reg, digest) -> list:
+    """`plans` and `images` include the code-list controls; a decode that differs from its
+    plan kills as surely as an encode that differs from its image."""
     source = CODEC.read_text()
     results = []
     for name, edits in CODEC_MUTANTS:
@@ -909,8 +969,17 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest) ->
                 if mutant.encode(plan, digest) != images[case]:
                     killed_by = f'image {case} differs'
                     break
+                lost = round_trip(plan, images[case], digest, mutant)
+                if lost:
+                    killed_by = f'image {case} {lost}'
+                    break
             except Exception:
                 continue
+        if not killed_by:
+            try:
+                killed_by = text_spelling(plans, digest, mutant)
+            except Exception:
+                pass
         for label, data, reason, message in [] if killed_by else controls:
             try:
                 got = rejected(data, reg, digest, mutant)
@@ -1147,8 +1216,16 @@ def main() -> int:
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
         require(verdicts[label] == verdict, f'describe control {label}: {verdicts[label]!r}, frozen {verdict!r}')
+    coded = dict(code_controls(plans))
+    for label, plan in coded.items():
+        data = codec.encode(plan, digest)
+        require(rejected(data, reg, digest) is None, f'code-list control {label}: {rejected(data, reg, digest)}')
+        require(round_trip(plan, data, digest) is None, f'code-list control {label}: {round_trip(plan, data, digest)}')
+        admitted.append((label, data))
+    require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
-    mutants = codec_mutants(plans, images, controls, admitted, describing, reg, digest) + source_mutants(cases, built)
+    mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
+                            controls, admitted, describing, reg, digest) + source_mutants(cases, built)
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 
@@ -1156,13 +1233,14 @@ def main() -> int:
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
                   admitted=[label for label, _ in admitted], describe=verdicts, mutants=mutants,
+                  code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
                             'none_typed_nodes': len(abstract)})
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
-          f"{len(admitted)} admitted controls, {len(verdicts)} describe controls, "
+          f"{len(admitted)} admitted controls ({len(coded)} code lists), {len(verdicts)} describe controls, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 
