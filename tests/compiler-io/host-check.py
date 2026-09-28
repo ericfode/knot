@@ -38,7 +38,7 @@ def command(argv, **kwargs):
 def assemble(wat, target):
     source = target.with_suffix('.wat')
     source.write_text(wat)
-    r = command(['wat2wasm', str(source), '-o', str(target)])
+    r = command(['wat2wasm', '--enable-exceptions', str(source), '-o', str(target)])
     assert r.returncode == 0, r.stderr.decode()
     return sha(target.read_bytes())
 
@@ -123,6 +123,13 @@ def controls():
         'allocator_effect': small('(call $args (i32.const 64))',
                                   allocator='(call $close (i32.const 999)) (i32.const 1024)'),
         'unexpected_trap': small('(unreachable)'),
+        'caught_die': small('(try (do (call $die (i32.const 7) (i32.const 100) (i32.const 4))) (catch_all)) '
+                            '(call $print (i32.const 100) (i32.const 4))', '(data (i32.const 100) "stop")'),
+        'caught_sandbox': small('(try (do (call $open (i32.const 100) (i32.const 14) (i32.const 1000) (i32.const 1) '
+                                '(i32.const 64))) (catch_all)) (call $print (i32.const 1000) (i32.const 1))',
+                                '(data (i32.const 100) "../outside.txt") (data (i32.const 1000) "w")'),
+        'caught_allocator': small('(call $args (i32.const 64))',
+                                  allocator='(try (do (call $close (i32.const 999))) (catch_all)) (i32.const 1024)'),
     }
     directory = fresh('controls')
     sentinel = directory / 'outside.txt'
@@ -148,11 +155,12 @@ def controls():
             module.write_bytes(b'not wasm')
         elif name != 'missing_module':
             assemble(definitions[name], module)
-        r, outcome = invoke(module, box, ['argument'] if name in ('allocation_budget', 'allocator_effect') else [])
+        r, outcome = invoke(module, box, ['argument'] if name in ('allocation_budget', 'allocator_effect', 'caught_allocator') else [])
         actual = [outcome.get('status'), outcome.get('code'), outcome.get('exit')]
         assert actual == expected, (name, expected, actual, r.stderr)
         assert r.returncode == expected[2] and r.stdout == b'', (name, r)
-        assert r.stderr == f'{expected[0]}\tio\t{expected[1]}\n'.encode(), (name, r.stderr)
+        message = b'stop\n' if expected[0] == 'Halted' else f'{expected[0]}\tio\t{expected[1]}\n'.encode()
+        assert r.stderr == message, (name, r.stderr)
         assert sentinel.read_bytes() == b'outside unchanged\n', name
         assert sorted(p.name for p in box.iterdir()) == (['link'] if name.startswith('symlink_') else []), name
         rows.append({'name': name, 'outcome': outcome})

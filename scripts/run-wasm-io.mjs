@@ -109,6 +109,8 @@ function writeAll(fd, bytes) {
 
 export async function runIO({modulePath, sandbox, args = []}) {
   let instance, allocating = false, nextHandle = 1, root;
+  // A guest may catch a thrown Halt or Fault (Wasm exception handling); termination stays sticky.
+  let stopped = null;
   const handles = new Map();
   function ready() {
     if (!instance || allocating) bad('abi', 'effect outside guest invocation');
@@ -136,6 +138,7 @@ export async function runIO({modulePath, sandbox, args = []}) {
     let p;
     try { p = instance.exports.knot_alloc(bytes.length); }
     finally { allocating = false; }
+    if (stopped) throw stopped;
     range(p, bytes.length).set(bytes);
     return p >>> 0;
   }
@@ -279,8 +282,15 @@ export async function runIO({modulePath, sandbox, args = []}) {
     if (!WebAssembly.validate(bytes)) bad('module', 'Wasm validation failed');
     abi(bytes);
     const module = await WebAssembly.compile(bytes);
-    instance = await WebAssembly.instantiate(module, {knot_io: io});
+    const sticky = f => (...values) => {
+      if (stopped) throw stopped;
+      try { return f(...values); }
+      catch (error) { if (error instanceof Halt || error instanceof Fault) stopped = error; throw error; }
+    };
+    const imports = Object.fromEntries(Object.entries(io).map(([name, f]) => [name, sticky(f)]));
+    instance = await WebAssembly.instantiate(module, {knot_io: imports});
     instance.exports.knot_main();
+    if (stopped) throw stopped;
     return {status: 'Completed', exit: 0};
   } catch (error) {
     if (error instanceof Halt) return {status: 'Halted', exit: error.exit};

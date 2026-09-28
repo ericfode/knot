@@ -4,11 +4,11 @@
   "profile": "knot-io-1",
   "boundary": "Hand-serialized effect programs only; no Knot checking, lowering or evaluator claim.",
   "sources": {
-    "scripts/run-wasm-io.mjs": "0c7f4ab1b4d3f06c7ab42cacde1b8dc60c33749e1a589e1cfc8ef9a4c542f7e1",
-    "tests/compiler-io/host-check.py": "726763790cfb24bfe80123084f2d6765138e3497e22c5e2f48f9adce64e434f7",
+    "scripts/run-wasm-io.mjs": "4c0e1bc92c126289be756ee1c4b9543cea2bbda0ae0162b49d5b51d55ecae675",
+    "tests/compiler-io/host-check.py": "21df9ba4a3930d6ee755a1467240623a4ca16452e884a9d0aee7312d905cf746",
     "tests/compiler-io/expectations.json": "118c922f459aa2b968cd69ed886eca3e305349d56f61c1e45a92423d22047806",
     "tests/compiler-io/regen.py": "fd0c20f819734444d0db711ca26dc20bc0b79d74318ddc0106d739ef15dfb0f9",
-    "tests/compiler-io/host/PLAN.json": "14f62dd10958bf48c2d21001e8509f4f92f72f1ff89f2f8d2c53f15787c3c6be",
+    "tests/compiler-io/host/PLAN.json": "570127c0668df45322c430d4cc2f3581f33c71f51d16d6f83e9efc04e790e0fd",
     "tests/compiler-io/host/runtime.wat": "ca2b5d4974ea49ecf5dff15069439da6846580247850f37297960783eba9b2d5",
     "tests/compiler-io/host/programs.py": "859255196d07558503dccf26bcbfb95ee3aff8c53da595b93454b100109212f4",
     "tests/compiler-io/host/invoke.mjs": "94282fff5cc0d8fdf847e7ade9cc356de2a2682e8f877fd4eacd8c7afcd400ec",
@@ -2696,6 +2696,29 @@
       }
     },
     {
+      "name": "caught_die",
+      "outcome": {
+        "status": "Halted",
+        "exit": 7
+      }
+    },
+    {
+      "name": "caught_sandbox",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "sandbox",
+        "exit": 5
+      }
+    },
+    {
+      "name": "caught_allocator",
+      "outcome": {
+        "status": "HostFailure",
+        "code": "abi",
+        "exit": 5
+      }
+    },
+    {
       "name": "missing_module",
       "outcome": {
         "status": "HostFailure",
@@ -2716,7 +2739,7 @@
         "status": "Completed",
         "exit": 0
       },
-      "host_sha256": "2dd1d0496d9afdaf92482e758be6fa5140663584d09c1514f631f554420dfc6b"
+      "host_sha256": "57031298fba42a5546f78b33e13e028d32d70b7966a4e633408d893a635ee001"
     },
     {
       "name": "drop-truncated-replacement",
@@ -2729,7 +2752,7 @@
         "status": "Completed",
         "exit": 0
       },
-      "host_sha256": "0d30b5521a64d65e4e2aa1bf1f74415c0b8fb89beac44dc1e7242d9bbcf80b9b"
+      "host_sha256": "340b69bd9a3b41c9893061cfa524a152d230d9e93a930124bb68cf66a5882141"
     },
     {
       "name": "unmasked-exit",
@@ -2742,7 +2765,7 @@
         "status": "Halted",
         "exit": 256
       },
-      "host_sha256": "71bebf0c0c3ba22f501b3926b410f346c356f1f38cb29cd319e979f03253e886"
+      "host_sha256": "5196d86421b4821aeb07dbcfc3ed8c0b9a9f01fcc53b4958e5b731f438d44f38"
     },
     {
       "name": "read-write-handle",
@@ -2755,7 +2778,7 @@
         "status": "Completed",
         "exit": 0
       },
-      "host_sha256": "af7bb6257e2bdc8843ca8193e9882ff96b8484e7537d28db0014a6b65fec8852"
+      "host_sha256": "1b90729467f0ba2079f959df1d0962937a52a0298ac3237b6f221e3364d3eedf"
     },
     {
       "name": "unchecked-byte",
@@ -2769,7 +2792,7 @@
         "status": "Completed",
         "exit": 0
       },
-      "host_sha256": "c62563f4eb84b9997c5a2318ecc3d118a74f5a63fbe24cd59527ea1b93b62e8f"
+      "host_sha256": "93f339dcdd59a3c6eb0f50b54486bbfd433e813f6b38d3f1a15888f05082d13c"
     },
     {
       "name": "print-no-lf",
@@ -2782,7 +2805,7 @@
         "status": "Completed",
         "exit": 0
       },
-      "host_sha256": "5720b7631ecd6ce1c840e134e1597cd66c621e0e98e8142b282e49eed12fde66"
+      "host_sha256": "09820950e016b38ac94884d265a51cb87a9e75c3d85d4ad70111838332b4872a"
     }
   ],
   "review": {
@@ -3412,7 +3435,7 @@
       {
         "name": "case-sensitive-secret",
         "killed": true,
-        "sha256": "e3864e86902cae0168eea490959e59a83d94f31ae56f264a79f0c16f9c3b3b8d",
+        "sha256": "dec38bee53f8c322d671e5d0719290bbf425459ce5cea6f68445df6c65e9de3c",
         "witnesses": [
           {
             "path": ".ENV",
@@ -3458,7 +3481,7 @@
       {
         "name": "empty-write-ebadf",
         "killed": true,
-        "sha256": "fff4fb7f81e484b2e1c8647960d5a0e3e85c0a287dccfdffa7e979843d868485",
+        "sha256": "69110b5aafe40416c9ed9de62d9e6f36ff7a2275ecb229de103e5053eae31d1d",
         "witnesses": [
           {
             "name": "file",
