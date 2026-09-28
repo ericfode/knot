@@ -19,7 +19,9 @@
   },
   "sources": {
     "regressions/type-names-base-constructor.bend": "377d2f5304f4ed09ce568d8fa506117a86ddc769bd23e0e2d9c101726d6a32b3",
-    "regressions/constructor-names-base-type.bend": "e8cb6503bb63e41ae779420c589b28f3da0487b01da3fd5e3e37d8e2df947961"
+    "regressions/constructor-names-base-type.bend": "e8cb6503bb63e41ae779420c589b28f3da0487b01da3fd5e3e37d8e2df947961",
+    "regressions/large-comment.bend": "be0cf0beaf37153d3db56a903c688980e078bb34cccac8d41a3f7c27e955a129",
+    "regressions/many-blank-lines.bend": "56a9157a9e5b5a18d27b2e88c59e89b7d290962740b4296a06f2b36c21766c76"
   },
   "fixtures": [
     {
@@ -88,6 +90,74 @@
           "stdout": "Bool{}\n",
           "stderr": "",
           "constructor": "Bool",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "regressions/large-comment.bend",
+      "summary": "A 50001-character comment line followed by a simple enum program; the complete ASCII entry stays below the default 65536-character budget.",
+      "source_bytes": 50076,
+      "modules": [],
+      "result": {
+        "type": "LimitFlag",
+        "constructors": [
+          "LimitOk"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "checked_base": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "regressions/large-comment.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/regressions/large-comment.bend"
+          ],
+          "exit": 0,
+          "stdout": "LimitOk{}\n",
+          "stderr": "",
+          "constructor": "LimitOk",
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "file": "regressions/many-blank-lines.bend",
+      "summary": "Fifty thousand blank lines followed by a simple enum program; the complete ASCII entry stays below the default 65536-character budget, and line count alone does not consume semantic parser depth.",
+      "source_bytes": 50074,
+      "modules": [],
+      "result": {
+        "type": "LimitFlag",
+        "constructors": [
+          "LimitOk"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "checked_base": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "regressions/many-blank-lines.bend",
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-modules/regressions/many-blank-lines.bend"
+          ],
+          "exit": 0,
+          "stdout": "LimitOk{}\n",
+          "stderr": "",
+          "constructor": "LimitOk",
           "tag": 0
         }
       ]
