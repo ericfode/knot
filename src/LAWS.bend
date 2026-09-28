@@ -43,12 +43,53 @@ law template_binder:
   {P.run(1n,P.Parameters{")"},Con{S.Token{"~",at},Con{S.Token{"x",at},Con{S.Token{":",at},rest}}})
     == Fail{S.Unsupported{"parse","template-binder",at}} : Result<S.Error,P.Parsed>}
 
+law nonleading_template_binder:
+  for +at: S.At
+  for +head: S.Node
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.ListTail{")",head,True{},False{}},Con{S.Token{",",at},Con{S.Token{"~",at},rest}})
+    == Fail{S.Invalid{"parse","parameter",at}} : Result<S.Error,P.Parsed>}
+
 law destructuring_binding:
   for +at: S.At
   for +fields: List<&2,S.Node>
   for +rest: List<&2,S.Token>
+  for plain: {Bool.or(P.starts(rest,"="),P.starts(rest,">")) == False{} : Bool}
   {P.reply(S.Constructor{S.Token{"Cell",at},fields},Con{S.Token{"=",at},rest})
     == Fail{S.Unsupported{"parse","destructuring-binding",at}} : Result<S.Error,P.Parsed>}
+
+law equality_is_not_binding:
+  for +at: S.At
+  for +fields: List<&2,S.Node>
+  for +rest: List<&2,S.Token>
+  {P.reply(S.Constructor{S.Token{"Cell",at},fields},Con{S.Token{"=",at},Con{S.Token{"=",at},rest}})
+    == Fail{S.Invalid{"parse","end-of-body",at}} : Result<S.Error,P.Parsed>}
+
+law arrow_is_not_binding:
+  for +at: S.At
+  for +fields: List<&2,S.Node>
+  for +rest: List<&2,S.Token>
+  {P.reply(S.Constructor{S.Token{"Cell",at},fields},Con{S.Token{"=",at},Con{S.Token{">",at},rest}})
+    == Fail{S.Invalid{"parse","end-of-body",at}} : Result<S.Error,P.Parsed>}
+
+law parameter_type_application:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.parameter(Con{S.Token{"xs",at},Con{S.Token{":",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
+    == Fail{S.Unsupported{"parse","parameter-type",at}} : Result<S.Error,P.Parsed>}
+
+law return_type_application:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.FunctionTail{S.Token{"main",at},S.Sequence{Nil{}}},
+    Con{S.Token{"-",at},Con{S.Token{">",at},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}}}})
+    == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
+
+law binding_type_application:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.AnnotatedBinding{S.Token{"xs",at},1,2},Con{S.Token{"List",at},Con{S.Token{"<",at},rest}})
+    == Fail{S.Unsupported{"parse","type-application",at}} : Result<S.Error,P.Parsed>}
 
 law local_import:
   for +at: S.At

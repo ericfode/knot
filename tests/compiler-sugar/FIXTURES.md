@@ -1,0 +1,418 @@
+# Sugar fixture suite (campaign increment `sugar`)
+
+This suite freezes the expectations for the `sugar` increment of the
+[compiler campaign](../../docs/COMPILER-CAMPAIGN.md). It covers the surface forms
+of Knot's own source that no other suite covers. It was written before any
+implementation (D4, D7) and independently of the implementer.
+
+Seed-valid programs take their results from the pinned reference interpreter,
+Bend 2.0.29 at `574b6d3`. Knot-specific outcomes are reviewed literals in
+`expectations.json`. No expectation comes from Knot output, and `regen.py`
+never runs Knot.
+
+The implementer wires the gate runner and does not edit these expectations.
+Changing a fixture, a case or a pinned outcome is a separately reviewed amendment.
+
+## Scope
+
+The scope comes from the census of `src/*.bend` non-law files in
+[`implementation.json`](../../docs/compiler-campaign/inventory/implementation.json).
+It covers these classes: `literals.list`, `literals.tuple`, `bindings`
+(destructuring lets), `templates`, `calls.partial`, `function-values`,
+`annotations`, `dependent`, `quantities.erased`, `types.type` and
+`literals.char`. Each positive mirrors named census declarations in miniature,
+in the compact spelling Knot uses: no space after a comma, and `case K{..}: e`
+on one line. Each case's `mirrors` field lists those declarations.
+
+| Census class | Knot source it comes from | Fixtures |
+| --- | --- | --- |
+| `literals.list` | `String.concat([..])`, `W.concat(cap,[..])`, `W.bytes(cap,[70,4,127])`, `Done{[value]}`, `render(fuel,[mode],..)` | `list-*`, `annotation-list-let` |
+| `literals.tuple` | `(file,result) = pair`, `case Fail{(code,message)}`, `U32 & String` in `Result<&1,&1,U32 & String,String>` | `tuple-*`, `list-literal-affine` |
+| `bindings` | `(file,result) = pair` in the four `read_pair`/`write_pair` definitions | `destructure-*`, `tuple-*` |
+| `templates` | `scope.set_known`, `refine`, `replace` (`~A: Data`, `~value: A -> ..`) | `template-*` |
+| `calls.partial` | `IO.bind(..,read_pair(characters,depth))`, `IO.bind(..,opened(characters,depth))` | `partial-call*` |
+| `function-values` | `IO.bind(List<String>,Unit,IO.args(),arguments)` in the four CLI `main`s | `function-value*`, `template-function-arg` |
+| `annotations` | `+a : S.At = S.At{..}`, `+introduced : List<&2,C.Binding> = Con{head,tail}` | `annotation-*`, `destructure-typed` |
+| `dependent`, `quantities.erased`, `types.type` | the 10 census declarations: `core.invalid`, `core.unsupported`, `core.exhausted`, `core.internal`, `eval.internal`, `eval.host`, `wasm.internal` (`-A: Type` only in the result), `syntax.choose`, `syntax.bind`, `scope.set_known` | `dependent-*`, `template-set-known` |
+| `literals.char` | `Char.is_eq(c,'\n')` in `lex.step_at` | `char-*` |
+
+The source column lists where each class occurs in Knot, not what each fixture
+reproduces. The fixtures cover every class, but these list-literal contexts are
+not reproduced (audit, 2026-09-27):
+- lists of String or U32 literals (`String.concat([..])`,
+  `W.bytes(cap,[70,4,127])`). Every fixture list holds enum or constructor
+  values, so element typing is covered but literal elements are not.
+- a list in a field of a generic constructor, typed through the instantiated
+  type argument (`Done{[value]}` at `Result<S.Error,List<&2,U32>>`).
+  `list-literal` covers only a monomorphic field (`Ready{[a]}`).
+- a list as a lambda body typed by an explicit type argument
+  (`u => [level]` in `S.choose(List<&2,U32>,..)`).
+
+Two boundary fixtures pin forms that no Knot source uses but that sit beside
+the scope: the parallel let (census `bindings.parallel` is empty) and the cons
+operator `<>`.
+
+## Contents
+
+- `fixtures/*.bend`: 40 small programs, one feature or edge each.
+  - Every fixture is ASCII with LF line endings and no tabs. Line 1 is a
+    `# summary`, which `regen.py` checks against the case's `summary`.
+  - A fixture imports Base only when its form requires it, and its `base` field
+    says why. List literals use Base `List<&2,Flag>`. Tuples and `A & B` use
+    Base `Tuple` and `Pair`. The Char fixtures use Base `Char`. The other 23
+    fixtures import nothing. A fixture that imports Base declares no name that
+    Base declares.
+  - Each fixture declares its own enums (`Flag`, `Color`, `Mode`, `Glyph`).
+    Seed-valid fixtures have a `main` plus a few entries. Entries take and
+    return only nullary enums declared in the fixture, because the host
+    boundary is enum-only. Lists, pairs, templates and closures are built and
+    consumed inside the program.
+- `expectations.json`: all expectations, in these sections:
+  - `seed`: version, revision and launcher path. These must equal `src/CONTRACT.json`.
+  - `commands`: how every observation was produced.
+  - `requirements`: the three Knot requirement kinds, defined below.
+  - `needs`: the capability vocabulary for `requires`.
+  - `cases`: hand-reviewed metadata for each fixture. It records the class,
+    feature, summary, census classes, mirrored declarations, twin, needs, Base
+    reason and entry signatures. Negatives also record the seed's rejection
+    reason. Every case ends with its Knot outcome block.
+  - `observations`: generated by `regen.py`. It holds the seed file hashes and
+    the Bun version. For each fixture it holds the source hash, the enum
+    constructor orders, the `--check-only` and run results, and every entry
+    call. A call records its wrapper source, argv, exit code, exact stdout and
+    stderr, and its result `{type, constructor, tag}`. `tag` is the
+    constructor's position in its declaration.
+- `regen.py`: re-runs the seed and diffs the output against `observations`.
+
+## Regenerating and checking
+
+```sh
+python3 tests/compiler-sugar/regen.py          # re-run the seed; exit 1 on any difference
+python3 tests/compiler-sugar/regen.py --write  # rewrite observations only; review the diff
+```
+
+The script runs the seed as `bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts`,
+from the repository root, with `BEND_NO_TELEMETRY=1` and relative paths. Its
+recorded output does not depend on the checkout. A check takes about 20
+seconds. `--write` runs the seed twice and writes only if both passes agree.
+Wrappers are written to the ignored `.local/compiler-sugar/wrappers/`
+directory.
+
+- **Observation shapes.** For `main`, the observation is a direct run of the
+  fixture, so stdout is unqualified (`On{}`). Every other entry is called
+  through a wrapper that imports the fixture as `F`. Its stdout therefore
+  carries the import path, `../../../tests/compiler-sugar/fixtures/<case>.On{}`,
+  and `result` strips that prefix.
+- **Failure conditions.** It fails in any of these cases:
+  - the fixture files differ from the cases;
+  - a summary line, import, Base reason or `base` need is inconsistent;
+  - a fixture that imports Base declares a Base name;
+  - a Knot requirement is malformed, or disagrees with the case's class;
+  - a negative names no seed-valid twin;
+  - the seed accepts a fixture marked `reject`, or rejects one that is not;
+  - a negative's `seed_reason` substrings are missing, meaning the seed
+    rejected it for a different reason;
+  - an entry uses a non-enum type;
+  - the calls of an `agree` fixture yield only one constructor, so a constant
+    answer could pass;
+  - the seed times out;
+  - the seed identity, the seed file hashes or the Bun version changed;
+  - a recorded output contains a checkout-specific path.
+- **Bootstrapping.** `--write` never touches `cases`. After running it, read the
+  diff by hand.
+
+## Coverage matrix
+
+Classes:
+- **positive**: an ordinary program the increment must run.
+- **edge**: an adversarial program the seed accepts.
+- **boundary**: a program the seed accepts that uses a form outside this increment.
+- **negative**: a program the seed rejects, next to a named seed-valid twin.
+
+| Feature | Positive | Edge | Boundary | Negative |
+| --- | --- | --- | --- | --- |
+| list-literals | `list-literal`, `list-literal-affine` | `list-separators`, `list-nested` | - | `list-element-mismatch`, `list-as-scalar` |
+| tuples | `tuple-read-pair`, `tuple-constructor-pattern` | `tuple-right-nested` | - | `tuple-affine-reuse`, `tuple-arity` |
+| destructuring | `destructure-constructor` | `destructure-then-match` | - | `destructure-computed`, `destructure-order`, `destructure-sum`, `destructure-typed` |
+| templates | `template-value-arg`, `template-set-known`, `template-function-arg` | `template-bare-call` | - | `template-open-argument`, `template-late-binder`, `template-forward` |
+| partial-calls | `partial-call` | - | - | `partial-call-reuse` |
+| function-values | `function-value` | - | - | `function-value-arity` |
+| annotations | `annotation-list-let` | `annotation-brace` | - | `annotation-unannotated-list`, `annotation-reusable-quantity` |
+| dependent | `dependent-result`, `dependent-choose`, `dependent-bind` | - | - | `dependent-forward` |
+| char | `char-compare` | - | - | `char-u32-mismatch` |
+| boundary | - | - | `parallel-let`, `cons-operator` | - |
+
+That makes 15 positive, 6 edge, 2 boundary and 17 negative fixtures. They
+produce 198 seed entry calls and 17 seed rejections. The 21 `agree` fixtures
+account for 190 of the calls.
+
+## Knot requirements
+
+| Requirement | Meaning |
+| --- | --- |
+| `agree` | Knot checks the fixture (exit 0). For every call in `observations`, the evaluator and the emitted Wasm return the recorded `result.tag`. |
+| `unsupported` | Exit 3. stderr starts with the pinned diagnostic. No artifact. |
+| `reject` | Exit 2 (`Invalid`), never `Checked` or `Built`, and no artifact. If `diagnostic` is pinned, stderr starts with it. Otherwise the phase and code are the implementer's to choose. |
+
+A pinned outcome carries `knot_expected: true` and a one-line justification.
+
+- **Reused codes.** A pinned `Invalid` code reuses the existing vocabulary only
+  where the reason is exactly the same. Each sugar form lowers onto a rule Knot
+  already enforces, as follows:
+  - `type-mismatch`: a list element, a list used as a Flag, a Char used as a
+    U32, and a two-parameter def used as a one-parameter function.
+  - `affine-reuse`: a destructured field used twice, and a let-bound partial
+    application used twice.
+  - `computed-scrutinee`: a destructuring let is a match, and this one
+    scrutinizes a call.
+  - `unmatchable-binder`: the parameter-order rule, reached after a destructuring let.
+  - `missing-arm`: `On{} = f`.
+  - `annotation-required`: a list literal is a constructor chain.
+  - `reusable-type`: `+xs : List<&1,Flag>`.
+- **Class-only pins.** These negatives pin exit 2 only, because no existing code
+  names their reason: `tuple-arity`, `destructure-typed`,
+  `template-open-argument`, `template-late-binder`, `template-forward` and
+  `dependent-forward`. The implementer chooses the code and records it.
+  `template-late-binder` is `Unsupported parse template-binder` today, a
+  precision regression recorded in the classify review. With templates
+  supported, it must become `Invalid`.
+- **Pinned `Unsupported`.** These are seed-valid forms outside this increment:
+  - `parallel-let` must report `Unsupported\tparse\tparallel-binding\t`. No Knot
+    source uses a parallel let. The code is new. It is reviewed here because the
+    form sits beside the destructuring let. A parser that read `a b = ..` as a
+    malformed binding would report `Invalid`, violating D4.
+  - `cons-operator` must report `Unsupported\tparse\toperator\t`. No Knot source
+    uses `<>`. It is operator sugar, reported with the code the literals suite
+    pins for `++`. That operator decision is vetoable before implementation
+    starts. If it is vetoed, move `cons-operator` to `agree` and re-freeze.
+
+In these prefixes, `\t` stands for a tab character, as in the other compiler
+suites; `expectations.json` holds the exact strings.
+
+The classification invariant holds for every fixture. When the seed accepts,
+Knot never reports `Invalid`. When the seed rejects, Knot never reports
+`Checked` or `Built`.
+
+| Fixture | Requirement | Pinned | Needs | Twin |
+| --- | --- | --- | --- | --- |
+| `list-literal` | agree | - | base, fields, generics, recursion | - |
+| `list-literal-affine` | agree | - | base, fields, generics, type-level-definition | - |
+| `list-separators` | agree | - | base, fields, generics | - |
+| `list-nested` | agree | - | base, fields, generics | - |
+| `list-element-mismatch` | reject | `Invalid\tcheck\ttype-mismatch\t` | base, fields, generics | `list-literal` |
+| `list-as-scalar` | reject | `Invalid\tcheck\ttype-mismatch\t` | base, fields, generics | `list-literal` |
+| `tuple-read-pair` | agree | - | base, fields, generics, type-level-definition | - |
+| `tuple-right-nested` | agree | - | base, fields, generics, type-level-definition | - |
+| `tuple-constructor-pattern` | agree | - | base, fields, generics, nested-patterns, type-level-definition | - |
+| `tuple-affine-reuse` | reject | `Invalid\tcheck\taffine-reuse\t` | base, fields, generics, type-level-definition | `tuple-read-pair` |
+| `tuple-arity` | reject | exit 2 | base, fields, generics, type-level-definition | `tuple-right-nested` |
+| `destructure-constructor` | agree | - | fields | - |
+| `destructure-then-match` | agree | - | fields | - |
+| `destructure-computed` | reject | `Invalid\tcheck\tcomputed-scrutinee\t` | fields | `destructure-constructor` |
+| `destructure-order` | reject | `Invalid\tcheck\tunmatchable-binder\t` | fields | `destructure-then-match` |
+| `destructure-sum` | reject | `Invalid\tcheck\tmissing-arm\t` | - | `destructure-constructor` |
+| `destructure-typed` | reject | exit 2 | fields | `destructure-constructor` |
+| `template-value-arg` | agree | - | - | - |
+| `template-set-known` | agree | - | closures, fields, generics, recursion | - |
+| `template-function-arg` | agree | - | closures | - |
+| `template-bare-call` | agree | - | - | - |
+| `template-open-argument` | reject | exit 2 | - | `template-value-arg` |
+| `template-late-binder` | reject | exit 2 | - | `template-value-arg` |
+| `template-forward` | reject | exit 2 | - | `template-value-arg` |
+| `partial-call` | agree | - | closures, generics | - |
+| `function-value` | agree | - | closures, generics | - |
+| `partial-call-reuse` | reject | `Invalid\tcheck\taffine-reuse\t` | closures | `partial-call` |
+| `function-value-arity` | reject | `Invalid\tcheck\ttype-mismatch\t` | closures, generics | `partial-call` |
+| `annotation-list-let` | agree | - | base, fields, generics | - |
+| `annotation-brace` | agree | - | - | - |
+| `annotation-unannotated-list` | reject | `Invalid\tcheck\tannotation-required\t` | base, fields, generics | `annotation-list-let` |
+| `annotation-reusable-quantity` | reject | `Invalid\tcheck\treusable-type\t` | base, fields, generics | `annotation-list-let` |
+| `dependent-result` | agree | - | fields, generics | - |
+| `dependent-choose` | agree | - | closures, generics | - |
+| `dependent-bind` | agree | - | closures, fields, generics | - |
+| `dependent-forward` | reject | exit 2 | fields, generics | `dependent-result` |
+| `char-compare` | agree | - | base, literals | - |
+| `char-u32-mismatch` | reject | `Invalid\tcheck\ttype-mismatch\t` | base, literals | `char-compare` |
+| `parallel-let` | unsupported | `Unsupported\tparse\tparallel-binding\t` | - | - |
+| `cons-operator` | unsupported | `Unsupported\tparse\toperator\t` | base, fields, generics | - |
+
+## Needs and blocking
+
+The **Needs** column lists capabilities outside this increment (`needs` in
+`expectations.json`):
+
+- `base`: loading the pinned Base (increment 4) and lowering its reachable
+  slice (increment 8).
+- `generics`: generic datatypes, erased type parameters and quantity arguments
+  (increment 6).
+- `fields`: fielded constructors. These are checked and evaluated today, and
+  emitted to Wasm through `knot-fields-wasm-1`.
+- `recursion`: first-parameter structural recursion (increment 1, landed).
+- `nested-patterns`: constructor patterns inside constructor patterns (increment 3).
+- `closures`: lambdas, arrow-typed parameters and function values (increment 7).
+- `literals`: Char and U32 literals and the Base primitive calls (increment 5).
+- `type-level-definition`: Base `Pair` is a type-level def over the dependent
+  `Sigma` family. `A & B` lowers to it. The generics suite lists this
+  capability as outside increment 6. The baseslice suite on main (increment 8)
+  claims `Pair`, spelled `A & B`, as its own work, because it is in the reached
+  Base slice. The sugar implementer either supplies the `A & B` lowering or
+  waits for baseslice to land it.
+
+A fixture is blocked while a need it names is unavailable. The runner reports a
+blocked fixture separately. It never relabels a blocked fixture as passing, and
+never re-expects one.
+
+These 13 fixtures need nothing beyond fields, so the increment can pass them
+first:
+- `template-value-arg`, `template-bare-call`, `template-open-argument`,
+  `template-late-binder` and `template-forward`;
+- the six `destructure-*` fixtures;
+- `annotation-brace` and `parallel-let`.
+
+They isolate the `~` mechanics, destructuring and brace annotations from Base,
+generics and closures.
+
+## Existing assertions this increment supersedes
+
+Several frozen assertions state that these forms are `Unsupported`. When sugar
+lands, the `agree` outcomes here contradict them. Under D7 this suite does not
+edit any of them. Each needs a separately reviewed amendment in the landing
+change:
+
+- `tests/subsets/classification-cases.json`, two cases:
+  - `classification/template.bend` pins `Unsupported\tparse\ttemplate-binder\t`
+    for `constant(~x: Flag)`. That fixture is `template-bare-call`'s form (a
+    template called without `~`).
+  - `classification/destructure.bend` pins
+    `Unsupported\tparse\tdestructuring-binding\t` for `Cell{value} = x`. That is
+    `destructure-constructor`'s form.
+- `src/LAWS.bend`: the classification laws `template_binder` and
+  `destructuring_binding` quantify over every suffix. They state that these
+  prefixes are `Unsupported`, so supporting templates and destructuring lets
+  falsifies them as stated. AGENTS.md forbids weakening an accepted law, so
+  replacing them is a coordinator or user decision. The decision must precede
+  implementation, not follow it.
+- `tests/compiler-generics`, `template-twice`: on main it pins
+  `Unsupported\tparse\ttemplate-binder\t`, reconciled from the original
+  `Unsupported\tparse\ttemplate\t` in `8eba6ba`, which is later than this
+  branch's base. The generics suite scopes its `Unsupported` pins to
+  increment 6 and leaves them to the increments that own the forms.
+- `tests/compiler-closures`, `template-map`: on main it pins
+  `Unsupported\tparse\ttemplate-binder\t` for a `~f` binder, with the need
+  `templates`. Once templates land, that seed-valid fixture contradicts the pin.
+
+`closure-apply` in the generics suite (`Unsupported\tparse\tparameter-type\t`)
+is not contradicted. Every fixture here with an arrow-typed parameter or a
+lambda needs `closures`, so it stays blocked until increment 7 lands.
+
+## Overlaps with other suites
+
+- **Closures (increment 7, frozen on main).** Captures, lambdas as
+  runtime values, higher-order parameters and variable calls belong to that
+  suite. The fixtures here that need closures pin only these forms: the
+  partial call, the function value, and the `choose`, `bind` and `set_known`
+  helper shapes. They pin nothing about closure representation.
+- **Generics.** `phantom-type` covers an erased type parameter that appears
+  only in the result. `dependent-result` adds these shapes, taken from
+  `core.invalid`:
+  - a two-constructor result family whose chosen constructor never mentions `A`;
+  - a type argument that is itself an application (`Outcome<Flag>`).
+- **Literals.** That suite owns Char escapes, Char patterns and their negatives.
+  `char-compare` covers only the census form: a Char literal as an argument to
+  `Char.is_eq`, next to the `'n'` trap. `char-u32-mismatch` pins that a Char
+  literal is not a U32. It pins `type-mismatch`, while the literals suite leaves
+  the codes of its own literal-type negatives open (`nat-u32-mismatch`). If
+  increment 5 chooses another code for a mistyped literal, one of the two needs
+  a reviewed amendment.
+- **Baseslice (increment 8, frozen on main).** Its FIXTURES.md claims two of
+  this suite's forms as increment 8's own work, because Base's reached slice
+  uses them:
+  - tuple destructuring, `((a2, b2), c) = r` in `String.eq.fin`,
+    `String.cmp.fin` and `String.cmp.rec`;
+  - `Pair`, spelled `A & B` (`type-level-definition` above).
+
+  Both suites therefore expect the destructuring let and the tuple sugar. The
+  coordinator decides which increment implements them. The other increment
+  reuses that implementation, and neither suite re-expects its fixtures.
+
+## Seed behaviours this suite freezes
+
+These behaviours were observed while writing the suite. They are recorded
+because an implementer could reasonably expect otherwise.
+
+- **Lists.** Commas in a list literal are optional, a trailing comma and inner
+  spaces are accepted, and `[]` is `Nil{}` (`list-separators`). An untyped let
+  cannot infer a list literal (`annotation-unannotated-list`). A brace
+  annotation or a typed let supplies the type (`annotation-list-let`).
+- **Tuples.** `(a,b,c)` is `(a,(b,c))`. A three-name pattern against
+  `A & B & C` destructures it, and against `A & B` is a pattern error
+  (`tuple-right-nested`, `tuple-arity`).
+- **Destructuring is a match, not a let.**
+  - After `K{x,y} = p`, a *later* parameter can still be matched, and so can
+    `x` (`destructure-then-match`).
+  - An earlier parameter cannot (`destructure-order`).
+  - A computed value cannot be destructured (`destructure-computed`).
+  - A partial destructure is non-exhaustive (`destructure-sum`).
+  - A typed destructuring let is refused at parse (`destructure-typed`).
+  - Not frozen: destructuring a local binder is refused too ("a match cannot
+    scrutinize a local binder").
+- **Templates.**
+  - A call may omit every `~` (`template-bare-call`).
+  - A `~` argument must be closed. A lambda whose binder shadows the caller's
+    own parameter, as in `refine` and `replace`, is still closed
+    (`template-set-known`). A caller's variable is not
+    (`template-open-argument`).
+  - Only leading binders take `~` (`template-late-binder`).
+  - A template can call only templates declared above it; the seed refuses the
+    `~` at parse (`template-forward`).
+  - Not frozen: a template may recurse into another instance of itself.
+    `walk~id` calling `walk~invert` is accepted, and so, surprisingly, is a
+    recursion whose `~` argument grows by one lambda per level.
+- **Partial calls and function values.** Each mention of a top-level def is a
+  fresh value, so `each(paint,paint,..)` is valid (`function-value`). A let-bound
+  function or partial application is affine (`partial-call-reuse`). Not frozen:
+  a let-bound bare def used twice is refused in the same way.
+- **Not frozen: sugar resolves by bare name.** List and tuple sugar build
+  `Con`, `Nil` and `Tuple` by their bare spellings. In the entry file, the
+  book's own `Con`/`Nil`/`Tuple` capture them, even without Base. Imported as a
+  module, the same file fails: the local names are qualified, and the bare
+  names fall to Base. Every sugar fixture here therefore uses Base's types. No
+  fixture relies on local capture, because an entry-only behaviour cannot be
+  observed through the wrapper calls. Knot source never relies on it either.
+
+## What the implementer must wire
+
+The gate runner, its receipts and the build lanes belong to the implementer.
+Follow the pattern of `tests/compiler-fields/check.py` and `tests/compiler-wasm/check.py`.
+
+1. Run `regen.py` first. It is the seed lane: fixture hashes, seed hashes and
+   all observations must still match before anything else counts.
+2. Build the check, eval and compile CLIs for the native and Bun lanes. For
+   every fixture that is not blocked, check it, then compile it into an output
+   file seeded with a marker. A rejected compilation must leave that file
+   unchanged.
+3. For `agree` fixtures, take each call in `observations`:
+   - Evaluate `eval-cli <fixture> <entry> <budget> <ordinals...>`. It must
+     yield `result.constructor`.
+   - Run `node scripts/run-wasm.mjs <module> <entry> <ordinals...>` with the
+     profile that the fixture's needs require. It must return `result.tag`.
+   - `ordinals` are the live enum arguments in parameter order. Every entry here
+     has only live enum parameters. Erased, template and function parameters of
+     internal helpers never cross the host boundary.
+4. For `unsupported` and `reject` fixtures, apply the requirement table to every
+   CLI phase that runs, including eval and compile.
+5. Report blocked fixtures (see Needs) separately from passes and failures.
+6. Land the reviewed amendments listed under "Existing assertions this increment
+   supersedes" in the same change, with their own review.
+
+## Limits
+
+- The seed lane is the reference interpreter. No seed-compiled binary is compared.
+- A seed-invalid fixture records only its direct rejection, because a wrapper
+  cannot import an invalid module.
+- The suite pins behaviour on finite programs. It proves no checker property.
+- Entries are observed only through the enum host boundary. Lists, pairs and
+  closures never cross it, so their representations are checked only through
+  the enum results they determine.
+- `Unsupported` pins are scoped to this increment. The increments that own
+  those forms supersede them through reviewed amendments.

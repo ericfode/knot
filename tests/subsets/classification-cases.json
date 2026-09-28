@@ -141,6 +141,350 @@
         "exit": 2,
         "diagnostic": "Invalid\tparse\tdeclaration-name\t8:42:1:8"
       }
+    },
+    {
+      "file": "classification/template-nonleading.bend",
+      "increment": "classify-2",
+      "sha256": "8a42cef188fcfdd9043e73cae88ad691de6ac4a016b4a5a33b1505ad30575a85",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(a: Flag, ~x: Flag) -> Flag:\n  |                       ^\n6 |   x\n",
+        "diagnostic_contains": "expected : a plain binder (only leading binders take ~)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-malformed.bend",
+      "increment": "classify-2",
+      "sha256": "5704f5c156763a19a4bbd30f1d29184b2013854adbcbe751a5f55bce74096c1b",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-malformed.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(a: Flag, ~x:) -> Flag:\n  |                       ^\n6 |   x\n",
+        "diagnostic_contains": "expected : a plain binder (only leading binders take ~)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t57:58:5:22"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-erased.bend",
+      "increment": "classify-2",
+      "sha256": "635dd5b4e54591af3cc5a70efef7d7811b13118cda04acc0e615c83f5b694906",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-erased.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(-a: Flag, ~x: Flag) -> Flag:\n  |                        ^\n6 |   x\n",
+        "diagnostic_contains": "expected : a plain binder (only leading binders take ~)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23"
+      }
+    },
+    {
+      "file": "classification/template-nonleading-reusable.bend",
+      "increment": "classify-2",
+      "sha256": "2f690542b3a0fea4bacdde27f08facd400fdc496332e45be636a51856de09d70",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-nonleading-reusable.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a plain binder (only leading binders take ~)\n- observed : '~'\nLocation:\n4 | \n5>| def constant(+a: Flag, ~x: Flag) -> Flag:\n  |                        ^\n6 |   x\n",
+        "diagnostic_contains": "expected : a plain binder (only leading binders take ~)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t58:59:5:23"
+      }
+    },
+    {
+      "file": "classification/template-leading-pair.bend",
+      "increment": "classify-2",
+      "sha256": "11a504bcec3c58719a62359b6658482535d6a4ba7ac0c880059207c92670adb0",
+      "reference": {
+        "exit": 0,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-leading-pair.bend"
+        ],
+        "stdout": "On{}\n",
+        "stderr": "",
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/template-after-prefix.bend",
+      "increment": "classify-2",
+      "sha256": "925eeb336266751600e84fb1c50a49e91d4ff9d3fcec10942cf541f72f3c70dc",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/template-after-prefix.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n4 | \n5>| def constant(~x:) -> Flag:\n  |                 ^\n6 |   x\n",
+        "diagnostic_contains": "expected : a term"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13"
+      }
+    },
+    {
+      "file": "classification/destructure-equality.bend",
+      "increment": "classify-2",
+      "sha256": "9714c019351bc4acb95fa6208aaaa4f1d12e6d135f6396017995f19db5ae882e",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-equality.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '='\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} == x\n   |               ^\n10 |   value\n",
+        "diagnostic_contains": "expected : 'def', 'type' or 'law'"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-arrow.bend",
+      "increment": "classify-2",
+      "sha256": "eebecf75c69fcb1e07cb00063c818ac2e791e28969d571f8df0093cfe93e6f3c",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-arrow.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a lambda binder (one name: k => body)\n- observed : ' '\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} => x\n   |                 ^\n10 |   value\n",
+        "diagnostic_contains": "expected : a lambda binder (one name: k => body)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-equality-malformed.bend",
+      "increment": "classify-2",
+      "sha256": "f410c28a63657cc3b57b542db87cb8fcbd408da23cff727a781c2dc2da285fd9",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-equality-malformed.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '='\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} ==\n   |               ^\n10 |   value\n",
+        "diagnostic_contains": "expected : 'def', 'type' or 'law'"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-arrow-malformed.bend",
+      "increment": "classify-2",
+      "sha256": "5d053c09548fd7adc6be4e0263e3614fe5a504e280cac9c1ff70aa481371eff6",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-arrow-malformed.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a lambda binder (one name: k => body)\n- observed : '\n'\nLocation:\n 8 | def take(x: Cell) -> Flag:\n 9>|   Cell{value} =>\n   |                 ^\n10 |   value\n",
+        "diagnostic_contains": "expected : a lambda binder (one name: k => body)"
+      },
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tend-of-body\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/destructure-after-prefix.bend",
+      "increment": "classify-2",
+      "sha256": "c8ecbd11055ce79403ba44a1bd0ff8526ccff263c2eee27a77a4fe8f18cd10d7",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/destructure-after-prefix.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n11 | \n12>| def main() -> Flag:\n   | ^^^\n13 |   take(Cell{On{}})\n",
+        "diagnostic_contains": "expected : a term (the keyword 'def' cannot head one)"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14"
+      }
+    },
+    {
+      "file": "classification/application-parameter.bend",
+      "increment": "classify-2",
+      "sha256": "a6732313a9a28f2d6529d9aa42ec1679310be273047f91cffee9a278add99e28",
+      "reference": {
+        "exit": 0,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-parameter.bend"
+        ],
+        "stdout": "On{}\n",
+        "stderr": "",
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17"
+      }
+    },
+    {
+      "file": "classification/application-return.bend",
+      "increment": "classify-2",
+      "sha256": "8f78e510562ae976e93621cb8b8a268f72982db988324552b676ab6971b436f1",
+      "reference": {
+        "exit": 0,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-return.bend"
+        ],
+        "stdout": "[]\n",
+        "stderr": "",
+        "value": "[]"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18"
+      }
+    },
+    {
+      "file": "classification/application-binding.bend",
+      "increment": "classify-2",
+      "sha256": "077e81a60d8e4e8a724ff8199e4ccda92ef5348f6cde64ca85137fd85a20294d",
+      "reference": {
+        "exit": 0,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-binding.bend"
+        ],
+        "stdout": "On{}\n",
+        "stderr": "",
+        "value": "On{}"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10"
+      }
+    },
+    {
+      "file": "classification/application-parameter-after-prefix.bend",
+      "increment": "classify-2",
+      "sha256": "e31406e1bfe62e3cfec190038a9a943e2c18ab56b9df5ae3e5b8ffd4885faef0",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-parameter-after-prefix.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n4 | \n5>| def take(xs: List<) -> Flag:\n  |                   ^\n6 |   On{}\n",
+        "diagnostic_contains": "expected : a term"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t52:53:5:17"
+      }
+    },
+    {
+      "file": "classification/application-return-after-prefix.bend",
+      "increment": "classify-2",
+      "sha256": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-return-after-prefix.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() -> List<:\n  |                    ^\n6 |   Nil{}\n",
+        "diagnostic_contains": "expected : a term"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t53:54:5:18"
+      }
+    },
+    {
+      "file": "classification/application-binding-after-prefix.bend",
+      "increment": "classify-2",
+      "sha256": "ec0f431d89bdf0c80f2425ae5b3ac45624e86c1a5e69448ed09b7055d5b27a91",
+      "reference": {
+        "exit": 1,
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/subsets/classification/application-binding-after-prefix.bend"
+        ],
+        "stdout": "",
+        "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n5 | def main() -> Flag:\n6>|   xs: List< = Nil{}\n  |             ^\n7 |   On{}\n",
+        "diagnostic_contains": "expected : a term"
+      },
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\ttype-application\t65:66:6:10"
+      }
     }
-  ]
+  ],
+  "classify_2": {
+    "scope": "Seed commands and outputs fixed before implementation; locations reviewed from source bytes. Parameter applications retain parameter-type; return and local annotation applications use type-application. An unsupported prefix does not validate the remaining source.",
+    "cases": 17
+  }
 }

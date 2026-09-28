@@ -1,0 +1,35 @@
+{
+  "basis": "Literal-reviewed independent meter control, fixed before implementation.",
+  "files": [
+    {"file": "src/control.bend", "imports": [], "declarations": [
+      {"key": "src/control.a", "kind": "definition", "features": ["calls"]},
+      {"key": "src/control.b", "kind": "definition", "features": ["calls", "lambdas"]},
+      {"key": "src/control.C", "kind": "datatype", "features": ["fields"]}
+    ]},
+    {"file": "src/control-LAWS.bend", "imports": [], "declarations": [
+      {"key": "src/control-LAWS.helper", "kind": "definition", "features": ["equality"]}
+    ]}
+  ],
+  "closure": {
+    "roots": ["src/control.a"], "mode": "runtime", "target": "js", "unresolved": [],
+    "entries": [
+      {"key": "src/control.a", "file": "src/control.bend", "boundary": "source"},
+      {"key": "src/control.b", "file": "src/control.bend", "boundary": "source"},
+      {"key": "src/control.C", "file": "src/control.bend", "boundary": "source"},
+      {"key": "src/control-LAWS.helper", "file": "src/control-LAWS.bend", "boundary": "source"}
+    ]
+  },
+  "evidence": {"check": ["calls", "fields"], "wasm": ["calls"]},
+  "expected": {
+    "declarations": 3, "check": 2, "wasm": 1,
+    "missing": {
+      "check": [{"feature": "lambdas", "declarations": 1}],
+      "wasm": [{"feature": "fields", "declarations": 1}, {"feature": "lambdas", "declarations": 1}]
+    },
+    "per_declaration": {
+      "src/control.C": {"check": [], "wasm": ["fields"]},
+      "src/control.a": {"check": [], "wasm": []},
+      "src/control.b": {"check": ["lambdas"], "wasm": ["lambdas"]}
+    }
+  }
+}
