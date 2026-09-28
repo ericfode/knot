@@ -170,11 +170,55 @@ def copy_cache(source: Path, destination: Path, identities: dict, namespace: str
             dest.write_bytes(data)
 
 
+def host_cc() -> str | None:
+    """The seed's native lane probes `$CC`, then `clang`, with `--version`. On
+    macOS `/usr/bin/clang` is an xcrun shim that intermittently prints nothing
+    under heavy parallel load, which the seed reports as "found no clang".
+    Resolve the toolchain's clang once and pass it as CC: the same compiler the
+    shim forwards to, without the per-call shim."""
+    if os.environ.get('CC'):
+        return os.environ['CC']
+    if sys.platform != 'darwin':
+        return None
+    for _ in range(3):
+        try:
+            found = subprocess.run(['xcrun', '--find', 'clang'], capture_output=True, text=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        path = found.stdout.strip()
+        if found.returncode == 0 and path and os.access(path, os.X_OK):
+            return path
+    return None
+
+
 def environment(run_dir: Path) -> tuple[dict, dict]:
     # Preserve only host tool discovery; never import credentials, dotenv files,
     # NODE_OPTIONS, shell hooks, or caller-specific Bend/network configuration.
     env = {key: os.environ[key] for key in ('PATH', 'HOME', 'SDKROOT', 'DEVELOPER_DIR',
                                           'SYSTEMROOT') if key in os.environ}
+    cc = host_cc()
+    if cc:
+        env['CC'] = cc
+        if sys.platform == 'darwin' and 'SDKROOT' not in env:
+            # The unwrapped compiler needs the SDK path that the shim supplied.
+            try:
+                sdk = subprocess.run(['xcrun', '--show-sdk-path'], capture_output=True, text=True,
+                                     timeout=60).stdout.strip()
+            except (OSError, subprocess.TimeoutExpired):
+                sdk = ''
+            if sdk:
+                env['SDKROOT'] = sdk
+        # Gate programs that rebuild their own environment keep PATH but may drop
+        # CC; the seed then probes the xcrun shim. A `clang` first on PATH that
+        # runs the resolved compiler (with the SDK the shim would supply) keeps
+        # every such path off the shim.
+        tools = run_dir / 'bin'
+        tools.mkdir()
+        wrapper = tools / 'clang'
+        sdk_line = f": \"${{SDKROOT:={env['SDKROOT']}}}\"; export SDKROOT\n" if 'SDKROOT' in env else ''
+        wrapper.write_text(f'#!/bin/sh\n{sdk_line}exec "{cc}" "$@"\n')
+        wrapper.chmod(0o755)
+        env['PATH'] = str(tools) + os.pathsep + env.get('PATH', '')
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()

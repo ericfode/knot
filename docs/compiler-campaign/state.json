@@ -86,43 +86,35 @@
     },
     {
       "id": "modules",
-      "state": "codex fix round 2 (symlink/case path identity -> Unsupported load path-identity; Base-namespace shadowing)"
-    },
-    {
-      "id": "literals",
-      "state": "codex implementing (based on campaign/modules)"
+      "state": "Claude fix round 3 (65,537-byte truncation, path-identity pins, Base#, BOM/NBSP headers, constructor binders)"
     },
     {
       "id": "generics",
-      "state": "codex implementing"
+      "state": "Claude fix round 1 (coordinator-authorized generic-header pin flip, parallel checker, quantity-family soundness)"
     },
     {
-      "id": "io-host",
-      "state": "codex fix round 2 (case-insensitive .env refusal); becomes the VM IO layer"
+      "id": "literals",
+      "state": "Claude fix rounds (spaced Nat offset soundness, loader ownership)"
     },
     {
-      "id": "wasm-owned",
-      "state": "codex implementing (native RC heap; informs the VM heap)"
+      "id": "vm-spec",
+      "state": "Claude review round 2 (vm/SPEC.md, golden images, bench workloads)"
     },
     {
-      "id": "closures",
-      "state": "done a1d6891; review workflow wfswsiz0q running"
+      "id": "vm-model",
+      "state": "Claude implementing from campaign/vm-spec"
+    },
+    {
+      "id": "vm-core",
+      "state": "Claude implementing from campaign/vm-spec"
     },
     {
       "id": "descent-2",
-      "state": "done; reviewed: 0 blocking; integration hazards: closures partial-self-same pin must migrate to Invalid, closures must rebase onto Scope{...,aliases}, re-merge onto current campaign/nest"
+      "state": "done, reviewed (0 blocking); merges after nest"
     },
     {
-      "id": "classify-2",
-      "state": "merged; follow-up classify-3 queued: function-type return/binding annotations Unsupported, type-application only when seed commits"
-    },
-    {
-      "id": "vm-design",
-      "state": "design-panel workflow wf_68968469-dba running; its synthesis defines the VM increments (IR/image format, VM, model+laws, harness route)"
-    },
-    {
-      "id": "selfhost-gap-analysis",
-      "state": "workflow wf_35f2e149-542 running; output -> docs/compiler-campaign/SELF-HOSTING-PATH.md"
+      "id": "closures",
+      "state": "done, reviewed (0 blocking, 1 major: closure-profile gate); rebase onto nest/descent-2 Scope API before merge"
     }
   ],
   "decisions": [
@@ -251,5 +243,13 @@
     "review/merge on-path branches as they finish: nest, modules, literals, generics, closures, descent-2, io-host",
     "commit the gap analysis as docs/compiler-campaign/SELF-HOSTING-PATH.md",
     "launch sugar, baseslice and classify-3 when their prerequisites land"
+  ],
+  "executor": "Claude workflows (scratchpad campaign-infra/claude-increment.js: implement loop, adversarial review, fix rounds) since 2026-09-27; Codex quota exhausted",
+  "merged_since_vm_switch": [
+    "io-host (sticky termination, D19 host memory)",
+    "io-abi-2 (knot-io-2)",
+    "harness-2 (generation contract)",
+    "joint (selfhost suite, 65 cases)",
+    "poly fixture suite (61 cases)"
   ]
 }
