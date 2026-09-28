@@ -19,7 +19,6 @@ seed's native lane and requires:
   HostFailure image, and one past a resource limit of SPEC section 4 (image
   size, records per table, arity, `slots`) as Exhausted kind 2, on both sides of
   each limit;
-
 - check-spec's argument controls (SPEC section 8): the image before the words,
   then its entry kind's form, `usage` before any word, each word a decimal u32;
   an admitted one runs as the reference evaluation runs it;
@@ -47,8 +46,13 @@ seed's native lane and requires:
   and every admitted mutation runs soundly;
 - vm/PROOF.bend to print 'All terms check.';
 - every model mutant killed by a wrong observation of those checks, never by a
-  crash or a timeout, and those in LAW_MUTANTS also refuted by a law of PROOF.bend.
-It writes only vm/receipts/model.json.
+  crash or a timeout, and those in LAW_MUTANTS also refuted by a law of PROOF.bend;
+- the images its runs share staged once, read-only, before any run; a refusal as
+  `length`, `magic`, `total` or `noncanonical` of an image the reference codec
+  admits is a harness fault, never a kill, and fails the gate; and the harness
+  control: three workers run every staged run at once on the unmutated model and
+  every row agrees, and a torn image is such a fault.
+It writes only vm/receipts/model.json, beside its builds in .local/vm-model/gate.
 """
 from __future__ import annotations
 
@@ -62,6 +66,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -254,6 +259,40 @@ def built(tree: Path, entries) -> dict:
         return dict(zip(entries, pool.map(lambda e: build(tree, e), entries)))
 
 
+# ------------------------------------------------------------------ staged images
+
+# The runs of the inspection, refusal, admitted and argument controls read their images
+# from BUILD, many at once. Each image is written once, before any run: into a temporary
+# file, made read-only and renamed into place, so no run can see a partial image and a
+# later writer fails instead of tearing a concurrent read.
+def staged(folder: str, images: list) -> dict:
+    """label -> path of each (label, bytes), written once under BUILD/folder."""
+    root = BUILD / folder
+    root.mkdir(parents=True, exist_ok=True)
+    paths = {label: root / (label.replace(':', '_') + '.kimg') for label, _ in images}
+    require(len(set(paths.values())) == len(images), f'{folder}: two images share a path')
+    for label, data in images:
+        handle, scratch = tempfile.mkstemp(dir=root, suffix='.tmp')
+        with os.fdopen(handle, 'wb') as out:
+            out.write(data)
+        os.chmod(scratch, 0o444)
+        os.replace(scratch, paths[label])
+    return paths
+
+
+# Refusals that no image the reference codec admits can earn: its length, magic and total
+# are facts of the bytes read (SPEC section 4 step 1), and its encoding is canonical. A
+# partial read of an image gives them, so on an admitted image they are a harness fault,
+# never a kill, and the gate fails on one.
+TORN = tuple(f'HostFailure image: {reason}' for reason in ('length', 'magic', 'total', 'noncanonical'))
+
+
+def harness_faults(observed: dict) -> list:
+    """Rows whose image the reference codec admits and the model refused as TORN."""
+    return [f'{check}:{name}' for check, rows in observed.items() for name, row in rows.items()
+            if row.get('admitted') and model_refusal(row['result']) in TORN]
+
+
 # ------------------------------------------------------------------ observations
 
 KNOWN_EXITS = {0, 3, 4, 5, 6, 7}
@@ -295,7 +334,7 @@ def golden_runs(model: Path, expected: dict) -> dict:
     cases = expected['cases']
     with ThreadPoolExecutor(max_workers=8) as pool:
         got = dict(zip(cases, pool.map(lambda n: run(argv_of(model, n, cases[n]['argv']), 120), cases)))
-    return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n])} for n in cases}
+    return {n: {'result': got[n], 'agrees': agrees(cases[n], got[n]), 'admitted': True} for n in cases}
 
 
 def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
@@ -314,7 +353,7 @@ def invocation_runs(model: Path, audit: Path, expected: dict) -> dict:
             calls = reference_calls(plans[n], row['argv'])
             good = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == calls
             result = result if good else audited
-        return label, {'result': result, 'agrees': good}
+        return label, {'result': result, 'agrees': good, 'admitted': True}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, rows))
 
@@ -340,7 +379,7 @@ def fuel_runs(model: Path, expected: dict) -> dict:
             good = (result['exit'], result['stdout']) == (0, 'Evaluated\t0\t1\tOn{}\n')
         else:
             good = result['exit'] == 4 and tuple(result['stderr'].rstrip('\n').split('\t')) == want[n]
-        out[n] = {'result': result, 'agrees': good}
+        out[n] = {'result': result, 'agrees': good, 'admitted': True}
     return out
 
 
@@ -368,41 +407,46 @@ def controls() -> list:
     capture = images['closure-captures']
     body = cs.word(capture, cs.word(capture, 7) + 1 + 5)
     listed.append(('model:child-is-parent', cs.word_patch(capture, body + 4, body), '', ''))
-    return [(label, data, cs.rejected(data, REGISTRY, DIGEST)) for label, data, _, _ in listed]
+    paths = staged('controls', [(label, data) for label, data, _, _ in listed])
+    return [(label, paths[label], cs.rejected(data, REGISTRY, DIGEST)) for label, data, _, _ in listed]
 
 
-def argument_runs(model: Path, audit: Path) -> dict:
-    """SPEC section 8's argument controls, check-spec's by literal review: the image first,
-    then its entry kind's form and words. A refused one halts with check-spec's verdict; an
-    admitted one runs as the reference evaluation runs its fuel and ordinals, and its RC
-    audit passes."""
-    folder = BUILD / 'arguments'
-    folder.mkdir(parents=True, exist_ok=True)
-    images = {p.stem: p.read_bytes() for p in GOLDEN.glob('*.kimg')}
-    listed = cs.argument_controls(images)
+def argument_controls() -> list:
+    """(label, path, words, verdict, reference run, admitted): SPEC section 8's argument
+    controls, check-spec's by literal review, each image staged: a refused one's verdict, or
+    the reference evaluation's run of its fuel and ordinals."""
+    listed = cs.argument_controls(golden_images())
     require(any(v is None for *_, v in listed) and any(v for *_, v in listed), 'check-spec lists admitted and refused argument controls')
-
-    def one(item):
-        label, data, words, verdict = item
+    paths = staged('arguments', [(label, data) for label, data, _, _ in listed])
+    out = []
+    for label, data, words, verdict in listed:
         require(cs.argument_verdict(data, words, REGISTRY, DIGEST) == verdict, f'argument control {label}: check-spec gives another verdict')
-        path = folder / f'{label}.kimg'
-        if not path.exists() or path.read_bytes() != data:
-            path.write_bytes(data)
+        got = None
+        if verdict is None:
+            plan = codec.decode(data, DIGEST)
+            got = (reference.book(plan, words[0], [codec.decimal(w) for w in words[2:]], codec.decimal(words[1]))
+                   if plan['entry'] == 'book' else reference_run(plan, codec.decimal(words[0])))
+        out.append((label, paths[label], words, verdict, got, cs.rejected(data, REGISTRY, DIGEST) is None))
+    return out
+
+
+def argument_runs(model: Path, audit: Path, listed: list) -> dict:
+    """The image first, then its entry kind's form and words: a refused control halts with
+    check-spec's verdict; an admitted one runs as the reference evaluation ran it, and its RC
+    audit passes."""
+    def one(item):
+        label, path, words, verdict, got, admitted = item
         result = run([model, '--', path, *words], 120)
         if verdict is not None and verdict.startswith('HostFailure image: '):
-            return label, {'result': result, 'agrees': model_refusal(result) == verdict}
+            return label, {'result': result, 'agrees': model_refusal(result) == verdict, 'admitted': admitted}
         if verdict is not None:
-            return label, {'result': result, 'agrees': agrees({'outcome': 'HostFailure', 'cause': verdict.split(' ', 1)[1]}, result)}
-        plan = codec.decode(data, DIGEST)
-        if plan['entry'] == 'book':
-            got = reference.book(plan, words[0], [codec.decimal(w) for w in words[2:]], codec.decimal(words[1]))
-        else:
-            got = reference_run(plan, codec.decimal(words[0]))
+            return label, {'result': result, 'admitted': admitted,
+                           'agrees': agrees({'outcome': 'HostFailure', 'cause': verdict.split(' ', 1)[1]}, result)}
         audited = run([audit, '--', path, *words], 300)
         m = AUDIT.match(audited['stdout'].strip())
         good = agrees(expected_run(got), result)
         balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and m.group(4) == '0' and int(m.group(5)) == got['calls']
-        return label, {'result': audited if good else result, 'agrees': good and balanced}
+        return label, {'result': audited if good else result, 'agrees': good and balanced, 'admitted': admitted}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, listed))
 
@@ -420,14 +464,8 @@ def model_refusal(result) -> str | None:
 
 
 def control_runs(model: Path, listed: list) -> dict:
-    folder = BUILD / 'controls'
-    folder.mkdir(parents=True, exist_ok=True)
-
     def one(item):
-        label, data, want = item
-        path = folder / (label.replace(':', '_') + '.kimg')
-        if not path.exists() or path.read_bytes() != data:
-            path.write_bytes(data)
+        label, path, want = item
         result = run([model, '--', path, 'main', '1000000'], 120)
         return label, {'result': result, 'reference': want, 'agrees': model_refusal(result) == want}
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -448,12 +486,13 @@ def reference_run(plan: dict, fuel: int) -> dict:
 
 
 def admitted_controls() -> list:
-    """(label, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST
+    """(label, path, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST
     run at `fuel` to `run` after `calls` entries (SPEC sections 4 and 7): check-spec's
     admitted plan controls, its admitted limit control, its code-list controls, its frozen
     run controls and the model's own frozen controls, seed-derived and display. A run control
     runs at the fuel frozen with it, every other control at SPEC section 7's 1,000,000; the
-    reference evaluation runs each at that fuel and reproduces what the control froze."""
+    reference evaluation runs each at that fuel and reproduces what the control froze. Each
+    image is staged."""
     plans = golden_plans()
     listed = [(f'plan:{k}', p, {}) for k, p, m in cs.plan_controls(plans) if m is None]
     listed += [(f'limit:{k}', codec.decode(data, DIGEST), {})
@@ -476,7 +515,8 @@ def admitted_controls() -> list:
         got = reference_run(plan, fuel)
         want = {k: v for k, v in frozen.items() if k not in ('fuel', 'calls')} or expected_run(got)
         out.append((label, plan, fuel, want, frozen.get('calls', got['calls'])))
-    return out
+    paths = staged('admitted', [(label, codec.encode(plan, DIGEST)) for label, plan, *_ in out])
+    return [(label, paths[label], *rest) for label, *rest in out]
 
 
 def control_argv(binary: Path, path: Path, plan: dict, fuel: int) -> list:
@@ -486,22 +526,15 @@ def control_argv(binary: Path, path: Path, plan: dict, fuel: int) -> list:
 
 def admitted_runs(model: Path, audit: Path, listed: list, argv=control_argv) -> dict:
     """Each admitted control's run at its fuel, its RC audit and its entries paid for."""
-    folder = BUILD / 'admitted'
-    folder.mkdir(parents=True, exist_ok=True)
-
     def one(item):
-        label, plan, fuel, want, calls = item
-        path = folder / (label.replace(':', '_') + '.kimg')
-        data = codec.encode(plan, DIGEST)
-        if not path.exists() or path.read_bytes() != data:
-            path.write_bytes(data)
+        label, path, plan, fuel, want, calls = item
         result = run(argv(model, path, plan, fuel), 120)
         audited = run(argv(audit, path, plan, fuel), 300)
         m = AUDIT.match(audited['stdout'].strip())
         balanced = bool(m) and audited['exit'] == 0 and m.group(1) == 'passed' and (
             'exit' not in want or m.group(4) == '0') and int(m.group(5)) == calls
         # A kill is judged on the observation that went wrong.
-        return label, {'result': audited if agrees(want, result) else result,
+        return label, {'result': audited if agrees(want, result) else result, 'admitted': True,
                        'agrees': agrees(want, result) and balanced, 'calls': int(m.group(5)) if m else None}
     with ThreadPoolExecutor(max_workers=8) as pool:
         return dict(pool.map(one, listed))
@@ -517,7 +550,7 @@ def harness_runs(model: Path, audit: Path, admitted: list, base: dict) -> list:
     """`fuel-ignored` runs every control at 1,000,000: exactly the fuel controls whose frozen
     run differs from the reference evaluation's at 1,000,000 must kill it."""
     runs = [a for a in admitted if a[0].startswith('run:')]
-    killers = sorted(label for label, plan, fuel, want, calls in runs
+    killers = sorted(label for label, path, plan, fuel, want, calls in runs
                      if fuel != cs.VM_FUEL and cs.ran(plan, {**want, 'calls': calls}) != {**want, 'calls': calls})
     got = admitted_runs(model, audit, runs, fuel_ignored)
     killed = sorted(n for n, r in got.items() if not r['agrees'] and base[n]['agrees'])
@@ -551,7 +584,7 @@ def audit_runs(audit: Path, expected: dict) -> dict:
         outcome = cases[n].get('outcome') or ('Described' if cases[n]['argv'][1] == 'main' else 'Emitted')
         good = bool(m) and result['exit'] == 0 and m.group(1) == 'passed' and m.group(3) == outcome and (
             outcome in ('Exhausted', 'HostFailure') or m.group(4) == '0') and int(m.group(5)) == calls[n]
-        out[n] = {'result': result, 'agrees': good, 'transitions': int(m.group(2)) if m else None,
+        out[n] = {'result': result, 'agrees': good, 'admitted': True, 'transitions': int(m.group(2)) if m else None,
                   'live': int(m.group(4)) if m else None, 'calls': int(m.group(5)) if m else None}
     return out
 
@@ -608,19 +641,25 @@ INSPECTION.update({
 })
 
 
-def inspection_runs(model: Path) -> dict:
-    folder = BUILD / 'inspection'
-    folder.mkdir(parents=True, exist_ok=True)
-    out = {}
+def inspection_controls() -> list:
+    """(name, path) of each inspection control, staged: the reference codec admits it and the
+    reference evaluation refuses it ill-typed."""
+    images = []
     for name, plan in INSPECTION.items():
         data = codec.encode(plan, DIGEST)
         require(cs.rejected(data, REGISTRY, DIGEST) is None, f'{name}: the reference codec refuses it')
         got = reference.book(plan, 'main', [], 1000000)
         require({k: got.get(k) for k in cs.ILL_TYPED} == cs.ILL_TYPED, f'{name}: the reference evaluation gives {got}')
-        path = folder / f'{name}.kimg'
-        path.write_bytes(data)
+        images.append((name, data))
+    paths = staged('inspection', images)
+    return [(name, paths[name]) for name, _ in images]
+
+
+def inspection_runs(model: Path, listed: list) -> dict:
+    out = {}
+    for name, path in listed:
         result = run([model, '--', path, 'main', '1000000'], 120)
-        out[name] = {'result': result, 'agrees': (result['exit'], result['stdout'], result['stderr'])
+        out[name] = {'result': result, 'admitted': True, 'agrees': (result['exit'], result['stdout'], result['stderr'])
                      == (5, '', 'HostFailure\timage\till-typed\n')}
     return out
 
@@ -779,6 +818,50 @@ def proof() -> dict:
     laws = len(re.findall(r'^law ', (HERE / 'LAWS.bend').read_text(), re.M))
     return {'result': result, 'agrees': result['exit'] == 0 and result['stdout'].strip() == 'All terms check.',
             'laws': laws}
+
+
+def observations(bins: dict, tree: Path, expected: dict, shared: dict) -> dict:
+    """Every check's rows for one build of the model; `shared` holds the staged controls."""
+    model, audit = bins['model'], bins['audit']
+    return {'goldens': golden_runs(model, expected),
+            'invocations': invocation_runs(model, audit, expected),
+            'inspection': inspection_runs(model, shared['inspection']),
+            **({'lanes': lane_runs(bins['lanes'])} if 'lanes' in bins else {}),
+            'connectives': connective_runs(tree),
+            'fuel': fuel_runs(model, expected),
+            'controls': control_runs(model, shared['controls']),
+            'admitted': admitted_runs(model, audit, shared['admitted']),
+            'arguments': argument_runs(model, audit, shared['arguments']),
+            'audit': audit_runs(audit, expected)}
+
+
+def staged_runs(bins: dict, shared: dict) -> dict:
+    """The runs that read staged images."""
+    model, audit = bins['model'], bins['audit']
+    return {'inspection': inspection_runs(model, shared['inspection']),
+            'controls': control_runs(model, shared['controls']),
+            'admitted': admitted_runs(model, audit, shared['admitted']),
+            'arguments': argument_runs(model, audit, shared['arguments'])}
+
+
+def harness_controls(bins: dict, shared: dict) -> dict:
+    """The mutant pool's reading of staged images, on the unmutated model: three workers run
+    every staged run at once and every row agrees. A torn image (empty, a short prefix, a
+    word-aligned prefix of value-on) is a harness fault that `kills` never credits."""
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        rounds = list(pool.map(lambda _: staged_runs(bins, shared), range(3)))
+    differ = sorted({f'{check}:{name}' for got in rounds for check, rows in got.items()
+                     for name, row in rows.items() if not row['agrees']})
+    require(not differ, f'harness control: concurrent staged runs disagree at {differ[:8]}')
+    image = (GOLDEN / 'value-on.kimg').read_bytes()
+    paths = staged('torn', [('empty', b''), ('short', image[:64]), ('prefix', image[:128])])
+    torn = {'torn': {label: {'result': run([bins['model'], '--', path, 'main', '1000000'], 120), 'agrees': False,
+                             'admitted': True} for label, path in paths.items()}}
+    faults = harness_faults(torn)
+    require(len(faults) == len(paths) and not kills({'torn': {label: {'agrees': True} for label in paths}}, torn),
+            f'harness control: torn images {torn}')
+    return {'concurrent': {'workers': 3, 'rows': sum(len(rows) for rows in rounds[0].values()), 'disagreements': 0},
+            'torn': {label: model_refusal(row['result']) for label, row in torn['torn'].items()}}
 
 
 # ------------------------------------------------------------------ mutants
@@ -960,17 +1043,18 @@ def law_kill(tree: Path) -> str | None:
 
 
 def kills(base: dict, mutant: dict) -> list:
-    """Checks whose observation changed to a well-formed wrong one."""
+    """Checks whose observation changed to a well-formed wrong one; a harness fault is none."""
+    faults = set(harness_faults(mutant))
     killed = []
     for check, rows in mutant.items():
         for name, row in rows.items():
             if not row['agrees'] and base[check][name]['agrees'] and (
-                    check == 'sweep' or well_formed(row['result'])):
+                    check == 'sweep' or well_formed(row['result'])) and f'{check}:{name}' not in faults:
                 killed.append(f'{check}:{name}')
     return killed
 
 
-def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> list:
+def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
     trees = {name: build_tree(f'mutants/{name}', section, mutation) for name, section, mutation, _ in MUTANTS}
 
     def one(entry):
@@ -978,19 +1062,10 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
         tree = trees[name]
         # vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
         bins = built(tree, ('model', 'audit', 'lanes') if section == 'word' else ('model', 'audit'))
-        observed = {'goldens': golden_runs(bins['model'], expected),
-                    'invocations': invocation_runs(bins['model'], bins['audit'], expected),
-                    'inspection': inspection_runs(bins['model']),
-                    **({'lanes': lane_runs(bins['lanes'])} if 'lanes' in bins else {}),
-                    'connectives': connective_runs(tree),
-                    'fuel': fuel_runs(bins['model'], expected),
-                    'controls': control_runs(bins['model'], listed),
-                    'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
-                    'arguments': argument_runs(bins['model'], bins['audit']),
-                    'audit': audit_runs(bins['audit'], expected)}
+        observed = observations(bins, tree, expected, shared)
         crashes = [f'{c}:{n}' for c, rows in observed.items() for n, r in rows.items()
                    if not r['agrees'] and not well_formed(r['result'])]
-        return kills(base, observed), crashes
+        return kills(base, observed), crashes, harness_faults(observed)
     # PROOF.bend runs single-threaded for minutes, so the law kills run beside the
     # observations instead of after each one.
     with ThreadPoolExecutor(max_workers=3) as proofs, ThreadPoolExecutor(max_workers=3) as pool:
@@ -998,10 +1073,11 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
         observed = list(pool.map(one, MUTANTS))
         laws = {name: future.result() for name, future in proving.items()}
     out = []
-    for (name, section, mutation, meaning), (killed, crashes) in zip(MUTANTS, observed):
+    for (name, section, mutation, meaning), (killed, crashes, faults) in zip(MUTANTS, observed):
+        require(not faults, f'mutant {name}: harness faults, not kills, at {faults[:8]}')
         require(name not in LAW_MUTANTS or laws[name], f'mutant {name}: PROOF.bend did not fail at a law')
         out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
-                    'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes)})
+                    'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes), 'crashed': crashes[:8]})
     return out
 
 
@@ -1033,32 +1109,26 @@ def main() -> int:
     tree = build_tree('base')
     bins = built(tree, ('model', 'audit', 'sweep', 'lanes'))
     record['lanes'] = check_lanes(tree, bins['lanes'])
-    listed = controls()
-    admitted = admitted_controls()
-    base = {'goldens': golden_runs(bins['model'], expected),
-            'invocations': invocation_runs(bins['model'], bins['audit'], expected),
-            'inspection': inspection_runs(bins['model']),
-            'lanes': lane_runs(bins['lanes']),
-            'connectives': connective_runs(tree),
-            'fuel': fuel_runs(bins['model'], expected),
-            'controls': control_runs(bins['model'], listed),
-            'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
-            'arguments': argument_runs(bins['model'], bins['audit']),
-            'audit': audit_runs(bins['audit'], expected)}
+    # Every shared image is staged here, before any pool reads one.
+    shared = {'inspection': inspection_controls(), 'controls': controls(),
+              'admitted': admitted_controls(), 'arguments': argument_controls()}
+    base = observations(bins, tree, expected, shared)
+    require(not harness_faults(base), f'harness faults {harness_faults(base)[:8]}')
     for check, rows in base.items():
         bad = {n: r['result'] for n, r in rows.items() if not r['agrees']}
         require(not bad, (check, dict(list(bad.items())[:3])))
+    record['harness_controls'] = harness_controls(bins, shared)
     swept = sweep_runs(bins['sweep'], sorted(expected['cases']))
     bad = {n: (r['stats'], r['examples'], r['result']) for n, r in swept.items() if not r['agrees']}
     require(not bad, ('sweep', bad))
     with ThreadPoolExecutor(max_workers=2) as pool:
         proving = pool.submit(proof)
-        mutants = mutant_runs(expected, listed, admitted, {**base, 'sweep': swept})
+        mutants = mutant_runs(expected, shared, {**base, 'sweep': swept})
         proven = proving.result()
     require(proven['agrees'], ('proof', proven['result']))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
-    harness = harness_runs(bins['model'], bins['audit'], admitted, base['admitted'])
+    harness = harness_runs(bins['model'], bins['audit'], shared['admitted'], base['admitted'])
 
     record.update(
         status='passed',

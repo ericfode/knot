@@ -153,6 +153,15 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - A Case arm that is absent or not a Branch or Default cannot be selected in
   an admitted image; if it were, the machine stops as `InternalFailure vm case
   arm` rather than reading a wrapped offset.
+- The gate stages every image its runs share (inspection, refusal, admitted and
+  argument controls) once, before any run: a temporary file, made read-only and
+  renamed into place. A refusal as `length`, `magic`, `total` or `noncanonical`
+  of an image the reference codec admits is a harness fault, never a kill, and
+  fails the gate. A harness control runs every staged run three at once on the
+  unmutated model, as the mutant pool does, and requires every row to agree; it
+  also checks that a torn image (empty, or a prefix of `value-on`) is such a
+  fault. Before review round 3 the inspection images were rewritten on every
+  run, and torn reads from concurrent mutants were counted as kills.
 - Deep lists recurse without a tail call (`pack`, `slice`); compiler-sized
   images are unmeasured. The checker's evaluator is slow: PROOF.bend takes
   about 95 s, most of it in the audited runs.

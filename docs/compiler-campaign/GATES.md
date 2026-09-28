@@ -86,19 +86,28 @@ The vm-model increment adds gate `vm-model` (`python3 vm/check-model.py`). It
 builds the Bend model of `knot-vm-1` in `vm/model/` ([vm/MODEL.md](../../vm/MODEL.md))
 with the seed's native lane and requires: the goldens to be their frozen
 plans' encodings and the `vm/LAWS.bend` fixtures their words; the model's prim and
-foreign tables to equal `vm/registry.json`; all 91 golden runs and 28 frozen Book
-invocations to agree with `vm/golden/vm-expected.json`; literal fuel and
-inspection controls; the 61 frozen refusal controls and a child-at-parent
-boundary refused with check-spec's exact reason; 25 admitted controls (vm-spec's
-three admitted plan, seven code-list and seven run controls, and the model's own
-eight in `vm/model-controls/`, whose values the seed prints) run to the
-reference evaluation's outcome and call count; the RC audit before every
+foreign tables to equal `vm/registry.json`; no Base `Bool.or` or `Bool.xor` in the
+natively built model, and `vm/model-lanes.bend` to print W's connectives as the
+comparisons' values on both seed lanes; all 93 golden runs and 44 frozen Book
+invocations to agree with `vm/golden/vm-expected.json`; 90 literal fuel controls and
+six inspection controls; the 72 frozen refusal controls (byte-level, both sides of
+SPEC section 4's resource limits, `Exhausted` kind 2 past one, and plan-level) and a
+child-at-parent boundary refused with check-spec's exact reason; the 13 argument
+controls; 66 admitted controls (vm-spec's six admitted plan, one limit, seven
+code-list and 41 run controls, each run control at its frozen fuel, and the model's
+own eleven, eight of them in `vm/model-controls/`, whose values the seed prints) run
+to their frozen or reference outcome and call count; the RC audit before every
 transition of every golden and zero live mortal cells after each completed run,
 with the reference evaluation's call count; the bounded soundness sweep, every
 single-word mutation of every golden refused exactly when the reference codec
 refuses it, for the same reason, and otherwise run soundly; `vm/PROOF.bend`
-printing `All terms check.`; and 24 model mutants killed by a wrong observation,
-never a crash, seven of them also refuted by a law of `vm/PROOF.bend`. It writes
+printing `All terms check.` (32 laws); 46 model mutants killed by a wrong
+observation, never a crash or a harness fault, 14 of them also refuted by a law;
+and the harness mutant `fuel-ignored` killed by exactly the fuel controls. Every
+image its runs share is staged once, read-only, before any run; a refusal of an
+image the reference codec admits as `length`, `magic`, `total` or `noncanonical` is
+a harness fault that fails the gate, and a harness control runs every staged run
+three at once on the unmutated model and requires every row to agree. It writes
 only `vm/receipts/model.json`.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
