@@ -43,7 +43,11 @@ No), a `case 450n` (`depth`: 450n Yes, 449n No) and a 100-Char String pattern
 
 Check and evaluation agreed in both lanes before and after. The two lanes now
 build identical modules up to the 32768-instruction bound and both report
-`Exhausted emit` beyond it. The largest module of any earlier frozen book was
+`Exhausted emit` beyond it. The byte limit is unchanged: compiling
+module-width with an output budget of 100000 (inside the data section) or
+156917 bytes is `Exhausted emit budget`, exit 4, output untouched, in the
+native lane before and after and in the Bun lane before and after; at 156918
+the fixed lanes build it and the old Bun lane faulted. The largest module of any earlier frozen book was
 39191 bytes (nat-pattern-offset), under the fault threshold.
 
 ### Laws and mutant
@@ -72,6 +76,11 @@ build identical modules up to the 32768-instruction bound and both report
   bound for every user. That is the output_builder owner's decision.
 - The older profiles (`knot-enum-1`, `knot-fields-wasm-1`) compose small
   fragments and were not changed or probed at this size.
+
+Erratum: the `8a2db01` message credits the 473-second direct literals gate
+to its tree. That run preceded two edits in the same commit, the law rename
+`runs_invert_seq` to `seq_undoes_runs` and the direction of the `runs`
+comment; no behavior changed, and the full run below is on `8a2db01`.
 
 ### Gates on the round-8 fix head
 
