@@ -418,6 +418,49 @@
         "diagnostic": "Invalid\tcheck\tcomputed-scrutinee\t"
       },
       "calls": []
+    },
+    {
+      "name": "discard-global-shadow",
+      "file": "regressions/discard-global-shadow.bend",
+      "source_sha256": "07babc0406d11cb9a31861dfb51c0d59048c51083c5d7e0070cac74514d83188",
+      "intent": "A discarded lambda binder must not shadow a named top-level underscore definition; the body resolves the global On value instead of the discarded Off argument.",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/discard-global-shadow.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/regressions/discard-global-shadow.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      },
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ]
     }
   ]
 }
