@@ -150,7 +150,33 @@ coordinator.
 
 ## Gates
 
-GATES-PLACEHOLDER
+The full runner (`npm run -s gates -- --refresh --jobs 3`) passed all 22 gates
+on the tree of `ba624dd`. Receipt drift was the same as in round 5: 64
+identical, 16 semantic and 9 volatile-only. The modules gate checked:
+
+- 158 fixtures and 166 seed calls;
+- 316 checks, 332 evaluations and 316 compilations;
+- 90 Wasm observations, 39 byte-identity pairs and 238 preserved outputs;
+- 84 trust audits and 192 single-file observations;
+- 22 pin, 6 tampered-Base and 22 output-guard observations;
+- 47 semantic mutants.
+
+The other gates have their round-5 counts, except for two inventories that
+grew with this round's files. The census now counts 904 declarations (it was
+893), and the bootstrap corpus holds 1,035 files (it was 996). The checker
+gate, which runs `src/check-PROOF.bend`, passed with its 7 mutants.
+`gates:verify` runs 19 tests. Only the modules receipt is committed; shared
+receipts are left for the coordinator.
+
+Two earlier runner passes on the same tree each failed one gate: recursion
+first, then bootstrap. Both failures were the seed's host message `bend needs
+clang 14 or newer ... (found no clang)`, under a load average of about 50.
+Every other gate passed in both runs (`.local/modules/r6-gates-run{1,2}.stderr`).
+main fixed this flake in `90b4052`, by passing `CC` and `SDKROOT` to every gate;
+this branch predates that fix. For the passing run, the toolchain clang
+(`xcrun --find clang`, the compiler that main passes) came first on `PATH`,
+`SDKROOT` was set, and 3 jobs ran at once. No gate assertion or runner file
+changed.
 
 ## For the coordinator
 
