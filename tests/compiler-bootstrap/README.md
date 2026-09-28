@@ -181,7 +181,8 @@ The two generated census inventory files conflict; the scratch tree takes
 commits, the merge tree, both argvs, the stages, the audit and the receipt's
 sha256. The run passed its verdict. Both contracts carry
 `--bundle lib src/compile-cli.bend generation.wasm 65536 4096 4096 4096 1048576`,
-and S grows to 23 files, including `src/host/path-identity.c` and `.js`. The new
+and C1's executed argv on S and on the parser is `../c1` followed by that list
+(with `src/parse-cli.bend` for the parser). S grows to 23 files, including `src/host/path-identity.c` and `.js`. The new
 first blocker of both tiers, and of the audit, is `Unsupported lex literal
 1947:1948:67:22`. That is the string literal `"type"` in `src/syntax.bend`, the
 first module the loader lexes; before, the single-file command stopped at
