@@ -338,7 +338,8 @@ follows it (§5, §10, §11) without a new image header word.
    The rule mutant `rejected-limit-as-host-failure` (check-spec.py's `rejected`
    reporting the exhaustion as `HostFailure image` again) dies by `oversize`.
    `decode` now reads its words with an explicit little-endian `struct` format, so
-   the 8 MiB and 16 MiB controls cost milliseconds per mutant.
+   the 8 MiB and 16 MiB controls cost milliseconds per mutant. §8's image-first
+   refusal, "`HostFailure image` whatever the words", now names the limits too.
 20. **Only a documented eval bound, past its budget, excuses eval.** Review round 8
    found §11's rule unenforced for eval and its documented display bound four
    times too high. `vm_expectation` accepted any Exhausted eval lane at any

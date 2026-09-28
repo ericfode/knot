@@ -273,8 +273,9 @@ malformed record, an inexact `slots` and every later rule:
 | live arity 4,096 | a larger arity in a function record whose length holds it (`arity`) | a length that does not (`function record`) |
 | `slots` 65,536, a function's or a Closure's | a larger `slots` (`slots`), even when inexact | none: every word is a count; exactness is step 4 |
 
-`check-spec.py` freezes 71 refusals (20 byte-level, 9 at the limits, 42 plan-level):
-each limit passed by one, a record count beyond the image and an arity beyond its
+`check-spec.py` freezes 71 refusals (20 byte-level, 9 at the limits, 42 plan-level).
+At the limits: the record, arity and `slots` limits passed by one (a function's
+`slots` and a Closure's), a record count beyond the image and an arity beyond its
 record, an image of exactly 16 MiB (`total`), 2^20 records whose first zero word is
 a malformed record, and a `slots` of 65,536 that its body does not reach. vm-core
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
@@ -544,7 +545,8 @@ ordinals. FN and ARGS are any words, and FUEL any u32, 0 included (§7); eval-cl
 also refuses a budget above its 1,048,576 transitions as `budget-out-of-range`, a
 cap the VM does not share. eval-cli reads its words before its source; the VM
 reads the image first because the entry kind selects the form, so an image §4
-refuses is `HostFailure image` whatever the words.
+refuses is `HostFailure image`, or `Exhausted` kind 2 past a §4 limit, whatever the
+words.
 
 **Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks run in this order, before any
 entry and without debiting fuel; steps 2–4 fail as `HostFailure invoke` with the
@@ -773,9 +775,11 @@ cause, request and limit, because `exhausted(2)` alone does not say which bound
 was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
 
-**An exhausted eval lane** is excused only by one of the three literals eval
-bounds, named by the phase eval-cli prints (`Exhausted<TAB>phase<TAB>budget`), and
-only when the program passes that budget. The gate measures it without eval-cli
+**An exhausted eval lane** where the VM owes the seed's value is excused only by
+one of the three literals eval bounds, named by the phase eval-cli prints
+(`Exhausted<TAB>phase<TAB>budget`), and only when the program passes that budget.
+(Where a VM bound of golden/bounds.json applies, the VM's own outcome is Exhausted
+and eval's lane is only recorded.) The gate measures it without eval-cli
 (`check-spec.py` `EVAL_BOUNDS` and `reach`): `primitive` by the largest Nat or String
 length a node yields in the reference evaluation; `eval` by a lower bound on
 eval-cli's transitions, the terms the reference evaluation evaluates plus the Nat
