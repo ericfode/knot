@@ -1,0 +1,468 @@
+{
+  "suite": "compiler-generics/bare-families",
+  "increment": "6: generics and quantity arguments (S2), review round 1",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "explicit-quantity-family",
+      "file": "fixtures/explicit-quantity-family.bend",
+      "class": "positive",
+      "feature": "quantity-polymorphism",
+      "intent": "An all-quantity family is used through explicit Bit<&1> applications in a result and a parameter.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        },
+        {
+          "name": "pick",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-valid program inside increment 6; every call must match the seed."
+      }
+    },
+    {
+      "name": "bare-family-parameter",
+      "file": "fixtures/bare-family-parameter.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare all-quantity family name as a parameter type.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Bit<..>)\n",
+        "Location: read\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    },
+    {
+      "name": "bare-family-field",
+      "file": "fixtures/bare-family-field.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare all-quantity family name as a constructor field type.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Bit<..>)\n",
+        "Location: Hold\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    },
+    {
+      "name": "bare-family-annotation",
+      "file": "fixtures/bare-family-annotation.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare all-quantity family name as a local binding annotation.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Bit<..>)\n",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    },
+    {
+      "name": "bare-family-result",
+      "file": "fixtures/bare-family-result.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare all-quantity family name as a result type.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Bit<..>)\n",
+        "Location: mk\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    },
+    {
+      "name": "bare-family-static",
+      "file": "fixtures/bare-family-static.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare all-quantity family name as an erased static type argument.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Bit<..>)\n",
+        "Location: main\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    },
+    {
+      "name": "bare-two-quantity-family",
+      "file": "fixtures/bare-two-quantity-family.bend",
+      "class": "negative",
+      "feature": "quantity-polymorphism",
+      "intent": "A bare two-quantity family name as a parameter type.",
+      "twin": "explicit-quantity-family",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a family instance (write Two<..>)\n",
+        "Location: read\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "knot_expected": true,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "explicit-quantity-family",
+        "source_sha256": "ad1f52e3e765a2a1475cec766e2fa5bdfaa230bad3fd3dcd19e8d885d8f5447d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/bare-family-wrappers/explicit-quantity-family--pick--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend as F\n\ndef main() -> F.Flag:\n  F.pick(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/bare-family-wrappers/explicit-quantity-family--pick--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "pick",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/bare-family-wrappers/explicit-quantity-family--pick--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend as F\n\ndef main() -> F.Flag:\n  F.pick(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/bare-family-wrappers/explicit-quantity-family--pick--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "bare-family-parameter",
+        "source_sha256": "55b5c09d5a7585303e6e4f3f58c0bab70e153d32c3721bc846c4a9ff253778d2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: read\n 8 | \n 9>| def read(x: Bit) -> Flag:\n   |             ^^^\n10 |   match x:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: read\n 8 | \n 9>| def read(x: Bit) -> Flag:\n   |             ^^^\n10 |   match x:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "bare-family-field",
+        "source_sha256": "4d41372dc59f1f6a1a9458b900b08879d4f39027b02885d0e69c05bee36046a0",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: Hold\n 9 | type Hold is Type:\n10>|   Hold{bit: Bit}\n   |             ^^^\n11 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-field.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: Hold\n 9 | type Hold is Type:\n10>|   Hold{bit: Bit}\n   |             ^^^\n11 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "bare-family-annotation",
+        "source_sha256": "a121fbf4c6d6adc973dbd04cea20654624e995023a41da58243a6bdb40abad46",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: main\n16 | def main() -> Flag:\n17>|   y : Bit = One{}\n   |       ^^^\n18 |   read(y)\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: main\n16 | def main() -> Flag:\n17>|   y : Bit = One{}\n   |       ^^^\n18 |   read(y)\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "bare-family-result",
+        "source_sha256": "c3be02437278119c61f6d41627e71acaa77831ddd22f1143511643f587cbf461",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nContext:\n- x : Flag\nLocation: mk\n 8 | \n 9>| def mk(x: Flag) -> Bit:\n   |                    ^^^\n10 |   match x:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-result.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nContext:\n- x : Flag\nLocation: mk\n 8 | \n 9>| def mk(x: Flag) -> Bit:\n   |                    ^^^\n10 |   match x:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "bare-family-static",
+        "source_sha256": "f15a5e88f6a576d5d6c45d5f978d5eeac16685c75fa70c1315015ccd16ed8486",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: main\n19 | def main() -> Flag:\n20>|   read(id(Bit, One{}))\n   |           ^^^\n21 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-family-static.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Bit<..>)\n- observed : Bit\nLocation: main\n19 | def main() -> Flag:\n20>|   read(id(Bit, One{}))\n   |           ^^^\n21 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "bare-two-quantity-family",
+        "source_sha256": "1e35b74cfb4c6774a6ef8bdb580004a15eadbda03a7873651bcaa50b8211a958",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Two<..>)\n- observed : Two\nLocation: read\n 8 | \n 9>| def read(x: Two) -> Flag:\n   |             ^^^\n10 |   match x:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a family instance (write Two<..>)\n- observed : Two\nLocation: read\n 8 | \n 9>| def read(x: Two) -> Flag:\n   |             ^^^\n10 |   match x:\n"
+        },
+        "calls": []
+      }
+    ]
+  }
+}
