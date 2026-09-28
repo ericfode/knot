@@ -1503,6 +1503,7 @@ def effect_controls(plans: dict) -> list:
     `got` returns what an IO.OP carries, and `printing(t)` is `IO.print(t)` applied to R and
     then to a continuation: main, IO.print, R and the Action are 4 entries, where a Book stops,
     5 when an `id` call builds the String first.
+    - `IO.args` under a Book stops the same way: D22 precedes the check of the foreign id, whatever it is.
     - Under a Program the same Action prints, from inside a pure argument, before the Program's
       own print: main, IO.print, R, the Action (writes `x`), k, got, say, IO.print, R, the
       Action (writes `t`) and the terminal continuation are 11 entries.
@@ -1535,6 +1536,12 @@ def effect_controls(plans: dict) -> list:
         return ['call', 8, got, [printing(*string_and_k)]]
     laundered = ['con', 3, 1, [['lit', 2, 'Char', 97], ['call', 3, ident, [['closure', 9, 1, 1, [], ['ref', 8, 0]]]]]]
     refused, on = {'outcome': 'Unsupported', 'cause': 'vm effect', 'calls': 4}, 'Evaluated\t8\t1\tOn{}\n'
+    # IO.args (foreign 0) is IO(List<String>): a List of Strings' continuation type 11, applied to 12.
+    args_types = [{'kind': 'data', 'name': 'List', 'constructors': [{'name': 'Nil', 'fields': []}, {'name': 'Con', 'fields': [None, 10]}]},
+                  {'kind': 'arrow', 'domain': 10, 'result': 4}, {'kind': 'arrow', 'domain': 11, 'result': 4},
+                  {'kind': 'erased-arrow', 'domain': None, 'result': 12}]
+    args = {'name': 'IO.args', 'parameters': [], 'result': 13, 'slots': 0, 'body': ['foreign', 13, 0, []]}
+    listed = ['invoke', 4, ['invoke', 12, ['call', 13, 4, []], []], [['closure', 11, 1, 1, [], ['con', 4, 0, [['value', 8, 1]]]]]]
     saying = {'name': 'say', 'parameters': [8], 'result': 7, 'slots': 1, 'body': ['case', 7, 0, 8, 'tags', [
         ['branch', 0, 1, 0, ['call', 7, print_, [text('f')]]], ['branch', 1, 1, 0, ['call', 7, print_, [text('t')]]]], None]}
 
@@ -1547,6 +1554,8 @@ def effect_controls(plans: dict) -> list:
         ('book-print-twice', image('book', ['let', 8, 0, bound(text('y')), bound(text('x'))], 1), refused),
         ('book-print-non-scalar', image('book', bound(['lit', 3, 'String', [0xD800]])), refused),
         ('book-print-ill-typed', image('book', bound(laundered)), {**refused, 'calls': 5}),
+        ('book-args', {**image('book', ['call', 8, got, [listed]], 0, args), 'types': [*types, *args_types],
+                       'representation': {**fp['representation'], 'List': 10}}, refused),
         ('book-continuation-called', image('book', ['call', 8, got, [['call', 4, resume, [['value', 0, 0]]]]]),
          {'exit': 0, 'stdout': on, 'calls': 3}),
         ('book-action-dropped', image('book', ['let', 8, 0, ['call', 7, print_, [text('x')]], ['value', 8, 1]], 1),
@@ -2200,6 +2209,9 @@ EVALUATOR_MUTANTS = [
     ('book-performs-effect', [(BOOK_GUARD, '')]),
     ('book-drops-effect', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n", '            return 0\n')]),
     ('program-refuses-effect', [("        if self.entry != 'program':\n", '        if True:\n')]),
+    ('book-names-the-foreign', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n",
+                                 "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect' if action[1] == 1"
+                                 " else f'vm foreign {action[1]}'})\n")]),
     ('book-refuses-after-inspection', [(BOOK_GUARD, ''), ('        codes = self.codes(operands[0])\n',
                                                           '        codes = self.codes(operands[0])\n' + BOOK_GUARD)]),
     ('book-refuses-after-scalar-check', [(BOOK_GUARD, ''), ('        self.outgoing(codes)\n',

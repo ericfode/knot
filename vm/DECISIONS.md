@@ -372,30 +372,35 @@ follows it (§5, §10, §11) without a new image header word.
    `got(IO.print("x")(R, k))`) printing in the model, `evaluate.book` running the effect
    and dropping its output, and the seed's native lane fail-stopping. The coordinator
    recorded D22, and §7 step 2, §8 and §10 now state it: under a Book invocation the
-   second application of an Action, `Enter(Action, [k])`, stops with `Unsupported vm
-   effect` after its debit and before it reads, inspects or converts an operand or
-   calls the host. Neither the whole-extent inspection nor D20's scalar check runs
-   first, so the print of a non-scalar or an ill-typed String is refused the same way,
-   as `Unsupported`, never `HostFailure`. An Action built, dropped or applied to its
-   erased `R` is not an effect, and the Program entry, the only one that performs
-   effects, performs them wherever an Action meets its continuation, even inside a pure
-   argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect` refuses before
-   it reads an operand; `evaluate.book` no longer runs the effect. Ten effect controls
-   (`effect_controls`, frozen before the change) rebuild the reviewers' probes on
-   foreign-print's types: `book-print`, `book-print-continuation-call` and
+   second application of any Action, `Enter(Action, [k])`, stops with `Unsupported vm
+   effect` after its debit and before it reads, inspects or converts an operand, checks
+   the foreign id or calls the host. Neither the whole-extent inspection nor D20's
+   scalar check runs first, so the print of a non-scalar or an ill-typed String is
+   refused the same way, as `Unsupported`, never `HostFailure`. An Action built, dropped
+   or applied to its erased `R` is not an effect, and the Program entry, the only one
+   that performs effects, performs them wherever an Action meets its continuation, even
+   inside a pure argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect`
+   refuses before it reads an operand; `evaluate.book` no longer runs the effect. Eleven
+   effect controls (`effect_controls`, frozen before the change) rebuild the reviewers'
+   probes on foreign-print's types: `book-print`, `book-print-continuation-call` and
    `book-print-twice` (bookio-1, bk-print and bookio-2) and `book-print-non-scalar`
    (bookio-nonscalar) stop `Unsupported vm effect` after 4 calls (main, IO.print, `R`,
    the Action), writing nothing; `book-print-ill-typed`, added to fix the order against
-   the inspection, stops the same way after 5; the pure `got(k(Unit{}))` of bk-direct
-   (`book-continuation-called`), an Action built and dropped and one applied to its
-   erased `R` still evaluate, after 3, 2 and 3; `program-print-in-value` (pg-print)
-   prints `x` from a pure argument and then its own `t` after 11 (§12). The refusal
-   precedes both D20 and the inspection because a Book performs no effect, so no
-   operand is converted for a host call that never happens. Seven evaluator mutants
-   (a Book that performs the effect, one that drops it silently, one that refuses
-   after the inspection or after D20's scalar check, one that refuses when an Action is
-   built or when it meets its erased `R`, and a Program that refuses) are killed, each by
-   a control of the group; the first two by every `book-print*` control.
+   the inspection, stops the same way after 5, and `book-args` (`IO.args`, foreign 0)
+   after 4, added because vm-model answered `Unsupported vm foreign 0` for a foreign
+   that is not `IO.print`: D22 fires for every foreign id, before it is checked. The
+   pure `got(k(Unit{}))` of bk-direct (`book-continuation-called`), an Action built and
+   dropped and one applied to its erased `R` still evaluate, after 3, 2 and 3;
+   `program-print-in-value` (pg-print) prints `x` from a pure argument and then its own
+   `t` after 11 (§12). The refusal precedes both D20 and the inspection because a Book
+   performs no effect, so no operand is converted for a host call that never happens.
+   The order is this executor's reading of D22, whose text says only "before the host
+   call"; the coordinator can overrule it, and the controls then change with it. Eight
+   evaluator mutants (a Book that performs the effect, one that drops it silently, one
+   that names the foreign it refuses, one that refuses after the inspection or after
+   D20's scalar check, one that refuses when an Action is built or when it meets its
+   erased `R`, and a Program that refuses) are killed, each by a control of the group;
+   the first two by every `book-print*` control.
 22. **A stop after the debit keeps it.** The same review asked whether an Enter whose
    step 2 stops keeps step 1's debit. vm-model and evaluate.py kept it, but §7 was
    silent and no check counted the refused entry: a VM that refunded it, or counted
