@@ -252,6 +252,11 @@ follows it (§5, §10, §11) without a new image header word.
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
+   Review round 5 confirmed this as a **merge condition** on the coordinator's
+   `npm run gates:refresh` for main, not executor rework: no gate stops a refresh
+   from absorbing the rows, and `vm/golden/` stays in the bootstrap corpus, since
+   removing it would hide them. Round 5 added no `.bend` file, so the histogram
+   above stands.
 6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged
