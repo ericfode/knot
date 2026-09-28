@@ -10,7 +10,7 @@
   ],
   "registry": {
     "file": "scripts/gates/run.py",
-    "sha256": "33b1636b1cff80812517f49b83e92aae9bda03cebbb2990b8c425e232d5b1f5b",
+    "sha256": "d7e22c89866f0daafe44050a43a2b64b500fa1085e48f96203618401ad8c282b",
     "gates": [
       {
         "name": "frontend",
@@ -191,6 +191,20 @@
           "lint:verify"
         ],
         "programs": []
+      },
+      {
+        "name": "io-host",
+        "argv": [
+          "python3",
+          "-B",
+          "tests/compiler-io/host-check.py"
+        ],
+        "programs": [
+          {
+            "file": "tests/compiler-io/host-check.py",
+            "sha256": "f119e1299c3b6b87fe1888c69d5355c7bfdf9f4543dce6e31abc82fe2f708e2f"
+          }
+        ]
       }
     ]
   },
@@ -332,7 +346,9 @@
           "sha256": "118c922f459aa2b968cd69ed886eca3e305349d56f61c1e45a92423d22047806"
         }
       ],
-      "gates": [],
+      "gates": [
+        "io-host"
+      ],
       "fixtures": 0,
       "detail": "No reviewed adapter for this suite path"
     },

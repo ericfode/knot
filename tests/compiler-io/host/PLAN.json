@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "oracle": "tests/compiler-io/expectations.json",
+  "boundary": "Hand-serialized effect programs only; no Knot checking, lowering or evaluator claim.",
+  "fixtures": [
+    "args-echo", "print-lines", "print-large", "print-many",
+    "die-codes", "die-messages", "die-stops-effects", "die-after-write",
+    "open-modes", "open-nul-path", "read-text", "read-limit", "read-decode",
+    "write-bytes", "write-values", "write-read-back", "handle-dropped",
+    "bind-deep", "main-value", "result-try"
+  ],
+  "comparison": ["exit", "stdout", "stderr", "output", "files"],
+  "cli_fixture": "args-echo",
+  "errno": [2, 9, 20, 21, 22, 92],
+  "stress": {"left_binds": 100000, "right_binds": 100000},
+  "mutants": [
+    {"name": "utf16-units", "witness": "args-echo/unicode"},
+    {"name": "drop-truncated-replacement", "witness": "read-decode/split-char"},
+    {"name": "unmasked-exit", "witness": "die-codes/code-256"},
+    {"name": "read-write-handle", "witness": "open-modes/w-new"},
+    {"name": "unchecked-byte", "witness": "write-values/over"},
+    {"name": "print-no-lf", "witness": "print-lines/one"}
+  ],
+  "literal_controls": {
+    "unknown_import": ["Unsupported", "import", 3],
+    "wrong_import_signature": ["HostFailure", "abi", 5],
+    "wrong_entry_signature": ["HostFailure", "abi", 5],
+    "invalid_module": ["HostFailure", "module", 5],
+    "start_section": ["HostFailure", "abi", 5],
+    "bad_pointer": ["HostFailure", "abi", 5],
+    "unaligned_result": ["HostFailure", "abi", 5],
+    "non_scalar_text": ["HostFailure", "abi", 5],
+    "unknown_handle": ["HostFailure", "handle", 5],
+    "parent_escape": ["HostFailure", "sandbox", 5],
+    "absolute_escape": ["HostFailure", "sandbox", 5],
+    "symlink_escape": ["HostFailure", "sandbox", 5],
+    "symlink_parent": ["HostFailure", "sandbox", 5],
+    "secret_path": ["HostFailure", "sandbox", 5],
+    "step_budget": ["Exhausted", "steps", 4],
+    "allocation_budget": ["Exhausted", "memory", 4],
+    "allocator_effect": ["HostFailure", "abi", 5],
+    "unexpected_trap": ["HostFailure", "trap", 5],
+    "missing_module": ["HostFailure", "module", 5]
+  }
+}
