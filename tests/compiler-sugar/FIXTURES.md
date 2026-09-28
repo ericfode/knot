@@ -36,6 +36,18 @@ on one line. Each case's `mirrors` field lists those declarations.
 | `dependent`, `quantities.erased`, `types.type` | the 10 census declarations: `core.invalid`, `core.unsupported`, `core.exhausted`, `core.internal`, `eval.internal`, `eval.host`, `wasm.internal` (`-A: Type` only in the result), `syntax.choose`, `syntax.bind`, `scope.set_known` | `dependent-*`, `template-set-known` |
 | `literals.char` | `Char.is_eq(c,'\n')` in `lex.step_at` | `char-*` |
 
+The source column lists where each class occurs in Knot, not what each fixture
+reproduces. The fixtures cover every class, but these list-literal contexts are
+not reproduced (audit, 2026-09-27):
+- lists of String or U32 literals (`String.concat([..])`,
+  `W.bytes(cap,[70,4,127])`). Every fixture list holds enum or constructor
+  values, so element typing is covered but literal elements are not.
+- a list in a field of a generic constructor, typed through the instantiated
+  type argument (`Done{[value]}` at `Result<S.Error,List<&2,U32>>`).
+  `list-literal` covers only a monomorphic field (`Ready{[a]}`).
+- a list as a lambda body typed by an explicit type argument
+  (`u => [level]` in `S.choose(List<&2,U32>,..)`).
+
 Two boundary fixtures pin forms that no Knot source uses but that sit beside
 the scope: the parallel let (census `bindings.parallel` is empty) and the cons
 operator `<>`.
@@ -240,9 +252,11 @@ The **Needs** column lists capabilities outside this increment (`needs` in
 - `closures`: lambdas, arrow-typed parameters and function values (increment 7).
 - `literals`: Char and U32 literals and the Base primitive calls (increment 5).
 - `type-level-definition`: Base `Pair` is a type-level def over the dependent
-  `Sigma` family. `A & B` lowers to it, and the generics suite lists this
-  capability as outside increment 6. The sugar implementer either supplies the
-  `A & B` lowering or waits for it.
+  `Sigma` family. `A & B` lowers to it. The generics suite lists this
+  capability as outside increment 6. The baseslice suite on main (increment 8)
+  claims `Pair`, spelled `A & B`, as its own work, because it is in the reached
+  Base slice. The sugar implementer either supplies the `A & B` lowering or
+  waits for baseslice to land it.
 
 A fixture is blocked while a need it names is unavailable. The runner reports a
 blocked fixture separately. It never relabels a blocked fixture as passing, and
@@ -278,9 +292,14 @@ change:
   falsifies them as stated. AGENTS.md forbids weakening an accepted law, so
   replacing them is a coordinator or user decision. The decision must precede
   implementation, not follow it.
-- `tests/compiler-generics`, `template-twice`: it pins
-  `Unsupported\tparse\ttemplate\t` and marks the pin as scoped to increment 6.
-  The generics suite itself names this supersession.
+- `tests/compiler-generics`, `template-twice`: on main it pins
+  `Unsupported\tparse\ttemplate-binder\t`, reconciled from the original
+  `Unsupported\tparse\ttemplate\t` in `8eba6ba`, which is later than this
+  branch's base. The generics suite scopes its `Unsupported` pins to
+  increment 6 and leaves them to the increments that own the forms.
+- `tests/compiler-closures`, `template-map`: on main it pins
+  `Unsupported\tparse\ttemplate-binder\t` for a `~f` binder, with the need
+  `templates`. Once templates land, that seed-valid fixture contradicts the pin.
 
 `closure-apply` in the generics suite (`Unsupported\tparse\tparameter-type\t`)
 is not contradicted. Every fixture here with an arrow-typed parameter or a
@@ -288,7 +307,7 @@ lambda needs `closures`, so it stays blocked until increment 7 lands.
 
 ## Overlaps with other suites
 
-- **Closures (increment 7, being authored in parallel).** Captures, lambdas as
+- **Closures (increment 7, frozen on main).** Captures, lambdas as
   runtime values, higher-order parameters and variable calls belong to that
   suite. The fixtures here that need closures pin only these forms: the
   partial call, the function value, and the `choose`, `bind` and `set_known`
@@ -301,7 +320,20 @@ lambda needs `closures`, so it stays blocked until increment 7 lands.
 - **Literals.** That suite owns Char escapes, Char patterns and their negatives.
   `char-compare` covers only the census form: a Char literal as an argument to
   `Char.is_eq`, next to the `'n'` trap. `char-u32-mismatch` pins that a Char
-  literal is not a U32.
+  literal is not a U32. It pins `type-mismatch`, while the literals suite leaves
+  the codes of its own literal-type negatives open (`nat-u32-mismatch`). If
+  increment 5 chooses another code for a mistyped literal, one of the two needs
+  a reviewed amendment.
+- **Baseslice (increment 8, frozen on main).** Its FIXTURES.md claims two of
+  this suite's forms as increment 8's own work, because Base's reached slice
+  uses them:
+  - tuple destructuring, `((a2, b2), c) = r` in `String.eq.fin`,
+    `String.cmp.fin` and `String.cmp.rec`;
+  - `Pair`, spelled `A & B` (`type-level-definition` above).
+
+  Both suites therefore expect the destructuring let and the tuple sugar. The
+  coordinator decides which increment implements them. The other increment
+  reuses that implementation, and neither suite re-expects its fixtures.
 
 ## Seed behaviours this suite freezes
 
