@@ -25,7 +25,7 @@ def records(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +at: 
     case 0n: next(List.reverse(&2,U32,found),at)
     case 1n+m:
       +size = W.read(image,at)
-      W.unless(B,Bool.or(U32.is_ge(at,total),Bool.or(U32.is_lt(size,2),U32.is_gt(size,U32.sub(total,at)))),
+      W.unless(B,W.or(U32.is_ge(at,total),W.or(U32.is_lt(size,2),U32.is_gt(size,U32.sub(total,at)))),
         String.concat(["section ",U32.show(section)," record length"]),u =>
         records(B,m,image,total,section,U32.add(at,size),Con{at,found},next))
 
@@ -48,13 +48,13 @@ def valid_utf8(bytes: List<&2,U32>) -> Bool:
 
 def spelled(+bytes: List<&2,U32>, +size: Nat) -> Result<String,List<&2,U32>>:
   +text = List.take(&2,U32,bytes,size)
-  W.unless(List<&2,U32>,Bool.or(Bool.not(W.zero_all(List.drop(&2,U32,bytes,size))),W.member(text,0)),"name padding",u =>
+  W.unless(List<&2,U32>,W.or(Bool.not(W.zero_all(List.drop(&2,U32,bytes,size))),W.member(text,0)),"name padding",u =>
   W.unless(List<&2,U32>,Bool.not(valid_utf8(text)),"name utf-8",u => Done{text}))
 
 def named(+image: W.Store, +at: U32) -> Result<String,List<&2,U32>>:
   +size = W.read(image,U32.add(at,1))
   +length = U32.sub(W.read(image,at),1)
-  W.unless(List<&2,U32>,Bool.or(U32.is_eq(size,0),Bool.not(U32.is_eq(length,U32.add(1,ceil4(size))))),"name length",u =>
+  W.unless(List<&2,U32>,W.or(U32.is_eq(size,0),Bool.not(U32.is_eq(length,U32.add(1,ceil4(size))))),"name length",u =>
     spelled(W.unpack(W.slice(U32.to_nat(U32.sub(length,1)),image,U32.add(at,2))),U32.to_nat(size)))
 
 def names(at: List<&2,U32>, +image: W.Store) -> Result<String,List<&2,List<&2,U32>>>:
@@ -67,12 +67,12 @@ def names(at: List<&2,U32>, +image: W.Store) -> Result<String,List<&2,List<&2,U3
 def listed(xs: List<&2,List<&2,U32>>, +x: List<&2,U32>) -> Bool:
   match xs:
     case Nil{}: False{}
-    case Con{y,rest}: Bool.or(W.same(x,y),listed(rest,x))
+    case Con{y,rest}: W.or(W.same(x,y),listed(rest,x))
 
 def repeated(xs: List<&2,List<&2,U32>>) -> Bool:
   match xs:
     case Nil{}: False{}
-    case Con{+x,+rest}: Bool.or(listed(rest,x),repeated(rest))
+    case Con{+x,+rest}: W.or(listed(rest,x),repeated(rest))
 
 def name_at(names: List<&2,List<&2,U32>>, +i: U32) -> Result<String,List<&2,U32>>:
   match names:
@@ -110,12 +110,12 @@ def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32,
   +name = W.read(image,U32.add(at,2))
   +a = W.read(image,U32.add(at,3))
   +b = W.read(image,U32.add(at,4))
-  W.unless(Row,Bool.or(Bool.not(U32.is_eq(W.read(image,at),5)),U32.is_ge(kind,4)),"type record",u =>
+  W.unless(Row,W.or(Bool.not(U32.is_eq(W.read(image,at),5)),U32.is_ge(kind,4)),"type record",u =>
     W.choose(Result<String,Row>,U32.is_eq(kind,0),
       u => W.unless(Row,Bool.not(U32.is_eq(a,expect)),"constructor grouping",u =>
              W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Declared{t,a,b}})),
       u => W.choose(Result<String,Row>,U32.is_eq(kind,3),
-        u => W.unless(Row,Bool.or(Bool.not(U32.is_eq(a,0)),Bool.not(U32.is_eq(b,0))),"opaque type",u =>
+        u => W.unless(Row,W.or(Bool.not(U32.is_eq(a,0)),Bool.not(U32.is_eq(b,0))),"opaque type",u =>
                W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Signature{W.Opaque{t}}})),
         u => W.unless(Row,Bool.not(W.is_none(name)),"arrow name",u =>
                W.then(U32,Row,reference(a,bound),d =>
@@ -152,8 +152,8 @@ def placed(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +ro
     case Con{+a,rest}:
       +length = U32.sub(W.read(image,a),1)
       +place = position(rows,W.read(image,U32.add(a,1)),W.read(image,U32.add(a,2)))
-      W.unless(W.Store,Bool.or(U32.is_lt(length,4),Bool.or(Bool.not(U32.is_eq(length,U32.add(4,W.read(image,U32.add(a,4))))),U32.is_ge(W.read(image,U32.add(a,1)),bound))),"constructor record",u =>
-      W.unless(W.Store,Bool.or(W.is_none(place),Bool.not(U32.is_eq(W.read(filled,place),0))),"constructor tag",u =>
+      W.unless(W.Store,W.or(U32.is_lt(length,4),W.or(Bool.not(U32.is_eq(length,U32.add(4,W.read(image,U32.add(a,4))))),U32.is_ge(W.read(image,U32.add(a,1)),bound))),"constructor record",u =>
+      W.unless(W.Store,W.or(W.is_none(place),Bool.not(U32.is_eq(W.read(filled,place),0))),"constructor tag",u =>
       W.then(List<&2,U32>,W.Store,name_at(names,W.read(image,U32.add(a,3))),t =>
       W.then(List<&2,U32>,W.Store,references(W.slice(U32.to_nat(W.read(image,U32.add(a,4))),image,U32.add(a,5)),bound),fields =>
         placed(rest,image,names,rows,bound,W.write(filled,place,U32.add(a,1)))))))
@@ -183,7 +183,7 @@ def constants(at: List<&2,U32>, +image: W.Store) -> Result<String,List<&2,W.Cons
       +length = U32.sub(W.read(image,a),1)
       +kind = W.read(image,U32.add(a,1))
       +n = W.read(image,U32.add(a,2))
-      W.unless(List<&2,W.Constant>,Bool.or(U32.is_lt(length,2),Bool.or(U32.is_ge(kind,4),Bool.not(U32.is_eq(length,U32.add(2,n))))),"constant record",u =>
+      W.unless(List<&2,W.Constant>,W.or(U32.is_lt(length,2),W.or(U32.is_ge(kind,4),Bool.not(U32.is_eq(length,U32.add(2,n))))),"constant record",u =>
       W.unless(List<&2,W.Constant>,Bool.and(Bool.not(U32.is_eq(kind,3)),Bool.not(U32.is_eq(n,1))),"scalar constant width",u =>
       W.then(List<&2,W.Constant>,List<&2,W.Constant>,constants(rest,image),more =>
         Done{Con{W.Constant{kind,W.slice(U32.to_nat(n),image,U32.add(a,3))},more}})))
@@ -193,14 +193,14 @@ def misshaped(+op: U32, +x: U32, +image: W.Store, +at: U32) -> Bool:
   +x1 = W.read(image,U32.add(at,4))
   +x2 = W.read(image,U32.add(at,5))
   +x3 = W.read(image,U32.add(at,6))
-  W.choose(Bool,Bool.or(Bool.or(U32.is_eq(op,0),U32.is_eq(op,3)),Bool.or(U32.is_eq(op,5),U32.is_eq(op,2))),u => Bool.not(U32.is_eq(x,1)),u =>
+  W.choose(Bool,W.or(W.or(U32.is_eq(op,0),U32.is_eq(op,3)),W.or(U32.is_eq(op,5),U32.is_eq(op,2))),u => Bool.not(U32.is_eq(x,1)),u =>
   W.choose(Bool,U32.is_eq(op,7),u => Bool.not(U32.is_eq(x,3)),u =>
   W.choose(Bool,U32.is_eq(op,9),u => Bool.not(U32.is_eq(x,4)),u =>
   W.choose(Bool,U32.is_eq(op,8),u =>
-    Bool.or(U32.is_lt(x,4),Bool.or(U32.is_ge(x2,2),Bool.or(U32.is_gt(x3,x),
+    W.or(U32.is_lt(x,4),W.or(U32.is_ge(x2,2),W.or(U32.is_gt(x3,x),
       Bool.not(U32.is_eq(x,U32.add(5,U32.mul(x3,Bool.pick(U32,U32.is_eq(x2,0),1,2)))))))),u =>
-  W.choose(Bool,U32.is_eq(op,10),u => Bool.or(U32.is_lt(x,5),Bool.not(U32.is_eq(x,U32.add(5,x3)))),u =>
-    Bool.or(U32.is_lt(x,2),Bool.not(U32.is_eq(x,U32.add(2,x1)))))))))
+  W.choose(Bool,U32.is_eq(op,10),u => W.or(U32.is_lt(x,5),Bool.not(U32.is_eq(x,U32.add(5,x3)))),u =>
+    W.or(U32.is_lt(x,2),Bool.not(U32.is_eq(x,U32.add(2,x1)))))))))
 
 def shaped(at: List<&2,U32>, +image: W.Store, starts: W.Store) -> Result<String,W.Store>:
   match at:
@@ -208,7 +208,7 @@ def shaped(at: List<&2,U32>, +image: W.Store, starts: W.Store) -> Result<String,
     case Con{+a,rest}:
       +length = U32.sub(W.read(image,a),1)
       +op = W.read(image,U32.add(a,1))
-      W.unless(W.Store,Bool.or(U32.is_lt(length,2),U32.is_ge(op,13)),"node record",u =>
+      W.unless(W.Store,W.or(U32.is_lt(length,2),U32.is_ge(op,13)),"node record",u =>
       W.unless(W.Store,misshaped(op,U32.sub(length,2),image,a),String.append(opcode_name(op)," length"),u =>
         shaped(rest,image,W.write(starts,a,1))))
 
@@ -250,11 +250,11 @@ def claim(+env: Env, +parent: U32, +at: U32, +claims: Claims) -> Result<String,C
 def rooted(+env: Env, +at: U32, +claims: Claims) -> Result<String,Claims>:
   match env claims:
     case Env{image,+starts,types,constants} Claims{+marks,+owned,+roots}:
-      W.unless(Claims,Bool.or(U32.is_eq(W.read(starts,at),0),Bool.not(U32.is_eq(W.read(marks,at),0))),"function root",u =>
+      W.unless(Claims,W.or(U32.is_eq(W.read(starts,at),0),Bool.not(U32.is_eq(W.read(marks,at),0))),"function root",u =>
         Done{Claims{W.write(marks,at,2),owned,U32.add(roots,1)}})
 
 def is_arm(+op: U32) -> Bool:
-  Bool.or(U32.is_eq(op,2),U32.is_eq(op,9))
+  W.or(U32.is_eq(op,2),U32.is_eq(op,9))
 
 def is_operand(role: Role) -> Bool:
   match role:
@@ -437,7 +437,7 @@ def functions(at: List<&2,U32>, +fuel: Nat, +env: Env, +names: List<&2,List<&2,U
       +length = U32.sub(W.read(image,a),1)
       +arity = W.read(image,U32.add(a,3))
       +root = W.read(image,U32.add(a,5))
-      W.unless(W.Plan,Bool.or(U32.is_lt(length,5),Bool.not(U32.is_eq(length,U32.add(5,arity)))),"function record",u =>
+      W.unless(W.Plan,W.or(U32.is_lt(length,5),Bool.not(U32.is_eq(length,U32.add(5,arity)))),"function record",u =>
       W.then(Claims,W.Plan,rooted(env,root,claims),claims =>
       W.then(List<&2,U32>,W.Plan,name_at(names,W.read(image,U32.add(a,1))),name =>
       W.then(List<&2,U32>,W.Plan,references(W.slice(U32.to_nat(arity),image,U32.add(a,6)),types_of(env)),parameters =>
@@ -489,8 +489,8 @@ def decoded(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) -> Resul
 def decode(+words: List<&2,U32>) -> Result<String,W.Plan>:
   +total = W.count(U32,words)
   +image = W.stored(words,W.empty(),0)
-  W.unless(W.Plan,Bool.or(Bool.not(U32.is_eq(W.read(image,0),magic())),Bool.not(U32.is_eq(W.read(image,1),1))),"magic",u =>
+  W.unless(W.Plan,W.or(Bool.not(U32.is_eq(W.read(image,0),magic())),Bool.not(U32.is_eq(W.read(image,1),1))),"magic",u =>
   W.unless(W.Plan,Bool.not(U32.is_eq(W.read(image,2),total)),"total",u =>
-  W.unless(W.Plan,Bool.or(U32.is_ge(W.read(image,3),2),Bool.not(U32.is_eq(W.read(image,11),0))),"header",u =>
+  W.unless(W.Plan,W.or(U32.is_ge(W.read(image,3),2),Bool.not(U32.is_eq(W.read(image,11),0))),"header",u =>
   W.unless(W.Plan,Bool.not(W.same(W.slice(8n,image,24),digest())),"registry digest",u =>
     sections(W.Plan,6n,image,total,0,32,Nil{},lists => decoded(lists,image,total))))))

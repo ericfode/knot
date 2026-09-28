@@ -14,6 +14,17 @@ def choose(-A: Type, condition: Bool, yes: Unit -> A, no: Unit -> A) -> A:
     case True{}: yes(Unit{})
     case False{}: no(Unit{})
 
+# Disjunction and exclusive or, as choices. The seed's native lane can read a
+# U32 comparison against a nullary or constant-argument call as True when it is
+# an operand of Base's Bool.or or Bool.xor, but reads it correctly as a choice's
+# condition (MODEL.md, vm/model-lanes.bend); the natively built model uses these,
+# and the vm-model gate refuses Base's two there.
+def or(a: Bool, b: Bool) -> Bool:
+  choose(Bool,a,u => True{},u => b)
+
+def xor(a: Bool, +b: Bool) -> Bool:
+  choose(Bool,a,u => Bool.not(b),u => b)
+
 def then(-A: Data, -B: Data, result: Result<String,A>, next: A -> Result<String,B>) -> Result<String,B>:
   match result:
     case Fail{reason}: Fail{reason}
@@ -65,7 +76,7 @@ def plant(level: Nat, trie: Trie, +key: U32, word: U32) -> Trie:
     case 1n+ +l _: pair(bit(key,l),plant(l,Void{},key,word),Void{})
 
 def inside(+key: U32, +depth: Nat) -> Bool:
-  Bool.or(Nat.is_ge(depth,32n),U32.is_eq(U32.shrn(key,depth),0))
+  or(Nat.is_ge(depth,32n),U32.is_eq(U32.shrn(key,depth),0))
 
 def read(store: Store, +key: U32) -> U32:
   match store:
@@ -145,7 +156,7 @@ def nth_bool(xs: List<&2,Bool>, +i: U32) -> Bool:
 def member(xs: List<&2,U32>, +x: U32) -> Bool:
   match xs:
     case Nil{}: False{}
-    case Con{y,rest}: Bool.or(U32.is_eq(x,y),member(rest,x))
+    case Con{y,rest}: or(U32.is_eq(x,y),member(rest,x))
 
 def range(n: Nat, +from: U32) -> List<&2,U32>:
   match n:

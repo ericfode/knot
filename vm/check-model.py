@@ -6,6 +6,10 @@ seed's native lane and requires:
 - every golden image to be its frozen plan's encoding, and each LAWS.bend
   fixture to equal its image's words;
 - the model's prim and foreign tables to equal registry.json;
+- no Base Bool.or or Bool.xor in the natively built model, whose connectives are
+  choices (W.or, W.xor), and vm/model-lanes.bend to print W's columns as the
+  comparisons' values on both of the seed's lanes while the native lane still
+  misreads Base's (MODEL.md);
 - every golden run and frozen Book invocation to agree with
   vm/golden/vm-expected.json (SPEC sections 8 and 11);
 - literal fuel controls (SPEC section 7): fuel 0 exhausts every golden at its
@@ -63,8 +67,9 @@ RECEIPT = HERE / 'receipts/model.json'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
 SECTIONS = ('word', 'decode', 'validate', 'encode', 'memory', 'machine', 'audit')  # vm/model/, in import order
 SOURCES = tuple(f'model/{s}.bend' for s in SECTIONS) + (
-    'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'LAWS.bend', 'PROOF.bend')
-ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend'}
+    'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'model-lanes.bend', 'LAWS.bend', 'PROOF.bend')
+ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend', 'lanes': 'model-lanes.bend'}
+BUILT = tuple(f'model/{s}.bend' for s in SECTIONS) + ('model-cli.bend', 'model-audit.bend', 'model-sweep.bend')  # the natively built model
 SWEEP_FUEL = '256'  # every golden completes within 256 entries; mutants that loop stop early
 
 
@@ -145,6 +150,75 @@ def check_registry() -> dict:
     require(table('prims') == rows(REGISTRY['prims']), 'model prim table differs from registry.json')
     require(table('foreigns') == rows(REGISTRY['foreign']), 'model foreign table differs from registry.json')
     return {'prims': len(table('prims')), 'foreign': len(table('foreigns'))}
+
+
+# ------------------------------------------------------------------ the seed's lanes
+
+# The seed's native lane can read a U32 comparison against a nullary or constant-argument
+# call as True when it is an operand of Base's Bool.or or Bool.xor (MODEL.md). The model
+# spells both as choices, W.or and W.xor, which vm/model-lanes.bend witnesses on the two
+# lanes; Base's pair is refused anywhere in the natively built model.
+BASE_CONNECTIVE = re.compile(r'(?<![\w.])Bool\.(or|xor)\(')
+
+
+def base_connectives(texts: dict) -> list:
+    """Each line of the natively built model that applies Base's Bool.or or Bool.xor."""
+    return [f'{name}:{i}' for name, text in texts.items() for i, line in enumerate(text.split('\n'), 1)
+            if BASE_CONNECTIVE.search(line.split('#', 1)[0])]
+
+
+def connective_runs(tree: Path) -> dict:
+    """The natively built model (a mutant's included) applies neither of Base's connectives."""
+    found = base_connectives({name: (tree / 'vm' / name).read_text() for name in BUILT})
+    return {'base': {'result': {'exit': 0, 'stdout': '\n'.join(found), 'stderr': ''}, 'agrees': not found}}
+
+
+def check_connectives() -> dict:
+    """Control: a W.or put back as Base's Bool.or is refused."""
+    memory = (HERE / 'model/memory.bend').read_text()
+    require(base_connectives({'model/memory.bend': memory.replace('W.or(', 'Bool.or(', 1)}),
+            "control: the connective check refuses Base's Bool.or")
+    texts = [(HERE / name).read_text() for name in BUILT]
+    return {'sources': len(texts), 'choices': sum(len(re.findall(r'(?<![\w.])(?:W\.)?x?or\(', t)) for t in texts)}
+
+
+LANE_LITERALS = ('3', '2000000', '4294967295')  # vm/model-lanes.bend's literal rows
+LANE_WORDS = ('3', '2000000', '4294967295', '1048576', '1048577', '0')  # its rows read at run time
+
+
+def lane_row(x: int) -> str:
+    """vm/model-lanes.bend's seven columns for the word x, as its comparisons' values."""
+    over, none = x > 1_048_576, x == 0xFFFF_FFFF
+    return f"{x}\t{''.join(str(int(b)) for b in (over, over, not over, not over, none, False, none or x == 3))}"
+
+
+LANE_ROWS = [lane_row(int(x)) for x in (*LANE_LITERALS, *LANE_WORDS)]
+
+
+def lane_columns(result: dict, base: bool) -> list:
+    """Each printed row's word with W's columns (base False) or Base's (base True)."""
+    rows = [line.split('\t') for line in result['stdout'].strip().split('\n')]
+    return ['\t'.join((r[0], r[2 if base else 1])) for r in rows if len(r) == 3]
+
+
+def lane_runs(lanes: Path) -> dict:
+    """The native lane prints W.or's and W.xor's columns as the comparisons' values."""
+    result = run([lanes, '--', *LANE_WORDS], 60)
+    return {'native': {'result': result, 'agrees': result['exit'] == 0 and lane_columns(result, False) == LANE_ROWS}}
+
+
+def check_lanes(tree: Path, lanes: Path) -> dict:
+    """Both lanes print W's columns as the comparisons' values, and the Bun lane Base's too;
+    the native lane misreads some of Base's, so the probe still reaches the defect."""
+    bun = run([SEED, tree / 'vm' / 'model-lanes.bend', '--', *LANE_WORDS], 300)
+    native = run([lanes, '--', *LANE_WORDS], 60)
+    require(bun['exit'] == 0 and lane_columns(bun, False) == LANE_ROWS == lane_columns(bun, True),
+            f'model-lanes on the Bun lane: {bun}')
+    require(native['exit'] == 0 and lane_columns(native, False) == LANE_ROWS, f'model-lanes natively: {native}')
+    misread = [f'{i}:{j}' for i, (got, want) in enumerate(zip(lane_columns(native, True), LANE_ROWS))
+               for j, (x, y) in enumerate(zip(got.split('\t')[1], want.split('\t')[1])) if x != y]
+    require(misread, "model-lanes: the native lane reads Base's Bool.or and Bool.xor correctly; the probe no longer reaches the defect")
+    return {'rows': len(LANE_ROWS), 'base_misread': misread}  # row:column
 
 
 # ------------------------------------------------------------------ builds
@@ -684,7 +758,7 @@ MUTANTS = [
     ('rc-over-count', 'memory', [('    u => Done{stored_word(heap,w,0,U32.sub(rc,1))})))\n\ndef drops(',
        '    u => Done{stored_word(heap,w,0,rc)})))\n\ndef drops(')],
      'drop above one keeps its count'),
-    ('append-drops-tail', 'memory', [('Bool.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(W.within(id,16,19),U32.is_eq(i,0)))',
+    ('append-drops-tail', 'memory', [('W.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(W.within(id,16,19),U32.is_eq(i,0)))',
        'Bool.and(W.within(id,16,19),U32.is_eq(i,0))')],
      'String.append also drops its moved tail'),
     ('tail-keeps-caller', 'machine', [('    u => H.bind(H.Heap,Next,H.drop(heap,H.room(unscoped(stack)),H.act_of(stack)),heap => to(Eval{0},H.with_act(unscoped(stack),0),heap)),',
@@ -729,10 +803,10 @@ MUTANTS = [
     ('char-tag', 'memory', [('  W.choose(U32,is_rep(code,t,2),u => 0,u =>\n',
        '  W.choose(U32,False{},u => 0,u =>\n')],
      'a Char dispatches on its code, not on Chr'),
-    ('key-bound', 'validate', [('Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback))',
-       'Expect{Bool.or(Bool.not(Bool.and(increasing(keys_of(rows)),below(keys_of(rows),W.none()))),Maybe.is_none(&2,W.Node,fallback))')],
+    ('key-bound', 'validate', [('Expect{W.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback))',
+       'Expect{W.or(Bool.not(Bool.and(increasing(keys_of(rows)),below(keys_of(rows),W.none()))),Maybe.is_none(&2,W.Node,fallback))')],
      'the key 0xffffffff is refused'),
-    ('none-slot', 'validate', [('Bool.not(Bool.or(W.is_none(held),U32.is_eq(held,scrutinee)))',
+    ('none-slot', 'validate', [('Bool.not(W.or(W.is_none(held),U32.is_eq(held,scrutinee)))',
        'Bool.not(U32.is_eq(held,scrutinee))')],
      'a Case on a none-typed slot is refused'),
     ('debit-refunded', 'machine', [('    case Fail{stop}: Done{halted(m,stop)}',
@@ -802,6 +876,13 @@ MUTANTS = [
      "a Program's second word need not be `--`"),
     ('usage-as-word', 'model-cli', [('  stopped(W.Refused{"arguments","usage"})', '  stopped(W.Refused{"arguments","expected-u32"})')],
      'a missing word is expected-u32, not usage'),
+    # Review round 2: the model's connectives are choices, which the native lane reads.
+    ('or-through-base', 'word', [('def or(a: Bool, b: Bool) -> Bool:\n  choose(Bool,a,u => True{},u => b)',
+                                  'def or(a: Bool, b: Bool) -> Bool:\n  Bool.or(a,b)')],
+     "W.or is Base's Bool.or"),
+    ('xor-through-base', 'word', [('def xor(a: Bool, +b: Bool) -> Bool:\n  choose(Bool,a,u => Bool.not(b),u => b)',
+                                   'def xor(a: Bool, +b: Bool) -> Bool:\n  Bool.xor(a,b)')],
+     "W.xor is Base's Bool.xor"),
 ]
 
 
@@ -832,10 +913,12 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
     def one(entry):
         name, section, mutation, meaning = entry
         tree = build_tree(f'mutants/{name}', section, mutation)
-        bins = built(tree, ('model', 'audit'))
+        bins = built(tree, ('model', 'audit', 'lanes'))
         observed = {'goldens': golden_runs(bins['model'], expected),
                     'invocations': invocation_runs(bins['model'], bins['audit'], expected),
                     'inspection': inspection_runs(bins['model']),
+                    'lanes': lane_runs(bins['lanes']),
+                    'connectives': connective_runs(tree),
                     'fuel': fuel_runs(bins['model'], expected),
                     'controls': control_runs(bins['model'], listed),
                     'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
@@ -874,15 +957,19 @@ def main() -> int:
               'status': 'failed', 'sources': {s: sha((HERE / s).read_bytes()) for s in SOURCES}}
     record['fixtures'] = check_inputs(expected)
     record['registry'] = check_registry()
+    record['connectives'] = check_connectives()
     record['seed'] = seed_controls()
 
     tree = build_tree('base')
-    bins = built(tree, ('model', 'audit', 'sweep'))
+    bins = built(tree, ('model', 'audit', 'sweep', 'lanes'))
+    record['lanes'] = check_lanes(tree, bins['lanes'])
     listed = controls()
     admitted = admitted_controls()
     base = {'goldens': golden_runs(bins['model'], expected),
             'invocations': invocation_runs(bins['model'], bins['audit'], expected),
             'inspection': inspection_runs(bins['model']),
+            'lanes': lane_runs(bins['lanes']),
+            'connectives': connective_runs(tree),
             'fuel': fuel_runs(bins['model'], expected),
             'controls': control_runs(bins['model'], listed),
             'admitted': admitted_runs(bins['model'], bins['audit'], admitted),

@@ -125,7 +125,7 @@ def edges(+heap: Heap, +q: U32) -> List<&2,U32>:
   +header = load_word(heap,q,1)
   +length = U32.shrn(header,3n)
   +class = U32.and(header,7)
-  +skip = Bool.pick(U32,Bool.or(U32.is_eq(class,1),U32.is_eq(class,3)),1,Bool.pick(U32,U32.is_eq(class,2),length,2))
+  +skip = Bool.pick(U32,W.or(U32.is_eq(class,1),U32.is_eq(class,3)),1,Bool.pick(U32,U32.is_eq(class,2),length,2))
   W.slice(U32.to_nat(U32.sub(length,Bool.pick(U32,U32.is_gt(skip,length),length,skip))),memory_of(heap),U32.add(U32.shrn(q,2n),U32.add(2,skip)))
 
 def freed(+heap: Heap, +q: U32) -> Heap:
@@ -313,8 +313,8 @@ def cell_class(+heap: Heap, +w: U32) -> U32:
 # immediate or a Big cell, File an immediate, and an algebraic type a nullary
 # tag or an Object of its own type whose tag has fields.
 def admits(+code: Code, +heap: Heap, +t: U32, +w: U32) -> Bool:
-  W.choose(Bool,Bool.or(is_rep(code,t,0),Bool.or(is_rep(code,t,1),is_rep(code,t,2))),
-    u => Bool.or(U32.is_eq(U32.and(w,1),1),Bool.and(is_pointer(w),U32.is_eq(cell_class(heap,w),2))),u =>
+  W.choose(Bool,W.or(is_rep(code,t,0),W.or(is_rep(code,t,1),is_rep(code,t,2))),
+    u => W.or(U32.is_eq(U32.and(w,1),1),Bool.and(is_pointer(w),U32.is_eq(cell_class(heap,w),2))),u =>
   W.choose(Bool,is_rep(code,t,11),u => U32.is_eq(U32.and(w,1),1),u =>
   W.choose(Bool,Bool.not(U32.is_eq(type_kind(code,t),0)),u => False{},u =>
   W.choose(Bool,U32.is_eq(U32.and(w,1),1),
@@ -360,7 +360,7 @@ def shifted(left: Bool, +a: U32, +n: U32) -> U32:
   W.choose(U32,U32.is_ge(n,32),u => 0,u => Bool.pick(U32,left,U32.shln(a,U32.to_nat(n)),U32.shrn(a,U32.to_nat(n))))
 
 def spaced(+c: U32) -> Bool:
-  Bool.or(W.within(c,9,13),U32.is_eq(c,32))
+  W.or(W.within(c,9,13),U32.is_eq(c,32))
 
 def digits(fuel: Nat, +v: U32, +acc: List<&2,U32>) -> List<&2,U32>:
   match fuel:
@@ -464,7 +464,7 @@ def compute(+id: U32, +code: Code, +heap: Heap, +a: U32, +b: U32) -> Result<W.St
 # Operands the prim moves into its result: append's tail and the word-keeping
 # conversions. Every other operand is dropped after the result exists.
 def moved(+id: U32, +i: U32) -> Bool:
-  Bool.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(W.within(id,16,19),U32.is_eq(i,0)))
+  W.or(Bool.and(U32.is_eq(id,35),U32.is_eq(i,1)),Bool.and(W.within(id,16,19),U32.is_eq(i,0)))
 
 def dropped_operands(+id: U32, words: List<&2,U32>, +i: U32) -> List<&2,U32>:
   match words:

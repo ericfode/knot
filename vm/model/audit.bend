@@ -34,7 +34,7 @@ def blocks(fuel: Nat, +heap: H.Heap, +marks: W.Store, +q: U32, +bump: U32, +foun
       +memory = H.memory_of(heap)
       +size = W.choose(U32,U32.is_eq(W.read(marks,q),1),u => W.read(memory,U32.add(q,1)),
         u => U32.shln(4,U32.to_nat(H.class_of(U32.add(2,U32.shrn(W.read(memory,U32.add(q,1)),3n))))))
-      W.choose(List<&2,U32>,Bool.or(U32.is_ge(q,bump),U32.is_lt(size,4)),u => found,u =>
+      W.choose(List<&2,U32>,W.or(U32.is_ge(q,bump),U32.is_lt(size,4)),u => found,u =>
         blocks(f,heap,marks,U32.add(q,size),bump,Bool.pick(List<&2,U32>,U32.is_eq(W.read(marks,q),1),found,Con{U32.shln(q,2n),found})))
 
 def live_cells(+heap: H.Heap, +base: U32) -> List<&2,U32>:
@@ -108,7 +108,7 @@ def vacant(cells: List<&2,U32>, +heap: H.Heap) -> Bool:
     case Con{+c,rest}:
       +depth = H.load_word(heap,c,3)
       +capacity = U32.sub(U32.shrn(H.load_word(heap,c,1),3n),2)
-      Bool.and(W.choose(Bool,Bool.or(Bool.not(U32.is_eq(H.cell_class(heap,c),4)),U32.is_gt(depth,capacity)),u => True{},
+      Bool.and(W.choose(Bool,W.or(Bool.not(U32.is_eq(H.cell_class(heap,c),4)),U32.is_gt(depth,capacity)),u => True{},
           u => W.zero_all(W.slice(U32.to_nat(U32.sub(capacity,depth)),H.memory_of(heap),U32.add(U32.shrn(c,2n),U32.add(4,depth))))),
         vacant(rest,heap))
 
@@ -210,7 +210,7 @@ def sound(run: Run) -> Bool:
     case Refusal{stop}: Bool.not(internal(M.Stopped{stop,M.Eval{0}}))
     case Ran{+code,+m,balanced}:
       Bool.and(Bool.and(Bool.not(internal(finished_outcome(m))),balanced),
-        Bool.or(Bool.not(completing(finished_outcome(m))),U32.is_eq(leaked(code,m),0)))
+        W.or(Bool.not(completing(finished_outcome(m))),U32.is_eq(leaked(code,m),0)))
 
 def balanced_run(run: Run) -> Bool:
   match run:

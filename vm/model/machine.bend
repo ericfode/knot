@@ -432,9 +432,7 @@ def exhausted(-A: Data) -> Result<W.Stop,A>:
 # §8: an iterative walk. A visit is one rendered constructor: every shown word
 # pays one, and a Nat word n its n further levels. The tree's bytes include
 # its separators. Both bounds are inclusive; a word is inspected before it is
-# charged, and charged before it is spelled. Each bound is its own choice: the
-# seed's native lane can evaluate Bool.or(U32.is_gt(n,visit_limit()),False{})
-# as True, a comparison with a constant-argument call (MODEL.md).
+# charged, and charged before it is spelled.
 def render(fuel: Nat, +code: H.Code, +heap: H.Heap, work: List<&2,Piece>, +visits: U32, +size: U32, parts: List<&2,List<&2,U32>>) -> Result<W.Stop,List<&2,U32>>:
   match fuel work:
     case _ Nil{}: Done{List.concat(&2,U32,List.reverse(&2,List<&2,U32>,parts))}

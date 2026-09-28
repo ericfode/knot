@@ -93,7 +93,7 @@ def fields_of(constructors: List<&2,W.Constructor>, +tag: U32) -> List<&2,U32>:
     case Con{W.Constructor{name,+fields},+rest}: W.choose(List<&2,U32>,U32.is_eq(tag,0),u => fields,u => fields_of(rest,U32.sub(tag,1)))
 
 def is_arrow(+k: U32) -> Bool:
-  Bool.or(U32.is_eq(k,1),U32.is_eq(k,2))
+  W.or(U32.is_eq(k,1),U32.is_eq(k,2))
 
 # `actual` may flow site `declared` is expected: none fits any type, and arrows
 # of one kind fit position by position (SPEC §3).
@@ -101,7 +101,7 @@ def fits(fuel: Nat, +types: List<&2,W.Sort>, +declared: U32, +actual: U32) -> Bo
   match fuel:
     case 0n: False{}
     case 1n+ +f:
-      W.choose(Bool,Bool.or(Bool.or(W.is_none(declared),W.is_none(actual)),U32.is_eq(declared,actual)),u => True{},u =>
+      W.choose(Bool,W.or(W.or(W.is_none(declared),W.is_none(actual)),U32.is_eq(declared,actual)),u => True{},u =>
       W.choose(Bool,Bool.and(is_arrow(kind(types,declared)),U32.is_eq(kind(types,declared),kind(types,actual))),u =>
         Bool.and(fits(f,types,domain(types,declared),domain(types,actual)),fits(f,types,codomain(types,declared),codomain(types,actual))),
         u => False{}))
@@ -165,7 +165,7 @@ def all_fit(+types: List<&2,W.Sort>, declared: List<&2,U32>, actual: List<&2,U32
 def pinned_operands(+reps: List<&2,U32>, +op: String, +site: String, actual: List<&2,U32>, inputs: List<&2,U32>) -> List<&2,Task>:
   match actual inputs:
     case Con{+a,as} Con{+r,rs}:
-      Con{Expect{Bool.or(W.is_none(W.nth(reps,r)),Bool.not(U32.is_eq(a,W.nth(reps,r)))),at_where(site,String.concat([op," operand is not the pinned ",rep_name(r)]))},
+      Con{Expect{W.or(W.is_none(W.nth(reps,r)),Bool.not(U32.is_eq(a,W.nth(reps,r)))),at_where(site,String.concat([op," operand is not the pinned ",rep_name(r)]))},
         pinned_operands(reps,op,site,as,rs)}
     case _ _: Nil{}
 
@@ -176,7 +176,7 @@ def primitive_tasks(+cx: Context, +op: String, +id: U32, +t: U32, +site: String,
       Con{Expect{Bool.not(U32.is_eq(W.count(U32,actual),W.count(U32,inputs))),at_where(site,String.append(op," arity"))},
         List.append(&2,Task,pinned_operands(reps,op,site,actual,inputs),
           W.choose(List<&2,Task>,String.eq(op,"prim"),
-            u => [Expect{Bool.or(W.is_none(W.nth(reps,output)),Bool.not(U32.is_eq(t,W.nth(reps,output)))),at_where(site,String.append("prim result is not the pinned ",rep_name(output)))}],
+            u => [Expect{W.or(W.is_none(W.nth(reps,output)),Bool.not(U32.is_eq(t,W.nth(reps,output)))),at_where(site,String.append("prim result is not the pinned ",rep_name(output)))}],
             u => [Expect{Bool.not(is_io(types,W.nth(reps,10),t,W.nth(reps,output))),at_where(site,String.concat(["foreign result is not IO(",rep_name(output),")"]))}]))}
 
 # Each word above the one before it. Keys span every u32, 0xffffffff included
@@ -184,7 +184,7 @@ def primitive_tasks(+cx: Context, +op: String, +id: U32, +t: U32, +site: String,
 def ascending(xs: List<&2,U32>, +floor: U32, +started: Bool) -> Bool:
   match xs:
     case Nil{}: True{}
-    case Con{+x,rest}: Bool.and(Bool.or(Bool.not(started),U32.is_gt(x,floor)),ascending(rest,x,True{}))
+    case Con{+x,rest}: Bool.and(W.or(Bool.not(started),U32.is_gt(x,floor)),ascending(rest,x,True{}))
 
 def increasing(xs: List<&2,U32>) -> Bool:
   ascending(xs,0,False{})
@@ -256,8 +256,8 @@ def tag_tasks(rows: List<&2,Maybe<&2,W.Node>>, +types: List<&2,W.Sort>, +constru
     case Con{Some{W.Branch{+key,+first,+fields,+body}},rest}:
       +bound = fields_of(constructors,tag)
       List.append(&2,Task,
-        [Expect{Bool.or(Bool.not(U32.is_eq(key,tag)),U32.is_ge(tag,W.count(W.Constructor,constructors))),at_where(site,"branch key")},
-         Expect{Bool.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,W.count(U32,bound)))),at_where(site,"branch binders")},
+        [Expect{W.or(Bool.not(U32.is_eq(key,tag)),U32.is_ge(tag,W.count(W.Constructor,constructors))),at_where(site,"branch key")},
+         Expect{W.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,W.count(U32,bound)))),at_where(site,"branch binders")},
          Check{body,List.append(&2,U32,scope,bound),site},
          Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"branch body type")}],
         tag_tasks(rest,types,constructors,scope,depth,t,site,U32.add(tag,1)))
@@ -267,7 +267,7 @@ def key_tasks(rows: List<&2,Maybe<&2,W.Node>>, +types: List<&2,W.Sort>, +scope: 
   match rows:
     case Con{Some{W.Branch{key,+first,+fields,+body}},rest}:
       List.append(&2,Task,
-        [Expect{Bool.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,0))),at_where(site,"key branch binds nothing")},
+        [Expect{W.or(Bool.not(U32.is_eq(first,depth)),Bool.not(U32.is_eq(fields,0))),at_where(site,"key branch binds nothing")},
          Check{body,scope,site},
          Expect{Bool.not(fit(types,t,type_of(body))),at_where(site,"key branch body type")}],
         key_tasks(rest,types,scope,depth,t,site))
@@ -299,11 +299,11 @@ def case_tasks(+cx: Context, +scope: List<&2,U32>, +depth: U32, +site: String, +
         u => List.append(&2,Task,
           [Expect{Bool.not(U32.is_eq(kind(types,scrutinee),0)),at_where(site,"tag case on a non-data type")},
            Expect{Bool.not(U32.is_eq(W.count(Maybe<&2,W.Node>,rows),W.count(W.Constructor,constructors))),at_where(site,"tag table is not dense")},
-           Expect{Bool.xor(Maybe.is_none(&2,W.Node,fallback),all_present(rows)),at_where(site,"default must cover exactly the missing tags")}],
+           Expect{W.xor(Maybe.is_none(&2,W.Node,fallback),all_present(rows)),at_where(site,"default must cover exactly the missing tags")}],
           tag_tasks(rows,types,constructors,scope,depth,t,site,0)),
         u => List.append(&2,Task,
-          [Expect{Bool.not(Bool.and(Bool.not(W.is_none(scrutinee)),Bool.or(U32.is_eq(scrutinee,W.nth(reps,1)),U32.is_eq(scrutinee,W.nth(reps,2))))),at_where(site,"key case on a non-scalar type")},
-           Expect{Bool.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback)),at_where(site,"keys must increase strictly, with a default")}],
+          [Expect{Bool.not(Bool.and(Bool.not(W.is_none(scrutinee)),W.or(U32.is_eq(scrutinee,W.nth(reps,1)),U32.is_eq(scrutinee,W.nth(reps,2))))),at_where(site,"key case on a non-scalar type")},
+           Expect{W.or(Bool.not(increasing(keys_of(rows))),Maybe.is_none(&2,W.Node,fallback)),at_where(site,"keys must increase strictly, with a default")}],
           key_tasks(rows,types,scope,depth,t,site))),
         default_tasks(fallback,types,scope,t,site))
 
@@ -340,7 +340,7 @@ def expand(+cx: Context, node: W.Node, +scope: List<&2,U32>, +depth: U32, +site:
        Expect{Bool.not(U32.is_eq(first_rep(reps,t,0),constant_rep(k))),at_where(site,String.concat([const_name(k)," literal at a non-",const_name(k)," type"]))}]
     case Context{+types,+functions,+reps} W.Value{+t,+tag}:
       [type_index(types,t,site),
-       Expect{Bool.or(Bool.not(U32.is_eq(kind(types,t),0)),Bool.or(U32.is_ge(tag,W.count(W.Constructor,constructors_of(types,t))),Bool.not(U32.is_eq(W.count(U32,fields_of(constructors_of(types,t),tag)),0)))),
+       Expect{W.or(Bool.not(U32.is_eq(kind(types,t),0)),W.or(U32.is_ge(tag,W.count(W.Constructor,constructors_of(types,t))),Bool.not(U32.is_eq(W.count(U32,fields_of(constructors_of(types,t),tag)),0)))),
          at_where(site,"value is not a nullary constructor")}]
     case Context{+types,+functions,+reps} W.Reference{+t,+slot}:
       [type_index(types,t,site),
@@ -349,8 +349,8 @@ def expand(+cx: Context, node: W.Node, +scope: List<&2,U32>, +depth: U32, +site:
     case Context{+types,+functions,+reps} W.Construct{+t,+tag,+xs}:
       +fields = fields_of(constructors_of(types,t),tag)
       Con{type_index(types,t,site),List.append(&2,Task,checked(xs,scope,site),
-        [Expect{Bool.or(Bool.not(U32.is_eq(kind(types,t),0)),U32.is_ge(tag,W.count(W.Constructor,constructors_of(types,t)))),at_where(site,"construct tag")},
-         Expect{Bool.or(U32.is_eq(W.count(U32,fields),0),Bool.not(U32.is_eq(W.count(U32,fields),W.count(W.Node,xs)))),at_where(site,"construct arity")},
+        [Expect{W.or(Bool.not(U32.is_eq(kind(types,t),0)),U32.is_ge(tag,W.count(W.Constructor,constructors_of(types,t)))),at_where(site,"construct tag")},
+         Expect{W.or(U32.is_eq(W.count(U32,fields),0),Bool.not(U32.is_eq(W.count(U32,fields),W.count(W.Node,xs)))),at_where(site,"construct arity")},
          Expect{Bool.not(all_fit(types,fields,types_of_nodes(xs))),at_where(site,"construct field type")}])}
     case Context{+types,+functions,+reps} W.Application{+t,+f,+xs}:
       +found = callee(functions,f)
@@ -375,13 +375,13 @@ def expand(+cx: Context, node: W.Node, +scope: List<&2,U32>, +depth: U32, +site:
       +held = W.nth(scope,slot)
       Con{type_index(types,t,site),
       Con{Expect{U32.is_ge(slot,depth),at_where(site,"case slot beyond depth")},
-      Con{Expect{Bool.or(W.is_none(scrutinee),Bool.not(Bool.or(W.is_none(held),U32.is_eq(held,scrutinee)))),at_where(site,"case scrutinee type")},
+      Con{Expect{W.or(W.is_none(scrutinee),Bool.not(W.or(W.is_none(held),U32.is_eq(held,scrutinee)))),at_where(site,"case scrutinee type")},
         case_tasks(Context{types,functions,reps},scope,depth,site,t,scrutinee,mode,rows,fallback)}}}
     case Context{+types,+functions,+reps} W.Closure{+t,+live,+slots,+caps,+body}:
       +arrow = kind(types,t)
       +inner = List.append(&2,U32,scoped(caps,scope),Bool.pick(List<&2,U32>,U32.is_eq(live,1),[domain(types,t)],Nil{}))
       [type_index(types,t,site),
-       Expect{Bool.not(Bool.or(Bool.and(U32.is_eq(arrow,1),U32.is_eq(live,1)),Bool.and(U32.is_eq(arrow,2),U32.is_eq(live,0)))),at_where(site,"closure arrow")},
+       Expect{Bool.not(W.or(Bool.and(U32.is_eq(arrow,1),U32.is_eq(live,1)),Bool.and(U32.is_eq(arrow,2),U32.is_eq(live,0)))),at_where(site,"closure arrow")},
        Expect{Bool.not(Bool.and(increasing(caps),below(caps,depth))),at_where(site,"captures must increase strictly below depth")},
        Nested{body,inner,String.append(site,"/closure"),slots,site,
          covers(U32.to_nat(W.count(U32,caps)),uses(U32.to_nat(W.none()),[body]),0),fit(types,codomain(types,t),type_of(body))}]
@@ -389,8 +389,8 @@ def expand(+cx: Context, node: W.Node, +scope: List<&2,U32>, +depth: U32, +site:
       +g = type_of(f)
       +arrow = kind(types,g)
       Con{type_index(types,t,site),Con{Check{f,scope,site},List.append(&2,Task,checked(xs,scope,site),
-        [Expect{Bool.or(Bool.not(is_arrow(arrow)),Bool.not(U32.is_eq(W.count(W.Node,xs),Bool.pick(U32,U32.is_eq(arrow,1),1,0)))),at_where(site,"invoke arity")},
-         Expect{Bool.or(Bool.not(fit(types,codomain(types,g),t)),Bool.and(Bool.not(U32.is_eq(W.count(W.Node,xs),0)),Bool.not(fit(types,domain(types,g),type_of(D.first(xs)))))),at_where(site,"invoke types")}])}}
+        [Expect{W.or(Bool.not(is_arrow(arrow)),Bool.not(U32.is_eq(W.count(W.Node,xs),Bool.pick(U32,U32.is_eq(arrow,1),1,0)))),at_where(site,"invoke arity")},
+         Expect{W.or(Bool.not(fit(types,codomain(types,g),t)),Bool.and(Bool.not(U32.is_eq(W.count(W.Node,xs),0)),Bool.not(fit(types,domain(types,g),type_of(D.first(xs)))))),at_where(site,"invoke types")}])}}
     case _ W.Branch{key,first,fields,body}: [Expect{True{},at_where(site,"standalone branch")}]
     case _ W.Default{body}: [Expect{True{},at_where(site,"standalone default")}]
 
@@ -422,7 +422,7 @@ def same_fields(+reps: List<&2,U32>, fields: List<&2,U32>, specs: List<&2,U32>) 
   match fields specs:
     case Nil{} Nil{}: True{}
     case Con{+f,fs} Con{+s,ss}:
-      Bool.and(Bool.and(U32.is_eq(f,pin(reps,s)),Bool.or(W.is_none(s),Bool.not(W.is_none(W.nth(reps,s))))),same_fields(reps,fs,ss))
+      Bool.and(Bool.and(U32.is_eq(f,pin(reps,s)),W.or(W.is_none(s),Bool.not(W.is_none(W.nth(reps,s))))),same_fields(reps,fs,ss))
     case _ _: False{}
 
 def same_shape(+reps: List<&2,U32>, constructors: List<&2,W.Constructor>, specs: List<&2,List<&2,U32>>) -> Bool:
@@ -437,10 +437,10 @@ def representations(n: Nat, +types: List<&2,W.Sort>, +reps: List<&2,U32>, +r: U3
     case 1n+ +m:
       +t = W.nth(reps,r)
       W.choose(Result<String,Unit>,W.is_none(t),u => representations(m,types,reps,U32.add(r,1)),u =>
-      W.choose(Result<String,Unit>,Bool.or(U32.is_eq(r,1),U32.is_eq(r,11)),
+      W.choose(Result<String,Unit>,W.or(U32.is_eq(r,1),U32.is_eq(r,11)),
         u => W.unless(Unit,Bool.not(U32.is_eq(kind(types,t),3)),String.concat(["representation: ",rep_name(r)," must be opaque"]),u =>
                representations(m,types,reps,U32.add(r,1))),
-        u => W.unless(Unit,Bool.or(Bool.not(U32.is_eq(kind(types,t),0)),Bool.not(same_shape(reps,constructors_of(types,t),pinned(r)))),
+        u => W.unless(Unit,W.or(Bool.not(U32.is_eq(kind(types,t),0)),Bool.not(same_shape(reps,constructors_of(types,t),pinned(r)))),
                String.concat(["representation: ",rep_name(r)," shape"]),u => representations(m,types,reps,U32.add(r,1)))))
 
 def function_names(functions: List<&2,W.Function>) -> List<&2,List<&2,U32>>:
@@ -450,12 +450,12 @@ def function_names(functions: List<&2,W.Function>) -> List<&2,List<&2,U32>>:
 
 
 def grounded_at(+marks: List<&2,Bool>, +t: U32) -> Bool:
-  Bool.or(W.is_none(t),W.nth_bool(marks,t))
+  W.or(W.is_none(t),W.nth_bool(marks,t))
 
 def regrounded(sorts: List<&2,W.Sort>, +marks: List<&2,Bool>, current: List<&2,Bool>) -> List<&2,Bool>:
   match sorts current:
-    case Con{W.Arrow{+d,+r},ss} Con{m,ms}: Con{Bool.or(m,Bool.and(grounded_at(marks,d),grounded_at(marks,r))),regrounded(ss,marks,ms)}
-    case Con{W.Erased{+d,+r},ss} Con{m,ms}: Con{Bool.or(m,Bool.and(grounded_at(marks,d),grounded_at(marks,r))),regrounded(ss,marks,ms)}
+    case Con{W.Arrow{+d,+r},ss} Con{m,ms}: Con{W.or(m,Bool.and(grounded_at(marks,d),grounded_at(marks,r))),regrounded(ss,marks,ms)}
+    case Con{W.Erased{+d,+r},ss} Con{m,ms}: Con{W.or(m,Bool.and(grounded_at(marks,d),grounded_at(marks,r))),regrounded(ss,marks,ms)}
     case Con{s,ss} Con{m,ms}: Con{m,regrounded(ss,marks,ms)}
     case _ _: Nil{}
 
@@ -524,7 +524,7 @@ def function_valid(+cx: Context, f: W.Function) -> Result<String,Unit>:
   match f:
     case W.Function{name,+parameters,+result,+slots,+body}:
       +site = text_of(name)
-      W.unless(Unit,Bool.or(U32.is_gt(W.count(U32,parameters),4096),U32.is_gt(slots,65536)),at_where(site,"limits"),u =>
+      W.unless(Unit,W.or(U32.is_gt(W.count(U32,parameters),4096),U32.is_gt(slots,65536)),at_where(site,"limits"),u =>
       W.then(U32,Unit,checks(U32.to_nat(W.none()),[Check{body,parameters,site}],cx,W.count(U32,parameters)),+d =>
       W.unless(Unit,Bool.not(U32.is_eq(d,slots)),at_where(site,String.concat(["slots ",U32.show(slots),", reached ",U32.show(d)])),u =>
       W.unless(Unit,Bool.not(fit(types_in(cx),result,type_of(body))),at_where(site,"body type"),u => Done{Unit{}}))))

@@ -124,7 +124,7 @@ def calls_of(m: M.Machine) -> U32:
 def audit_report(+code: H.Code, +m: M.Machine, +steps: U32, balanced: Bool) -> IO(Unit):
   +outcome = machine_outcome(m)
   +live = A.leaked(code,m)
-  +passed = Bool.and(Bool.and(balanced,A.balanced(code,m)),Bool.or(Bool.not(completes(outcome)),U32.is_eq(live,0)))
+  +passed = Bool.and(Bool.and(balanced,A.balanced(code,m)),W.or(Bool.not(completes(outcome)),U32.is_eq(live,0)))
   +line = String.concat(["audit\t",Bool.pick(String,passed,"passed","failed"),"\t",U32.show(steps),"\t",outcome_name(outcome),"\t",U32.show(live),"\t",U32.show(calls_of(m))])
   W.choose(IO(Unit),passed,u => IO.print(line),u => IO.die(Unit,6,line))
 

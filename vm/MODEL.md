@@ -31,6 +31,7 @@ S=scripts/bend-reference
 $S vm/model-cli.bend -o .local/vm-model/model      # IMAGE FN FUEL [ORDINALS...] | IMAGE FUEL -- [ARGS...]
 $S vm/model-audit.bend -o .local/vm-model/audit    # same arguments; RC audit before every transition, and calls
 $S vm/model-sweep.bend -o .local/vm-model/sweep    # IMAGE FUEL; soundness of every single-word mutation
+$S vm/model-lanes.bend -o .local/vm-model/lanes    # W.or and W.xor against Base's, on the native lane
 .local/vm-model/model -- vm/golden/closure-captures.kimg main 1000000
 $S vm/PROOF.bend                                   # All terms check.
 python3 vm/check-model.py                          # gate vm-model
@@ -100,24 +101,37 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
-  model's differential covers the 91 goldens, their 28 frozen Book invocations,
+  model's differential covers the 93 goldens, their 44 frozen Book invocations,
   vm-spec's admitted plan, code-list and run controls (counted from
-  `check-spec.py`: 6, 7 and 11 at vm-spec 8ef906e), the model's own eight
-  controls in [model-controls/](model-controls/) (a tags-mode Case on Char,
-  immediate and Big, and key-mode Cases on U32 and Char at the key 0xffffffff),
-  two display controls with multibyte constructor names at and beyond the byte
-  bound, and six inspection controls, each against the reference evaluation's
-  outcome and call count (`vm/evaluate.py`) and, for the seed-derived eight,
-  the seed.
-- The seed's native lane can evaluate `Bool.or` or `Bool.xor` as True when
-  both sides are False and one is a U32 comparison against a user-defined call
-  with constant arguments: `Bool.or(U32.is_gt(3,limit()),False{})` with
-  `limit() = 1048576` prints 1 natively and 0 on the Bun lane (so do `four()`
-  and `id(4)`; the builtin `U32.add(4,1)`, `Bool.and`, `Bool.not` and a
-  comparison as a choice's condition behave). The trigger was found by probes,
-  not proved. The describe walk therefore tests each bound in its own choice;
-  a scan finds no other `Bool.or` or `Bool.xor` operand of that shape in the
-  model, and the gate's differential covers the rest.
+  `check-spec.py`: 6, 7 and 23 at vm-spec c7250b2, each run control at the fuel
+  frozen with it), its 13 argument controls, the model's own eight controls in
+  [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
+  Big, and key-mode Cases on U32 and Char at the key 0xffffffff), two display
+  controls with multibyte constructor names at and beyond the byte bound, and
+  six inspection controls, each against the reference evaluation's outcome and
+  call count (`vm/evaluate.py`) and, for the seed-derived eight, the seed.
+- The seed's native lane misreads a U32 comparison against a nullary call or a
+  call with constant arguments when it is an operand of Base's `Bool.or` or
+  `Bool.xor`: the comparison reads as True whatever its value. Either operand
+  triggers it, the comparison's other side may be a runtime word, and
+  `Bool.xor` fails even when its other operand is True
+  (`Bool.xor(U32.is_gt(3,limit()),True{})` is 1 on the Bun lane and 0
+  natively, with `limit() = 1048576`). A helper whose arguments become constant
+  at a call site triggers it through specialization: review round 2 found
+  `Bool.or(W.is_none(0),False{})` read as True. The emitted C shows why: the
+  comparison is held as a raw word, `Term _u_N = U32_BIN(3ull, >, 1048576ull)`,
+  and then tested as a constructor, `term_aux(_u_N) == CID_FALSE`
+  (`comp.ts` `val_unbox`). `Bool.and`, `Bool.not`, `Bool.pick` and a choice's
+  condition read the same comparisons correctly in every probed shape. These are
+  probe results, not a proof of the seed's rule, so the protection is
+  structural: the natively built model spells disjunction and exclusive or as
+  choices (`W.or`, `W.xor`), the gate refuses Base's `Bool.or` and `Bool.xor`
+  anywhere in it (the mutants `or-through-base` and `xor-through-base` die
+  there), and [model-lanes.bend](model-lanes.bend) prints W's connectives on
+  those shapes as the comparisons' values on both lanes while the native lane
+  still misreads Base's. The probe does not kill those two mutants: there the
+  comparison reaches Base's connective only through W's parameter, which the
+  native lane reads correctly.
 - A Case arm that is absent or not a Branch or Default cannot be selected in
   an admitted image; if it were, the machine stops as `InternalFailure vm case
   arm` rather than reading a wrapped offset.

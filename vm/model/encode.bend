@@ -276,5 +276,5 @@ def admit(+words: List<&2,U32>) -> Result<W.Stop,W.Plan>:
 def load(+bytes: List<&2,U32>) -> Result<W.Stop,W.Plan>:
   +size = W.count(U32,bytes)
   W.choose(Result<W.Stop,W.Plan>,U32.is_gt(size,image_limit()),u => Fail{W.Exhausted{2,"image-size"}},u =>
-  W.choose(Result<W.Stop,W.Plan>,Bool.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),u => Fail{W.Refused{"image","length"}},u =>
+  W.choose(Result<W.Stop,W.Plan>,W.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),u => Fail{W.Refused{"image","length"}},u =>
     admit(W.pack(bytes))))
