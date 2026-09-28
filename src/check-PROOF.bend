@@ -20,3 +20,5 @@ def L.dotted_binder_rebinds_only_a_bound_name(at):
   {==}
 def L.annotation_reads_the_scope(at,here,ctors):
   {==}
+def L.term_names_a_binder_or_a_declaration(at,params):
+  {==}

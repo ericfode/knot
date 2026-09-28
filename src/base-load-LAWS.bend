@@ -116,3 +116,23 @@ law foreign_slice_is_unsupported:
   for depth: Nat
   {B.parse(depth,B.Decl{"f",["f"],"def f() -> Unit:\n  import \"./f.c\"\n",False{}}) ==
     Fail{S.Unsupported{"check","foreign-definition",S.At{0,0,0,0}}} : Result<S.Error,S.Node>}
+
+# User value mentions: not a scrutinee, a call head, a type or a binder.
+law mentions_are_free_values:
+  for +at: S.At
+  {B.mentions(32n,S.Function{S.Token{"f",at},[S.Parameter{S.Token{"x",at},1,S.Token{"Bool",at}}],S.Token{"Bool",at},
+      S.Match{S.Token{"match",at},S.Variable{S.Token{"Bool",at}},[S.Arm{S.Token{"case",at},
+        S.Constructor{S.Token{"Box",at},[S.Variable{S.Token{"y",at}}]},
+        S.Binding{S.Token{"h",at},0,Some{S.Token{"Bool",at}},S.Variable{S.Token{"Bool.not",at}},
+          S.Call{S.Token{"g",at},[S.Variable{S.Token{"x",at}},S.Variable{S.Token{"y",at}},S.Variable{S.Token{"h",at}}]}}}]}},Nil{}) ==
+    Done{[S.Token{"Bool.not",at}]} : Result<S.Error,List<&2,S.Token>>}
+
+# A value mention of a Base type or function is Unsupported and selects nothing;
+# a constructor name is not a declaration there.
+law base_values_are_unsupported:
+  for +at: S.At
+  {(B.undeclared([S.Token{"Bool",at}],[B.Decl{"Bool",["Bool","False","True"],"type Bool is Data:\n",False{}}]),
+    B.undeclared([S.Token{"Bool.not",at}],[B.Decl{"Bool.not",["Bool.not"],"def Bool.not(b: Bool) -> Bool:\n",False{}}]),
+    B.undeclared([S.Token{"True",at}],[B.Decl{"Bool",["Bool","False","True"],"type Bool is Data:\n",False{}}]))
+   == (Fail{S.Unsupported{"check","type-as-term",at}},Fail{S.Unsupported{"check","function-reference",at}},Done{Unit{}})
+   : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}

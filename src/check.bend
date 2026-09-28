@@ -169,7 +169,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} _ _:
-      S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
+      S.bind(C.Binding,C.Checked,E.term(scope,catalog,token),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>

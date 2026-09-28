@@ -784,6 +784,32 @@ MUTANTS += [
      'new': 'E.binder(bindings,token)',
      'witness': 'dotted-erased-let',
      'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tdotted-binder\t'}},
+    {'name': 'type-positions-scope-blind', 'file': 'catalog.bend',
+     'old': 'S.choose(Result<S.Error,Unit>,shadowed,u => C.invalid(Unit,"binder-as-type",name),u => Done{Unit{}})',
+     'new': 'Done{Unit{}}',
+     'witness': 'typebind-result', 'plain': True, 'actual': {'exit': 0}},
+    {'name': 'qualified-parameter-types-global', 'file': 'qualify.bend',
+     'old': 'S.bind(S.Token,Qualified,local(typ,names,bound),t =>',
+     'new': 'S.bind(S.Token,Qualified,reference(typ,names),t =>',
+     'witness': 'typebind-dotted', 'actual': {'exit': 0}},
+    {'name': 'declared-fields-leak', 'file': 'qualify.bend',
+     'old': 'Bool.pick(List<&2,String>,is_pattern(position),binders,Nil{})', 'new': 'binders',
+     'witness': 'typebind-module-constructor',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tunknown-type\t'}},
+    {'name': 'annotation-scope-blind', 'file': 'check.bend',
+     'old': 'G.scoped_type(E.bound(bindings,name),types,name)', 'new': 'G.scoped_type(False{},types,name)',
+     'witness': 'typebind-arm', 'plain': True, 'actual': {'exit': 0}},
+    {'name': 'declared-globals-free', 'file': 'catalog.bend',
+     'old': '''S.choose(Result<S.Error,A>,found(TypeRef,find_type(types,name,0)),u => C.unsupported(A,"type-as-term",name),u =>
+      S.choose(Result<S.Error,A>,found(FunctionRef,find_function(sigs,name,0)),u => C.unsupported(A,"function-reference",name),u =>
+        C.invalid(A,"free-name",name)))''',
+     'new': 'C.invalid(A,"free-name",name)',
+     'witness': 'global-function', 'plain': True,
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tfree-name\t'}},
+    {'name': 'base-values-selected', 'file': 'base-load.bend',
+     'old': 'S.bind(Unit,Slice,undeclared(names,book),u =>', 'new': 'S.bind(Unit,Slice,Done{Unit{}},u =>',
+     'witness': 'global-base-foreign',
+     'actual': {'exit': 3, 'diagnostic_prefix': 'Unsupported\tcheck\tforeign-definition\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -803,7 +829,9 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'binding-type-continuation-invalid', 'own-terms-unregistered',
                     'own-constructors-unregistered', 'rooted-local-invalid', 'rooted-hash-invalid',
                     'dotted-let-binder-unresolved', 'dotted-field-binder-unresolved',
-                    'dotted-binder-scope-blind', 'erased-let-resolved'}
+                    'dotted-binder-scope-blind', 'erased-let-resolved', 'type-positions-scope-blind',
+                    'qualified-parameter-types-global', 'declared-fields-leak', 'annotation-scope-blind',
+                    'declared-globals-free', 'base-values-selected'}
 
 
 def mutants(fixtures):
@@ -871,12 +899,12 @@ def main():
              HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json',
              HERE / 'review-round2.json', HERE / 'review-round3.json', HERE / 'review-round4.json',
-             HERE / 'review-round5.json', HERE / 'review-round6.json',
+             HERE / 'review-round5.json', HERE / 'review-round6.json', HERE / 'review-round7.json',
              *sorted((ROOT / 'src/host').glob('*')),
              ROOT / 'tests/compiler-io-abi-2/expectations.json',
              *sorted((ROOT / 'tests/compiler-io-abi-2/reference').glob('*'))]
     paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes', 'review-round2', 'review-round3',
-                               'review-round4', 'review-round5', 'review-round6')
+                               'review-round4', 'review-round5', 'review-round6', 'review-round7')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'seed': manifest['seed'],
@@ -890,7 +918,8 @@ def main():
         round4, record['round4_reference'] = review_reference(manifest, 'review-round4')
         round5, record['round5_reference'] = review_reference(manifest, 'review-round5')
         round6, record['round6_reference'] = review_reference(manifest, 'review-round6')
-        review += round3 + round4 + round5 + round6
+        round7, record['round7_reference'] = review_reference(manifest, 'review-round7')
+        review += round3 + round4 + round5 + round6 + round7
         record['adapters'] = adapter_pins()
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3')}

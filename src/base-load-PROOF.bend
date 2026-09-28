@@ -24,3 +24,5 @@ def L.pinned_syntax_cannot_be_invalid(phase,code,at): {==}
 def L.unsafe_slice_is_unsupported(depth,name,names,source): {==}
 def L.empty_base_type_is_unsupported(at,tree): {==}
 def L.foreign_slice_is_unsupported(depth): {==}
+def L.mentions_are_free_values(at): {==}
+def L.base_values_are_unsupported(at): {==}

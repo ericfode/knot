@@ -234,6 +234,40 @@ def references(depth: Nat, node: S.Node, +scope: List<&2,String>) -> Result<S.Er
         S.bind(List<&2,Use>,List<&2,Use>,references(n,S.Sequence{tail},scope),rest =>
           Done{List.append(&2,Use,first,rest)}))
 
+# The names a user definition reads as values. A match scrutinee must be a
+# binder, so it is not one; binders scope as in references.
+def mentions(depth: Nat, node: S.Node, +scope: List<&2,String>) -> Result<S.Error,List<&2,S.Token>>:
+  match depth node:
+    case 0n _: Fail{S.Exhausted{"base-references",S.At{0,0,0,0}}}
+    case 1n+n S.Variable{+token}: Done{S.choose(List<&2,S.Token>,member(scope,S.text(token)),u => Nil{},u => [token])}
+    case 1n+ +n S.Constructor{token,args}: mentions(n,S.Sequence{args},scope)
+    case 1n+ +n S.Call{token,args}: mentions(n,S.Sequence{args},scope)
+    case 1n+ +n S.Binding{+token,q,typ,value,+body}:
+      S.bind(List<&2,S.Token>,List<&2,S.Token>,mentions(n,value,scope),before =>
+        S.bind(List<&2,S.Token>,List<&2,S.Token>,mentions(n,body,Con{S.text(token),scope}),after =>
+          Done{List.append(&2,S.Token,before,after)}))
+    case 1n+ +n S.Match{token,value,arms}: mentions(n,S.Sequence{arms},scope)
+    case 1n+ +n S.Arm{token,pattern,body}: mentions(n,body,pattern_scope(pattern,scope))
+    case 1n+ +n S.Function{token,params,result,body}: mentions(n,body,List.append(&2,String,parameters(params),scope))
+    case 1n+ +n S.Sequence{Con{head,+tail}}:
+      S.bind(List<&2,S.Token>,List<&2,S.Token>,mentions(n,head,scope),first =>
+        S.bind(List<&2,S.Token>,List<&2,S.Token>,mentions(n,S.Sequence{tail},scope),rest =>
+          Done{List.append(&2,S.Token,first,rest)}))
+    case _ _: Done{Nil{}}
+
+# Knot has no type or function value yet, as the checker reports for a user one.
+def value(declaration: Maybe<&2,Decl>, +name: S.Token, next: Unit -> Result<S.Error,Unit>) -> Result<S.Error,Unit>:
+  match declaration:
+    case None{}: next(Unit{})
+    case Some{Decl{primary,values,source,unsafe}}:
+      Fail{S.Unsupported{"check",Bool.pick(String,String.starts_with(source,"type "),"type-as-term","function-reference"),S.at(name)}}
+
+# A value mention of a Base declaration is Unsupported, so it selects nothing.
+def undeclared(names: List<&2,S.Token>, +book: List<&2,Decl>) -> Result<S.Error,Unit>:
+  match names:
+    case Nil{}: Done{Unit{}}
+    case Con{+name,tail}: value(lookup(book,S.text(name)),name,u => undeclared(tail,book))
+
 def base_error(error: S.Error) -> S.Error:
   match error:
     case S.Invalid{phase,code,at}: S.Unsupported{"load",String.append("base-",code),at}
@@ -335,5 +369,7 @@ def visit(depth: Nat, +parser: Nat, pending: List<&2,String>, +book: List<&2,Dec
           todo => visited => selected_items => visit(n,parser,todo,book,visited,selected_items)))
 
 def slice(+depth: Nat, +book: List<&2,Decl>, +roots: S.Node) -> Result<S.Error,Slice>:
+  S.bind(List<&2,S.Token>,Slice,mentions(depth,roots,Nil{}),names =>
+  S.bind(Unit,Slice,undeclared(names,book),u =>
   S.bind(List<&2,Use>,Slice,references(depth,roots,Nil{}),refs =>
-    visit(depth,depth,dependencies(refs,book,Nil{}),book,Nil{},Nil{}))
+    visit(depth,depth,dependencies(refs,book,Nil{}),book,Nil{},Nil{}))))

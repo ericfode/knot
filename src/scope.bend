@@ -1,6 +1,7 @@
 import Base
 import ./syntax.bend as S
 import ./core.bend as C
+import ./catalog.bend as G
 
 type Scope is Data:
   Scope{bindings: List<&2,C.Binding>, next_level: U32, open: List<&2,U32>, live: Bool, smaller: List<&2,U32>}
@@ -62,6 +63,12 @@ def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
 def binder(bindings: List<&2,C.Binding>, +token: S.Token) -> Result<S.Error,Unit>:
   S.choose(Result<S.Error,Unit>,Bool.or(Bool.not(String.contains(S.text(token),".")),bound(bindings,token)),u =>
     Done{Unit{}},u => C.invalid(Unit,"dotted-binder",token))
+
+# A term name resolves lexically first; an unbound one names a declaration.
+def term(scope: Scope, +catalog: C.Catalog, +name: S.Token) -> Result<S.Error,C.Binding>:
+  match scope:
+    case Scope{+bindings,level,from,live,smaller}:
+      S.choose(Result<S.Error,C.Binding>,bound(bindings,name),u => find(bindings,name),u => G.unbound(C.Binding,catalog,name))
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:

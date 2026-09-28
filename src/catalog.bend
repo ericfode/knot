@@ -49,6 +49,20 @@ def find_function(sigs: List<&2,C.Signature>, +name: S.Token, +index: U32) -> Re
           S.choose(Result<S.Error,FunctionRef>,String.eq(S.text(token),S.text(name)),u =>
             Done{FunctionRef{index,head}},u => find_function(tail,name,U32.add(index,1)))
 
+def found(-A: Data, result: Result<S.Error,A>) -> Bool:
+  match result:
+    case Done{value}: True{}
+    case Fail{error}: False{}
+
+# No Knot term names a declaration. The seed reads a type or a function as a
+# value, which Knot cannot represent yet; a constructor needs its braces.
+def unbound(-A: Type, catalog: C.Catalog, +name: S.Token) -> Result<S.Error,A>:
+  match catalog:
+    case C.Catalog{+types,+sigs}:
+      S.choose(Result<S.Error,A>,found(TypeRef,find_type(types,name,0)),u => C.unsupported(A,"type-as-term",name),u =>
+      S.choose(Result<S.Error,A>,found(FunctionRef,find_function(sigs,name,0)),u => C.unsupported(A,"function-reference",name),u =>
+        C.invalid(A,"free-name",name)))
+
 def constructor_tag(tokens: List<&2,C.Constructor>, +name: S.Token, +index: U32) -> Maybe<&2,U32>:
   match tokens:
     case Nil{}: None{}

@@ -70,3 +70,24 @@ law annotation_reads_the_scope:
       Some{S.Token{"Light",here}}))
    == (Done{Some{0}},Fail{S.Invalid{"check","binder-as-type",here}})
    : Result<S.Error,Maybe<&2,U32>> & Result<S.Error,Maybe<&2,U32>>}
+
+# A term name resolves lexically first. Unbound, a type or function is a value
+# Knot cannot represent yet; a constructor without braces is not a term.
+law term_names_a_binder_or_a_declaration:
+  for +at: S.At
+  for +params: List<&2,C.Parameter>
+  {(E.term(E.Scope{[C.Binding{S.Token{"flip",at},0,1,0,True{},None{}}],1,Nil{},True{},Nil{}},
+      C.Catalog{[C.Datatype{S.Token{"Light",at},False{},[C.Constructor{S.Token{"Lit",at},Nil{}}]}],[C.Signature{S.Token{"flip",at},params,0}]},
+      S.Token{"flip",at}),
+    E.term(E.Scope{Nil{},0,Nil{},True{},Nil{}},
+      C.Catalog{[C.Datatype{S.Token{"Light",at},False{},[C.Constructor{S.Token{"Lit",at},Nil{}}]}],[C.Signature{S.Token{"flip",at},params,0}]},
+      S.Token{"Light",at}),
+    E.term(E.Scope{Nil{},0,Nil{},True{},Nil{}},
+      C.Catalog{[C.Datatype{S.Token{"Light",at},False{},[C.Constructor{S.Token{"Lit",at},Nil{}}]}],[C.Signature{S.Token{"flip",at},params,0}]},
+      S.Token{"flip",at}),
+    E.term(E.Scope{Nil{},0,Nil{},True{},Nil{}},
+      C.Catalog{[C.Datatype{S.Token{"Light",at},False{},[C.Constructor{S.Token{"Lit",at},Nil{}}]}],[C.Signature{S.Token{"flip",at},params,0}]},
+      S.Token{"Lit",at}))
+   == (Done{C.Binding{S.Token{"flip",at},0,1,0,True{},None{}}},Fail{S.Unsupported{"check","type-as-term",at}},
+       Fail{S.Unsupported{"check","function-reference",at}},Fail{S.Invalid{"check","free-name",at}})
+   : Result<S.Error,C.Binding> & Result<S.Error,C.Binding> & Result<S.Error,C.Binding> & Result<S.Error,C.Binding>}
