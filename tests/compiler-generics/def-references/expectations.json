@@ -1,0 +1,508 @@
+{
+  "suite": "compiler-generics/def-references",
+  "increment": "6: generics and quantity arguments (S2), review round 2",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "def-reference-live",
+      "file": "fixtures/def-reference-live.bend",
+      "class": "boundary",
+      "feature": "definition-reference",
+      "intent": "A bare zero-arity definition as the live body of main, in a book with a generic family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name."
+      }
+    },
+    {
+      "name": "def-reference-erased",
+      "file": "fixtures/def-reference-erased.bend",
+      "class": "boundary",
+      "feature": "definition-reference",
+      "intent": "A bare zero-arity definition as an erased argument, in a book with a generic family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name."
+      }
+    },
+    {
+      "name": "def-reference-forward-erased",
+      "file": "fixtures/def-reference-forward-erased.bend",
+      "class": "boundary",
+      "feature": "definition-reference",
+      "intent": "A forward bare reference to main inside an erased call argument, in a book with a generic family.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name."
+      }
+    },
+    {
+      "name": "def-reference-monomorphic",
+      "file": "fixtures/def-reference-monomorphic.bend",
+      "class": "boundary",
+      "feature": "definition-reference",
+      "intent": "A bare zero-arity definition as the live body of main, without generic syntax.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name."
+      }
+    },
+    {
+      "name": "def-reference-erased-monomorphic",
+      "file": "fixtures/def-reference-erased-monomorphic.bend",
+      "class": "boundary",
+      "feature": "definition-reference",
+      "intent": "A bare zero-arity definition as an erased argument, without generic syntax.",
+      "twin": null,
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name."
+      }
+    },
+    {
+      "name": "function-value-mismatch",
+      "file": "fixtures/function-value-mismatch.bend",
+      "class": "negative",
+      "feature": "definition-reference",
+      "intent": "A bare one-parameter definition where its result type is expected; the seed rejects the function value.",
+      "twin": "def-reference-live",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : Flag\n",
+        "- observed : @x:Flag -> Flag\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "knot_expected": true,
+        "justification": "The seed rejects the function value against Flag. Knot does not type definition references, so it reports the reference Unsupported: never accepted, a precision loss against the seed's type mismatch."
+      }
+    },
+    {
+      "name": "free-name-control",
+      "file": "fixtures/free-name-control.bend",
+      "class": "negative",
+      "feature": "definition-reference",
+      "intent": "An undefined name in a book with a generic family stays a free name.",
+      "twin": "def-reference-live",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : a defined name\n",
+        "- observed : missing\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tfree-name\t",
+        "knot_expected": true,
+        "justification": "The name resolves to no binding, datatype or definition, and the seed rejects it: Invalid check free-name, unchanged by the definition-reference rule."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "def-reference-live",
+        "source_sha256": "a88cb9777081f633a9dd6f39585e19a5d1e4ce281695529805351dfd2c46ad43",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "def-reference-erased",
+        "source_sha256": "0cad3f3ed25688062c6440a58152a63ca7ec59a8be49e04cc99e889508a37613",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "def-reference-forward-erased",
+        "source_sha256": "3214261bb12016e009b444128a53dd26654d2306ca05358e28f1c29bd0dcbb55",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "def-reference-monomorphic",
+        "source_sha256": "fd0862a01e779b8e77dcca14240adc9023a0cc570417b22eda21244c7dfdea9d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "def-reference-erased-monomorphic",
+        "source_sha256": "45097bd949c10e98b278091e0f3819e89123ca2adf24a04da50229f80a90fbfa",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "function-value-mismatch",
+        "source_sha256": "6a5f4a0239bd7be0d4c7634be5d36f4b6a0f6a1d8e34d37b1b977893ca5dc3cc",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n 8 | def main() -> Flag:\n 9>|   id\n   |   ^^\n10 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n 8 | def main() -> Flag:\n 9>|   id\n   |   ^^\n10 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "free-name-control",
+        "source_sha256": "82a6b7f49b430a51cb0049b16dd010d9521c6ecef642d614c635ec32ddbe12a7",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n 8 | def main() -> Flag:\n 9>|   missing\n   |   ^^^^^^^\n10 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/def-references/fixtures/free-name-control.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n 8 | def main() -> Flag:\n 9>|   missing\n   |   ^^^^^^^\n10 | \n"
+        },
+        "calls": []
+      }
+    ]
+  }
+}
