@@ -5,7 +5,7 @@
   "status": "passed",
   "seed": {
     "reproduced": true,
-    "summary": "62 cases (33 seed-valid, 29 seed-rejected), 187 calls and 7 io runs on 2 lanes, 0 reviewed lane disagreements"
+    "summary": "65 cases (34 seed-valid, 31 seed-rejected), 194 calls and 7 io runs on 2 lanes, 0 reviewed lane disagreements"
   },
   "knot": {
     "lane": "native",
@@ -685,6 +685,129 @@
           "exit": 2,
           "stdout": "",
           "stderr": "Invalid\tparse\texpected-term\t406:407:20:9\n"
+        }
+      }
+    },
+    {
+      "case": "layout-comments-swallowed",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01",
+        "SF-03"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Invalid\tparse\texpected-term\t399:400:20:9 != Invalid\tparse\targument-separator",
+        "eval: Invalid\tparse\texpected-term\t399:400:20:9 != Invalid\tparse\targument-separator"
+      ],
+      "outcomes": [
+        "Invalid"
+      ],
+      "first_blocker": "Invalid\tparse\texpected-term\t399:400:20:9",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t399:400:20:9\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\texpected-term\t399:400:20:9\n"
+        }
+      }
+    },
+    {
+      "case": "layout-lambda-statements",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "agree",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tparameter-type\t662:663:28:31"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tparameter-type\t662:663:28:31",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t662:663:28:31\n"
+        }
+      }
+    },
+    {
+      "case": "layout-lambda-statements-reuse",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "require": "reject",
+      "status": "blocked",
+      "blocked_by": [
+        "layout",
+        "closures"
+      ],
+      "meets_requirement": false,
+      "problems": [
+        "check: Unsupported\tparse\tparameter-type\t477:478:25:31 != Invalid\tcheck\taffine-reuse",
+        "eval: Unsupported\tparse\tparameter-type\t477:478:25:31 != Invalid\tcheck\taffine-reuse"
+      ],
+      "outcomes": [
+        "Unsupported"
+      ],
+      "first_blocker": "Unsupported\tparse\tparameter-type\t477:478:25:31",
+      "d4_gap": false,
+      "knot": {
+        "check": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/check",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t477:478:25:31\n"
+        },
+        "eval": {
+          "argv": [
+            "./.local/compiler-selfhost/knot/eval",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend",
+            "main",
+            "65536"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "Unsupported\tparse\tparameter-type\t477:478:25:31\n"
         }
       }
     },
@@ -2643,7 +2766,7 @@
     "status": {
       "pass": 2,
       "fail": 0,
-      "blocked": 60
+      "blocked": 63
     },
     "by_owner": {
       "core-io": {
@@ -2679,7 +2802,7 @@
       "selfsource": {
         "pass": 0,
         "fail": 0,
-        "blocked": 15
+        "blocked": 18
       },
       "sugar": {
         "pass": 0,
@@ -2875,8 +2998,8 @@
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
     "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
-    "tests/compiler-selfhost/check.py": "68248aa8e80a7d1780a0e5551fa72eedf7f97d4d25a197a023cddbf84831f136",
-    "tests/compiler-selfhost/regen.py": "0790205b560fbfab2febd9c863a062af762dfd9846d10f55ed34e6d95a71043f",
-    "tests/compiler-selfhost/expectations.json": "d28913f98db2d304de1b0b5d281a40987758cf979ac682b118d454fc2e9bd5c4"
+    "tests/compiler-selfhost/check.py": "8cde7afc0bfc6554d5f032c3f6afa73255d3b45efd3da77ef01eb9579391fc19",
+    "tests/compiler-selfhost/regen.py": "47e08b0c31aaca41d15d7601ed54953aca2c48573c7c3e15435599fb70f66a93",
+    "tests/compiler-selfhost/expectations.json": "e5dbfd7f701c603c5e4fe0bb658b62233ba7969756226e3c74312cbce1fb1e7b"
   }
 }

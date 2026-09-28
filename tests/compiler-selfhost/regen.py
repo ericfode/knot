@@ -87,6 +87,19 @@ def execute(argv, cwd=ROOT):
     return out
 
 
+HOST_TOOLCHAIN = 'bend needs clang'
+
+
+def build(argv):
+    """A native build. The seed's clang probe can fail to spawn under host load;
+    that is a host failure, never an observation: retry it, then abort."""
+    for _ in range(3):
+        built = execute(argv)
+        if not (built['exit'] != 0 and HOST_TOOLCHAIN in built['stderr'] and 'found no clang' in built['stderr']):
+            return built
+    raise Mismatch(('host failure: the seed found no clang three times', built))
+
+
 # ---------------------------------------------------------------- scale bundle
 
 def scale_bundle() -> dict[str, str]:
@@ -197,9 +210,9 @@ def lanes_for_call(case, entry, args, result, build_dir):
     (ROOT / wrapper).write_text(text)
     binary = f'{build_dir}/{name}--{label}'
     interpreter = execute(['bun', SEED, wrapper])
-    build = execute(['bun', SEED, wrapper, '-o', binary])
-    native = execute([f'./{binary}']) if build['exit'] == 0 else None
-    return wrapper, interpreter, build, native
+    built = build(['bun', SEED, wrapper, '-o', binary])
+    native = execute([f'./{binary}']) if built['exit'] == 0 else None
+    return wrapper, interpreter, built, native
 
 
 def constructor(stdout: str, pre: str, constructors) -> str | None:
@@ -225,7 +238,7 @@ def observe_value(case, types):
             jobs.append((entry, args, result))
     with ThreadPoolExecutor(JOBS) as pool:
         raw = list(pool.map(lambda j: lanes_for_call(case, j[0], j[1], j[2], build_dir), jobs))
-    for (entry, args, result), (wrapper, interpreter, build, native) in zip(jobs, raw):
+    for (entry, args, result), (wrapper, interpreter, built, native) in zip(jobs, raw):
         pre = prefix(case['files'][0], wrapper)
         seen = {'interpreter': constructor(interpreter['stdout'], pre, types[result])
                 if interpreter['exit'] == 0 and interpreter['stderr'] == '' else None,
@@ -235,7 +248,7 @@ def observe_value(case, types):
                 'ordinals': [types[p].index(a) for p, a in zip(entry['params'], args)],
                 'wrapper': wrapper,
                 'interpreter': outcome(interpreter),
-                'native': {'build': outcome(build), 'run': outcome(native)}}
+                'native': {'build': outcome(built), 'run': outcome(native)}}
         if seen['interpreter'] is not None and seen['interpreter'] == seen['native']:
             call['lanes'] = 'agree'
             ctor = seen['interpreter']
@@ -243,7 +256,7 @@ def observe_value(case, types):
             call['lanes'] = 'disagree'
             decision = lane_decision(case['name'], entry['name'], args)
             require(decision is not None, (case['name'], entry['name'], args,
-                                           'unreviewed lane disagreement (DEC-7)', interpreter, build, native))
+                                           'unreviewed lane disagreement (DEC-7)', interpreter, built, native))
             ctor = seen.get(decision['oracle'])
             call['decision'] = decision['id']
         call['result'] = None if ctor is None else {
@@ -302,10 +315,10 @@ def observe_io(case):
     entry = case['files'][0]
     binary = f'{WORK}/bin/{case["name"]}'
     (ROOT / binary).parent.mkdir(parents=True, exist_ok=True)
-    build = execute(['bun', SEED, entry, '-o', binary])
+    built = build(['bun', SEED, entry, '-o', binary])
     runs = []
     for spec in case['runs']:
-        record = {'name': spec['name'], 'argv': spec['argv'], 'native_build': strip(build)}
+        record = {'name': spec['name'], 'argv': spec['argv'], 'native_build': strip(built)}
         for lane in ('interpreter', 'native'):
             box = sandbox(f'{WORK}/runs/{case["name"]}/{spec["name"]}/{lane}')
             for dest, source in spec.get('inputs', {}).items():
@@ -316,7 +329,7 @@ def observe_io(case):
             if lane == 'interpreter':
                 argv = ['bun', f'{up}/{SEED}', f'{up}/{entry}', '--', *spec['argv']]
             else:
-                require(build['exit'] == 0, (case['name'], 'native build failed', build))
+                require(built['exit'] == 0, (case['name'], 'native build failed', built))
                 argv = [f'{up}/{binary}', *spec['argv']]
             done = execute(argv, cwd=box)
             record[lane] = {**strip(done), 'files': snapshot(box, spec.get('inputs', {}))}
@@ -346,7 +359,7 @@ def observe_rejection(case):
     binary = f'{WORK}/bin/{case["name"]}'
     (ROOT / binary).parent.mkdir(parents=True, exist_ok=True)
     direct = execute(['bun', SEED, entry])
-    native = execute(['bun', SEED, wrapper, '-o', binary])
+    native = build(['bun', SEED, wrapper, '-o', binary])
     require(direct['exit'] == 1 and direct['stdout'] == '' and direct['stderr'].startswith('Error:\n'),
             (case['name'], 'the interpreter must reject', direct))
     require(native['exit'] != 0 and not (ROOT / binary).exists(),

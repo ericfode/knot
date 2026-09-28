@@ -211,7 +211,10 @@ def judge(document, receipt) -> list[str]:
 # ------------------------------------------------------------------ Knot lanes
 
 def build(entry, out, record):
-    built = run(['bun', SEED, entry, '-o', out], SECONDS['build'])
+    for _ in range(3):  # the seed's clang probe can fail to spawn under host load
+        built = run(['bun', SEED, entry, '-o', out], SECONDS['build'])
+        if not (built['exit'] != 0 and regen.HOST_TOOLCHAIN in built['stderr']):
+            break
     require(built['exit'] == 0, ('seed build failed', built))
     record.append({'entry': entry, 'output': out, 'exit': built['exit'], 'stdout': built['stdout'],
                    'stderr': built['stderr'], 'sha256': digest((ROOT / out).read_bytes())})

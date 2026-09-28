@@ -677,7 +677,7 @@
         "fields"
       ],
       "shape": "A dedented `name)` line closing a call whose earlier argument spans lines, and a bare dedented `)`.",
-      "site": "src/driver.bend:33-37",
+      "site": "src/driver.bend:33-37 without its lambdas (see layout-lambda-statements)",
       "files": [
         "tests/compiler-selfhost/fixtures/layout-dedent-close/main.bend"
       ],
@@ -822,7 +822,140 @@
         "require": "agree",
         "justification": "Seed-accepted; Knot checks the book and every observed call agrees with both seed lanes.",
         "budget": 65536
-      }
+      },
+      "twin": "layout-comments-swallowed"
+    },
+    {
+      "name": "layout-comments-swallowed",
+      "kind": "value",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01",
+        "SF-03"
+      ],
+      "needs": [
+        "layout",
+        "fields"
+      ],
+      "shape": "A trailing comment swallows the closing brace, so the next declaration meets an open argument list.",
+      "files": [
+        "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend"
+      ],
+      "twin_of": "layout-comments",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\targument-separator\t",
+        "justification": "The seed expects another term at the next `def`. After a complete argument the parser needs the closing delimiter or a comma: existing code argument-separator. The position is not pinned: skipping the comment and blank lines before reporting is the implementer's choice."
+      },
+      "seed_reason": [
+        "- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\n"
+      ]
+    },
+    {
+      "name": "layout-lambda-statements",
+      "kind": "value",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "needs": [
+        "layout",
+        "fields",
+        "closures"
+      ],
+      "shape": "Lambda bodies continued on new lines inside open argument lists: the driver pipeline closed by a dedented `name)`, and a lambda body of let statements then a term, one per line.",
+      "site": "src/driver.bend:33-37; campaign/closures src/parse.bend LambdaStatements",
+      "files": [
+        "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend"
+      ],
+      "entries": [
+        {
+          "name": "meet",
+          "params": [
+            "Answer",
+            "Answer"
+          ],
+          "result": "Answer",
+          "calls": [
+            [
+              "Yes",
+              "Yes"
+            ],
+            [
+              "Yes",
+              "No"
+            ],
+            [
+              "No",
+              "Yes"
+            ]
+          ]
+        },
+        {
+          "name": "staged",
+          "params": [
+            "Answer",
+            "Answer"
+          ],
+          "result": "Answer",
+          "calls": [
+            [
+              "Yes",
+              "Yes"
+            ],
+            [
+              "Yes",
+              "No"
+            ],
+            [
+              "No",
+              "Yes"
+            ]
+          ]
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Answer",
+          "calls": [
+            []
+          ]
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Seed-accepted; Knot checks the book and every observed call agrees with both seed lanes.",
+        "budget": 65536
+      },
+      "twin": "layout-lambda-statements-reuse"
+    },
+    {
+      "name": "layout-lambda-statements-reuse",
+      "kind": "value",
+      "owner": "selfsource",
+      "requirements": [
+        "SF-01"
+      ],
+      "needs": [
+        "layout",
+        "fields",
+        "closures"
+      ],
+      "shape": "A non-reusable let in a lambda body inside an argument list is used twice.",
+      "files": [
+        "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend"
+      ],
+      "twin_of": "layout-lambda-statements",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+        "justification": "The seed rejects a second use of a non-reusable binder: existing code affine-reuse."
+      },
+      "seed_reason": [
+        "- expected : m\n- observed : m (consumed more than once)\n"
+      ]
     },
     {
       "name": "layout-choose-ladder",
@@ -5343,6 +5476,372 @@
             }
           }
         ]
+      },
+      {
+        "case": "layout-comments-swallowed",
+        "sources": {
+          "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend": "605532e690b0d29138fae3cfb51c115e05ae89295a02b8f48f26517074668e4b"
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n26 | \n27>| def meet(p: Couple) -> Answer:\n   | ^^^\n28 |   match p:\n"
+        },
+        "rejection": {
+          "interpreter": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-selfhost/fixtures/layout-comments-swallowed/main.bend"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n26 | \n27>| def meet(p: Couple) -> Answer:\n   | ^^^\n28 |   match p:\n"
+          },
+          "at": "27:0",
+          "native": {
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-comments-swallowed/main.bend",
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-selfhost/seed/wrappers/layout-comments-swallowed/main.bend",
+                "-o",
+                ".local/compiler-selfhost/seed/bin/layout-comments-swallowed"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term (the keyword 'def' cannot head one)\n- observed : 'def'\nLocation:\n26 | \n27>| def meet(p: Couple) -> Answer:\n   | ^^^\n28 |   match p:\n"
+            },
+            "same_report": true
+          }
+        }
+      },
+      {
+        "case": "layout-lambda-statements",
+        "sources": {
+          "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend": "03f6ca08e9ac7a93acb91f71383ca7bc7ee5eac56cb6db0138b359bc192f4848"
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Yes{}\n",
+          "stderr": ""
+        },
+        "enums": {
+          "Answer": [
+            "No",
+            "Yes"
+          ]
+        },
+        "calls": [
+          {
+            "entry": "meet",
+            "arguments": [
+              "Yes",
+              "Yes"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/meet--Yes-Yes.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "Yes",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "meet",
+            "arguments": [
+              "Yes",
+              "No"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/meet--Yes-No.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "No",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "meet",
+            "arguments": [
+              "No",
+              "Yes"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/meet--No-Yes.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "No",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Yes",
+              "Yes"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/staged--Yes-Yes.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "Yes",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Yes",
+              "No"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/staged--Yes-No.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "No",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "No",
+              "Yes"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/staged--No-Yes.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.No{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "No",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements/main.bend",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "build": {
+                "exit": 0,
+                "stdout": "",
+                "stderr": ""
+              },
+              "run": {
+                "exit": 0,
+                "stdout": "../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements/main.Yes{}\n",
+                "stderr": ""
+              }
+            },
+            "lanes": "agree",
+            "result": {
+              "type": "Answer",
+              "constructor": "Yes",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "layout-lambda-statements-reuse",
+        "sources": {
+          "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend": "96b0e07e64c2876a02bf2718daa1bfcbfc20275f2ffd37c499e1ffe6faac3c64"
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : m\n- observed : m (consumed more than once)\nContext:\n- a : Answer\n- b : Answer\n- x : Answer\nLocation: staged\n43 |   finish(bind(guard(a),x =>\n44>|     m = flip(x)\n   |     ^\n45 |     +k = both(flip(m),b)\n"
+        },
+        "rejection": {
+          "interpreter": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.bend"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : m\n- observed : m (consumed more than once)\nContext:\n- a : Answer\n- b : Answer\n- x : Answer\nLocation: staged\n43 |   finish(bind(guard(a),x =>\n44>|     m = flip(x)\n   |     ^\n45 |     +k = both(flip(m),b)\n"
+          },
+          "at": "44:4",
+          "native": {
+            "wrapper": ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements-reuse/main.bend",
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-selfhost/seed/wrappers/layout-lambda-statements-reuse/main.bend",
+                "-o",
+                ".local/compiler-selfhost/seed/bin/layout-lambda-statements-reuse"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : m\n- observed : m (consumed more than once)\nContext:\n- a : ../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.Answer\n- b : ../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.Answer\n- x : ../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.Answer\nLocation: ../../../../../tests/compiler-selfhost/fixtures/layout-lambda-statements-reuse/main.staged\n43 |   finish(bind(guard(a),x =>\n44>|     m = flip(x)\n   |     ^\n45 |     +k = both(flip(m),b)\n"
+            },
+            "same_report": true
+          }
+        }
       },
       {
         "case": "layout-choose-ladder",

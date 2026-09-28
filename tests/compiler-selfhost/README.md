@@ -14,7 +14,7 @@ owns it, and the gate never passes a case whose needs have not landed.
 
 | File | Role |
 |---|---|
-| `fixtures/<case>/main.bend` | The entry of each of 62 cases. Sibling `.bend` files are its local modules, and `inputs/` holds its IO inputs. |
+| `fixtures/<case>/main.bend` | The entry of each of 65 cases. Sibling `.bend` files are its local modules, and `inputs/` holds its IO inputs. |
 | `expectations.json` | Reviewed: `needs`, `cases` and `lane_decisions`. Generated: `observations`, every seed record on both lanes. |
 | `regen.py` | The seed lane. `verify` (the default) recomputes everything and fails on any difference; `--write` refreezes. |
 | `check.py` | The gate (`selfhost`). It runs the seed lane, then Knot, with blocked cases reported separately. `--judge` re-verifies a receipt. |
@@ -66,20 +66,20 @@ Both lanes must name the reviewed `seed_reason`. The native report's
 module-path prefixes are normalized first. Today the two lanes' reports are
 byte-identical after that normalization (`same_report`).
 
-**Lane agreement today:** 187 calls and 7 IO runs, with 0 disagreements. A
+**Lane agreement today:** 194 calls and 7 IO runs, with 0 disagreements. A
 disagreement fails `regen.py` unless a reviewed `lane_decisions` entry names it,
 with the oracle lane it chose. The seed's Bun JS lane (`-o x.js`) is not an
 oracle here; the lanes increment measures it.
 
 ## Knot requirements
 
-- **`agree`** (33 positives).
+- **`agree`** (34 positives).
   - Value cases: Knot's `check-cli` checks the entry, and `eval-cli <entry> <fn> <budget> <ordinals..>` returns the frozen constructor and tag for every call. The budget defaults to 65,536; the scale and Nat cases use 1,048,576. Exhausted within the budget does not meet the requirement.
   - IO cases: a Knot route must reproduce every run's exit, stdout, stderr and files. No Knot lane runs IO programs yet, so the need `io` (core-io) blocks them.
-- **`reject`** (29 twins).
+- **`reject`** (31 twins).
   - Every phase that runs (check and eval) must exit 2 with the pinned `Invalid<TAB>phase<TAB>code<TAB>` prefix.
   - Where `at` is pinned, the reported position must be the seed's caret, as `line:column` (1-based line, 0-based column). `regen.py` verifies that each pin is where the seed points.
-  - Each code is an existing one: `type-mismatch`, `expected-term`, `parameter`, `end-of-body`, `missing-arm`, `affine-reuse`, `pattern-type`, `pattern-arity` (nest's matrix), `unknown-type`, `unknown-function` and `forward-live-call`.
+  - Each code is an existing one: `type-mismatch`, `expected-term`, `parameter`, `end-of-body`, `argument-separator`, `missing-arm`, `affine-reuse`, `pattern-type`, `pattern-arity` (nest's matrix), `unknown-type`, `unknown-function` and `forward-live-call`.
   - A twin is the positive's own shape with one reviewed defect, so it needs what the positive needs. It keeps a D4-sound implementation from accepting the defect.
 
 The runner invokes the CLIs in single-file mode. When `modules` lands, that
@@ -109,7 +109,7 @@ Available on this tree: `fields`, `recursion`.
 | Status | Count |
 |---|---|
 | Pass | 2 |
-| Blocked | 60 |
+| Blocked | 63 |
 | Fail | 0 |
 
 The five D4 gaps are all owned by selfsource:
@@ -138,7 +138,8 @@ The other blocked cases stop at `Unsupported`:
 | `layout-braces` | selfsource | SF-01 | layout | `layout-braces-comma` (expected-term, 12:11) | blocked, D4 gap |
 | `layout-brackets` | selfsource | SF-01 | layout, base, generics, lists | `layout-brackets-comma` (expected-term, 36:12) | blocked |
 | `layout-dedent-close` | selfsource | SF-01 | layout | `layout-dedent-close-extra` (end-of-body, 16:6) | blocked, D4 gap |
-| `layout-comments` | selfsource | SF-01, SF-03 | layout | none: the seed accepts every blank or comment placement inside delimiters | blocked, D4 gap |
+| `layout-comments` | selfsource | SF-01, SF-03 | layout | `layout-comments-swallowed` (argument-separator; position not pinned) | blocked, D4 gap |
+| `layout-lambda-statements` | selfsource | SF-01 | layout, closures | `layout-lambda-statements-reuse` (affine-reuse) | blocked |
 | `layout-choose-ladder` | selfsource | SF-04 | layout, closures | `layout-choose-ladder-comma` (expected-term, 24:11) | blocked |
 | `fuel-rows` | literals | SF-05, SF-06 | base, literals, nat-columns, nest | `fuel-rows-missing-zero` (missing-arm) | blocked |
 | `fuel-wildcard-first` | literals | SF-05 | base, literals, nat-columns, nest | `fuel-wildcard-first-reuse` (affine-reuse) | blocked |
@@ -166,7 +167,14 @@ The other blocked cases stop at `Unsupported`:
 | `u32-bitwise-edges` | literals | BS-05 | base, literals, u32-bits | `u32-bitwise-word-count` (type-mismatch) | blocked |
 
 Each case's `shape` and `site` in `expectations.json` name the Knot source it
-mirrors. The generated scale fixtures are:
+mirrors.
+
+`layout-lambda-statements` separates two ways of implementing layout.
+Continuation newlines inside delimiters are skippable. The newlines between a
+lambda body's statements are not, even inside an argument list. So a lexer that
+drops every newline inside delimiters fails that case, while a parser that skips
+newlines at continuation points passes it, as SELF-HOSTING-PATH.md (selfsource)
+requires. The generated scale fixtures are:
 
 - `scale-catalog`: 723 functions in one Base-free book;
 - `scale-bundle`: 782 functions across 20 modules plus Base, reached through one 720-link call chain.
@@ -207,4 +215,4 @@ mirrors. The generated scale fixtures are:
 - Entries cross the host boundary as nullary enums only. Lists, strings and words are observed through the enum results they determine.
 - Knot runs only through `check-cli` and `eval-cli`. The Wasm and image routes are compared with the evaluator by their own gates. The IO route has no Knot lane yet.
 - A Knot code pin for a twin is a literal-review decision. An owner can change one before implementing, through a reviewed amendment that states why. An implementation result never justifies the change.
-- Three shapes have no seed-rejected twin: blank and comment lines, scale, and the Nat round trip. Their reasons are in the table above.
+- Two shapes have no seed-rejected twin: scale and the Nat round trip. Their reasons are in the table above.

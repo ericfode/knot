@@ -43,7 +43,7 @@ requests and retains the pinned rubric and composition-byte cap.
 
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
 
-- It first reproduces 62 frozen cases on the seed's interpreter and native lanes.
+- It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
 - It then runs Knot's `check-cli` and `eval-cli` on each case.
 - A case is blocked while a reviewed need is unavailable. A blocked case never
   counts as passing. It fails the gate only by crashing, timing out, or reporting
