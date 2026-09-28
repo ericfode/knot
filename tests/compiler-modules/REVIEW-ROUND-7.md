@@ -155,32 +155,43 @@ All preflight runs were offline and made no provider requests.
   `wasm-emission`. `catalog.bend` stays composed in full in `catalog` (19,302
   bytes). All 23 groups and 1,428 declaration occurrences check, with no
   truncated or role-limited declarations and no structural blockers. All
-  compositions are available; `checking` is 37,484 bytes.
+  compositions are available; `checking` is 37,484 bytes. The new mechanism is
+  still composed in full: `scope-patterns` holds `scope.term` together with
+  `catalog.unbound` and `signature_scope`, and `catalog` holds the catalog.
 - **Direct.** The thirteen changed implementation and law files hold 335
   declarations. Thirty-two contexts are truncated: 11 by the caller or byte
   limit, 14 by the helper limit and 7 by the file limit. Two of them are
   changed declarations, both at the helper limit: `check.run`, which was
   already truncated in round 6, and `base-load.slice`. The combined composition
-  is oversized, at 137,259 bytes.
+  is oversized, at 137,259 bytes. The report counts 33 structural blockers: the
+  32 truncated contexts and the composition.
 
 No style rating or style pass is claimed. Live Perch review remains with the
 coordinator.
 
 ## Gates
 
-The modules gate, run directly on the tree of `e53f4ce` with the scaled
-timeouts, passed:
+The full runner (`npm run -s gates -- --refresh --jobs 3`) passed all 22 gates
+on the tree of `e4e25a6`, and `gates:verify` ran 19 tests, OK. Receipt drift was
+the same as in rounds 5 and 6: 64 identical, 16 semantic and 9 volatile-only.
+The modules gate checked:
 
 - 191 fixtures and 199 seed calls;
 - 382 checks, 398 evaluations and 382 compilations;
 - 96 Wasm observations, 42 byte-identity pairs and 298 preserved outputs;
 - 94 trust audits and 312 single-file observations;
 - 22 pin, 6 tampered-Base and 22 output-guard observations;
-- 53 semantic mutants.
+- 53 semantic mutants and 4 proof entries.
 
-The checker, structural, fields and recursion gates passed directly after the
-finding-1 repair. Every proof entry, including `check-PROOF.bend` and
-`catalog-PROOF.bend`, prints `All terms check.`
+The other gates kept their round-6 counts: checker 49 fixtures and 7 mutants,
+structural 16 and 7, fields 40 and 9, recursion 19 and 3, selfhost 65 cases
+with 5 reviewed D4 gaps. Two inventories grew with this round's files. The
+census now counts 925 declarations in 44 files (it was 904), and the bootstrap
+corpus holds 1,075 files (it was 1,035). Every proof entry prints
+`All terms check.`, including `check-PROOF.bend` and `catalog-PROOF.bend`.
+Only the modules receipt is committed; shared receipts are left for the
+coordinator. With main's clang and SDK fix merged, no gate hit the seed's
+"found no clang" flake.
 
 ## For the coordinator
 

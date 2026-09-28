@@ -118,7 +118,7 @@ compositions available). Since round 7, `checking` takes the declaration catalog
 as an interface (37,484 of its 48,000 bytes); `catalog` composes it in full. The
 direct thirteen-file round-7 review (335 declarations) has 32 truncated
 contexts, two of them changed declarations (`check.run`, `base-load.slice`), and
-an oversized combined composition. Deliberately invalid
+an oversized combined composition: 33 blockers. Deliberately invalid
 binder fixtures fail parsing as expected. No live style ratings or style pass
 are claimed; live Perch remains with the coordinator.
 
