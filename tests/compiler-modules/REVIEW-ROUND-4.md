@@ -116,17 +116,25 @@ literal case in a private copy.
 
 All preflight runs were offline and made no provider requests.
 
-- **Manifest.** 23 groups, 1,400 declaration occurrences, all 23 compositions
+- **Manifest.** 23 groups, 1,402 declaration occurrences, all 23 compositions
   available. No truncated or role-limited declarations and no structural
-  blockers. `frontend-parsing` is 21,284 bytes, `module-loading` 32,872 and
+  blockers. `frontend-parsing` is 21,284 bytes, `module-loading` 33,344 and
   `checking` 47,400, all under the 48,000-byte bound.
-- **Direct.** The nine changed implementation, law and proof files hold 259
+- **Direct.** The nine changed implementation, law and proof files hold 261
   declarations, with 46 truncated or role-limited contexts: 6 caller/byte,
-  9 file and 32 helper limits. The combined composition is oversized: 173,688
+  9 file and 32 helper limits. The combined composition is oversized: 174,160
   bytes against the 48,000-byte bound. That gives 47 structural blockers.
 
 No style rating or style pass is claimed. Live Perch review remains with the
 coordinator.
+
+## Gates
+
+The modules gate on an export of `77b3b5c` passed: 112 fixtures, 120 seed calls,
+224 checks, 240 evaluations, 224 compilations, 68 Wasm observations, 28
+byte-identity pairs, 168 preserved outputs, 60 trust audits, 90 single-file
+observations, 22 pin, 6 tampered-Base and 22 output-guard observations, and 36
+semantic mutants. The full runner results are in the final report.
 
 ## Known limits
 

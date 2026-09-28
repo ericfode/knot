@@ -82,18 +82,18 @@ BEND_NO_TELEMETRY=1 npm run -s gates
 BEND_NO_TELEMETRY=1 npm run -s gates:verify
 ```
 
-The module gate checks 111 fixtures and 119 seed calls, both native and Bun:
-222 checks, 238 evaluations, 222 compilations, 68 Wasm observations, 28 identical
-Wasm pairs, 166 preserved outputs, 60 trust audits, 90 single-file observations,
+The module gate checks 112 fixtures and 120 seed calls, both native and Bun:
+224 checks, 240 evaluations, 224 compilations, 68 Wasm observations, 28 identical
+Wasm pairs, 168 preserved outputs, 60 trust audits, 90 single-file observations,
 22 pin observations, six corrupted-Base observations, 22 output-guard observations
-and six adapter-pin controls. All 35 semantic mutants are independently
-seed-typechecked and killed. The four complete proof entries check 94 filled
-laws: loader/path 33, qualification 26, Base selection 20 and pin helpers 15.
+and six adapter-pin controls. All 36 semantic mutants are independently
+seed-typechecked and killed. The four complete proof entries check 95 filled
+laws: loader/path 34, qualification 26, Base selection 20 and pin helpers 15.
 These are helper/transition proofs, not a general compiler-correctness theorem.
 
 Offline preflight covers every compiler declaration through 23 bounded manifest
-groups with zero structural blockers (1,400 declaration occurrences, all 23
-compositions available). The direct nine-file round-4 review (259 declarations)
+groups with zero structural blockers (1,402 declaration occurrences, all 23
+compositions available). The direct nine-file round-4 review (261 declarations)
 has 46 truncated contexts and an oversized combined composition: 47 blockers. Deliberately invalid
 binder fixtures fail parsing as expected. No live style ratings or style pass
 are claimed; live Perch remains with the coordinator.

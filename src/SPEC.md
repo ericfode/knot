@@ -215,7 +215,7 @@ spaced `- >` arrow, which the seed rejects, reports `Invalid parse function-resu
 
 The [module gate](../tests/compiler-modules/README.md) compares frozen seed
 expectations with native/Bun checking, evaluation and emittable Wasm. Four proof
-entries check 94 path, scope, loader-transition, Base-selection and digest-boundary
+entries check 95 path, scope, loader-transition, Base-selection and digest-boundary
 laws. These are helper/transition laws; whole-graph order independence and
 compiler correctness are not proved.
 
