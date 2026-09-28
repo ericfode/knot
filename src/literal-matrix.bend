@@ -39,6 +39,11 @@ def literal(node: S.Node) -> S.Node:
       S.Constructor{retoken("Succ",token),[S.Offset{token,U32.sub(count,1),tail}]}
     case _: node
 
+# Base spells U32{data: Word(32n)}, but an installed U32 is unboxed bits.
+def lookup(+types: List<&2,C.Datatype>, +token: S.Token) -> Result<S.Error,G.ConstructorRef>:
+  S.choose(Result<S.Error,G.ConstructorRef>,Bool.and(S.matches(token,"U32"),L.present(types,"U32")),u =>
+    C.unsupported(G.ConstructorRef,"u32-constructor",token),u => G.find_constructor(types,token,0))
+
 def constructor(reference: G.ConstructorRef, +type_id: U32, +token: S.Token, +args: List<&2,S.Node>, types: List<&2,C.Datatype>) -> Result<S.Error,S.Node>:
   match reference:
     case G.ConstructorRef{+actual,+tag}:
@@ -57,7 +62,7 @@ def normalize(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>, +type_id: U3
         S.choose(Result<S.Error,S.Node>,U32.is_eq(count,0),u => normalize(n,tail,types,type_id),u => Done{literal(S.Offset{token,count,tail})}),u => C.invalid(S.Node,"pattern-type",token))
     case 1n+n S.Constructor{+token,+args}:
       S.choose(Result<S.Error,S.Node>,L.is_kind(types,type_id,2),u => C.unsupported(S.Node,"char-constructor-pattern",token),u =>
-        S.bind(G.ConstructorRef,S.Node,L.constructor(types,token),reference => constructor(reference,type_id,token,args,types)))
+        S.bind(G.ConstructorRef,S.Node,lookup(types,token),reference => constructor(reference,type_id,token,args,types)))
     case 1n+n S.Variable{+token}:
       S.choose(Result<S.Error,S.Node>,G.constructor_named(types,token),u => C.invalid(S.Node,"constructor-pattern-binder",token),u => Done{S.Variable{token}})
     case 1n+n S.Promotion{+token}:
