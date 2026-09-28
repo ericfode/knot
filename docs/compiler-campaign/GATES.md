@@ -67,9 +67,9 @@ byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table; 62 refused malformed-image
 controls; 16 expectation, five invocation, two seed-display and two bench
-controls; four admitted plan controls, seven admitted code-list controls and
+controls; six admitted plan controls, seven admitted code-list controls and
 eleven run controls with their frozen outcomes; nine describe-domain controls;
-the lowering of one hand-written display; 48 codec, 4 source and 15 evaluator
+the lowering of one hand-written display; 49 codec, 4 source and 15 evaluator
 mutants; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

@@ -198,14 +198,18 @@ inspects it (§6.1).
   field is pinned `none`. A Case has the type of the position it fills: a
   function's or closure's result; its Let's or enclosing Case's type as a Let body
   or an arm; a Let binder's type as its value; an operand's declared parameter,
-  field, registry input, arrow or domain type. Where a value flows into a declared
+  field, registry input, arrow or domain type. That is how the encoder and the
+  gate's display cross-check type a Case, so plans are canonical; validation
+  checks only fit, and admits a `none`-typed Case in a concrete position
+  (`first-code-none-case`). Where a value flows into a declared
   position (an Application's arguments and result, a Construct's fields, an
   Invoke's argument and result, a Closure's and a function's body, and every arm
   body of a Case) it **fits**: `none` on either side fits any type, arrows of one
   kind fit when their domains and results fit, and any other type fits only
   itself. S's `first_code(codes: List<U32>) -> U32` (`literal.bend`) answers `0`
   for Nil and the `none`-typed head for Con in one U32 Case (admitted plan control
-  `first-code`). Fit is instantiation of an erased parameter, so validation does
+  `first-code`); a key Branch and a Default answer a `none` parameter in another
+  (`key-arms-none`). Fit is instantiation of an erased parameter, so validation does
   not establish type soundness under generics; the VM inspects every word it reads
   (§6).
 - **Let** binds slot = current depth; its value runs at that depth, its body one
@@ -255,9 +259,10 @@ stack. The validator checks every function, reachable or not:
 
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
 refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
-and MUST admit its four admitted plan controls (three Cases on a `none` slot,
-among them `list-head-match`, and `first-code`'s arms, S's shapes), its seven
-code-list controls and its eleven run controls; vm-model and vm-core MUST run each run control to the outcome
+and MUST admit its six admitted plan controls (three Cases on a `none` slot,
+among them `list-head-match`, and three whose arms fit their Case, among them
+`first-code`, S's shapes), its seven code-list controls and its eleven run
+controls; vm-model and vm-core MUST run each run control to the outcome
 frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
@@ -761,7 +766,7 @@ lane and requires:
   (`none` field) and an arrow are Unsupported;
 - all 13 node forms, both Case modes, a Program, a boxed scalar constant and a
   `none`-typed node covered;
-- all 62 refusals of §4 with their frozen reasons, and its four admitted plan
+- all 62 refusals of §4 with their frozen reasons, and its six admitted plan
   controls; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
@@ -785,7 +790,7 @@ lane and requires:
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 48 codec mutants and 4 source mutants killed through a changed image, a decode
+- 49 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe or invocation verdict or a changed observation, and 15 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash;

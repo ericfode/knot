@@ -1045,7 +1045,22 @@ def plan_controls(plans: dict) -> list:
             {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0,
              'body': ['call', 0, 0, [['con', 1, 1, [['value', 2, 1], ['value', 1, 0]]]]]}]}
 
-    def first_code(nil):
+    def key_arms(case_type):
+        """pick(x: none, k: U32) -> U32 answers the `none` x from both a key Branch (k = 0) and
+        the Default: `U32.is_eq(pick(7,0),7)`. Each arm body fits the U32 Case."""
+        return {
+            'entry': 'book', 'representation': {'Bool': 0, 'U32': 1},
+            'types': [plans['u32-zero']['types'][0], {'kind': 'opaque', 'name': 'U32'}],
+            'functions': [
+                {'name': 'U32.is_eq', 'parameters': [1, 1], 'result': 0, 'slots': 2,
+                 'body': ['prim', 0, 8, [['ref', 1, 0], ['ref', 1, 1]]]},
+                {'name': 'pick', 'parameters': [None, 1], 'result': 1, 'slots': 2,
+                 'body': ['case', case_type, 1, 1, 'keys', [['branch', 0, 2, 0, ['ref', None, 0]]],
+                          ['default', ['ref', None, 0]]]},
+                {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['call', 0, 0, [
+                    ['call', 1, 1, [['lit', 1, 'U32', 7], ['lit', 1, 'U32', 0]]], ['lit', 1, 'U32', 7]]]}]}
+
+    def first_code(nil, case_type=1):
         """S's literal.bend `first_code(codes: List<U32>) -> U32` (Nil: 0, Con: the head), called
         as `U32.is_eq(first_code(Con{7,Nil{}}),7)`; the seed prints True{}. The Case takes its
         position's type, U32, and the Con arm returns the head, pinned `none` (SPEC section 3)."""
@@ -1058,7 +1073,7 @@ def plan_controls(plans: dict) -> list:
                 {'name': 'U32.is_eq', 'parameters': [1, 1], 'result': 0, 'slots': 2,
                  'body': ['prim', 0, 8, [['ref', 1, 0], ['ref', 1, 1]]]},
                 {'name': 'first_code', 'parameters': [2], 'result': 1, 'slots': 3,
-                 'body': ['case', 1, 0, 2, 'tags', [['branch', 0, 1, 0, nil], ['branch', 1, 1, 2, ['ref', None, 1]]], None]},
+                 'body': ['case', case_type, 0, 2, 'tags', [['branch', 0, 1, 0, nil], ['branch', 1, 1, 2, ['ref', None, 1]]], None]},
                 {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': ['call', 0, 0, [
                     ['call', 1, 1, [['con', 2, 1, [['lit', 1, 'U32', 7], ['value', 2, 0]]]]], ['lit', 1, 'U32', 7]]]}]}
     return [
@@ -1121,6 +1136,10 @@ def plan_controls(plans: dict) -> list:
         # An arm body fits its Case: a concrete Nil arm beside the `none` head (review round 5).
         ('first-code', first_code(['lit', 1, 'U32', 0]), None),
         ('branch-body-type', first_code(['value', 0, 0]), 'branch body type'),
+        # Positional typing makes plans canonical; validation checks only fit, so a `none`
+        # Case in the U32 body is admitted too.
+        ('first-code-none-case', first_code(['lit', 1, 'U32', 0], None), None),
+        ('key-arms-none', key_arms(1), None),
         ('nat-field-type', edits('nat-unpack', (['types', 0, 'constructors', 1, 'fields'], [1]),
                                  ([*body(0), 5, 1], ['branch', 1, 1, 1, ['case', 1, 1, 1, 'tags', flag_rows(2), None]]),
                                  (['functions', 0, 'slots'], 2)),
@@ -1365,6 +1384,9 @@ CODEC_MUTANTS = [
                                   ("                    if not fits(t, r[4][1]):\n                        fail(where, 'key branch body type')",
                                    "                    if r[4][1] != t:\n                        fail(where, 'key branch body type')"),
                                   ("                if not fits(t, default[1][1]):", "                if default[1][1] != t:")]),
+    ('validator-exact-key-and-default-type', [("                    if not fits(t, r[4][1]):\n                        fail(where, 'key branch body type')",
+                                               "                    if r[4][1] != t:\n                        fail(where, 'key branch body type')"),
+                                              ("                if not fits(t, default[1][1]):", "                if default[1][1] != t:")]),
     ('validator-vacuous-operand-representation', [("                if name not in rep or k[1] != rep[name]:",
                                                    "                if rep.get(name, k[1]) != k[1]:")]),
     ('validator-vacuous-prim-result', [("            if op == 'prim' and (row['output'] not in rep or t != rep[row['output']]):",

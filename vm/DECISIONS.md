@@ -112,9 +112,13 @@ follows it (§5, §10, §11) without a new image header word.
    by the value's node and Cases by position, while a nested Case still names the
    core's type as its scrutinee. The admitted plan control `first-code` (seed
    `True{}` for the same source) is also the lowering of its hand-written display,
-   which neither the old last-arm Case type nor a core-typed binder reproduces. A
-   refused control `branch-body-type` (a Bool arm in the U32 Case) and two codec
-   mutants (`validator-exact-arm-type`, killed by `first-code`, and
+   which neither the old last-arm Case type nor a core-typed binder reproduces.
+   Positional typing makes plans canonical; validation checks only fit, so
+   `first-code-none-case` (the same Case typed `none`) is admitted too, and
+   `key-arms-none` answers a `none` parameter from a key Branch and a Default. A
+   refused control `branch-body-type` (a Bool arm in the U32 Case) and three codec
+   mutants (`validator-exact-arm-type`, killed by `first-code`,
+   `validator-exact-key-and-default-type`, killed by `key-arms-none`, and
    `validator-ignores-branch-body-type`) pin both directions.
 10. **Non-scalar output is a divergence by contract (D20).** Review round 3 found
    §11's reference lane and §10's IO contract in conflict: the seed's native lane
