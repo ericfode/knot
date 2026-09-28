@@ -23,6 +23,10 @@ def programs(count=COUNT):
         return rng.choice(DOTTED) if rng.randrange(12) == 0 else rng.choice(
             ['Off{}', 'On{}', '_', 'v', 'w', 'x', '+v', '_x'])
 
+    def sep():
+        # Headers run to their colon; a line break inside one separates nothing.
+        return rng.choice(('\n      ', ',\n      ')) if rng.randrange(8) == 0 else rng.choice((' ', ', '))
+
     for index in range(count):
         shape = rng.choice(('flag', 'multi', 'pair', 'box'))
         kind = rng.choice(('Type', 'Data'))
@@ -66,14 +70,14 @@ def programs(count=COUNT):
             if shape == 'flag':
                 pattern = atom()
             elif shape == 'multi':
-                pattern = rng.choice((' ', ', ')).join(atom() for _ in columns)
+                pattern = sep().join(atom() for _ in columns)
             else:
                 pattern = 'P{' + ', '.join(atom() for _ in slots) + '}'
                 if shape == 'box':
                     pattern = 'B{' + rng.choice((pattern, '_', 'v')) + '}'
                 pattern = rng.choice((pattern, pattern, '_', 'v', '+v'))
             rows.append(f'    case {pattern}: {rng.choice(body_terms)}\n')
-        scrutinee = rng.choice((' ', ', ')).join(columns)
+        scrutinee = sep().join(columns)
         source = prefix + f'\ndef f({", ".join(params)}) -> Flag:\n  match {scrutinee}:\n' + ''.join(rows)
         call = rng.choice(('On{}', 'Off{}')) if empty else f'f({arguments})'
         source += f'\ndef main() -> Flag:\n  {call}\n'

@@ -36,6 +36,15 @@ MUTANTS = [
     {'name': 'erased-empty-witness', 'file': 'scope.bend',
      'old': 'Bool.and(U32.is_ne(q,0),empty(known,types,type_id))', 'new': 'empty(known,types,type_id)',
      'witness': 'empty-erased-control', 'phase': 'check', 'wrong': {'exit': 0}},
+    {'name': 'case-header-layout', 'file': 'parse.bend',
+     'old': 'run(n,Term{True{}},header(tail))', 'new': 'run(n,Term{True{}},tail)',
+     'witness': 'line-case', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-term\t'}},
+    {'name': 'match-header-layout', 'file': 'parse.bend',
+     'old': 'header(Con{second,tail})', 'new': 'Con{second,tail}',
+     'witness': 'line-match', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-term\t'}},
+    {'name': 'header-past-colon', 'file': 'parse.bend',
+     'old': 'S.matches(h,":"),u => Con{h,t}', 'new': 'False{},u => Con{h,t}',
+     'witness': 'line-row', 'phase': 'check', 'wrong': {'exit': 2, 'diagnostic': 'Invalid\tparse\tend-of-body\t'}},
 ]
 
 

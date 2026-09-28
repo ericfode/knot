@@ -34,6 +34,10 @@ def L.comma_scrutinees(at): {==}
 def L.multiple_scrutinees(at):
   {==}
 
+def L.header_joins_lines(at,rest): {==}
+
+def L.line_broken_scrutinees(): {==}
+
 def L.dotted_pattern_binder(at,rest): {==}
 
 def L.dotted_let_binder(at,rest): {==}

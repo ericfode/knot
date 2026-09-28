@@ -150,6 +150,15 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
           invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
 
+# A match or case header runs to its colon; line breaks inside it separate
+# nothing, as in the seed. Tokens after the colon keep their layout.
+def header(ts: List<&2,S.Token>) -> List<&2,S.Token>:
+  match ts:
+    case Nil{}: Nil{}
+    case Con{+h,+t}:
+      S.choose(List<&2,S.Token>,S.matches(h,":"),u => Con{h,t},u =>
+        S.choose(List<&2,S.Token>,S.matches(h,"\n"),u => header(t),u => Con{h,header(t)}))
+
 # One recursive dispatcher makes the parser's depth budget explicit and avoids
 # unchecked mutual recursion. Every recursive invocation decreases fuel.
 def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
@@ -239,7 +248,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+h,Con{+second,+tail}}:
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(h),column),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,"match"),u =>
-            then(run(n,Term{False{}},Con{second,tail}),value => rest => run(n,MatchTail{h,value,S.column(h)},rest)),u =>
+            then(run(n,Term{False{}},header(Con{second,tail})),value => rest => run(n,MatchTail{h,value,S.column(h)},rest)),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,"+"),S.matches(h,"-")),u =>
             run(n,BindingStart{Bool.pick(U32,S.matches(h,"+"),2,0),S.column(h)},Con{second,tail}),u =>
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(second,"="),S.matches(second,":")),u =>
@@ -335,7 +344,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(keyword,"<eof>"),U32.is_le(S.column(keyword),parent)),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(keyword,"case"),Bool.or(U32.is_eq(column,0),U32.is_eq(column,S.column(keyword)))),u =>
-            then(run(n,Term{True{}},tail),+pattern => +rest =>
+            then(run(n,Term{True{}},header(tail)),+pattern => +rest =>
               S.choose(Result<S.Error,Parsed>,Bool.or(starts(rest,","),Bool.or(scrutinee(rest),starts(rest,"+"))),u =>
                 run(n,RowTail{keyword,pattern,parent,S.column(keyword)},rest),u =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>

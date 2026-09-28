@@ -54,6 +54,21 @@ law comma_scrutinees:
       S.Sequence{[S.Variable{S.Token{"a",at}},S.Variable{S.Token{"b",at}}]},Nil{}},
       [S.Token{"<eof>",at}]}} : Result<S.Error,P.Parsed>}
 
+# A header runs to its colon; its line breaks separate nothing, and the
+# tokens after the colon keep their layout.
+law header_joins_lines:
+  for +at: S.At
+  for +rest: List<&2,S.Token>
+  {P.header(Con{S.Token{"\n",at},Con{S.Token{"a",at},Con{S.Token{"\n",at},Con{S.Token{":",at},rest}}}})
+    == Con{S.Token{"a",at},Con{S.Token{":",at},rest}} : List<&2,S.Token>}
+
+def indented(text: String) -> S.Token: S.Token{text,S.At{0,0,1,2}}
+
+law line_broken_scrutinees:
+  {P.run(8n,P.BodyAt{2},[indented("match"),indented("\n"),indented("a"),indented("\n"),indented("b"),indented(":"),indented("<eof>")])
+    == Done{P.Parsed{S.Match{indented("match"),S.Sequence{[S.Variable{indented("a")},S.Variable{indented("b")}]},Nil{}},
+      [indented("<eof>")]}} : Result<S.Error,P.Parsed>}
+
 # A pattern or live let binds one word; a dotted name refers to a declaration.
 law dotted_pattern_binder:
   for +at: S.At
