@@ -87,8 +87,14 @@ did not refuse the image.
 
   Node offsets, which the machine state names, do not change. Those words of
   the loaded copy no longer equal the file.
-- **Scratch above the bump.** Describe, UTF-8 output and `Halt` messages are
-  built above the bump pointer, which they do not advance.
+- **Scratch above the bump.** Describe's text, UTF-8 output and `Halt`
+  messages are built above the bump pointer, which they do not advance. Their
+  addresses are summed in 64 bits.
+- **Describe's worklist** sits in the frame region above Top, where §5 keeps
+  release's worklist. It holds one (cell, record, next field) triple per open
+  Object. Each triple took a visit, so at most 1,048,576 triples (12 MiB) are
+  open, and the 16 MiB region always holds them. A test build that lowers the
+  frame limit can overflow it, which stops with `Exhausted` kind 3 (frames).
 - **`knot_alloc` after boot (an obligation for vm-io).** After boot,
   `knot_alloc`'s cursor still points just past the loaded image, into the gap
   before the frame region. This is harmless in vm-core, because no allocating
@@ -152,6 +158,11 @@ adopt them or record its own, so that lockstep compares like with like.
     holds a non-scalar Char. §10 does not order the two, and the growth is not
     bounded by the heap limit. vm-io, which owns the effect path, should settle
     both.
+12. **Describe at 4 GiB.** Describe's text starts at the bump pointer and has
+    no reserved window. Text ending beyond 4 GiB stops with `Exhausted` kind 2
+    (heap), the outcome §5 gives an allocation beyond the maximum, because the
+    text is memory the VM needs. The display bound is checked first. Text ending
+    exactly at 4 GiB is printed. The `ceiling` fixtures pin both cases.
 
 ## Findings for the spec owner
 
@@ -191,12 +202,19 @@ adopt them or record its own, so that lockstep compares like with like.
   - exact fuel boundaries, rendering and both display bounds;
   - an ill-typed flow through a `none` parameter;
   - the Unsupported foreign leaf, and the invocation errors.
+- **Ceiling.** Six Books whose bump pointer ends near 4 GiB, one run at a
+  time. Each dump pins the bump pointer, which keeps the image in its band:
+  - review round 2's three images, where a worklist based in i32 arithmetic
+    16 MiB above the text wrapped into the image: `On{}`;
+  - `ceiling-band`, just below that wrap: `B1{B1{B0{}}}`;
+  - `ceiling-top`, whose text ends exactly at 4 GiB;
+  - `ceiling-over`, 16 bytes beyond it: `Exhausted` kind 2 (heap).
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
 - **Malformed images.** As above: 61 frozen controls and 3,440 fuzz images,
   with no trap.
-- **Mutants.** Twelve, each killed by a wrong observation in a named group:
+- **Mutants.** Thirteen, each killed by a wrong observation in a named group:
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
@@ -205,4 +223,5 @@ adopt them or record its own, so that lockstep compares like with like.
   - host-stack recursion (call graph);
   - a refused `none` slot (the admitted controls);
   - a refused code above U+10FFFF (`string-beyond-unicode`);
-  - a surrogate left to the host (the D20 goldens, through the VM's registers).
+  - a surrogate left to the host (the D20 goldens, through the VM's registers);
+  - a describe that demands its whole 16 MiB text window below 4 GiB (ceiling).

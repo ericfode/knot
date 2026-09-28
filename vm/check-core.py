@@ -12,6 +12,8 @@ Checks, in order:
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits;
+- the ceiling fixtures: Books whose bump pointer ends near 4 GiB, described
+  exactly or, where the text cannot fit, Exhausted kind 2 (heap);
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
@@ -412,6 +414,11 @@ MUTANTS = [
        '            (then (call $refuse (global.get $R_constant_record))))))\n')], 'goldens'),
     ('surrogate-left-to-host', 'a surrogate reaches the host call, which refuses it in the VM\'s place',
      [('(i32.eq (i32.and (local.get $c) (i32.const 0xfffff800)) (i32.const 0xd800))', '(i32.const 0)')], 'goldens'),
+    # review round 2: describe near 4 GiB
+    ('display-reservation', 'describe demands its whole 16 MiB text window below 4 GiB',
+     [('(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (local.get $upto)))',
+       '(local.set $end (i64.add (i64.extend_i32_u (global.get $out)) (i64.add (local.get $upto) (i64.const 0x1000000))))')],
+     'ceiling'),
 ]
 
 
@@ -502,6 +509,26 @@ def main() -> int:
         require(all(seen[k] == v for k, v in want.items()), f'dump {name}: {seen} vs {want}')
         dumps.append({'name': name, **{k: seen[k] for k in want}})
     record['fixtures'] = {'runs': core, 'dumps': dumps}
+
+    # the bump pointer near 4 GiB: each run touches about 4 GiB, so two at a time,
+    # each in its own process
+    ceiling = fixtures['ceiling']['rows']
+    for r in ceiling:
+        plan = json.loads((HERE / f"{r['image']}.plan.json").read_text())
+        require(codec.encode(plan, digest) == (HERE / f"{r['image']}.kimg").read_bytes(),
+                f"ceiling {r['name']}: the image is its plan's encoding")
+    ceiling_jobs = [{'id': r['name'], 'wasm': str(test), 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
+                     'argv': [staged(r['image']), *r['argv']]} for r in ceiling]
+    ran = pool(lambda r: host(module, sandbox, [staged(r['image']), *r['argv']]), ceiling, workers=2)
+    dumped = {j['id']: harness([j])[j['id']] for j in ceiling_jobs}
+    high = []
+    for r, got in zip(ceiling, ran):
+        dump, state = dumped[r['name']], dumped[r['name']]['state']
+        require(got == r['expect'], f"ceiling {r['name']}: {got} vs {r['expect']}")
+        require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f"ceiling {r['name']}: harness and host differ")
+        require(all(state[k] == v for k, v in r['dump'].items()), f"ceiling {r['name']}: {state} vs {r['dump']}")
+        high.append({'name': r['name'], 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()), **r['dump']})
+    record['ceiling'] = high
 
     # nothing recurses: a 200,000-deep nested expression, and the deep runs on a 64 KiB host stack
     small = nested_plan(40)
@@ -615,9 +642,11 @@ def main() -> int:
                     for r, g in zip(rows, got)]
     admitted_jobs = [{'id': f"admitted:{r['label']}", 'files': {r['argv'][0]: str(loaded / r['argv'][0])},
                       'argv': r['argv'], 'want': frozen[r['label']]['expect']} for r in welcome]
+    ceiling_mutant_jobs = [{**j, 'id': f"ceiling:{r['name']}", 'want': r['expect'], 'dump': r['dump']}
+                           for j, r in zip(ceiling_jobs, ceiling)]
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
-              'quantum': [j for j in fixture_jobs if 'quantum' in j['id']]}
+              'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs}
 
     def observed_wrong(job, out):
         shown = {k: out[k] for k in ('exit', 'stdout', 'stderr')} != job['want']
@@ -638,8 +667,11 @@ def main() -> int:
                            'killed_by': [f'function {reached} reaches itself'], 'wrong_observations': 1, 'crashes': 0})
             continue
         wasm.write_bytes(build.assemble(build.test_source(text)))
-        out = harness([{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm)}
-                       for j in groups[group]])
+        batch = [{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm)} for j in groups[group]]
+        if group == 'ceiling':  # about 4 GiB each: one process per run
+            out = {k: v for part in pool(lambda j: harness([j]), batch, workers=2) for k, v in part.items()}
+        else:
+            out = harness(batch)
         wrong = [j['id'] for j in groups[group] if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
         crashed = [j['id'] for j in groups[group] if not clean(out[j['id']])]
         require(wrong, f'mutant {name} survives group {group} (crashes: {crashed[:5]})')
@@ -651,7 +683,7 @@ def main() -> int:
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-core passed: {len(goldens)} golden images, {len(core)} fixture runs, {len(dumps)} dump rows, "
-          f"{len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
+          f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
           f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")
