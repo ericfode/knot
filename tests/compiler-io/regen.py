@@ -68,12 +68,13 @@ def unsupported(phase, code, why):
 
 
 HOST_EFFECT = unsupported(
-    'check', 'host-effect',
+    'compile', 'host-effect',
     'The IO host ABI of this increment is the compiler\'s own surface: IO.args, IO.print, '
     'File.open, File.read, File.write_bytes and File.close (census of src/*.bend), beside the '
-    'pure Base IO.pure, IO.bind and IO.die. BEND-SUBSET-STAGES S4 maps only the declared Base '
-    'effects the driver needs, and D4 forbids passing a reference to any other foreign effect '
-    'through unchecked. Vetoable before implementation starts (FIXTURES.md).')
+    'pure Base IO.pure, IO.bind and IO.die. Coordinator decision D12 (docs/COMPILER-CAMPAIGN.md, '
+    'following BEND-SUBSET-STAGES: build rejects a reachable missing capability before '
+    'emission): check-cli checks the book successfully, and compile-cli rejects a reachable '
+    'effect outside that surface with this prefix and emits no artifact.')
 DO_BIND = unsupported(
     'parse', 'do-bind',
     'Knot\'s own do blocks hold statements only (census: no `<-` or `return` in src/*.bend); '

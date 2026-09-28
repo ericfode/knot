@@ -171,7 +171,7 @@ another reason.
 
 | Fixtures | Prefix | Justification |
 |---|---|---|
-| `effect-write`, `effect-print-err`, `effect-get-env`, `effect-file-write` | `Unsupported\tcheck\thost-effect\t` | The ABI is the compiler's own six effects. S4 of `BEND-SUBSET-STAGES.md` maps only the declared Base effects the driver needs, and D4 forbids passing any other foreign effect through unchecked. Every other Base foreign definition takes this prefix too, including `File.read_bytes`, `File.size`, `Process.run`, channels, sockets and windows. |
+| `effect-write`, `effect-print-err`, `effect-get-env`, `effect-file-write` | `Unsupported\tcompile\thost-effect\t` (compile-cli; check-cli checks the book, per D12) | The ABI is the compiler's own six effects. S4 of `BEND-SUBSET-STAGES.md` maps only the declared Base effects the driver needs, and D4 forbids passing any other foreign effect through unchecked. Every other Base foreign definition takes this prefix too, including `File.read_bytes`, `File.size`, `Process.run`, channels, sockets and windows. |
 | `do-bind-arrow`, `do-bind-type-mismatch` | `Unsupported\tparse\tdo-bind\t` | Knot's own `do` blocks hold statements only: the census finds no `<-` and no `return` in `src/*.bend`. The second fixture is seed-invalid, but D4 forbids an `Invalid` claim about a form Knot does not check. |
 
 In these prefixes, `\t` stands for a tab character; `expectations.json` holds
