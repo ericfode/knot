@@ -103,11 +103,17 @@ irrefutable-column preservation, first-leaf selection, alias identity/erasure,
 one step of the live split's remainder (the split constructor leaves the
 remaining tags and its rows leave the negative matrix; other tags and variable
 rows stay) and work exhaustion are quantified helper laws. They do not state
-the general exhaustive-lowering law. Two complete checker normalizations
-exercise an overlapping irrefutable row and an exhaustive 2-by-2 matrix. Those
-full-tree witnesses, now `irrefutable_lowering_witness` and
-`exhaustive_matrix_witness`, are concrete. The general irrefutable-first-row and
-exhaustive-lowering laws remain **unmet** in `state.json` and `CONTRACT.json`.
+the general exhaustive-lowering law. `irrefutable_first_row_selected`
+(`src/lowering-LAWS.bend`, filled in `src/lowering-PROOF.bend` and checked
+through the `src/matrix-PROOF.bend` entry) composes them over the complete
+lowering: for every fuel, catalog, scope, work budget,
+column list and trailing rows, a first row of one variable or promotion per
+column whose body is a leaf is the body at every leaf of each successful
+`M.expand` tree. Two complete checker normalizations exercise an overlapping
+irrefutable row and an exhaustive 2-by-2 matrix; `irrefutable_lowering_witness`,
+`irrefutable_first_row_witness` and `exhaustive_matrix_witness` are concrete.
+The general exhaustive-lowering law remains **unmet** in `state.json` and
+`CONTRACT.json`.
 Additional checked helpers cover anonymous lookup, live residual references,
 empty-type evidence, latest-let aliases and total-counter leaves. Runtime
 differential checks remain separate evidence.

@@ -224,13 +224,13 @@
     "contract": "tests/compiler-nest/SPEC.md",
     "evidence": "tests/compiler-nest/receipts/nest.json",
     "proof": "src/matrix-PROOF.bend",
+    "lowering_law": "src/lowering-LAWS.bend::irrefutable_first_row_selected, filled in src/lowering-PROOF.bend and imported by the matrix proof entry",
     "frozen_expectations": "tests/compiler-nest/expectations.json",
     "core": "Binary Decision with live Remainder scopes, checked then coalesced into exhaustive core Case; Matrix, Decision, Remainder and Alias never enter runtime core",
     "bounds": "4096 residual-matrix visits per expanded source match, including leaves and empty remainders; Expansion threads the unused total through both branches without division. Each separately reached source match starts a new budget; checker/expansion depth and lexical-level limits remain.",
     "unmet": [
       "rec-swapped-args: Unsupported check recursive-call, frozen Invalid expectation unchanged",
       "rec-alias: Unsupported check recursive-call, frozen Invalid expectation unchanged",
-      "General law: lowering any matrix with an irrefutable first row selects that row (only helper laws and irrefutable_lowering_witness are proved)",
       "General law: every exhaustive matrix lowers without a missing branch (only helper laws and exhaustive_matrix_witness are proved)"
     ],
     "defaults": "The negative branch excludes one constructor and retains the live unrefined lexical binding. A variable row is checked even when its remainder is empty. A missing arm is dead code only when a live binder outside the pending suffix of the match frontier (which starts at the scrutinee) has an empty constructor set: an emptied residual or a zero-constructor datatype. Dead code never bypasses body checking.",

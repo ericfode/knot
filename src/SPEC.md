@@ -97,8 +97,10 @@ splits a positive matrix from its negative remainder. The negative branch keeps
 the scrutinee live and unrefined; only its available constructor set narrows.
 A later source match on that residual binding currently reports
 `Unsupported check default-scrutinee`. Internal binary remainder processing is
-supported. General irrefutable-first-row and exhaustive-lowering theorems remain
-unmet; the two renamed `_witness` laws are checked ground normalizations.
+supported. `src/lowering-LAWS.bend::irrefutable_first_row_selected` proves
+that every successful lowering of a matrix whose first row is irrefutable
+selects that row's body at every leaf. The general exhaustive-lowering theorem
+remains unmet; `exhaustive_matrix_witness` is a checked ground normalization.
 
 Generic/dependent types, imports, literals, closures, destructuring local
 bindings, laws, templates, foreign code and effects remain explicitly

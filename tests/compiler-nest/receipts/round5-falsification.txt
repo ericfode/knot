@@ -1,0 +1,39 @@
+# Round-5 falsification of src/lowering-LAWS.bend::irrefutable_first_row_selected
+# Each case copies src/, applies one textual mutation and runs
+# BEND_NO_TELEMETRY=1 bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/lowering-PROOF.bend
+# (first lines of output). The control is the unmutated copy.
+
+== control
+All terms check.
+== specialize drops variable rows
+Error:
+- expected : matrix.specialize(tail, ctor, matrix.fresh(params, next, syntax.at(token)), level)
+- observed : syntax.Arm{arm, syntax.Sequence{List.append(&2, syntax.Node, matrix.fresh(params, next, syntax.at(token)), more)}, matrix.bind_body(lead, binder, level, 1)} <> matrix.specialize(tail, ctor, matrix.fresh(params, next, syntax.at(token)), level)
+== specialize moves variable rows last
+Error:
+- expected : List.append(&2, syntax.Node, matrix.specialize(tail, ctor, matrix.fresh(params, next, syntax.at(token)), level), [syntax.Arm{arm, syntax.Sequence{List.append(&2, syntax.Node, matrix.fresh(params, next, syntax.at(token)), more)}, matrix.bind_body(lead, binder, level, 1)}])
+- observed : syntax.Arm{arm, syntax.Sequence{List.append(&2, syntax.Node, matrix.fresh(params, next, syntax.at(token)), more)}, matrix.bind_body(lead, binder, level, 1)} <> matrix.specialize(tail, ctor, matrix.fresh(params, next, syntax.at(token)), level)
+== without drops variable rows
+Error:
+- expected : matrix.without(tail, ctor)
+- observed : syntax.Arm{arm, syntax.Sequence{syntax.Variable{binder} <> more}, lead} <> matrix.without(tail, ctor)
+== default_rows drops variable rows
+Error:
+- expected : matrix.default_rows(tail, level)
+- observed : syntax.Arm{arm, syntax.Sequence{more}, matrix.bind_body(lead, binder, level, 1)} <> matrix.default_rows(tail, level)
+== default_rows drops promotion rows
+Error:
+- expected : matrix.default_rows(tail, level)
+- observed : syntax.Arm{arm, syntax.Sequence{more}, matrix.bind_body(lead, binder, level, 2)} <> matrix.default_rows(tail, level)
+== zero-column step returns another node
+Error:
+- expected : {syntax.Sequence{[]} == body : syntax.Node}
+- observed : Lowers(lead, body)
+== fresh fields become constructors
+Error:
+- expected : Empty
+- observed : lowering-LAWS.Irrefutable(List.append(&2, syntax.Node, matrix.fresh(tail, U32.add(level, 1), at), columns), List.append(&2, syntax.Node, matrix.fresh(tail, U32.add(level, 1), at), patterns))
+== conclusion names another body
+Error:
+- expected : lowering-LAWS.Leaves(tree, syntax.Sequence{[]})
+- observed : lowering-LAWS.Leaves(tree, body)

@@ -161,3 +161,45 @@ that law.
 **not proved** and rests only on the 14 round-4 fixtures: that `E.rebuilt`
 admits only arguments the seed's decreasing-call rule orders strictly below
 parameter 0. No new general lowering or termination theorem is claimed.
+
+## Round 5
+
+The round-5 review confirmed that two of the three requested matrix laws were
+only ground witnesses. The irrefutable-first-row law is now general. It lives in
+`src/lowering-LAWS.bend` and is filled in `src/lowering-PROOF.bend`, which the
+`src/matrix-PROOF.bend` entry imports, so the nest gate's proof run checks it;
+the move keeps the `pattern-matrix-laws` Perch composition under its 48 KB
+bound, with a new `lowering-laws` manifest group.
+
+| Law | Quantification and evidence | Limit |
+|---|---|---|
+| `irrefutable_first_row_selected` | Every fuel, catalog, scope, work budget, column list, arm and trailing rows. Hypotheses: `Irrefutable(columns, patterns)` (one variable or promotion per column; indexed by the columns, so a short row, which a split would drop, cannot satisfy it) and `Leaf(body)` (not a matrix, decision or alias, which expansion would re-enter). Conclusion: if `M.expand` returns `Done{Expansion{tree, left}}`, `Leaves(tree, body)`: every leaf of both decision branches is the body, under the installed aliases | Partial correctness: exhausted fuel or work, catalog and scope failures, Invalid and Unsupported are other outcomes and are not claimed absent. Aliases are transparent; quantities and checking are other laws |
+| `irrefutable_first_row_witness` (`matrix-LAWS`) | Ground: `M.expand` of the overlapping `_ _` / `Off Off` Flag matrix is a two-level decision with `On` at all three leaves | Inhabits the general law's antecedent |
+
+The proof is an induction on expansion fuel over the invariant `Lowers`: a
+matrix leads with an irrefutable row whose body lowers to the selected body,
+an alias lowers when its body does, and a decision lowers on both sides. Each
+lowering state preserves it: a split's positive matrix prepends fresh fields,
+which are variables; its negative matrix keeps the variable-headed row; a
+default drops the head; promotion adds a transparent alias; `bind_body` extends
+the alias chain. A zero-column step returns the leading row's body. The
+invariant is Data-kinded so one proof serves both branches of a split.
+
+`round5-falsification.txt` runs the lowering entry on mutated copies of `src`.
+The control checks; each of eight mutants fails at a named proof term:
+`specialize` dropping variable rows or moving them last, `without` dropping
+them, `default_rows` dropping variable or promotion rows, a zero-column step
+returning another node, fresh fields built as constructors, and a conclusion
+naming another body. Every proof entry prints `All terms check.`
+
+The exhaustive-lowering law remains **unmet**. Its obstacle is typing, not
+proof mechanics. A split reads a column's available constructors from the
+scope-bound type (`M.available` over `G.type_at` of `M.column_binding`), and
+field columns receive their types from `P.branch` as expansion proceeds. An
+independent statement of exhaustiveness quantifies over typed value vectors,
+so the proof must relate that scope to the column types: lookups of generated
+`$matrix` names after `P.branch` (injectivity of `U32.show` levels), `E.residual`
+and `M.alias`, and inhabitants for unconstrained positions, which empty types
+deny (the dead-code rule). A type-free witness would be trivial: a vector of
+unknown constructors refutes every row that has any constructor. A catch-all
+corollary of the law above is not the general theorem and is not claimed.
