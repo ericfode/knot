@@ -13,6 +13,11 @@ annotated let.
 The seed also accepts a dotted binder that rebinds a name in scope, which Knot
 does not resolve yet: every dotted binder, in a let, a typed let or a pattern,
 is Unsupported (coordinator decision, round 9), never Invalid (D4).
+
+The seed reads a line break inside a bracketed list (call and constructor
+arguments, a def header's parameters, a type's fields) as whitespace, and a
+second arm on the line of an arm's body as the next arm. Knot ends a term at a
+line break, so these seed-accepted programs are Unsupported, never Invalid.
 """
 import argparse
 import json
@@ -27,6 +32,8 @@ FIXTURES = HERE / 'round9-fixtures'
 INFER = {'exit': 2, 'diagnostic': 'Invalid\tcheck\tannotation-required\t'}
 ACCEPTED = {'exit': 0, 'outcome': 'Accepted'}
 DOTTED = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tdotted-binder\t'}
+BREAK = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tline-break\t'}
+ARM = {'exit': 3, 'diagnostic': 'Unsupported\tparse\tsame-line-arm\t'}
 SITES = ('default-col', 'default-resid', 'flat-param', 'inline', 'inline-outer', 'multi-col1',
          'multi-col2', 'nested-field', 'nested-inner', 'nested-sub', 'var-row-alias')
 LETS = ('plain', 'erased', 'promo')
@@ -57,6 +64,14 @@ REVIEWED = {
     'dotted-binder-stopgap': {**{name: DOTTED for name in (
         'rebound-let', 'rebound-typed-let', 'rebound-field', 'rebound-promotion',
         'rebound-row', 'rebound-multi', 'rebound-nested')}, 'rebound-erased-let': ACCEPTED},
+    # The reviewer's seven main-era probes (sem-r7-probes/hd) and four more list
+    # sites: a def header's parameters and a type's fields, after a comma, before
+    # the closer and after the opener.
+    'layout-stopgap': {**{name: BREAK for name in (
+        'hd-b1-body-empty-brace-newline', 'hd-b2-body-open-brace-newline', 'hd-b3-body-comma-newline',
+        'hd-b4-body-top-level-ctor-newline', 'hd-b5-call-args-newline', 'hd-h15-ctr-body-newline',
+        'layout-def-params', 'layout-def-close', 'layout-type-fields', 'layout-type-open')},
+        'hd-h25-two-cases-one-line': ARM},
 }
 
 
@@ -84,8 +99,9 @@ def main():
     assert sorted(p.stem for p in files) == sorted(table), ('unreviewed or missing fixtures',
         sorted(set(p.stem for p in files) ^ set(table)))
     result = {'basis': 'Reviewer let-of-binder repros verbatim (11 sites in four let forms, the multi-scrutinee, '
-                       'default, nested and flat programs, the twins and eight fuzz hits) and rebound dotted-binder '
-                       'probes (the modules review\'s three verbatim), frozen with the pinned seed before the repairs.',
+                       'default, nested and flat programs, the twins and eight fuzz hits), rebound dotted-binder '
+                       'probes (the modules review\'s three verbatim) and line-break probes (the reviewer\'s seven '
+                       'verbatim), frozen with the pinned seed before the repairs.',
               'seed': oracle.environment()[0],
               'fixtures': [observe(p, *table[p.stem]) for p in files]}
     if write:
