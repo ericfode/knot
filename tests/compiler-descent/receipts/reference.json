@@ -1,0 +1,524 @@
+{
+  "date": "2026-09-28T01:40:53.828810+00:00",
+  "status": "passed",
+  "inputs": {
+    "tests/compiler-descent/expectations.json": "b9bc5ccf2ee287a6554ce867ff3dbf819ba62b28b384ce6fdbd57486082e45f1",
+    "tests/compiler-descent/fixtures/second-column.bend": "1f5fe658fff30408eea86e56a4b3beb3c13d5b7ddb69ffc9906d00b196d149b0",
+    "tests/compiler-descent/fixtures/third-column.bend": "4a41d0b0b2bc707b5593e0c8483af8196b0bf8893ab4c018af8a9d6567958483",
+    "tests/compiler-descent/fixtures/earlier-shrink-later-growth.bend": "b0d0267cf1113f2ff5788b5c7fe7490fedf8f09a7731c7b356448f5e51e8727f",
+    "tests/compiler-descent/fixtures/earlier-growth-later-shrink.bend": "51e13c7ba0ef2fc2e3148ef32dcaabf79767ed3a92c4557bc80e93975c40df55",
+    "tests/compiler-descent/fixtures/all-equal.bend": "212a474da079522b922555cd9aaabe52f3b16a937b2aa13168c8f82c69ae0f03",
+    "tests/compiler-descent/fixtures/rebuilt-equal.bend": "7c621b4b9eed492816e05d45989524a36626398d4ccdfccdcab1c6fd3be0182f",
+    "tests/compiler-descent/fixtures/rebuilt-smaller.bend": "c35f2dc59388f12a87d1464c24bcf17a79eb98e09cc9c2d8b091d71e7498cce0",
+    "tests/compiler-descent/fixtures/matched-parent-equal-prefix.bend": "6dd42218ce97a28cf9cb54e733db8eb0644a98a7583dc973d4ee950e9d276246",
+    "tests/compiler-descent/fixtures/explicit-constructor-equal-prefix.bend": "10e3384934ea468df4b3e4d40e4e5c0c78cb2ad82df5bff4ae1b17d03551d675",
+    "tests/compiler-descent/fixtures/alias-field.bend": "a4ba2639c3f255a3376bda01b69b53694141028ed911d027cc25240b40db223e",
+    "tests/compiler-descent/fixtures/alias-chain.bend": "bdd648df339a1b73e319c2bff68b5bcf4f453f1c8849c10d14405d610a535f92",
+    "tests/compiler-descent/fixtures/alias-parent.bend": "eed325c07e0fe30d8b8603121b6e4032ed61f88e8dc3aa09182d4e7e5afa6ccd",
+    "tests/compiler-descent/fixtures/alias-computed.bend": "23431d371a1b7d04b5c13b0da0c3b7852666059e1848c4bef1732e1c165420de",
+    "tests/compiler-descent/fixtures/alias-shadow.bend": "494bd534b89eb29a0fdb3b8dd66f2978d5e11e0729095392a507614800a3ca54",
+    "tests/compiler-descent/fixtures/erased-column.bend": "31ee754488853d721450bf4cee38913cc651760e74e5c54abe9f3b81a6bbefe6",
+    "tests/compiler-descent/fixtures/erased-only-change.bend": "d215f25ecbf7e3b93d5ce9c4809b9cb98f9bfc2121ea8cdb6b4140fd4513c6b5",
+    "tests/compiler-descent/fixtures/all-erased.bend": "4cadbccb89eaa5d96b6bec151908893b26c1a70ca4a5b7619290c52c66d70644",
+    "tests/compiler-descent/fixtures/dead-self-call.bend": "79a9beca5d756dc2fdb15ff997d86effcffb651bd98c5792b2b6272b45cd0f71",
+    "tests/compiler-descent/fixtures/dead-self-argument.bend": "d14bbe299e1b3ec861771f62b48f2c1d33b8cce6bccd44841a0de99c0ce40ada",
+    "tests/compiler-descent/fixtures/product-first.bend": "aa94f6416a2a523ae0710e648847b0931abab6dade08a631012a21c70304f06e",
+    "tests/compiler-descent/fixtures/product-second.bend": "a2b52a8ce08c1a14318a5de6b3886130e796d98d61d29dedb438bf57e3463919",
+    "tests/compiler-descent/fixtures/product-growth.bend": "e8ac75d2a08671cb0b6408d740096c80629a5ca1d8e781d1a38ae971f2c2f333",
+    "tests/compiler-descent/fixtures/erased-field-equal.bend": "624f8f2326125a3e59637990fca038c4b1b1d70ad12cc6fea7182c9c2384232e",
+    "tests/compiler-descent/fixtures/erased-field-growth.bend": "f64b6a8fd51978661285504bfa61346f7ebbdf19a81434afceeee89f9bff4872",
+    "tests/compiler-descent/fixtures/different-head-subterm.bend": "03c1a8622ba855943dea55e64d2260f8ec0ada0db5b61d2a7349468744eefab3",
+    "tests/compiler-descent/fixtures/constructor-subterm.bend": "31be7b8cf5db12d330b7342b1b2ed009991d743711e93399c49fa65c7717ea78",
+    "tests/compiler-descent/fixtures/same-head-subterm.bend": "a6584b7886bac1e26976ae205cba17be88cda483bab4e27cec1818c72749635f",
+    "tests/compiler-descent/fixtures/second-descent-observer.bend": "a1e94f85591c26b3fcf67a70909b2fafd1b93aa35c96d7e4bb3dea545fb9f8af",
+    "tests/compiler-recursion/fixtures/same-parameter.bend": "3aa67d0b3ccb3d9d545404959036d2eaa0871f63cb17700a638eead095fb2e4c",
+    "tests/compiler-recursion/fixtures/other-parameter.bend": "c5252c14ba1f2dc4ad12c496321fe247d279c19434e9162c6d1d6340976c42e5",
+    "tests/compiler-recursion/fixtures/rebuilt-parent.bend": "7f9ee29b2ce6e2f8fc607fc1a6aff54035f54475d312e0da7928ab8de6e3bcaa",
+    "tests/compiler-recursion/fixtures/rebuilt-constructor.bend": "7ba3e48f12a5c309e3ed215ccded13e7e4dd0126c594d0d7ea125bbd0c1edeb5",
+    "tests/compiler-recursion/fixtures/computed.bend": "6bdd0c955058cd9e63c6e7c918a71a45237208ef61f8f7ea9fdc4eb095a39eda",
+    "tests/compiler-recursion/fixtures/shadow-let.bend": "568cdf41693687228d467d2cd1c9329b697d2f0b3fd6b41f6b816b67b4d3cb2e",
+    "tests/compiler-recursion/fixtures/second-descent.bend": "c80d1224a2d05935d2614029f169f74ed6bc00c0b640f1d6a852f4f7d996d6d6",
+    "tests/compiler-checker/fixtures/recursive-call.bend": "949f6edea1b6beb7ca9a560cdd47bb5ed17a3d71ef7e2bb9800ba70008a22119",
+    "tests/compiler-nest/fixtures/rec-swapped-args.bend": "1747f6f375d529421c0b30440dbc9e8286c67ea5783c550d648e083daf6939ea",
+    "tests/compiler-nest/fixtures/rec-alias.bend": "798708f5ad868629e15d900f919e85a07b3575ba727946db6c826dcf073722dd"
+  },
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "observations": [
+    {
+      "name": "second-column",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/second-column.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "third-column",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/third-column.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "earlier-shrink-later-growth",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/earlier-shrink-later-growth.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "earlier-growth-later-shrink",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/earlier-growth-later-shrink.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- n : N\n- p : N\nLocation: drain\n 9 |     case Z{}: On{}\n10>|     case S{p}: drain(S{n},p)\n   |                ^^^^^\n11 | def main() -> Flag:\n"
+    },
+    {
+      "name": "all-equal",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/all-equal.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- n : N\n- m : N\nLocation: drain\n7 | def drain(+n: N, +m: N) -> Flag:\n8>|   drain(n,m)\n  |   ^^^^^\n9 | def main() -> Flag:\n"
+    },
+    {
+      "name": "rebuilt-equal",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/rebuilt-equal.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- p : N\nLocation: drain\n 9 |     case Z{}: On{}\n10>|     case S{p}: drain(S{p})\n   |                ^^^^^\n11 | def main() -> Flag:\n"
+    },
+    {
+      "name": "rebuilt-smaller",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/rebuilt-smaller.bend"
+      ],
+      "exit": 0,
+      "stdout": "Off{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "matched-parent-equal-prefix",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/matched-parent-equal-prefix.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "explicit-constructor-equal-prefix",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/explicit-constructor-equal-prefix.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "alias-field",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/alias-field.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "alias-chain",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/alias-chain.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "alias-parent",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/alias-parent.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- p    : N\n- next : N\nLocation: drain\n11 |       next : N = n\n12>|       drain(next)\n   |       ^^^^^\n13 | def main() -> Flag:\n"
+    },
+    {
+      "name": "alias-computed",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/alias-computed.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- p    : N\n- next : N\nLocation: drain\n13 |       next = identity(p)\n14>|       drain(next)\n   |       ^^^^^\n15 | def main() -> Flag:\n"
+    },
+    {
+      "name": "alias-shadow",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/alias-shadow.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- p : N\n- p : N\nLocation: drain\n11 |       p : N = S{p}\n12>|       drain(p)\n   |       ^^^^^\n13 | def main() -> Flag:\n"
+    },
+    {
+      "name": "erased-column",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/erased-column.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "erased-only-change",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/erased-only-change.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- ghost : N\n- p     : N\nLocation: drain\n 9 |     case Z{}: On{}\n10>|     case S{p}: drain(p,n)\n   |                ^^^^^\n11 | def main() -> Flag:\n"
+    },
+    {
+      "name": "all-erased",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/all-erased.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- ghost : N\nLocation: drain\n7 | def drain(-ghost: N) -> Flag:\n8>|   drain(ghost)\n  |   ^^^^^\n9 | def main() -> Flag:\n"
+    },
+    {
+      "name": "dead-self-call",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/dead-self-call.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "dead-self-argument",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/dead-self-argument.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "product-first",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/product-first.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "product-second",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/product-second.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "product-growth",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/product-growth.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- a : N\n- _ : N\nLocation: drain\n11 |     case Pair{Z{},_}: On{}\n12>|     case Pair{S{a},b}: drain(Pair{a,S{b}})\n   |                        ^^^^^\n13 | def main() -> Flag:\n"
+    },
+    {
+      "name": "erased-field-equal",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/erased-field-equal.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "erased-field-growth",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/erased-field-growth.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- _ : N\n- b : N\nLocation: drain\n11 |     case Pair{_,Z{}}: On{}\n12>|     case Pair{ghost,S{b}}: drain(Pair{S{ghost},b})\n   |                            ^^^^^\n13 | def main() -> Flag:\n"
+    },
+    {
+      "name": "different-head-subterm",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/different-head-subterm.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "constructor-subterm",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/constructor-subterm.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "same-head-subterm",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/same-head-subterm.bend"
+      ],
+      "exit": 0,
+      "stdout": "Off{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "second-descent-observer",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-descent/fixtures/second-descent-observer.bend"
+      ],
+      "exit": 0,
+      "stdout": "On{}\n",
+      "stderr": ""
+    },
+    {
+      "name": "recursion/same-parameter",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/same-parameter.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\nLocation: f\n4 | def f(n: Peano) -> Peano:\n5>|   f(n)\n  |   ^\n6 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/other-parameter",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/other-parameter.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- n : Peano\n- p : Peano\nLocation: f\n6 |     case Zero{}: n\n7>|     case Succ{p}: f(p,Zero{})\n  |                   ^\n8 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/rebuilt-parent",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(n)\n  |                   ^\n8 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/rebuilt-constructor",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n6 |     case Zero{}: Zero{}\n7>|     case Succ{p}: f(Succ{p})\n  |                   ^\n8 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/computed",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/computed.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\nLocation: f\n 8 |     case Zero{}: Zero{}\n 9>|     case Succ{p}: f(g(p))\n   |                   ^\n10 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/shadow-let",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/shadow-let.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- p : Peano\n- p : Peano\nLocation: f\n 8 |       p : Peano = Succ{p}\n 9>|       f(p)\n   |       ^\n10 | def main() -> Peano:\n"
+    },
+    {
+      "name": "recursion/second-descent",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-recursion/fixtures/second-descent.bend"
+      ],
+      "exit": 0,
+      "stdout": "1n\n",
+      "stderr": ""
+    },
+    {
+      "name": "compiler-checker/recursive-call",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-checker/fixtures/recursive-call.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : f\nContext:\n- x : Flag\nLocation: f\n4 | def f(x: Flag) -> Flag:\n5>|   f(x)\n  |   ^\n6 | def main() -> Flag:\n"
+    },
+    {
+      "name": "compiler-nest/rec-swapped-args",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-nest/fixtures/rec-swapped-args.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : swap\nContext:\n- x : N\n- b : N\nLocation: swap\n12 |     case Z{} _: On{}\n13>|     case S{x} y: swap(y, x)\n   |                  ^^^^\n14 | \n"
+    },
+    {
+      "name": "compiler-nest/rec-alias",
+      "command": [
+        "bun",
+        ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+        "tests/compiler-nest/fixtures/rec-alias.bend",
+        "--check-only"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Error:\n- expected : a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)\n- observed : drain\nContext:\n- n : N<> - Z{}\nLocation: drain\n12 |     case Z{}: On{}\n13>|     case k: drain(k)\n   |             ^^^^^\n14 | \n"
+    }
+  ],
+  "baseline_implementation": {
+    "src/LAWS.bend": "b7755dbd1da14516ecdb7484edace511e581e4c8671a287f2d23826264502e6d",
+    "src/PROOF.bend": "b3808807d0ffdfaa14a1cebb5bf532f58836402b1e988c56d3b3c9bea9eca7c4",
+    "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
+    "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
+    "src/catalog.bend": "0b478dbbc0f07f60ade43c04dd53b9660f6410b1c5dd4d0ef191772d83986098",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "2c39850e49a82268748541fea1f5074ee99f4cec774448cdfc5a05d0746b96ee",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "5ceff091280c1a5e5cd4ca4b609c6520f76435d44ba0e75cd08688e3f0c64354",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/matrix-LAWS.bend": "872942aaf3936e939f50caea516c4305824a737aac7c7791d38e1b6f87bf8d76",
+    "src/matrix-PROOF.bend": "3a6d3c19fce3e6f2fb562bbf964198e8411d4d2b4cfc4e41d2233200991ccdc9",
+    "src/matrix.bend": "23f7e79793b4a864ca1b55f218d1b056922ae0d7ec9696b97bca8b553713a0f5",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "2301b90a8787bcd413ba26a27d6360d7c05a3e102f501e39dba097923877c9f7",
+    "src/patterns.bend": "379a8e4d95d860bd8e9bedd30f2193143ebaef290b82db19db74d5cfe5de98c9",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "8c9bedfbc7583b6c6009ef8f2f1b1a6d9aa2a085e3f06d467f57bab8b4dfce93",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "4557219b40a35431e71de9c98ee38b96fb15fb505cf0e2f93f1100385c89672d"
+  }
+}

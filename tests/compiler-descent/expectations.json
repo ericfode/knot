@@ -1,0 +1,908 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "basis": "Seed term_descend and live Ref rule; literal enum tags and constructor trees fixed before implementation.",
+  "fixtures": [
+    {
+      "name": "second-column",
+      "file": "tests/compiler-descent/fixtures/second-column.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "third-column",
+      "file": "tests/compiler-descent/fixtures/third-column.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "earlier-shrink-later-growth",
+      "file": "tests/compiler-descent/fixtures/earlier-shrink-later-growth.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "earlier-growth-later-shrink",
+      "file": "tests/compiler-descent/fixtures/earlier-growth-later-shrink.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "earlier-shrink-later-growth"
+    },
+    {
+      "name": "all-equal",
+      "file": "tests/compiler-descent/fixtures/all-equal.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "second-column"
+    },
+    {
+      "name": "rebuilt-equal",
+      "file": "tests/compiler-descent/fixtures/rebuilt-equal.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "rebuilt-smaller"
+    },
+    {
+      "name": "rebuilt-smaller",
+      "file": "tests/compiler-descent/fixtures/rebuilt-smaller.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 0
+      }
+    },
+    {
+      "name": "matched-parent-equal-prefix",
+      "file": "tests/compiler-descent/fixtures/matched-parent-equal-prefix.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "explicit-constructor-equal-prefix",
+      "file": "tests/compiler-descent/fixtures/explicit-constructor-equal-prefix.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "alias-field",
+      "file": "tests/compiler-descent/fixtures/alias-field.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "alias-chain",
+      "file": "tests/compiler-descent/fixtures/alias-chain.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "alias-parent",
+      "file": "tests/compiler-descent/fixtures/alias-parent.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "alias-field"
+    },
+    {
+      "name": "alias-computed",
+      "file": "tests/compiler-descent/fixtures/alias-computed.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "alias-field"
+    },
+    {
+      "name": "alias-shadow",
+      "file": "tests/compiler-descent/fixtures/alias-shadow.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "alias-field"
+    },
+    {
+      "name": "erased-column",
+      "file": "tests/compiler-descent/fixtures/erased-column.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "erased-only-change",
+      "file": "tests/compiler-descent/fixtures/erased-only-change.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "erased-column"
+    },
+    {
+      "name": "all-erased",
+      "file": "tests/compiler-descent/fixtures/all-erased.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "erased-column"
+    },
+    {
+      "name": "dead-self-call",
+      "file": "tests/compiler-descent/fixtures/dead-self-call.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "dead-self-argument",
+      "file": "tests/compiler-descent/fixtures/dead-self-argument.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-first",
+      "file": "tests/compiler-descent/fixtures/product-first.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-second",
+      "file": "tests/compiler-descent/fixtures/product-second.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "product-growth",
+      "file": "tests/compiler-descent/fixtures/product-growth.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "product-first"
+    },
+    {
+      "name": "erased-field-equal",
+      "file": "tests/compiler-descent/fixtures/erased-field-equal.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "erased-field-growth",
+      "file": "tests/compiler-descent/fixtures/erased-field-growth.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "control": "erased-field-equal"
+    },
+    {
+      "name": "different-head-subterm",
+      "file": "tests/compiler-descent/fixtures/different-head-subterm.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "constructor-subterm",
+      "file": "tests/compiler-descent/fixtures/constructor-subterm.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    },
+    {
+      "name": "same-head-subterm",
+      "file": "tests/compiler-descent/fixtures/same-head-subterm.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "Off{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t0\tOff{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 0
+      }
+    },
+    {
+      "name": "second-descent-observer",
+      "file": "tests/compiler-descent/fixtures/second-descent-observer.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}"
+      },
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tOn{}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm": {
+        "export": "main",
+        "arguments": [],
+        "result": 1
+      }
+    }
+  ],
+  "legacy": [
+    {
+      "name": "recursion/same-parameter",
+      "file": "tests/compiler-recursion/fixtures/same-parameter.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/other-parameter",
+      "file": "tests/compiler-recursion/fixtures/other-parameter.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/rebuilt-parent",
+      "file": "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/rebuilt-constructor",
+      "file": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/computed",
+      "file": "tests/compiler-recursion/fixtures/computed.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/shadow-let",
+      "file": "tests/compiler-recursion/fixtures/shadow-let.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call (arguments are read left to right: each passed unchanged until one shrinks)"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "recursion/second-descent",
+      "file": "tests/compiler-recursion/fixtures/second-descent.bend",
+      "seed": {
+        "exit": 0,
+        "stdout": "1n"
+      },
+      "seed_args": [],
+      "check": {
+        "exit": 0,
+        "contains": "Checked\n"
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tSucc{Zero{}}"
+      },
+      "compile": {
+        "exit": 0
+      },
+      "wasm_observer": "second-descent-observer"
+    },
+    {
+      "name": "compiler-checker/recursive-call",
+      "file": "tests/compiler-checker/fixtures/recursive-call.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "compiler-nest/rec-swapped-args",
+      "file": "tests/compiler-nest/fixtures/rec-swapped-args.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "name": "compiler-nest/rec-alias",
+      "file": "tests/compiler-nest/fixtures/rec-alias.bend",
+      "seed": {
+        "exit": 1,
+        "diagnostic": "a decreasing self-call"
+      },
+      "seed_args": [
+        "--check-only"
+      ],
+      "check": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "eval": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      },
+      "compile": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\trecursive-call\t"
+      }
+    }
+  ]
+}
