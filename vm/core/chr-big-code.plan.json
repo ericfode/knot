@@ -1,0 +1,120 @@
+{
+ "entry": "book",
+ "representation": {
+  "U32": 1,
+  "Char": 2,
+  "Bool": 0
+ },
+ "types": [
+  {
+   "kind": "data",
+   "name": "Bool",
+   "constructors": [
+    {
+     "name": "False",
+     "fields": []
+    },
+    {
+     "name": "True",
+     "fields": []
+    }
+   ]
+  },
+  {
+   "kind": "opaque",
+   "name": "U32"
+  },
+  {
+   "kind": "data",
+   "name": "Char",
+   "constructors": [
+    {
+     "name": "Chr",
+     "fields": [
+      1
+     ]
+    }
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "id",
+   "parameters": [
+    null
+   ],
+   "result": null,
+   "slots": 1,
+   "body": [
+    "ref",
+    null,
+    0
+   ]
+  },
+  {
+   "name": "main",
+   "parameters": [],
+   "result": 0,
+   "slots": 2,
+   "body": [
+    "let",
+    0,
+    0,
+    [
+     "con",
+     2,
+     0,
+     [
+      [
+       "call",
+       1,
+       0,
+       [
+        [
+         "lit",
+         1,
+         "U32",
+         2147483648
+        ]
+       ]
+      ]
+     ]
+    ],
+    [
+     "case",
+     0,
+     0,
+     2,
+     "tags",
+     [
+      [
+       "branch",
+       0,
+       1,
+       1,
+       [
+        "prim",
+        0,
+        8,
+        [
+         [
+          "ref",
+          1,
+          1
+         ],
+         [
+          "lit",
+          1,
+          "U32",
+          2147483648
+         ]
+        ]
+       ]
+      ]
+     ],
+     null
+    ]
+   ]
+  }
+ ]
+}

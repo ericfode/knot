@@ -604,7 +604,7 @@
   }
  ],
  "admitted": {
-  "rule": "vm-spec's admitted controls (check-spec.py plan_controls rows without a message, and code_controls) at 5f9a0fd: SPEC section 4 requires vm-core to load each one. Expected runs are literal review of each control's plan, written before the VM admitted them (D7).",
+  "rule": "vm-spec's admitted controls (check-spec.py plan_controls rows without a message, and code_controls) at 8ef906e: SPEC section 4 requires vm-core to load each one. Expected runs are literal review of each control's plan, written before the VM admitted them (D7). The gate also requires vm-spec's reference evaluation of each plan (vm/evaluate.py `book`) to give the same run and `calls`.",
   "rows": [
    {
     "control": "plan:case-none-parameter",
@@ -777,11 +777,62 @@
      "calls": 2
     },
     "basis": "String.eq([0xD83D, 0xDE00], [0x1F600]): two codes against one, never merged, False{} (Bool is type 0)"
+   },
+   {
+    "control": "plan:first-code",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tTrue{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 3
+    },
+    "basis": "U32.is_eq(first_code(Con{7, Nil{}}), 7): the U32 Case answers the none-typed head 7 from its Con arm (section 3: every arm fits its Case). Entries main, U32.is_eq, first_code: 3. True{} (Bool is type 0); the seed prints True{}"
+   },
+   {
+    "control": "plan:first-code-none-case",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tTrue{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 3
+    },
+    "basis": "first-code with its Case typed none, which fits the U32 body: the same run, True{} after 3 entries"
+   },
+   {
+    "control": "plan:key-arms-none",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tTrue{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 3
+    },
+    "basis": "U32.is_eq(pick(7, 0), 7): the key Case on k = 0 takes its key Branch, which answers the none-typed x = 7 (the Default would too). Entries main, U32.is_eq, pick: 3. True{} (Bool is type 0)"
    }
   ]
  },
  "ceiling": {
-  "rule": "Books whose bump pointer ends within 16 MiB of 4 GiB, where describe used to reserve a 16 MiB text window and a worklist above it in 32-bit arithmetic (review round 2). Expected runs are literal review of each plan under SPEC sections 5 and 8, written before the VM change (D7); `bump` is the design target that section 5's allocation sizes give, and keeps each image in its band. Each run touches about 4 GiB, so they run one at a time.",
+  "rule": "Books whose bump pointer ends within 16 MiB of 4 GiB, where describe used to reserve a 16 MiB text window and a worklist above it in 32-bit arithmetic (review round 2). Provenance: c9869ef chose each plan's fill counts a and b by measuring the pre-fix VM's bump pointer, and pinned `bump` from that measurement; review round 3 found it labelled literal review. The gate now derives every row before any VM runs: check-core's `ceiling_run` sums SPEC section 5's cell sizes over the plan (no reclamation, CORE.md choice 1; append as one block, choice 4), and `ceiling_expectation` starts the text at the bump pointer (choice 12). Each `expect` and `dump` must equal that derivation; it agrees with every measured pin, so no value changed. Each basis records the arithmetic. Each run touches about 4 GiB, so at most two run at a time, each in its own process.",
   "rows": [
    {
     "name": "ceiling-wrap-name",
@@ -799,7 +850,7 @@
      "outcome": "Completed",
      "bump": 4278194480
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313300, b = 4; every function returns On, so main is On{} of Res (type 2, tag 1). A worklist based 16 MiB above the text wrapped onto On's name word, and the VM printed Evaluated\t2\t1\t{} (review round 2)"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 12 slots (64 B; the call fill2(b, 2^31) is main's tail); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 313,300, B0): a + 1 Activations and a B1 cells, 64a + 32 = 20,051,232; fill2(b = 4, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 224; bump = 4,278,194,480. The stdout is literal review: every function returns On, so main is On{} of Res (type 2, tag 1). The pre-fix VM's worklist, based 16 MiB above the text, wrapped onto On's name word, and it printed Evaluated\\t2\\t1\\t{} (review round 2)"
    },
    {
     "name": "ceiling-wrap-type",
@@ -817,7 +868,7 @@
      "outcome": "Completed",
      "bump": 4278194336
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313300, b = 1; every function returns On, so main is On{} of Res (type 2, tag 1). The wrapped worklist overwrote Res's type record, and the VM failed ill-typed (review round 2)"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 12 slots (64 B; the call fill2(b, 2^31) is main's tail); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 313,300, B0): a + 1 Activations and a B1 cells, 64a + 32 = 20,051,232; fill2(b = 1, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 80; bump = 4,278,194,336. The stdout is literal review: every function returns On, so main is On{} of Res (type 2, tag 1). The pre-fix VM's wrapped worklist overwrote Res's type record, and it failed ill-typed (review round 2)"
    },
    {
     "name": "ceiling-wrap-dead",
@@ -835,7 +886,7 @@
      "outcome": "Completed",
      "bump": 4278259872
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 314324, b = 1; every function returns On, so main is On{} of Res (type 2, tag 1). The control: the wrapped worklist landed past the image, and the answer was right"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 12 slots (64 B; the call fill2(b, 2^31) is main's tail); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 314,324, B0): a + 1 Activations and a B1 cells, 64a + 32 = 20,116,768; fill2(b = 1, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 80; bump = 4,278,259,872. The stdout is literal review: every function returns On, so main is On{} of Res (type 2, tag 1). The control: the pre-fix VM's wrapped worklist landed past the image, and the answer was right"
    },
    {
     "name": "ceiling-band",
@@ -853,7 +904,7 @@
      "outcome": "Completed",
      "bump": 4278190048
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 313231, b = 1, each loop returning Nat 0 at Zero; main returns B1{B1{B0{}}} of Box (type 2, tag 1), 26 bytes of text. Just below the wrap: a worklist 16 MiB above the text began 8 bytes below 4 GiB, and opening the first B1 trapped"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 13 slots (128 B; main lets all 13 calls); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 313,231, B0): a + 1 Activations and a B1 cells, 64a + 32 = 20,046,816; fill2(b = 1, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 80; the result, 64 B; bump = 4,278,190,048. The stdout is literal review: each loop returns Nat 0 at Zero; main returns B1{B1{B0{}}} of Box (type 2, tag 1), two Objects of 32 B, and 26 bytes of tree text. Just below the wrap: the pre-fix VM's worklist began 8 bytes below 4 GiB, and opening the first B1 trapped"
    },
    {
     "name": "ceiling-top",
@@ -871,7 +922,7 @@
      "outcome": "Completed",
      "bump": 4294967264
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 575376, b = 1, each loop returning Nat 0 at Zero; main returns Nat 2 (type 0, tag 1). Its 32 bytes of text end exactly at 4 GiB, inside the memory maximum (D19)"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 13 slots (128 B; main lets all 13 calls); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 575,376, B0): a + 1 Activations and a B1 cells, 64a + 32 = 36,824,096; fill2(b = 1, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 80; bump = 4,294,967,264. The stdout is literal review: each loop returns Nat 0 at Zero; main returns Nat 2 (type 0, tag 1). Its line without the LF is 32 bytes, which end exactly at 4 GiB, inside the memory maximum (D19): printed (choice 12)"
    },
    {
     "name": "ceiling-over",
@@ -891,7 +942,68 @@
      "cause": "heap",
      "bump": 4294967280
     },
-    "basis": "main lets dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11 (k String.append doublings, each one block), then fill1(a, B0) (64 B per step: an Activation and a B1 cell) and fill2(b, 2^31) (48 B per step: an Activation and a Big U32 cell); with no reclamation (CORE.md choice 1) section 5's cell sizes put the bump pointer at `bump` when the result is described, a = 575377, b = 0, as ceiling-top 16 bytes higher: its 32 bytes of text would end 16 bytes beyond 4 GiB. Section 5 stops an allocation beyond the maximum with Exhausted kind 2 (heap); the output text is one (CORE.md choice 12)"
+    "basis": "Section 5 arithmetic (check-core's ceiling_run derives it): H0 = 65,536 + 16 MiB = 16,842,752; the pool's Big 2^31 (16 B) and the SCon of \"x\" (32 B); main's Activation of 13 slots (128 B; main lets all 13 calls); dbl(k, \"x\") for k in 26, 25, 24, 23, 22, 21, 18, 17, 14, 13, 11: k + 1 Activations and 2^k - 1 appended String cells, 32 B each, 32 * sum(k + 2^k) = 4,241,300,160; fill1(a = 575,377, B0): a + 1 Activations and a B1 cells, 64a + 32 = 36,824,160; fill2(b = 0, 2^31): b + 1 Activations and b Big U32 cells, 48b + 32 = 32; bump = 4,294,967,280. The stdout is literal review: as ceiling-top 16 bytes higher: its 32 bytes of text would end 16 bytes beyond 4 GiB. Section 5 stops an allocation beyond the maximum with Exhausted kind 2 (heap); the text is one (choice 12)"
+   }
+  ]
+ },
+ "reference": {
+  "rule": "Books whose expected run is literal review of the plan under SPEC sections 3 and 6, written before the VM change (D7), and which the gate also compares with vm-spec's reference evaluation (vm/evaluate.py `book`): the frozen run and `calls` must equal the reference's, and the VM's must equal both. Completing Chr{w} reads its operand as the reference's `construct` does (`word`), so a laundered non-scalar is ill-typed there, used or not (CORE.md choice 13; review round 3).",
+  "rows": [
+   {
+    "name": "chr-unchecked",
+    "image": "core/chr-unchecked",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\till-typed\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed",
+     "calls": 2
+    },
+    "basis": "main = let _ = Chr{id(Box{On{}})} in On{}, with id: none -> none (review round 3's repro). After the entries main and id, completing Chr reads the Object Box{On{}} as a U32: ill-typed, before the unused Let body"
+   },
+   {
+    "name": "chr-closure",
+    "image": "core/chr-closure",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 5,
+     "stdout": "",
+     "stderr": "HostFailure\timage\till-typed\n"
+    },
+    "dump": {
+     "outcome": "HostFailure",
+     "cause": "ill-typed",
+     "calls": 2
+    },
+    "basis": "chr-unchecked with a Closure (Flag -> Flag) as the laundered operand: a class-1 cell read as a U32 is ill-typed after 2 entries"
+   },
+   {
+    "name": "chr-big-code",
+    "image": "core/chr-big-code",
+    "argv": [
+     "main",
+     "1000000"
+    ],
+    "expect": {
+     "exit": 0,
+     "stdout": "Evaluated\t0\t1\tTrue{}\n",
+     "stderr": ""
+    },
+    "dump": {
+     "outcome": "Completed",
+     "calls": 2
+    },
+    "basis": "The control: let c = Chr{id(2^31)} in case c: Chr{w} -> U32.is_eq(w, 2^31). The Big code passes the inspection and Chr keeps the word itself, the pool's Big cell; the Case binds it and the prim compares values: True{} (Bool is type 0) after 2 entries"
    }
   ]
  }

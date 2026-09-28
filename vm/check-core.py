@@ -13,13 +13,18 @@ Checks, in order:
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits;
+  and Books whose frozen run the reference evaluation (vm/evaluate.py) must
+  also give (Chr's operand);
 - the ceiling fixtures: Books whose bump pointer ends near 4 GiB, described
-  exactly or, where the text cannot fit, Exhausted kind 2 (heap);
+  exactly or, where the text cannot fit, Exhausted kind 2 (heap). Each row's
+  bump pointer and outcome are first derived from SPEC section 5's cell sizes
+  over its plan (`ceiling_run`), independently of any VM;
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
 - the malformed-image controls vm-spec froze (as many as SPEC section 4
   states), refused with the reference codec's first defect; the controls
-  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them, and its
+  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them (and as
+  the reference evaluation runs them), and its
   run controls, run to the outcome and call count check-spec.py freezes with
   them, also on exactly that much fuel (section 7's operand check); and a
   seeded fuzz corpus of mutated goldens, where every refusal matches the
@@ -193,6 +198,133 @@ def expected_dump(case: dict) -> dict:
         return {'outcome': 'Completed'}
     row = {'outcome': case['outcome'], 'cause': case['cause'].split(' ')[-1]}
     return {**row, 'kind': case['kind']} if case['outcome'] == 'Exhausted' else row
+
+
+def shown(result: dict, want: dict) -> dict:
+    """The host-visible run, with stdout as its digest where `want` freezes one (a display
+    run control's 16 MiB line is frozen by SHA-256)."""
+    seen = {k: result[k] for k in ('exit', 'stdout', 'stderr')}
+    if 'stdout_sha256' in want:
+        seen['stdout_sha256'] = sha(seen.pop('stdout').encode())
+    return seen
+
+
+def reference_run(plan: dict, fuel: int) -> tuple[dict, dict]:
+    """(host run, outcome registers) of vm-spec's reference evaluation of a Book's `main`
+    (vm/evaluate.py), independent of the VM."""
+    got = spec.reference.book(plan, 'main', [], fuel)
+    run = {'stderr': '', **got} if 'exit' in got else got
+    return expected_run(run), {**expected_dump(run), 'calls': got['calls']}
+
+
+# ------------------------------------------------------------------ SPEC section 5 arithmetic
+class Tail(tuple):
+    """A call in tail position, (function, operands): the entering loop takes it."""
+
+
+def cell(payload: int) -> int:
+    """Bytes of a cell with `payload` words: the smallest power of two not below
+    max(4, 2 + payload) words."""
+    words = 4
+    while words < 2 + payload:
+        words *= 2
+    return 4 * words
+
+
+def ceiling_run(plan: dict, image: bytes) -> tuple[int, str]:
+    """(bump, line) when a ceiling Book's result is described, from SPEC section 5 alone.
+
+    The heap starts at H0: the image at byte 4096, the frame region from the next 64 KiB
+    boundary, and its 16 MiB. The pool is materialized first. Each entry allocates an
+    Activation of its owner's `slots` (section 7), each Construct with fields an Object, a
+    U32 result at or above 2^31 a Big cell, and `append` one String cell per code of its
+    first operand (CORE.md choice 4). Nothing is freed (choice 1), so the bump pointer is
+    the sum. A String here is its code count, since only sizes reach the heap. The line is
+    section 8's rendering, by the reference evaluation's `describe`."""
+    rep, fns = plan['representation'], plan['functions']
+    big, scon = cell(1), cell(4)  # a Big scalar; a String cell (type, tag, Char, tail)
+    end = 4096 + len(image)
+    require(end % 65536, 'the image does not end on a 64 KiB boundary, where "next" reads two ways')
+    heap = [(end // 65536 + 1) * 65536 + (16 << 20)]
+
+    pool = set()  # interned: one entry per distinct kind and value, as serializer.encode keeps them
+
+    def lits(node):
+        op = node[0]
+        if op == 'lit':
+            pool.add((node[2], tuple(node[3]) if node[2] == 'String' else node[3]))
+        elif op == 'let':
+            lits(node[3])
+            lits(node[4])
+        elif op == 'case':
+            for arm in [r for r in node[5] if r] + [node[6]] * bool(node[6]):
+                lits(arm[-1])
+        elif op in ('con', 'prim', 'call'):
+            for kid in node[3]:
+                lits(kid)
+    for f in fns:
+        lits(f['body'])
+    for kind, v in pool:
+        heap[0] += sum(scon + big * (c >= 2 ** 31) for c in v) if kind == 'String' else big * (v >= 2 ** 31)
+
+    def value(node, env, tail=False):
+        op = node[0]
+        if op == 'lit':
+            return len(node[3]) if node[2] == 'String' else node[3]
+        if op == 'value':
+            return node[2]
+        if op == 'ref':
+            return env[node[2]]
+        if op == 'let':
+            env[node[2]] = value(node[3], env)
+            return value(node[4], env, tail)
+        if op == 'case':
+            _, _, slot, t, mode, rows, default = node
+            require((t, mode, default) == (rep['Nat'], 'tags', None), 'the model cases on Nat only')
+            n = env[slot]
+            arm = rows[n > 0]
+            if n:  # choice 5: n - 1 is allocated only when a Branch binds it
+                heap[0] += big * (n - 1 >= 2 ** 31)
+                env[arm[2]] = n - 1
+            return value(arm[4], env, tail)
+        ops = [value(k, env) for k in node[3]]
+        if op == 'call':
+            return Tail((node[2], ops)) if tail else enter(node[2], ops)
+        if op == 'con' and node[1] not in (rep['Nat'], rep['Char']):
+            heap[0] += cell(2 + len(ops))
+            return ('obj', node[1], node[2], tuple(ops))
+        if op == 'prim' and node[2] == 0:  # U32.add
+            r = (ops[0] + ops[1]) & NONE
+            heap[0] += big * (r >= 2 ** 31)
+            return r
+        if op == 'prim' and node[2] == 35:  # String.append
+            heap[0] += scon * ops[0]
+            return ops[0] + ops[1]
+        raise AssertionError(f'the section 5 model does not cover {node[:3]}')
+
+    def enter(index, ops):
+        while True:
+            f = fns[index]
+            heap[0] += cell(2 + f['slots'])  # an Activation: owner, depth, slot[slots]
+            result = value(f['body'], ops + [None] * f['slots'], True)
+            if not isinstance(result, Tail):
+                return result
+            index, ops = result
+
+    main = next(i for i, f in enumerate(fns) if f['name'] == 'main')
+    result = enter(main, [])
+    return heap[0], spec.reference.Machine(plan, 0).describe(result, fns[main]['result'])
+
+
+def ceiling_expectation(plan: dict, image: bytes) -> tuple[dict, dict]:
+    """(host run, dump) that section 5's bump and CORE.md choice 12 give: the text starts
+    at the bump pointer and is printed when it ends at or below 4 GiB, else it is Exhausted
+    kind 2 (heap)."""
+    bump, line = ceiling_run(plan, image)
+    if bump + len(line) - 1 <= 1 << 32:  # the text is the line without its LF
+        return {'exit': 0, 'stdout': line, 'stderr': ''}, {'outcome': 'Completed', 'bump': bump}
+    return ({'exit': 4, 'stdout': '', 'stderr': 'Exhausted\tio\tmemory\n'},
+            {'outcome': 'Exhausted', 'kind': 2, 'cause': 'heap', 'bump': bump})
 
 
 def refusal_counts() -> tuple[int, int, int]:
@@ -456,7 +588,8 @@ def main() -> int:
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(
                   [HERE / 'vm.wat', HERE / 'vm.wasm', HERE / 'build.json', HERE / 'build.py', HERE / 'harness.mjs',
                    HERE / 'check-core.py', HERE / 'SPEC.md', HERE / 'serializer.py', HERE / 'registry.json', HOST,
-                   HERE / 'check-spec.py', HERE / 'golden/vm-expected.json', *(HERE / 'core').glob('*')])}}
+                   HERE / 'check-spec.py', HERE / 'evaluate.py', HERE / 'golden/vm-expected.json',
+                   *(HERE / 'core').glob('*')])}}
 
     # pins and module shape
     pins, module_bytes, test_bytes = build.build()
@@ -550,13 +683,41 @@ def main() -> int:
         dumps.append({'name': name, **{k: seen[k] for k in want}})
     record['fixtures'] = {'runs': core, 'dumps': dumps}
 
+    # Books compared with the reference evaluation: the frozen run is literal review, and
+    # vm/evaluate.py and the VM must each give it (review round 3: Chr's operand)
+    compared = fixtures['reference']['rows']
+    for r in compared:
+        plan, image = json.loads((HERE / f"{r['image']}.plan.json").read_text()), (HERE / f"{r['image']}.kimg").read_bytes()
+        require(codec.encode(plan, digest) == image and spec.rejected(image, reg, digest) is None,
+                f"reference {r['name']}: the image is its plan's encoding, and the reference codec admits it")
+        derived = reference_run(plan, int(r['argv'][1]))
+        require(derived == (r['expect'], r['dump']), f"reference {r['name']}: frozen {r['expect']} {r['dump']}, "
+                                                     f"the reference evaluation {derived}")
+    reference_jobs = [{'id': f"reference:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
+                       'argv': [staged(r['image']), *r['argv']], 'want': r['expect'], 'dump': r['dump']} for r in compared]
+    ran = pool(lambda j: host(module, sandbox, j['argv']), reference_jobs)
+    dumped = harness([{**{k: j[k] for k in ('id', 'files', 'argv')}, 'wasm': str(test), 'trace': 'audit'}
+                      for j in reference_jobs])
+    agreed = []
+    for j, got in zip(reference_jobs, ran):
+        dump, state = dumped[j['id']], dumped[j['id']]['state']
+        require(dump['broken'] is None, f"{j['id']}: state audit {dump['broken']}")
+        require(got == j['want'], f"{j['id']}: {got} vs the reference evaluation {j['want']}")
+        require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f"{j['id']}: harness and host differ")
+        require(all(state[k] == v for k, v in j['dump'].items()), f"{j['id']}: {state} vs {j['dump']}")
+        agreed.append({'name': j['id'].split(':', 1)[1], 'exit': got['exit'], **j['dump']})
+    record['reference'] = agreed
+
     # the bump pointer near 4 GiB: each run touches about 4 GiB, so two at a time,
     # each in its own process
+    # SPEC section 5's arithmetic fixes each row before the VM runs it
     ceiling = fixtures['ceiling']['rows']
     for r in ceiling:
-        plan = json.loads((HERE / f"{r['image']}.plan.json").read_text())
-        require(codec.encode(plan, digest) == (HERE / f"{r['image']}.kimg").read_bytes(),
-                f"ceiling {r['name']}: the image is its plan's encoding")
+        plan, image = json.loads((HERE / f"{r['image']}.plan.json").read_text()), (HERE / f"{r['image']}.kimg").read_bytes()
+        require(codec.encode(plan, digest) == image, f"ceiling {r['name']}: the image is its plan's encoding")
+        derived = ceiling_expectation(plan, image)
+        require(derived == (r['expect'], r['dump']), f"ceiling {r['name']}: frozen {r['expect']} {r['dump']}, "
+                                                      f"section 5 gives {derived}")
     ceiling_jobs = [{'id': r['name'], 'wasm': str(test), 'files': {staged(r['image']): str(sandbox / staged(r['image']))},
                      'argv': [staged(r['image']), *r['argv']]} for r in ceiling]
     ran = pool(lambda r: host(module, sandbox, [staged(r['image']), *r['argv']]), ceiling, workers=2)
@@ -623,16 +784,20 @@ def main() -> int:
         refused.append({'control': r['label'], 'reference': r['reference'], 'vm': code, 'exit': g['exit']})
 
     # the controls vm-spec admits (SPEC section 4): loaded, then run as literal review froze them
-    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None] + [
-        (label, codec.encode(p, digest)) for label, p in spec.code_controls(plans)]
+    admitted = [(f'plan:{k}', p) for k, p, m in planned if m is None] + spec.code_controls(plans)
     frozen = {r['control']: r for r in fixtures['admitted']['rows']}
     require(sorted(label for label, _ in admitted) == sorted(frozen),
             f'admitted controls {sorted(label for label, _ in admitted)} vs frozen rows {sorted(frozen)}')
     loaded = BUILD / 'admitted'
     loaded.mkdir()
     welcome = []
-    for i, (label, data) in enumerate(admitted):
+    for i, (label, plan) in enumerate(admitted):
+        data, row = codec.encode(plan, digest), frozen[label]
         require(spec.rejected(data, reg, digest) is None, f'admitted control {label}: the reference refuses it')
+        require(plan['entry'] == 'book' and row['argv'][0] == 'main', f'admitted control {label}: a Book of main')
+        run, dump = reference_run(plan, int(row['argv'][1]))
+        require(run == row['expect'] and {k: dump.get(k) for k in row['dump']} == row['dump'],
+                f"admitted control {label}: frozen {row['expect']} {row['dump']}, the reference evaluation {run} {dump}")
         (loaded / f'a{i}.kimg').write_bytes(data)
         welcome.append({'label': label, 'sha256': sha(data), 'argv': [f'a{i}.kimg', *frozen[label]['argv']]})
     ran = pool(lambda r: host(module, loaded, r['argv']), welcome)
@@ -658,7 +823,7 @@ def main() -> int:
         data = codec.encode(plan, digest)
         require(spec.rejected(data, reg, digest) is None, f'run control {label}: the reference refuses it')
         (loaded / f'r{i}.kimg').write_bytes(data)
-        want = expected_run({'stderr': '', **run}) if 'exit' in run else expected_run(run)
+        want = {'stderr': '', **{k: v for k, v in run.items() if k != 'calls'}} if 'exit' in run else expected_run(run)
         dump = {**expected_dump(run if 'exit' not in run else {'exit': 0}), 'calls': run['calls']}
         for fuel in ('1000000', str(run['calls'])):
             argv = ['main', fuel] if plan['entry'] == 'book' else [fuel, '--']
@@ -668,7 +833,7 @@ def main() -> int:
     dumped = traced(run_rows, loaded)
     for r, g in zip(run_rows, ran):
         dump, state = dumped[r['label']], dumped[r['label']]['state']
-        require(g == r['want'], f"run control {r['label']}: {g} vs {r['want']}")
+        require(shown(g, r['want']) == r['want'], f"run control {r['label']}: {shown(g, r['want'])} vs {r['want']}")
         require(dump['booted'] and (dump['exit'], dump['stdout']) == (g['exit'], g['stdout']),
                 f"run control {r['label']}: not loaded, or harness and host differ: {dump}")
         seen = {'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls']}
@@ -722,11 +887,10 @@ def main() -> int:
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']], 'ceiling': ceiling_mutant_jobs,
-              'invocations': invocation_jobs, 'runs': run_jobs}
+              'invocations': invocation_jobs, 'runs': run_jobs, 'reference': reference_jobs}
 
     def observed_wrong(job, out):
-        shown = {k: out[k] for k in ('exit', 'stdout', 'stderr')} != job['want']
-        return shown or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+        return shown(out, job['want']) != job['want'] or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
 
     killed = []
     for name, breaks, edits, group in MUTANTS:
@@ -759,7 +923,7 @@ def main() -> int:
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-core passed: {len(goldens)} golden images, {len(invocations)} Book invocations, {len(core)} fixture runs, "
-          f"{len(dumps)} dump rows, "
+          f"{len(dumps)} dump rows, {len(agreed)} runs equal to the reference evaluation, "
           f"{len(high)} ceiling runs, {len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
           f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
