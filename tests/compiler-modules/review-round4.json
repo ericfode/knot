@@ -23,9 +23,13 @@
     "containment",
     "identity",
     "string",
-    "result"
+    "result",
+    "output"
   ],
   "sources": {
+    "output/base.bend": "5dacc63838ab6dbb0a43dd52875971dc17950e01208c461ebe6e068bcf0abab7",
+    "output/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "output/main.bend": "9a0f462ab40bdc6059435127f2e6037aa26f3ca4a77b875d2d78afc28c1e130d",
     "rel/w/app/back.bend": "3a5407812fb20ca075dbc2ae121bdda1996746adcd753799621b2a3b0b3a39e6",
     "rel/w/app/climb.bend": "35dd2f0e3958ed33bd712448fa20d21f9ada5e6b6ae2a2c24b0096d9108d1a7a",
     "rel/w/app/m/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
@@ -829,5 +833,151 @@
         "diagnostic_prefix": "Invalid\tparse\tfunction-result\t"
       }
     }
-  ]
+  ],
+  "output_guard": {
+    "reason": "Literal review (no seed call): compile --bundle must not open an output naming the entry, a loaded module or the pinned Base, by any spelling; the named file stays byte-identical. Paths are relative to cwd unless listed in absolute.",
+    "cwd": "output",
+    "bundle": "pkgs",
+    "base_copy": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+    "cases": [
+      {
+        "name": "output-module-absolute",
+        "entry": "main.bend",
+        "output": "lib/flag.bend",
+        "absolute": [
+          "entry",
+          "bundle",
+          "output"
+        ],
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-module-relative",
+        "entry": "main.bend",
+        "output": "lib/flag.bend",
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-module-dotted",
+        "entry": "main.bend",
+        "output": "./lib/../lib/flag.bend",
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-entry-dotted",
+        "entry": "main.bend",
+        "output": "./main.bend",
+        "protected": "main.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-module-mixed-basis",
+        "entry": "main.bend",
+        "output": "lib/flag.bend",
+        "absolute": [
+          "output"
+        ],
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-entry-mixed-basis",
+        "entry": "main.bend",
+        "output": "main.bend",
+        "absolute": [
+          "entry",
+          "bundle"
+        ],
+        "protected": "main.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-climbing",
+        "entry": "main.bend",
+        "output": "../output/lib/flag.bend",
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\toutput-path"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-symlink",
+        "entry": "main.bend",
+        "output": "alias.wasm",
+        "symlink": "lib/flag.bend",
+        "protected": "lib/flag.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\toutput-path"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-base-relative",
+        "entry": "base.bend",
+        "output": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+        "base_copy": true,
+        "protected": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-base-absolute",
+        "entry": "base.bend",
+        "output": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+        "base_copy": true,
+        "absolute": [
+          "output"
+        ],
+        "protected": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+        "expected": {
+          "exit": 5,
+          "diagnostic_prefix": "HostFailure\targuments\tsource-is-output"
+        },
+        "finding": "output"
+      },
+      {
+        "name": "output-fresh",
+        "entry": "main.bend",
+        "output": "fresh.wasm",
+        "expected": {
+          "exit": 0,
+          "stdout_prefix": "Built\t"
+        },
+        "finding": "output"
+      }
+    ]
+  }
 }
