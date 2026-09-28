@@ -95,7 +95,7 @@ Classes:
 | match-interplay | `closure-in-arm` | - | - | `lambda-matches-capture` |
 
 That makes 13 positive, 6 edge, 4 boundary and 17 negative fixtures. They
-produce 273 seed entry calls and 17 seed rejections.
+produce 283 seed entry calls and 17 seed rejections.
 
 ### What Knot's own source needs
 
@@ -106,7 +106,9 @@ declarations, captures in 168, function-typed parameters (`higher-order`) in
 definitions used as values in 5. The suite pins their shapes:
 
 - `S.choose(A, c, u => ..., u => ...)`: `choose-thunks`, and the exact signature
-  in `generic-choose-bind`, including an instance at a function type.
+  in `generic-choose-bind`, including an instance at a function type. The last
+  thunk of `staged` has a statement body, a `+m = ...` let and then a call, as
+  `src/patterns.bend` and `src/check.bend` write them.
 - `S.bind(A, B, r, +x => S.bind(..., y => ...))`: `bind-continuation`,
   `generic-choose-bind`, and the `+binder` in `lambda-reusable-binder`.
 - Curried continuations such as `next: E.Scope -> C.Binding -> C.Term -> R`,
@@ -281,6 +283,11 @@ because an implementer could reasonably expect otherwise.
   a `+` parameter or lambda binder at a function type is rejected
   (`reusable-function-param`, `reusable-closure-binder`), and so is a function
   field in a `Data` datatype (`function-field-data`).
+- **Second-order parameters are in scope.** `lift(h: (Flag -> Flag) -> Flag)`
+  in `lambda-reusable-binder` takes a function whose argument is a function, fed
+  a plain `g => g(x)`. `reusable-closure-binder` feeds the identical `lift` a
+  `+g` binder, so its pinned `reusable-type` cannot be preempted by an
+  unsupported parameter type.
 - **Captures are consumed when the closure is built**, not when it runs. Two
   thunks that capture one affine value are rejected although only one runs
   (`capture-affine-twice`). Each branch may capture its own affine value, or
@@ -321,6 +328,9 @@ because an implementer could reasonably expect otherwise.
     rejected with the descent reason.
   - A lambda checked against `Flag` reports `observed : non-inferrable term`.
   - `+y => match y:` is rejected like `y => match y:`.
+  - A match inside a lambda body on a field captured from an enclosing arm,
+    `case Tagged{t}: y => match t:`, is rejected with the same reason. A
+    lambda body may hold lets (`choose-thunks`), but never a match.
 - Tags come from a syntactic reading of each fixture's enum declarations, in
   declaration order. The seed only names the constructor.
 

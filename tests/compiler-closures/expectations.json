@@ -188,7 +188,7 @@
       "file": "fixtures/choose-thunks.bend",
       "class": "positive",
       "feature": "captures",
-      "intent": "The S.choose idiom with u => thunks: split gives each thunk its own affine capture; shared captures one + value in both thunks and nests a choose.",
+      "intent": "The S.choose idiom with u => thunks: split gives each thunk its own affine capture; shared captures one + value in both thunks and nests a choose; staged ends in a thunk whose body is a +m let followed by a call, as in src/patterns.bend.",
       "twin": null,
       "requires": [],
       "entries": [
@@ -209,6 +209,15 @@
         {
           "name": "shared",
           "params": [
+            "Flag",
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "staged",
+          "params": [
+            "Flag",
             "Flag",
             "Flag"
           ],
@@ -686,7 +695,7 @@
       "file": "fixtures/lambda-reusable-binder.bend",
       "class": "edge",
       "feature": "lambda-binders",
-      "intent": "A +y lambda binder at the Data type Flag is used twice in a constructor, as in S.bind(..., +reference => ...).",
+      "intent": "A +y lambda binder at the Data type Flag is used twice in a constructor, as in S.bind(..., +reference => ...); a plain g binder at the function type Flag -> Flag, the argument of the second-order parameter of lift, is applied once.",
       "twin": null,
       "requires": [
         "fields"
@@ -706,6 +715,13 @@
         },
         {
           "name": "run_right",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "run_lift",
           "params": [
             "Flag"
           ],
@@ -1010,7 +1026,7 @@
       "file": "fixtures/reusable-closure-binder.bend",
       "class": "negative",
       "feature": "lambda-binders",
-      "intent": "A +g lambda binder whose type is the function type Flag -> Flag.",
+      "intent": "The lift of lambda-reusable-binder fed a +g binder, whose type is the function type Flag -> Flag, to apply it twice.",
       "twin": "lambda-reusable-binder",
       "requires": [],
       "entries": [],
@@ -2658,7 +2674,7 @@
       },
       {
         "case": "choose-thunks",
-        "source_sha256": "25e3bbae54d313bc6afbd9a7f9e6b830778970d6d17426b3462cade1d74282d0",
+        "source_sha256": "fd3f3aaae66dd80244ad034127496796b798e7b7eebdb9c355bec6346d10ad06",
         "enums": {
           "Flag": [
             "Off",
@@ -3028,6 +3044,230 @@
               "bun",
               ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
               ".local/compiler-closures/wrappers/choose-thunks--shared--On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Off",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--Off-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.Off{}, F.Off{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--Off-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Off",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--Off-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.Off{}, F.Off{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--Off-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Off",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--Off-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.Off{}, F.On{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--Off-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "Off",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--Off-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.Off{}, F.On{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--Off-On-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "On",
+              "Off",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--On-Off-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.On{}, F.Off{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--On-Off-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "On",
+              "Off",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--On-Off-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.On{}, F.Off{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--On-Off-On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "On",
+              "On",
+              "Off"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--On-On-Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.On{}, F.On{}, F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--On-On-Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "staged",
+            "arguments": [
+              "On",
+              "On",
+              "On"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/choose-thunks--staged--On-On-On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/choose-thunks.bend as F\n\ndef main() -> F.Flag:\n  F.staged(F.On{}, F.On{}, F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/choose-thunks--staged--On-On-On.bend"
             ],
             "exit": 0,
             "stdout": "../../../tests/compiler-closures/fixtures/choose-thunks.On{}\n",
@@ -8226,7 +8466,7 @@
       },
       {
         "case": "lambda-reusable-binder",
-        "source_sha256": "1d5a4cf3e53bfba8eadef80c3e7f02c63e339fc5f4c426e758d166cf81a4b3f5",
+        "source_sha256": "0ce950b581ab8ecaab5af14ab7f020c09024eca5b8df7ab31bae0e96cf07475f",
         "enums": {
           "Flag": [
             "Off",
@@ -8361,6 +8601,54 @@
               "bun",
               ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
               ".local/compiler-closures/wrappers/lambda-reusable-binder--run_right--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/lambda-reusable-binder.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "run_lift",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/lambda-reusable-binder--run_lift--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/lambda-reusable-binder.bend as F\n\ndef main() -> F.Flag:\n  F.run_lift(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/lambda-reusable-binder--run_lift--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-closures/fixtures/lambda-reusable-binder.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "run_lift",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-closures/wrappers/lambda-reusable-binder--run_lift--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-closures/fixtures/lambda-reusable-binder.bend as F\n\ndef main() -> F.Flag:\n  F.run_lift(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/wrappers/lambda-reusable-binder--run_lift--On.bend"
             ],
             "exit": 0,
             "stdout": "../../../tests/compiler-closures/fixtures/lambda-reusable-binder.Off{}\n",
