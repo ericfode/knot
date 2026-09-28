@@ -4,7 +4,7 @@ These literals are fixed before changing `scripts/run-wasm-io.mjs` from
 `f42ae39`. They extend the host boundary under D17, not the source language.
 The existing IO suite, its 86 host runs and review-2 assertions stay unchanged.
 
-`expectations.json` fixes 11 byte fixtures, 26 identity fixtures, 23 boundary
+`expectations.json` fixes 11 byte fixtures, 26 identity fixtures, 25 boundary
 controls and four semantic mutants. Expectations come from literal byte and
 protocol review. The two unmodified foreign bodies in `reference/` are copied
 from `campaign/modules` commit `0111f13`; their SHA-256 identities are fixed in
@@ -57,8 +57,19 @@ The private, stable-directory and race limits of knot-io-1 still apply.
 `Exhausted\tio\tframes\n`. No later guest instruction executes. Kinds 1 and 2
 and the recognized engine `call-stack` outcome are unchanged. Other kinds are
 ABI failures. Allocation callbacks still permit only exhaustion kind 2.
+The two allocator controls (kinds 1 and 3 inside `knot_alloc`) were added
+before the host change: `knot-io-1` documented this rule but let kind 1
+through as `Exhausted io steps`. Both are now `HostFailure io abi`.
 
 ## Independent observations
+
+The pinned seed independently witnesses every byte fixture.
+[`read-bytes.bend`](read-bytes.bend) prints each `File.read_bytes` result as
+bytes and each `File.read` result as scalar values; its interpreter, native
+and JS lanes must reproduce the frozen errno and bytes (Base handles are
+opaque, so `value` is Wasm-only). The Bun lanes overflow on lists beyond about
+32,000 cells; only that documented bound excuses them, on the 65,537-byte
+fixture, which the native lane still witnesses.
 
 Byte fixtures pin empty reads, every byte value, invalid UTF-8, non-BMP UTF-8,
 a BOM, split sequences, unsigned maxima, EOF, mixed text/raw reads, handle
@@ -80,5 +91,7 @@ additional case-comparison mutant must disagree on a case-insensitive volume;
 the frame mutant must return a wrong, explicit Exhausted classification.
 Crashes, invalid Wasm, syntax errors and unavailable tools do not kill mutants.
 
-No Bend file or law is added. Offline style preflight has zero changed Bend
-targets. Live review and compiler/VM integration belong to subsequent owners.
+One test-only Bend file (the seed witness, 12 definitions) and no law is
+added; `src/` is unchanged. The gate runs its offline style preflight, which
+must report zero structural blockers and zero provider requests. Live review
+and compiler/VM integration belong to subsequent owners.
