@@ -1,0 +1,2015 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "expectations": {
+    "SPEC.md": "b93086abaf6867e5c1ecf6fd6e0160d7bb6c649a83dd93aa3189308680216ff0",
+    "reference.py": "4fdd6dacdb7c4675391f2403719b0ee1cf7acea9a5d60f3f46c5e9d086927fea",
+    "traces.py": "adbc4577b17940bf4b3cd3bc3d54f22c96cd79d55250450bca7862770bd69e3a",
+    "literals.json": "fff3b1704c918bdd516958120c0882c0377d5eecb080857e8966f66bb2efb632"
+  },
+  "literal_checks": 20,
+  "cross_policy": {
+    "value_and_holder_pairs": 1691,
+    "resource_divergences": [
+      {
+        "case": "copy-capacity",
+        "step": 1,
+        "A": 3,
+        "B": 0
+      },
+      {
+        "case": "count-ceiling",
+        "step": 2,
+        "A": 0,
+        "B": 3
+      },
+      {
+        "case": "open-overflow-rollback",
+        "step": 4,
+        "A": 0,
+        "B": 3
+      },
+      {
+        "case": "partial-copy-rollback",
+        "step": 3,
+        "A": 3,
+        "B": 0
+      }
+    ]
+  },
+  "traces_per_candidate": 105,
+  "steps_per_candidate_per_lane": 1697,
+  "sources": {
+    "research/data-lifetime/LAWS.bend": "72651bc6e6ed186397736462103d6325861489dac994f4ca24411fb2e227ce0d",
+    "research/data-lifetime/PROOF.bend": "098e8177895894a0944dd8b5e3b4628c8fc00a7e463434c75be3d10bf9417438",
+    "research/data-lifetime/check.py": "6e471f1849899daf3074b89e6d0a2ddc08ccbfc12df3fa5688bb877de8df5aa9",
+    "research/data-lifetime/expectations.json": "fa0cd763ea210e3386e8c0a8adaf2470629b1cfab6911bc49678d7fdc60ca9c8",
+    "research/data-lifetime/extra-traces.json": "9c708b5b7094507ef700c37e8aeb169aeba173cf31a47a02c320fc85d990caa2",
+    "research/data-lifetime/fixtures/list-tail.bend": "88941274b7a3e2ec323d8fbe57e42d89a88e4afbb232442fa98846cca7417433",
+    "research/data-lifetime/fixtures/owned-rebuild.bend": "4be1fe2618962e680180e33eb58e18c63dccd25e0e0dacd5c59c1a114938a2bb",
+    "research/data-lifetime/fixtures/shared-open.bend": "dd9eaa43ee59b2a5c380887a558b1a5bb9865f338ed577f5f7d8aaace4ca9ceb",
+    "research/data-lifetime/fixtures/tree-share.bend": "769bdb735f1bca0da722f81fe1e589644e0b92c6308a2da5d2cc6e68765aa1c8",
+    "research/data-lifetime/literals.json": "fff3b1704c918bdd516958120c0882c0377d5eecb080857e8966f66bb2efb632",
+    "research/data-lifetime/model.bend": "f606d0bdd93224631e7802ddc9b2203f3f1e77e665755169a9a11499e0f1031e",
+    "research/data-lifetime/observe.bend": "ba3df25db9b42cbcad49b446bb9ea9d1ac5703558bc8208fbcd29531ce4b7eff",
+    "research/data-lifetime/reference.py": "4fdd6dacdb7c4675391f2403719b0ee1cf7acea9a5d60f3f46c5e9d086927fea",
+    "research/data-lifetime/source-expectations.json": "85289c1b085d38478d94066c64641ade4b933e742143535a38aa517e8d1c51e1",
+    "research/data-lifetime/traces.py": "adbc4577b17940bf4b3cd3bc3d54f22c96cd79d55250450bca7862770bd69e3a",
+    "research/data-lifetime/trust.ts": "0abe62f81685df276a3d31d735e41b3b7fedf4be59780ae3ad74e9f6924793d7"
+  },
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3"
+  },
+  "seed_main_sha256": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+  "seed_base_sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+  "proof": {
+    "argv": [
+      "bun",
+      "--no-env-file",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+      "research/data-lifetime/PROOF.bend"
+    ],
+    "exit": 0,
+    "stdout": "All terms check.\n",
+    "stderr": ""
+  },
+  "filled_laws": 20,
+  "entry_sha256": "0c6181e0f92bb10d6194fc2f142b95c1cd722330d96a5027492a8646b0fe859a",
+  "quantity_controls": [
+    {
+      "name": "move-store",
+      "expected": "Checked",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/move-store.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "duplicate-store",
+      "expected": "Invalid quantity",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/duplicate-store.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : s\n- observed : s (consumed more than once)\nLocation: use\n2 | \n3>| def use(s: M.Store) -> M.Store & M.Store:\n  |         ^\n4 |   (s,s)\n"
+      }
+    },
+    {
+      "name": "copy-snapshot",
+      "expected": "Checked",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/copy-snapshot.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "move-token",
+      "expected": "Checked",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/move-token.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "duplicate-token",
+      "expected": "Invalid quantity",
+      "result": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/duplicate-token.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : t\n- observed : t (consumed more than once)\nLocation: use\n4 |   Token{serial: U32}\n5>| def use(t: Token) -> Token & Token:\n  |         ^\n6 |   (t,t)\n"
+      }
+    }
+  ],
+  "lanes": {
+    "native": {
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/entry.bend",
+          "-o",
+          ".local/data-lifetime/baseline/program"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "run": {
+        "argv": [
+          ".local/data-lifetime/baseline/program"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout_sha256": "826be1c4e72e2383f2940486c86a003da59c1cd19b22f52a9fb841bac700fe39"
+      },
+      "artifact_sha256": "8da01f11343c0bfe11b5d37626b118eed2fcc9fefce1c3b84dd2224f789aab93",
+      "observations": 3394,
+      "output": "research/data-lifetime/receipts/native.txt.gz",
+      "output_sha256": "ae32dba279ea0ff5e0f5b257a9cf5907dd3f4a07133aa7dfd5a940c5110efcc8"
+    },
+    "bun": {
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/baseline/entry.bend",
+          "-o",
+          ".local/data-lifetime/baseline/program.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "run": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".local/data-lifetime/baseline/program.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout_sha256": "826be1c4e72e2383f2940486c86a003da59c1cd19b22f52a9fb841bac700fe39"
+      },
+      "artifact_sha256": "13341033fede6e8e6f4cba4564594d16a5a8581c6593d995df329421f5afc0cd",
+      "observations": 3394,
+      "output": "research/data-lifetime/receipts/bun.txt.gz",
+      "output_sha256": "ae32dba279ea0ff5e0f5b257a9cf5907dd3f4a07133aa7dfd5a940c5110efcc8"
+    }
+  },
+  "measurements": [
+    {
+      "name": "list-1",
+      "family": "list",
+      "size": 1,
+      "commands": 8,
+      "policies": {
+        "A": [
+          4,
+          4,
+          5,
+          3,
+          0,
+          0,
+          4,
+          0,
+          10,
+          2
+        ],
+        "B": [
+          2,
+          2,
+          0,
+          1,
+          1,
+          3,
+          3,
+          0,
+          7,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-2",
+      "family": "list",
+      "size": 2,
+      "commands": 9,
+      "policies": {
+        "A": [
+          6,
+          6,
+          8,
+          6,
+          0,
+          0,
+          6,
+          0,
+          16,
+          2
+        ],
+        "B": [
+          3,
+          3,
+          0,
+          2,
+          1,
+          4,
+          4,
+          0,
+          11,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-4",
+      "family": "list",
+      "size": 4,
+      "commands": 11,
+      "policies": {
+        "A": [
+          10,
+          10,
+          14,
+          12,
+          0,
+          0,
+          10,
+          0,
+          28,
+          2
+        ],
+        "B": [
+          5,
+          5,
+          0,
+          4,
+          1,
+          6,
+          6,
+          0,
+          19,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-8",
+      "family": "list",
+      "size": 8,
+      "commands": 15,
+      "policies": {
+        "A": [
+          18,
+          18,
+          26,
+          24,
+          0,
+          0,
+          18,
+          0,
+          52,
+          2
+        ],
+        "B": [
+          9,
+          9,
+          0,
+          8,
+          1,
+          10,
+          10,
+          0,
+          35,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-16",
+      "family": "list",
+      "size": 16,
+      "commands": 23,
+      "policies": {
+        "A": [
+          34,
+          34,
+          50,
+          48,
+          0,
+          0,
+          34,
+          0,
+          100,
+          2
+        ],
+        "B": [
+          17,
+          17,
+          0,
+          16,
+          1,
+          18,
+          18,
+          0,
+          67,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-32",
+      "family": "list",
+      "size": 32,
+      "commands": 39,
+      "policies": {
+        "A": [
+          66,
+          66,
+          98,
+          96,
+          0,
+          0,
+          66,
+          0,
+          196,
+          2
+        ],
+        "B": [
+          33,
+          33,
+          0,
+          32,
+          1,
+          34,
+          34,
+          0,
+          131,
+          2
+        ]
+      }
+    },
+    {
+      "name": "list-64",
+      "family": "list",
+      "size": 64,
+      "commands": 71,
+      "policies": {
+        "A": [
+          130,
+          130,
+          194,
+          192,
+          0,
+          0,
+          130,
+          0,
+          388,
+          2
+        ],
+        "B": [
+          65,
+          65,
+          0,
+          64,
+          1,
+          66,
+          66,
+          0,
+          259,
+          2
+        ]
+      }
+    },
+    {
+      "name": "tree-1",
+      "family": "tree",
+      "size": 3,
+      "commands": 15,
+      "policies": {
+        "A": [
+          15,
+          15,
+          32,
+          18,
+          0,
+          0,
+          15,
+          0,
+          40,
+          6
+        ],
+        "B": [
+          3,
+          3,
+          0,
+          2,
+          4,
+          7,
+          7,
+          0,
+          11,
+          5
+        ]
+      }
+    },
+    {
+      "name": "tree-2",
+      "family": "tree",
+      "size": 7,
+      "commands": 19,
+      "policies": {
+        "A": [
+          35,
+          35,
+          80,
+          54,
+          0,
+          0,
+          35,
+          0,
+          100,
+          7
+        ],
+        "B": [
+          7,
+          7,
+          0,
+          6,
+          4,
+          11,
+          11,
+          0,
+          27,
+          5
+        ]
+      }
+    },
+    {
+      "name": "tree-3",
+      "family": "tree",
+      "size": 15,
+      "commands": 27,
+      "policies": {
+        "A": [
+          75,
+          75,
+          176,
+          126,
+          0,
+          0,
+          75,
+          0,
+          220,
+          8
+        ],
+        "B": [
+          15,
+          15,
+          0,
+          14,
+          4,
+          19,
+          19,
+          0,
+          59,
+          5
+        ]
+      }
+    },
+    {
+      "name": "tree-4",
+      "family": "tree",
+      "size": 31,
+      "commands": 43,
+      "policies": {
+        "A": [
+          155,
+          155,
+          368,
+          270,
+          0,
+          0,
+          155,
+          0,
+          460,
+          9
+        ],
+        "B": [
+          31,
+          31,
+          0,
+          30,
+          4,
+          35,
+          35,
+          0,
+          123,
+          5
+        ]
+      }
+    },
+    {
+      "name": "tree-5",
+      "family": "tree",
+      "size": 63,
+      "commands": 75,
+      "policies": {
+        "A": [
+          315,
+          315,
+          752,
+          558,
+          0,
+          0,
+          315,
+          0,
+          940,
+          10
+        ],
+        "B": [
+          63,
+          63,
+          0,
+          62,
+          4,
+          67,
+          67,
+          0,
+          251,
+          6
+        ]
+      }
+    },
+    {
+      "name": "dag-1",
+      "family": "shared-subterm",
+      "size": 1,
+      "commands": 7,
+      "policies": {
+        "A": [
+          3,
+          3,
+          2,
+          2,
+          0,
+          0,
+          3,
+          0,
+          8,
+          2
+        ],
+        "B": [
+          2,
+          2,
+          0,
+          2,
+          1,
+          3,
+          3,
+          0,
+          8,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-2",
+      "family": "shared-subterm",
+      "size": 2,
+      "commands": 9,
+      "policies": {
+        "A": [
+          7,
+          7,
+          10,
+          8,
+          0,
+          0,
+          7,
+          0,
+          20,
+          3
+        ],
+        "B": [
+          3,
+          3,
+          0,
+          4,
+          2,
+          5,
+          5,
+          0,
+          13,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-3",
+      "family": "shared-subterm",
+      "size": 3,
+      "commands": 11,
+      "policies": {
+        "A": [
+          15,
+          15,
+          30,
+          22,
+          0,
+          0,
+          15,
+          0,
+          44,
+          4
+        ],
+        "B": [
+          4,
+          4,
+          0,
+          6,
+          3,
+          7,
+          7,
+          0,
+          18,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-4",
+      "family": "shared-subterm",
+      "size": 4,
+      "commands": 13,
+      "policies": {
+        "A": [
+          31,
+          31,
+          74,
+          52,
+          0,
+          0,
+          31,
+          0,
+          92,
+          5
+        ],
+        "B": [
+          5,
+          5,
+          0,
+          8,
+          4,
+          9,
+          9,
+          0,
+          23,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-5",
+      "family": "shared-subterm",
+      "size": 5,
+      "commands": 15,
+      "policies": {
+        "A": [
+          63,
+          63,
+          166,
+          114,
+          0,
+          0,
+          63,
+          0,
+          188,
+          6
+        ],
+        "B": [
+          6,
+          6,
+          0,
+          10,
+          5,
+          11,
+          11,
+          0,
+          28,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-6",
+      "family": "shared-subterm",
+      "size": 6,
+      "commands": 17,
+      "policies": {
+        "A": [
+          127,
+          127,
+          354,
+          240,
+          0,
+          0,
+          127,
+          0,
+          380,
+          7
+        ],
+        "B": [
+          7,
+          7,
+          0,
+          12,
+          6,
+          13,
+          13,
+          0,
+          33,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-7",
+      "family": "shared-subterm",
+      "size": 7,
+      "commands": 19,
+      "policies": {
+        "A": [
+          255,
+          255,
+          734,
+          494,
+          0,
+          0,
+          255,
+          0,
+          764,
+          8
+        ],
+        "B": [
+          8,
+          8,
+          0,
+          14,
+          7,
+          15,
+          15,
+          0,
+          38,
+          2
+        ]
+      }
+    },
+    {
+      "name": "dag-8",
+      "family": "shared-subterm",
+      "size": 8,
+      "commands": 21,
+      "policies": {
+        "A": [
+          511,
+          511,
+          1498,
+          1004,
+          0,
+          0,
+          511,
+          0,
+          1532,
+          9
+        ],
+        "B": [
+          9,
+          9,
+          0,
+          16,
+          8,
+          17,
+          17,
+          0,
+          43,
+          2
+        ]
+      }
+    },
+    {
+      "name": "rebuild-1",
+      "family": "rebuild",
+      "size": 1,
+      "commands": 8,
+      "policies": {
+        "A": [
+          3,
+          3,
+          0,
+          2,
+          0,
+          0,
+          2,
+          0,
+          5,
+          1
+        ],
+        "B": [
+          3,
+          3,
+          0,
+          2,
+          0,
+          1,
+          2,
+          0,
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "name": "rebuild-4",
+      "family": "rebuild",
+      "size": 4,
+      "commands": 14,
+      "policies": {
+        "A": [
+          6,
+          6,
+          0,
+          5,
+          0,
+          0,
+          2,
+          0,
+          5,
+          1
+        ],
+        "B": [
+          6,
+          6,
+          0,
+          5,
+          0,
+          1,
+          2,
+          0,
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "name": "rebuild-16",
+      "family": "rebuild",
+      "size": 16,
+      "commands": 38,
+      "policies": {
+        "A": [
+          18,
+          18,
+          0,
+          17,
+          0,
+          0,
+          2,
+          0,
+          5,
+          1
+        ],
+        "B": [
+          18,
+          18,
+          0,
+          17,
+          0,
+          1,
+          2,
+          0,
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "name": "rebuild-64",
+      "family": "rebuild",
+      "size": 64,
+      "commands": 134,
+      "policies": {
+        "A": [
+          66,
+          66,
+          0,
+          65,
+          0,
+          0,
+          2,
+          0,
+          5,
+          1
+        ],
+        "B": [
+          66,
+          66,
+          0,
+          65,
+          0,
+          1,
+          2,
+          0,
+          6,
+          1
+        ]
+      }
+    }
+  ],
+  "mutants": [
+    {
+      "name": "copy-aliases-original",
+      "obligation": "copied Data identity",
+      "function": "shared",
+      "old": "copy(heap,id)",
+      "new": "Done{Allocation{heap,id}}",
+      "sha256": "41a0639c597cbc5740f5b3103a759f78924276915e652e9353d7b0ae83999002",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-aliases-original/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-aliases-original/entry.bend",
+          "-o",
+          ".local/data-lifetime/copy-aliases-original/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "two-holders",
+        "policy": "A",
+        "step": 1,
+        "expected": "0|3|1:2,0:1|2:1:9:1:;1:1:9:1:|||2,0,2,0,0,0,0,4,4,0|",
+        "actual": "0|2|1:1,0:1|1:1:9:1:|||1,0,0,0,0,0,0,2,2,0|"
+      },
+      "differing_traces": 7
+    },
+    {
+      "name": "copy-reverses-fields",
+      "obligation": "field order",
+      "function": "assemble",
+      "old": "allocate(heap,kind,tag,[a,b])",
+      "new": "allocate(heap,kind,tag,[b,a])",
+      "sha256": "7a9c704e8d355ee16feef1bc659fa9c4ea67544a27bdde6a6b47b12cfc23bdf4",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-reverses-fields/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-reverses-fields/entry.bend",
+          "-o",
+          ".local/data-lifetime/copy-reverses-fields/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "shared-open",
+        "policy": "A",
+        "step": 3,
+        "expected": "0|7|3:6,2:3|6:1:5:1:4,5;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||6,0,8,2,0,0,0,16,16,0|",
+        "actual": "0|7|3:6,2:3|6:1:5:1:5,4;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||6,0,8,2,0,0,0,16,16,0|"
+      },
+      "differing_traces": 4
+    },
+    {
+      "name": "retain-forgets-count",
+      "obligation": "balanced acquire",
+      "function": "retained",
+      "old": "U32.add(refs,1)",
+      "new": "refs",
+      "sha256": "0631893b5e97f38276d4107033affebf2a9e40fc18a33d40db181a750c7c2541",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/retain-forgets-count/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/retain-forgets-count/entry.bend",
+          "-o",
+          ".local/data-lifetime/retain-forgets-count/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "two-holders",
+        "policy": "B",
+        "step": 1,
+        "expected": "0|2|1:1,0:1|1:1:9:2:|||1,0,0,0,1,0,0,3,3,0|",
+        "actual": "0|2|1:1,0:1|1:1:9:1:|||1,0,0,0,1,0,0,3,3,0|"
+      },
+      "differing_traces": 7
+    },
+    {
+      "name": "count-wrap-permitted",
+      "obligation": "count ceiling",
+      "function": "retained",
+      "old": "U32.is_lt(refs,ceiling)",
+      "new": "True{}",
+      "sha256": "e603918c7231832bc01899827564fe09b06466294522bd9be613b8c5f9b88e5b",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/count-wrap-permitted/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/count-wrap-permitted/entry.bend",
+          "-o",
+          ".local/data-lifetime/count-wrap-permitted/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "count-ceiling",
+        "policy": "B",
+        "step": 2,
+        "expected": "3|2|1:1,0:1|1:1:9:2:|||1,0,0,0,1,0,0,3,3,0|",
+        "actual": "0|2|2:1,1:1,0:1|1:1:9:3:|||1,0,0,0,2,0,0,3,3,0|"
+      },
+      "differing_traces": 2
+    },
+    {
+      "name": "first-release-frees",
+      "obligation": "surviving Data holder",
+      "function": "release_cell",
+      "old": "U32.is_eq(refs,1)",
+      "new": "True{}",
+      "sha256": "cc1374cf4c50ec92b9e165498fc26e1c8a3956a5f041545005f6dc51a6f9363c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/first-release-frees/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/first-release-frees/entry.bend",
+          "-o",
+          ".local/data-lifetime/first-release-frees/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "two-holders",
+        "policy": "B",
+        "step": 3,
+        "expected": "0|2|1:1|1:1:9:1:|||1,0,0,0,1,1,1,3,3,1|",
+        "actual": "0|2|1:1||||1,1,0,0,1,1,1,0,3,1|"
+      },
+      "differing_traces": 5
+    },
+    {
+      "name": "never-reclaim",
+      "obligation": "last-release progress",
+      "function": "release_cell",
+      "old": "free(charged(charged_heap,3n,length(children)),value)",
+      "new": "charged(charged_heap,3n,length(children))",
+      "sha256": "4595c1a1cb898e16153f03b783db3f0380eb6834f520c04bdc94a00a729920cd",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/never-reclaim/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/never-reclaim/entry.bend",
+          "-o",
+          ".local/data-lifetime/never-reclaim/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "unique-drop",
+        "policy": "A",
+        "step": 3,
+        "expected": "0|2|||||1,1,0,0,0,0,1,0,2,1|7",
+        "actual": "0|2||1:0:7:1:|||1,0,0,0,0,0,1,2,2,1|7"
+      },
+      "differing_traces": 17
+    },
+    {
+      "name": "cleanup-loses-tail",
+      "obligation": "pending work preservation",
+      "function": "clean_step",
+      "old": "queued(heap,tail)",
+      "new": "queued(heap,Nil{})",
+      "sha256": "3a71a0aa01ebde925e56f23ebf599d7cf54f38b352a1bd27b6fa4b5114258b89",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/cleanup-loses-tail/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/cleanup-loses-tail/entry.bend",
+          "-o",
+          ".local/data-lifetime/cleanup-loses-tail/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "rebuild",
+        "policy": "A",
+        "step": 7,
+        "expected": "3|5||2:1:9:1:|2||4,3,0,4,0,0,2,2,8,2|7,13",
+        "actual": "0|5||2:1:9:1:|||4,3,0,4,0,0,2,2,8,2|7,13"
+      },
+      "differing_traces": 10
+    },
+    {
+      "name": "zero-budget-loses-work",
+      "obligation": "exhaustion preservation",
+      "function": "clean",
+      "old": "case 0n _: (heap,3)",
+      "new": "case 0n _: (queued(heap,Nil{}),3)",
+      "sha256": "307a7dcb026104a5c35072429cffd9394da2324067782b349ea200ac80ca8817",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/zero-budget-loses-work/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/zero-budget-loses-work/entry.bend",
+          "-o",
+          ".local/data-lifetime/zero-budget-loses-work/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "unique-drop",
+        "policy": "A",
+        "step": 2,
+        "expected": "3|2||1:0:7:1:|1||1,0,0,0,0,0,0,2,2,1|",
+        "actual": "3|2||1:0:7:1:|||1,0,0,0,0,0,0,2,2,1|"
+      },
+      "differing_traces": 8
+    },
+    {
+      "name": "ignore-reader-barrier",
+      "obligation": "reader completion before reuse",
+      "function": "clean",
+      "old": "case 1n+n Heap{p,l,c,next,cs,rs,q,Con{h,t},m,d}: (heap,3)",
+      "new": "case 1n+n Heap{p,l,c,next,cs,rs,q,Con{h,t},m,d}: continue_clean(clean_step(heap),heap,next => clean(n,next))",
+      "sha256": "c49d7dd4a33946b72daa8acd22f50a3633fadd550c17d5b98cba3a27158eedfa",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/ignore-reader-barrier/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/ignore-reader-barrier/entry.bend",
+          "-o",
+          ".local/data-lifetime/ignore-reader-barrier/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "reader-barrier",
+        "policy": "A",
+        "step": 5,
+        "expected": "3|2||1:0:7:1:|1|6:1,5:1|1,0,0,0,0,0,0,2,2,1|",
+        "actual": "0|2||||6:1,5:1|1,1,0,0,0,0,1,0,2,1|7"
+      },
+      "differing_traces": 6
+    },
+    {
+      "name": "double-drop-type",
+      "obligation": "serial 7 disposed twice",
+      "function": "dropped",
+      "old": "Con{tag,d}",
+      "new": "Con{tag,Con{7,d}}",
+      "sha256": "8396792d34b3508846e0397a5ee11b720f3bce07e0b6f1bda292e6cf69abbc8d",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/double-drop-type/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/double-drop-type/entry.bend",
+          "-o",
+          ".local/data-lifetime/double-drop-type/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "unique-drop",
+        "policy": "A",
+        "step": 3,
+        "expected": "0|2|||||1,1,0,0,0,0,1,0,2,1|7",
+        "actual": "0|2|||||1,1,0,0,0,0,1,0,2,1|7,7"
+      },
+      "differing_traces": 12
+    },
+    {
+      "name": "rejection-loses-owner",
+      "obligation": "failure ownership",
+      "function": "commit",
+      "old": "(original,error)",
+      "new": "(with_roots(original,Nil{}),error)",
+      "sha256": "f26ff0cee1d8c784389a61940da8ddf83b16f0de7b3bb3dee3cff153d4b454a2",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/rejection-loses-owner/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/rejection-loses-owner/entry.bend",
+          "-o",
+          ".local/data-lifetime/rejection-loses-owner/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "copy-capacity",
+        "policy": "A",
+        "step": 1,
+        "expected": "3|2|0:1|1:1:9:1:|||1,0,0,0,0,0,0,2,2,0|",
+        "actual": "3|2||1:1:9:1:|||1,0,0,0,0,0,0,2,2,0|"
+      },
+      "differing_traces": 11
+    },
+    {
+      "name": "take-retains-parent",
+      "obligation": "consume releases parent cell",
+      "function": "opened",
+      "old": "Done{free(charged_heap,value)}",
+      "new": "Done{charged_heap}",
+      "sha256": "547217146131c3d2e65a4fd5a120cb8687d953a764f185a5c1a9b6efb0931a8a",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/take-retains-parent/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/take-retains-parent/entry.bend",
+          "-o",
+          ".local/data-lifetime/take-retains-parent/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "rebuild",
+        "policy": "A",
+        "step": 3,
+        "expected": "0|4|4:2,3:1|2:1:9:1:;1:0:7:1:|||3,1,0,2,0,0,0,4,8,0|",
+        "actual": "0|4|4:2,3:1|3:0:13:1:1,2;2:1:9:1:;1:0:7:1:|||3,0,0,2,0,0,0,8,8,0|"
+      },
+      "differing_traces": 6
+    },
+    {
+      "name": "open-forgets-child-acquire",
+      "obligation": "shared parent opening",
+      "function": "opened",
+      "old": "acquire_all(children,charged_heap)",
+      "new": "Done{charged_heap}",
+      "sha256": "b6463b6d3c221cb46a99fd6c0e472f6f4783ec589f5489887eff68f4dbfd9efa",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/open-forgets-child-acquire/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/open-forgets-child-acquire/entry.bend",
+          "-o",
+          ".local/data-lifetime/open-forgets-child-acquire/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "shared-open",
+        "policy": "B",
+        "step": 4,
+        "expected": "0|4|5:2,4:1,2:3|3:1:5:1:1,2;2:1:11:2:;1:1:9:2:|||3,0,0,2,3,1,0,11,11,0|",
+        "actual": "0|4|5:2,4:1,2:3|3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||3,0,0,2,1,1,0,11,11,0|"
+      },
+      "differing_traces": 3
+    },
+    {
+      "name": "copy-type-owner",
+      "obligation": "Type sharing Unsupported",
+      "function": "shared",
+      "old": "U32.is_eq(k,1)",
+      "new": "True{}",
+      "sha256": "b80b811ab90afff8e2ea129541945c8c74b668175012be843c11c3ad287b595c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-type-owner/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/copy-type-owner/entry.bend",
+          "-o",
+          ".local/data-lifetime/copy-type-owner/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "unique-reject",
+        "policy": "A",
+        "step": 1,
+        "expected": "2|2|0:1|1:0:7:1:|||1,0,0,0,0,0,0,2,2,0|",
+        "actual": "0|3|1:2,0:1|2:0:7:1:;1:0:7:1:|||2,0,2,0,0,0,0,4,4,0|"
+      },
+      "differing_traces": 1
+    },
+    {
+      "name": "omit-suspended-root",
+      "obligation": "suspended frame remains an owning holder",
+      "function": "move",
+      "old": "Con{Holder{dst,ref},omit(src,rs)}",
+      "new": "Bool.pick(List<&2,Holder>,U32.is_eq(dst,10),omit(src,rs),Con{Holder{dst,ref},omit(src,rs)})",
+      "sha256": "7c5d3fee3a71ce4745ad6d24926470ecc377dada33dfacbbb7a9b0aa3406dc69",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/omit-suspended-root/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/omit-suspended-root/entry.bend",
+          "-o",
+          ".local/data-lifetime/omit-suspended-root/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "suspend-join-resume",
+        "policy": "A",
+        "step": 7,
+        "expected": "0|12|10:11,4:9,2:3|11:0:13:1:10,6;10:0:7:1:;9:1:5:1:7,8;8:1:11:1:;7:1:9:1:;6:1:5:1:4,5;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||11,0,16,4,0,0,0,30,30,0|",
+        "actual": "0|12|4:9,2:3|11:0:13:1:10,6;10:0:7:1:;9:1:5:1:7,8;8:1:11:1:;7:1:9:1:;6:1:5:1:4,5;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||11,0,16,4,0,0,0,30,30,0|"
+      },
+      "differing_traces": 4
+    },
+    {
+      "name": "omit-partial-join-root",
+      "obligation": "delivered join slot remains an owning holder",
+      "function": "move",
+      "old": "Con{Holder{dst,ref},omit(src,rs)}",
+      "new": "Bool.pick(List<&2,Holder>,U32.is_eq(dst,20),omit(src,rs),Con{Holder{dst,ref},omit(src,rs)})",
+      "sha256": "7dba82fcef4227fc8788ff58fb3e34d050b6d89f5aab02788e6912bce68eeffa",
+      "typecheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/omit-partial-join-root/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "build": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/data-lifetime/omit-partial-join-root/entry.bend",
+          "-o",
+          ".local/data-lifetime/omit-partial-join-root/mutant.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "outcome": "semantic-kill",
+      "witness": {
+        "case": "suspend-join-resume",
+        "policy": "A",
+        "step": 8,
+        "expected": "0|12|20:9,10:11,2:3|11:0:13:1:10,6;10:0:7:1:;9:1:5:1:7,8;8:1:11:1:;7:1:9:1:;6:1:5:1:4,5;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||11,0,16,4,0,0,0,30,30,0|",
+        "actual": "0|12|10:11,2:3|11:0:13:1:10,6;10:0:7:1:;9:1:5:1:7,8;8:1:11:1:;7:1:9:1:;6:1:5:1:4,5;5:1:11:1:;4:1:9:1:;3:1:5:1:1,2;2:1:11:1:;1:1:9:1:|||11,0,16,4,0,0,0,30,30,0|"
+      },
+      "differing_traces": 4
+    }
+  ],
+  "source_differential": {
+    "scope": "Source value observations only; store models are outside Knot implementation profile.",
+    "cases": [
+      {
+        "file": "tree-share.bend",
+        "sha256": "769bdb735f1bca0da722f81fe1e589644e0b92c6308a2da5d2cc6e68765aa1c8",
+        "seed": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "research/data-lifetime/fixtures/tree-share.bend"
+          ],
+          "exit": 0,
+          "stdout": "Fork{Fork{Tip{Nine{}}, Tip{Eleven{}}}, Fork{Tip{Nine{}}, Tip{Eleven{}}}}\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "evaluator": {
+              "argv": [
+                ".local/data-lifetime/eval",
+                "research/data-lifetime/fixtures/tree-share.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t1\t1\tFork{Fork{Tip{Nine{}},Tip{Eleven{}}},Fork{Tip{Nine{}},Tip{Eleven{}}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                ".local/data-lifetime/compile",
+                "research/data-lifetime/fixtures/tree-share.bend",
+                ".local/data-lifetime/tree-share.bend-native.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t60:63:5:2\n"
+            },
+            "artifact_preserved": true
+          },
+          "bun": {
+            "evaluator": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/eval.js",
+                "research/data-lifetime/fixtures/tree-share.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t1\t1\tFork{Fork{Tip{Nine{}},Tip{Eleven{}}},Fork{Tip{Nine{}},Tip{Eleven{}}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/compile.js",
+                "research/data-lifetime/fixtures/tree-share.bend",
+                ".local/data-lifetime/tree-share.bend-bun.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t60:63:5:2\n"
+            },
+            "artifact_preserved": true
+          }
+        }
+      },
+      {
+        "file": "list-tail.bend",
+        "sha256": "88941274b7a3e2ec323d8fbe57e42d89a88e4afbb232442fa98846cca7417433",
+        "seed": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "research/data-lifetime/fixtures/list-tail.bend"
+          ],
+          "exit": 0,
+          "stdout": "Tails{Link{Eleven{}, End{}}, Link{Eleven{}, End{}}}\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "evaluator": {
+              "argv": [
+                ".local/data-lifetime/eval",
+                "research/data-lifetime/fixtures/list-tail.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t2\t0\tTails{Link{Eleven{},End{}},Link{Eleven{},End{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                ".local/data-lifetime/compile",
+                "research/data-lifetime/fixtures/list-tail.bend",
+                ".local/data-lifetime/list-tail.bend-native.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t69:73:6:2\n"
+            },
+            "artifact_preserved": true
+          },
+          "bun": {
+            "evaluator": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/eval.js",
+                "research/data-lifetime/fixtures/list-tail.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t2\t0\tTails{Link{Eleven{},End{}},Link{Eleven{},End{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/compile.js",
+                "research/data-lifetime/fixtures/list-tail.bend",
+                ".local/data-lifetime/list-tail.bend-bun.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t69:73:6:2\n"
+            },
+            "artifact_preserved": true
+          }
+        }
+      },
+      {
+        "file": "owned-rebuild.bend",
+        "sha256": "4be1fe2618962e680180e33eb58e18c63dccd25e0e0dacd5c59c1a114938a2bb",
+        "seed": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "research/data-lifetime/fixtures/owned-rebuild.bend"
+          ],
+          "exit": 0,
+          "stdout": "Frame{Seven{}, DataPair{Nine{}, Eleven{}}}\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "evaluator": {
+              "argv": [
+                ".local/data-lifetime/eval",
+                "research/data-lifetime/fixtures/owned-rebuild.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t3\t0\tFrame{Seven{},DataPair{Nine{},Eleven{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                ".local/data-lifetime/compile",
+                "research/data-lifetime/fixtures/owned-rebuild.bend",
+                ".local/data-lifetime/owned-rebuild.bend-native.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t94:102:7:2\n"
+            },
+            "artifact_preserved": true
+          },
+          "bun": {
+            "evaluator": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/eval.js",
+                "research/data-lifetime/fixtures/owned-rebuild.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t3\t0\tFrame{Seven{},DataPair{Nine{},Eleven{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/compile.js",
+                "research/data-lifetime/fixtures/owned-rebuild.bend",
+                ".local/data-lifetime/owned-rebuild.bend-bun.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t94:102:7:2\n"
+            },
+            "artifact_preserved": true
+          }
+        }
+      },
+      {
+        "file": "shared-open.bend",
+        "sha256": "dd9eaa43ee59b2a5c380887a558b1a5bb9865f338ed577f5f7d8aaace4ca9ceb",
+        "seed": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "research/data-lifetime/fixtures/shared-open.bend"
+          ],
+          "exit": 0,
+          "stdout": "Pairs{DataPair{Nine{}, Eleven{}}, DataPair{Eleven{}, Nine{}}}\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "evaluator": {
+              "argv": [
+                ".local/data-lifetime/eval",
+                "research/data-lifetime/fixtures/shared-open.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t2\t0\tPairs{DataPair{Nine{},Eleven{}},DataPair{Eleven{},Nine{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                ".local/data-lifetime/compile",
+                "research/data-lifetime/fixtures/shared-open.bend",
+                ".local/data-lifetime/shared-open.bend-native.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t64:72:5:2\n"
+            },
+            "artifact_preserved": true
+          },
+          "bun": {
+            "evaluator": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/eval.js",
+                "research/data-lifetime/fixtures/shared-open.bend",
+                "main",
+                "4096"
+              ],
+              "exit": 0,
+              "stdout": "Evaluated\t2\t0\tPairs{DataPair{Nine{},Eleven{}},DataPair{Eleven{},Nine{}}}\n",
+              "stderr": ""
+            },
+            "wasm": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/data-lifetime/compile.js",
+                "research/data-lifetime/fixtures/shared-open.bend",
+                ".local/data-lifetime/shared-open.bend-bun.wasm"
+              ],
+              "exit": 3,
+              "stdout": "",
+              "stderr": "Unsupported\tcheck\tconstructor-fields\t64:72:5:2\n"
+            },
+            "artifact_preserved": true
+          }
+        }
+      }
+    ],
+    "builds": [
+      {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "src/eval-cli.bend",
+          "-o",
+          ".local/data-lifetime/eval"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "src/compile-cli.bend",
+          "-o",
+          ".local/data-lifetime/compile"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "src/eval-cli.bend",
+          "-o",
+          ".local/data-lifetime/eval.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "src/compile-cli.bend",
+          "-o",
+          ".local/data-lifetime/compile.js"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    ],
+    "counts": {
+      "seed_values": 4,
+      "evaluator_values": 8,
+      "wasm_unsupported": 8
+    }
+  },
+  "trust": {
+    "argv": [
+      "bun",
+      "--no-env-file",
+      "research/data-lifetime/trust.ts"
+    ],
+    "exit": 0,
+    "stdout": "{\"entries\":2,\"holes\":0,\"foreign_per_entry\":42,\"unsafe_per_entry\":2,\"runtime\":[\"IO.print\"]}\n",
+    "stderr": ""
+  }
+}

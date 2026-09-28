@@ -6,6 +6,14 @@
     "node": ">=22.18"
   },
   "scripts": {
+    "gates": "python3 -B scripts/gates/run.py",
+    "gates:check": "python3 -B scripts/gates/run.py",
+    "gates:refresh": "python3 -B scripts/gates/run.py --refresh",
+    "gates:verify": "python3 -B -m unittest discover -s scripts/gates -p 'test_*.py' -v",
+    "census": "node tools/census/census.mjs",
+    "census:check": "node tools/census/census.mjs --check",
+    "census:test": "node --test tools/census/tests/*.test.mjs",
+    "census:approve": "node tools/census/approve.mjs",
     "bench": "node bench/run.mjs",
     "bench:compare": "node bench/compare.mjs",
     "bench:baseline": "node bench/run.mjs --baseline",
@@ -23,7 +31,7 @@
     "review:laya": ".local/perch-laya/venv/bin/python scripts/laya-review.py",
     "review:kev": ".local/kev/repo/.venv/bin/python scripts/kev-review.py",
     "review:julia": ".local/julia/repo/.venv/bin/python scripts/julia-review.py",
-    "lint:verify": "node --test tests/perch-workflow.test.mjs tests/perch-incremental.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs tests/perch-style.test.mjs tests/perch-potential.test.mjs tests/perch-style-role.test.mjs tests/perch-style-preflight.test.mjs tests/perch-style-campaign.test.mjs && node scripts/check-law-rule-wiring.mjs",
+    "lint:verify": "node --test tests/perch-workflow.test.mjs tests/perch-incremental.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs tests/perch-style.test.mjs tests/perch-potential.test.mjs tests/perch-style-role.test.mjs tests/perch-style-preflight.test.mjs tests/perch-style-manifest.test.mjs tests/perch-style-manifest-mutants.test.mjs tests/perch-style-campaign.test.mjs && node scripts/check-law-rule-wiring.mjs",
     "postinstall": "node scripts/install-perch-bend.mjs"
   },
   "devDependencies": {

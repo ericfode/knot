@@ -96,7 +96,7 @@
     "evaluator": "Evaluated<TAB>type-id<TAB>tag<TAB>live-field constructor tree"
   },
   "output_policy": "The compiler opens the requested output only after complete checking and bounded emission; semantic failure and exhaustion leave existing output untouched. File-write failures are HostFailure and may leave an incomplete file, never a Built result. Callers must use the exit status, not file presence, as evidence of a fresh artifact.",
-  "external_argument_domain": "Each live ordinal must designate a nullary constructor of its declared type. Fielded constructor ordinals are HostFailure structured-argument. The Node adapter remains the enum-only ABI: live arity and profile-wide 0..255 checked, per-type domain a caller precondition.",
+  "external_argument_domain": "Each live evaluator ordinal must designate a nullary constructor of its declared type; eval-cli reports HostFailure structured-argument for fielded constructor ordinals. The Node adapter accepts only enum-signatured host calls: live arity and profile-wide 0..255 are checked, while declared signature and per-type domain remain caller preconditions.",
   "declaration_inspection": {
     "profile": "knot-structural-declarations-1",
     "contract": "research/compiler-structural/SPEC.md",
@@ -106,11 +106,23 @@
   "execution_evidence": "tests/compiler-wasm/receipts/wasm.json",
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
-    "owned field storage and Wasm lowering",
-    "sound structural recursion",
+    "owned field storage and reclamation (R3/R7)",
+    "recursive Wasm lowering",
+    "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
   ],
+  "structural_recursion": {
+    "profile": "knot-structural-recursion-1",
+    "contract": "tests/compiler-recursion/SPEC.md",
+    "evidence": "tests/compiler-recursion/receipts/recursion.json",
+    "checker": true,
+    "independent_evaluator": true,
+    "wasm": false,
+    "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
+    "other_self_calls": "Unsupported check recursive-call",
+    "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call."
+  },
   "structural_terms": {
     "profile": "knot-structural-terms-1",
     "contract": "research/compiler-fields/SPEC.md",
@@ -123,5 +135,84 @@
     "observation": "Live-field projection, declaration order; erased fields omitted",
     "inspection_work": 4096,
     "inspection_characters": 65536
+  },
+  "fields_wasm": {
+    "profile": "knot-fields-wasm-1",
+    "source_profile": "knot-structural-terms-1",
+    "entry": "tests/compiler-fields-wasm/compile.bend",
+    "emitter": "src/wasm.bend::emit_profile(Fields{}, checked_book, depth, bytes)",
+    "arguments": "source output [characters parser-depth checker-depth emitter-depth output-bytes]",
+    "budgets": "Same defaults and maximum overrides as compiler; profile selection is explicit.",
+    "enum_entry_unchanged": "src/compile-cli.bend calls emit, which selects Enum{} and retains enum_profile rejection.",
+    "sections": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      10
+    ],
+    "enum_only_book_sections": [
+      1,
+      3,
+      7,
+      10
+    ],
+    "enum_only_book_bytes": "Identical to knot-enum-1; 25 frozen module hashes checked in both compiler lanes.",
+    "representation": {
+      "enum_only_type": "i32 constructor ordinal",
+      "fielded_type": "i32 address of [tag][live fields in declaration order], one 4-byte word each",
+      "erased_fields": "No slot and no evaluation",
+      "nullary_constructor_of_fielded_type": "4-byte tag-only cell",
+      "zero_address": "Valid cell address, not a null sentinel"
+    },
+    "arena": {
+      "memory_pages": 1,
+      "maximum_pages": 1,
+      "bytes": 65536,
+      "initial_bump": 0,
+      "guard": "unsigned size > 65536 - bump; only unreachable in the profile",
+      "allocation": "Arguments saved before allocation; stores after bounded pointer advance",
+      "lifetime": "Instance lifetime; immutable initialized cells; no free, reset, growth or reclamation"
+    },
+    "exports": "All original functions, unchanged indices; allocator appended and unexported; no memory or global exports.",
+    "host_precondition": "Checked Knot module of selected profile; invoke only enum-only live parameter/result signatures with valid per-type ordinals. Structured functions are for compiled callers. Adapter cannot enforce signature provenance.",
+    "host_command": "node scripts/run-wasm.mjs --profile=knot-fields-wasm-1 module export [live-ordinals...]",
+    "host_outcomes": {
+      "call_stack_range_error": "Exhausted<TAB>wasm<TAB>call-stack, exit 4, during export invocation",
+      "arena_unreachable": "Exhausted<TAB>wasm<TAB>arena-overflow, exit 4, during fields-profile invocation",
+      "other_traps_and_host_errors": "HostFailure, exit 5",
+      "node_startup_failure": "Outside adapter classification; not a successful execution"
+    },
+    "instructions": [
+      "i32.const",
+      "local.get",
+      "local.set",
+      "call",
+      "i32.eq",
+      "if",
+      "else",
+      "end",
+      "global.get",
+      "global.set",
+      "i32.load",
+      "i32.store",
+      "i32.add",
+      "i32.sub",
+      "i32.gt_u",
+      "unreachable"
+    ],
+    "imports": [],
+    "recursion": false,
+    "owned_storage_reclamation": false,
+    "unmet_runtime_requirements": [
+      "R3",
+      "R7"
+    ],
+    "evidence": "tests/compiler-fields-wasm/receipts/fields-wasm.json",
+    "frozen_expectations": "tests/compiler-fields-wasm/expectations.json",
+    "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
+    "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
   }
 }

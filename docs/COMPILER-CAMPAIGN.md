@@ -11,6 +11,8 @@ Later additions the same day:
 - "update the goal to include the gpu and cpu backends"
 - "an extension to bends syntax that allows for unicode symbols but do that last … after we are self hosting"
 - "you can delegate to codex too"
+- "add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend"
+- "You can let claude do actual work too. i just want you to use up my codex tokens as well"
 
 ## Definition of done
 
@@ -24,8 +26,13 @@ Later additions the same day:
 5. **Benchmark framework.** Compile time and emitted-code runtime per backend, with correctness guards and noise-aware comparison, for hill-climbing speed. Landed in `f324221` as `bench/`; it grows with each backend.
 6. **Passes Perch.** Two parts:
    - Semantic: targeted rules on every changed Bend file, with nonzero coverage and no unresolved confirmed findings.
-   - Style (rubric v8): each mechanism in the compiler manifest (`docs/compiler-campaign/manifest.json`, built during the campaign) meets its declaration and composition targets. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
+   - Style (rubric v8): each mechanism in the [compiler manifest](compiler-campaign/manifest.json) meets its declaration and composition targets. `npm run lint:style -- --live --manifest=docs/compiler-campaign/manifest.json` reports each group and overall qualification; a filtered `--group=NAME` run qualifies only that selection. The [offline baseline](compiler-campaign/perch-baseline.md) records structural blockers, not ratings or a pass. Whether leading declarations keep the level-3 Anticipation/Payoff bar is the user's threshold decision (see the v8 calibration record); until then it is reported, not waived.
 7. **Unicode syntax extension (after self-hosting).** Unicode symbols in identifiers and operators, as a Knot dialect with a desugaring to plain Bend.
+8. **Metaprogramming library (last milestone).** Bend programs generate and run Bend code from Bend. The library is built on the self-hosted compiler used as a library, not on the upstream seed.
+   - **Code as data.** A typed syntax and core representation, with builders and quotation, that generated programs are written in.
+   - **Checking before running.** The same checker validates generated code before it runs. It never runs unchecked code. Invalid and Unsupported results come back as values.
+   - **Running.** Generated code runs in-process through the evaluator, and through emitted Wasm that the host instantiates.
+   - **Conformance.** Generated code agrees with the same program written by hand and run through the pinned reference.
 
 ## Decision record (coordinator, 2026-09-27, under the user's explicit instructions above)
 
@@ -40,6 +47,9 @@ Later additions the same day:
 | D7 | Every new capability gets fixed expectations from the pinned reference (seed) or literal review before implementation, and existing assertions stay unchanged. Differential conformance (seed ⇔ Knot evaluator ⇔ Knot Wasm) is the core gate. | Preserves the law-quality discipline. |
 | D8 | The user's instruction authorizes this campaign to edit `src/` through delegated worktrees. Compiler Planning's accepted work and all receipts are preserved; package directories are not edited unless an increment explicitly requires it; arrays (`vec`) stay out of the bootstrap profile. | Ownership continuity. |
 | D9 | New Bend code follows the user's calibrated register: one core idea, laws stated as `law` declarations with checked proofs (not unchecked law comments), and terse, exact names. It avoids costume vocabulary, narration and ornament. | `docs/perch-calibration/taste-duel-2026-09-27/`, rubric v8. |
+| D10 | Data lifetime for milestone 1: unique `Type` objects plus reference-counted immutable `Data` (candidate B of `research/data-lifetime/`). Copied Data (A) stays as the conformance control. Reclamation is part of owned-storage acceptance; the bump arena stays interim. | The r3r7 packet: both candidates pass 105 traces with 16 of 16 mutants killed, and B peaks at 43 words against 1,532 on the shared-subterm trace. The packet asked for a coordinator or user decision; the coordinator decided under the goal. The user can reverse it. |
+| D11 | D6 revised. The native C backend starts now, in parallel on the current core IR, and grows with each accepted profile. It no longer waits for self-hosting. | The user asked for maximal parallel use of Codex and of Claude implementers. The C emitter shares only core terms, so its conflicts are small. |
+| D12 | Host effects before the IO ABI lands. A reachable IO or host-effect declaration checks successfully. Evaluation of a pure entry agrees with the seed. Compilation reports `Unsupported compile host-effect` (exit 3) and emits no artifact. | This follows `docs/BEND-SUBSET-STAGES.md` (build rejects a missing capability before emission) over the baseslice suite's check-phase pin. The coordinator reconciles that pin when baseslice is implemented. |
 
 ## Milestone ladder
 
@@ -62,6 +72,7 @@ Increments are bounded at 1 to 3 agent-days each. Each has deterministic gates f
 | 12 | GPU: device runtime probes (R4 to R7) in parallel from now, then records emission, host bundle and generated device runs. | gpu |
 | 13 | Native C backend. | cpu |
 | 14 | Unicode syntax dialect. | language |
+| 15 | Metaprogramming library: code as data (typed syntax and core terms with builders and quotation), then `check`, `eval` and `compile` as library functions, then `run` of generated code in-process and as host-instantiated Wasm. Each result is differentially checked against the same program written by hand. | language/runtime |
 
 Parallel tracks throughout:
 

@@ -1,0 +1,5284 @@
+{
+  "boundaries": [
+    {
+      "lane": "native",
+      "name": "stack-pair",
+      "result": {
+        "argv": [
+          "node",
+          "--stack_size=80",
+          "--liftoff-only",
+          "--no-wasm-tier-up",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "main"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":335}\n"
+      }
+    },
+    {
+      "lane": "native",
+      "name": "stack-deep-stack",
+      "result": {
+        "argv": [
+          "node",
+          "--stack_size=80",
+          "--liftoff-only",
+          "--no-wasm-tier-up",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-native.wasm",
+          "main"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\twasm\tcall-stack\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "arena-f0",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-native.wasm",
+          "f0",
+          "8192",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":8192,\"overflow\":8193,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "native",
+      "name": "arena-ghost",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+          "ghost",
+          "16384",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":16384,\"overflow\":16385,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "native",
+      "name": "arena-empty",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+          "empty",
+          "16384",
+          "0"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":16384,\"overflow\":16385,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "native",
+      "name": "arena-direct",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "direct",
+          "5461",
+          "0",
+          "0",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":5461,\"overflow\":5462,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "native",
+      "name": "missing-file",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/absent.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tENOENT: no such file or directory, open '$ROOT/.local/compiler-fields-wasm/gate/absent.wasm'\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "invalid-module",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/invalid.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tWasm validation failed\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "unknown-profile",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=missing",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown Wasm profile\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "missing-export",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "absent"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown export or wrong live arity\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "wrong-arity",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "direct",
+          "0"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown export or wrong live arity\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "argument-range",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+          "direct",
+          "256",
+          "0"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tordinal outside enum-profile bounds\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "native",
+      "name": "unreachable-outside-fields-profile",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-native.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunreachable\n",
+        "stdout": ""
+      }
+    },
+    {
+      "artifact_preserved": true,
+      "lane": "native",
+      "name": "emitter-depth",
+      "result": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/emitter-depth-native.wasm",
+          "65536",
+          "512",
+          "512",
+          "0",
+          "65536"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\temit\tbudget\t0:0:0:0\n",
+        "stdout": ""
+      }
+    },
+    {
+      "artifact_preserved": true,
+      "lane": "native",
+      "name": "output-capacity",
+      "result": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/output-capacity-native.wasm",
+          "65536",
+          "512",
+          "512",
+          "4096",
+          "32"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\temit\tbudget\t0:0:0:0\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "stack-pair",
+      "result": {
+        "argv": [
+          "node",
+          "--stack_size=80",
+          "--liftoff-only",
+          "--no-wasm-tier-up",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "main"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":335}\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "stack-deep-stack",
+      "result": {
+        "argv": [
+          "node",
+          "--stack_size=80",
+          "--liftoff-only",
+          "--no-wasm-tier-up",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-bun.wasm",
+          "main"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\twasm\tcall-stack\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "arena-f0",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-bun.wasm",
+          "f0",
+          "8192",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":8192,\"overflow\":8193,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "arena-ghost",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+          "ghost",
+          "16384",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":16384,\"overflow\":16385,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "arena-empty",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+          "empty",
+          "16384",
+          "0"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":16384,\"overflow\":16385,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "arena-direct",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/tests/compiler-fields-wasm/arena.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "direct",
+          "5461",
+          "0",
+          "0",
+          "1"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "{\"successful\":5461,\"overflow\":5462,\"repeatedOverflow\":true}\n"
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "missing-file",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/absent.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tENOENT: no such file or directory, open '$ROOT/.local/compiler-fields-wasm/gate/absent.wasm'\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "invalid-module",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/invalid.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tWasm validation failed\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "unknown-profile",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=missing",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown Wasm profile\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "missing-export",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "absent"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown export or wrong live arity\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "wrong-arity",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "direct",
+          "0"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunknown export or wrong live arity\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "argument-range",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+          "direct",
+          "256",
+          "0"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tordinal outside enum-profile bounds\n",
+        "stdout": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "name": "unreachable-outside-fields-profile",
+      "result": {
+        "argv": [
+          "node",
+          "$ROOT/scripts/run-wasm.mjs",
+          "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-bun.wasm",
+          "main"
+        ],
+        "exit": 5,
+        "stderr": "HostFailure\twasm\tunreachable\n",
+        "stdout": ""
+      }
+    },
+    {
+      "artifact_preserved": true,
+      "lane": "bun",
+      "name": "emitter-depth",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/emitter-depth-bun.wasm",
+          "65536",
+          "512",
+          "512",
+          "0",
+          "65536"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\temit\tbudget\t0:0:0:0\n",
+        "stdout": ""
+      }
+    },
+    {
+      "artifact_preserved": true,
+      "lane": "bun",
+      "name": "output-capacity",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/output-capacity-bun.wasm",
+          "65536",
+          "512",
+          "512",
+          "4096",
+          "32"
+        ],
+        "exit": 4,
+        "stderr": "Exhausted\temit\tbudget\t0:0:0:0\n",
+        "stdout": ""
+      }
+    }
+  ],
+  "builds": [
+    {
+      "lane": "native",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/compiler-fields-wasm/compile.bend",
+          "-o",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "fc8995040689545e4579de8d7604079fe8139bac170f8b49ae1b9acccf6259d0"
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-fields-wasm/gate/eval"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "b4cc8c67cb39edce3ed7757731d21e0bc2c6fb68a0fb0783a0a6c57173d3fcf2"
+    },
+    {
+      "lane": "bun",
+      "phase": "compile",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/compiler-fields-wasm/compile.bend",
+          "-o",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "afde30f8baee7e14f7d57ccf0e4265c3d5e04268caa767090160d5313c00bd3c"
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/src/eval-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-fields-wasm/gate/eval.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "249d958daff4c1e4ff0e2e1417a4776cab7b72c8a4899a3db4a25db467104a54"
+    }
+  ],
+  "date": "<normalized-date>",
+  "enum_preservation": [
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/data-reuse.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-reuse-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "native",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+      "source": "tests/subsets/s1/data-reuse.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/data-reuse.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-reuse-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "bun",
+      "sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+      "source": "tests/subsets/s1/data-reuse.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/erased-forward.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-forward-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t77\n"
+      },
+      "lane": "native",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+      "source": "tests/subsets/s1/erased-forward.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/erased-forward.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-forward-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t77\n"
+      },
+      "lane": "bun",
+      "sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+      "source": "tests/subsets/s1/erased-forward.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/flag.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-flag-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "native",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+      "source": "tests/subsets/s1/flag.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/flag.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-flag-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "bun",
+      "sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+      "source": "tests/subsets/s1/flag.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/forward-type.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-forward-type-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t54\n"
+      },
+      "lane": "native",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+      "source": "tests/subsets/s1/forward-type.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/forward-type.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-forward-type-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t54\n"
+      },
+      "lane": "bun",
+      "sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+      "source": "tests/subsets/s1/forward-type.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/nested-match.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-nested-match-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "native",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+      "source": "tests/subsets/s1/nested-match.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/nested-match.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-nested-match-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "bun",
+      "sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+      "source": "tests/subsets/s1/nested-match.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/subsets/s1/shadowing.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-shadowing-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t100\n"
+      },
+      "lane": "native",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+      "source": "tests/subsets/s1/shadowing.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/subsets/s1/shadowing.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-shadowing-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t100\n"
+      },
+      "lane": "bun",
+      "sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+      "source": "tests/subsets/s1/shadowing.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/branch-maximum.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-branch-maximum-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "native",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+      "source": "tests/compiler-checker/fixtures/branch-maximum.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/branch-maximum.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-branch-maximum-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "bun",
+      "sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+      "source": "tests/compiler-checker/fixtures/branch-maximum.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/data-argument.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-argument-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t75\n"
+      },
+      "lane": "native",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+      "source": "tests/compiler-checker/fixtures/data-argument.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/data-argument.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-argument-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t75\n"
+      },
+      "lane": "bun",
+      "sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+      "source": "tests/compiler-checker/fixtures/data-argument.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/data-promote.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-promote-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t84\n"
+      },
+      "lane": "native",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+      "source": "tests/compiler-checker/fixtures/data-promote.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/data-promote.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-data-promote-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t84\n"
+      },
+      "lane": "bun",
+      "sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+      "source": "tests/compiler-checker/fixtures/data-promote.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/duplicate-parameters.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-duplicate-parameters-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t57\n"
+      },
+      "lane": "native",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+      "source": "tests/compiler-checker/fixtures/duplicate-parameters.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/duplicate-parameters.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-duplicate-parameters-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t57\n"
+      },
+      "lane": "bun",
+      "sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+      "source": "tests/compiler-checker/fixtures/duplicate-parameters.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/erased-affine-copy.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-affine-copy-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t74\n"
+      },
+      "lane": "native",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+      "source": "tests/compiler-checker/fixtures/erased-affine-copy.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/erased-affine-copy.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-affine-copy-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t74\n"
+      },
+      "lane": "bun",
+      "sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+      "source": "tests/compiler-checker/fixtures/erased-affine-copy.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/erased-binding.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-binding-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t51\n"
+      },
+      "lane": "native",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+      "source": "tests/compiler-checker/fixtures/erased-binding.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/erased-binding.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-binding-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t51\n"
+      },
+      "lane": "bun",
+      "sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+      "source": "tests/compiler-checker/fixtures/erased-binding.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/erased-forward-call.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-forward-call-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t89\n"
+      },
+      "lane": "native",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+      "source": "tests/compiler-checker/fixtures/erased-forward-call.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/erased-forward-call.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-forward-call-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t89\n"
+      },
+      "lane": "bun",
+      "sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+      "source": "tests/compiler-checker/fixtures/erased-forward-call.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/matched-duplicate.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-matched-duplicate-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t93\n"
+      },
+      "lane": "native",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+      "source": "tests/compiler-checker/fixtures/matched-duplicate.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/matched-duplicate.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-matched-duplicate-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t93\n"
+      },
+      "lane": "bun",
+      "sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+      "source": "tests/compiler-checker/fixtures/matched-duplicate.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/matched-return.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-matched-return-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t65\n"
+      },
+      "lane": "native",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+      "source": "tests/compiler-checker/fixtures/matched-return.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/matched-return.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-matched-return-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t65\n"
+      },
+      "lane": "bun",
+      "sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+      "source": "tests/compiler-checker/fixtures/matched-return.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/renamed.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-renamed-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t70\n"
+      },
+      "lane": "native",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+      "source": "tests/compiler-checker/fixtures/renamed.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/renamed.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-renamed-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t70\n"
+      },
+      "lane": "bun",
+      "sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+      "source": "tests/compiler-checker/fixtures/renamed.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-checker/fixtures/reordered-arms.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-reordered-arms-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "native",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+      "source": "tests/compiler-checker/fixtures/reordered-arms.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-checker/fixtures/reordered-arms.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-reordered-arms-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t68\n"
+      },
+      "lane": "bun",
+      "sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+      "source": "tests/compiler-checker/fixtures/reordered-arms.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/three-colors.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-three-colors-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t80\n"
+      },
+      "lane": "native",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+      "source": "tests/compiler-wasm/fixtures/three-colors.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/three-colors.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-three-colors-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t80\n"
+      },
+      "lane": "bun",
+      "sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+      "source": "tests/compiler-wasm/fixtures/three-colors.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/mixed-types.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-mixed-types-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t73\n"
+      },
+      "lane": "native",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+      "source": "tests/compiler-wasm/fixtures/mixed-types.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/mixed-types.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-mixed-types-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t73\n"
+      },
+      "lane": "bun",
+      "sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+      "source": "tests/compiler-wasm/fixtures/mixed-types.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/branch-locals.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-branch-locals-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t106\n"
+      },
+      "lane": "native",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+      "source": "tests/compiler-wasm/fixtures/branch-locals.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/branch-locals.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-branch-locals-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t106\n"
+      },
+      "lane": "bun",
+      "sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+      "source": "tests/compiler-wasm/fixtures/branch-locals.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/erased-cost.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-cost-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t80\n"
+      },
+      "lane": "native",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+      "source": "tests/compiler-wasm/fixtures/erased-cost.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/erased-cost.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-erased-cost-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t80\n"
+      },
+      "lane": "bun",
+      "sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+      "source": "tests/compiler-wasm/fixtures/erased-cost.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/argument-order.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-argument-order-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "native",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+      "source": "tests/compiler-wasm/fixtures/argument-order.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/argument-order.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-argument-order-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t82\n"
+      },
+      "lane": "bun",
+      "sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+      "source": "tests/compiler-wasm/fixtures/argument-order.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/high-tags.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-tags-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t102\n"
+      },
+      "lane": "native",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+      "source": "tests/compiler-wasm/fixtures/high-tags.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/high-tags.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-tags-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t102\n"
+      },
+      "lane": "bun",
+      "sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+      "source": "tests/compiler-wasm/fixtures/high-tags.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/high-function-index.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-function-index-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t2133\n"
+      },
+      "lane": "native",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+      "source": "tests/compiler-wasm/fixtures/high-function-index.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/high-function-index.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-function-index-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t2133\n"
+      },
+      "lane": "bun",
+      "sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+      "source": "tests/compiler-wasm/fixtures/high-function-index.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "$ROOT/.local/compiler-fields-wasm/gate/compile",
+          "$ROOT/tests/compiler-wasm/fixtures/high-local-index.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-local-index-native.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t446\n"
+      },
+      "lane": "native",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+      "source": "tests/compiler-wasm/fixtures/high-local-index.bend"
+    },
+    {
+      "compile": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+          "$ROOT/tests/compiler-wasm/fixtures/high-local-index.bend",
+          "$ROOT/.local/compiler-fields-wasm/gate/enum-high-local-index-bun.wasm"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Built\t446\n"
+      },
+      "lane": "bun",
+      "sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+      "source": "tests/compiler-wasm/fixtures/high-local-index.bend"
+    }
+  ],
+  "fixtures": [
+    {
+      "instructions": [
+        "call",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t335\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "direct",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.Off{},F.On{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "direct",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,1],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.On{},F.Off{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "direct",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[1,0],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "direct",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[1,1],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "swapped",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[0,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "swapped",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[0,1],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "swapped",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[1,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-bun.wasm",
+                  "swapped",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[1,1],\"result\":1,\"bytes\":335}\n"
+              }
+            }
+          ],
+          "sha256": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t335\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "direct",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.Off{},F.On{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "direct",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,1],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.On{},F.Off{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "direct",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[1,0],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "direct",
+                "seed": "F.direct(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "direct",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "direct",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[1,1],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "swapped",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[0,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "swapped",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[0,1],\"result\":1,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "swapped",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[1,0],\"result\":0,\"bytes\":335}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "swapped",
+                "seed": "F.swapped(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+                  "swapped",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/pair-native.wasm",
+                  "swapped",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"swapped\",\"arguments\":[1,1],\"result\":1,\"bytes\":335}\n"
+              }
+            }
+          ],
+          "sha256": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf"
+        }
+      },
+      "name": "pair",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              0
+            ],
+            "export": "direct",
+            "seed": "F.direct(F.Off{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-1.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              1
+            ],
+            "export": "direct",
+            "seed": "F.direct(F.Off{},F.On{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-2.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              0
+            ],
+            "export": "direct",
+            "seed": "F.direct(F.On{},F.Off{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-3.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              1
+            ],
+            "export": "direct",
+            "seed": "F.direct(F.On{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-4.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              0
+            ],
+            "export": "swapped",
+            "seed": "F.swapped(F.Off{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-5.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              1
+            ],
+            "export": "swapped",
+            "seed": "F.swapped(F.Off{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-6.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              0
+            ],
+            "export": "swapped",
+            "seed": "F.swapped(F.On{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-7.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              1
+            ],
+            "export": "swapped",
+            "seed": "F.swapped(F.On{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/pair-reference-8.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/pair.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "else",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.eq",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/peano-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t321\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":321}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "zero",
+                "seed": "F.zero()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "zero",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-bun.wasm",
+                  "zero"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"zero\",\"arguments\":[],\"result\":0,\"bytes\":321}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "two",
+                "seed": "F.two()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "two",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-bun.wasm",
+                  "two"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"two\",\"arguments\":[],\"result\":0,\"bytes\":321}\n"
+              }
+            }
+          ],
+          "sha256": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/peano-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t321\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":321}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "zero",
+                "seed": "F.zero()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "zero",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-native.wasm",
+                  "zero"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"zero\",\"arguments\":[],\"result\":0,\"bytes\":321}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "two",
+                "seed": "F.two()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/peano.bend",
+                  "two",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/peano-native.wasm",
+                  "two"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"two\",\"arguments\":[],\"result\":0,\"bytes\":321}\n"
+              }
+            }
+          ],
+          "sha256": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4"
+        }
+      },
+      "name": "peano",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/peano-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [],
+            "export": "zero",
+            "seed": "F.zero()",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/peano-reference-1.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [],
+            "export": "two",
+            "seed": "F.two()",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/peano-reference-2.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/peano.Off{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t258\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":0,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-bun.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":258}\n"
+              }
+            }
+          ],
+          "sha256": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t258\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":0,\"bytes\":258}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/nested.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/nested-native.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":258}\n"
+              }
+            }
+          ],
+          "sha256": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0"
+        }
+      },
+      "name": "nested",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-reference-1.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-reference-2.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-reference-3.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/nested-reference-4.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/nested.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t205\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":1,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-bun.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":205}\n"
+              }
+            }
+          ],
+          "sha256": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t205\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":0,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":1,\"bytes\":205}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/aliasing-native.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":205}\n"
+              }
+            }
+          ],
+          "sha256": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012"
+        }
+      },
+      "name": "aliasing",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-reference-1.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.On{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-reference-2.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.Off{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-reference-3.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/aliasing-reference-4.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/aliasing.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "else",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.eq",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t341\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "empty",
+                "seed": "F.empty()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "empty",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "empty"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"empty\",\"arguments\":[],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "ghost",
+                "seed": "F.ghost()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "ghost",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-bun.wasm",
+                  "ghost"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"ghost\",\"arguments\":[],\"result\":1,\"bytes\":341}\n"
+              }
+            }
+          ],
+          "sha256": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t341\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "observe",
+                  "0",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,0],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  0,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.Off{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "observe",
+                  "0",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  0
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.Off{})",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "observe",
+                  "1",
+                  "0"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,0],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [
+                  1,
+                  1
+                ],
+                "export": "observe",
+                "seed": "F.observe(F.On{},F.On{})",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "observe",
+                  "1048576",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "observe",
+                  "1",
+                  "1"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[1,1],\"result\":1,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "empty",
+                "seed": "F.empty()",
+                "tag": 0
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "empty",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "empty"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"empty\",\"arguments\":[],\"result\":0,\"bytes\":341}\n"
+              }
+            },
+            {
+              "call": {
+                "arguments": [],
+                "export": "ghost",
+                "seed": "F.ghost()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+                  "ghost",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/erased-native.wasm",
+                  "ghost"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"ghost\",\"arguments\":[],\"result\":1,\"bytes\":341}\n"
+              }
+            }
+          ],
+          "sha256": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2"
+        }
+      },
+      "name": "erased",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-1.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              0,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.Off{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-2.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              0
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.Off{})",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-3.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [
+              1,
+              1
+            ],
+            "export": "observe",
+            "seed": "F.observe(F.On{},F.On{})",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-4.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [],
+            "export": "empty",
+            "seed": "F.empty()",
+            "tag": 0
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-5.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.Off{}\n"
+          }
+        },
+        {
+          "call": {
+            "arguments": [],
+            "export": "ghost",
+            "seed": "F.ghost()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/erased-reference-6.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/erased.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "end",
+        "global.get",
+        "global.set",
+        "i32.add",
+        "i32.const",
+        "i32.gt_u",
+        "i32.load",
+        "i32.store",
+        "i32.sub",
+        "if",
+        "local.get",
+        "local.set",
+        "unreachable"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t466\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-bun.wasm",
+                  "main"
+                ],
+                "exit": 4,
+                "stderr": "Exhausted\twasm\tarena-overflow\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t466\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/arena-overflow.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-native.wasm",
+                  "main"
+                ],
+                "exit": 4,
+                "stderr": "Exhausted\twasm\tarena-overflow\n",
+                "stdout": ""
+              }
+            }
+          ],
+          "sha256": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716"
+        }
+      },
+      "name": "arena-overflow",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/arena-overflow-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/arena-overflow.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "i32.const",
+        "local.get",
+        "local.set"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/deep-call.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-call-bun.wasm",
+              "65536",
+              "4096",
+              "4096",
+              "4096",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t6797\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/deep-call.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 4,
+                "stderr": "Exhausted\tparse\tbudget\t11080:11081:754:10\n",
+                "stdout": ""
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/deep-call-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":6797}\n"
+              }
+            }
+          ],
+          "sha256": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/deep-call.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-call-native.wasm",
+              "65536",
+              "4096",
+              "4096",
+              "4096",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t6797\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/deep-call.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 4,
+                "stderr": "Exhausted\tparse\tbudget\t11080:11081:754:10\n",
+                "stdout": ""
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/deep-call-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":6797}\n"
+              }
+            }
+          ],
+          "sha256": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8"
+        }
+      },
+      "name": "deep-call",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-call-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/deep-call.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        7,
+        10
+      ]
+    },
+    {
+      "instructions": [
+        "call",
+        "i32.const",
+        "local.get",
+        "local.set"
+      ],
+      "lanes": {
+        "bun": {
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/compile.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t26748\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval.js",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":26748}\n"
+              }
+            }
+          ],
+          "sha256": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48"
+        },
+        "native": {
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/compile",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t26748\n"
+          },
+          "observations": [
+            {
+              "call": {
+                "arguments": [],
+                "export": "main",
+                "seed": "F.main()",
+                "tag": 1
+              },
+              "evaluator": {
+                "argv": [
+                  "$ROOT/.local/compiler-fields-wasm/gate/eval",
+                  "$ROOT/tests/compiler-fields-wasm/fixtures/deep-stack.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":26748}\n"
+              }
+            }
+          ],
+          "sha256": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48"
+        }
+      },
+      "name": "deep-stack",
+      "reference": [
+        {
+          "call": {
+            "arguments": [],
+            "export": "main",
+            "seed": "F.main()",
+            "tag": 1
+          },
+          "result": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/deep-stack-reference-0.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "../../../tests/compiler-fields-wasm/fixtures/deep-stack.On{}\n"
+          }
+        }
+      ],
+      "sections": [
+        1,
+        3,
+        7,
+        10
+      ]
+    }
+  ],
+  "generated": {
+    "tests/compiler-fields-wasm/generated/aliasing.wasm": "f994a945630d5fd2becf9a49fe0bdb4ecf9942b6f170bd58c563599f6e24a012",
+    "tests/compiler-fields-wasm/generated/aliasing.wat": "42d255fd97e93b98e968821d3e1b8c4907449ce1a5411e092cfca21d9010aea5",
+    "tests/compiler-fields-wasm/generated/arena-overflow.wasm": "b50b51805bcb62aabff873be0507d35eb47f4a3739878e3fe798caecd2124716",
+    "tests/compiler-fields-wasm/generated/arena-overflow.wat": "334fff347be6e3c0cb006e4f73f433256fec85ba8ba29afeff08822e448a56ba",
+    "tests/compiler-fields-wasm/generated/deep-call.wasm": "d20f882fad72a3f7836c38697a278ebc1b0b395d80cc5190073805e5bf73fee8",
+    "tests/compiler-fields-wasm/generated/deep-call.wat": "c4c55d03cb8320ea8deb2c46f4de198a24bdfaefaab653d2f29bdc6aa973bfa1",
+    "tests/compiler-fields-wasm/generated/deep-stack.wasm": "a9a8a34ddd8a948f6426bd71b761c055fc8634b6206f7838cdb229ba8f5aed48",
+    "tests/compiler-fields-wasm/generated/deep-stack.wat": "5801b6da2404ea0f190e521fb77ddb38cfeb13f717b7e4d1ed3177a243cd9438",
+    "tests/compiler-fields-wasm/generated/erased.wasm": "e91122cabe02c28d32df25ade4367aef8bafa3ae302a717c2af383fdd28218b2",
+    "tests/compiler-fields-wasm/generated/erased.wat": "a872776417c1d52653d31a46bd4048495aeedf122a235109feb6155d98cf100e",
+    "tests/compiler-fields-wasm/generated/nested.wasm": "d2d1166a77db072558d3c62095a4ff2130bac5cf6d8ee1c4f7a2e7056e3ecda0",
+    "tests/compiler-fields-wasm/generated/nested.wat": "533f46398a97443502cc4a50e4e38710b9c0017ca48309ffc29437cf43a27aec",
+    "tests/compiler-fields-wasm/generated/pair.wasm": "893b5cd119ede8085ffe1f031ca44c8557cfc387b6ce18c27e6caaf3759591bf",
+    "tests/compiler-fields-wasm/generated/pair.wat": "e08d6bf6dad182e335a6926fe06c25fa56ae00bdd38005d1c1cea409d7bd5217",
+    "tests/compiler-fields-wasm/generated/peano.wasm": "c3c424ac0fa7f241de27137666fb0009bf9d046e95878aef430c60b475ec33f4",
+    "tests/compiler-fields-wasm/generated/peano.wat": "d7955cdce4443c4f9dd89e8849fd3c17988bdc8232aca903b1ae5d6e171cf778"
+  },
+  "inputs": {
+    "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
+    "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/SPEC.md": "242b0151afef6db94697c61d705904e73becd4e9ec796b37b0fc836a0eb6c937",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-checker/fixtures/branch-maximum.bend": "4f901a8b7a61773c7fe2c406b43716c48f01491ffa1d00de3d7a868895033585",
+    "tests/compiler-checker/fixtures/data-argument.bend": "6f8987a5c8f091f6175eab46f82c96ce5a1820de6b2824c5d9fd485ae05c9a2a",
+    "tests/compiler-checker/fixtures/data-promote.bend": "e8cad8cc7d508d6c3b1779c86a8aa7c86942c1ff6981c6a5d77474354b27d41c",
+    "tests/compiler-checker/fixtures/duplicate-parameters.bend": "562a5b6763f730ece8ae156e2beb8b2e0d43b70ab2d1ae2faa6ffe28428a7e68",
+    "tests/compiler-checker/fixtures/erased-affine-copy.bend": "bc0c7cc519e526264f9bad4fbfb0917dc9a1b7e880a808b38ccb4e7646a57393",
+    "tests/compiler-checker/fixtures/erased-binding.bend": "c67c9978aecfe8fa9523becbca5303700b4c87ca714613f35e21201f9c50e895",
+    "tests/compiler-checker/fixtures/erased-forward-call.bend": "51e479f5525fdfdef374e71af730e812a0fa0a92560bf10c68df374f624bd5ce",
+    "tests/compiler-checker/fixtures/matched-duplicate.bend": "62ae6ffd0541174e41bb53a74281f531b75b558de55b3ad0ce70a3baedbcf799",
+    "tests/compiler-checker/fixtures/matched-return.bend": "49ff74b3ec4369b5c5e452689dcdddb2df794523623b2335cf3fe73c25a6fc6f",
+    "tests/compiler-checker/fixtures/renamed.bend": "48ec0a0b92508402f64eccd5f2e253e43cfd4051d8eb5e82a9cad71ba89d1b2e",
+    "tests/compiler-checker/fixtures/reordered-arms.bend": "1ea8a66f3aec3709a6896503c783b0e69f98e9f61a521448ea906e7f939b0d63",
+    "tests/compiler-fields-wasm/LAWS.bend": "f5ef175cc720ec4e8d2da95ae42f876fae92f295ed1b0d6dab3c53e10fe26aa9",
+    "tests/compiler-fields-wasm/PROOF.bend": "df0f23b2fd1f921362ab52f06eb5c5d28d235867c90aab7a43fd575000c1cd0c",
+    "tests/compiler-fields-wasm/arena.mjs": "58ad1dc68e8b763e15eaaf22936596b90782eeee1a7275ddae5862278519088a",
+    "tests/compiler-fields-wasm/cases.json": "d4accfb0d29337a0324af58f8bd8b2db979dadc4ff6ff08fd58cf539d024acc9",
+    "tests/compiler-fields-wasm/check.py": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+    "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7",
+    "tests/compiler-fields-wasm/enum-baseline.json": "73468f8804864370a5430e8a8a5ca73be09df6581d06751905c78697bf0ccb03",
+    "tests/compiler-fields-wasm/expectations.json": "da8031ac5930995368c7171ba5c8a1b3f1cb1eedffc5dbe6515858362c17bcc9",
+    "tests/compiler-fields-wasm/fixtures/aliasing.bend": "ef9cf6288ba0f89eb77bf28e24f43a08412a17828b84fc23ee14c3fd25de70e3",
+    "tests/compiler-fields-wasm/fixtures/arena-overflow.bend": "894223d307a63359f40dbd052f43c5c40b6810215b14fccc9056ca88bd71e569",
+    "tests/compiler-fields-wasm/fixtures/deep-call.bend": "30ecb9719a3dc1a0793cfd94e20a130b4b0a1176756227fbba855ef52c8ce1cc",
+    "tests/compiler-fields-wasm/fixtures/deep-stack.bend": "bfb5dbb7eeda23ad0a20b32c3c37cf23bd413450d9949998d104944e05ca525f",
+    "tests/compiler-fields-wasm/fixtures/erased.bend": "460a4e89b2a344aa7d1420889db3ef46c866a945cac9310ee73cf2e6d6bc1c3d",
+    "tests/compiler-fields-wasm/fixtures/nested.bend": "6272acbe70503d207d99520e93a004195d23a3264bbdb68420c9a064ff2eb49d",
+    "tests/compiler-fields-wasm/fixtures/pair.bend": "b20eead85365d6f37505322314cc6b2ad4bdb8ffe554fed0052129ee4c203678",
+    "tests/compiler-fields-wasm/fixtures/peano.bend": "2bb48f935fec9a37ac6cf5c3cc68d002ef5b6b629ebd620180e8b718e5780a6d",
+    "tests/compiler-wasm/fixtures/argument-order.bend": "3e1227fbf6d60641f69c7b9ba56a8ced696aab98ec8b8da667a9cfd42d9043b8",
+    "tests/compiler-wasm/fixtures/branch-locals.bend": "a545519aaa3ba53102a128d4a1bc0b8f7a419065d310b15ef1048dae15bdce84",
+    "tests/compiler-wasm/fixtures/erased-cost.bend": "2b922e02325ae9884e8120956d32be8e7629deac3fe9cb94ba67c44e17c6d983",
+    "tests/compiler-wasm/fixtures/high-function-index.bend": "9b5765800381e3ad1cc2f3279d49d7626c45454a22ad9bf8161022af56096ace",
+    "tests/compiler-wasm/fixtures/high-local-index.bend": "9fc6330c2b1a6c6de299880b043343ade92a42eb988621acca976a1aec2ee738",
+    "tests/compiler-wasm/fixtures/high-tags.bend": "2820c0bfc0ce277af93191933506a9bcc2f21995183caeb3873bf13cb3f3a01e",
+    "tests/compiler-wasm/fixtures/mixed-types.bend": "45108568a4c08da743156a24864e686da497a7a51fcc625a72ae7dc2617e617c",
+    "tests/compiler-wasm/fixtures/three-colors.bend": "e5fbbca409af89fac9e860eec557b5091d40462ef8b75eba079aef7d965c9b43",
+    "tests/subsets/s1/data-reuse.bend": "e8d7639788240f05b250a07e957353d9627607e4c39a65a90eb104f15e99a0ce",
+    "tests/subsets/s1/erased-forward.bend": "0b1397aed613d9ebde53c2870a32663a10f3583688300ae09c22f776898e583e",
+    "tests/subsets/s1/flag.bend": "46a52b79e4f20bba7b5a4a90e733b4aa5de9384ecb97b2587e1608118fd8c673",
+    "tests/subsets/s1/forward-type.bend": "d819b2460f350736fe9e58415fe733acdcb9276c86ace267a5ad4774f0b62195",
+    "tests/subsets/s1/nested-match.bend": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
+    "tests/subsets/s1/shadowing.bend": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340"
+  },
+  "mutants": [
+    {
+      "arguments": [
+        0,
+        1
+      ],
+      "expected_tag": 0,
+      "export": "direct",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/bun.wasm",
+              "direct",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,1],\"result\":1,\"bytes\":335}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/mutant.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/mutant.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t335\n"
+          },
+          "outcome": "semantic-kill"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/native.wasm",
+              "direct",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"direct\",\"arguments\":[0,1],\"result\":1,\"bytes\":335}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/mutant"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/mutant",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/pair.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t335\n"
+          },
+          "outcome": "semantic-kill"
+        }
+      },
+      "name": "swapped-field-offsets",
+      "new": "memory(cap,54,Bool.pick(U32,U32.is_eq(offset,4),8,4))",
+      "old": "memory(cap,54,offset)",
+      "source_sha256": "c909475727aa6303f050aa333901819939888150e50b1a5bce21b19fb1c97e88",
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-fields-wasm/gate/swapped-field-offsets/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "pair"
+    },
+    {
+      "arguments": [
+        0,
+        1
+      ],
+      "expected_tag": 1,
+      "export": "observe",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/bun.wasm",
+              "observe",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":0,\"bytes\":376}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/mutant.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/mutant.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t376\n"
+          },
+          "outcome": "semantic-kill"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/native.wasm",
+              "observe",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":0,\"bytes\":376}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/mutant"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/mutant",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t376\n"
+          },
+          "outcome": "semantic-kill"
+        }
+      },
+      "name": "stored-erased-slot",
+      "new": "u => lower(n,Cell{tail,params,Con{next,slots},tag},heap,functions,locals,U32.add(next,1),cap),u =>",
+      "old": "u => lower(n,Cell{tail,params,slots,tag},heap,functions,locals,next,cap),u =>",
+      "source_sha256": "6b22335187cbe8dab2846e3b1fb72794fb9c8e89d2b71e5ca7bb21e4edd76032",
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-fields-wasm/gate/stored-erased-slot/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "erased"
+    },
+    {
+      "arguments": [],
+      "expected_tag": 1,
+      "export": "ghost",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/bun.wasm",
+              "ghost"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"ghost\",\"arguments\":[],\"result\":0,\"bytes\":341}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/mutant.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/mutant.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t341\n"
+          },
+          "outcome": "semantic-kill"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/native.wasm",
+              "ghost"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"ghost\",\"arguments\":[],\"result\":0,\"bytes\":341}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/mutant"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/mutant",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/erased.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t341\n"
+          },
+          "outcome": "semantic-kill"
+        }
+      },
+      "name": "wrong-cell-tag",
+      "new": "constant(cap,0),memory(cap,54,0)",
+      "old": "constant(cap,tag),memory(cap,54,0)",
+      "source_sha256": "aba4fe1c91416ed3b6be4b11687661fc5cb54a6d40d7bf9ebc8035791a258d39",
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-fields-wasm/gate/wrong-cell-tag/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "erased"
+    },
+    {
+      "arguments": [
+        0,
+        1
+      ],
+      "expected_tag": 0,
+      "export": "observe",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/bun.wasm",
+              "observe",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":205}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/mutant.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/mutant.js",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t205\n"
+          },
+          "outcome": "semantic-kill"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/native.wasm",
+              "observe",
+              "0",
+              "1"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"observe\",\"arguments\":[0,1],\"result\":1,\"bytes\":205}\n"
+          },
+          "build": {
+            "argv": [
+              "$ROOT/scripts/bend-reference",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/entry.bend",
+              "-o",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/mutant"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "emission": {
+            "argv": [
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/mutant",
+              "$ROOT/tests/compiler-fields-wasm/fixtures/aliasing.bend",
+              "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t205\n"
+          },
+          "outcome": "semantic-kill"
+        }
+      },
+      "name": "no-pointer-bump",
+      "new": "constant(cap,0),W.bytes(cap,[106])",
+      "old": "instruction(cap,32,0),W.bytes(cap,[106])",
+      "source_sha256": "6dcabd9b44506abb1888838583961b9c2b5cf9dcd3a0e10d01e752fa65762ac8",
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-fields-wasm/gate/no-pointer-bump/entry.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "aliasing"
+    }
+  ],
+  "new_laws": 5,
+  "profile": "knot-fields-wasm-1",
+  "proof": {
+    "argv": [
+      "$ROOT/scripts/bend-reference",
+      "$ROOT/tests/compiler-fields-wasm/PROOF.bend"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "All terms check.\n"
+  },
+  "seed": {
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed",
+  "tools": {
+    "bun": "1.3.14",
+    "node": "v22.22.3",
+    "python3": "Python 3.14.3",
+    "wasm2wat": "1.0.41"
+  }
+}

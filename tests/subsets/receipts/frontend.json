@@ -1,37 +1,2722 @@
 {
-  "date": "2026-09-27T00:58:50.483065+00:00",
-  "scope": "Parser checkpoint, not checked source-to-Wasm compilation",
-  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
-  "status": "passed",
+  "boundaries": [
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/lex-zero.bend",
+        "0",
+        "512"
+      ],
+      "case": "lex-zero",
+      "exit": 4,
+      "lane": "bun",
+      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/lex-zero.bend",
+        "0",
+        "512"
+      ],
+      "case": "lex-zero",
+      "exit": 4,
+      "lane": "native",
+      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/parse-zero.bend",
+        "65536",
+        "0"
+      ],
+      "case": "parse-zero",
+      "exit": 4,
+      "lane": "bun",
+      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/parse-zero.bend",
+        "65536",
+        "0"
+      ],
+      "case": "parse-zero",
+      "exit": 4,
+      "lane": "native",
+      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/parse-small.bend",
+        "65536",
+        "3"
+      ],
+      "case": "parse-small",
+      "exit": 4,
+      "lane": "bun",
+      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/parse-small.bend",
+        "65536",
+        "3"
+      ],
+      "case": "parse-small",
+      "exit": 4,
+      "lane": "native",
+      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/source-exact.bend"
+      ],
+      "case": "source-exact",
+      "exit": 0,
+      "lane": "bun",
+      "stderr": "",
+      "stdout": "Parsed\t\n"
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/source-exact.bend"
+      ],
+      "case": "source-exact",
+      "exit": 0,
+      "lane": "native",
+      "stderr": "",
+      "stdout": "Parsed\t\n"
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/source-over.bend"
+      ],
+      "case": "source-over",
+      "exit": 4,
+      "lane": "bun",
+      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/source-over.bend"
+      ],
+      "case": "source-over",
+      "exit": 4,
+      "lane": "native",
+      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/import.bend"
+      ],
+      "case": "import",
+      "exit": 3,
+      "lane": "bun",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/import.bend"
+      ],
+      "case": "import",
+      "exit": 3,
+      "lane": "native",
+      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/fields.bend"
+      ],
+      "case": "fields",
+      "exit": 0,
+      "lane": "bun",
+      "stderr": "",
+      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n"
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/fields.bend"
+      ],
+      "case": "fields",
+      "exit": 0,
+      "lane": "native",
+      "stderr": "",
+      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n"
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/literal.bend"
+      ],
+      "case": "literal",
+      "exit": 3,
+      "lane": "bun",
+      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/literal.bend"
+      ],
+      "case": "literal",
+      "exit": 3,
+      "lane": "native",
+      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/unicode.bend"
+      ],
+      "case": "unicode",
+      "exit": 3,
+      "lane": "bun",
+      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/unicode.bend"
+      ],
+      "case": "unicode",
+      "exit": 3,
+      "lane": "native",
+      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/missing-colon.bend"
+      ],
+      "case": "missing-colon",
+      "exit": 2,
+      "lane": "bun",
+      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/missing-colon.bend"
+      ],
+      "case": "missing-colon",
+      "exit": 2,
+      "lane": "native",
+      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/indent.bend"
+      ],
+      "case": "indent",
+      "exit": 2,
+      "lane": "bun",
+      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/indent.bend"
+      ],
+      "case": "indent",
+      "exit": 2,
+      "lane": "native",
+      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "bun",
+        "$ROOT/.local/compiler-frontend/parse-cli.js",
+        "$ROOT/.local/compiler-frontend/options.bend",
+        "65537",
+        "512"
+      ],
+      "case": "options",
+      "exit": 5,
+      "lane": "bun",
+      "stderr": "HostFailure\targuments\tbudget-out-of-range\n",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/.local/compiler-frontend/parse-cli",
+        "$ROOT/.local/compiler-frontend/options.bend",
+        "65537",
+        "512"
+      ],
+      "case": "options",
+      "exit": 5,
+      "lane": "native",
+      "stderr": "HostFailure\targuments\tbudget-out-of-range\n",
+      "stdout": ""
+    }
+  ],
+  "builds": [
+    {
+      "argv": [
+        "$ROOT/scripts/bend-reference",
+        "$ROOT/src/parse-cli.bend",
+        "-o",
+        "$ROOT/.local/compiler-frontend/parse-cli.js"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "$ROOT/scripts/bend-reference",
+        "$ROOT/src/parse-cli.bend",
+        "-o",
+        "$ROOT/.local/compiler-frontend/parse-cli"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "classification": {
+    "downstream": [
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/generic.bend"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/match.bend"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/match-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/template.bend"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/template-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/destructure.bend"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/local-import.bend"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/hash-import.bend"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-check.js",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/generic.bend"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/match.bend"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/match-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/template.bend"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/template-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/destructure.bend"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/local-import.bend"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/hash-import.bend"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-check",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "check",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/generic.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/match.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/match-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/template.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/template-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/destructure.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/local-import.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/hash-import.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-eval.js",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/generic.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/match.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/match-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/template.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/template-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/destructure.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/local-import.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/hash-import.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-eval",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend",
+          "main",
+          "65536"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": false,
+        "phase": "eval",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/generic.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/match.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/match-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/template.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/template-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/destructure.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/local-import.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/hash-import.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/classification-compile.js",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "bun",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/generic.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/generic.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/generic-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/generic-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/match.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/match.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/match-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/match-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/template.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/template.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/template-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/template-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/destructure.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/destructure.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/destructure-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/destructure-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/local-import.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/local-import.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/local-import-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/local-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/hash-import.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 3,
+        "file": "classification/hash-import.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+        "stdout": ""
+      },
+      {
+        "argv": [
+          "$ROOT/.local/compiler-frontend/classification-compile",
+          "$ROOT/tests/subsets/classification/hash-import-malformed.bend",
+          "$ROOT/.local/compiler-frontend/classification-rejected.wasm"
+        ],
+        "exit": 2,
+        "file": "classification/hash-import-malformed.bend",
+        "lane": "native",
+        "output_preserved": true,
+        "phase": "compile",
+        "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+        "stdout": ""
+      }
+    ],
+    "downstream_builds": [
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/check-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-check.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "bun",
+        "phase": "check",
+        "sha256": "080b493f90760b2ed97f5654af2c3dd724412d0ed907d1caf3ee4cff4f7e8ff3"
+      },
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/check-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-check"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "native",
+        "phase": "check",
+        "sha256": "4363ae58c2f74ebab7f535b62e130e41eed239837381e637dd278c4a1ab6ccd5"
+      },
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/eval-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-eval.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "bun",
+        "phase": "eval",
+        "sha256": "249d958daff4c1e4ff0e2e1417a4776cab7b72c8a4899a3db4a25db467104a54"
+      },
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/eval-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-eval"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "native",
+        "phase": "eval",
+        "sha256": "55736ba38212288defb1899c8fa61956fcce4774582873ab02d51ef3f6f64173"
+      },
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/compile-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-compile.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "bun",
+        "phase": "compile",
+        "sha256": "1610da78cc0af40bc5eacfc54e9076cbbc5c091c2f679dc61d01f30a38c38a33"
+      },
+      {
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/src/compile-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/classification-compile"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "lane": "native",
+        "phase": "compile",
+        "sha256": "948b6ddb437d67ec3eee094352414fd6570d25d42000f463d8b9b39faf198a3c"
+      }
+    ],
+    "fixtures": [
+      {
+        "file": "classification/generic.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/generic.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/generic.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/generic.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Box{On{}}\n"
+        }
+      },
+      {
+        "file": "classification/generic-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/generic-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/generic-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-is\t9:10:1:9\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/generic-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : 'is'\n- observed : '-'\nLocation:\n1>| type Box -A: Type> is Type:\n  |          ^\n2 |   Box{value: A}\n",
+          "stdout": ""
+        }
+      },
+      {
+        "file": "classification/match.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/match.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/match.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/match.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "On{}\n"
+        }
+      },
+      {
+        "file": "classification/match-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/match-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/match-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\texpected-:\t81:82:6:10\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/match-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : a term\n- observed : ')'\nLocation:\n5 | def both(a: Flag, b: Flag) -> Flag:\n6>|   match a ):\n  |           ^\n7 |     case Off{} Off{}: On{}\n",
+          "stdout": ""
+        }
+      },
+      {
+        "file": "classification/template.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/template.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/template.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\ttemplate-binder\t48:49:5:13\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/template.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "On{}\n"
+        }
+      },
+      {
+        "file": "classification/template-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/template-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/template-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tparameter\t48:49:5:13\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/template-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : a name\n- observed : ':'\nLocation:\n4 | \n5>| def constant(~: Flag) -> Flag:\n  |               ^\n6 |   x\n",
+          "stdout": ""
+        }
+      },
+      {
+        "file": "classification/destructure.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/destructure.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/destructure.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/destructure.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "On{}\n"
+        }
+      },
+      {
+        "file": "classification/destructure-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/destructure-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/destructure-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tend-of-body\t116:117:9:14\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/destructure-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : '='\n- observed : 'v'\nLocation:\n 9 |   Cell{value} x\n10>|   value\n   |   ^\n11 | \n",
+          "stdout": ""
+        }
+      },
+      {
+        "file": "classification/local-import.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/local-import.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/local-import.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\timport\t7:8:1:7\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/local-import.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "module.On{}\n"
+        }
+      },
+      {
+        "file": "classification/local-import-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/local-import-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/local-import-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tdeclaration-name\t7:8:2:0\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/local-import-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : an import ('import Base', or 'import <path> as <Name>')\n- observed : 'import'\nLocation:\n1>| import\n  | ^\n2 | \n",
+          "stdout": ""
+        }
+      },
+      {
+        "file": "classification/hash-import.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/hash-import.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/hash-import.bend"
+            ],
+            "exit": 3,
+            "stderr": "Unsupported\tparse\timport\t7:41:1:7\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/hash-import.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "0x77a1a37baca5d86f62241cab956a1fb1/module.On{}\n"
+        }
+      },
+      {
+        "file": "classification/hash-import-malformed.bend",
+        "lanes": {
+          "bun": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-frontend/parse-cli.js",
+              "$ROOT/tests/subsets/classification/hash-import-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+            "stdout": ""
+          },
+          "native": {
+            "argv": [
+              "$ROOT/.local/compiler-frontend/parse-cli",
+              "$ROOT/tests/subsets/classification/hash-import-malformed.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tparse\tdeclaration-name\t8:42:1:8\n",
+            "stdout": ""
+          }
+        },
+        "reference": {
+          "argv": [
+            "env",
+            "BEND_LIB=$ROOT/.local/compiler-frontend/classification-lib",
+            "BEND_NO_TELEMETRY=1",
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/tests/subsets/classification/hash-import-malformed.bend"
+          ],
+          "exit": 1,
+          "stderr": "Error:\n- expected : an import path of plain names (letters, digits, _ and -; the hub's files import the hub's)\n- observed : '=0x77a1a37baca5d86f62241cab956a1fb1/module.bend'\nLocation:\n1>| import =0x77a1a37baca5d86f62241cab956a1fb1/module.bend as M\n  |        ^\n2 | \n",
+          "stdout": ""
+        }
+      }
+    ],
+    "mutants": [
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/generic-invalid/cli.js",
+            "$ROOT/tests/subsets/classification/generic.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tgeneric-datatype\t8:9:1:8\n",
+          "stdout": ""
+        },
+        "after": "invalid(tokens,\"generic-datatype\")",
+        "before": "unsupported(tokens,\"generic-datatype\")",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/generic-invalid/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/generic-invalid/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Unsupported\tparse\tgeneric-datatype\t8:9:1:8",
+          "exit": 3
+        },
+        "mutated_sha256": "2954192a6e043cd952fbf898e1ccf07613ee112b89eb3230a73aa8daa41a8972",
+        "name": "generic-invalid",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/generic-invalid/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/generic.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/match-invalid/cli.js",
+            "$ROOT/tests/subsets/classification/match.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tmatch-scrutinees\t81:82:6:10\n",
+          "stdout": ""
+        },
+        "after": "invalid(tokens,\"match-scrutinees\")",
+        "before": "unsupported(tokens,\"match-scrutinees\")",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/match-invalid/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/match-invalid/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Unsupported\tparse\tmatch-scrutinees\t81:82:6:10",
+          "exit": 3
+        },
+        "mutated_sha256": "531125d07026057ffa111e53f7801fb8f203544cd1cf3419da1c050fe8b7bef3",
+        "name": "match-invalid",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/match-invalid/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/match.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/template-invalid/cli.js",
+            "$ROOT/tests/subsets/classification/template.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\ttemplate-binder\t48:49:5:13\n",
+          "stdout": ""
+        },
+        "after": "invalid(ts,\"template-binder\")",
+        "before": "unsupported(ts,\"template-binder\")",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/template-invalid/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/template-invalid/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Unsupported\tparse\ttemplate-binder\t48:49:5:13",
+          "exit": 3
+        },
+        "mutated_sha256": "e0d4439cc9e40ed71bfd209c99fa84caba9d28748ae8f3ffdd19bcae55c075a2",
+        "name": "template-invalid",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/template-invalid/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/template.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/destructure-invalid/cli.js",
+            "$ROOT/tests/subsets/classification/destructure.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\tdestructuring-binding\t116:117:9:14\n",
+          "stdout": ""
+        },
+        "after": "invalid(ts,\"destructuring-binding\")",
+        "before": "unsupported(ts,\"destructuring-binding\")",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/destructure-invalid/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/destructure-invalid/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Unsupported\tparse\tdestructuring-binding\t116:117:9:14",
+          "exit": 3
+        },
+        "mutated_sha256": "131c119e9f745ab4e0e936bd326cb8751e72893b1e50c37d05b52b70d37606ba",
+        "name": "destructure-invalid",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/destructure-invalid/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/destructure.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/import-invalid/cli.js",
+            "$ROOT/tests/subsets/classification/local-import.bend"
+          ],
+          "exit": 2,
+          "stderr": "Invalid\tparse\timport\t7:8:1:7\n",
+          "stdout": ""
+        },
+        "after": "invalid(Con{name,tokens},\"import\")",
+        "before": "unsupported(Con{name,tokens},\"import\")",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/import-invalid/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/import-invalid/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Unsupported\tparse\timport\t7:8:1:7",
+          "exit": 3
+        },
+        "mutated_sha256": "6052fde9c6ef447cb2e011f24c80aabf1e04a29c160c635eadaa8dffb0ed7bb8",
+        "name": "import-invalid",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/import-invalid/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/local-import.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/malformed-unsupported/cli.js",
+            "$ROOT/tests/subsets/classification/template-malformed.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\tparameter\t48:49:5:13\n",
+          "stdout": ""
+        },
+        "after": "Fail{S.Unsupported{\"parse\",code,S.here(ts)}}",
+        "before": "Fail{S.Invalid{\"parse\",code,S.here(ts)}}",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/malformed-unsupported/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/malformed-unsupported/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Invalid\tparse\tparameter\t48:49:5:13",
+          "exit": 2
+        },
+        "mutated_sha256": "43bbbb8ee66b323c8f98f9896806543b74662c760f478e93b473e9cceeebbbd2",
+        "name": "malformed-unsupported",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/malformed-unsupported/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/template-malformed.bend"
+      },
+      {
+        "actual": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/expected-unsupported/cli.js",
+            "$ROOT/tests/subsets/classification/generic-malformed.bend"
+          ],
+          "exit": 3,
+          "stderr": "Unsupported\tparse\texpected-is\t9:10:1:9\n",
+          "stdout": ""
+        },
+        "after": "S.Unsupported{\"parse\",String.append(\"expected-\",word),S.at(h)}",
+        "before": "S.Invalid{\"parse\",String.append(\"expected-\",word),S.at(h)}",
+        "build": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/expected-unsupported/parse-cli.bend",
+            "-o",
+            "$ROOT/.local/compiler-frontend/expected-unsupported/cli.js"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "expected": {
+          "diagnostic": "Invalid\tparse\texpected-is\t9:10:1:9",
+          "exit": 2
+        },
+        "mutated_sha256": "5033b63516e2067a8b5542d4a77d475c9b8217a60a237248f510c3d784df3fae",
+        "name": "expected-unsupported",
+        "outcome": "semantic-kill",
+        "typecheck": {
+          "argv": [
+            "$ROOT/scripts/bend-reference",
+            "$ROOT/.local/compiler-frontend/expected-unsupported/parse-cli.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "witness": "classification/generic-malformed.bend"
+      }
+    ]
+  },
+  "date": "<normalized-date>",
+  "fixtures": [
+    {
+      "file": "s1/flag.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/flag.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/data-reuse.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/data-reuse.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/data-reuse.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/erased-forward.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/erased-forward.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/erased-forward.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/shadowing.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/shadowing.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/shadowing.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/nested-match.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/nested-match.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/nested-match.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/forward-type.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/forward-type.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/forward-type.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "On{}\n"
+      }
+    },
+    {
+      "file": "s1/affine-reuse.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/affine-reuse.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/affine-reuse.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: reuse\n7 | \n8>| def reuse(x: Flag) -> Flag:\n  |           ^\n9 |   first(x,x)\n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/erased-live.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/erased-live.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/erased-live.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nLocation: observe\n6 |   match ghost:\n7>|     case Off{}: On{}\n  |          ^^^^^\n8 |     case On{}: Off{}\n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/missing-arm.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/missing-arm.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/missing-arm.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : cases for On\n- observed : \\{}\nLocation: flip\n5 | def flip(x: Flag) -> Flag:\n6>|   match x:\n  |   ^^^^^^^^\n7 |     case Off{}: On{}\n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/forward-call.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/forward-call.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/forward-call.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : flip\nContext:\n- x : Flag\nLocation: forward\n5 | def forward(x: Flag) -> Flag:\n6>|   flip(x)\n  |   ^^^^\n7 | \n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/constructor-mismatch.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/constructor-mismatch.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/constructor-mismatch.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Flag:\n 9>|   OtherTag{}\n   |   ^^^^^^^^^^\n10 | \n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/constructor-arity.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/constructor-arity.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/constructor-arity.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Off with 0 fields\n- observed : Off{On{}}\nLocation: main\n5 | def main() -> Flag:\n6>|   Off{On{}}\n  |   ^^^^^^^^^\n7 | \n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/shadowing-type.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/shadowing-type.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/shadowing-type.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Flag\n- observed : Other\nContext:\n- x : Flag\n- x : Other\nLocation: shadow\n12 |   x : Other = OtherTag{}\n13>|   identity(x)\n   |            ^\n14 | \n",
+        "stdout": ""
+      }
+    },
+    {
+      "file": "s1/unannotated-constructor.bend",
+      "lanes": {
+        "bun": {
+          "argv": [
+            "bun",
+            "$ROOT/.local/compiler-frontend/parse-cli.js",
+            "$ROOT/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n"
+        },
+        "native": {
+          "argv": [
+            "$ROOT/.local/compiler-frontend/parse-cli",
+            "$ROOT/tests/subsets/s1/unannotated-constructor.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n"
+        }
+      },
+      "reference": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/tests/subsets/s1/unannotated-constructor.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : On{}\nLocation: main\n5 | def main() -> Flag:\n6>|   x = On{}\n  |       ^^^^\n7 |   x\n",
+        "stdout": ""
+      }
+    }
+  ],
+  "generated": {
+    ".local/compiler-frontend/parse-cli": "d43c458b0ade781b3866aed6804590156f2f6be6491b643225ce583ee61d44e2",
+    ".local/compiler-frontend/parse-cli.js": "a416b6988392b48ff5a4ed5552e3383366a0af135d96ad04a6fbff554892fd63"
+  },
   "inputs": {
-    "src/LAWS.bend": "5db3a525420e9cff3448b0a7219ff71b10a8dc111d6e440007c2a0ae7e8fa76d",
-    "src/PROOF.bend": "c0313e180f55d3941f6bae25a7c4d4362f883495bb54dcb570ef62825eb43a80",
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
     "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
     "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
     "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
-    "src/check-LAWS.bend": "e89d5ecb4589d3778bcf74a50304cd9a9b08e54d0171fbefcea498bbbaafed31",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
     "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
     "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
-    "src/check.bend": "131bf0f567ce65ba69eb6eff597bb13595116811e3884a1ca18f182ad47b07d2",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
     "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
     "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
     "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
     "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
-    "src/driver.bend": "4c1b4d1fb9a412e1e9fda6474bde2bd3b0524774543d0d857fdd75bf5b548c9d",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
     "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
     "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
     "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
     "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
     "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
     "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "046b79f2cbc4153a10493e44e0e7ec2136bbb68487680832b91689a6f28b1217",
-    "src/patterns.bend": "3d0a5429adb3c3a095ec7ee28534152cb7274510e226f41691af5f1c99ea4e67",
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
     "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
     "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
-    "src/scope.bend": "9581c3922f9d027e67b6b0a054b99b6b7b4062f59c3a0c72f9e7e3f1ea522dfd",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
     "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
-    "src/wasm.bend": "bf01bf3b24b48571c128162cffb2dfaae068a8456d6e04cdacd0187d18be078b",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/subsets/check_frontend.py": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9",
+    "tests/subsets/classification-cases.json": "014d252d2e1e7cad36fba074213c3a9f0c9b67e593b11a501f92e5c7c37bf6fc",
+    "tests/subsets/classification/destructure-malformed.bend": "4bb247c50405472be392515923fd093c7ac2fc08b8c7b2f6620d91504f8ac939",
+    "tests/subsets/classification/destructure.bend": "90845487bd821c25e5b8915aed37c398eaeefe54397385d53e181a1b9c62b288",
+    "tests/subsets/classification/generic-malformed.bend": "4bc35fbdc39211ae5e7cabf4e8a644a892d8e99b3765083a4fb327b0a7092595",
+    "tests/subsets/classification/generic.bend": "7c3e2486808268da160b6d519c8027a5e130a44c62d8cb53aa23a46b8a4ab21b",
+    "tests/subsets/classification/hash-import-malformed.bend": "2fc83ec12e41b629e98112de7199f26e049c3e6121b89b1867be48f5e17aa647",
+    "tests/subsets/classification/hash-import.bend": "a64cd73eea637f6e15f2f68219f7d3873452220ebcab5088aa407742e19f649d",
+    "tests/subsets/classification/local-import-malformed.bend": "46f5c25928e82b9ea3804e7b05a29777b0b78a28792b8de7429c04e7d69c3dce",
+    "tests/subsets/classification/local-import.bend": "9ad9c76011419fd247b4772b4308c2a96f01c653028ec9f1e464ecf8ec848044",
+    "tests/subsets/classification/match-malformed.bend": "4bb367ee201573cdce32f6eda69a46081113dd426cd084b8a1f5b43a1b25abdb",
+    "tests/subsets/classification/match.bend": "a4dea9fdf7df79d8f61b7b22af027ab147d9f40f9561c23f77a5bf6496f64955",
+    "tests/subsets/classification/module.bend": "ecc42e46188f2d9bbc568ef50c92f9f0c5412e108a053b3d408544ce06885f1e",
+    "tests/subsets/classification/template-malformed.bend": "4ffd5c4a350d551931dab406adcbec585cdffb076a2ce4f4f04875a64e9044fb",
+    "tests/subsets/classification/template.bend": "d85156031510250462ab376852f3c0d2246e78fc58d059dfbb278e339a936d3d",
+    "tests/subsets/frontend-cases.json": "34e1c5cb0f68b2d3c5a8c0f35c0cfd5eca22169d5339b4a7369ae31c33c8ff2e",
+    "tests/subsets/lexer-observe.bend": "e96860f0fb4f77f17c78de0424215042d4d8f8cb8f1dc040ab7134912c5bc220",
     "tests/subsets/s1/affine-reuse.bend": "10ca59993f373c7598a4962b82e46708c89c5bee222d52c4a8ee0e5d8ae46b6c",
     "tests/subsets/s1/constructor-arity.bend": "8e004fc31333088b84bd9b72ea59d466d247afd1751698b17c2ff1fd4a07f9a4",
     "tests/subsets/s1/constructor-mismatch.bend": "69c0a6495de5de23fb46f5f58fbad817c060f811f8f4300002f92f0ae65e71d5",
@@ -45,952 +2730,166 @@
     "tests/subsets/s1/nested-match.bend": "18a90f0afbf0c74808f0846ac7ca58f89617272b6780cb90b1b74c383ba2aebb",
     "tests/subsets/s1/shadowing-type.bend": "2960eb8870b605fe8c1c91a18e3d2c4bdf862f2545cb828b978bf4ff6232264a",
     "tests/subsets/s1/shadowing.bend": "0198a3002f4bedf7bf4150caad754cc040d3152a5add1e9abea985a53bbae340",
-    "tests/subsets/s1/unannotated-constructor.bend": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020",
-    "tests/subsets/frontend-cases.json": "34e1c5cb0f68b2d3c5a8c0f35c0cfd5eca22169d5339b4a7369ae31c33c8ff2e",
-    "tests/subsets/lexer-observe.bend": "e96860f0fb4f77f17c78de0424215042d4d8f8cb8f1dc040ab7134912c5bc220",
-    "tests/subsets/check_frontend.py": "0f6270231b787e027df8455bc6af30c917726811a1e637093d116419945e4996"
+    "tests/subsets/s1/unannotated-constructor.bend": "3d5d8eb5312c094c62ec594213e7e3a36f98435c280e86f146f83cde26797020"
   },
+  "lexer_observation": {
+    "argv": [
+      "$ROOT/scripts/bend-reference",
+      "$ROOT/tests/subsets/lexer-observe.bend"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "<nl>@3:4:1:3;a@5:6:2:1;<eof>@7:7:2:3;\nalpha.beta@0:10:1:0;(@10:11:1:10;foo@11:14:1:11;)@14:15:1:14;<eof>@15:15:1:15;\nExhausted\tlex\tbudget\t1:1:1:1\n<eof>@0:0:1:0;\n"
+  },
+  "mutants": [
+    {
+      "after": "\"discarded\"",
+      "before": "String.reverse(rev)",
+      "file": "lex.bend",
+      "killed_by": "word_source",
+      "mutated_sha256": "40d047302769072e0070286bc294a3e47c5cf2af434140925d0ead22734e3571",
+      "name": "word-spelling",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/word-spelling/PROOF.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Done{[syntax.Token{\"discarded\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\n- observed : Done{[syntax.Token{\"a\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\nLocation: LAWS.word_source\n10 |   match extra:\n11>|     case 0n: {==}\n   |              ^^^^\n12 |     case 1n+n: {==}\n",
+        "stdout": ""
+      },
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/word-spelling/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    },
+    {
+      "after": "case 0n _: Done{Parsed{S.Sequence{Nil{}},tokens}}",
+      "before": "case 0n _: Fail{S.Exhausted{\"parse\",S.here(tokens)}}",
+      "file": "parse.bend",
+      "killed_by": "no_parser_budget",
+      "mutated_sha256": "1c6ae400657de627b4ffd180709c4180b3d9b223dbcf5bcbc4a4b4cebd1b5858",
+      "name": "zero-depth-accept",
+      "result": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/zero-depth-accept/PROOF.bend"
+        ],
+        "exit": 1,
+        "stderr": "Error:\n- expected : Done{parse.Parsed{syntax.Sequence{[]}, tokens}}\n- observed : Fail{syntax.Exhausted{\"parse\", syntax.here(tokens)}}\nContext:\n- tokens : List<&2, syntax.Token>\nLocation: LAWS.no_parser_budget\n17 | def L.no_parser_budget(tokens):\n18>|   {==}\n   |   ^^^^\n19 | \n",
+        "stdout": ""
+      },
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/zero-depth-accept/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    },
+    {
+      "after": "S.Sequence{List.append(&2,S.Node,items,Con{head,Nil{}})}",
+      "before": "S.Sequence{Con{head,items}}",
+      "build": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/reverse-sequence/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-frontend/reverse-sequence/cli.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "file": "parse.bend",
+      "killed_by": "unchanged Flag tree observation",
+      "mutated_sha256": "d0b4733137b076b16279f79a4e9a359514d9792416274efd2342adca86a97f86",
+      "name": "reverse-sequence",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/reverse-sequence/cli.js",
+          "$ROOT/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Parsed\tdef main()->Flag flip(Off{}); def flip(1 x:Flag)->Flag match[$x](On{} => Off{}; Off{} => On{}); type Flag Type(On{}; Off{})\n"
+      },
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/reverse-sequence/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    },
+    {
+      "after": "parameter_parts(2,ts)",
+      "before": "parameter_parts(1,ts)",
+      "build": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/reuse-default/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-frontend/reuse-default/cli.js"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "file": "parse.bend",
+      "killed_by": "unchanged Flag tree observation",
+      "mutated_sha256": "53cc6957f311694a285c9b4feb04c07a5612fa2c9bd76c7cf7f727f4ec0567a9",
+      "name": "reuse-default",
+      "result": {
+        "argv": [
+          "bun",
+          "$ROOT/.local/compiler-frontend/reuse-default/cli.js",
+          "$ROOT/tests/subsets/s1/flag.bend"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(2 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n"
+      },
+      "typecheck": {
+        "argv": [
+          "$ROOT/scripts/bend-reference",
+          "$ROOT/.local/compiler-frontend/reuse-default/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    }
+  ],
+  "proof": {
+    "argv": [
+      "$ROOT/scripts/bend-reference",
+      "$ROOT/src/PROOF.bend"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "All terms check.\n"
+  },
+  "scope": "Parser checkpoint, not checked source-to-Wasm compilation",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed",
   "tools": {
     "bun": "1.3.14",
     "node": "v22.22.3",
     "python3": "Python 3.14.3"
-  },
-  "proof": {
-    "argv": [
-      "/Users/ericfode/src/knot/scripts/bend-reference",
-      "/Users/ericfode/src/knot/src/PROOF.bend"
-    ],
-    "exit": 0,
-    "stdout": "All terms check.\n",
-    "stderr": ""
-  },
-  "builds": [
-    {
-      "argv": [
-        "/Users/ericfode/src/knot/scripts/bend-reference",
-        "/Users/ericfode/src/knot/src/parse-cli.bend",
-        "-o",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js"
-      ],
-      "exit": 0,
-      "stdout": "",
-      "stderr": ""
-    },
-    {
-      "argv": [
-        "/Users/ericfode/src/knot/scripts/bend-reference",
-        "/Users/ericfode/src/knot/src/parse-cli.bend",
-        "-o",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli"
-      ],
-      "exit": 0,
-      "stdout": "",
-      "stderr": ""
-    }
-  ],
-  "generated": {
-    ".local/compiler-frontend/parse-cli.js": "9e9eb7bb3c80cd6cc97142dd6c98775ab5b6554f2814c63fa4a276c6181f530f",
-    ".local/compiler-frontend/parse-cli": "72ca94c1a8fed8a8806401390ae988b0e697137f36cf40ae0346992c4d597f80"
-  },
-  "fixtures": [
-    {
-      "file": "s1/flag.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/data-reuse.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/data-reuse.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(2 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/erased-forward.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/erased-forward.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def take(0 ghost:Flag; 1 value:Flag)->Flag $value; def forward(0 ghost:Flag)->Flag take($ghost; On{}); def main()->Flag forward(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/shadowing.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def shadow(1 x:Flag)->Flag let[1 x flip($x)] let[1 x:Flag On{}] $x; def main()->Flag shadow(On{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/nested-match.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/nested-match.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def both(1 x:Flag; 1 y:Flag)->Flag match[$x](Off{} => match[$y](Off{} => On{}; On{} => Off{}); On{} => $y); def main()->Flag both(Off{}; Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/forward-type.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
-        ],
-        "exit": 0,
-        "stdout": "On{}\n",
-        "stderr": ""
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/forward-type.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\tdef make()->Flag On{}; type Flag Type(Off{}; On{}); def main()->Flag make()\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/affine-reuse.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: reuse\n7 | \n8>| def reuse(x: Flag) -> Flag:\n  |           ^\n9 |   first(x,x)\n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/affine-reuse.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def first(1 a:Flag; 1 b:Flag)->Flag $a; def reuse(1 x:Flag)->Flag first($x; $x); def main()->Flag reuse(On{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/erased-live.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- message  : a live scrutinee (a - scrutinee matches only in a dead region)\nLocation: observe\n6 |   match ghost:\n7>|     case Off{}: On{}\n  |          ^^^^^\n8 |     case On{}: Off{}\n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/erased-live.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def observe(0 ghost:Flag)->Flag match[$ghost](Off{} => On{}; On{} => Off{}); def main()->Flag observe(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/missing-arm.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : cases for On\n- observed : \\{}\nLocation: flip\n5 | def flip(x: Flag) -> Flag:\n6>|   match x:\n  |   ^^^^^^^^\n7 |     case Off{}: On{}\n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/missing-arm.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}); def main()->Flag flip(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/forward-call.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : a filled definition (an unfilled law is a dead claim: live code cannot use it)\n- observed : flip\nContext:\n- x : Flag\nLocation: forward\n5 | def forward(x: Flag) -> Flag:\n6>|   flip(x)\n  |   ^^^^\n7 | \n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/forward-call.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def forward(1 x:Flag)->Flag flip($x); def flip(1 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag forward(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/constructor-mismatch.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : Flag\n- observed : Other\nLocation: main\n 8 | def main() -> Flag:\n 9>|   OtherTag{}\n   |   ^^^^^^^^^^\n10 | \n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-mismatch.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def main()->Flag OtherTag{}\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/constructor-arity.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : Off with 0 fields\n- observed : Off{On{}}\nLocation: main\n5 | def main() -> Flag:\n6>|   Off{On{}}\n  |   ^^^^^^^^^\n7 | \n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/constructor-arity.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag Off{On{}}\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/shadowing-type.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : Flag\n- observed : Other\nContext:\n- x : Flag\n- x : Other\nLocation: shadow\n12 |   x : Other = OtherTag{}\n13>|   identity(x)\n   |            ^\n14 | \n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/shadowing-type.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); type Other Type(OtherTag{}); def identity(1 x:Flag)->Flag $x; def shadow(1 x:Flag)->Flag let[1 x:Other OtherTag{}] identity($x); def main()->Flag shadow(Off{})\n",
-          "stderr": ""
-        }
-      }
-    },
-    {
-      "file": "s1/unannotated-constructor.bend",
-      "reference": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : On{}\nLocation: main\n5 | def main() -> Flag:\n6>|   x = On{}\n  |       ^^^^\n7 |   x\n"
-      },
-      "lanes": {
-        "bun": {
-          "argv": [
-            "bun",
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n",
-          "stderr": ""
-        },
-        "native": {
-          "argv": [
-            "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-            "/Users/ericfode/src/knot/tests/subsets/s1/unannotated-constructor.bend"
-          ],
-          "exit": 0,
-          "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def main()->Flag let[1 x On{}] $x\n",
-          "stderr": ""
-        }
-      }
-    }
-  ],
-  "lexer_observation": {
-    "argv": [
-      "/Users/ericfode/src/knot/scripts/bend-reference",
-      "/Users/ericfode/src/knot/tests/subsets/lexer-observe.bend"
-    ],
-    "exit": 0,
-    "stdout": "<nl>@3:4:1:3;a@5:6:2:1;<eof>@7:7:2:3;\nalpha.beta@0:10:1:0;(@10:11:1:10;foo@11:14:1:11;)@14:15:1:14;<eof>@15:15:1:15;\nExhausted\tlex\tbudget\t1:1:1:1\n<eof>@0:0:1:0;\n",
-    "stderr": ""
-  },
-  "boundaries": [
-    {
-      "case": "lex-zero",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/lex-zero.bend",
-        "0",
-        "512"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n"
-    },
-    {
-      "case": "lex-zero",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/lex-zero.bend",
-        "0",
-        "512"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tlex\tbudget\t0:0:1:0\n"
-    },
-    {
-      "case": "parse-zero",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-zero.bend",
-        "65536",
-        "0"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n"
-    },
-    {
-      "case": "parse-zero",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-zero.bend",
-        "65536",
-        "0"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tparse\tbudget\t0:4:1:0\n"
-    },
-    {
-      "case": "parse-small",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-small.bend",
-        "65536",
-        "3"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n"
-    },
-    {
-      "case": "parse-small",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-small.bend",
-        "65536",
-        "3"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tparse\tbudget\t13:17:1:13\n"
-    },
-    {
-      "case": "source-exact",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/source-exact.bend"
-      ],
-      "exit": 0,
-      "stdout": "Parsed\t\n",
-      "stderr": ""
-    },
-    {
-      "case": "source-exact",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/source-exact.bend"
-      ],
-      "exit": 0,
-      "stdout": "Parsed\t\n",
-      "stderr": ""
-    },
-    {
-      "case": "source-over",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/source-over.bend"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n"
-    },
-    {
-      "case": "source-over",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/source-over.bend"
-      ],
-      "exit": 4,
-      "stdout": "",
-      "stderr": "Exhausted\tlex\tbudget\t65536:65536:1:65536\n"
-    },
-    {
-      "case": "import",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/import.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
-    },
-    {
-      "case": "import",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/import.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
-    },
-    {
-      "case": "fields",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/fields.bend"
-      ],
-      "exit": 0,
-      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n",
-      "stderr": ""
-    },
-    {
-      "case": "fields",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/fields.bend"
-      ],
-      "exit": 0,
-      "stdout": "Parsed\ttype Box Type(Box{1 x:Box})\n",
-      "stderr": ""
-    },
-    {
-      "case": "literal",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/literal.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n"
-    },
-    {
-      "case": "literal",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/literal.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tlex\tliteral\t22:23:2:2\n"
-    },
-    {
-      "case": "unicode",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/unicode.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n"
-    },
-    {
-      "case": "unicode",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/unicode.bend"
-      ],
-      "exit": 3,
-      "stdout": "",
-      "stderr": "Unsupported\tlex\tnon-ascii\t2:3:1:2\n"
-    },
-    {
-      "case": "missing-colon",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/missing-colon.bend"
-      ],
-      "exit": 2,
-      "stdout": "",
-      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n"
-    },
-    {
-      "case": "missing-colon",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/missing-colon.bend"
-      ],
-      "exit": 2,
-      "stdout": "",
-      "stderr": "Invalid\tparse\tfunction-result\t11:12:1:11\n"
-    },
-    {
-      "case": "indent",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/indent.bend"
-      ],
-      "exit": 2,
-      "stdout": "",
-      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n"
-    },
-    {
-      "case": "indent",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/indent.bend"
-      ],
-      "exit": 2,
-      "stdout": "",
-      "stderr": "Invalid\tparse\tbody-indentation\t20:22:2:0\n"
-    },
-    {
-      "case": "options",
-      "lane": "bun",
-      "argv": [
-        "bun",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli.js",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/options.bend",
-        "65537",
-        "512"
-      ],
-      "exit": 5,
-      "stdout": "",
-      "stderr": "HostFailure\targuments\tbudget-out-of-range\n"
-    },
-    {
-      "case": "options",
-      "lane": "native",
-      "argv": [
-        "/Users/ericfode/src/knot/.local/compiler-frontend/parse-cli",
-        "/Users/ericfode/src/knot/.local/compiler-frontend/options.bend",
-        "65537",
-        "512"
-      ],
-      "exit": 5,
-      "stdout": "",
-      "stderr": "HostFailure\targuments\tbudget-out-of-range\n"
-    }
-  ],
-  "mutants": [
-    {
-      "name": "word-spelling",
-      "file": "lex.bend",
-      "before": "String.reverse(rev)",
-      "after": "\"discarded\"",
-      "typecheck": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/word-spelling/parse-cli.bend",
-          "--check-only"
-        ],
-        "exit": 0,
-        "stdout": "All terms check.\n",
-        "stderr": ""
-      },
-      "mutated_sha256": "40d047302769072e0070286bc294a3e47c5cf2af434140925d0ead22734e3571",
-      "killed_by": "word_source",
-      "result": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/word-spelling/PROOF.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : Done{[syntax.Token{\"discarded\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\n- observed : Done{[syntax.Token{\"a\", syntax.At{0, 1, 1, 0}}, syntax.Token{\"<eof>\", syntax.At{1, 1, 1, 1}}]}\nLocation: LAWS.word_source\n10 |   match extra:\n11>|     case 0n: {==}\n   |              ^^^^\n12 |     case 1n+n: {==}\n"
-      }
-    },
-    {
-      "name": "zero-depth-accept",
-      "file": "parse.bend",
-      "before": "case 0n _: Fail{S.Exhausted{\"parse\",S.here(tokens)}}",
-      "after": "case 0n _: Done{Parsed{S.Sequence{Nil{}},tokens}}",
-      "typecheck": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/zero-depth-accept/parse-cli.bend",
-          "--check-only"
-        ],
-        "exit": 0,
-        "stdout": "All terms check.\n",
-        "stderr": ""
-      },
-      "mutated_sha256": "4258cd5df1b5d54c184ba2592949bf492679f04aa62acf8479c20bea2ee51bd0",
-      "killed_by": "no_parser_budget",
-      "result": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/zero-depth-accept/PROOF.bend"
-        ],
-        "exit": 1,
-        "stdout": "",
-        "stderr": "Error:\n- expected : Done{parse.Parsed{syntax.Sequence{[]}, tokens}}\n- observed : Fail{syntax.Exhausted{\"parse\", syntax.here(tokens)}}\nContext:\n- tokens : List<&2, syntax.Token>\nLocation: LAWS.no_parser_budget\n17 | def L.no_parser_budget(tokens):\n18>|   {==}\n   |   ^^^^\n19 | \n"
-      }
-    },
-    {
-      "name": "reverse-sequence",
-      "file": "parse.bend",
-      "before": "S.Sequence{Con{head,items}}",
-      "after": "S.Sequence{List.append(&2,S.Node,items,Con{head,Nil{}})}",
-      "typecheck": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reverse-sequence/parse-cli.bend",
-          "--check-only"
-        ],
-        "exit": 0,
-        "stdout": "All terms check.\n",
-        "stderr": ""
-      },
-      "mutated_sha256": "9b596b855fcc2cb54995c0e84c97b981c160cfdf9fa65e7691fcd59ab4a49fcd",
-      "build": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reverse-sequence/parse-cli.bend",
-          "-o",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reverse-sequence/cli.js"
-        ],
-        "exit": 0,
-        "stdout": "",
-        "stderr": ""
-      },
-      "killed_by": "unchanged Flag tree observation",
-      "result": {
-        "argv": [
-          "bun",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reverse-sequence/cli.js",
-          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
-        ],
-        "exit": 0,
-        "stdout": "Parsed\tdef main()->Flag flip(Off{}); def flip(1 x:Flag)->Flag match[$x](On{} => Off{}; Off{} => On{}); type Flag Type(On{}; Off{})\n",
-        "stderr": ""
-      }
-    },
-    {
-      "name": "reuse-default",
-      "file": "parse.bend",
-      "before": "parameter_parts(1,ts)",
-      "after": "parameter_parts(2,ts)",
-      "typecheck": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reuse-default/parse-cli.bend",
-          "--check-only"
-        ],
-        "exit": 0,
-        "stdout": "All terms check.\n",
-        "stderr": ""
-      },
-      "mutated_sha256": "59e3b12f133a0121bde0cada2a77985c98c8b358376e00c30121eb7edc9ca196",
-      "build": {
-        "argv": [
-          "/Users/ericfode/src/knot/scripts/bend-reference",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reuse-default/parse-cli.bend",
-          "-o",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reuse-default/cli.js"
-        ],
-        "exit": 0,
-        "stdout": "",
-        "stderr": ""
-      },
-      "killed_by": "unchanged Flag tree observation",
-      "result": {
-        "argv": [
-          "bun",
-          "/Users/ericfode/src/knot/.local/compiler-frontend/reuse-default/cli.js",
-          "/Users/ericfode/src/knot/tests/subsets/s1/flag.bend"
-        ],
-        "exit": 0,
-        "stdout": "Parsed\ttype Flag Type(Off{}; On{}); def flip(2 x:Flag)->Flag match[$x](Off{} => On{}; On{} => Off{}); def main()->Flag flip(Off{})\n",
-        "stderr": ""
-      }
-    }
-  ]
+  }
 }

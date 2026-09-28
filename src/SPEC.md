@@ -1,12 +1,21 @@
-# Knot compiler contracts — enum Wasm and structural checking
+# Knot compiler contracts — enum and fielded Wasm
 
-The Wasm contract below remains `knot-enum-1`. The checker and independent
+The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
 [the field contract](../research/compiler-fields/SPEC.md). That extension accepts
 constructor arguments and flat field binders, validates quantities and ordered
 matching, and evaluates finite live-field trees. It does not provide owned
-runtime storage. The emitter rejects every fielded book after body checking.
-Nested patterns, recursion and structured host arguments remain unsupported.
+runtime storage. The default emitter rejects every fielded book after body
+checking. The separately selected `knot-fields-wasm-1` profile below lowers those
+checked books to a bounded bump arena. Owned-storage reclamation (R3/R7) remains
+unmet; this increment does not qualify either runtime requirement.
+The [first-parameter descent contract](../tests/compiler-recursion/SPEC.md)
+adds structural self-calls to checking and evaluation: the first checked argument
+must be a reference to a field of parameter 0, directly or through further
+matches. Other self-calls report `Unsupported check recursive-call`; forward
+and mutual calls retain their existing classification. Nested patterns and
+structured host arguments remain unsupported. Recursive Wasm lowering is not
+yet a qualified capability of `knot-fields-wasm-1`.
 References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
@@ -17,7 +26,7 @@ programs do not import Base or any other module.
 
 ## Accepted language
 
-The profile accepts ASCII Bend source with LF line endings, spaces, `#` comments,
+The retained enum profile accepts ASCII Bend source with LF line endings, spaces, `#` comments,
 and indentation. Identifiers use letters/underscore followed by letters,
 digits, underscores or dots. Keywords cannot be identifiers.
 
@@ -47,8 +56,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
   matching. Already matched parameters cannot be matched again. Inside an arm,
   uses of its matched parameter become the known nullary constructor; this may
   construct several fresh values without reusing the consumed affine value.
-- Live calls form an acyclic graph. Erased arguments may contain forward calls;
-  self-calls remain unsupported in any context. Every function is checked, including unused
+- In the enum subprofile, live calls form an acyclic graph. Erased arguments may
+  contain forward calls; no enum self-call can meet the field-descent rule.
+  Every function is checked, including unused
   definitions. No executable artifact is emitted until the entire book passes.
 
 Constructor names must be unique across the book in this first profile.
@@ -65,13 +75,34 @@ effects remain explicitly unsupported. This restriction leaves recursive trees
 and field-bound variables outstanding for the broader S1 stage. A recognized
 unsupported form makes no claim about the validity of its remaining contents.
 
+The parser recognizes these out-of-profile prefixes before applying the narrower
+enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
+
+| Recognized form | Phase | Code |
+| --- | --- | --- |
+| `type Name<...` generic datatype header | `parse` | `generic-datatype` |
+| `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
+| `~name:` in a function parameter list | `parse` | `template-binder` |
+| Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
+| `import ./...` or `import 0x.../...` | `parse` | `import` |
+
+Recognition stops at that prefix; it neither validates the suffix nor loads a
+module. Malformed supported syntax still reports `Invalid`. The reviewed
+[classification fixtures](../tests/subsets/classification-cases.json) pair six
+seed-accepted programs (local and hash imports separately) with six nearby
+syntax errors, fixing complete diagnostics including locations. The hash
+fixture uses a frozen local cache; it does not claim a published package.
+Six checked prefix laws quantify over source locations and unconsumed suffixes;
+they are classification laws, not a parser soundness theorem or feature support.
+
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).
 They preserve ordered field signatures and validate their declared kinds and
-quantities, including forward/mutual type references. A fielded datatype still
-reports `Unsupported check constructor-fields` before function-body checking.
-Known invalid field declarations can report Invalid first. This extends
-declaration inspection, not the accepted executable language or Wasm ABI.
+quantities, including forward/mutual type references. Structural term checking
+now follows declaration checking. Selecting the default enum emission profile
+still reports `Unsupported check constructor-fields` for a checked fielded book.
+Known invalid declarations or bodies can report Invalid first. Declaration
+inspection itself does not imply execution or a structured host ABI.
 
 ## Binding and quantity semantics
 
@@ -111,6 +142,80 @@ The binary format follows the official WebAssembly specifications for
 [instructions](https://webassembly.github.io/spec/core/binary/instructions.html)
 and [integer encoding](https://webassembly.github.io/spec/core/binary/values.html),
 consulted 2026-09-26. Only the stated MVP subset is used.
+
+## Fielded Wasm profile: `knot-fields-wasm-1`
+
+This profile accepts the same completely checked acyclic books as
+`knot-structural-terms-1`: monomorphic constructor fields, flat field patterns,
+parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
+checker bypass. Recursion, nested patterns, imports and the other unsupported
+forms remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
+a checked book, as does the original `wasm.emit` entry. `emit` still selects
+`Enum{}`; `check.enum_profile` and its existing capability law remain unchanged.
+
+An enum-only datatype uses i32 ordinals, even inside a fielded book. If any
+constructor of a datatype declares fields (including only erased fields), every
+value of that datatype is an i32 cell address. The cell contains `[tag][live
+field 0]...[live field k-1]`, with one 4-byte word per entry. Fields retain
+declaration order; erased fields take no slot and their arguments never run.
+Nullary constructors of such a datatype allocate a tag-only cell. Field values
+are either enum ordinals or cell addresses according to their declared type.
+Constructor arguments are evaluated left to right into fresh locals before
+allocation; matching loads the tag and then its arm's live fields into locals.
+Checked arms are exhaustive, so their field signatures identify the scrutinee
+representation independently of the match's result type.
+
+A module containing a fielded datatype adds memory and global sections:
+`[1,3,5,6,7,10]`. Memory has exactly one page (65,536 bytes, min=max=1). The
+mutable i32 bump starts at zero; zero is a valid cell address. The appended,
+unexported allocator checks `size > 65536 - bump` before advancing the bump.
+That guard contains the profile's sole `unreachable`. An allocation ending at
+65,536 succeeds; an allocation beyond the remaining space traps before writing.
+Cells stay immutable after initialization, so reusable Data may share addresses.
+There is no memory growth, free, reset, reclamation, generation tracking or
+storage transfer. Dropped values retain their cells until the instance is
+discarded. This is bounded allocation, not the owning-store runtime from R3/R7.
+
+The profile adds `global.get`, `global.set`, `i32.load`, `i32.store`, `i32.add`,
+`i32.sub`, `i32.gt_u`, and `unreachable` to the enum instruction whitelist.
+There are no imports, tables, memory exports, GC, SIMD, threads or GPU execution.
+When the book has no fielded constructors, no allocator, memory or global is
+emitted; the 25 enum corpus modules remain byte-identical, in both profiles and
+both compiler lanes, with sections `[1,3,7,10]`.
+
+All original function indices and exports are retained; only the allocator is
+appended. **Host precondition:** invoke only functions whose live parameters and
+result have enum-only datatypes, supplying each parameter's valid constructor
+ordinal. Functions taking or returning cells are for compiled callers. The host
+adapter does not carry source signatures and cannot enforce this precondition;
+an integer that happens to lie in 0..255 is not evidence that a pointer is a
+valid ordinal. Structured host arguments and pointer observations are outside
+this ABI.
+
+The explicit driver is `tests/compiler-fields-wasm/compile.bend`, built with the
+pinned seed to a native executable or Bun JS. It uses the same checked loader,
+budgets, byte writer and failure policy as `src/compile-cli.bend`, but selects
+`Fields{}`. Its command is `compile source output [characters parser-depth
+checker-depth emitter-depth output-bytes]`. Keeping this entry separate preserves
+the existing enum compiler's rejection assertions. Unifying profile selection
+in the public compiler CLI is a subsequent driver increment.
+
+Run its output with `node scripts/run-wasm.mjs --profile=knot-fields-wasm-1 module
+export [live-ordinals...]`. Profile selection asserts that the module came from
+the corresponding checked Knot emitter; it is not a verifier for arbitrary
+Wasm. During export invocation, a call-stack `RangeError` reports
+`Exhausted<TAB>wasm<TAB>call-stack` (exit 4). In the fields profile, the arena's
+`unreachable` reports `Exhausted<TAB>wasm<TAB>arena-overflow` (exit 4). Other traps,
+invalid modules, file failures, unknown exports and malformed host arguments
+remain HostFailure (exit 5). Node startup failures occur before this adapter can
+classify them; the stack test pairs a shallow control with an acyclic wide-frame
+fixture under identical Node flags. No stack overflow is evidence of Invalid.
+
+The gate is `BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py`.
+Its frozen seed observations, enum hashes, five checked helper/erasure laws,
+instruction whitelist, persistent-instance arena boundaries and four
+type-correct semantic mutants are independent evidence, not a general compiler
+correctness or memory-refinement theorem. See its [report and limits](../tests/compiler-fields-wasm/README.md).
 
 ## Outcomes and budgets
 
@@ -182,7 +287,7 @@ no Built record. File-open/read/write failures report HostFailure; a failed writ
 can leave a partial file. A file left after failure cannot count as a new module.
 These commands do not promise atomic replacement or crash durability.
 
-The first runtime represents only nullary enum values. Its evaluator values are
+The retained enum runtime represents only nullary enum values. Its evaluator values are
 Data records used as an independent pure model; source quantities are checked
 before execution. This does not establish an owning heap for general affine
 resources, a parallel runtime, or source compilation to the existing GPU probe.

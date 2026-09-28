@@ -1,0 +1,795 @@
+{
+  "schema": 1,
+  "seed": {
+    "version": "2.0.29",
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "base_sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    "comp_sha256": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b"
+  },
+  "parser": {
+    "profile": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+    "sha256": "5d9dbee5d33572b12da79a9681ff4f3ae727d5284855cab26895a781a32584a8",
+    "typechecked": false
+  },
+  "census_sources": {
+    "tools/census/census.mjs": "8653221ba5d37d6b97dbef1e5ba9a8ad9d169f6e97e54be9d6401c5137f876d2",
+    "tools/census/features.mjs": "eba11b4fb39ca377f68e8d1e4862bb958d6555700851e5d78487a9412e671f11",
+    "scripts/perch-bend.mjs": "c28ea1cff2532c641eea9584c79072f1cfa37b898da8e664accdaec40cfb3e12"
+  },
+  "scope": "Seed-built artifacts: declared foreign boundaries and intrinsic/representation requirements of the static slice. Emitted Knot artifacts: contract plus independent Wasm gate.",
+  "base_trust": {
+    "entries": 466,
+    "foreign": [
+      {
+        "name": "IO.print",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/print.c",
+            "sha256": "baa246e2f6131f7b33f4be8b444f8a689744287a1f4c56bac1ffb1a9bfb410d7"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/print.js",
+            "sha256": "814ceba4efbaa291b7b6a9ff29aa20e3a23c06eb4fa165c69ee0bd22878adaa9"
+          }
+        ]
+      },
+      {
+        "name": "IO.write",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/write.c",
+            "sha256": "45d043f804bbd155484d8e3eef6a271775c790c8cf34b1c862b4c635e1b3c2b4"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/write.js",
+            "sha256": "e3495066a5d8c53fe1c46cfd2bb32577e3bd7dcae9797808801599073504dacb"
+          }
+        ]
+      },
+      {
+        "name": "IO.print_err",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/print_err.c",
+            "sha256": "1ae1025f57d14ccc5a593319f9ea82bff061a05b4c468ab1bd0b939d4b98e2c4"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/print_err.js",
+            "sha256": "16bae7b06f270b4ec5a09fd10810b0e5d043ee560f2b591cf2c1d8c2e7cba99b"
+          }
+        ]
+      },
+      {
+        "name": "IO.get_env",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/get_env.c",
+            "sha256": "3c05cb6453d858df9f24d5734defb51afce55da23f5799025782fe8e3191634f"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/get_env.js",
+            "sha256": "2fab2162d5ff9842d1b84bfdc56466a606eeb0b81b04dd29f091652ff715ded6"
+          }
+        ]
+      },
+      {
+        "name": "IO.args",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/args.c",
+            "sha256": "2635223ad1d401b07e1834b9341e3f0be254796f6de1d9a0e800ca59fb3000b4"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/args.js",
+            "sha256": "ed1a7e7b73ae7fe58ac6d428d2762b66f223f4c70a165570fc5d68dc874ddc0b"
+          }
+        ]
+      },
+      {
+        "name": "Process.run",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/process_run.c",
+            "sha256": "da47d96cdf5d5f1a16b6d695b39a9114234d109ffb3fe41aed033322f05404c5"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/process_run.js",
+            "sha256": "6ebe3b9875ef62ee189209096fb422508e79d34e58913457aefe52a052631e42"
+          }
+        ]
+      },
+      {
+        "name": "IO.random_u32",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/random_u32.c",
+            "sha256": "69686c427ad434aff4ce1ad54122c54d03efa0751c5345880153a3200f6dc206"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/random_u32.js",
+            "sha256": "c9a588139fb4afddc69b1b498374a014a12c639dbb88a9bb39d3b0ad7c671260"
+          }
+        ]
+      },
+      {
+        "name": "IO.spawn",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/spawn.c",
+            "sha256": "6d140b2b73b200c4bbd3004528734e7517e87d3f7ed40b901a06bfcbf2449abc"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/spawn.js",
+            "sha256": "8a14c7a7a5ff80b049f0659f9e58d43bf0f3b1a6724d35a199c3f864b3242e4b"
+          }
+        ]
+      },
+      {
+        "name": "IO.sleep",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/sleep.c",
+            "sha256": "eb9d441b0ec6b11cbc775dd6f85da0aefdf8d9cdcb7f45f316d4f12c7aa1fdbc"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/sleep.js",
+            "sha256": "324704349471cacfb5ba94c1aed2f316d2e5fdbea486478ab1e2e5a278c7ad9d"
+          }
+        ]
+      },
+      {
+        "name": "IO.now",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/now.c",
+            "sha256": "268e869a5b5dd667aeb61ee7ef07f832238fb17f93015fe708528e95987c3ec3"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/now.js",
+            "sha256": "b2c45fdcfeba0f155be5631b25708341c09d3c80929d8467afd5977473b087bf"
+          }
+        ]
+      },
+      {
+        "name": "IO.thread_count",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/thread_count.c",
+            "sha256": "ff5605b52535484adc10cb800c376ed77ededbddc9adea7064294e2cc0670d49"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/thread_count.js",
+            "sha256": "f4ef6d8ded95fe3114e50b7d2b6eb873e693419b85150f681b4a54a5043c2de9"
+          }
+        ]
+      },
+      {
+        "name": "Chan.new",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.c",
+            "sha256": "cf026f9d428e83870d046a973ac434ce0a2471f5b93748bb264af84a239eacd3"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.js",
+            "sha256": "7e04ccbe0a34aff323ec4e63b0ad5f2242b5c323c7b47cca6d5a20bcedc23fcb"
+          }
+        ]
+      },
+      {
+        "name": "Chan.send",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.c",
+            "sha256": "cf026f9d428e83870d046a973ac434ce0a2471f5b93748bb264af84a239eacd3"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.js",
+            "sha256": "7e04ccbe0a34aff323ec4e63b0ad5f2242b5c323c7b47cca6d5a20bcedc23fcb"
+          }
+        ]
+      },
+      {
+        "name": "Chan.recv",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.c",
+            "sha256": "cf026f9d428e83870d046a973ac434ce0a2471f5b93748bb264af84a239eacd3"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.js",
+            "sha256": "7e04ccbe0a34aff323ec4e63b0ad5f2242b5c323c7b47cca6d5a20bcedc23fcb"
+          }
+        ]
+      },
+      {
+        "name": "Chan.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.c",
+            "sha256": "cf026f9d428e83870d046a973ac434ce0a2471f5b93748bb264af84a239eacd3"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/chan.js",
+            "sha256": "7e04ccbe0a34aff323ec4e63b0ad5f2242b5c323c7b47cca6d5a20bcedc23fcb"
+          }
+        ]
+      },
+      {
+        "name": "File.open",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_open.c",
+            "sha256": "62d98ea6e21c4aeede4eadae7abac2ff2601e5335a3bd19faa1f74afa514521f"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_open.js",
+            "sha256": "dd549f5f05eb896aef9a3a02ffecf2ee902e653f5463be72781edab1cd1180ae"
+          }
+        ]
+      },
+      {
+        "name": "File.read",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.c",
+            "sha256": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.js",
+            "sha256": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+          }
+        ]
+      },
+      {
+        "name": "File.read_bytes",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.c",
+            "sha256": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.js",
+            "sha256": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+          }
+        ]
+      },
+      {
+        "name": "File.read_at",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.c",
+            "sha256": "477ffc5d92c302261c6c46a2f6e32ae0d73ee82b635cc33b9e9f9a46c9b766a8"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_read.js",
+            "sha256": "07e65f568689eb8bd90c26f811b9dc102b69c3c6cf8cf5e759379b76f754833b"
+          }
+        ]
+      },
+      {
+        "name": "File.size",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_size.c",
+            "sha256": "3998a0b73e9e290bc0aeec4964bda0b45befa84a378263f8ee698edda2655130"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_size.js",
+            "sha256": "41ec19c5777788144cc089bf78451d0918bdbf0c4afab9e35495cdd24a279051"
+          }
+        ]
+      },
+      {
+        "name": "File.write",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_write.c",
+            "sha256": "4ffac62a2989139ec520424bc2e1eacb2cef10ef96494af73986f8c628a3ebfa"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_write.js",
+            "sha256": "a643df366fdd1aafa2c2d00a16ec50e3f84d1b909c22f9ccefa2dcb5cd314506"
+          }
+        ]
+      },
+      {
+        "name": "File.write_bytes",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_write.c",
+            "sha256": "4ffac62a2989139ec520424bc2e1eacb2cef10ef96494af73986f8c628a3ebfa"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_write.js",
+            "sha256": "a643df366fdd1aafa2c2d00a16ec50e3f84d1b909c22f9ccefa2dcb5cd314506"
+          }
+        ]
+      },
+      {
+        "name": "File.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_close.c",
+            "sha256": "08fdd18ef43dff0bc6f7e064eb7ccf7a49f4140c238450f1b5f49ee1a2739dd5"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/file_close.js",
+            "sha256": "2b83f900113776ab875fa3afd29f31000a191fe48645abe78b1d7b34cb12a7fe"
+          }
+        ]
+      },
+      {
+        "name": "TCP.listen",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_listen.c",
+            "sha256": "c82715dbaa34c00be20452a2ae73fe4db5125afc7cb2fa5c60294cbf6ce48370"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_listen.js",
+            "sha256": "42894b45ec28a499a863701d2bb9a9b03b0b28ed529c6a500b39d132bd9b0c6d"
+          }
+        ]
+      },
+      {
+        "name": "TCP.accept",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_accept.c",
+            "sha256": "c0f73b2916744eba672e0b17779509c4b4c9551e264e7774ac2e323233c76487"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_accept.js",
+            "sha256": "3a9eb2359ec60af942fc0aa0390e1d5213a6c8b050bc832b6c8709f68e57b6ed"
+          }
+        ]
+      },
+      {
+        "name": "TCP.connect",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_connect.c",
+            "sha256": "ec6d1900f4c7ca88890c7e689bd8317e807665eed0c84418bd7e6505addac8e7"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_connect.js",
+            "sha256": "a20819822e4ce18c8878b94e6ee70466833415eb9ebc2b6a39b65cabfcc553c9"
+          }
+        ]
+      },
+      {
+        "name": "TCP.send",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_send.c",
+            "sha256": "ec1273852f136acd92ef38551ae37f6ea4c8766d4de0552e5c8e62189d7bdb6d"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_send.js",
+            "sha256": "81725d673c0bb8b1cb02130ffefa568957dd695b40613d83c6d0a72f3ae7ceef"
+          }
+        ]
+      },
+      {
+        "name": "TCP.recv",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_recv.c",
+            "sha256": "1f2a3bc87fcebd66df38eb906ec24179403f063cc1f260857ca617683e9ba202"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_recv.js",
+            "sha256": "ce2533b88b94e3d283e2d7fbcb9729ab30265606088546be8bb6660ecb59369a"
+          }
+        ]
+      },
+      {
+        "name": "TCP.poll",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_poll.c",
+            "sha256": "dcfa0d639a1bb22ff5a3611ff6e15830db79e0baa913a7431a5c7ead03883219"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/tcp_poll.js",
+            "sha256": "c969ae2e7fde1c7efe4915d7c4826b1a9d9793370283c27b0d1e4a205b67641f"
+          }
+        ]
+      },
+      {
+        "name": "UDP.bind",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_bind.c",
+            "sha256": "51275bd056e18867eaa06cbdaefdabf4d0e829eaf92c4f1e790852ff0ec9f3e2"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_bind.js",
+            "sha256": "283d06ae8584522312c22ff4c2e3563929ba3baf5a18e3ead12c552d3a827874"
+          }
+        ]
+      },
+      {
+        "name": "UDP.send_to",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_send_to.c",
+            "sha256": "0c79d4848497e2b0937ac65c7a4c1581f61a207dd748ff632e81ec4788686d71"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_send_to.js",
+            "sha256": "0eb95a9c026918435f1eabc6d6d04044731d10f56950d06582086250240911c7"
+          }
+        ]
+      },
+      {
+        "name": "UDP.recv_from",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_recv_from.c",
+            "sha256": "abd147ba3c02ad4b4833b09d6070f6280c8a37c57c5f84923587770583942802"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_recv_from.js",
+            "sha256": "d2ca779e878b5f3f85db5fb56148de955f4d094b312299a33f27b70b5b330b1b"
+          }
+        ]
+      },
+      {
+        "name": "UDP.poll",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_poll.c",
+            "sha256": "b6b6c6eb0ee4fce361e15df09b6579d30634ceab95d530f1e9e401c06155511b"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/udp_poll.js",
+            "sha256": "86a7c4eee06ac487f476589d3137e39c152d6ab87b9208adf18763a1ceb486bd"
+          }
+        ]
+      },
+      {
+        "name": "Socket.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/socket_close.c",
+            "sha256": "742b164fecf63abf8b39fe8d2dd027cec4aa5a9cd31184e7d9d7825c91d5d65c"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/socket_close.js",
+            "sha256": "ee0a9b7ce0125fe1ae4f33d6c3dadf2ec757821ff6f23eaba175af431a12af49"
+          }
+        ]
+      },
+      {
+        "name": "Listener.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/listener_close.c",
+            "sha256": "f3b023a763f62d85c861b9f6e0a717ba05992fe0b9d08bb827722ebaad291310"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/listener_close.js",
+            "sha256": "aa36541548ce473784307993a945457b97e832759db5e409a812649001579295"
+          }
+        ]
+      },
+      {
+        "name": "Window.open",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_open.c",
+            "sha256": "a801ee17dfa34494fd9c774752a11c98a312e990aa0b1ea41b1335d2383db6ea"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_open.js",
+            "sha256": "43e4edfc0c5687b28bdafd84c3574656df7626fb82da823773f99836c814b746"
+          }
+        ]
+      },
+      {
+        "name": "Window.frame",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_frame.c",
+            "sha256": "5efaf0161ef7331e76ad2b3a04f29070d0191db067475fedc42fe95aa97d3806"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_frame.js",
+            "sha256": "de62790d63e3c4819b0da54e8d534e495134d8b8fdc3f5a89b028225306d308b"
+          }
+        ]
+      },
+      {
+        "name": "Window.set_title",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_set_title.c",
+            "sha256": "47cd3aaee3d3938f14c974c5da4c66e7573b8539c5da104e1ff65e743a38ea93"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_set_title.js",
+            "sha256": "eee0bf26b7f381f8800364e22e8c735e47dd6db3f58e23ff3dda8478a8411513"
+          }
+        ]
+      },
+      {
+        "name": "Window.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_close.c",
+            "sha256": "dfb744c12c736e26832cf2c789c9c6ecb33f4685797a539e1dff7576211eaba1"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/window_close.js",
+            "sha256": "be4ef11e9ac57c59aa4aee847f15ece18034ca9fe1c4a68c6e0b0d7bbd7c3590"
+          }
+        ]
+      },
+      {
+        "name": "Audio.open",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio.c",
+            "sha256": "27b66a6317fb68362414e7585e7295bf32302153d5446b0a50aada9c67c96a04"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio_open.js",
+            "sha256": "6f531ac205dab98dd366111cdcc5eed69fb9058350ca715f3419065cd979b088"
+          }
+        ]
+      },
+      {
+        "name": "Audio.write",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio.c",
+            "sha256": "27b66a6317fb68362414e7585e7295bf32302153d5446b0a50aada9c67c96a04"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio_write.js",
+            "sha256": "91c5b0783d421565e11fb5837bfd21d7158a85390893f76d229a5d8be57c67d9"
+          }
+        ]
+      },
+      {
+        "name": "Audio.close",
+        "implementations": [
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio.c",
+            "sha256": "27b66a6317fb68362414e7585e7295bf32302153d5446b0a50aada9c67c96a04"
+          },
+          {
+            "file": ".toolchain/bend-2.0.29-574b6d3/bend2/effs/audio_close.js",
+            "sha256": "c700e2fc0eda1f9a67afd317184999d9283912817aaec00637af41b135b84c62"
+          }
+        ]
+      }
+    ],
+    "unsafe": [
+      "Array.fork",
+      "Array.join"
+    ],
+    "bodiless": [
+      "Array.atomic.add",
+      "Array.atomic.and",
+      "Array.atomic.cas",
+      "Array.atomic.exch",
+      "Array.atomic.fadd",
+      "Array.atomic.max",
+      "Array.atomic.min",
+      "Array.atomic.or",
+      "Array.atomic.xor",
+      "Audio",
+      "Chan",
+      "F32.abs",
+      "F32.acos",
+      "F32.add",
+      "F32.asin",
+      "F32.atan",
+      "F32.atan2",
+      "F32.bits",
+      "F32.ceil",
+      "F32.cos",
+      "F32.cosh",
+      "F32.div",
+      "F32.exp",
+      "F32.floor",
+      "F32.is_eq",
+      "F32.is_ge",
+      "F32.is_gt",
+      "F32.is_le",
+      "F32.is_lt",
+      "F32.is_ne",
+      "F32.log",
+      "F32.log10",
+      "F32.log2",
+      "F32.mod",
+      "F32.mul",
+      "F32.neg",
+      "F32.pow",
+      "F32.read",
+      "F32.show",
+      "F32.sin",
+      "F32.sinh",
+      "F32.sqrt",
+      "F32.sub",
+      "F32.tan",
+      "F32.tanh",
+      "F32.to_u32",
+      "F32.trunc",
+      "File",
+      "Listener",
+      "Socket",
+      "U32.to_f32",
+      "Window"
+    ]
+  },
+  "artifacts": {
+    "frontend": {
+      "js": {
+        "foreign": [],
+        "intrinsics": [
+          "Bool.or",
+          "String.append",
+          "U32.add",
+          "U32.cmp",
+          "U32.is_eq",
+          "U32.is_ge",
+          "U32.is_gt",
+          "U32.is_le",
+          "U32.is_lt"
+        ],
+        "word_representations": [
+          "Nat",
+          "U32"
+        ],
+        "unsafe": [],
+        "external_host_effects": false
+      },
+      "native": {
+        "foreign": [],
+        "intrinsics": [
+          "Bool.or",
+          "U32.add",
+          "U32.cmp",
+          "U32.is_eq",
+          "U32.is_ge",
+          "U32.is_gt",
+          "U32.is_le",
+          "U32.is_lt"
+        ],
+        "word_representations": [
+          "Nat",
+          "U32"
+        ],
+        "unsafe": [],
+        "external_host_effects": false
+      }
+    },
+    "compiler": {
+      "js": {
+        "foreign": [
+          "File.close",
+          "File.open",
+          "File.read",
+          "File.write_bytes",
+          "IO.args",
+          "IO.print"
+        ],
+        "intrinsics": [
+          "Bool.or",
+          "Nat.cmp",
+          "String.append",
+          "U32.add",
+          "U32.and",
+          "U32.cmp",
+          "U32.div",
+          "U32.from_nat",
+          "U32.is_eq",
+          "U32.is_ge",
+          "U32.is_gt",
+          "U32.is_le",
+          "U32.is_lt",
+          "U32.is_ne",
+          "U32.is_zero",
+          "U32.mod",
+          "U32.mul",
+          "U32.shrn",
+          "U32.sub",
+          "U32.to_nat"
+        ],
+        "word_representations": [
+          "Nat",
+          "U32"
+        ],
+        "unsafe": [],
+        "external_host_effects": true
+      },
+      "native": {
+        "foreign": [
+          "File.close",
+          "File.open",
+          "File.read",
+          "File.write_bytes",
+          "IO.args",
+          "IO.print"
+        ],
+        "intrinsics": [
+          "Bool.or",
+          "Nat.cmp",
+          "U32.add",
+          "U32.and",
+          "U32.cmp",
+          "U32.div",
+          "U32.from_nat",
+          "U32.is_eq",
+          "U32.is_ge",
+          "U32.is_gt",
+          "U32.is_le",
+          "U32.is_lt",
+          "U32.is_ne",
+          "U32.is_zero",
+          "U32.mod",
+          "U32.mul",
+          "U32.shrn",
+          "U32.sub",
+          "U32.to_nat"
+        ],
+        "word_representations": [
+          "Nat",
+          "U32"
+        ],
+        "unsafe": [],
+        "external_host_effects": true
+      }
+    }
+  },
+  "knot_emitted_wasm": {
+    "profile": "knot-enum-1",
+    "contract": "src/CONTRACT.json",
+    "contract_sha256": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
+    "host": {
+      "engine": "Node",
+      "version": "22.22.3",
+      "os": "macOS",
+      "architecture": "arm64",
+      "adapter": "scripts/run-wasm.mjs"
+    },
+    "capabilities": {
+      "binary_version": 1,
+      "sections": [
+        1,
+        3,
+        7,
+        10
+      ],
+      "imports": [],
+      "exports": "all top-level functions",
+      "parameters": "live enum ordinals only; erased parameters omitted",
+      "result": "i32 enum ordinal",
+      "instructions": [
+        "i32.const",
+        "local.get",
+        "local.set",
+        "call",
+        "i32.eq",
+        "if",
+        "else",
+        "end"
+      ],
+      "memory": false,
+      "simd": false,
+      "threads": false,
+      "gc": false,
+      "gpu": false
+    },
+    "gate": "tests/compiler-wasm/check.py",
+    "boundary": "Native Wasm engine executes enum ordinals; no imports, linear memory, IO or GPU. This is separate from the seed-built compiler host."
+  },
+  "limits": [
+    "Foreign declarations are inventoried, not executed by census.",
+    "The compiler driver and underlying VM/runtime remain trusted; source analysis does not qualify an ABI."
+  ]
+}
