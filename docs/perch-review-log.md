@@ -1202,3 +1202,27 @@ that type (`case _:` fallbacks included) and freeze a seed book for each, in
 both synthesis and checking positions. Probe the degenerate count of every
 counted form (here `0n+t`) against the seed before accepting a reviewer's
 proposed fix.
+
+## 2026-09-28 — Literals review round 6: own-type literals keyed on a name
+
+Round 5 fixed a seed-valid `2n` against a book's own `Nat` by resolving the
+literal's type by the name `Nat` and reporting a non-installed match as
+Unsupported. The review of `c7f3487` found the same D4 violation in the
+positions that fix never exercised: literal and offset arms on an own
+Zero/Succ or SNil/SCon type (any name), and expression literals against an own
+type named N or T, which fell to a synthetic `unknown-type 0:0:0:0`.
+
+[The round-6 freeze](../tests/compiler-literals/regressions.json) pins 17
+books first. The fix keys the case on the absent installed primitive and on
+the constructor the seed actually spells (the matrix's `M.literal`), so
+`case 0n` on `N{Z, S}` stays Invalid as the seed rejects it. The review named
+`literal-matrix.bend::normalize` as the site; a probe that gave each candidate
+Invalid its own code showed every repro failing in `check.bend::pattern`, and
+`normalize` is unreachable without an installed type. See
+[the round-6 report](../tests/compiler-literals/REPORT.md).
+
+Prevention: key a capability boundary on the property the seed uses (here,
+Base's absence and the spelled constructor), never on a type name, and check
+every position the form can occupy (arm, return, argument, let) against the
+seed with a name other than the primitive's. Locate a failing site with distinct per-site
+codes before following a reviewer's attribution.

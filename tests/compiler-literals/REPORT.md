@@ -4,6 +4,151 @@ Implemented the frozen U32/Nat/Char/String surface through bundle parsing, check
 
 The original 40 fixtures and observations are unchanged. Commit `d3c1e7b` fixed the 12 supplemental bootstrap-helper calls before implementation. See [README.md](README.md) for the exact contract and limits.
 
+## Review round 6
+
+The coordinator's review of `c7f3487` confirmed one major D4 finding: without
+Base, a seed-valid literal or Nat offset against a book's own Zero/Succ or
+SNil/SCon datatype was Invalid. It is fixed in new commits; no history was
+rewritten and no earlier expectation changed.
+
+| Commit | Content |
+| --- | --- |
+| `e16fe06` | Freeze: 17 regression books from the seed (13 seed-valid, 4 seed-invalid controls) |
+| `e1e6b55` | `primitive_type` keyed on the absent installed primitive and the spelled constructor; five checker laws; two mutants; docs; census |
+
+| Finding | Disposition | Evidence |
+| --- | --- | --- |
+| [major] Without Base, a book's own Zero/Succ or SNil/SCon type: seed-valid literal/offset patterns and non-Nat-named expression literals are Invalid | Fixed in `e1e6b55`. `literal-check.bend::primitive_type` takes the literal's kind, its target (the expected type, or the scrutinee type for an arm) and its spelling (`M.literal`, the matrix's own expansion). The installed primitive wins. Without it, a target that declares the spelled constructor gives `Unsupported check literal-base-type`, whatever the type is called; a U32 or Char word (Base's `Word`) gives Unsupported for any target; a target that declares no spelled constructor, or no target, stays Invalid, as `unknown-type` at the literal. `check.bend` applies it to expression literals, expression offsets and, through `arm_pattern` in `patterns`, to literal and offset arms on a datatype scrutinee. With Base those arms stay Invalid pattern-type. | All 13 seed-valid round-6 books (own Nat, N, A.T, String and T; patterns `0n`, `2n`, `1n+p`, `""`; expressions `2n`, `2n+n`, `""`, `1n+n`) are `Unsupported check literal-base-type` in both lanes for check, eval and compile, with the output file preserved; 11 were Invalid before. Controls: own-u32-pattern is Unsupported, like the frozen own-u32-literal; own-unspelled-pattern (`N{Z, S}`), own-nat-pattern-module and own-n-expr-module (datatypes imported with qualified constructor names) stay Invalid unknown-type, as the seed rejects them; literal-without-base, pattern-u32-on-enum, pattern-offset-on-enum and pattern-string-on-enum stay Invalid; own-u32-literal stays Unsupported. Laws `installed_literal_type`, `spelled_own_literal`, `unspelled_literal`, `word_spells_any_target` and `untargeted_literal`. Mutants invalid-own-pattern and unspelled-own-target. |
+
+The review named `literal-matrix.bend::normalize` as a site. No repro reaches
+it, and `normalize` is unchanged:
+- `M.enabled` admits only a scrutinee whose type is an installed primitive.
+- Every nested matrix column is a primitive field (`Succ.pred`, `SCon`'s Char
+  and String), so a matrix column is never a user datatype.
+- An installed type exists only when Base is loaded, and Base then installs
+  the primitive of every literal the book uses. The unchanged Invalid
+  pattern-type of pattern-u32-on-enum, pattern-offset-on-enum and
+  pattern-string-on-enum shows it: were U32, Nat or String missing there,
+  the new rule would have changed their verdict.
+
+The two conditions of the required rule therefore never hold together inside
+`normalize`, and a guard there would be dead code that no book or mutant
+reaches. A site probe on `c7f3487` gave each Invalid site its own code: all
+nine review repros failed in `check.bend::pattern` (its Offset case for the
+offset books). The matrix's pattern-type fired only for `dead-pattern-type`,
+which has Base (`'a'` on U32).
+
+Spelling, not the type name, separates the seed's verdicts: the seed rejects
+`case 0n` on `N{Z, S}` ("unknown: Zero") and accepts it on `N{Zero, Succ}`.
+Checking the target's spelled constructor keeps the first one Invalid; a rule
+on the absent primitive alone would have made it Unsupported.
+
+Erratum: the freeze message of `e16fe06` says twelve of its books are
+seed-valid and that Knot printed Invalid for ten of them. The correct counts
+are 13 and 11: regressions.json has 13 round-6 entries with seed check exit 0,
+and all but own-nat-offset-expr and own-string-empty-expr were Invalid.
+
+### Differential evidence
+
+- Verdicts, base (`c7f3487` source) against fix, native lane, over 857
+  tracked books (every `tests/`, `src/`, `packages/` and `research/` book):
+  837 identical, byte for byte including the printed checked core. The 20
+  changes are the 17 round-6 books and three location moves:
+  literal-without-base (0:0:0:0 to its literal), own-nat-literal and
+  own-u32-literal (their type token to their literal). No verdict class
+  changed outside the round-6 books.
+- Probes in other positions, seed `--check-only` and run against both check
+  lanes and the native evaluator:
+  - seed-valid, now Unsupported literal-base-type: a constructor field
+    argument (`Succ{1n}` into own N), a call argument (`z(2n)`), annotated
+    lets (`x: N = 2n` and `x: N = 1n+Zero{}`), and patterns on a Zero/Succ
+    type named A.T and an SNil/SCon type named A.S;
+  - seed-invalid, still Invalid: two types declaring Zero (duplicate
+    constructor in both), an own `Nat` beside `import Base` (duplicate
+    global), an unannotated `x = 2n` (unknown-type), `case 0n` and `z(0n)`
+    against a type that declares none of the spelled constructors
+    (unknown-type), and module-qualified datatypes;
+  - seed-invalid, now Unsupported: a Char pattern on an own type, and
+    `Succ{1n}` feeding a computed scrutinee, through spellings Knot does not
+    interpret.
+  No Invalid on a seed-valid book, no accepted seed-invalid book, no lane
+  mismatch.
+
+Scripts are in the executor scratchpad (`impl-literals/r6/probe.py`,
+`diffverdict.py` and `mutants.py`).
+
+### Gates on the round-6 fix head
+
+`BEND_NO_TELEMETRY=1 npm run -s gates` on `e1e6b55` passed all 20
+registered gates (exit 0) in 518.6 seconds with 4 workers (run directory
+`run-a9rdezcy`). `npm run -s gates:verify` passed 18 tests. Before the
+commit, the direct literals gate passed on the same sources (125 fixtures,
+23 mutants). Counts are copied from the runner; categories overlap and are
+not summed.
+
+| Gate | Exact counts |
+| --- | --- |
+| frontend | boundaries=24; fixtures=14; lane observations=28; mutants=4 |
+| checker | bound observations=16; bounds=2; budgets=10; fixtures=49; lane observations=98; mutants=7 |
+| structural | bounds=4; fixtures=16; lane observations=64; mutants=7 |
+| fields | bound observations=12; bounds=2; budgets=36; fixtures=40; host boundaries=6; lane observations=240; mutants=9 |
+| wasm | boundaries=44; execution lanes=2; fixtures=25; mutants=7; reference calls=90; rejects=64 |
+| wasm-trust | entries=3; proof holes=0 |
+| fields-trust | entries=4; proof holes=0 |
+| structural-trust | entries=2; proof holes=0 |
+| owned-store | cases=3532; execution lanes=2; literal witnesses=15; mutants=6 |
+| flat-store | bun=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621); mutants=9; native=(installed boundary states=2; instances=3534; lifecycle checks=7; observations=13621) |
+| recursion | fixtures=19; mutants=3 |
+| fields-wasm | boundaries=30; fixtures=8; mutants=4 |
+| modules | artifact preservation probes=80; byte identity pairs=23; check observations=126; compile observations=126; eval observations=142; execution lanes=2; fixtures=63; mutants=14; pin observations=22; proof entries=4; reference calls=71; tampered base observations=6; trust audits=46; wasm observations=58 |
+| census | classes=42; declarations=1149; files=65 |
+| perch-context | fixtures=33; mutants=8 |
+| lint:verify | law rules=8; tests=168 |
+| bootstrap | corpus=857; mutants=9; reached=2; stages=8 |
+| classification | fixtures=17; mutants=6 |
+| io-host | cli runs=6; conformance runs=86; errno=[2, 9, 20, 21, 22, 92]; fixtures=20; host boundaries=22; mutants=6; review=(empty write=4; mutants=3; oracle controls=14; secret paths=21; seed runs=12); seed fixtures=40; seed runs=109; stress=(left binds=100000; right binds=100000) |
+| literals | agree eval observations=886; agree fixtures=34; artifact preservation probes=182; boundary probes=8; byte identity pairs=34; check observations=250; compile observations=250; eval observations=1068; execution lanes=2; fixtures=125; invalid fixtures=47; mutant eval observations=6; mutant verdict observations=14; mutant wasm observations=5; no artifact probes=182; proof entries=3; proof laws=32; reference calls=481; result byte identity pairs=5; result calls=61; result display observations=122; result fixtures=5; semantic mutants=23; trust audits=68; unsupported fixtures=44; wasm observations=886 |
+
+Receipt drift: identical=64; semantic=16; volatile-only=7. The 15
+semantic drifts in shared receipts are the same 15 as in rounds 2 to 5
+(source hashes and derived code), left for the coordinator. The literals
+receipt was copied from the run's normalized output after every recorded
+input hash was checked against the tree.
+
+All 13 `src/*PROOF.bend` entries print `All terms check.`; each of the five
+new laws fails when its right-hand side is changed (`Done{1}` for
+`installed_literal_type`, and Invalid and Unsupported swapped in the other
+four).
+
+### Offline preflight
+
+- The compiler-manifest preflight reports 32 groups and 0 structural
+  blockers. literal-patterns stays at 47995/48000 bytes (`literal-matrix.bend`
+  is unchanged); checking is 46580/48000 (45288 before), checker-laws
+  22435/48000 (20154) and literal-types 31762/48000 (31046).
+- Per changed file (`--preflight FILE`), truncated contexts against
+  `c7f3487`: check.bend 7 (6 before). The new one is `match_body`, whose
+  transitive helpers now pass the 48-helper cap by three (`constructor_next`,
+  `constructor_tag`, `fields_at`), because `patterns` reaches
+  `L.primitive_type` through `arm_pattern`. check-LAWS.bend stays at 1,
+  check-PROOF.bend and literal-check.bend at 0. The single-file compositions
+  of check.bend (83886 bytes) and check-LAWS.bend (76879, now importing
+  literal-check and literal-matrix) were already over the limit (82151 and
+  52828); literal-check.bend's is available (31762/48000).
+- Zero provider requests were made. Live Perch review remains the
+  coordinator's.
+
+### Known limits
+
+- Without Base, Knot interprets no literal spelling: a seed-valid book that
+  uses one is Unsupported, never Checked.
+- Only the outermost spelled constructor is compared with the target: `2n`
+  against a type that declares Succ but not Zero is Unsupported, where the
+  seed rejects it. That is safe under D4.
+- Without Base, a U32 or Char literal is Unsupported against any target,
+  although the seed rejects every one ("unknown: U32"), because Knot does not
+  model Base's Word spelling.
+
 ## Review round 5
 
 The coordinator's review of `3246fa3` confirmed one blocking and one major
