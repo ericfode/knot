@@ -10,10 +10,10 @@ the original monomorphic path and its fixed assertions remain in place for
 every other book.
 
 The frontend's generic-header pin was superseded under the coordinator's
-review-round-1 authorization (`5eea108`). Main's classify-2 pins for `Name<...>`
-in parameter, return and binding types conflict with the same capability, and
-two of its laws fail on the generic parser. They are unchanged here; see
-[Review round 1](#review-round-1) for the proposed supersession.
+review-round-1 authorization (`5eea108`), and classify-2's pins for `Name<...>`
+in parameter, return and binding types under its later authorization
+(`78c4942`). [Review round 2](#review-round-2) repairs three seed-accepted
+forms the generic path had exposed as Invalid.
 
 The mechanism is a type-expression algebra with rigid binder indices. A single
 sequential substitution list instantiates later parameter domains and results.
@@ -78,8 +78,12 @@ one-page arena and exhaustion policy apply; there is no reclamation or owned
 storage guarantee.
 
 `src/types-PROOF.bend` fills 12 laws, including universal substitution composition
-and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 17 laws,
-including erased evaluator transitions with their one-step fuel adjustment.
+and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 18 laws,
+including erased evaluator transitions with their one-step fuel adjustment and
+the empty-family boundary. `src/check-PROOF.bend` fills `def_reference`,
+`src/catalog-PROOF.bend` fills `empty_datatype`, and the frontend proof fills
+`term_argument`; the gate runs the frontend, types, erasure and catalog proof
+entries (the last chains the check laws).
 The complete frontend proof fills the restated generic-header acceptance law.
 These proofs and finite differential observations are distinct from a universal
 checker-soundness or compiler-correctness theorem. The bounded proof and review
@@ -92,12 +96,75 @@ descent remain Unsupported. This increment covers only the documented S2 subset.
 The legacy structural catalog
 observer remains monomorphic and reports Unsupported for generic declarations.
 
-The next integration step must settle the classify-2 supersession below,
-compose this checker with the parallel modules/pattern/descent work (which
+The next integration step must compose this checker with the parallel modules/pattern/descent work (which
 extends `generics.bend`; see the dual checker path in
 [COMPILER-CAMPAIGN.md](../../docs/COMPILER-CAMPAIGN.md)), and run live Perch
 semantic and style review. No package, runtime IR, evaluator or Wasm emitter
 implementation changes are part of this increment.
+
+## Review round 2
+
+The branch merges main `481bb31` (`f7c98b9`; documentation only). Each
+confirmed finding has a seed-derived fixture frozen in its own commit before
+the repair (D7):
+
+| Finding | Frozen | Repair | Disposition |
+| --- | --- | --- | --- |
+| [blocking] `Tag<On{}>` was Invalid `type-argument-separator` | `58afc10`, 5 fixtures | `447be7d`: a type argument followed by anything but `,` or `>` is `Unsupported parse term-argument`; law `term_argument`; mutant `term-argument-invalid` | fixed |
+| Empty datatypes were Invalid `empty-datatype` | `cfad5c4`, 7 fixtures | `88e204b`: both catalogs report Unsupported; laws `empty_datatype` and `empty_family`; mutants `empty-family-invalid`, `empty-datatype-invalid` | fixed |
+| A bare zero-arity definition was Invalid `free-name` | `efdca4a`, 7 fixtures | `c52929b`: shared `term_name` reports `Unsupported check def-reference`; law `def_reference`; mutant `def-reference-free` | fixed |
+| Classification mutants deleted, not retargeted | existing witnesses | `d3cee9f`: `parameter-application-invalid` retargeted to `function-parameter`; `type-expression-invalid` on the three after-prefix twins; two route mutants on `application-return` and `application-binding`: 7 mutants (main had 6) | fixed |
+| Stale `receipts/generics.json` | — | `6cc4bf0`: regenerated at the round-2 tree, normalized like round 0; `0d2b41f` regenerates the census the classification change staled | fixed |
+| Host `found no clang` flakes under load | — | none in this increment | disputed as a generics defect, see below |
+
+Every repair keeps D4 in the same direction: a seed-accepted program that the
+generic path now reached is reported Unsupported, never Invalid. Before each
+repair, the native `parse` and `check` CLIs ran over every tracked Bend file
+and the review's probes; after it, only the targeted probes and the new
+fixtures changed outcome.
+
+**Gates.** `npm run -s gates` on `0d2b41f` (4 jobs, 445 s, load about 13 to 21):
+exit 0, 21 of 21 passed ([summary](receipts/review-2/gates.json)). Generics:
+92 fixtures, 185 seed calls, 284 evaluator and 284 Node agreements, 384
+negative phase observations, 128 preserved artifacts, 28 byte-identical module
+pairs, 10 ABI arity observations, 4 proof entries, 9 mutants (18 lane kills).
+Classification: 17 fixtures, 7 mutants on 9 witnesses. `npm run -s
+gates:verify`: 18 tests OK. Of 89 regenerated receipts, 64 are identical, 10
+volatile-only (including this gate's committed receipt) and 15 semantic:
+shared receipts whose source hashes changed, left for the coordinator.
+
+**Host `found no clang`.** The failure is the seed's clang discovery returning
+empty output under campaign load. `GATES.md` records the same class at the
+campaign base, and no source in this increment touches it. The runner
+(`scripts/gates/`) belongs to its own owner, and its documented contract is to
+report such failures, never retry or relabel them. This round reports every
+full run it made. The owner's options are the review's: a single retry on
+that exact stderr, recorded in the summary, or capturing `spawnSync`'s errno
+around `cc_find`.
+
+**Style preflight (offline, 0 provider requests).** Manifest mode: 24 groups,
+1,202 units, 0 truncated, 24 of 24 compositions available, 0 structural
+blockers. Changed groups (units / composition bytes): frontend-laws 108 /
+44,776, checker-laws 42 / 18,931, catalog-laws 44 / 26,089,
+generic-erasure-laws 36 / 18,390, generic-type-parsing 21 / 10,812,
+generic-catalog 76 / 31,119, generic-checking 65 / 39,414, checking 71 /
+36,921, scope-patterns 101 / 30,982, catalog 65 / 18,845. Targets mode over the
+14 changed sources reports 351 declarations, 55 truncated contexts (none of
+them a new or changed declaration except the pre-existing `check.bend::run`
+and `generics.bend::run`), and an unavailable cross-group composition. No
+style rating is claimed.
+
+**New observation, not repaired.** The seed resolves a constructor pattern
+only against datatypes declared earlier in the file: `case On{}:` above `type
+Flag` fails with `a declared constructor (unknown: On)`. Knot accepts such
+books (`Checked`) in both checkers. Main already accepts the monomorphic form;
+the generic form (`case Box{value}` above a generic `Box`) was `Unsupported
+parse` on main and is `Checked` here. This is acceptance of a seed-rejected
+program, recorded for the coordinator with its probes in the handoff.
+
+The round-0 summaries `receipts/gates.json`,
+`receipts/gates-resource-exhaustion.json` and
+`receipts/preflight-before-dispatch.json` are historical evidence.
 
 ## Review round 1
 
@@ -109,7 +176,7 @@ The branch merges main (`cac8dd2`) and fixes the confirmed findings:
   generics contract in its own task file and the manifest closures (`5f86882`);
 - the dual checker path recorded with its convergence plan (`52c9e8a`).
 
-**Blocker.** Main's classify-2 pins `Name<...>` in parameter, return and binding
+**Blocker (resolved by the authorized supersession `78c4942`).** Main's classify-2 pins `Name<...>` in parameter, return and binding
 types as Unsupported. The generic parser accepts them, so six classification
 cases, three classification-gate mutants and the laws `return_type_application`
 and `binding_type_application` conflict. Because every proof entry chains
@@ -226,8 +293,8 @@ generic case, so its remaining classification checks are not reported as passes.
 | Lint verification | 127 tests; 8 law-rule wiring controls |
 | Generics | 66 fixtures; 165 seed calls; 278 evaluator and 278 Node agreements; 234 negative-phase observations; 78 preserved artifacts; 27 byte-identical module pairs; 10 ABI arity observations; 3 proof entries; 4 mutants / 8 lane kills |
 
-The [generic receipt](receipts/generics.json) has 27 agreed fixtures, 23 required
-rejections and 16 Unsupported fixtures. Across the two lanes, checking records
+At round 0 the generic receipt had 27 agreed fixtures, 23 required
+rejections and 16 Unsupported fixtures; round 2 refreshed it (see below). Across the two lanes, checking records
 54 successes, 40 Invalid outcomes and 38 Unsupported outcomes. No exhaustion,
 host failure or internal failure satisfies a fixture. All three complete proof
 entries print `All terms check.` The gate wrapper's independent `gates:verify`
