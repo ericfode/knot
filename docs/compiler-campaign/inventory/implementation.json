@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 38,
-      "declarations": 553,
-      "unique_declarations": 479,
-      "definitions": 362,
+      "declarations": 567,
+      "unique_declarations": 489,
+      "definitions": 368,
       "classes": 41
     },
     "frontend_files": {
@@ -52135,7 +52135,7 @@
     },
     {
       "file": "src/opt-check.bend",
-      "sha256": "a49a5bedce52c62a6f58c248980d41e59e9d9643feab0dfd36e75ba0e754b081",
+      "sha256": "c021753208c37e2e339628222d0330d62e5a1b9bad2e0e0dee87ce42b05aaa7a",
       "imports": [
         {
           "module": "Base",
@@ -55164,12 +55164,186 @@
             ],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/opt-check.bend::signature_equal:definition",
+          "name": "signature_equal",
+          "key": "src/opt-check.signature_equal",
+          "kind": "definition",
+          "lines": [
+            246,
+            249
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "String.eq",
+            "U32.is_eq",
+            "src/core.Signature",
+            "src/opt-check.parameters_equal",
+            "src/syntax.text"
+          ],
+          "type_references": [
+            "Bool",
+            "src/core.Signature"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "String.eq",
+              "U32.is_eq",
+              "src/opt-check.parameters_equal",
+              "src/syntax.text"
+            ],
+            "types": [
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-check.bend::exports_equal:definition",
+          "name": "exports_equal",
+          "key": "src/opt-check.exports_equal",
+          "kind": "definition",
+          "lines": [
+            251,
+            256
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "matches.multi",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/core.Function",
+            "src/opt-check.exports_equal",
+            "src/opt-check.signature_equal"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/core.Function"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "src/opt-check.exports_equal",
+              "src/opt-check.signature_equal"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil",
+              "True",
+              "src/core.Function"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-check.bend::recheck:definition",
+          "name": "recheck",
+          "key": "src/opt-check.recheck",
+          "kind": "definition",
+          "lines": [
+            260,
+            261
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "List",
+            "Nat",
+            "Result",
+            "Unit",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/opt-check.exports_equal",
+            "src/opt-check.require",
+            "src/opt-check.verify",
+            "src/syntax.Error",
+            "src/syntax.bind"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/syntax.Error"
+          ],
+          "captures": [
+            {
+              "offset": 17094,
+              "names": [
+                "after",
+                "depth",
+                "types"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/opt-check.exports_equal",
+              "src/opt-check.require",
+              "src/opt-check.verify",
+              "src/syntax.bind"
+            ],
+            "types": [
+              "String",
+              "src/core.Book"
+            ],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/opt-fold.bend",
-      "sha256": "ee0526927758f5222ab1328402f60bdab09145d4c2e8d26ff548caaa0172d2d5",
+      "sha256": "afe0b678fbf53431f532bc6c60e6e298060c2ed5d4ba42004b4cdd7149c8db6c",
       "imports": [
         {
           "module": "Base",
@@ -55889,39 +56063,193 @@
           }
         },
         {
+          "id": "src/opt-fold.bend::nullary:definition",
+          "name": "nullary",
+          "key": "src/opt-fold.nullary",
+          "kind": "definition",
+          "lines": [
+            76,
+            80
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/core.Constructor",
+            "src/opt-fold.nullary"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/core.Constructor"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/opt-fold.nullary"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil",
+              "True",
+              "src/core.Constructor"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-fold.bend::enum_type:definition",
+          "name": "enum_type",
+          "key": "src/opt-fold.enum_type",
+          "kind": "definition",
+          "lines": [
+            82,
+            86
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "U32",
+            "U32.is_eq",
+            "U32.sub",
+            "src/core.Datatype",
+            "src/opt-fold.enum_type",
+            "src/opt-fold.nullary",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "U32",
+            "src/core.Datatype"
+          ],
+          "captures": [
+            {
+              "offset": 4197,
+              "names": [
+                "constructors"
+              ]
+            },
+            {
+              "offset": 4224,
+              "names": [
+                "index",
+                "tail"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_eq",
+              "U32.sub",
+              "src/opt-fold.enum_type",
+              "src/opt-fold.nullary",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil",
+              "U32",
+              "src/core.Datatype"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/opt-fold.bend::literal:definition",
           "name": "literal",
           "key": "src/opt-fold.literal",
           "kind": "definition",
           "lines": [
-            76,
-            79
+            90,
+            94
           ],
           "features": [
+            "calls",
+            "captures",
             "constructors",
             "fields",
             "generics",
+            "lambdas",
             "matches",
             "patterns.variable",
             "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "references": [
+            "List",
             "Maybe",
             "None",
             "Some",
+            "src/core.Datatype",
             "src/core.Term",
-            "src/core.Value"
+            "src/core.Value",
+            "src/opt-fold.enum_type",
+            "src/syntax.choose"
           ],
           "type_references": [
+            "List",
             "Maybe",
+            "src/core.Datatype",
             "src/core.Term"
           ],
-          "captures": [],
+          "captures": [
+            {
+              "offset": 4591,
+              "names": [
+                "tag",
+                "token",
+                "typ"
+              ]
+            }
+          ],
           "execution": {
-            "references": [],
+            "references": [
+              "src/opt-fold.enum_type",
+              "src/syntax.choose"
+            ],
             "types": [
               "None",
               "Some",
@@ -55936,8 +56264,8 @@
           "key": "src/opt-fold.known",
           "kind": "definition",
           "lines": [
-            81,
-            85
+            96,
+            100
           ],
           "features": [
             "calls",
@@ -55977,13 +56305,13 @@
           ],
           "captures": [
             {
-              "offset": 4173,
+              "offset": 4875,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 4184,
+              "offset": 4886,
               "names": [
                 "level",
                 "tail"
@@ -56011,8 +56339,8 @@
           "key": "src/opt-fold.discardable",
           "kind": "definition",
           "lines": [
-            87,
-            88
+            102,
+            103
           ],
           "features": [
             "calls",
@@ -56048,8 +56376,8 @@
           "key": "src/opt-fold.dead",
           "kind": "definition",
           "lines": [
-            92,
-            94
+            107,
+            109
           ],
           "features": [
             "calls",
@@ -56091,7 +56419,7 @@
           ],
           "captures": [
             {
-              "offset": 4652,
+              "offset": 5354,
               "names": [
                 "body",
                 "level",
@@ -56102,13 +56430,13 @@
               ]
             },
             {
-              "offset": 4746,
+              "offset": 5448,
               "names": [
                 "body"
               ]
             },
             {
-              "offset": 4762,
+              "offset": 5464,
               "names": [
                 "body",
                 "level",
@@ -56607,7 +56935,7 @@
     },
     {
       "file": "src/opt-LAWS.bend",
-      "sha256": "e8fa549954277de8ad45bce27f5b66b8d4b06d5e80c1465cff995df6882fcb95",
+      "sha256": "86f7d88ecb9d4665715fbf31cb6603d0dae3dfeaa3709b618ffabf61b29ae2ba",
       "imports": [
         {
           "module": "Base",
@@ -56646,6 +56974,12 @@
           "feature": "imports.local"
         },
         {
+          "module": "./opt-check.bend",
+          "alias": "K",
+          "file": "src/opt-check.bend",
+          "feature": "imports.local"
+        },
+        {
           "module": "./opt.bend",
           "alias": "O",
           "file": "src/opt.bend",
@@ -56678,8 +57012,8 @@
           "key": "src/opt-LAWS.matching_arm_is_selected",
           "kind": "law",
           "lines": [
-            11,
-            17
+            12,
+            18
           ],
           "features": [
             "calls",
@@ -56728,8 +57062,8 @@
           "key": "src/opt-LAWS.value_case_returns_matching_body",
           "kind": "law",
           "lines": [
-            19,
-            25
+            20,
+            26
           ],
           "features": [
             "calls",
@@ -56783,8 +57117,8 @@
           "key": "src/opt-LAWS.fields_bind_in_declaration_order",
           "kind": "law",
           "lines": [
-            27,
-            33
+            28,
+            34
           ],
           "features": [
             "calls",
@@ -56834,8 +57168,8 @@
           "key": "src/opt-LAWS.empty_field_binding_is_identity",
           "kind": "law",
           "lines": [
-            35,
-            37
+            36,
+            38
           ],
           "features": [
             "calls",
@@ -56876,8 +57210,8 @@
           "key": "src/opt-LAWS.zero_parameter_binding_is_identity",
           "kind": "law",
           "lines": [
-            39,
-            42
+            40,
+            43
           ],
           "features": [
             "calls",
@@ -56921,8 +57255,8 @@
           "key": "src/opt-LAWS.arguments_bind_once_in_order",
           "kind": "law",
           "lines": [
-            44,
-            50
+            45,
+            51
           ],
           "features": [
             "calls",
@@ -56970,8 +57304,8 @@
           "key": "src/opt-LAWS.reference_translation",
           "kind": "law",
           "lines": [
-            52,
-            58
+            53,
+            59
           ],
           "features": [
             "calls",
@@ -57019,8 +57353,8 @@
           "key": "src/opt-LAWS.dead_reusable_value_is_removed",
           "kind": "law",
           "lines": [
-            60,
-            65
+            61,
+            66
           ],
           "features": [
             "calls",
@@ -57068,8 +57402,8 @@
           "key": "src/opt-LAWS.used_reusable_binding_is_retained",
           "kind": "law",
           "lines": [
-            67,
-            72
+            68,
+            73
           ],
           "features": [
             "calls",
@@ -57117,8 +57451,8 @@
           "key": "src/opt-LAWS.export_reconstruction_preserves_signature",
           "kind": "law",
           "lines": [
-            76,
-            80
+            77,
+            81
           ],
           "features": [
             "calls",
@@ -57160,8 +57494,8 @@
           "key": "src/opt-LAWS.empty_pipeline_is_identity",
           "kind": "law",
           "lines": [
-            82,
-            85
+            83,
+            86
           ],
           "features": [
             "calls",
@@ -57205,8 +57539,8 @@
           "key": "src/opt-LAWS.zero_pipeline_fuel_is_exhausted",
           "kind": "law",
           "lines": [
-            87,
-            90
+            88,
+            91
           ],
           "features": [
             "calls",
@@ -57246,12 +57580,204 @@
             "types": [],
             "dynamic_calls": []
           }
+        },
+        {
+          "id": "src/opt-LAWS.bend::last_verified_round_stops:law",
+          "name": "last_verified_round_stops",
+          "key": "src/opt-LAWS.last_verified_round_stops",
+          "kind": "law",
+          "lines": [
+            93,
+            95
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "laws",
+            "literals.nat",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "True",
+            "src/opt.stop"
+          ],
+          "type_references": [
+            "Bool",
+            "src/opt.stop"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-LAWS.bend::enum_literal_is_propagated:law",
+          "name": "enum_literal_is_propagated",
+          "key": "src/opt-LAWS.enum_literal_is_propagated",
+          "kind": "law",
+          "lines": [
+            97,
+            100
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Maybe",
+            "Nil",
+            "Some",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Term",
+            "src/core.Value",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Maybe",
+            "src/core.Term",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-LAWS.bend::boxed_literal_is_retained:law",
+          "name": "boxed_literal_is_retained",
+          "key": "src/opt-LAWS.boxed_literal_is_retained",
+          "kind": "law",
+          "lines": [
+            102,
+            107
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Maybe",
+            "Nil",
+            "None",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/core.Value",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Maybe",
+            "src/core.Term",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-LAWS.bend::dropped_export_is_rejected:law",
+          "name": "dropped_export_is_rejected",
+          "key": "src/opt-LAWS.dropped_export_is_rejected",
+          "kind": "law",
+          "lines": [
+            109,
+            115
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/opt-check.recheck",
+            "src/syntax.Error",
+            "src/syntax.Internal"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/opt-check.recheck",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
         }
       ]
     },
     {
       "file": "src/opt-PROOF.bend",
-      "sha256": "8bb823565cf195adf4983edaa330eccd16d45d32f6e6fc647ce9699778e9c4a3",
+      "sha256": "3c66f24ecccfa48ce736bdeeef63261614b546d75321c22511d7db7aaab490ae",
       "imports": [
         {
           "module": "Base",
@@ -57854,6 +58380,195 @@
             "Result",
             "src/core.Book",
             "src/opt.settle",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-PROOF.bend::L.last_verified_round_stops:law_fill",
+          "name": "L.last_verified_round_stops",
+          "key": "src/opt-LAWS.last_verified_round_stops",
+          "kind": "law_fill",
+          "lines": [
+            17,
+            17
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "literals.nat",
+            "proofs",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "True",
+            "src/opt.stop"
+          ],
+          "type_references": [
+            "Bool",
+            "src/opt.stop"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-PROOF.bend::L.enum_literal_is_propagated:law_fill",
+          "name": "L.enum_literal_is_propagated",
+          "key": "src/opt-LAWS.enum_literal_is_propagated",
+          "kind": "law_fill",
+          "lines": [
+            18,
+            18
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Maybe",
+            "Nil",
+            "Some",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Term",
+            "src/core.Value",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Maybe",
+            "src/core.Term",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-PROOF.bend::L.boxed_literal_is_retained:law_fill",
+          "name": "L.boxed_literal_is_retained",
+          "key": "src/opt-LAWS.boxed_literal_is_retained",
+          "kind": "law_fill",
+          "lines": [
+            19,
+            19
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Maybe",
+            "Nil",
+            "None",
+            "True",
+            "src/core.Constructor",
+            "src/core.Datatype",
+            "src/core.Parameter",
+            "src/core.Term",
+            "src/core.Value",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Maybe",
+            "src/core.Term",
+            "src/opt-fold.literal",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/opt-PROOF.bend::L.dropped_export_is_rejected:law_fill",
+          "name": "L.dropped_export_is_rejected",
+          "key": "src/opt-LAWS.dropped_export_is_rejected",
+          "kind": "law_fill",
+          "lines": [
+            20,
+            20
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "Fail",
+            "List",
+            "Nat",
+            "Nil",
+            "Result",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Function",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/opt-check.recheck",
+            "src/syntax.Error",
+            "src/syntax.Internal"
+          ],
+          "type_references": [
+            "List",
+            "Nat",
+            "Result",
+            "src/core.Book",
+            "src/core.Datatype",
+            "src/core.Signature",
+            "src/core.Term",
+            "src/opt-check.recheck",
             "src/syntax.Error"
           ],
           "captures": [],
@@ -60136,7 +60851,7 @@
     },
     {
       "file": "src/opt.bend",
-      "sha256": "3a305b91b36cb094777bb748ddaa57c9197c91c804b371371d28884164aa9b51",
+      "sha256": "c7f92c56897d40226f383967fb4e444c9fa963b566fec0fbbf358281bc86853f",
       "imports": [
         {
           "module": "Base",
@@ -60716,6 +61431,7 @@
             "src/core.Branch",
             "src/core.Case",
             "src/core.Construct",
+            "src/core.Datatype",
             "src/core.Function",
             "src/core.Let",
             "src/core.Parameter",
@@ -60723,6 +61439,7 @@
             "src/core.Sequence",
             "src/core.Term",
             "src/core.Value",
+            "src/opt-fold.enum_type",
             "src/opt-fold.fuse",
             "src/opt-fold.known",
             "src/opt-fold.literal",
@@ -60756,6 +61473,7 @@
             "Result",
             "U32",
             "src/core.Binding",
+            "src/core.Datatype",
             "src/core.Function",
             "src/core.Term",
             "src/opt.Pass",
@@ -60764,7 +61482,7 @@
           ],
           "captures": [
             {
-              "offset": 2397,
+              "offset": 2459,
               "names": [
                 "env",
                 "level",
@@ -60773,7 +61491,7 @@
               ]
             },
             {
-              "offset": 2463,
+              "offset": 2525,
               "names": [
                 "level",
                 "token",
@@ -60781,7 +61499,7 @@
               ]
             },
             {
-              "offset": 2657,
+              "offset": 2725,
               "names": [
                 "fields",
                 "tag",
@@ -60790,7 +61508,7 @@
               ]
             },
             {
-              "offset": 2686,
+              "offset": 2754,
               "names": [
                 "fields",
                 "tag",
@@ -60799,7 +61517,7 @@
               ]
             },
             {
-              "offset": 2848,
+              "offset": 2916,
               "names": [
                 "all",
                 "args",
@@ -60810,11 +61528,12 @@
                 "n",
                 "pass",
                 "token",
-                "typ"
+                "typ",
+                "types"
               ]
             },
             {
-              "offset": 2946,
+              "offset": 3020,
               "names": [
                 "available",
                 "base",
@@ -60826,7 +61545,7 @@
               ]
             },
             {
-              "offset": 2967,
+              "offset": 3041,
               "names": [
                 "available",
                 "base",
@@ -60838,7 +61557,7 @@
               ]
             },
             {
-              "offset": 3032,
+              "offset": 3106,
               "names": [
                 "available",
                 "base",
@@ -60850,7 +61569,7 @@
               ]
             },
             {
-              "offset": 3191,
+              "offset": 3265,
               "names": [
                 "index",
                 "token",
@@ -60859,7 +61578,7 @@
               ]
             },
             {
-              "offset": 3276,
+              "offset": 3350,
               "names": [
                 "index",
                 "token",
@@ -60868,13 +61587,13 @@
               ]
             },
             {
-              "offset": 3470,
+              "offset": 3544,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 3487,
+              "offset": 3561,
               "names": [
                 "all",
                 "available",
@@ -60882,11 +61601,12 @@
                 "env",
                 "n",
                 "pass",
+                "types",
                 "value"
               ]
             },
             {
-              "offset": 3547,
+              "offset": 3627,
               "names": [
                 "all",
                 "available",
@@ -60898,17 +61618,19 @@
                 "pass",
                 "q",
                 "token",
-                "typ"
+                "typ",
+                "types"
               ]
             },
             {
-              "offset": 3641,
+              "offset": 3721,
               "names": [
-                "initial"
+                "initial",
+                "types"
               ]
             },
             {
-              "offset": 3808,
+              "offset": 3900,
               "names": [
                 "all",
                 "available",
@@ -60920,28 +61642,12 @@
                 "pass",
                 "q",
                 "token",
-                "typ"
+                "typ",
+                "types"
               ]
             },
             {
-              "offset": 3873,
-              "names": [
-                "all",
-                "available",
-                "base",
-                "env",
-                "initial",
-                "level",
-                "n",
-                "pass",
-                "q",
-                "rest",
-                "token",
-                "typ"
-              ]
-            },
-            {
-              "offset": 3950,
+              "offset": 3965,
               "names": [
                 "all",
                 "available",
@@ -60954,22 +61660,42 @@
                 "q",
                 "rest",
                 "token",
-                "typ"
+                "typ",
+                "types"
               ]
             },
             {
-              "offset": 4027,
+              "offset": 4042,
+              "names": [
+                "all",
+                "available",
+                "base",
+                "env",
+                "initial",
+                "level",
+                "n",
+                "pass",
+                "q",
+                "rest",
+                "token",
+                "typ",
+                "types"
+              ]
+            },
+            {
+              "offset": 4119,
               "names": [
                 "all",
                 "available",
                 "base",
                 "env",
                 "n",
-                "pass"
+                "pass",
+                "types"
               ]
             },
             {
-              "offset": 4090,
+              "offset": 4188,
               "names": [
                 "initial",
                 "level",
@@ -60982,7 +61708,7 @@
               ]
             },
             {
-              "offset": 4312,
+              "offset": 4416,
               "names": [
                 "env",
                 "level",
@@ -60992,7 +61718,7 @@
               ]
             },
             {
-              "offset": 4333,
+              "offset": 4437,
               "names": [
                 "env",
                 "level",
@@ -61002,7 +61728,7 @@
               ]
             },
             {
-              "offset": 4394,
+              "offset": 4498,
               "names": [
                 "env",
                 "level",
@@ -61012,7 +61738,7 @@
               ]
             },
             {
-              "offset": 4489,
+              "offset": 4593,
               "names": [
                 "level",
                 "token",
@@ -61021,14 +61747,14 @@
               ]
             },
             {
-              "offset": 4700,
+              "offset": 4810,
               "names": [
                 "fields",
                 "tag"
               ]
             },
             {
-              "offset": 4949,
+              "offset": 5065,
               "names": [
                 "all",
                 "available",
@@ -61036,29 +61762,30 @@
                 "env",
                 "n",
                 "pass",
-                "tail"
+                "tail",
+                "types"
               ]
             },
             {
-              "offset": 5052,
+              "offset": 5174,
               "names": [
                 "first"
               ]
             },
             {
-              "offset": 5073,
+              "offset": 5195,
               "names": [
                 "first"
               ]
             },
             {
-              "offset": 5413,
+              "offset": 5535,
               "names": [
                 "head"
               ]
             },
             {
-              "offset": 5429,
+              "offset": 5551,
               "names": [
                 "all",
                 "available",
@@ -61066,11 +61793,12 @@
                 "env",
                 "head",
                 "n",
-                "pass"
+                "pass",
+                "types"
               ]
             },
             {
-              "offset": 5488,
+              "offset": 5616,
               "names": [
                 "all",
                 "available",
@@ -61079,17 +61807,18 @@
                 "n",
                 "pass",
                 "rest",
-                "tail"
+                "tail",
+                "types"
               ]
             },
             {
-              "offset": 5583,
+              "offset": 5717,
               "names": [
                 "first"
               ]
             },
             {
-              "offset": 5604,
+              "offset": 5738,
               "names": [
                 "first"
               ]
@@ -61103,6 +61832,7 @@
               "U32.from_nat",
               "U32.is_eq",
               "U32.is_ne",
+              "src/opt-fold.enum_type",
               "src/opt-fold.fuse",
               "src/opt-fold.known",
               "src/opt-fold.literal",
@@ -61268,6 +61998,7 @@
             "Nil",
             "Result",
             "U32",
+            "src/core.Datatype",
             "src/core.Function",
             "src/core.Term",
             "src/opt-term.Ceiling",
@@ -61286,13 +62017,14 @@
             "List",
             "Nat",
             "Result",
+            "src/core.Datatype",
             "src/core.Function",
             "src/opt.Pass",
             "src/syntax.Error"
           ],
           "captures": [
             {
-              "offset": 6353,
+              "offset": 6516,
               "names": [
                 "all",
                 "body",
@@ -61300,22 +62032,24 @@
                 "pass",
                 "previous",
                 "signature",
-                "tail"
+                "tail",
+                "types"
               ]
             },
             {
-              "offset": 6489,
+              "offset": 6658,
               "names": [
                 "all",
                 "depth",
                 "pass",
                 "previous",
                 "signature",
-                "tail"
+                "tail",
+                "types"
               ]
             },
             {
-              "offset": 6651,
+              "offset": 6826,
               "names": [
                 "signature",
                 "term"
@@ -61374,7 +62108,7 @@
             "Result",
             "src/core.Book",
             "src/core.Function",
-            "src/opt-check.verify",
+            "src/opt-check.recheck",
             "src/opt.Pass",
             "src/opt.functions",
             "src/syntax.Error",
@@ -61390,16 +62124,17 @@
           ],
           "captures": [
             {
-              "offset": 6912,
+              "offset": 7093,
               "names": [
                 "depth",
+                "items",
                 "types"
               ]
             }
           ],
           "execution": {
             "references": [
-              "src/opt-check.verify",
+              "src/opt-check.recheck",
               "src/opt.functions",
               "src/syntax.bind"
             ],
@@ -61458,7 +62193,7 @@
           ],
           "captures": [
             {
-              "offset": 7169,
+              "offset": 7349,
               "names": [
                 "depth",
                 "tail"
@@ -61480,13 +62215,53 @@
           }
         },
         {
+          "id": "src/opt.bend::stop:definition",
+          "name": "stop",
+          "key": "src/opt.stop",
+          "kind": "definition",
+          "lines": [
+            128,
+            131
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "literals.nat",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Nat",
+            "Succ",
+            "True",
+            "Zero"
+          ],
+          "type_references": [
+            "Bool",
+            "Nat"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "Succ",
+              "True",
+              "Zero"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/opt.bend::settle:definition",
           "name": "settle",
           "key": "src/opt.settle",
           "kind": "definition",
           "lines": [
-            130,
-            136
+            135,
+            141
           ],
           "features": [
             "calls",
@@ -61522,6 +62297,7 @@
             "src/opt.Inline",
             "src/opt.compose",
             "src/opt.settle",
+            "src/opt.stop",
             "src/syntax.Error",
             "src/syntax.bind",
             "src/syntax.choose"
@@ -61534,7 +62310,7 @@
           ],
           "captures": [
             {
-              "offset": 7559,
+              "offset": 7852,
               "names": [
                 "book",
                 "depth",
@@ -61542,7 +62318,7 @@
               ]
             },
             {
-              "offset": 7621,
+              "offset": 7914,
               "names": [
                 "depth",
                 "n",
@@ -61550,13 +62326,13 @@
               ]
             },
             {
-              "offset": 7676,
+              "offset": 7977,
               "names": [
                 "next"
               ]
             },
             {
-              "offset": 7692,
+              "offset": 7993,
               "names": [
                 "depth",
                 "n",
@@ -61570,6 +62346,7 @@
               "src/opt-term.stable",
               "src/opt.compose",
               "src/opt.settle",
+              "src/opt.stop",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -61592,8 +62369,8 @@
           "key": "src/opt.pipeline",
           "kind": "definition",
           "lines": [
-            138,
-            139
+            143,
+            144
           ],
           "features": [
             "calls",
@@ -61623,7 +62400,7 @@
           ],
           "captures": [
             {
-              "offset": 7833,
+              "offset": 8134,
               "names": [
                 "depth"
               ]

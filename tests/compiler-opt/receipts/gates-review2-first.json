@@ -1,0 +1,300 @@
+{
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+  "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+  "failures": [
+    {
+      "classification": "host-tool-discovery",
+      "error": null,
+      "exit_code": 1,
+      "gate": "frontend",
+      "status": "failed",
+      "stderr": "Traceback (most recent call last):\n  File \"$ROOT/tests/subsets/check_frontend.py\", line 292, in <module>\n    main()\n    ~~~~^^\n  File \"$ROOT/tests/subsets/check_frontend.py\", line 273, in main\n    classification(record['classification'], classification_manifest, lanes, source_paths)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$ROOT/tests/subsets/check_frontend.py\", line 89, in classification\n    built = successful([SEED, ROOT / 'src' / (phase + '-cli.bend'), '-o', output])\n  File \"$ROOT/tests/subsets/check_frontend.py\", line 43, in successful\n    require(result['exit'] == 0, result)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$ROOT/tests/subsets/check_frontend.py\", line 22, in require\n    raise AssertionError(message)\nAssertionError: {'argv': ['$ROOT/scripts/bend-reference', '$ROOT/src/eval-cli.bend', '-o', '$ROOT/.local/compiler-frontend/classification-eval'], 'exit': 1, 'stdout': '', 'stderr': 'Error: bend needs clang 14 or newer to build binaries (found no clang); on Debian/Ubuntu: curl -fsSL https://apt.llvm.org/llvm.sh | sudo bash -s 19; on macOS: xcode-select --install\\n'}\n",
+      "stderr_sha256": "7be4429f50be2acfd9ada956cd97634e8bbf1b53b98c857fa54880db3e72c90e"
+    },
+    {
+      "classification": "harness-timeout",
+      "error": "Gate timeout: 900 seconds",
+      "exit_code": null,
+      "gate": "compiler-opt",
+      "status": "exhausted",
+      "stderr": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {},
+      "exit_code": 1,
+      "name": "frontend",
+      "status": "failed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-opt/check.py"
+      ],
+      "counts": {},
+      "error": "Gate timeout: 900 seconds",
+      "exit_code": null,
+      "name": "compiler-opt",
+      "status": "exhausted"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 41,
+        "declarations": 567,
+        "files": 38
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/perch-context/check.py"
+      ],
+      "counts": {
+        "fixtures": 33,
+        "mutants": 8
+      },
+      "exit_code": 0,
+      "name": "perch-context",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 168
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-bootstrap/check.py"
+      ],
+      "counts": {
+        "corpus": 660,
+        "mutants": 9,
+        "reached": 2,
+        "stages": 8
+      },
+      "exit_code": 0,
+      "name": "bootstrap",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-classification/check.py"
+      ],
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "classification",
+      "status": "passed"
+    }
+  ],
+  "interpretation": "Failed full run retained. Frontend native seed compilation failed to discover clang. The optimizer gate reached the runner wall-clock guard during mutant verification; this is not a language Exhausted verdict or a failed semantic assertion. Other sixteen gates passed. The subsequent complete run uses one worker and a 1800-second harness guard, with unchanged compiler budgets and assertions.",
+  "run": {
+    "directory": ".local/gates/run-l9mwyd4n",
+    "jobs": 4,
+    "timeout_seconds": 900,
+    "total_seconds": 976.227598
+  },
+  "schema_version": 1,
+  "snapshot_sha256": "b157e636b78cb593123bb2d4acf751f7216662cf110152dceb8d093868a3391d",
+  "status": "failed"
+}

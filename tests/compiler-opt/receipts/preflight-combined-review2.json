@@ -1,0 +1,1148 @@
+{
+  "schema": 1,
+  "scope": "Requested combined changed-file preflights; residual legacy-context blockers are retained separately from bounded interfaces-v1 packets.",
+  "selection": "Sorted union of git diff --name-only main -- *.bend and git ls-files --others --exclude-standard -- *.bend; 36 tracked differences plus review-controls.bend, supplied as an argv array.",
+  "BEND_NO_TELEMETRY": "1",
+  "parser": "bend-2.0.29-574b6d3-observer-v3+law-template-arity",
+  "rubric_version": 8,
+  "rubric_sha256": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+  "provider_requests": 0,
+  "plain": {
+    "command": [
+      "node",
+      "scripts/perch-style.mjs",
+      "--preflight",
+      "src/opt-LAWS.bend",
+      "src/opt-PROOF.bend",
+      "src/opt-check.bend",
+      "src/opt-fold.bend",
+      "src/opt-inline.bend",
+      "src/opt-term.bend",
+      "src/opt-wasm.bend",
+      "src/opt.bend",
+      "tests/compiler-opt/audit.bend",
+      "tests/compiler-opt/compile.bend",
+      "tests/compiler-opt/core-controls.bend",
+      "tests/compiler-opt/eval.bend",
+      "tests/compiler-opt/fixtures/capture.bend",
+      "tests/compiler-opt/fixtures/hostile-erased-forward.bend",
+      "tests/compiler-opt/fixtures/hostile-fusion.bend",
+      "tests/compiler-opt/fixtures/hostile-multi-arg.bend",
+      "tests/compiler-opt/fixtures/hostile-nullary.bend",
+      "tests/compiler-opt/fixtures/known-fields.bend",
+      "tests/compiler-opt/fixtures/known.bend",
+      "tests/compiler-opt/fixtures/non-tail.bend",
+      "tests/compiler-opt/fixtures/observers/add.bend",
+      "tests/compiler-opt/fixtures/observers/after-let.bend",
+      "tests/compiler-opt/fixtures/observers/deep-input.bend",
+      "tests/compiler-opt/fixtures/observers/deep.bend",
+      "tests/compiler-opt/fixtures/observers/direct.bend",
+      "tests/compiler-opt/fixtures/observers/even.bend",
+      "tests/compiler-opt/fixtures/observers/first-parameter.bend",
+      "tests/compiler-opt/fixtures/observers/length.bend",
+      "tests/compiler-opt/fixtures/observers/mirror.bend",
+      "tests/compiler-opt/fixtures/observers/ordered-calls.bend",
+      "tests/compiler-opt/fixtures/observers/shadow-field.bend",
+      "tests/compiler-opt/fixtures/tail.bend",
+      "tests/compiler-opt/fixtures/used-let.bend",
+      "tests/compiler-opt/regressions/arena-sharing.bend",
+      "tests/compiler-opt/regressions/r_20_13.bend",
+      "tests/compiler-opt/regressions/r_4_13.bend",
+      "tests/compiler-opt/review-controls.bend"
+    ],
+    "exit": 3,
+    "stdout": "Style preflight (offline, 0 provider requests): 439 declarations in 37 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.\nTask: unavailable (missing_task_context).\nTruncated contexts (Anticipation/Payoff unavailable, cannot pass): 80 {\"caller-or-byte-limit\":22,\"context-file-limit\":10,\"context-helper-limit\":54}.\nSupporting role impossible (incomplete role context): 83 {\"context-file-limit\":10,\"context-helper-limit\":54,\"nonlocal-import\":10,\"truncated-context\":80}.\nComposition (required always): unavailable [unresolved_composition_context, composition_byte_limit]; 186307/48000 bytes; unresolved {\"collaborator-not-in-group\":6,\"nonlocal-import\":86}.\ntruncated: src/opt-LAWS.bend::empty_pipeline_is_identity context-helper-limit\ntruncated: src/opt-LAWS.bend::zero_pipeline_fuel_is_exhausted context-helper-limit\ntruncated: src/opt-LAWS.bend::dropped_export_is_rejected context-helper-limit\ntruncated: src/opt-check.bend::Mode context-file-limit\ntruncated: src/opt-check.bend::internal caller-or-byte-limit\ntruncated: src/opt-check.bend::exhausted caller-or-byte-limit\ntruncated: src/opt-check.bend::require caller-or-byte-limit\ntruncated: src/opt-check.bend::run context-helper-limit\ntruncated: src/opt-check.bend::function context-helper-limit\ntruncated: src/opt-check.bend::functions context-helper-limit\ntruncated: src/opt-check.bend::verify context-helper-limit\ntruncated: src/opt-check.bend::recheck context-helper-limit\ntruncated: src/opt-wasm.bend::Tail context-file-limit\ntruncated: src/opt-wasm.bend::entry context-helper-limit\ntruncated: src/opt-wasm.bend::entries context-helper-limit\ntruncated: src/opt-wasm.bend::emit context-helper-limit\ntruncated: src/opt.bend::Visit context-file-limit\ntruncated: src/opt.bend::Pass caller-or-byte-limit\ntruncated: src/opt.bend::walk context-helper-limit\ntruncated: src/opt.bend::functions context-helper-limit\ntruncated: src/opt.bend::apply context-helper-limit\ntruncated: src/opt.bend::compose context-helper-limit\ntruncated: src/opt.bend::settle context-helper-limit\ntruncated: src/opt.bend::pipeline context-helper-limit\ntruncated: tests/compiler-opt/audit.bend::repeat context-helper-limit\ntruncated: tests/compiler-opt/audit.bend::inspect context-helper-limit\ntruncated: tests/compiler-opt/audit.bend::configured context-helper-limit,context-file-limit\ntruncated: tests/compiler-opt/audit.bend::arguments context-helper-limit,context-file-limit\ntruncated: tests/compiler-opt/audit.bend::main context-helper-limit\ntruncated: tests/compiler-opt/compile.bend::compile context-file-limit,context-helper-limit\ntruncated: tests/compiler-opt/compile.bend::configured context-file-limit,context-helper-limit\ntruncated: tests/compiler-opt/compile.bend::arguments context-helper-limit,context-file-limit\ntruncated: tests/compiler-opt/compile.bend::main context-helper-limit,context-file-limit\ntruncated: tests/compiler-opt/core-controls.bend::Trial context-file-limit\ntruncated: tests/compiler-opt/core-controls.bend::token caller-or-byte-limit\ntruncated: tests/compiler-opt/core-controls.bend::parameter caller-or-byte-limit\ntruncated: tests/compiler-opt/core-controls.bend::value caller-or-byte-limit\ntruncated: tests/compiler-opt/core-controls.bend::pipeline_control context-helper-limit\ntruncated: tests/compiler-opt/core-controls.bend::check context-helper-limit\ntruncated: tests/compiler-opt/core-controls.bend::main context-helper-limit\ntruncated: tests/compiler-opt/eval.bend::evaluate context-helper-limit\ntruncated: tests/compiler-opt/eval.bend::configured context-helper-limit\ntruncated: tests/compiler-opt/eval.bend::arguments context-helper-limit\ntruncated: tests/compiler-opt/eval.bend::main context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/add.bend::Peano caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/add.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::Peano caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check49 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check50 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check51 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check52 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check53 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check54 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check55 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check56 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check57 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check58 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check59 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check60 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check61 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check62 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check63 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check64 context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_exact context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_observe context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep-input.bend::opt_observe_bad context-helper-limit\ntruncated: tests/compiler-opt/fixtures/observers/deep.bend::Peano caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/even.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/length.bend::Peano caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/length.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/mirror.bend::Tree caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/mirror.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/ordered-calls.bend::Peano caller-or-byte-limit\ntruncated: tests/compiler-opt/fixtures/observers/ordered-calls.bend::OptObservation caller-or-byte-limit\ntruncated: tests/compiler-opt/regressions/r_20_13.bend::T caller-or-byte-limit\ntruncated: tests/compiler-opt/regressions/r_20_13.bend::g caller-or-byte-limit\ntruncated: tests/compiler-opt/regressions/r_4_13.bend::T caller-or-byte-limit\ntruncated: tests/compiler-opt/review-controls.bend::checked context-helper-limit\ntruncated: tests/compiler-opt/review-controls.bend::main context-helper-limit\n",
+    "stderr": "",
+    "summary": {
+      "units": 439,
+      "files": 37,
+      "truncated_units": 80,
+      "truncated_by_limit": {
+        "caller-or-byte-limit": 22,
+        "context-file-limit": 10,
+        "context-helper-limit": 54
+      },
+      "supporting_role_impossible": 83,
+      "role_gap_units_by_reason": {
+        "context-file-limit": 10,
+        "context-helper-limit": 54,
+        "nonlocal-import": 10,
+        "truncated-context": 80
+      },
+      "composition_available": false
+    },
+    "task": {
+      "available": false,
+      "reason": "missing_task_context"
+    },
+    "structural_blockers": 81,
+    "blocker_count_basis": "80 truncated declarations plus one unavailable required composition."
+  },
+  "task_qualified": {
+    "command": [
+      "node",
+      "scripts/perch-style.mjs",
+      "--preflight",
+      "--json",
+      "--task=tests/compiler-opt/SPEC.md",
+      "src/opt-LAWS.bend",
+      "src/opt-PROOF.bend",
+      "src/opt-check.bend",
+      "src/opt-fold.bend",
+      "src/opt-inline.bend",
+      "src/opt-term.bend",
+      "src/opt-wasm.bend",
+      "src/opt.bend",
+      "tests/compiler-opt/audit.bend",
+      "tests/compiler-opt/compile.bend",
+      "tests/compiler-opt/core-controls.bend",
+      "tests/compiler-opt/eval.bend",
+      "tests/compiler-opt/fixtures/capture.bend",
+      "tests/compiler-opt/fixtures/hostile-erased-forward.bend",
+      "tests/compiler-opt/fixtures/hostile-fusion.bend",
+      "tests/compiler-opt/fixtures/hostile-multi-arg.bend",
+      "tests/compiler-opt/fixtures/hostile-nullary.bend",
+      "tests/compiler-opt/fixtures/known-fields.bend",
+      "tests/compiler-opt/fixtures/known.bend",
+      "tests/compiler-opt/fixtures/non-tail.bend",
+      "tests/compiler-opt/fixtures/observers/add.bend",
+      "tests/compiler-opt/fixtures/observers/after-let.bend",
+      "tests/compiler-opt/fixtures/observers/deep-input.bend",
+      "tests/compiler-opt/fixtures/observers/deep.bend",
+      "tests/compiler-opt/fixtures/observers/direct.bend",
+      "tests/compiler-opt/fixtures/observers/even.bend",
+      "tests/compiler-opt/fixtures/observers/first-parameter.bend",
+      "tests/compiler-opt/fixtures/observers/length.bend",
+      "tests/compiler-opt/fixtures/observers/mirror.bend",
+      "tests/compiler-opt/fixtures/observers/ordered-calls.bend",
+      "tests/compiler-opt/fixtures/observers/shadow-field.bend",
+      "tests/compiler-opt/fixtures/tail.bend",
+      "tests/compiler-opt/fixtures/used-let.bend",
+      "tests/compiler-opt/regressions/arena-sharing.bend",
+      "tests/compiler-opt/regressions/r_20_13.bend",
+      "tests/compiler-opt/regressions/r_4_13.bend",
+      "tests/compiler-opt/review-controls.bend"
+    ],
+    "exit": 3,
+    "stderr": "",
+    "task": {
+      "origin": "task-file",
+      "path": "tests/compiler-opt/SPEC.md",
+      "sha256": "8ebaddb6cd453ea9ef798696164aec203f5cb2047f5f9c8b57edc1a686b31ec8",
+      "bytes": 10063,
+      "available": true,
+      "reason": null
+    },
+    "summary": {
+      "units": 439,
+      "files": 37,
+      "unranked_files": 0,
+      "empty_files": 0,
+      "truncated_units": 80,
+      "truncated_by_limit": {
+        "caller-or-byte-limit": 22,
+        "context-file-limit": 10,
+        "context-helper-limit": 54
+      },
+      "supporting_role_impossible": 83,
+      "role_gap_units_by_reason": {
+        "context-file-limit": 10,
+        "context-helper-limit": 54,
+        "nonlocal-import": 10,
+        "truncated-context": 80
+      },
+      "max_state_bytes": 43674,
+      "composition_available": false,
+      "composition_reasons": [
+        "unresolved_composition_context",
+        "composition_byte_limit"
+      ]
+    },
+    "structural_blockers": 81,
+    "composition": {
+      "required": "always",
+      "available": false,
+      "reasons": [
+        "unresolved_composition_context",
+        "composition_byte_limit"
+      ],
+      "selected_files": [
+        "src/opt-LAWS.bend",
+        "src/opt-PROOF.bend",
+        "src/opt-check.bend",
+        "src/opt-fold.bend",
+        "src/opt-inline.bend",
+        "src/opt-term.bend",
+        "src/opt-wasm.bend",
+        "src/opt.bend",
+        "tests/compiler-opt/audit.bend",
+        "tests/compiler-opt/compile.bend",
+        "tests/compiler-opt/core-controls.bend",
+        "tests/compiler-opt/eval.bend",
+        "tests/compiler-opt/fixtures/capture.bend",
+        "tests/compiler-opt/fixtures/hostile-erased-forward.bend",
+        "tests/compiler-opt/fixtures/hostile-fusion.bend",
+        "tests/compiler-opt/fixtures/hostile-multi-arg.bend",
+        "tests/compiler-opt/fixtures/hostile-nullary.bend",
+        "tests/compiler-opt/fixtures/known-fields.bend",
+        "tests/compiler-opt/fixtures/known.bend",
+        "tests/compiler-opt/fixtures/non-tail.bend",
+        "tests/compiler-opt/fixtures/observers/add.bend",
+        "tests/compiler-opt/fixtures/observers/after-let.bend",
+        "tests/compiler-opt/fixtures/observers/deep-input.bend",
+        "tests/compiler-opt/fixtures/observers/deep.bend",
+        "tests/compiler-opt/fixtures/observers/direct.bend",
+        "tests/compiler-opt/fixtures/observers/even.bend",
+        "tests/compiler-opt/fixtures/observers/first-parameter.bend",
+        "tests/compiler-opt/fixtures/observers/length.bend",
+        "tests/compiler-opt/fixtures/observers/mirror.bend",
+        "tests/compiler-opt/fixtures/observers/ordered-calls.bend",
+        "tests/compiler-opt/fixtures/observers/shadow-field.bend",
+        "tests/compiler-opt/fixtures/tail.bend",
+        "tests/compiler-opt/fixtures/used-let.bend",
+        "tests/compiler-opt/regressions/arena-sharing.bend",
+        "tests/compiler-opt/regressions/r_20_13.bend",
+        "tests/compiler-opt/regressions/r_4_13.bend",
+        "tests/compiler-opt/review-controls.bend"
+      ],
+      "context_files": 51,
+      "source_bytes": 186307,
+      "byte_limit": 48000,
+      "unresolved_by_reason": {
+        "collaborator-not-in-group": 6,
+        "nonlocal-import": 86
+      }
+    },
+    "blocked_or_role_limited_declarations": [
+      {
+        "target": "src/opt-LAWS.bend::empty_pipeline_is_identity",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 13
+        }
+      },
+      {
+        "target": "src/opt-LAWS.bend::zero_pipeline_fuel_is_exhausted",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 17
+        }
+      },
+      {
+        "target": "src/opt-LAWS.bend::dropped_export_is_rejected",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 24
+        }
+      },
+      {
+        "target": "src/opt-check.bend::Mode",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 3
+        }
+      },
+      {
+        "target": "src/opt-check.bend::internal",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "src/opt-check.bend::exhausted",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "src/opt-check.bend::require",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "src/opt-check.bend::run",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 11
+        }
+      },
+      {
+        "target": "src/opt-check.bend::function",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 14
+        }
+      },
+      {
+        "target": "src/opt-check.bend::functions",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 18
+        }
+      },
+      {
+        "target": "src/opt-check.bend::verify",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 21
+        }
+      },
+      {
+        "target": "src/opt-check.bend::recheck",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 23
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::Tail",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 2
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::called",
+        "truncated": false,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "nonlocal-import": 6
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::lower",
+        "truncated": false,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "nonlocal-import": 7
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::body",
+        "truncated": false,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "nonlocal-import": 9
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::entry",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 5,
+          "nonlocal-import": 9
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::entries",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 8,
+          "nonlocal-import": 9
+        }
+      },
+      {
+        "target": "src/opt-wasm.bend::emit",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 12,
+          "nonlocal-import": 10
+        }
+      },
+      {
+        "target": "src/opt.bend::Visit",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 2
+        }
+      },
+      {
+        "target": "src/opt.bend::Pass",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "src/opt.bend::walk",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 2
+        }
+      },
+      {
+        "target": "src/opt.bend::functions",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 5
+        }
+      },
+      {
+        "target": "src/opt.bend::apply",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 12
+        }
+      },
+      {
+        "target": "src/opt.bend::compose",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 12
+        }
+      },
+      {
+        "target": "src/opt.bend::settle",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 16
+        }
+      },
+      {
+        "target": "src/opt.bend::pipeline",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 37
+        }
+      },
+      {
+        "target": "tests/compiler-opt/audit.bend::repeat",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 37
+        }
+      },
+      {
+        "target": "tests/compiler-opt/audit.bend::inspect",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 28
+        }
+      },
+      {
+        "target": "tests/compiler-opt/audit.bend::configured",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit",
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 4,
+          "context-helper-limit": 36
+        }
+      },
+      {
+        "target": "tests/compiler-opt/audit.bend::arguments",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit",
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 4,
+          "context-helper-limit": 37
+        }
+      },
+      {
+        "target": "tests/compiler-opt/audit.bend::main",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 37
+        }
+      },
+      {
+        "target": "tests/compiler-opt/compile.bend::compile",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit",
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 7,
+          "context-helper-limit": 25,
+          "nonlocal-import": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/compile.bend::configured",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit",
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 5,
+          "context-helper-limit": 18,
+          "nonlocal-import": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/compile.bend::arguments",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit",
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 4,
+          "context-helper-limit": 20,
+          "nonlocal-import": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/compile.bend::main",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit",
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 4,
+          "context-helper-limit": 21,
+          "nonlocal-import": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::Trial",
+        "truncated": true,
+        "limit_reasons": [
+          "context-file-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-file-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::token",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::parameter",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::value",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::pipeline_control",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 24
+        }
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::check",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 23
+        }
+      },
+      {
+        "target": "tests/compiler-opt/core-controls.bend::main",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 14
+        }
+      },
+      {
+        "target": "tests/compiler-opt/eval.bend::evaluate",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/eval.bend::configured",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 18
+        }
+      },
+      {
+        "target": "tests/compiler-opt/eval.bend::arguments",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 16
+        }
+      },
+      {
+        "target": "tests/compiler-opt/eval.bend::main",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 17
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/add.bend::Peano",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/add.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::Peano",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check49",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check50",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check51",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check52",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check53",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check54",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check55",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check56",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check57",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check58",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check59",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check60",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check61",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check62",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check63",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_check64",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_exact",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_observe",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep-input.bend::opt_observe_bad",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 1
+        }
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/deep.bend::Peano",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/even.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/length.bend::Peano",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/length.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/mirror.bend::Tree",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/mirror.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/ordered-calls.bend::Peano",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/fixtures/observers/ordered-calls.bend::OptObservation",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/regressions/r_20_13.bend::T",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/regressions/r_20_13.bend::g",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/regressions/r_4_13.bend::T",
+        "truncated": true,
+        "limit_reasons": [],
+        "supporting_role_possible": false,
+        "role_gap_counts": {}
+      },
+      {
+        "target": "tests/compiler-opt/review-controls.bend::checked",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 27
+        }
+      },
+      {
+        "target": "tests/compiler-opt/review-controls.bend::main",
+        "truncated": true,
+        "limit_reasons": [
+          "context-helper-limit"
+        ],
+        "supporting_role_possible": false,
+        "role_gap_counts": {
+          "context-helper-limit": 16
+        }
+      }
+    ]
+  },
+  "source_snapshot": {
+    "0xc409b77d3230ca33374caf6b0993f0cb/BYTE_LAWS.bend": "cffc93ff7f84fec0e39e26fabdd8ee1b74a93f34cbf875403acc7d44d76b599a",
+    "0xc409b77d3230ca33374caf6b0993f0cb/BYTE_PROOF.bend": "969180966cbeebb904be36ba3a84b69147a47c64f22eaaad14e82b4160a54df9",
+    "0xc409b77d3230ca33374caf6b0993f0cb/LAWS.bend": "7c0b887642a77a3b8522b9c05a66ae61045b618b6bd062510530f5a2a783b569",
+    "0xc409b77d3230ca33374caf6b0993f0cb/LICENSE": "7be3637ad6ba94d74378f1479b4798fcf6ccbfddc00f9d7313ae0aab089b0e87",
+    "0xc409b77d3230ca33374caf6b0993f0cb/PROOF.bend": "b6851d6a3738b754309c7d803f39c6c5e7e3d5eec6c376f83b8f61cc53d539f7",
+    "0xc409b77d3230ca33374caf6b0993f0cb/byte_model.bend": "d70023c2847de95e68f84db86f42c5fc7f1ed094166a492f2d108319ef43a396",
+    "0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend": "b1c672949a72bcbc37509e31a1a20715eb73813904a50157328ded9ed0069ff1",
+    "0xc409b77d3230ca33374caf6b0993f0cb/conformance.bend": "f1f4bc8a01dbfa28fc62298ac3185fdcdca7e23569ed929ed8bf692ccd54ced5",
+    "0xc409b77d3230ca33374caf6b0993f0cb/example.bend": "8ab3b54a35ecd7e3ee1112fe0a80cb4d3c1c59930e906c116c564f7418c08ad3",
+    "0xc409b77d3230ca33374caf6b0993f0cb/main.bend": "4121b71f530bbb0d4cb05f7ff2ce3f2f65bbe5a5e3c1bb2f059a15b2c0491bb8",
+    "0xc409b77d3230ca33374caf6b0993f0cb/model.bend": "5a38de9bb16563d90077fd3e112084a420cc3b2cd55492a0e03c11d7c9101157",
+    "0xc409b77d3230ca33374caf6b0993f0cb/release.bend": "d13eb60779d4941ebbfdec4478345c61ec60dc0f8118f2ef3e7a1910966fd988",
+    "docs/compiler-campaign/manifest.json": "deb054b5f445c13ceeecb244b9b5173a3bf070c4aae7a4ae12018924f8b8ba31",
+    "perch-style.json": "b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693",
+    "scripts/perch-bend-context.mjs": "0858899b02dd657ab3a0d82d630cd7c08d39fa2277223ec3816a3b8c6dd02a61",
+    "scripts/perch-bend.mjs": "2b68a1aad0485870d16f531dcb919a6c0e4a35b62a3e55678fab5a218ca5ceef",
+    "scripts/perch-context-interfaces.mjs": "dd4153156575e81cd5c30ef02142783b42aebcbe3debcdadf2509d23080d498c",
+    "scripts/perch-style.mjs": "e52d0a4dac2958e93825c8dd236cba71ec694399f9d450e592eaa0a3186e977f",
+    "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
+    "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/opt-LAWS.bend": "86f7d88ecb9d4665715fbf31cb6603d0dae3dfeaa3709b618ffabf61b29ae2ba",
+    "src/opt-PROOF.bend": "3c66f24ecccfa48ce736bdeeef63261614b546d75321c22511d7db7aaab490ae",
+    "src/opt-check.bend": "c021753208c37e2e339628222d0330d62e5a1b9bad2e0e0dee87ce42b05aaa7a",
+    "src/opt-fold.bend": "afe0b678fbf53431f532bc6c60e6e298060c2ed5d4ba42004b4cdd7149c8db6c",
+    "src/opt-inline.bend": "6b6c10b8fb3606fc6d918444df94772276dd2a33feadae606414985a9a1cdfca",
+    "src/opt-term.bend": "32d9fb612fd2be06d52d415aef280298bf1df58c08de041a4f95fd73f2c494a0",
+    "src/opt-wasm.bend": "d2dcf7330681ceeed4cd6a15dbfd7e746c6cc6ba4146a17ccac4a386df3fb441",
+    "src/opt.bend": "c7f92c56897d40226f383967fb4e444c9fa963b566fec0fbbf358281bc86853f",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-opt/SPEC.md": "8ebaddb6cd453ea9ef798696164aec203f5cb2047f5f9c8b57edc1a686b31ec8",
+    "tests/compiler-opt/audit.bend": "167dc8b9a9378525457358f43fe69535107289ce62a86426833d8444e2a7f5cb",
+    "tests/compiler-opt/compile.bend": "70dcf1bb9e12e98f50e66b5c8e962d180653a06929dfd1b2248b3b365ad52225",
+    "tests/compiler-opt/core-controls.bend": "227750109b830ca4a82af57220116fe3751b3e278ed9448c4fa924b9a4097758",
+    "tests/compiler-opt/eval.bend": "b22a41a5af38ace8393dc978d8a30a4e15fc726aedd7f7a953ec98f792577b5c",
+    "tests/compiler-opt/fixtures/capture.bend": "5427385032d555e8fe6eb13cd0149ac7dd49ee900cb1fa42db23abf9c6ac0346",
+    "tests/compiler-opt/fixtures/hostile-erased-forward.bend": "c9a1dbb4a87074cbb9da5f3ac39c6fa04b64b72821da68dc5bf07ba1a383bfbb",
+    "tests/compiler-opt/fixtures/hostile-fusion.bend": "0f80d18c7bc710d90ac44c6d842c8c992c84171f6f610a182b845f7f036454d3",
+    "tests/compiler-opt/fixtures/hostile-multi-arg.bend": "a59d1a2841ffa6405a625cc7b3ba40c3dd575c6ed9932b16c723a60acccd1e74",
+    "tests/compiler-opt/fixtures/hostile-nullary.bend": "2b8c63b107e123b4a7469e5e70c4b47abe1ea24a13f67ab6426f75401c121c67",
+    "tests/compiler-opt/fixtures/known-fields.bend": "0c70e998d7e51cd5c207c971f835ebb43fbf5100e7b92d845c2be3cc5dfd0e46",
+    "tests/compiler-opt/fixtures/known.bend": "42753e3f25821ceba3e834fde1a731e3c50367e9181ce95335b6841e583506c6",
+    "tests/compiler-opt/fixtures/non-tail.bend": "230030a87ecde608a85e02e992c6373386c628ab551598f2823f77e7ea013652",
+    "tests/compiler-opt/fixtures/observers/add.bend": "acb8514f7ef96481671f564cf38369a69d8edb1e9ac35b6c773f73a8f0d111ad",
+    "tests/compiler-opt/fixtures/observers/after-let.bend": "206ad8c7808bc291fd31983cdecd92f76264f488e82663b380926d9928bce882",
+    "tests/compiler-opt/fixtures/observers/deep-input.bend": "0d41ed10e6f91692967dfe744c179126822a4d59860340eeb8dfaeec08349f93",
+    "tests/compiler-opt/fixtures/observers/deep.bend": "e723b69aac64e90b16bc52c9e2fb88fb1df19f3667577235f044e9f40a967e80",
+    "tests/compiler-opt/fixtures/observers/direct.bend": "236c4484ee58a1582613118b8de79212eee4aab727b2123203c185423b495aa4",
+    "tests/compiler-opt/fixtures/observers/even.bend": "bca3d0cbfceb513e7f2d6b481f816258c46b54bb920c11d0aef7f0abe43dc440",
+    "tests/compiler-opt/fixtures/observers/first-parameter.bend": "2592306d78068b8f8d5515d028616cad570fbe0a6b3f3f74b7c66733da8ac2bb",
+    "tests/compiler-opt/fixtures/observers/length.bend": "7b8b89393e29c6b25233538fba1801c587b229df4137ab55b9fcb2c63b0b294c",
+    "tests/compiler-opt/fixtures/observers/mirror.bend": "c9a80706b20bb0274a20e9c5431c2995e21cfafab6d80a8b9d1c4b41715a738a",
+    "tests/compiler-opt/fixtures/observers/ordered-calls.bend": "b927ce764cc42b1d4ebeaaaa822a324d3691ee3d7174a8d2814de8de31f50a0b",
+    "tests/compiler-opt/fixtures/observers/shadow-field.bend": "ba6287b9963524bd24e2586dc8d84a5ba8f4a4d1d206c8aead13157929cf4197",
+    "tests/compiler-opt/fixtures/tail.bend": "f8dd23886cecf5fc11556ec3b8d3401cde9c2008695c0f4dabd7fd2981f32186",
+    "tests/compiler-opt/fixtures/used-let.bend": "a7afc34ea61320c71fe2dbd5bc4b7eb9c132be72e519820bf356a0c108ecbff2",
+    "tests/compiler-opt/regressions/arena-sharing.bend": "fc64b65f3bce093f105734aadf7e7ca9a51a7b8b53cbc00676ba627a1d6777ba",
+    "tests/compiler-opt/regressions/r_20_13.bend": "d5bd25abdf7602e584614023e8fdcbe931432282f75419215bc9f8fcffb563f8",
+    "tests/compiler-opt/regressions/r_4_13.bend": "ea2cb54274e4aa24c7ae6b53942b559659f6061338f7984cb807d82d41bd7c34",
+    "tests/compiler-opt/review-controls.bend": "536a8bf6605c6b378233d29e8c9aceeda869461f98ba264dfd00dbcc5f9b0111",
+    "vendor/bend-parser/bend.mts": "34064e6eeea3e61243a0f8c2833c2cdcf2108edc108462a819662e26a8456145"
+  },
+  "bounded_evidence": "tests/compiler-opt/receipts/preflight-review2.json",
+  "ratings": "Unavailable: structural preflight only. These combined invocations do not pass; bounded packet availability is not a live D9 rating."
+}

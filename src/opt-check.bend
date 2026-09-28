@@ -242,3 +242,20 @@ def verify(depth: Nat, +book: C.Book) -> Result<S.Error,C.Book>:
       result(C.Book,S.bind(List<&2,C.Signature>,C.Book,signatures(bodies,0),sigs =>
         S.bind(C.Catalog,C.Book,catalog(types,sigs),catalog =>
           S.bind(Unit,C.Book,functions(bodies,catalog,0,1n+n),u => Done{book}))))
+
+def signature_equal(left: C.Signature, right: C.Signature) -> Bool:
+  match left right:
+    case C.Signature{name,params,result} C.Signature{other,args,actual}:
+      Bool.and(String.eq(S.text(name),S.text(other)),Bool.and(parameters_equal(params,args),U32.is_eq(result,actual)))
+
+def exports_equal(left: List<&2,C.Function>, right: List<&2,C.Function>) -> Bool:
+  match left right:
+    case Nil{} Nil{}: True{}
+    case Con{C.Function{signature,body},tail} Con{C.Function{other,term},rest}:
+      Bool.and(signature_equal(signature,other),exports_equal(tail,rest))
+    case _ _: False{}
+
+# Types are carried unchanged by the traversal. Check output bodies against
+# their own catalog only after ordered input/export signatures agree.
+def recheck(depth: Nat, types: List<&2,C.Datatype>, before: List<&2,C.Function>, +after: List<&2,C.Function>) -> Result<S.Error,C.Book>:
+  S.bind(Unit,C.Book,require(exports_equal(before,after),"exports-changed"),u => verify(depth,C.Book{types,after}))

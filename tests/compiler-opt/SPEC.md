@@ -47,8 +47,10 @@ host implementation of the source semantics is introduced.
 existing fields entry. Every existing `src/*.bend` identity is recorded as baseline provenance.
 Receipts audit those identities, while the gate enforces the fixed emitted bytes
 and behavior. Source identity changes alone do not block later checked frontend
-growth. The gate
-rebuilds the unoptimized modules in native and Bun, requires their exact byte
+growth. The shared manifests and benchmark generator are read on every run;
+new cases run all applicable differentials without requiring a baseline edit.
+`extensions.json` and `freeze.py` provide an explicit append-only freeze of new
+off hashes. See the README for the extension procedure. The gate rebuilds the unoptimized modules in native and Bun, requires their exact byte
 hashes, and independently compares the default enum entry's 25 outputs. New
 optimizer source files do not change this baseline.
 
@@ -64,7 +66,7 @@ For each lane:
 - Compare evaluation before and after optimization.
 - Invoke every recorded enum host call on unoptimized and optimized real Wasm.
 - Compare `wasm2wat`-decoded export names and function signatures.
-- Compare canonical function-body and signature observations after one and two pipeline applications. Datatypes, token spans and caches are outside this rendering.
+- Compare canonical function-body and signature observations after one and two pipeline applications. The original baseline retains its fixed-point assertions; later domains record convergence without requiring it. Datatypes, token spans and caches are outside this rendering.
 - Preserve the checked core function signatures and compare native/Bun bytes.
 
 The existing `deep-call` evaluator parser limit remains an explicit Exhausted
@@ -90,13 +92,16 @@ levels, calls, cases, descent, and exhaustion.
 
 ## Mutants
 
-Private scratch copies introduce four type-correct compiler mutants: select the
+Private scratch copies introduce seven type-correct compiler mutants: select the
 wrong case arm, drop a used let, capture the wrong lexical level while inlining,
-and drop an exported function. Each compiler is independently seed-checked and
+drop every core function, exhaust at the round limit, duplicate boxed literals,
+and omit one non-entry Wasm export while retaining its function and working main. Each compiler is independently seed-checked and
 built. A mutant is killed only by the fixed successful-call contract, checked
 core preservation, or the host export contract. A mutant that fails seed
 checking, fails to build, times out, or reports an unrelated host failure does
-not count as killed.
+not count as killed. Wrong-value, core-preservation, ABI, optimization-availability
+and resource-preservation kills have separate labels. A removed export also
+produces a separately classified HostFailure; that failure does not supply the ABI kill.
 
 ## Reproduction and limits
 
@@ -123,3 +128,35 @@ runs passed in both lanes. The failure was a compiler host-stack failure, never
 source Invalid, Unsupported, or a successful optimization. The retained
 `receipts/development-failure.json` names the observations and its provenance
 limit: the intermediate executable was replaced and its hash was not retained.
+
+## Review round 2: availability and representation
+
+The separately frozen `regressions.json` adds 11 calls across `r_4_13`,
+`r_20_13` and `arena-sharing`. The first two chains converge slowly; default and
+maximum CLI budgets must compile them and preserve the seed/evaluator/Wasm
+values. A successful optimization need not reach a fixed point: every completed
+round has passed core rechecking, so the last verified book is returned after
+eight rounds. The direct zero-round helper still has no completed result and
+retains its original Exhausted law. Depth and byte-budget failures are unchanged.
+
+Literal propagation is permitted only for enum-only datatypes. A nullary
+constructor of a fielded datatype allocates a cell; replacing its let-bound
+references with values would duplicate that allocation. Both the literal
+recognizer and reference rewrite guard the type representation. The near-arena
+fixture shares one Zero cell eight times per Row and must succeed under Fold
+and the full pipeline whenever its fixed off observation succeeds. No DCE
+assumption supplies this allocation guarantee.
+
+Each pass checks ordered export names, parameter quantities/types and result
+types against its input before verifying output bodies. Datatypes are retained
+from the input by construction. Four added checked equations cover final-round
+termination, enum propagation, boxed retention and missing-export rejection.
+The original twelve laws and 43 core controls remain unchanged. Fourteen new
+literal controls cover ordered ABI changes, body rechecking, reference
+representation and round limits in both compiler hosts.
+
+Direct receipts use the runner's normalizer before writing. The complete audit
+texts are compared in memory; normalized text hashes and byte lengths are
+retained instead of repeated successful IR dumps. Historical raw-root receipts
+were replaced by the matching normalized runner output, without altering their
+observations.

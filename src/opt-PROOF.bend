@@ -14,3 +14,7 @@ def L.used_reusable_binding_is_retained(token,typ,value): {==}
 def L.export_reconstruction_preserves_signature(signature,body,rest): {==}
 def L.empty_pipeline_is_identity(depth,book): {==}
 def L.zero_pipeline_fuel_is_exhausted(depth,book): {==}
+def L.last_verified_round_stops(same): {==}
+def L.enum_literal_is_propagated(token): {==}
+def L.boxed_literal_is_retained(token,empty,successor): {==}
+def L.dropped_export_is_rejected(depth,types,signature,body): {==}

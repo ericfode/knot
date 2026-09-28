@@ -73,9 +73,24 @@ def fuse(+depth: Nat, +level: U32, +value: C.Term, body: C.Term) -> Result<S.Err
       S.choose(Result<S.Error,Maybe<&2,C.Term>>,U32.is_eq(level,id),u => fused_value(depth,level,value,arms),u => Done{None{}})
     case _: Done{None{}}
 
-def literal(value: C.Term) -> Maybe<&2,C.Term>:
+def nullary(constructors: List<&2,C.Constructor>) -> Bool:
+  match constructors:
+    case Nil{}: True{}
+    case Con{C.Constructor{token,Nil{}},tail}: nullary(tail)
+    case _: False{}
+
+def enum_type(types: List<&2,C.Datatype>, +index: U32) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{token,data,+constructors},+tail}:
+      S.choose(Bool,U32.is_eq(index,0),u => nullary(constructors),u => enum_type(tail,U32.sub(index,1)))
+
+# A nullary value of a fielded type still allocates a cell. Only enum values
+# may replace shared references without increasing arena allocation.
+def literal(value: C.Term, +types: List<&2,C.Datatype>) -> Maybe<&2,C.Term>:
   match value:
-    case C.Value{token,typ,tag}: Some{C.Value{token,typ,tag}}
+    case C.Value{+token,+typ,+tag}:
+      S.choose(Maybe<&2,C.Term>,enum_type(types,typ),u => Some{C.Value{token,typ,tag}},u => None{})
     case _: None{}
 
 def known(env: List<&2,C.Binding>, +level: U32) -> Maybe<&2,C.Term>:

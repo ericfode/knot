@@ -318,7 +318,12 @@
         "src/opt-check.bend"
       ],
       "task": "tests/compiler-opt/SPEC.md",
-      "notes": "Checked-core scopes, types, quantities, cases and descent; no source match-frontier restriction. Full local closure exceeds the composition bound."
+      "notes": "Checked-core scopes, types, quantities, cases and descent; no source match-frontier restriction. Source-checking collaborators enter as interfaces.",
+      "selected_files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/opt-check.bend"
+      ]
     },
     {
       "name": "opt-inline",
@@ -376,7 +381,15 @@
         "src/opt-PROOF.bend"
       ],
       "task": "tests/compiler-opt/SPEC.md",
-      "notes": "Checked composition to a bounded fixed point with unchanged exports and the complete prior proof chain. Full local closure exceeds the composition bound."
+      "notes": "Bounded checked composition, its complete pass implementations, laws and proof entry; the core checker and prior proof chain enter as interfaces.",
+      "selected_files": [
+        "src/opt-term.bend",
+        "src/opt-inline.bend",
+        "src/opt-fold.bend",
+        "src/opt.bend",
+        "src/opt-LAWS.bend",
+        "src/opt-PROOF.bend"
+      ]
     },
     {
       "name": "opt-wasm",
@@ -392,7 +405,12 @@
         "src/opt-wasm.bend"
       ],
       "task": "tests/compiler-opt/SPEC.md",
-      "notes": "Optional fields-profile self return_call lowering. Full local closure exceeds the composition bound and ByteOutput remains external."
+      "notes": "Optional fields-profile self return_call lowering; the existing checker, emitter and verified ByteOutput dependency enter as interfaces.",
+      "selected_files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/opt-wasm.bend"
+      ]
     }
   ],
   "context": "interfaces-v1"

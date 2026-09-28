@@ -58,44 +58,44 @@ def keep_let(pass: Pass, depth: Nat, token: S.Token, level: U32, q: U32, typ: U3
 
 # Each traversal changes one mechanism. No pass changes types, signatures,
 # function order or export membership. All current functions are exports.
-def walk(fuel: Nat, visit: Visit, +pass: Pass, +all: List<&2,C.Function>, +available: List<&2,C.Function>, +base: U32, +env: List<&2,C.Binding>) -> Result<S.Error,C.Term>:
+def walk(fuel: Nat, visit: Visit, +pass: Pass, +types: List<&2,C.Datatype>, +all: List<&2,C.Function>, +available: List<&2,C.Function>, +base: U32, +env: List<&2,C.Binding>) -> Result<S.Error,C.Term>:
   match fuel visit:
     case 0n _: T.exhausted(C.Term)
     case 1n+ +n Expression{C.Value{token,typ,tag}}: Done{C.Value{token,typ,tag}}
     case 1n+ +n Expression{C.Reference{+token,+level,+typ}}:
-      Done{S.choose(C.Term,is_fold(pass),u => or_original(F.known(env,level),C.Reference{token,level,typ}),u => C.Reference{token,level,typ})}
+      Done{S.choose(C.Term,Bool.and(is_fold(pass),F.enum_type(types,typ)),u => or_original(F.known(env,level),C.Reference{token,level,typ}),u => C.Reference{token,level,typ})}
     case 1n+ +n Expression{C.Construct{+token,+typ,+tag,+fields,args}}:
-      S.bind(C.Term,C.Term,walk(n,Arguments{args,fields},pass,all,available,base,env),list =>
+      S.bind(C.Term,C.Term,walk(n,Arguments{args,fields},pass,types,all,available,base,env),list =>
         T.terms(list,xs => Done{C.Construct{token,typ,tag,fields,xs}}))
     case 1n+ +n Expression{C.Application{+token,+index,+typ,+args}}:
       parameters(I.function_at(all,index),params =>
-        S.bind(C.Term,C.Term,walk(n,Arguments{args,params},pass,all,available,base,env),list => T.terms(list,+xs =>
+        S.bind(C.Term,C.Term,walk(n,Arguments{args,params},pass,types,all,available,base,env),list => T.terms(list,+xs =>
           S.choose(Result<S.Error,C.Term>,is_inline(pass),u =>
             S.bind(Maybe<&2,C.Term>,C.Term,I.candidate(n,I.function_at(available,index),index,U32.from_nat(List.length(&2,C.Function,available)),base,xs),option =>
               Done{or_original(option,C.Application{token,index,typ,xs})}),u => Done{C.Application{token,index,typ,xs}}))))
     case 1n+ +n Expression{C.Let{+token,+level,+q,+typ,+value,+body}}:
-      S.bind(C.Term,C.Term,S.choose(Result<S.Error,C.Term>,U32.is_eq(q,0),u => Done{value},u => walk(n,Expression{value},pass,all,available,base,env)),+initial =>
-        +known = S.choose(Maybe<&2,C.Term>,Bool.and(is_fold(pass),U32.is_ne(q,0)),u => F.literal(initial),u => None{})
-        S.bind(C.Term,C.Term,walk(n,Expression{body},pass,all,available,base,Con{C.Binding{token,level,q,typ,False{},known},env}),+rest =>
+      S.bind(C.Term,C.Term,S.choose(Result<S.Error,C.Term>,U32.is_eq(q,0),u => Done{value},u => walk(n,Expression{value},pass,types,all,available,base,env)),+initial =>
+        +known = S.choose(Maybe<&2,C.Term>,Bool.and(is_fold(pass),U32.is_ne(q,0)),u => F.literal(initial,types),u => None{})
+        S.bind(C.Term,C.Term,walk(n,Expression{body},pass,types,all,available,base,Con{C.Binding{token,level,q,typ,False{},known},env}),+rest =>
           S.choose(Result<S.Error,C.Term>,is_fold(pass),u =>
             S.bind(Maybe<&2,C.Term>,C.Term,F.fuse(n,level,initial,rest),option =>
-              rewrite(option,C.Let{token,level,q,typ,initial,rest},term => walk(n,Expression{term},pass,all,available,base,env))),u =>
+              rewrite(option,C.Let{token,level,q,typ,initial,rest},term => walk(n,Expression{term},pass,types,all,available,base,env))),u =>
             keep_let(pass,n,token,level,q,typ,initial,rest))))
     case 1n+ +n Expression{C.Case{+token,+level,+typ,+arms}}:
-      S.bind(C.Term,C.Term,walk(n,Expression{C.Sequence{arms}},pass,all,available,base,env),list => T.terms(list,+xs =>
+      S.bind(C.Term,C.Term,walk(n,Expression{C.Sequence{arms}},pass,types,all,available,base,env),list => T.terms(list,+xs =>
         S.choose(Result<S.Error,C.Term>,is_fold(pass),u =>
           known_case(F.known(env,level),xs,C.Case{token,level,typ,xs},term => Done{term}),u => Done{C.Case{token,level,typ,xs}})))
     case 1n+ +n Expression{C.Branch{+tag,+fields,body}}:
-      S.bind(C.Term,C.Term,walk(n,Expression{body},pass,all,available,base,List.append(&2,C.Binding,fields,env)),rest => Done{C.Branch{tag,fields,rest}})
+      S.bind(C.Term,C.Term,walk(n,Expression{body},pass,types,all,available,base,List.append(&2,C.Binding,fields,env)),rest => Done{C.Branch{tag,fields,rest}})
     case 1n+ +n Expression{C.Sequence{Nil{}}}: Done{C.Sequence{Nil{}}}
     case 1n+ +n Expression{C.Sequence{Con{head,+tail}}}:
-      S.bind(C.Term,C.Term,walk(n,Expression{head},pass,all,available,base,env),first =>
-        S.bind(C.Term,C.Term,walk(n,Expression{C.Sequence{tail}},pass,all,available,base,env),list => T.terms(list,xs => Done{C.Sequence{Con{first,xs}}})))
+      S.bind(C.Term,C.Term,walk(n,Expression{head},pass,types,all,available,base,env),first =>
+        S.bind(C.Term,C.Term,walk(n,Expression{C.Sequence{tail}},pass,types,all,available,base,env),list => T.terms(list,xs => Done{C.Sequence{Con{first,xs}}})))
     case 1n+n Expression{term}: Fail{S.Unsupported{"opt","term",S.At{0,0,0,0}}}
     case 1n+ +n Arguments{Nil{},Nil{}}: Done{C.Sequence{Nil{}}}
     case 1n+ +n Arguments{Con{+head,+tail},Con{C.Parameter{token,q,typ},+rest}}:
-      S.bind(C.Term,C.Term,S.choose(Result<S.Error,C.Term>,U32.is_eq(q,0),u => Done{head},u => walk(n,Expression{head},pass,all,available,base,env)),first =>
-        S.bind(C.Term,C.Term,walk(n,Arguments{tail,rest},pass,all,available,base,env),list => T.terms(list,xs => Done{C.Sequence{Con{first,xs}}})))
+      S.bind(C.Term,C.Term,S.choose(Result<S.Error,C.Term>,U32.is_eq(q,0),u => Done{head},u => walk(n,Expression{head},pass,types,all,available,base,env)),first =>
+        S.bind(C.Term,C.Term,walk(n,Arguments{tail,rest},pass,types,all,available,base,env),list => T.terms(list,xs => Done{C.Sequence{Con{first,xs}}})))
     case 1n+ +n Arguments{args,params}: T.internal(C.Term,"argument-arity")
 
 def prepend(signature: C.Signature, body: C.Term, rest: List<&2,C.Function>) -> List<&2,C.Function>:
@@ -105,19 +105,19 @@ def arity(signature: C.Signature) -> U32:
   match signature:
     case C.Signature{token,params,typ}: U32.from_nat(List.length(&2,C.Parameter,params))
 
-def functions(remaining: List<&2,C.Function>, +previous: List<&2,C.Function>, +all: List<&2,C.Function>, +depth: Nat, +pass: Pass) -> Result<S.Error,List<&2,C.Function>>:
+def functions(remaining: List<&2,C.Function>, +previous: List<&2,C.Function>, +all: List<&2,C.Function>, +types: List<&2,C.Datatype>, +depth: Nat, +pass: Pass) -> Result<S.Error,List<&2,C.Function>>:
   match remaining:
     case Nil{}: Done{Nil{}}
     case Con{C.Function{+signature,+body},+tail}:
       S.bind(U32,List<&2,C.Function>,T.measure(depth,body,T.Ceiling{}),base =>
-        S.bind(C.Term,List<&2,C.Function>,walk(depth,Expression{body},pass,all,previous,T.maximum(base,arity(signature)),Nil{}),+term =>
-          S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,List.append(&2,C.Function,previous,[C.Function{signature,term}]),all,depth,pass),rest =>
+        S.bind(C.Term,List<&2,C.Function>,walk(depth,Expression{body},pass,types,all,previous,T.maximum(base,arity(signature)),Nil{}),+term =>
+          S.bind(List<&2,C.Function>,List<&2,C.Function>,functions(tail,List.append(&2,C.Function,previous,[C.Function{signature,term}]),all,types,depth,pass),rest =>
             Done{prepend(signature,term,rest)})))
 
 def apply(+depth: Nat, pass: Pass, book: C.Book) -> Result<S.Error,C.Book>:
   match book:
     case C.Book{+types,+items}:
-      S.bind(List<&2,C.Function>,C.Book,functions(items,Nil{},items,depth,pass),result => K.verify(depth,C.Book{types,result}))
+      S.bind(List<&2,C.Function>,C.Book,functions(items,Nil{},items,types,depth,pass),result => K.recheck(depth,types,items,result))
 
 def compose(passes: List<&2,Pass>, +depth: Nat, book: C.Book) -> Result<S.Error,C.Book>:
   match passes:
@@ -125,15 +125,20 @@ def compose(passes: List<&2,Pass>, +depth: Nat, book: C.Book) -> Result<S.Error,
     case Con{head,+tail}:
       S.bind(C.Book,C.Book,apply(depth,head,book),next => compose(tail,depth,next))
 
-# A successful pipeline is a fixed point, not an arbitrary number of rewrites.
-# A bounded failure publishes no partially optimized book.
+def stop(rounds: Nat, same: Bool) -> Bool:
+  match rounds:
+    case 0n: True{}
+    case 1n+n: same
+
+# Every completed round is checked. Stop at stability or return the last
+# verified book at the round limit; zero initial fuel still has no such book.
 def settle(rounds: Nat, +depth: Nat, +book: C.Book) -> Result<S.Error,C.Book>:
   match rounds:
     case 0n: T.exhausted(C.Book)
     case 1n+ +n:
       S.bind(C.Book,C.Book,compose([Inline{},Fold{},Dead{}],depth,book),+next =>
         S.bind(Bool,C.Book,T.stable(book,next,depth),same =>
-          S.choose(Result<S.Error,C.Book>,same,u => Done{next},u => settle(n,depth,next))))
+          S.choose(Result<S.Error,C.Book>,stop(n,same),u => Done{next},u => settle(n,depth,next))))
 
 def pipeline(+depth: Nat, book: C.Book) -> Result<S.Error,C.Book>:
   S.bind(C.Book,C.Book,K.verify(depth,book),checked => settle(8n,depth,checked))

@@ -5,15 +5,17 @@ rechecks its input and every pass output, and returns a complete checked book or
 a classified failure. `opt.apply` composes one checked-core transformation;
 `opt.compose` sequences them. Types, ordered signatures and exports are carried
 unchanged. Only bodies change. The source checker and original emitters are
-unchanged and their identities and module bytes are frozen in `baseline.json`.
+unchanged by this increment. Their source identities are audited and the original
+module bytes remain hard assertions from `baseline.json`.
 
 | Mechanism | Local checked equations | Independent integration evidence |
 | --- | --- | --- |
 | Case reduction | Matching arm, Value result, ordered field binding, empty binding | Reordered enum arms, second-field projection, all corpus calls |
 | Inlining | Zero-parameter argument binding, once-only ordered arguments, level translation | Distinct actuals, nested actual locals, nullary locals, shadowing, erased forward calls |
 | DCE | Used reusable let retained; unused reusable let removed | Fixed used-let calls, individual Dead-pass evaluation, used-let mutant |
-| Export retention | Function reconstruction retains its exact signature | Every original export and signature compared through independent Wasm decoding; export-drop mutant |
-| Composition | Empty composition identity; zero round fuel Exhausted | Each individual pass and full pipeline checked against seed/evaluator/Wasm; exact canonical fixed point |
+| Export retention | Function reconstruction retains its exact signature; deleting an input export fails rechecking | Ordered input/output signatures checked before the output catalog; independent Wasm ABI decode; one-export mutant with working main |
+| Composition | Empty composition identity; zero round fuel Exhausted; last verified round stops | Each individual pass and full pipeline checked against seed/evaluator/Wasm; original fixed points retained, slow-convergence chains still build |
+| Representation | Enum literals propagate; boxed literals are retained | Near-arena shared cells, direct reference/cache controls, boxed-duplication mutant |
 | Tail lowering | No separate universal instruction refinement law claimed | Tail fixture contains `return_call`; non-tail recursion and complete tree observers retain fixed values |
 | Core checking | Existing quantity/descent helpers reused | 43 literal malformed/valid-core controls; source rejection classifications retained |
 
@@ -50,6 +52,9 @@ A larger existing arena program exposed a Bun machine-stack failure when a
 fixed-point check compared complete rendered strings. Bounded structural term
 comparison now determines the fixed point. The gate independently compares
 canonical rendered output after one and two complete pipeline applications.
+The original baseline must still be idempotent. New slow-convergence programs
+may return a checked intermediate book at the work cap. This corrects the
+original fixed-point-as-success contract without deleting its zero-fuel law.
 
 Limits remain explicit: no universal semantic preservation proof, no arithmetic
 primitives, no private function metadata, no reclamation and no generalized
@@ -63,3 +68,10 @@ Exact source hashes, commands, tool versions, pass domains, failure records and
 mutation outcomes are retained in `receipts/optimization.json`. Benchmark source
 identities, raw samples, emitted bytes, correctness guards and confidence
 intervals are retained with the benchmark report.
+
+The round-2 [regression expectations](regressions.json) were committed before
+repair. Independent reproduction records default/max-budget optimization
+exhaustion and Fold-only arena exhaustion in [the before receipt](receipts/regressions-before.json).
+The final gate keeps host errors separate from actual wrong-value, checked-core,
+ABI, availability and allocation failures. A valid empty output book is not
+evidence of ABI preservation: the recheck now compares against the input.

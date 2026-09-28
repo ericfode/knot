@@ -1055,3 +1055,26 @@ zero semantic. An intervening loaded-host run exhausted three native-build
 budgets; it remains a failed run. A one-worker retry passed without changing
 any limit. All 33 context controls and eight semantic mutants pass, and the
 literal manifest command has zero blockers and no provider requests.
+
+## 2026-09-27 — opt-1 review round 2: allocation and availability controls
+
+Coordinator review confirmed six gaps in the first optimizer handoff: raw
+scratch receipt paths, a fixed shared-corpus domain, an all-function deletion
+mutant mislabelled through HostFailure, oversized review packets, rejection at
+a fixed round cap, and duplication of let-bound boxed constants. The
+[round-2 report](../tests/compiler-opt/REVIEW-ROUND-2.md) links independent seed
+expectations, the pre-repair failures, repaired gate counts and mutant outcomes.
+
+Prevention: retain the runner's normalized receipt tree; discover shared domains
+at run time and freeze new off hashes explicitly; decode a mutant's ABI while
+requiring its retained entry to run; carry checked intermediate output across an
+optimization round limit; and test successful near-limit allocation with shared
+boxed values, not only programs that already exhaust. Fold alone introduced the
+arena regression. Semantic values and resource availability need independent
+controls. Host failures are evidence with their own classification, never a
+surrogate semantic kill.
+
+Main's interfaces-v1 support and bounded selections make each optimizer
+composition reviewable without changing frozen observers or rubric limits.
+Offline structural readiness still supplies none of the five style ratings;
+live review remains with the coordinator.

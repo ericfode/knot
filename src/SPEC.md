@@ -239,7 +239,8 @@ compiler. The default CLIs and their bytes remain unchanged.
 small non-recursive inlining, known-constructor/constant case reduction, and
 unused reusable-let elimination. Each output is rechecked with the same core
 types, quantities, exhaustive-arm and descent judgments in `opt-check.bend`.
-Core matches may scrutinize fresh let-bound levels; source matching restrictions
+The ordered input and output signatures/exports must also agree before the
+output catalog is checked. Core matches may scrutinize fresh let-bound levels; source matching restrictions
 remain in the existing source checker. Unknown core forms are Unsupported;
 malformed transformed core is InternalFailure, never an Invalid source verdict.
 
@@ -248,19 +249,21 @@ the caller and rewritten-argument ceilings, including nullary functions. Actuals
 are bound once in declaration order, with erased actuals left unevaluated and
 unexpanded. Calls that would introduce a self-call are retained. Constructor
 fusion binds fields in declaration order only if their levels cannot capture
-argument locals and the removed parent is unused in the selected body. Value
-cases also fold through known bindings. There are no primitive operations to
+argument locals and the removed parent is unused in the selected body. Enum Value
+cases also fold through known bindings. A nullary constructor of a fielded type
+allocates a cell, so its shared references are not replaced by fresh Values. There are no primitive operations to
 fold yet. Dead-let elimination is limited to unused erased or reusable bindings;
 affine lets are retained. Every current function is exported, so function DCE
 retains the complete ordered function list and signatures.
 
-The pipeline stops at a canonical-core fixed point within eight rounds or
-reports Exhausted. Each individual pass is checked independently by the corpus
+The pipeline stops at a canonical-core fixed point or returns the last verified
+book after eight rounds. The round cap is a work bound, not a rejection or an
+unraiseable Exhausted outcome; depth and byte budgets retain their diagnostics. Each individual pass is checked independently by the corpus
 gate. The opt-in fields emitter additionally uses `return_call` for self-calls
 in result position. Calls in arguments, initializers and constructor fields keep
 ordinary `call`. Enum parameters/results and the fields arena ABI stay fixed.
 Resource exhaustion can change when work or allocation is removed; successful
-constructor observations must agree. Twelve checked local equations, direct
+constructor observations must agree. Sixteen checked local equations, direct
 malformed-core controls, mutation tests, and seed/evaluator/Wasm differentials
 qualify this bounded implementation, not a general preservation theorem.
 

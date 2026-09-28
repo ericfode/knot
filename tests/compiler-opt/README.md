@@ -1,95 +1,106 @@
 # opt-1: checked core optimization
 
-This increment adds an optional core-to-core pipeline and a separate fields
-compiler entry. It preserves the existing source checker, driver, CLIs and
-emitters. Each pass changes only function bodies, rechecks its complete output,
-and keeps the ordered type declarations, signatures and exports.
+The optional `knot-core-opt-1` pipeline changes checked function bodies and
+rechecks every pass. The default compiler, evaluator and Wasm emitter retain
+their existing contracts. Inlining binds actuals once, in order, above the
+caller and argument level ceilings. Fold reduces known cases and propagates
+only unboxed enum values. Dead removes unused erased/reusable lets. The optional
+emitter lowers tail self-calls to `return_call`.
 
-`src/opt.bend` composes Inline, Fold and Dead to a bounded fixed point. Small
-non-recursive callees move above both caller and actual-argument level ceilings;
-arguments become ordered, once-only bindings. Folding selects known constructor
-arms and binds fields conservatively. DCE removes unused erased/reusable lets.
-`src/opt-wasm.bend` emits `return_call` only for tail self-calls. The core verifier
-permits fresh let-bound match levels without relaxing source-language matching.
+Each pass compares its ordered export names, parameter quantities/types and
+result types against the input before checking the output bodies. Datatypes
+are carried unchanged. The pipeline stops at a fixed point or returns the last
+verified round after eight rounds. Depth/output exhaustion stays a distinct
+failure. The direct zero-round helper still reports Exhausted because it has
+performed no verification; its existing checked law is retained.
 
-The [contract](SPEC.md) fixes the regression domain. The [law review](LAW_REVIEW.md)
-separates twelve checked local equations from corpus-level semantic evidence.
-This is not a universal preservation proof. Every current top-level function is
-exported, so function DCE retains all functions. Primitive arithmetic awaits the
-literals increment. Unknown future IR constructors remain Unsupported.
+The [contract](SPEC.md), [law review](LAW_REVIEW.md) and
+[round-2 report](REVIEW-ROUND-2.md) separate local checked equations, differential
+execution, resource observations and review limits. Historical round-one
+receipts and benchmarks remain evidence of their original inputs. They do not
+qualify the repaired implementation.
 
-## Deterministic verification
+## Gate and corpus growth
 
-`BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 2 --keep-scratch` exited **0**:
-all 15 registered gates passed in 623.312408 measured seconds. The
-[summary](receipts/gates.json) retains exact counts, source/dependency identities
-and receipt comparisons; [stderr](receipts/gates.txt) records every gate result.
-Existing gate scripts and assertions are unchanged; the runner adds one gate and
-increments its registration-count assertion. Coverage categories overlap.
+```sh
+export BEND_NO_TELEMETRY=1
+python3 tests/compiler-opt/check.py
+npm run -s gates
+npm run -s gates:verify
+```
 
-| Gate | Exact passing coverage |
-| --- | --- |
-| frontend | 14 fixtures; 28 lane observations; 24 boundaries; 4 mutants |
-| checker | 49 fixtures; 98 lane observations; 10 budget probes; 2 catalog-bound records / 16 observations; 7 mutants |
-| structural | 16 fixtures; 64 lane observations; 4 boundary pairs; 7 mutants |
-| fields | 40 fixtures; 240 phase/lane observations; 36 budget probes; 6 host boundaries; 2 bound records / 12 observations; 9 mutants |
-| wasm | 25 programs; 90 reference calls in 2 lanes; 64 rejection controls; 44 boundaries; 7 mutants |
-| wasm-trust | 3 entries; 0 proof holes |
-| fields-trust | 4 entries; 0 proof holes |
-| structural-trust | 2 entries; 0 proof holes |
-| owned-store | 3,532 cases in 2 lanes; 15 literal witnesses; 6 mutants |
-| flat-store | Per lane: 13,621 observations, 3,534 instances, 2 installed boundary states, 7 lifecycle checks; 2 lanes; 9 mutants |
-| recursion | 19 seed fixtures; 114 check/eval/compile lane observations; 4 fuel probes; 3 mutants |
-| fields-wasm | 8 programs; 32 reference calls in 2 lanes; 50 enum byte-preservation checks; 30 boundaries; 4 mutants; 5 checked laws |
-| compiler-opt | 71 corpus programs (63 accepted, 8 rejected), plus 11 observer programs; 211 reference calls in 2 lanes; 43 core controls per lane; 12 checked laws; 14 boundaries; 4 mutants in both lanes |
-| census | 38 compiler files; 541 declarations; 40 feature classes |
-| lint:verify | 127 tests; 8 law-rule wiring controls; no provider calls |
+The optimizer gate derives its cases on every run from the enum Wasm, fielded
+Wasm and recursion manifests, its own frozen fixtures/observers/regressions,
+and the current benchmark generator. No global corpus, generator or law count
+is pinned. Every accepted case runs against the seed, both evaluator settings,
+both Wasm settings, and each individual pass in native and Bun lanes. All
+original unoptimized module hashes remain hard assertions. Source hashes are
+audited; source-only changes do not force a new byte baseline. The original
+74 programs also retain their observed fixed-point assertions. New programs
+record convergence without requiring it for successful optimization.
 
-The new gate additionally checks 148 ABIs, 148 canonical fixed points, 148 frozen
-unoptimized modules, 50 default enum modules, 444 individual-pass ABIs, 1,266
-individual-pass evaluator observations, 592 self-tail module inspections and 16
-rejection-lane records. Its [full receipt](receipts/optimization.json) includes
-all commands, source identities, observations and mutant outcomes. Every recorded
-input hash still matches the final source, and every preexisting `src/*.bend`
-identity matches the frozen baseline.
+New corpus entries run the same differentials immediately, even before their
+off bytes are frozen. `unfrozen_off_programs` in the receipt lists that gap.
+Freeze new off-path hashes explicitly:
 
-Full-pipeline evaluation records 420 successful observations and 2 parser-budget
-Exhausted observations **per setting** (off/on), across both lanes. Wasm records
-398 successful off observations plus 2 arena exhaustions, and 400 successful on
-observations. Structured outputs use the exact-tree observers. Resource
-exhaustion is not counted as a matching semantic value.
+1. Add the source and seed/literal expectations to its owning manifest, or add
+   a generated benchmark with an independent seed call. Keep prior expectations
+   and `baseline.json` unchanged. For a new structured recursion result, append
+   a seed-checked complete-tree observer plus a near-miss call to
+   `extensions.json.observers`, using the existing observer schema. The gate
+   refuses to substitute a pointer observation for the missing Wasm check.
+2. Run the gate. Inspect the differential results and the reported unfrozen keys.
+3. Produce an independently checked candidate for selected keys:
 
-Of 81 regenerated artifacts, 63 are identical, 10 volatile-only and 8 semantic.
-The eight are the new optimization receipt and seven existing receipts whose
-differences are input identities only, including stale host-script identities.
-Shared receipts remain untouched for the coordinator's integration refresh.
+   ```sh
+   python3 tests/compiler-opt/freeze.py --case compiler-wasm-example
+   ```
 
-`npm run -s gates:verify` passed all 18 wrapper tests, including six semantic
-mutants. `npm run bench:verify` passed 39 tests and the default native/Bun smoke
-run. `src/opt-PROOF.bend` printed `All terms check.` with all twelve new laws
-filled; its import chain includes the prior recursion proofs.
+   This rebuilds both off compilers/evaluators, checks seed/evaluator/host values
+   and equal native/Bun modules, and writes an ignored candidate receipt. A
+   structured case must include its new enum observer in the selection too.
+4. Review that candidate, then repeat with `--append`. Only
+   `extensions.json.baselines` is extended. Existing baseline entries cannot be
+   replaced or shadowed. The next gate run enforces the new hashes. Commit the
+   new fixtures, expectations and extension explicitly.
 
-## Fixed fixtures and mutants
+Editing an existing source may change its source identity, but changing its
+frozen off bytes still fails. Such a change needs a separate reviewed,
+seed-derived amendment; this freeze command cannot bless it. Shared recursion
+observers use the current source plus the fixed literal observer suffix when
+the original source changes, so stale copies cannot supply a passing result.
 
-Six primary fixtures fixed 24 literal/seed calls before optimizer implementation:
-known cases, lexical capture, used lets, known fields, tail recursion and non-tail
-recursion. Four review regressions add 23 independently seeded calls: nested
-actual locals, nullary callee locals, constructor-field scope, and erased forward
-calls. Eleven observer fixtures append frozen complete-tree recognizers to the
-accepted recursion programs; their 22 calls include a near miss for each tree.
-The host observes enums and never interprets pointers. Nine generated programs
-cover enum width, match width and acyclic call depth at 16, 64 and 128.
+The gate records Invalid, Unsupported, Exhausted, HostFailure and InternalFailure
+separately. A missing source preserves preexisting output. A harness timeout or
+failed mutant compiler build is not a semantic kill. Direct receipts are
+canonicalized with the gate runner's normalizer; full canonical IR is compared
+before only its hashes and byte lengths are retained. The coordinator still
+owns shared receipt refresh after merging.
 
-Four source-level type-correct compiler mutants are checked and built in both
-native and Bun: wrong case arm, deletion of a used let, captured wrong level and
-deleted export. The middle two fail the precise checked-core preservation
-diagnostic; the others violate the fixed result/export contract. Host failures,
-timeouts and failure to build do not count as semantic kills.
+## Regression and mutation obligations
 
-The [development-failure record](receipts/development-failure.json) retains the
-intermediate Bun stack failure caused by whole-book textual equality. Bounded
-structural comparison resolves it. The overwritten intermediate binary has no
-retained hash; the historical record states that provenance limit.
+`regressions.json` was frozen in a separate commit before the round-2 repairs:
+`r_4_13`, `r_20_13` and `arena-sharing` add 11 seed/off-evaluator/off-Wasm calls.
+The chains must compile and agree even when eight optimization rounds do not
+converge. The sharing fixture succeeds close to the 64 KiB arena boundary;
+optimized and Fold-only execution must also succeed. Its original failure was
+introduced by Fold alone, without requiring dead-let removal. The frozen
+`known` ABI contains both `choose` and `main`.
+
+Seven source mutants remain seed-type-correct and are built in native and Bun:
+wrong case selection, used-let deletion, captured lexical level, deletion of
+all core exports, premature round exhaustion, boxed-literal duplication and
+omission of one non-entry Wasm export. The all-export deletion is caught by the
+core recheck. The one-export mutant retains the complete functions and a working
+`main`; independent `abi()` decoding catches precisely the missing `choose` and
+records `abi-kill`. Calling the missing export separately records HostFailure,
+which is never relabelled a semantic kill. Round-limit and arena regressions are
+recorded as availability/resource-preservation kills, separate from wrong-value
+and core-preservation kills.
+
+Eight offline [corpus controls](test_corpus.py) exercise positive/rejection and
+generator growth, current-source observers, missing observer rejection,
+duplicate keys, append-only freeze selection and frozen-entry collision.
 
 ## First benchmark
 
@@ -125,60 +136,22 @@ Raw evidence: [off](receipts/bench-off.json), [on](receipts/bench-on.json), and
 [complete comparison](receipts/bench-compare.txt). The selected entries and
 source identities are recorded. Omitting `--pipeline` keeps the default compiler.
 
-## Style preflight
+## Style and limits
 
-[Offline preflight](receipts/preflight.json) ran on all 33 new Bend files with the
-fixed task supplied: 379 declarations, zero unranked or empty files, zero provider
-requests. It exited **3** with 73 structural blockers: 72 truncated unit contexts
-and unavailable composition. Truncation reasons overlap: 19 caller/byte, 12 file
-and 49 helper-limit cases. Supporting-role classification is unavailable for 75
-units. Composition needs 177,918 bytes against 48,000 and has unresolved imports
-and collaborators. All five ratings—conceptual compression, Delight, memetic
-identity, Anticipation and Payoff—and Galaxy brain remain unavailable. No style
-pass is claimed. The manifest adds five source groups with complete local import
-closures; larger groups still exceed the composition bound. The
-[first full run](receipts/gates-first.json) exposed missing import closure in
-these new groups ([test output](receipts/manifest-failure.txt)). The manifest was
-fixed, and its unchanged coverage/closure test then passed.
+[Bounded preflight packets](STYLE-REVIEW.md) keep complete optimizer mechanisms
+under the unchanged context caps. Every fixture and wrapper receives separate
+preflight. Main's interface context support resolves the old helper/caller
+truncations; no frozen observer is split or excluded from declaration review.
+Structural readiness supplies no conceptual compression, Delight, memetic,
+Anticipation or Payoff rating. The coordinator owns live review.
 
-Fresh preflight of the corrected groups also exits 3 in each group. Counts below
-include unchanged collaborators and overlap across groups; they are not added.
-Inline and Fold have complete composition packets, while their declaration
-contexts still have truncation blockers.
+There is no universal preservation theorem, primitive arithmetic, private
+function metadata, reclamation or generalized recursion. Inlining remains
+limited to 32-node callees and levels below 4,096. An eight-round result can
+need further optimization. Existing enum outputs and all successful near-arena
+observations must agree; resource failures are never language rejections.
 
-| Group | Declarations | Truncated | Composition bytes / availability |
-| --- | ---: | ---: | --- |
-| [opt-check](receipts/preflight-opt-check.json) | 167 | 30 | 64,048 / oversized |
-| [opt-inline](receipts/preflight-opt-inline.json) | 54 | 11 | 16,080 / available |
-| [opt-fold](receipts/preflight-opt-fold.json) | 63 | 11 | 18,425 / available |
-| [opt-pipeline](receipts/preflight-opt-pipeline.json) | 426 | 50 | 145,804 / oversized, external context |
-| [opt-wasm](receipts/preflight-opt-wasm.json) | 197 | 34 | 73,624 / oversized, external context |
-
-## Limits and integration
-
-The checked transformation is bounded to 32-node callees, levels below 4,096 and
-eight fixed-point rounds. Fusion refuses scope conflicts and residual parent
-uses; affine lets remain. Stack, evaluator fuel and arena exhaustion are separate
-resource observations. Eliminating work can turn exhaustion into a successful
-value. The fields arena and ABI are unchanged, including their existing limits.
-Field-allocation timing needs an explicit instance-lifetime protocol before it
-can enter the warm-call benchmark.
-
-The coordinator should run bounded live Perch review and refresh shared receipts
-after integration. The next optimization increment should target the measured
-compile/size costs with a whole-body growth budget and a frozen benchmark
-comparison. Nest, modules, literals and private exports need fresh domains and
-gates as their IR support arrives. Baseline source identities are audit evidence;
-frozen unoptimized module bytes and behavior remain hard assertions.
-
-Reproduction:
-
-```sh
-export BEND_NO_TELEMETRY=1
-npm run -s gates -- --jobs 2 --keep-scratch
-npm run -s gates:verify
-npm run bench:verify
-npm run bench -- --suite=opt --pipeline=off --out=.local/opt-off.json
-npm run bench -- --suite=opt --pipeline=on --out=.local/opt-on.json
-npm run bench:compare -- .local/opt-off.json .local/opt-on.json
-```
+The next increment can measure compile/size costs and whole-body growth under
+the existing benchmark controls, extend domains through the explicit freeze
+procedure, and obtain live Perch ratings. Shared gate receipts are refreshed by
+the coordinator after integration.

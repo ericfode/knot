@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-28T02:19:29.036911+00:00",
+  "basis": "Independent pre-repair reproduction from an immutable copied source closure captured after 8cdf4a0 and before review-round-2 implementation edits. Literal successful expectations remain in regressions.json. No failure is relabelled as a semantic kill.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_hashes": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "source_hashes": {
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/opt-check.bend": "a49a5bedce52c62a6f58c248980d41e59e9d9643feab0dfd36e75ba0e754b081",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/opt-inline.bend": "6b6c10b8fb3606fc6d918444df94772276dd2a33feadae606414985a9a1cdfca",
+    "src/opt-wasm.bend": "d2dcf7330681ceeed4cd6a15dbfd7e746c6cc6ba4146a17ccac4a386df3fb441",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/PROOF.bend": "c4b03d3046b45054c6fd00db7f77387ab2cb8f829a090eaacd4e34e6788493e1",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/opt.bend": "3a305b91b36cb094777bb748ddaa57c9197c91c804b371371d28884164aa9b51",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/opt-term.bend": "32d9fb612fd2be06d52d415aef280298bf1df58c08de041a4f95fd73f2c494a0",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/LAWS.bend": "8ae270658445385e0142c925c0a523fbfd4d042b3720d9209ec2582d3f69b4a7",
+    "src/opt-fold.bend": "ee0526927758f5222ab1328402f60bdab09145d4c2e8d26ff548caaa0172d2d5",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/opt-PROOF.bend": "8bb823565cf195adf4983edaa330eccd16d45d32f6e6fc647ce9699778e9c4a3",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/opt-LAWS.bend": "e8fa549954277de8ad45bce27f5b66b8d4b06d5e80c1465cff995df6882fcb95",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/parse.bend": "bb7dfb98040323c05c4964d4f6d37306f2d0afd0635eb7215d6d9fb264c6e05e"
+  },
+  "builds": [
+    {
+      "entry": "compile",
+      "entry_sha256": "5d5b31dfa55ad31d631e0f5eb97dcd595a2d2f94df45725ffd7dacc0f6e6c123",
+      "executable_sha256": "ac315b2c0cddbdcd64e75e7acddcbd932f382fa8406ea61f7dbef5feeb023d18",
+      "seed_check": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/opt-1/oracles/before/compile.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "classification": "success"
+      }
+    },
+    {
+      "entry": "eval",
+      "entry_sha256": "2f5eb648166a62ac7afc52c830ebf525149b46ce899e1d9644daeacf817c4a3d",
+      "executable_sha256": "123d58b9e42a6a88034d58701b6a037b9955fd4f4b211394251f11ff5884e634",
+      "seed_check": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/opt-1/oracles/before/eval.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "classification": "success"
+      }
+    },
+    {
+      "entry": "fold",
+      "entry_sha256": "c0389803e41ff4848bb0559b6098c90d6aa984388ec399c62b4afa6deab63a08",
+      "executable_sha256": "d3d00d5b6c5a29eefa23dc78867ff0cdb0c8098aa8b9fee2e0440852d2d21c47",
+      "seed_check": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/opt-1/oracles/before/fold.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "classification": "success"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "r_4_13",
+      "source_sha256": "ea2cb54274e4aa24c7ae6b53942b559659f6061338f7984cb807d82d41bd7c34",
+      "off_wasm": {
+        "argv": [
+          "node",
+          "scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          ".local/opt-1/oracles/r_4_13.off.wasm",
+          "main"
+        ],
+        "exit": 0,
+        "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":0,\"bytes\":215}",
+        "stderr": "",
+        "classification": "success"
+      },
+      "compile": {
+        "argv": [
+          ".local/opt-1/oracles/before/compile",
+          "tests/compiler-opt/regressions/r_4_13.bend",
+          ".local/opt-1/oracles/before/r_4_13.on.wasm"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      },
+      "evaluator": {
+        "argv": [
+          ".local/opt-1/oracles/before/eval",
+          "tests/compiler-opt/regressions/r_4_13.bend",
+          "main",
+          "1048576"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      },
+      "compile_maximum": {
+        "argv": [
+          ".local/opt-1/oracles/before/compile",
+          "tests/compiler-opt/regressions/r_4_13.bend",
+          ".local/opt-1/oracles/before/r_4_13.maximum.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      }
+    },
+    {
+      "name": "r_20_13",
+      "source_sha256": "d5bd25abdf7602e584614023e8fdcbe931432282f75419215bc9f8fcffb563f8",
+      "off_wasm": {
+        "argv": [
+          "node",
+          "scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          ".local/opt-1/oracles/r_20_13.off.wasm",
+          "main"
+        ],
+        "exit": 0,
+        "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":0,\"bytes\":548}",
+        "stderr": "",
+        "classification": "success"
+      },
+      "compile": {
+        "argv": [
+          ".local/opt-1/oracles/before/compile",
+          "tests/compiler-opt/regressions/r_20_13.bend",
+          ".local/opt-1/oracles/before/r_20_13.on.wasm"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      },
+      "evaluator": {
+        "argv": [
+          ".local/opt-1/oracles/before/eval",
+          "tests/compiler-opt/regressions/r_20_13.bend",
+          "main",
+          "1048576"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      },
+      "compile_maximum": {
+        "argv": [
+          ".local/opt-1/oracles/before/compile",
+          "tests/compiler-opt/regressions/r_20_13.bend",
+          ".local/opt-1/oracles/before/r_20_13.maximum.wasm",
+          "65536",
+          "4096",
+          "4096",
+          "4096",
+          "1048576"
+        ],
+        "exit": 4,
+        "stdout": "",
+        "stderr": "Exhausted\topt\tbudget\t0:0:0:0",
+        "classification": "exhausted"
+      }
+    },
+    {
+      "name": "arena-sharing",
+      "source_sha256": "fc64b65f3bce093f105734aadf7e7ca9a51a7b8b53cbc00676ba627a1d6777ba",
+      "off_wasm": {
+        "argv": [
+          "node",
+          "scripts/run-wasm.mjs",
+          "--profile=knot-fields-wasm-1",
+          ".local/opt-1/oracles/arena-sharing.off.wasm",
+          "main"
+        ],
+        "exit": 0,
+        "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":3891}",
+        "stderr": "",
+        "classification": "success"
+      },
+      "compile": {
+        "argv": [
+          ".local/opt-1/oracles/before/compile",
+          "tests/compiler-opt/regressions/arena-sharing.bend",
+          ".local/opt-1/oracles/before/arena-sharing.on.wasm"
+        ],
+        "exit": 0,
+        "stdout": "Built\t3978",
+        "stderr": "",
+        "classification": "success"
+      },
+      "evaluator": {
+        "argv": [
+          ".local/opt-1/oracles/before/eval",
+          "tests/compiler-opt/regressions/arena-sharing.bend",
+          "main",
+          "1048576"
+        ],
+        "exit": 0,
+        "stdout": "Evaluated\t1\t1\tOn{}",
+        "stderr": "",
+        "classification": "success"
+      },
+      "on_wasm": {
+        "compile": {
+          "argv": [
+            ".local/opt-1/oracles/before/compile",
+            "tests/compiler-opt/regressions/arena-sharing.bend",
+            ".local/opt-1/oracles/before/arena-sharing.on.wasm"
+          ],
+          "exit": 0,
+          "stdout": "Built\t3978",
+          "stderr": "",
+          "classification": "success"
+        },
+        "bytes": 3978,
+        "wasm_sha256": "8c248b80043b2ce596e77013f5de8e0e20af7f908cf8765034031987d40f6d4f",
+        "decoded_valid": true,
+        "host": {
+          "argv": [
+            "node",
+            "scripts/run-wasm.mjs",
+            "--profile=knot-fields-wasm-1",
+            ".local/opt-1/oracles/before/arena-sharing.on.wasm",
+            "main"
+          ],
+          "exit": 4,
+          "stdout": "",
+          "stderr": "Exhausted\twasm\tarena-overflow",
+          "classification": "exhausted"
+        }
+      },
+      "fold_only": {
+        "compile": {
+          "argv": [
+            ".local/opt-1/oracles/before/fold",
+            "tests/compiler-opt/regressions/arena-sharing.bend",
+            ".local/opt-1/oracles/before/arena-sharing.fold.wasm"
+          ],
+          "exit": 0,
+          "stdout": "Built\t3995",
+          "stderr": "",
+          "classification": "success"
+        },
+        "bytes": 3995,
+        "wasm_sha256": "da80e15c6a4ce927313ec0f31fda8e02bb993db0756a5fbfc60f5cfcb00f1b48",
+        "decoded_valid": true,
+        "host": {
+          "argv": [
+            "node",
+            "scripts/run-wasm.mjs",
+            "--profile=knot-fields-wasm-1",
+            ".local/opt-1/oracles/before/arena-sharing.fold.wasm",
+            "main"
+          ],
+          "exit": 4,
+          "stdout": "",
+          "stderr": "Exhausted\twasm\tarena-overflow",
+          "classification": "exhausted"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+
+> census:approve
+> node tools/census/approve.mjs
+
+new src/opt-check.bend::signature_equal:definition: calls,constructors,fields,matches,matches.multi,patterns.variable,quantities.affine,types.base
+new src/opt-check.bend::exports_equal:definition: calls,constructors,fields,generics,matches,matches.multi,patterns.nested,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,recursion,types.base
+new src/opt-check.bend::recheck:definition: calls,captures,constructors,fields,generics,lambdas,literals.string,quantities.affine,quantities.arguments,quantities.reusable,types.base
+new src/opt-fold.bend::nullary:definition: calls,constructors,fields,generics,matches,patterns.nested,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,recursion,types.base
+new src/opt-fold.bend::enum_type:definition: calls,captures,constructors,fields,generics,lambdas,literals.u32,matches,patterns.nested,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,recursion,types.base
+widen src/opt-fold.bend::literal:definition: +calls,captures,lambdas,quantities.reusable
+new src/opt-LAWS.bend::last_verified_round_stops:law: calls,constructors,dependent,equality,laws,literals.nat,quantities.affine,types.base
+new src/opt-LAWS.bend::enum_literal_is_propagated:law: calls,constructors,dependent,equality,fields,generics,laws,literals.list,literals.u32,quantities.arguments,quantities.reusable,types.base
+new src/opt-LAWS.bend::boxed_literal_is_retained:law: calls,constructors,dependent,equality,fields,generics,laws,literals.list,literals.u32,quantities.arguments,quantities.reusable,types.base
+new src/opt-LAWS.bend::dropped_export_is_rejected:law: calls,constructors,dependent,equality,fields,generics,laws,literals.list,literals.string,quantities.affine,quantities.arguments,types.base
+import src/opt-LAWS.bend: ./opt-check.bend -> src/opt-check.bend
+new src/opt-PROOF.bend::L.last_verified_round_stops:law_fill: calls,constructors,dependent,equality,literals.nat,proofs,quantities.affine,types.base
+new src/opt-PROOF.bend::L.enum_literal_is_propagated:law_fill: calls,constructors,dependent,equality,fields,generics,literals.u32,proofs,quantities.arguments,quantities.reusable,types.base
+new src/opt-PROOF.bend::L.boxed_literal_is_retained:law_fill: calls,constructors,dependent,equality,fields,generics,literals.u32,proofs,quantities.arguments,quantities.reusable,types.base
+new src/opt-PROOF.bend::L.dropped_export_is_rejected:law_fill: calls,constructors,dependent,equality,fields,generics,literals.string,proofs,quantities.affine,quantities.arguments,types.base
+new src/opt.bend::stop:definition: constructors,fields,literals.nat,matches,patterns.variable,quantities.affine,types.base
+
+> census:approve
+> node tools/census/approve.mjs
+
+widen src/opt-LAWS.bend::boxed_literal_is_retained:law: +quantities.affine
+widen src/opt-PROOF.bend::L.boxed_literal_is_retained:law_fill: +quantities.affine

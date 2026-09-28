@@ -4,6 +4,7 @@ import ./core.bend as C
 import ./opt-term.bend as T
 import ./opt-fold.bend as F
 import ./opt-inline.bend as I
+import ./opt-check.bend as K
 import ./opt.bend as O
 
 # These are local rewrite and composition equations. Corpus differentials
@@ -88,3 +89,27 @@ law zero_pipeline_fuel_is_exhausted:
   for depth: Nat
   for book: C.Book
   {O.settle(0n,depth,book) == Fail{S.Exhausted{"opt",S.At{0,0,0,0}}} : Result<S.Error,C.Book>}
+
+law last_verified_round_stops:
+  for same: Bool
+  {O.stop(0n,same) == True{} : Bool}
+
+law enum_literal_is_propagated:
+  for +token: S.Token
+  {F.literal(C.Value{token,0,0},[C.Datatype{token,True{},[C.Constructor{token,Nil{}}]}]) ==
+    Some{C.Value{token,0,0}} : Maybe<&2,C.Term>}
+
+law boxed_literal_is_retained:
+  for +token: S.Token
+  for empty: S.Token
+  for successor: S.Token
+  {F.literal(C.Value{token,0,0},[C.Datatype{token,True{},[
+    C.Constructor{empty,Nil{}},C.Constructor{successor,[C.Parameter{token,1,0}]}]}]) == None{} : Maybe<&2,C.Term>}
+
+law dropped_export_is_rejected:
+  for depth: Nat
+  for types: List<&2,C.Datatype>
+  for signature: C.Signature
+  for body: C.Term
+  {K.recheck(depth,types,[C.Function{signature,body}],Nil{}) ==
+    Fail{S.Internal{"opt-core","exports-changed"}} : Result<S.Error,C.Book>}

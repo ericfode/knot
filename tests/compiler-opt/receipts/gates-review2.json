@@ -1,0 +1,397 @@
+{
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 1 --timeout 1800",
+  "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+  "frozen_files_unchanged": {
+    "tests/compiler-opt/baseline.json": "3ce9a17fd42a7c1c2aaef23ffb0dd80717f8c69b303fdbf1c5af2ae83f2ea99c",
+    "tests/compiler-opt/core-controls.bend": "227750109b830ca4a82af57220116fe3751b3e278ed9448c4fa924b9a4097758",
+    "tests/compiler-opt/expectations.json": "7df4ccd93ce2ce45ae308d4877840da58cd54a1e761ed03f0458f6c5fe00a9d4",
+    "tests/compiler-opt/fixtures/capture.bend": "5427385032d555e8fe6eb13cd0149ac7dd49ee900cb1fa42db23abf9c6ac0346",
+    "tests/compiler-opt/fixtures/hostile-erased-forward.bend": "c9a1dbb4a87074cbb9da5f3ac39c6fa04b64b72821da68dc5bf07ba1a383bfbb",
+    "tests/compiler-opt/fixtures/hostile-fusion.bend": "0f80d18c7bc710d90ac44c6d842c8c992c84171f6f610a182b845f7f036454d3",
+    "tests/compiler-opt/fixtures/hostile-multi-arg.bend": "a59d1a2841ffa6405a625cc7b3ba40c3dd575c6ed9932b16c723a60acccd1e74",
+    "tests/compiler-opt/fixtures/hostile-nullary.bend": "2b8c63b107e123b4a7469e5e70c4b47abe1ea24a13f67ab6426f75401c121c67",
+    "tests/compiler-opt/fixtures/known-fields.bend": "0c70e998d7e51cd5c207c971f835ebb43fbf5100e7b92d845c2be3cc5dfd0e46",
+    "tests/compiler-opt/fixtures/known.bend": "42753e3f25821ceba3e834fde1a731e3c50367e9181ce95335b6841e583506c6",
+    "tests/compiler-opt/fixtures/non-tail.bend": "230030a87ecde608a85e02e992c6373386c628ab551598f2823f77e7ea013652",
+    "tests/compiler-opt/fixtures/observers/add.bend": "acb8514f7ef96481671f564cf38369a69d8edb1e9ac35b6c773f73a8f0d111ad",
+    "tests/compiler-opt/fixtures/observers/after-let.bend": "206ad8c7808bc291fd31983cdecd92f76264f488e82663b380926d9928bce882",
+    "tests/compiler-opt/fixtures/observers/deep-input.bend": "0d41ed10e6f91692967dfe744c179126822a4d59860340eeb8dfaeec08349f93",
+    "tests/compiler-opt/fixtures/observers/deep.bend": "e723b69aac64e90b16bc52c9e2fb88fb1df19f3667577235f044e9f40a967e80",
+    "tests/compiler-opt/fixtures/observers/direct.bend": "236c4484ee58a1582613118b8de79212eee4aab727b2123203c185423b495aa4",
+    "tests/compiler-opt/fixtures/observers/even.bend": "bca3d0cbfceb513e7f2d6b481f816258c46b54bb920c11d0aef7f0abe43dc440",
+    "tests/compiler-opt/fixtures/observers/first-parameter.bend": "2592306d78068b8f8d5515d028616cad570fbe0a6b3f3f74b7c66733da8ac2bb",
+    "tests/compiler-opt/fixtures/observers/length.bend": "7b8b89393e29c6b25233538fba1801c587b229df4137ab55b9fcb2c63b0b294c",
+    "tests/compiler-opt/fixtures/observers/mirror.bend": "c9a80706b20bb0274a20e9c5431c2995e21cfafab6d80a8b9d1c4b41715a738a",
+    "tests/compiler-opt/fixtures/observers/ordered-calls.bend": "b927ce764cc42b1d4ebeaaaa822a324d3691ee3d7174a8d2814de8de31f50a0b",
+    "tests/compiler-opt/fixtures/observers/shadow-field.bend": "ba6287b9963524bd24e2586dc8d84a5ba8f4a4d1d206c8aead13157929cf4197",
+    "tests/compiler-opt/fixtures/tail.bend": "f8dd23886cecf5fc11556ec3b8d3401cde9c2008695c0f4dabd7fd2981f32186",
+    "tests/compiler-opt/fixtures/used-let.bend": "a7afc34ea61320c71fe2dbd5bc4b7eb9c132be72e519820bf356a0c108ecbff2",
+    "tests/compiler-opt/regressions.json": "5979c6bf9ab51e06118d571adf03af2bad6323b47d4ee5d9bc5c43799f68be74"
+  },
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-opt/check.py"
+      ],
+      "counts": {
+        "abi_checks": 154,
+        "accepted_programs": 66,
+        "boundaries": 18,
+        "core_idempotence_checks": 148,
+        "core_round_observations": 154,
+        "core_verifier_controls_per_lane": 43,
+        "corpus_growth_controls": 8,
+        "default_enum_byte_checks": 50,
+        "direct_pointer_host_calls": 0,
+        "execution_lanes": 2,
+        "generated_programs": 9,
+        "new_fixture_reference_calls": 58,
+        "new_fixtures": 13,
+        "new_laws": 16,
+        "observer_programs": 11,
+        "observer_reference_calls": 22,
+        "reference_calls": 222,
+        "rejected_programs": 8,
+        "rejection_lane_observations": 16,
+        "review_controls_per_lane": 14,
+        "self_tail_module_checks": 616,
+        "semantic_mutants": 7,
+        "single_pass_abi_checks": 462,
+        "single_pass_evaluator_checks": 1332,
+        "source_programs": 74,
+        "structured_result_observers": 22,
+        "unfrozen_off_programs": 0,
+        "unoptimized_byte_checks": 154
+      },
+      "exit_code": 0,
+      "name": "compiler-opt",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 41,
+        "declarations": 567,
+        "files": 38
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/perch-context/check.py"
+      ],
+      "counts": {
+        "fixtures": 33,
+        "mutants": 8
+      },
+      "exit_code": 0,
+      "name": "perch-context",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 168
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-bootstrap/check.py"
+      ],
+      "counts": {
+        "corpus": 660,
+        "mutants": 9,
+        "reached": 2,
+        "stages": 8
+      },
+      "exit_code": 0,
+      "name": "bootstrap",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-classification/check.py"
+      ],
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "classification",
+      "status": "passed"
+    }
+  ],
+  "gates_verify": {
+    "command": "BEND_NO_TELEMETRY=1 npm run -s gates:verify",
+    "exit": 0,
+    "scope": "Earlier verification in this increment; scripts/gates unchanged since 2ac3fcc.",
+    "semantic_mutants": 6,
+    "stderr_sha256": "fcf3ab900cdc683f807607b830fd88d01eafe034a96bacc03c80bae2cc079575",
+    "tests": 18
+  },
+  "historical_failure": "tests/compiler-opt/receipts/gates-review2-first.json",
+  "optimizer_receipt": {
+    "absolute_host_paths": 0,
+    "bytes": 5937017,
+    "changed_fields_after_renormalization": 0,
+    "copied_from": ".local/gates/run-7revfqzs/normalized/tests/compiler-opt/receipts/optimization.json",
+    "current_input_hashes_verified": 142,
+    "path": "tests/compiler-opt/receipts/optimization.json",
+    "runner_normalized_copy_equal": true,
+    "sha256": "fa97cadd5f35295f48999386aaef52c4df6be766cbc10d6dbd1d3651ce113bef",
+    "unrelated_future_root_normalization_equal": true
+  },
+  "receipt_counts": {
+    "identical": 63,
+    "semantic": 12,
+    "volatile-only": 10
+  },
+  "run": {
+    "directory": ".local/gates/run-7revfqzs",
+    "gate_seconds": {
+      "bootstrap": 21.282522,
+      "census": 3.273876,
+      "checker": 26.436478,
+      "classification": 2.398036,
+      "compiler-opt": 427.320674,
+      "fields": 52.111389,
+      "fields-trust": 0.489491,
+      "fields-wasm": 86.984229,
+      "flat-store": 17.304768,
+      "frontend": 56.263501,
+      "lint:verify": 5.66225,
+      "owned-store": 9.545298,
+      "perch-context": 11.974411,
+      "recursion": 33.841457,
+      "structural": 41.434941,
+      "structural-trust": 0.283699,
+      "wasm": 57.139118,
+      "wasm-trust": 0.450096
+    },
+    "jobs": 1,
+    "timeout_seconds": 1800.0,
+    "total_seconds": 874.705277
+  },
+  "schema_version": 1,
+  "shared_receipts": "Unchanged in the working tree; coordinator refreshes after integration.",
+  "snapshot_sha256": "4e6818e5f031f2d8cfa17427a2741d1894266833f11c7e0ec8418a632c16aecc",
+  "status": "passed",
+  "style_receipt_inputs": {
+    "preflight-combined-review2.json": {
+      "all_identities": 87,
+      "current_local_identities": 75,
+      "sha256": "0ebe240dda835f41b135af3977ba890d66b3cb221d54e0b7d40f15eeca84fdd9"
+    },
+    "preflight-review2.json": {
+      "all_identities": 87,
+      "current_local_identities": 75,
+      "sha256": "cd010de048ffec8811292944a65313a2cbe3def2232a390da7d9cf077bf572e1"
+    }
+  }
+}
