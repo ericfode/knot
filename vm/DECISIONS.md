@@ -86,7 +86,16 @@ changing their direction. This executor does not edit the campaign decision tabl
 4. **No Char constructor pattern.** Knot reports `Unsupported check
    char-constructor-pattern` for `case Chr{x}`, so tag dispatch on Char (§3) has no
    golden yet.
-5. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
+5. **The main-line parser classifies six closure goldens Invalid.** The tree's
+   own `src/parse-cli.bend` (before closures merges) reports
+   `Invalid parse expected-=` for the arrow-typed lets in `closure-capture-off`,
+   `closure-capture-on`, `closure-captures` and `closure-shadow`, and
+   `Invalid parse function-result` for the arrow results of `closure-nested` and
+   `closure-return`. The seed runs all six, and the closures head parses them.
+   The bootstrap gate enforces D4 only on `src/`, so it passes, but its corpus now
+   records these outcomes. Merge-wave's closures merge should turn them into
+   parses or Unsupported.
+6. **Frozen evaluator snapshots.** Pinning the two heads separately makes this
    gate reproducible before merge-wave, but it does not qualify their combination.
    After merge-wave, the goldens' plans should be re-derived from the merged
    checker's display, which is the same check this gate runs today.
