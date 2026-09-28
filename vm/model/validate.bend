@@ -399,10 +399,10 @@ def larger(+a: U32, +b: U32) -> U32:
 
 # Runs obligations in order; the first refused one is the reason. Returns the
 # deepest scope reached, excluding nested closure bodies (SPEC §3).
-def checks(fuel: Nat, tasks: List<&2,Task>, +cx: Context, +deepest: U32) -> Result<String,U32>:
+def checks(fuel: Nat, tasks: List<&2,Task>, +cx: Context, +deepest: U32) -> Result<W.Stop,U32>:
   match fuel tasks:
     case _ Nil{}: Done{deepest}
-    case 0n _: Fail{"validation depth"}
+    case 0n _: Fail{W.Refused{"image","validation depth"}}
     case 1n+ +f Con{Check{node,+scope,+site},rest}:
       W.then(U32,U32,checks(f,expand(cx,node,scope,W.count(U32,scope),site),cx,W.count(U32,scope)),+d =>
         checks(f,rest,cx,larger(deepest,d)))
@@ -431,13 +431,13 @@ def same_shape(+reps: List<&2,U32>, constructors: List<&2,W.Constructor>, specs:
     case Con{W.Constructor{name,fields},cs} Con{s,ss}: Bool.and(same_fields(reps,fields,s),same_shape(reps,cs,ss))
     case _ _: False{}
 
-def representations(n: Nat, +types: List<&2,W.Sort>, +reps: List<&2,U32>, +r: U32) -> Result<String,Unit>:
+def representations(n: Nat, +types: List<&2,W.Sort>, +reps: List<&2,U32>, +r: U32) -> Result<W.Stop,Unit>:
   match n:
     case 0n: Done{Unit{}}
     case 1n+ +m:
       +t = W.nth(reps,r)
-      W.choose(Result<String,Unit>,W.is_none(t),u => representations(m,types,reps,U32.add(r,1)),u =>
-      W.choose(Result<String,Unit>,W.or(U32.is_eq(r,1),U32.is_eq(r,11)),
+      W.choose(Result<W.Stop,Unit>,W.is_none(t),u => representations(m,types,reps,U32.add(r,1)),u =>
+      W.choose(Result<W.Stop,Unit>,W.or(U32.is_eq(r,1),U32.is_eq(r,11)),
         u => W.unless(Unit,Bool.not(U32.is_eq(kind(types,t),3)),String.concat(["representation: ",rep_name(r)," must be opaque"]),u =>
                representations(m,types,reps,U32.add(r,1))),
         u => W.unless(Unit,W.or(Bool.not(U32.is_eq(kind(types,t),0)),Bool.not(same_shape(reps,constructors_of(types,t),pinned(r)))),
@@ -507,11 +507,11 @@ def main_returns(+types: List<&2,W.Sort>, +reps: List<&2,U32>, found: Maybe<&2,W
     case None{}: True{}
 
 # A Program's main takes no live argument and returns IO(Unit) (SPEC §8).
-def program_valid(+entry: U32, +cx: Context) -> Result<String,Unit>:
+def program_valid(+entry: U32, +cx: Context) -> Result<W.Stop,Unit>:
   match cx:
     case Context{+types,+functions,+reps}:
       +absent = missing(reps,[6,3,10])
-      W.choose(Result<String,Unit>,Bool.not(U32.is_eq(entry,1)),u => Done{Unit{}},u =>
+      W.choose(Result<W.Stop,Unit>,Bool.not(U32.is_eq(entry,1)),u => Done{Unit{}},u =>
       W.unless(Unit,Bool.not(main_ready(named_main(functions))),"program: main must exist with no live parameters",u =>
       W.unless(Unit,Bool.not(U32.is_eq(W.count(String,absent),0)),String.concat(["program: missing representation [",quoted(absent),"]"]),u =>
       W.unless(Unit,Bool.not(main_returns(types,reps,named_main(functions))),"program: main must return IO(Unit)",u => Done{Unit{}}))))
@@ -520,23 +520,22 @@ def types_in(cx: Context) -> List<&2,W.Sort>:
   match cx:
     case Context{types,functions,reps}: types
 
-def function_valid(+cx: Context, f: W.Function) -> Result<String,Unit>:
+def function_valid(+cx: Context, f: W.Function) -> Result<W.Stop,Unit>:
   match f:
     case W.Function{name,+parameters,+result,+slots,+body}:
       +site = text_of(name)
-      W.unless(Unit,W.or(U32.is_gt(W.count(U32,parameters),4096),U32.is_gt(slots,65536)),at_where(site,"limits"),u =>
       W.then(U32,Unit,checks(U32.to_nat(W.none()),[Check{body,parameters,site}],cx,W.count(U32,parameters)),+d =>
       W.unless(Unit,Bool.not(U32.is_eq(d,slots)),at_where(site,String.concat(["slots ",U32.show(slots),", reached ",U32.show(d)])),u =>
-      W.unless(Unit,Bool.not(fit(types_in(cx),result,type_of(body))),at_where(site,"body type"),u => Done{Unit{}}))))
+      W.unless(Unit,Bool.not(fit(types_in(cx),result,type_of(body))),at_where(site,"body type"),u => Done{Unit{}})))
 
-def functions_valid(functions: List<&2,W.Function>, +cx: Context) -> Result<String,Unit>:
+def functions_valid(functions: List<&2,W.Function>, +cx: Context) -> Result<W.Stop,Unit>:
   match functions:
     case Nil{}: Done{Unit{}}
     case Con{f,rest}: W.then(Unit,Unit,function_valid(cx,f),u => functions_valid(rest,cx))
 
 # SPEC §4 rules 4 and 5 on a decoded plan: representations, names, arrows,
 # the Program entry, then every function, reachable or not.
-def validate(plan: W.Plan) -> Result<String,Unit>:
+def validate(plan: W.Plan) -> Result<W.Stop,Unit>:
   match plan:
     case W.Plan{+entry,+types,+functions,+reps}:
       +cx : Context = Context{types,functions,reps}

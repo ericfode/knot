@@ -508,7 +508,7 @@ def booted_sections(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) 
 def boot(+words: List<&2,U32>) -> Result<W.Stop,Booted>:
   +image = W.stored(words,W.empty(),0)
   +total = W.count(U32,words)
-  H.bind(List<&2,List<&2,U32>>,Booted,E.refused(List<&2,List<&2,U32>>,D.sections(List<&2,List<&2,U32>>,6n,image,total,0,32,Nil{},lists => Done{lists})),lists =>
+  H.bind(List<&2,List<&2,U32>>,Booted,D.sections(List<&2,List<&2,U32>>,6n,image,total,0,32,Nil{},lists => Done{lists}),lists =>
     booted_sections(lists,image,total))
 
 # ---------------------------------------------------------------- Books and Programs

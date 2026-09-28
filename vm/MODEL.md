@@ -46,11 +46,15 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 29 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 32 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
   runs soundly;
+- §4's resource limits on `value-on`'s function record: a `slots` of 65,537 is
+  `Exhausted` kind 2 `slots`, one of 65,536 is within the limit (and refused by
+  the validator's exactness), and an arity of 4,097 that the record cannot hold
+  is the malformed `function record`, not the arity limit;
 - symbolic machine equations over arbitrary states: an entry at fuel 0 is
   Exhausted, a finished machine is final, tail position, the Nat bounds, `x/0`,
   `x%0` and shifts by 32 or more;
@@ -71,6 +75,15 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 
 ## Known limits and deltas
 
+- The loader's refusals are typed (`W.then`, `W.unless`, `W.limit` over
+  `W.Stop`): a malformed or invalid image is `HostFailure image` with §4's
+  reason, and a count past a resource limit of §4 is `Exhausted` kind 2 with the
+  limit as its cause: the image size (16 MiB), records per table (1,048,576),
+  arity (4,096) and a function's or a Closure's `slots` (65,536), each
+  inclusive and checked when its count is read, after the count's own
+  structure and before what it governs, in `serializer.decode`'s order. The
+  validator no longer checks limits. vm-spec's ten limit controls run in the
+  gate; the 8 and 16 MiB ones take seconds and up to 0.8 GB each natively.
 - Effects: only `IO.print` is modelled. Applying any other foreign Action is
   `Unsupported vm foreign N`; vm-io adds the pure World.
 - Inspection happens at §6's points only, over §9's extents: every prim
@@ -106,8 +119,8 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
   model's differential covers the 93 goldens, their 44 frozen Book invocations,
-  vm-spec's admitted plan, code-list and run controls (counted from
-  `check-spec.py`: 6, 7 and 41 at vm-spec 5517f26, each run control at the fuel
+  vm-spec's admitted plan, limit, code-list and run controls (counted from
+  `check-spec.py`: 6, 1, 7 and 41 at vm-spec ec96ae8, each run control at the fuel
   frozen with it), its 13 argument controls, the model's own eight controls in
   [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
   Big, and key-mode Cases on U32 and Char at the key 0xffffffff), two display

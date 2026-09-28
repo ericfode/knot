@@ -9,6 +9,9 @@ def L.magic_refused(): {==}
 def L.opcode_refused(): {==}
 def L.tag_refused(): {==}
 def L.layout_refused(): {==}
+def L.slots_past_limit(): {==}
+def L.slots_at_limit(): {==}
+def L.arity_beyond_record(): {==}
 def L.mutations_sound(): {==}
 def L.entry_needs_fuel(code,f,ops,stack,heap,calls,quantum,out): {==}
 def L.finished_is_final(code,outcome,stack,heap,meter,out): {==}

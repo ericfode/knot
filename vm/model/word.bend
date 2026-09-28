@@ -25,13 +25,19 @@ def or(a: Bool, b: Bool) -> Bool:
 def xor(a: Bool, +b: Bool) -> Bool:
   choose(Bool,a,u => Bool.not(b),u => b)
 
-def then(-A: Data, -B: Data, result: Result<String,A>, next: A -> Result<String,B>) -> Result<String,B>:
+# The loader's refusals: a malformed or invalid image is `HostFailure image`
+# with SPEC §4's reason, and a count past one of §4's resource limits,
+# inclusive, is `Exhausted` kind 2 with the limit as its cause.
+def then(-A: Data, -B: Data, result: Result<Stop,A>, next: A -> Result<Stop,B>) -> Result<Stop,B>:
   match result:
-    case Fail{reason}: Fail{reason}
+    case Fail{stop}: Fail{stop}
     case Done{value}: next(value)
 
-def unless(-A: Data, bad: Bool, reason: String, next: Unit -> Result<String,A>) -> Result<String,A>:
-  choose(Result<String,A>,bad,u => Fail{reason},next)
+def unless(-A: Data, bad: Bool, reason: String, next: Unit -> Result<Stop,A>) -> Result<Stop,A>:
+  choose(Result<Stop,A>,bad,u => Fail{Refused{"image",reason}},next)
+
+def limit(-A: Data, +count: U32, +bound: U32, cause: String, next: Unit -> Result<Stop,A>) -> Result<Stop,A>:
+  choose(Result<Stop,A>,U32.is_gt(count,bound),u => Fail{Exhausted{2,cause}},next)
 
 def is_none(+w: U32) -> Bool:
   U32.is_eq(w,none())

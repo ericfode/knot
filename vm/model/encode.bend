@@ -249,32 +249,25 @@ def encode(plan: W.Plan) -> List<&2,U32>:
 
 # ---------------------------------------------------------------- loading
 
-
-def image_limit() -> U32:
-  16777216
-
-def refused(-A: Data, result: Result<String,A>) -> Result<W.Stop,A>:
+# A validator problem reads `validator: <problem>`, as serializer.rejected spells it.
+def validated(result: Result<W.Stop,Unit>) -> Result<W.Stop,Unit>:
   match result:
-    case Fail{reason}: Fail{W.Refused{"image",reason}}
-    case Done{value}: Done{value}
-
-def validated(result: Result<String,Unit>) -> Result<String,Unit>:
-  match result:
-    case Fail{problem}: Fail{String.append("validator: ",problem)}
+    case Fail{W.Refused{phase,problem}}: Fail{W.Refused{phase,String.append("validator: ",problem)}}
+    case Fail{stop}: Fail{stop}
     case Done{u}: Done{u}
 
-def admitted(+words: List<&2,U32>, +plan: W.Plan) -> Result<String,W.Plan>:
+def admitted(+words: List<&2,U32>, +plan: W.Plan) -> Result<W.Stop,W.Plan>:
   W.then(Unit,W.Plan,validated(V.validate(plan)),u =>
     W.unless(W.Plan,Bool.not(W.same(encode(plan),words)),"noncanonical",u => Done{plan}))
 
 # Words the loader admits: decoded, validated and canonical.
 def admit(+words: List<&2,U32>) -> Result<W.Stop,W.Plan>:
-  refused(W.Plan,W.then(W.Plan,W.Plan,D.decode(words),+plan => admitted(words,plan)))
+  W.then(W.Plan,W.Plan,D.decode(words),+plan => admitted(words,plan))
 
 # SPEC §4: size first, then the bytes, the plan's rules and canonicality. The
 # loader never runs a body.
 def load(+bytes: List<&2,U32>) -> Result<W.Stop,W.Plan>:
   +size = W.count(U32,bytes)
-  W.choose(Result<W.Stop,W.Plan>,U32.is_gt(size,image_limit()),u => Fail{W.Exhausted{2,"image-size"}},u =>
-  W.choose(Result<W.Stop,W.Plan>,W.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),u => Fail{W.Refused{"image","length"}},u =>
+  W.limit(W.Plan,size,16777216,"image-size",u =>
+  W.unless(W.Plan,W.or(Bool.not(U32.is_eq(U32.mod(size,4),0)),U32.is_lt(size,128)),"length",u =>
     admit(W.pack(bytes))))

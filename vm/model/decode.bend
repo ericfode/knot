@@ -20,7 +20,7 @@ def opcode_name(+op: U32) -> String:
   nth_text(["lit","prim","default","value","con","ref","call","let","case","branch","closure","invoke","foreign"],op)
 
 # Record offsets of one section, in order, and the offset after its last record.
-def records(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +at: U32, found: List<&2,U32>, next: List<&2,U32> -> U32 -> Result<String,B>) -> Result<String,B>:
+def records(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +at: U32, found: List<&2,U32>, next: List<&2,U32> -> U32 -> Result<W.Stop,B>) -> Result<W.Stop,B>:
   match n:
     case 0n: next(List.reverse(&2,U32,found),at)
     case 1n+m:
@@ -29,15 +29,19 @@ def records(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +at: 
         String.concat(["section ",U32.show(section)," record length"]),u =>
         records(B,m,image,total,section,U32.add(at,size),Con{at,found},next))
 
-def sections(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +cursor: U32, found: List<&2,List<&2,U32>>, next: List<&2,List<&2,U32>> -> Result<String,B>) -> Result<String,B>:
+# Six sections, each at its header offset. A count the words after it cannot
+# hold, at two words per record, is malformed; one they hold is then bounded
+# by SPEC §4's record limit.
+def sections(-B: Data, n: Nat, +image: W.Store, +total: U32, +section: U32, +cursor: U32, found: List<&2,List<&2,U32>>, next: List<&2,List<&2,U32>> -> Result<W.Stop,B>) -> Result<W.Stop,B>:
   match n:
     case 0n: W.unless(B,Bool.not(U32.is_eq(cursor,total)),"trailing words",u => next(List.reverse(&2,List<&2,U32>,found)))
     case 1n+m:
       +count = W.read(image,cursor)
       W.unless(B,Bool.not(U32.is_eq(W.read(image,U32.add(5,section)),cursor)),String.concat(["section ",U32.show(section)," offset"]),u =>
-      W.unless(B,U32.is_gt(count,1048576),"record count",u =>
+      W.unless(B,U32.is_gt(count,U32.div(U32.sub(total,U32.add(cursor,1)),2)),"record count",u =>
+      W.limit(B,count,1048576,"records",u =>
       records(B,U32.to_nat(count),image,total,section,U32.add(cursor,1),Nil{},list => end =>
-        sections(B,m,image,total,U32.add(section,1),end,Con{list,found},next))))
+        sections(B,m,image,total,U32.add(section,1),end,Con{list,found},next)))))
 
 
 def ceil4(+size: U32) -> U32:
@@ -46,18 +50,18 @@ def ceil4(+size: U32) -> U32:
 def valid_utf8(bytes: List<&2,U32>) -> Bool:
   Maybe.is_some(&2,List<&2,U32>,W.scalars(bytes))
 
-def spelled(+bytes: List<&2,U32>, +size: Nat) -> Result<String,List<&2,U32>>:
+def spelled(+bytes: List<&2,U32>, +size: Nat) -> Result<W.Stop,List<&2,U32>>:
   +text = List.take(&2,U32,bytes,size)
   W.unless(List<&2,U32>,W.or(Bool.not(W.zero_all(List.drop(&2,U32,bytes,size))),W.member(text,0)),"name padding",u =>
   W.unless(List<&2,U32>,Bool.not(valid_utf8(text)),"name utf-8",u => Done{text}))
 
-def named(+image: W.Store, +at: U32) -> Result<String,List<&2,U32>>:
+def named(+image: W.Store, +at: U32) -> Result<W.Stop,List<&2,U32>>:
   +size = W.read(image,U32.add(at,1))
   +length = U32.sub(W.read(image,at),1)
   W.unless(List<&2,U32>,W.or(U32.is_eq(size,0),Bool.not(U32.is_eq(length,U32.add(1,ceil4(size))))),"name length",u =>
     spelled(W.unpack(W.slice(U32.to_nat(U32.sub(length,1)),image,U32.add(at,2))),U32.to_nat(size)))
 
-def names(at: List<&2,U32>, +image: W.Store) -> Result<String,List<&2,List<&2,U32>>>:
+def names(at: List<&2,U32>, +image: W.Store) -> Result<W.Stop,List<&2,List<&2,U32>>>:
   match at:
     case Nil{}: Done{Nil{}}
     case Con{a,rest}:
@@ -74,15 +78,15 @@ def repeated(xs: List<&2,List<&2,U32>>) -> Bool:
     case Nil{}: False{}
     case Con{+x,+rest}: W.or(listed(rest,x),repeated(rest))
 
-def name_at(names: List<&2,List<&2,U32>>, +i: U32) -> Result<String,List<&2,U32>>:
+def name_at(names: List<&2,List<&2,U32>>, +i: U32) -> Result<W.Stop,List<&2,U32>>:
   match names:
-    case Nil{}: Fail{"name index"}
-    case Con{+name,+rest}: W.choose(Result<String,List<&2,U32>>,U32.is_eq(i,0),u => Done{name},u => name_at(rest,U32.sub(i,1)))
+    case Nil{}: Fail{W.Refused{"image","name index"}}
+    case Con{+name,+rest}: W.choose(Result<W.Stop,List<&2,U32>>,U32.is_eq(i,0),u => Done{name},u => name_at(rest,U32.sub(i,1)))
 
-def reference(+i: U32, +bound: U32) -> Result<String,U32>:
-  W.choose(Result<String,U32>,Bool.and(Bool.not(W.is_none(i)),U32.is_ge(i,bound)),u => Fail{"type index"},u => Done{i})
+def reference(+i: U32, +bound: U32) -> Result<W.Stop,U32>:
+  W.choose(Result<W.Stop,U32>,Bool.and(Bool.not(W.is_none(i)),U32.is_ge(i,bound)),u => Fail{W.Refused{"image","type index"}},u => Done{i})
 
-def references(words: List<&2,U32>, +bound: U32) -> Result<String,List<&2,U32>>:
+def references(words: List<&2,U32>, +bound: U32) -> Result<W.Stop,List<&2,U32>>:
   match words:
     case Nil{}: Done{Nil{}}
     case Con{w,rest}:
@@ -105,23 +109,23 @@ def width(row: Row) -> U32:
     case Declared{name,first,count}: count
     case Signature{sort}: 0
 
-def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32, +expect: U32) -> Result<String,Row>:
+def typed(+image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +at: U32, +expect: U32) -> Result<W.Stop,Row>:
   +kind = W.read(image,U32.add(at,1))
   +name = W.read(image,U32.add(at,2))
   +a = W.read(image,U32.add(at,3))
   +b = W.read(image,U32.add(at,4))
   W.unless(Row,W.or(Bool.not(U32.is_eq(W.read(image,at),5)),U32.is_ge(kind,4)),"type record",u =>
-    W.choose(Result<String,Row>,U32.is_eq(kind,0),
+    W.choose(Result<W.Stop,Row>,U32.is_eq(kind,0),
       u => W.unless(Row,Bool.not(U32.is_eq(a,expect)),"constructor grouping",u =>
              W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Declared{t,a,b}})),
-      u => W.choose(Result<String,Row>,U32.is_eq(kind,3),
+      u => W.choose(Result<W.Stop,Row>,U32.is_eq(kind,3),
         u => W.unless(Row,W.or(Bool.not(U32.is_eq(a,0)),Bool.not(U32.is_eq(b,0))),"opaque type",u =>
                W.then(List<&2,U32>,Row,name_at(names,name),t => Done{Signature{W.Opaque{t}}})),
         u => W.unless(Row,Bool.not(W.is_none(name)),"arrow name",u =>
                W.then(U32,Row,reference(a,bound),d =>
                  W.then(U32,Row,reference(b,bound),r => Done{Signature{arrow(U32.is_eq(kind,1),d,r)}}))))))
 
-def rows(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +expect: U32) -> Result<String,List<&2,Row>>:
+def rows(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +bound: U32, +expect: U32) -> Result<W.Stop,List<&2,Row>>:
   match at:
     case Nil{}: Done{Nil{}}
     case Con{a,rest}:
@@ -146,7 +150,7 @@ def position(rows: List<&2,Row>, +t: U32, +tag: U32) -> U32:
 
 # Constructor records fill their row positions; `filled` maps a position to
 # its record offset plus one.
-def placed(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +rows: List<&2,Row>, +bound: U32, +filled: W.Store) -> Result<String,W.Store>:
+def placed(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +rows: List<&2,Row>, +bound: U32, +filled: W.Store) -> Result<W.Stop,W.Store>:
   match at:
     case Nil{}: Done{filled}
     case Con{+a,rest}:
@@ -159,7 +163,7 @@ def placed(at: List<&2,U32>, +image: W.Store, +names: List<&2,List<&2,U32>>, +ro
         placed(rest,image,names,rows,bound,W.write(filled,place,U32.add(a,1)))))))
 
 def constructor(+image: W.Store, +names: List<&2,List<&2,U32>>, +at: U32) -> W.Constructor:
-  W.Constructor{Result.default(&1,&1,String,List<&2,U32>,name_at(names,W.read(image,U32.add(at,3))),Nil{}),W.slice(U32.to_nat(W.read(image,U32.add(at,4))),image,U32.add(at,5))}
+  W.Constructor{Result.default(&1,&1,W.Stop,List<&2,U32>,name_at(names,W.read(image,U32.add(at,3))),Nil{}),W.slice(U32.to_nat(W.read(image,U32.add(at,4))),image,U32.add(at,5))}
 
 def constructors(n: Nat, +image: W.Store, +names: List<&2,List<&2,U32>>, +filled: W.Store, +place: U32) -> List<&2,W.Constructor>:
   match n:
@@ -176,7 +180,7 @@ def sorts(rows: List<&2,Row>, +image: W.Store, +names: List<&2,List<&2,U32>>, +f
     case Nil{}: Nil{}
     case Con{row,rest}: Con{sorted_row(row,image,names,filled),sorts(rest,image,names,filled)}
 
-def constants(at: List<&2,U32>, +image: W.Store) -> Result<String,List<&2,W.Constant>>:
+def constants(at: List<&2,U32>, +image: W.Store) -> Result<W.Stop,List<&2,W.Constant>>:
   match at:
     case Nil{}: Done{Nil{}}
     case Con{+a,rest}:
@@ -202,7 +206,12 @@ def misshaped(+op: U32, +x: U32, +image: W.Store, +at: U32) -> Bool:
   W.choose(Bool,U32.is_eq(op,10),u => W.or(U32.is_lt(x,5),Bool.not(U32.is_eq(x,U32.add(5,x3)))),u =>
     W.or(U32.is_lt(x,2),Bool.not(U32.is_eq(x,U32.add(2,x1)))))))))
 
-def shaped(at: List<&2,U32>, +image: W.Store, starts: W.Store) -> Result<String,W.Store>:
+# A Closure's `slots` sizes its Activation as a function's does; no other
+# node has one.
+def closure_slots(+op: U32, +image: W.Store, +at: U32) -> U32:
+  W.choose(U32,U32.is_eq(op,10),u => W.read(image,U32.add(at,5)),u => 0)
+
+def shaped(at: List<&2,U32>, +image: W.Store, starts: W.Store) -> Result<W.Stop,W.Store>:
   match at:
     case Nil{}: Done{starts}
     case Con{+a,rest}:
@@ -210,7 +219,8 @@ def shaped(at: List<&2,U32>, +image: W.Store, starts: W.Store) -> Result<String,
       +op = W.read(image,U32.add(a,1))
       W.unless(W.Store,W.or(U32.is_lt(length,2),U32.is_ge(op,13)),"node record",u =>
       W.unless(W.Store,misshaped(op,U32.sub(length,2),image,a),String.append(opcode_name(op)," length"),u =>
-        shaped(rest,image,W.write(starts,a,1))))
+      W.limit(W.Store,closure_slots(op,image,a),65536,"slots",u =>
+        shaped(rest,image,W.write(starts,a,1)))))
 
 # How a child record may be used: an operand, a tag-table row, a key-table row
 # with its key, or a Case default.
@@ -238,16 +248,16 @@ def types_of(env: Env) -> U32:
   match env:
     case Env{image,starts,types,constants}: types
 
-def claim(+env: Env, +parent: U32, +at: U32, +claims: Claims) -> Result<String,Claims>:
+def claim(+env: Env, +parent: U32, +at: U32, +claims: Claims) -> Result<W.Stop,Claims>:
   match env claims:
     case Env{image,+starts,types,constants} Claims{+marks,+owned,+roots}:
-      W.choose(Result<String,Claims>,W.is_none(parent),u => Done{Claims{marks,owned,roots}},u =>
+      W.choose(Result<W.Stop,Claims>,W.is_none(parent),u => Done{Claims{marks,owned,roots}},u =>
       W.unless(Claims,U32.is_eq(W.read(starts,at),0),"child offset",u =>
       W.unless(Claims,U32.is_ge(at,parent),"child after parent",u =>
       W.unless(Claims,U32.is_eq(U32.and(W.read(marks,at),1),1),"shared node",u =>
         Done{Claims{W.write(marks,at,U32.add(W.read(marks,at),1)),U32.add(owned,1),roots}}))))
 
-def rooted(+env: Env, +at: U32, +claims: Claims) -> Result<String,Claims>:
+def rooted(+env: Env, +at: U32, +claims: Claims) -> Result<W.Stop,Claims>:
   match env claims:
     case Env{image,+starts,types,constants} Claims{+marks,+owned,+roots}:
       W.unless(Claims,W.or(U32.is_eq(W.read(starts,at),0),Bool.not(U32.is_eq(W.read(marks,at),0))),"function root",u =>
@@ -261,7 +271,7 @@ def is_operand(role: Role) -> Bool:
     case Operand{}: True{}
     case _: False{}
 
-def inspected(+env: Env, +at: U32, role: Role) -> Result<String,Unit>:
+def inspected(+env: Env, +at: U32, role: Role) -> Result<W.Stop,Unit>:
   match env:
     case Env{+image,starts,+types,+constants}:
       +t = W.read(image,U32.add(at,2))
@@ -376,7 +386,7 @@ def default_is_default(fallback: Maybe<&2,W.Node>) -> Bool:
     case None{}: True{}
     case Some{node}: is_default(node)
 
-def cased(+image: W.Store, +at: U32, +types: U32, +nodes: List<&2,W.Node>) -> Result<String,W.Node>:
+def cased(+image: W.Store, +at: U32, +types: U32, +nodes: List<&2,W.Node>) -> Result<W.Stop,W.Node>:
   +x = U32.add(at,3)
   +mode = W.read(image,U32.add(x,2))
   +n = W.read(image,U32.add(x,3))
@@ -385,14 +395,14 @@ def cased(+image: W.Store, +at: U32, +types: U32, +nodes: List<&2,W.Node>) -> Re
   W.unless(W.Node,Bool.not(Bool.and(rows_are_branches(rows),default_is_default(fallback))),"case arm kind",u =>
     W.then(U32,W.Node,reference(W.read(image,U32.add(x,1)),types),s => Done{W.Case{W.read(image,U32.add(at,2)),W.read(image,x),s,mode,rows,fallback}}))
 
-def keyed(role: Role, node: W.Node) -> Result<String,W.Node>:
+def keyed(role: Role, node: W.Node) -> Result<W.Stop,W.Node>:
   match role node:
     case Keyed{+k} W.Branch{+key,first,fields,body}:
-      W.choose(Result<String,W.Node>,U32.is_eq(key,k),u => Done{W.Branch{key,first,fields,body}},u => Fail{"case key"})
-    case Keyed{k} _: Fail{"case key"}
+      W.choose(Result<W.Stop,W.Node>,U32.is_eq(key,k),u => Done{W.Branch{key,first,fields,body}},u => Fail{W.Refused{"image","case key"}})
+    case Keyed{k} _: Fail{W.Refused{"image","case key"}}
     case _ _: Done{node}
 
-def built(op: Nat, +image: W.Store, +types: U32, +constants: List<&2,W.Constant>, +at: U32, +t: U32, +x0: U32, +x1: U32, +x2: U32, +nodes: List<&2,W.Node>) -> Result<String,W.Node>:
+def built(op: Nat, +image: W.Store, +types: U32, +constants: List<&2,W.Constant>, +at: U32, +t: U32, +x0: U32, +x1: U32, +x2: U32, +nodes: List<&2,W.Node>) -> Result<W.Stop,W.Node>:
   match op:
     case 0n: Done{W.Literal{t,constant_at(constants,x0)}}
     case 1n: Done{W.Intrinsic{t,x0,nodes}}
@@ -407,9 +417,9 @@ def built(op: Nat, +image: W.Store, +types: U32, +constants: List<&2,W.Constant>
     case 10n: Done{W.Closure{t,x1,x2,W.slice(U32.to_nat(W.read(image,U32.add(at,6))),image,U32.add(at,7)),first(nodes)}}
     case 11n: Done{W.Invoke{t,first(nodes),rest_of(nodes)}}
     case 12n: Done{W.Foreign{t,x0,nodes}}
-    case _: Fail{"opcode"}
+    case _: Fail{W.Refused{"image","opcode"}}
 
-def assembled(+env: Env, +at: U32, nodes: List<&2,W.Node>) -> Result<String,W.Node>:
+def assembled(+env: Env, +at: U32, nodes: List<&2,W.Node>) -> Result<W.Stop,W.Node>:
   match env:
     case Env{+image,starts,+types,+constants}:
       built(U32.to_nat(W.read(image,U32.add(at,1))),image,types,constants,at,W.read(image,U32.add(at,2)),
@@ -417,10 +427,10 @@ def assembled(+env: Env, +at: U32, nodes: List<&2,W.Node>) -> Result<String,W.No
 
 # Post-order trees, each child claimed once and before its parent. Fuel bounds
 # the nesting of pending jobs by the image's word count.
-def forest(fuel: Nat, +env: Env, +parent: U32, work: List<&2,Job>, claims: Claims, done: List<&2,W.Node>, next: List<&2,W.Node> -> Claims -> Result<String,W.Plan>) -> Result<String,W.Plan>:
+def forest(fuel: Nat, +env: Env, +parent: U32, work: List<&2,Job>, claims: Claims, done: List<&2,W.Node>, next: List<&2,W.Node> -> Claims -> Result<W.Stop,W.Plan>) -> Result<W.Stop,W.Plan>:
   match fuel work:
     case _ Nil{}: next(List.reverse(&2,W.Node,done),claims)
-    case 0n _: Fail{"node depth"}
+    case 0n _: Fail{W.Refused{"image","node depth"}}
     case 1n+ +f Con{Job{+at,+role},rest}:
       W.then(Claims,W.Plan,claim(env,parent,at,claims),claims =>
       W.then(Unit,W.Plan,inspected(env,at,role),u =>
@@ -429,7 +439,7 @@ def forest(fuel: Nat, +env: Env, +parent: U32, work: List<&2,Job>, claims: Claim
       W.then(W.Node,W.Plan,keyed(role,node),node =>
       forest(f,env,parent,rest,claims,Con{node,done},next))))))
 
-def functions(at: List<&2,U32>, +fuel: Nat, +env: Env, +names: List<&2,List<&2,U32>>, claims: Claims, found: List<&2,W.Function>, next: List<&2,W.Function> -> Claims -> Result<String,W.Plan>) -> Result<String,W.Plan>:
+def functions(at: List<&2,U32>, +fuel: Nat, +env: Env, +names: List<&2,List<&2,U32>>, claims: Claims, found: List<&2,W.Function>, next: List<&2,W.Function> -> Claims -> Result<W.Stop,W.Plan>) -> Result<W.Stop,W.Plan>:
   match at:
     case Nil{}: next(List.reverse(&2,W.Function,found),claims)
     case Con{+a,rest}:
@@ -438,12 +448,14 @@ def functions(at: List<&2,U32>, +fuel: Nat, +env: Env, +names: List<&2,List<&2,U
       +arity = W.read(image,U32.add(a,3))
       +root = W.read(image,U32.add(a,5))
       W.unless(W.Plan,W.or(U32.is_lt(length,5),Bool.not(U32.is_eq(length,U32.add(5,arity)))),"function record",u =>
+      W.limit(W.Plan,arity,4096,"arity",u =>
+      W.limit(W.Plan,W.read(image,U32.add(a,4)),65536,"slots",u =>
       W.then(Claims,W.Plan,rooted(env,root,claims),claims =>
       W.then(List<&2,U32>,W.Plan,name_at(names,W.read(image,U32.add(a,1))),name =>
       W.then(List<&2,U32>,W.Plan,references(W.slice(U32.to_nat(arity),image,U32.add(a,6)),types_of(env)),parameters =>
       W.then(U32,W.Plan,reference(W.read(image,U32.add(a,2)),types_of(env)),result =>
       forest(fuel,env,W.none(),[Job{root,Operand{}}],claims,Nil{},nodes => claims =>
-        functions(rest,fuel,env,names,claims,Con{W.Function{name,parameters,result,W.read(image,U32.add(a,4)),first(nodes)},found},next)))))))
+        functions(rest,fuel,env,names,claims,Con{W.Function{name,parameters,result,W.read(image,U32.add(a,4)),first(nodes)},found},next)))))))))
 
 def name_of(f: W.Function) -> List<&2,U32>:
   match f:
@@ -462,7 +474,7 @@ def names_main(found: Maybe<&2,W.Function>) -> Bool:
     case None{}: False{}
     case Some{f}: W.same(name_of(f),main_bytes())
 
-def planned(+image: W.Store, +nodes: U32, +sorts: List<&2,W.Sort>, +functions: List<&2,W.Function>, claims: Claims) -> Result<String,W.Plan>:
+def planned(+image: W.Store, +nodes: U32, +sorts: List<&2,W.Sort>, +functions: List<&2,W.Function>, claims: Claims) -> Result<W.Stop,W.Plan>:
   match claims:
     case Claims{marks,owned,roots}:
       +main = W.read(image,4)
@@ -471,7 +483,7 @@ def planned(+image: W.Store, +nodes: U32, +sorts: List<&2,W.Sort>, +functions: L
       W.then(List<&2,U32>,W.Plan,references(W.slice(12n,image,12),W.count(W.Sort,sorts)),representation =>
         Done{W.Plan{W.read(image,3),sorts,functions,representation}})))
 
-def decoded(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) -> Result<String,W.Plan>:
+def decoded(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) -> Result<W.Stop,W.Plan>:
   match lists:
     case Con{+t,Con{+c,Con{f,Con{k,Con{+n,Con{m,Nil{}}}}}}}:
       W.then(List<&2,List<&2,U32>>,W.Plan,names(m,image),+names =>
@@ -483,10 +495,10 @@ def decoded(lists: List<&2,List<&2,U32>>, +image: W.Store, +total: U32) -> Resul
       W.then(W.Store,W.Plan,shaped(n,image,W.empty()),+starts =>
       functions(f,U32.to_nat(total),Env{image,starts,W.count(U32,t),constants},names,Claims{W.empty(),0,0},Nil{},found => claims =>
         planned(image,W.count(U32,n),sorts(rows,image,names,filled),found,claims)))))))))
-    case _: Fail{"sections"}
+    case _: Fail{W.Refused{"image","sections"}}
 
 # Header, sections and records of SPEC §2, refused in serializer.decode's order.
-def decode(+words: List<&2,U32>) -> Result<String,W.Plan>:
+def decode(+words: List<&2,U32>) -> Result<W.Stop,W.Plan>:
   +total = W.count(U32,words)
   +image = W.stored(words,W.empty(),0)
   W.unless(W.Plan,W.or(Bool.not(U32.is_eq(W.read(image,0),magic())),Bool.not(U32.is_eq(W.read(image,1),1))),"magic",u =>

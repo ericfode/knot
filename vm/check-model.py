@@ -15,7 +15,11 @@ seed's native lane and requires:
 - literal fuel controls (SPEC section 7): fuel 0 exhausts every golden at its
   first entry, and value-on, which makes one entry, completes on fuel 1;
 - check-spec's frozen refusal controls, and a child at its parent's offset,
-  refused with check-spec's exact reason;
+  refused with check-spec's exact reason: a malformed or invalid image as
+  HostFailure image, and one past a resource limit of SPEC section 4 (image
+  size, records per table, arity, `slots`) as Exhausted kind 2, on both sides of
+  each limit;
+
 - check-spec's argument controls (SPEC section 8): the image before the words,
   then its entry kind's form, `usage` before any word, each word a decimal u32;
   an admitted one runs as the reference evaluation runs it;
@@ -344,16 +348,21 @@ def golden_plans() -> dict:
     return {p.stem.removesuffix('.plan'): json.loads(p.read_text()) for p in sorted(GOLDEN.glob('*.plan.json'))}
 
 
+def golden_images() -> dict:
+    return {p.stem: p.read_bytes() for p in sorted(GOLDEN.glob('*.kimg'))}
+
+
 def controls() -> list:
-    """SPEC section 4's refusal controls; the plan controls it must admit run with the
-    admitted ones (`admitted_controls`)."""
-    names = sorted(p.stem for p in GOLDEN.glob('*.kimg'))
-    images = {n: (GOLDEN / f'{n}.kimg').read_bytes() for n in names}
+    """SPEC section 4's refusal controls, among them both sides of each resource limit; the
+    controls it must admit run with the admitted ones (`admitted_controls`)."""
+    images = golden_images()
     plans = golden_plans()
     refusals = [(f'plan:{k}', codec.encode(p, DIGEST), 'HostFailure image: validator: ', m)
                 for k, p, m in cs.plan_controls(plans) if m is not None]
-    listed = cs.byte_controls(images, DIGEST) + refusals
-    require(refusals and len(listed) > len(refusals), 'check-spec lists byte and plan refusal controls')
+    limits = [(f'limit:{k}', data, want, '') for k, data, want in cs.limit_controls(plans, images, DIGEST) if want]
+    listed = cs.byte_controls(images, DIGEST) + limits + refusals
+    require(refusals and limits and len(listed) > len(refusals) + len(limits),
+            'check-spec lists byte, limit and plan refusal controls')
     # One boundary the frozen controls leave open: a child at its own parent's
     # offset does not precede it. The reference supplies the expected reason.
     capture = images['closure-captures']
@@ -399,12 +408,14 @@ def argument_runs(model: Path, audit: Path) -> dict:
 
 
 def model_refusal(result) -> str | None:
-    """The model's refusal in check-spec's spelling; oversize is Exhausted image-size."""
+    """The model's refusal in check-spec's spelling: a malformed or invalid image is
+    HostFailure image, and one past a resource limit of SPEC section 4 is Exhausted
+    kind 2 with the limit as its cause."""
     fields = result['stderr'].rstrip('\n').split('\t')
     if result['exit'] == 5 and fields[:2] == ['HostFailure', 'image']:
         return 'HostFailure image: ' + '\t'.join(fields[2:])
-    if result['exit'] == 4 and fields == ['Exhausted', 'vm', '2', 'image-size']:
-        return 'HostFailure image: exhausted image-size'
+    if result['exit'] == 4 and len(fields) == 4 and fields[:3] == ['Exhausted', 'vm', '2']:
+        return f'Exhausted 2 {fields[3]}'
     return None
 
 
@@ -437,21 +448,23 @@ def reference_run(plan: dict, fuel: int) -> dict:
 
 
 def admitted_controls() -> list:
-    """(label, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST run
-    at `fuel` to `run` after `calls` entries (SPEC sections 4 and 7): check-spec's admitted
-    plan controls and code-list controls, its frozen run controls and the model's own frozen
-    controls, seed-derived and display. A run control runs at the fuel frozen with it, every
-    other control at SPEC section 7's 1,000,000; the reference evaluation runs each at that
-    fuel and reproduces what the control froze."""
+    """(label, plan, fuel, run, calls) for images the validator MUST admit and the VM MUST
+    run at `fuel` to `run` after `calls` entries (SPEC sections 4 and 7): check-spec's
+    admitted plan controls, its admitted limit control, its code-list controls, its frozen
+    run controls and the model's own frozen controls, seed-derived and display. A run control
+    runs at the fuel frozen with it, every other control at SPEC section 7's 1,000,000; the
+    reference evaluation runs each at that fuel and reproduces what the control froze."""
     plans = golden_plans()
     listed = [(f'plan:{k}', p, {}) for k, p, m in cs.plan_controls(plans) if m is None]
+    listed += [(f'limit:{k}', codec.decode(data, DIGEST), {})
+               for k, data, want in cs.limit_controls(plans, golden_images(), DIGEST) if want is None]
     listed += [(k, p, {}) for k, p in cs.code_controls(plans)]
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
     listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
     listed += [(f'model:{k}', p, frozen) for k, p, frozen in DISPLAY_CONTROLS]
     listed += [('model:inspect-append-b-whole', append_b_whole(plans), {**cs.ILL_TYPED, 'calls': 3})]
-    require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'codes', 'run')),
-            'check-spec lists admitted plan, code-list and run controls')
+    require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'limit', 'codes', 'run')),
+            'check-spec lists admitted plan, limit, code-list and run controls')
     require(any('fuel' in frozen for k, _, frozen in listed if k.startswith('run:')), 'check-spec freezes fuel run controls')
     out = []
     for label, plan, frozen in listed:
@@ -909,13 +922,35 @@ MUTANTS = [
     ('append-b-shallow', 'memory', [('    case 35n: string_cell(code,heap,a,s => string_cell(code,heap,b,t => chain(List.reverse(&2,U32,s),code,heap,b)))',
                                      '    case 35n: string_cell(code,heap,a,s => chain(List.reverse(&2,U32,s),code,heap,b))')],
      "append reads only the head of the b it moves"),
+    # vm-spec ae45466: SPEC section 4's resource limits are Exhausted kind 2, inclusive, each
+    # checked after its count's own structure and before what the count governs. These mirror
+    # check-spec's five limit codec mutants.
+    ('limit-as-malformed', 'word', [('u => Fail{Exhausted{2,cause}},next)', 'u => Fail{Refused{"image",cause}},next)')],
+     'a count past its limit is HostFailure image'),
+    ('limit-exclusive', 'word', [('choose(Result<Stop,A>,U32.is_gt(count,bound),', 'choose(Result<Stop,A>,U32.is_ge(count,bound),')],
+     'a count at its limit is Exhausted'),
+    ('record-limit-before-fit', 'decode', [(
+        '      W.unless(B,U32.is_gt(count,U32.div(U32.sub(total,U32.add(cursor,1)),2)),"record count",u =>\n'
+        '      W.limit(B,count,1048576,"records",u =>\n',
+        '      W.limit(B,count,1048576,"records",u =>\n'
+        '      W.unless(B,U32.is_gt(count,U32.div(U32.sub(total,U32.add(cursor,1)),2)),"record count",u =>\n')],
+     "the record limit precedes the count's fit"),
+    ('arity-limit-before-record', 'decode', [(
+        '      W.unless(W.Plan,W.or(U32.is_lt(length,5),Bool.not(U32.is_eq(length,U32.add(5,arity)))),"function record",u =>\n'
+        '      W.limit(W.Plan,arity,4096,"arity",u =>\n',
+        '      W.limit(W.Plan,arity,4096,"arity",u =>\n'
+        '      W.unless(W.Plan,W.or(U32.is_lt(length,5),Bool.not(U32.is_eq(length,U32.add(5,arity)))),"function record",u =>\n')],
+     "the arity limit precedes its record's length"),
+    ('closure-slots-unlimited', 'decode', [('      W.limit(W.Store,closure_slots(op,image,a),65536,"slots",u =>\n',
+                                            '      W.limit(W.Store,0,65536,"slots",u =>\n')],
+     "a Closure's slots is unlimited"),
 ]
 
 
 # Mutants whose PROOF.bend must also fail, at a law and not by a crash.
 LAW_MUTANTS = ('rc-under-count', 'tail-keeps-caller', 'arm-selection', 'nat-bound', 'remainder-by-zero',
                'char-tag', 'key-bound', 'exact-key-and-default-type', 'chr-uninspected', 'display-scalars',
-               'display-succ-named')
+               'display-succ-named', 'limit-as-malformed', 'limit-exclusive', 'arity-limit-before-record')
 
 
 def law_kill(tree: Path) -> str | None:

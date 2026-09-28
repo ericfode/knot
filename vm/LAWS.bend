@@ -66,7 +66,7 @@ def flag_plan() -> W.Plan:
   W.Plan{0,[W.Algebraic{M.text("Flag"),[W.Constructor{M.text("Off"),[]},W.Constructor{M.text("On"),[]}]}],
     [W.Function{M.text("main"),[],0,0,W.Value{0,1}}],none12()}
 
-def reencoded(result: Result<String,W.Plan>) -> List<&2,U32>:
+def reencoded(result: Result<W.Stop,W.Plan>) -> List<&2,U32>:
   match result:
     case Fail{reason}: Nil{}
     case Done{plan}: E.encode(plan)
@@ -107,7 +107,7 @@ law plan_encodes_image:
   {E.encode(flag_plan()) == value_on() : List<&2,U32>}
 
 law image_decodes_plan:
-  {D.decode(value_on()) == Done{flag_plan()} : Result<String,W.Plan>}
+  {D.decode(value_on()) == Done{flag_plan()} : Result<W.Stop,W.Plan>}
 
 law images_canonical:
   {canonical(fixtures()) == True{} : Bool}
@@ -125,6 +125,19 @@ law tag_refused:
 
 law layout_refused:
   {E.admit(H.replaced(value_on(),4,W.none())) == Fail{W.Refused{"image","noncanonical"}} : Result<W.Stop,W.Plan>}
+
+# SPEC §4's resource limits, inclusive, on value-on's function record (arity at
+# word 53, `slots` at 54): a count past its limit is Exhausted kind 2, a count
+# at it is within it, and a record that cannot hold its arity is malformed
+# before the arity is bounded.
+law slots_past_limit:
+  {E.admit(H.replaced(value_on(),54,65537)) == Fail{W.Exhausted{2,"slots"}} : Result<W.Stop,W.Plan>}
+
+law slots_at_limit:
+  {E.admit(H.replaced(value_on(),54,65536)) == Fail{W.Refused{"image","validator: main: slots 65536, reached 0"}} : Result<W.Stop,W.Plan>}
+
+law arity_beyond_record:
+  {E.admit(H.replaced(value_on(),53,4097)) == Fail{W.Refused{"image","function record"}} : Result<W.Stop,W.Plan>}
 
 # Every single-word mutation of value-on's function, constant and node
 # sections (words 49-61) is refused or runs soundly.
