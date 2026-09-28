@@ -128,10 +128,10 @@ adopt them or record its own, so that lockstep compares like with like.
    (`ill-typed`) before the prim computes, allocates or drops anything; the
    halted state's frames are choice 8's.
 
-   *Amended in review round 5, to follow the spec.* This choice used to read
-   `b` of `append` not at all and only the head cell of `is_empty`, where §9
-   named no extent. vm-spec `31aeaf2` and `5517f26` made every extent whole,
-   and two of its new inspection controls, `inspect-append-b` and
+   *Amended to follow the spec (fix round 4).* This choice used to read `b`
+   of `append` not at all and only the head cell of `is_empty`, where §9 named
+   no extent. vm-spec `31aeaf2` and `5517f26` made every extent whole, and two
+   of its new inspection controls, `inspect-append-b` and
    `inspect-is-empty`, failed here after the merge
    (.local/vm-core/logs/r5-runs-prefix.log). The mutants `append-b-unread` and
    `is-empty-reads-one-cell` restore the old reading; `eq-exits-early` and
