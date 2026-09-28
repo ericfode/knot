@@ -71,12 +71,22 @@ def relative(parts: List<&2,String>) -> Bool:
 def without_suffix(path: String) -> String:
   String.reverse(String.drop(String.reverse(path),5n))
 
+def named(+parts: List<&2,String>) -> Bool:
+  Bool.and(Bool.not(List.is_empty(&2,String,parts)),names(parts))
+
+# The seed strips one leading "./" or hash head, then reads a path whose leading
+# "/" admits one empty segment before plain names; normalization collapses it.
+def rooted(parts: List<&2,String>) -> Bool:
+  match parts:
+    case Nil{}: False{}
+    case Con{+part,+rest}: Bool.and(String.is_empty(part),named(rest))
+
 def valid_parts(parts: List<&2,String>) -> Bool:
   match parts:
     case Nil{}: False{}
     case Con{+part,+rest}:
-      S.choose(Bool,hash_head(part),u => Bool.and(Bool.not(List.is_empty(&2,String,rest)),names(rest)),u =>
-      S.choose(Bool,String.eq(part,"."),u => relative(rest),u => relative(Con{part,rest})))
+      S.choose(Bool,hash_head(part),u => Bool.or(rooted(rest),named(rest)),u =>
+      S.choose(Bool,String.eq(part,"."),u => Bool.or(rooted(rest),relative(rest)),u => relative(Con{part,rest})))
 
 def valid(+path: String) -> Bool:
   Bool.and(String.ends_with(path,".bend"),valid_parts(split(without_suffix(path),'/')))

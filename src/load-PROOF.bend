@@ -37,6 +37,12 @@ def L.package_relative_paths_keep_identity():
 def L.bundle_identity_is_independent_of_import_spelling():
   {==}
 
+def L.one_root_slash_is_plain():
+  {==}
+
+def L.one_root_slash_has_one_identity():
+  {==}
+
 def L.absolute_import_is_unsupported():
   {==}
 

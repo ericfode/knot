@@ -86,6 +86,16 @@ law bundle_identity_is_independent_of_import_spelling:
   {I.resolve("bundle/0xab/main.bend","","bundle","./mark.bend")
     == I.resolve("bundle/0xab/main.bend","","bundle","0xab/mark.bend") : Result<S.Error,I.Target>}
 
+law one_root_slash_is_plain:
+  {[I.valid(".//lib/flag.bend"),I.valid("0xab//flag.bend"),I.valid("./lib//flag.bend"),
+    I.valid(".///flag.bend"),I.valid(".//../flag.bend"),I.valid("..//flag.bend"),I.valid(".//.bend")]
+    == [True{},True{},False{},False{},False{},False{},False{}] : List<&2,Bool>}
+
+law one_root_slash_has_one_identity:
+  {(I.resolve("source/main.bend","","bundle",".//lib/flag.bend"),I.resolve("source/main.bend","","bundle","0xab//flag.bend"))
+    == (I.resolve("source/main.bend","","bundle","./lib/flag.bend"),I.resolve("source/main.bend","","bundle","0xab/flag.bend"))
+    : Result<S.Error,I.Target> & Result<S.Error,I.Target>}
+
 law absolute_import_is_unsupported:
   {I.header("import /lib/flag.bend as F\n")
     == Fail{S.Unsupported{"load","absolute-import",S.At{0,0,1,0}}} : Result<S.Error,I.Header>}

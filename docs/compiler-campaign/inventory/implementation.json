@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 44,
-      "declarations": 895,
-      "unique_declarations": 732,
-      "definitions": 508,
+      "declarations": 901,
+      "unique_declarations": 736,
+      "definitions": 510,
       "classes": 42
     },
     "frontend_files": {
@@ -59607,7 +59607,7 @@
     },
     {
       "file": "src/imports.bend",
-      "sha256": "b8d5b15dd60e64482769e8952c5a22331e421a60b92fe325864f9c1725305d3e",
+      "sha256": "332f17de1ff72249e55c6721903c4d46b9450f5e26fd4ae971c8b8fe091c01f9",
       "imports": [
         {
           "module": "Base",
@@ -60387,13 +60387,107 @@
           }
         },
         {
+          "id": "src/imports.bend::named:definition",
+          "name": "named",
+          "key": "src/imports.named",
+          "kind": "definition",
+          "lines": [
+            74,
+            75
+          ],
+          "features": [
+            "calls",
+            "generics",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Bool.not",
+            "List",
+            "List.is_empty",
+            "String",
+            "src/imports.names"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "String"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "Bool.not",
+              "List.is_empty",
+              "src/imports.names"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/imports.bend::rooted:definition",
+          "name": "rooted",
+          "key": "src/imports.rooted",
+          "kind": "definition",
+          "lines": [
+            79,
+            82
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Bool.and",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "String",
+            "String.is_empty",
+            "src/imports.named"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "String"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "Bool.and",
+              "String.is_empty",
+              "src/imports.named"
+            ],
+            "types": [
+              "Con",
+              "False",
+              "Nil"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/imports.bend::valid_parts:definition",
           "name": "valid_parts",
           "key": "src/imports.valid_parts",
           "kind": "definition",
           "lines": [
-            74,
-            79
+            84,
+            89
           ],
           "features": [
             "calls",
@@ -60412,18 +60506,17 @@
           ],
           "references": [
             "Bool",
-            "Bool.and",
-            "Bool.not",
+            "Bool.or",
             "Con",
             "False",
             "List",
-            "List.is_empty",
             "Nil",
             "String",
             "String.eq",
             "src/imports.hash_head",
-            "src/imports.names",
+            "src/imports.named",
             "src/imports.relative",
+            "src/imports.rooted",
             "src/syntax.choose"
           ],
           "type_references": [
@@ -60433,26 +60526,26 @@
           ],
           "captures": [
             {
-              "offset": 2542,
+              "offset": 2968,
               "names": [
                 "rest"
               ]
             },
             {
-              "offset": 2609,
+              "offset": 3007,
               "names": [
                 "part",
                 "rest"
               ]
             },
             {
-              "offset": 2654,
+              "offset": 3052,
               "names": [
                 "rest"
               ]
             },
             {
-              "offset": 2674,
+              "offset": 3094,
               "names": [
                 "part",
                 "rest"
@@ -60461,13 +60554,12 @@
           ],
           "execution": {
             "references": [
-              "Bool.and",
-              "Bool.not",
-              "List.is_empty",
+              "Bool.or",
               "String.eq",
               "src/imports.hash_head",
-              "src/imports.names",
+              "src/imports.named",
               "src/imports.relative",
+              "src/imports.rooted",
               "src/syntax.choose"
             ],
             "types": [
@@ -60485,8 +60577,8 @@
           "key": "src/imports.valid",
           "kind": "definition",
           "lines": [
-            81,
-            82
+            91,
+            92
           ],
           "features": [
             "calls",
@@ -60534,8 +60626,8 @@
           "key": "src/imports.parent",
           "kind": "definition",
           "lines": [
-            85,
-            89
+            95,
+            99
           ],
           "features": [
             "calls",
@@ -60569,14 +60661,14 @@
           ],
           "captures": [
             {
-              "offset": 3125,
+              "offset": 3545,
               "names": [
                 "head",
                 "tail"
               ]
             },
             {
-              "offset": 3155,
+              "offset": 3575,
               "names": [
                 "tail"
               ]
@@ -60601,8 +60693,8 @@
           "key": "src/imports.segments",
           "kind": "definition",
           "lines": [
-            91,
-            97
+            101,
+            107
           ],
           "features": [
             "bindings",
@@ -60641,13 +60733,13 @@
           ],
           "captures": [
             {
-              "offset": 3440,
+              "offset": 3860,
               "names": [
                 "stack"
               ]
             },
             {
-              "offset": 3451,
+              "offset": 3871,
               "names": [
                 "absolute",
                 "head",
@@ -60655,14 +60747,14 @@
               ]
             },
             {
-              "offset": 3510,
+              "offset": 3930,
               "names": [
                 "absolute",
                 "stack"
               ]
             },
             {
-              "offset": 3538,
+              "offset": 3958,
               "names": [
                 "head",
                 "stack"
@@ -60692,8 +60784,8 @@
           "key": "src/imports.normalize",
           "kind": "definition",
           "lines": [
-            99,
-            101
+            109,
+            111
           ],
           "features": [
             "bindings",
@@ -60746,8 +60838,8 @@
           "key": "src/imports.directory_parts",
           "kind": "definition",
           "lines": [
-            103,
-            106
+            113,
+            116
           ],
           "features": [
             "calls",
@@ -60793,8 +60885,8 @@
           "key": "src/imports.directory",
           "kind": "definition",
           "lines": [
-            108,
-            109
+            118,
+            119
           ],
           "features": [
             "calls",
@@ -60835,8 +60927,8 @@
           "key": "src/imports.beside",
           "kind": "definition",
           "lines": [
-            111,
-            112
+            121,
+            122
           ],
           "features": [
             "calls",
@@ -60879,8 +60971,8 @@
           "key": "src/imports.join",
           "kind": "definition",
           "lines": [
-            114,
-            115
+            124,
+            125
           ],
           "features": [
             "calls",
@@ -60908,13 +61000,13 @@
           ],
           "captures": [
             {
-              "offset": 4249,
+              "offset": 4669,
               "names": [
                 "path"
               ]
             },
             {
-              "offset": 4270,
+              "offset": 4690,
               "names": [
                 "dir",
                 "path"
@@ -60942,8 +61034,8 @@
           "key": "src/imports.parents",
           "kind": "definition",
           "lines": [
-            117,
-            120
+            127,
+            130
           ],
           "features": [
             "calls",
@@ -60988,8 +61080,8 @@
           "key": "src/imports.relative_parts",
           "kind": "definition",
           "lines": [
-            122,
-            126
+            132,
+            136
           ],
           "features": [
             "calls",
@@ -61024,14 +61116,14 @@
           ],
           "captures": [
             {
-              "offset": 4649,
+              "offset": 5069,
               "names": [
                 "lt",
                 "rt"
               ]
             },
             {
-              "offset": 4676,
+              "offset": 5096,
               "names": [
                 "left",
                 "right"
@@ -61058,8 +61150,8 @@
           "key": "src/imports.relative_path",
           "kind": "definition",
           "lines": [
-            128,
-            129
+            138,
+            139
           ],
           "features": [
             "calls",
@@ -61107,8 +61199,8 @@
           "key": "src/imports.bundle_prefix",
           "kind": "definition",
           "lines": [
-            132,
-            134
+            142,
+            144
           ],
           "features": [
             "calls",
@@ -61132,13 +61224,13 @@
           ],
           "captures": [
             {
-              "offset": 5161,
+              "offset": 5581,
               "names": [
                 "bundle"
               ]
             },
             {
-              "offset": 5173,
+              "offset": 5593,
               "names": [
                 "bundle"
               ]
@@ -61164,8 +61256,8 @@
           "key": "src/imports.climbs",
           "kind": "definition",
           "lines": [
-            139,
-            140
+            149,
+            150
           ],
           "features": [
             "calls",
@@ -61209,8 +61301,8 @@
           "key": "src/imports.same_file",
           "kind": "definition",
           "lines": [
-            144,
-            147
+            154,
+            157
           ],
           "features": [
             "calls",
@@ -61238,14 +61330,14 @@
           ],
           "captures": [
             {
-              "offset": 5797,
+              "offset": 6217,
               "names": [
                 "left",
                 "right"
               ]
             },
             {
-              "offset": 5911,
+              "offset": 6331,
               "names": [
                 "left",
                 "right"
@@ -61274,8 +61366,8 @@
           "key": "src/imports.resolve",
           "kind": "definition",
           "lines": [
-            149,
-            159
+            159,
+            169
           ],
           "features": [
             "bindings",
@@ -61325,28 +61417,28 @@
           ],
           "captures": [
             {
-              "offset": 6095,
+              "offset": 6515,
               "names": [
                 "bundle",
                 "path"
               ]
             },
             {
-              "offset": 6118,
+              "offset": 6538,
               "names": [
                 "importer",
                 "path"
               ]
             },
             {
-              "offset": 6250,
+              "offset": 6670,
               "names": [
                 "bundle",
                 "target"
               ]
             },
             {
-              "offset": 6328,
+              "offset": 6748,
               "names": [
                 "importer",
                 "namespace",
@@ -61354,7 +61446,7 @@
               ]
             },
             {
-              "offset": 6539,
+              "offset": 6959,
               "names": [
                 "inside",
                 "namespace",
@@ -61363,7 +61455,7 @@
               ]
             },
             {
-              "offset": 6694,
+              "offset": 7114,
               "names": [
                 "inside",
                 "space",
@@ -61371,7 +61463,7 @@
               ]
             },
             {
-              "offset": 6835,
+              "offset": 7255,
               "names": [
                 "space",
                 "target"
@@ -61413,8 +61505,8 @@
           "key": "src/imports.pushed",
           "kind": "definition",
           "lines": [
-            161,
-            162
+            171,
+            172
           ],
           "features": [
             "calls",
@@ -61442,13 +61534,13 @@
           ],
           "captures": [
             {
-              "offset": 6990,
+              "offset": 7410,
               "names": [
                 "rest"
               ]
             },
             {
-              "offset": 7000,
+              "offset": 7420,
               "names": [
                 "rest",
                 "word"
@@ -61473,8 +61565,8 @@
           "key": "src/imports.words",
           "kind": "definition",
           "lines": [
-            166,
-            174
+            176,
+            184
           ],
           "features": [
             "calls",
@@ -61514,7 +61606,7 @@
           ],
           "captures": [
             {
-              "offset": 7440,
+              "offset": 7860,
               "names": [
                 "rest",
                 "tail",
@@ -61522,7 +61614,7 @@
               ]
             },
             {
-              "offset": 7486,
+              "offset": 7906,
               "names": [
                 "c",
                 "rest",
@@ -61531,13 +61623,13 @@
               ]
             },
             {
-              "offset": 7572,
+              "offset": 7992,
               "names": [
                 "rest"
               ]
             },
             {
-              "offset": 7614,
+              "offset": 8034,
               "names": [
                 "c",
                 "rest",
@@ -61573,8 +61665,8 @@
           "key": "src/imports.printable",
           "kind": "definition",
           "lines": [
-            179,
-            184
+            189,
+            194
           ],
           "features": [
             "bindings",
@@ -61613,7 +61705,7 @@
           ],
           "captures": [
             {
-              "offset": 8094,
+              "offset": 8514,
               "names": [
                 "tail"
               ]
@@ -61646,8 +61738,8 @@
           "key": "src/imports.aliased",
           "kind": "definition",
           "lines": [
-            186,
-            193
+            196,
+            203
           ],
           "features": [
             "calls",
@@ -61694,7 +61786,7 @@
           ],
           "captures": [
             {
-              "offset": 8308,
+              "offset": 8728,
               "names": [
                 "alias",
                 "at",
@@ -61702,13 +61794,13 @@
               ]
             },
             {
-              "offset": 8391,
+              "offset": 8811,
               "names": [
                 "at"
               ]
             },
             {
-              "offset": 8447,
+              "offset": 8867,
               "names": [
                 "alias",
                 "at",
@@ -61716,13 +61808,13 @@
               ]
             },
             {
-              "offset": 8515,
+              "offset": 8935,
               "names": [
                 "at"
               ]
             },
             {
-              "offset": 8573,
+              "offset": 8993,
               "names": [
                 "alias",
                 "at",
@@ -61730,20 +61822,20 @@
               ]
             },
             {
-              "offset": 8624,
+              "offset": 9044,
               "names": [
                 "alias",
                 "path"
               ]
             },
             {
-              "offset": 8654,
+              "offset": 9074,
               "names": [
                 "at"
               ]
             },
             {
-              "offset": 8707,
+              "offset": 9127,
               "names": [
                 "at"
               ]
@@ -61781,8 +61873,8 @@
           "key": "src/imports.import_words",
           "kind": "definition",
           "lines": [
-            196,
-            204
+            206,
+            214
           ],
           "features": [
             "calls",
@@ -61834,13 +61926,13 @@
           ],
           "captures": [
             {
-              "offset": 9052,
+              "offset": 9472,
               "names": [
                 "at"
               ]
             },
             {
-              "offset": 9270,
+              "offset": 9690,
               "names": [
                 "alias",
                 "as",
@@ -61849,7 +61941,7 @@
               ]
             },
             {
-              "offset": 9327,
+              "offset": 9747,
               "names": [
                 "at"
               ]
@@ -61886,8 +61978,8 @@
           "key": "src/imports.alias",
           "kind": "definition",
           "lines": [
-            206,
-            208
+            216,
+            218
           ],
           "features": [
             "constructors",
@@ -61920,8 +62012,8 @@
           "key": "src/imports.push_import",
           "kind": "definition",
           "lines": [
-            210,
-            215
+            220,
+            225
           ],
           "features": [
             "calls",
@@ -61969,7 +62061,7 @@
           ],
           "captures": [
             {
-              "offset": 9904,
+              "offset": 10324,
               "names": [
                 "item",
                 "next"
@@ -62004,8 +62096,8 @@
           "key": "src/imports.join_lines",
           "kind": "definition",
           "lines": [
-            217,
-            220
+            227,
+            230
           ],
           "features": [
             "calls",
@@ -62054,8 +62146,8 @@
           "key": "src/imports.body_lines",
           "kind": "definition",
           "lines": [
-            222,
-            225
+            232,
+            235
           ],
           "features": [
             "calls",
@@ -62099,8 +62191,8 @@
           "key": "src/imports.foreign",
           "kind": "definition",
           "lines": [
-            227,
-            230
+            237,
+            240
           ],
           "features": [
             "calls",
@@ -62148,8 +62240,8 @@
           "key": "src/imports.header_lines",
           "kind": "definition",
           "lines": [
-            235,
-            252
+            245,
+            262
           ],
           "features": [
             "bindings",
@@ -62217,85 +62309,85 @@
           ],
           "captures": [
             {
-              "offset": 11082,
+              "offset": 11502,
               "names": [
-                "row"
-              ]
-            },
-            {
-              "offset": 11158,
-              "names": [
-                "body",
-                "imports",
-                "is_import",
-                "line",
-                "open",
-                "parts",
-                "quoted",
-                "row",
-                "seen",
-                "tail"
-              ]
-            },
-            {
-              "offset": 11226,
-              "names": [
-                "body",
-                "imports",
-                "parts",
-                "quoted",
-                "row",
-                "seen",
-                "tail"
-              ]
-            },
-            {
-              "offset": 11292,
-              "names": [
-                "body",
-                "imports",
-                "quoted",
-                "row",
-                "seen",
-                "tail"
-              ]
-            },
-            {
-              "offset": 11413,
-              "names": [
-                "body",
-                "imports",
-                "is_import",
-                "line",
-                "open",
-                "parts",
-                "quoted",
-                "row",
-                "seen",
-                "tail"
-              ]
-            },
-            {
-              "offset": 11518,
-              "names": [
-                "parts",
                 "row"
               ]
             },
             {
               "offset": 11578,
               "names": [
+                "body",
+                "imports",
+                "is_import",
+                "line",
+                "open",
+                "parts",
+                "quoted",
+                "row",
+                "seen",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11646,
+              "names": [
+                "body",
+                "imports",
+                "parts",
+                "quoted",
+                "row",
+                "seen",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11712,
+              "names": [
+                "body",
+                "imports",
+                "quoted",
+                "row",
+                "seen",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11833,
+              "names": [
+                "body",
+                "imports",
+                "is_import",
+                "line",
+                "open",
+                "parts",
+                "quoted",
+                "row",
+                "seen",
+                "tail"
+              ]
+            },
+            {
+              "offset": 11938,
+              "names": [
+                "parts",
                 "row"
               ]
             },
             {
-              "offset": 11659,
+              "offset": 11998,
               "names": [
                 "row"
               ]
             },
             {
-              "offset": 11742,
+              "offset": 12079,
+              "names": [
+                "row"
+              ]
+            },
+            {
+              "offset": 12162,
               "names": [
                 "body",
                 "imports",
@@ -62352,8 +62444,8 @@
           "key": "src/imports.header",
           "kind": "definition",
           "lines": [
-            254,
-            255
+            264,
+            265
           ],
           "features": [
             "calls",
@@ -64331,7 +64423,7 @@
     },
     {
       "file": "src/load-LAWS.bend",
-      "sha256": "830206d291d143eecf81c6f9c664c3cd5e4a48ed9697347d7a8bffbd2e8c2b70",
+      "sha256": "b61deb86d5c767c3d60794ea4f2e6c7f8fbdaf3bbb3723e3c590c52de580f5ce",
       "imports": [
         {
           "module": "Base",
@@ -64929,13 +65021,92 @@
           }
         },
         {
+          "id": "src/load-LAWS.bend::one_root_slash_is_plain:law",
+          "name": "one_root_slash_is_plain",
+          "key": "src/load-LAWS.one_root_slash_is_plain",
+          "kind": "law",
+          "lines": [
+            89,
+            92
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.list",
+            "literals.string",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/imports.valid"
+          ],
+          "type_references": [
+            "List"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/load-LAWS.bend::one_root_slash_has_one_identity:law",
+          "name": "one_root_slash_has_one_identity",
+          "key": "src/load-LAWS.one_root_slash_has_one_identity",
+          "kind": "law",
+          "lines": [
+            94,
+            97
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "literals.tuple",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Pair",
+            "Result",
+            "Tuple",
+            "src/imports.Target",
+            "src/imports.resolve",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Result"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/load-LAWS.bend::absolute_import_is_unsupported:law",
           "name": "absolute_import_is_unsupported",
           "key": "src/load-LAWS.absolute_import_is_unsupported",
           "kind": "law",
           "lines": [
-            89,
-            91
+            99,
+            101
           ],
           "features": [
             "calls",
@@ -64974,8 +65145,8 @@
           "key": "src/load-LAWS.mixed_path_roots_are_unsupported",
           "kind": "law",
           "lines": [
-            93,
-            95
+            103,
+            105
           ],
           "features": [
             "calls",
@@ -65007,8 +65178,8 @@
           "key": "src/load-LAWS.climbing_paths_have_no_identity",
           "kind": "law",
           "lines": [
-            97,
-            103
+            107,
+            113
           ],
           "features": [
             "calls",
@@ -65053,8 +65224,8 @@
           "key": "src/load-LAWS.root_bundle_is_unsupported",
           "kind": "law",
           "lines": [
-            105,
-            106
+            115,
+            116
           ],
           "features": [
             "calls",
@@ -65086,8 +65257,8 @@
           "key": "src/load-LAWS.working_directory_bundle_contains_local_paths",
           "kind": "law",
           "lines": [
-            108,
-            110
+            118,
+            120
           ],
           "features": [
             "calls",
@@ -65127,8 +65298,8 @@
           "key": "src/load-LAWS.package_escape_is_invalid",
           "kind": "law",
           "lines": [
-            112,
-            114
+            122,
+            124
           ],
           "features": [
             "calls",
@@ -65167,8 +65338,8 @@
           "key": "src/load-LAWS.namespace_is_lexically_canonical",
           "kind": "law",
           "lines": [
-            116,
-            117
+            126,
+            127
           ],
           "features": [
             "calls",
@@ -65194,8 +65365,8 @@
           "key": "src/load-LAWS.glued_hash_stays_in_the_path",
           "kind": "law",
           "lines": [
-            119,
-            122
+            129,
+            132
           ],
           "features": [
             "calls",
@@ -65242,8 +65413,8 @@
           "key": "src/load-LAWS.glued_hash_ends_an_alias",
           "kind": "law",
           "lines": [
-            124,
-            126
+            134,
+            136
           ],
           "features": [
             "calls",
@@ -65283,8 +65454,8 @@
           "key": "src/load-LAWS.header_separator_outside_ascii_is_unsupported",
           "kind": "law",
           "lines": [
-            128,
-            133
+            138,
+            143
           ],
           "features": [
             "calls",
@@ -65326,8 +65497,8 @@
           "key": "src/load-LAWS.duplicate_alias_is_invalid",
           "kind": "law",
           "lines": [
-            135,
-            137
+            145,
+            147
           ],
           "features": [
             "calls",
@@ -65366,8 +65537,8 @@
           "key": "src/load-LAWS.parent_import_is_recognized_without_loading",
           "kind": "law",
           "lines": [
-            139,
-            143
+            149,
+            153
           ],
           "features": [
             "calls",
@@ -65418,8 +65589,8 @@
           "key": "src/load-LAWS.base_term_collision_is_invalid",
           "kind": "law",
           "lines": [
-            145,
-            148
+            155,
+            158
           ],
           "features": [
             "calls",
@@ -65463,8 +65634,8 @@
           "key": "src/load-LAWS.base_constructor_collision_is_invalid",
           "kind": "law",
           "lines": [
-            150,
-            153
+            160,
+            163
           ],
           "features": [
             "calls",
@@ -65508,8 +65679,8 @@
           "key": "src/load-LAWS.column_zero_foreign_body_is_unsupported",
           "kind": "law",
           "lines": [
-            155,
-            157
+            165,
+            167
           ],
           "features": [
             "calls",
@@ -65548,8 +65719,8 @@
           "key": "src/load-LAWS.module_import_after_declaration_is_invalid",
           "kind": "law",
           "lines": [
-            159,
-            161
+            169,
+            171
           ],
           "features": [
             "calls",
@@ -65588,8 +65759,8 @@
           "key": "src/load-LAWS.quoted_body_leaves_imports_to_the_lexer",
           "kind": "law",
           "lines": [
-            163,
-            165
+            173,
+            175
           ],
           "features": [
             "calls",
@@ -65626,8 +65797,8 @@
           "key": "src/load-LAWS.output_names_no_file_the_load_read",
           "kind": "law",
           "lines": [
-            167,
-            177
+            177,
+            187
           ],
           "features": [
             "calls",
@@ -65684,8 +65855,8 @@
           "key": "src/load-LAWS.uncanonical_output_is_refused",
           "kind": "law",
           "lines": [
-            179,
-            183
+            189,
+            193
           ],
           "features": [
             "calls",
@@ -65734,8 +65905,8 @@
           "key": "src/load-LAWS.ambiguous_host_path_is_unsupported",
           "kind": "law",
           "lines": [
-            185,
-            187
+            195,
+            197
           ],
           "features": [
             "calls",
@@ -65776,8 +65947,8 @@
           "key": "src/load-LAWS.canonical_host_path_can_load",
           "kind": "law",
           "lines": [
-            189,
-            190
+            199,
+            200
           ],
           "features": [
             "calls",
@@ -65813,8 +65984,8 @@
           "key": "src/load-LAWS.path_query_failure_is_a_host_failure",
           "kind": "law",
           "lines": [
-            192,
-            195
+            202,
+            205
           ],
           "features": [
             "calls",
@@ -65861,7 +66032,7 @@
     },
     {
       "file": "src/load-PROOF.bend",
-      "sha256": "07148d45b2cab875b14ca9e799fbf98c9ad4efb60ec9ac8e560cb7de95862c1c",
+      "sha256": "fb66d06bd3fab7717e00eecb9e8d28ed6cdf0c80a414f41c51fa31872f8bd5a3",
       "imports": [
         {
           "module": "Base",
@@ -66442,13 +66613,96 @@
           }
         },
         {
+          "id": "src/load-PROOF.bend::L.one_root_slash_is_plain:law_fill",
+          "name": "L.one_root_slash_is_plain",
+          "key": "src/load-LAWS.one_root_slash_is_plain",
+          "kind": "law_fill",
+          "lines": [
+            40,
+            41
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Con",
+            "False",
+            "List",
+            "Nil",
+            "True",
+            "src/imports.valid"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "src/imports.valid"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/load-PROOF.bend::L.one_root_slash_has_one_identity:law_fill",
+          "name": "L.one_root_slash_has_one_identity",
+          "key": "src/load-LAWS.one_root_slash_has_one_identity",
+          "kind": "law_fill",
+          "lines": [
+            43,
+            44
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "equality",
+            "fields",
+            "generics",
+            "literals.string",
+            "proofs",
+            "quantities.arguments",
+            "types.base"
+          ],
+          "references": [
+            "Pair",
+            "Result",
+            "Tuple",
+            "src/imports.Target",
+            "src/imports.resolve",
+            "src/syntax.Error"
+          ],
+          "type_references": [
+            "Pair",
+            "Result",
+            "src/imports.Target",
+            "src/imports.resolve",
+            "src/syntax.Error"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/load-PROOF.bend::L.absolute_import_is_unsupported:law_fill",
           "name": "L.absolute_import_is_unsupported",
           "key": "src/load-LAWS.absolute_import_is_unsupported",
           "kind": "law_fill",
           "lines": [
-            40,
-            41
+            46,
+            47
           ],
           "features": [
             "calls",
@@ -66490,8 +66744,8 @@
           "key": "src/load-LAWS.mixed_path_roots_are_unsupported",
           "kind": "law_fill",
           "lines": [
-            43,
-            44
+            49,
+            50
           ],
           "features": [
             "calls",
@@ -66526,8 +66780,8 @@
           "key": "src/load-LAWS.climbing_paths_have_no_identity",
           "kind": "law_fill",
           "lines": [
-            46,
-            47
+            52,
+            53
           ],
           "features": [
             "calls",
@@ -66577,8 +66831,8 @@
           "key": "src/load-LAWS.root_bundle_is_unsupported",
           "kind": "law_fill",
           "lines": [
-            49,
-            50
+            55,
+            56
           ],
           "features": [
             "calls",
@@ -66613,8 +66867,8 @@
           "key": "src/load-LAWS.working_directory_bundle_contains_local_paths",
           "kind": "law_fill",
           "lines": [
-            52,
-            53
+            58,
+            59
           ],
           "features": [
             "calls",
@@ -66658,8 +66912,8 @@
           "key": "src/load-LAWS.package_escape_is_invalid",
           "kind": "law_fill",
           "lines": [
-            55,
-            56
+            61,
+            62
           ],
           "features": [
             "calls",
@@ -66701,8 +66955,8 @@
           "key": "src/load-LAWS.namespace_is_lexically_canonical",
           "kind": "law_fill",
           "lines": [
-            58,
-            59
+            64,
+            65
           ],
           "features": [
             "calls",
@@ -66732,8 +66986,8 @@
           "key": "src/load-LAWS.glued_hash_stays_in_the_path",
           "kind": "law_fill",
           "lines": [
-            61,
-            62
+            67,
+            68
           ],
           "features": [
             "calls",
@@ -66782,8 +67036,8 @@
           "key": "src/load-LAWS.glued_hash_ends_an_alias",
           "kind": "law_fill",
           "lines": [
-            64,
-            65
+            70,
+            71
           ],
           "features": [
             "calls",
@@ -66825,8 +67079,8 @@
           "key": "src/load-LAWS.header_separator_outside_ascii_is_unsupported",
           "kind": "law_fill",
           "lines": [
-            67,
-            68
+            73,
+            74
           ],
           "features": [
             "calls",
@@ -66871,8 +67125,8 @@
           "key": "src/load-LAWS.duplicate_alias_is_invalid",
           "kind": "law_fill",
           "lines": [
-            70,
-            71
+            76,
+            77
           ],
           "features": [
             "calls",
@@ -66914,8 +67168,8 @@
           "key": "src/load-LAWS.parent_import_is_recognized_without_loading",
           "kind": "law_fill",
           "lines": [
-            73,
-            74
+            79,
+            80
           ],
           "features": [
             "calls",
@@ -66966,8 +67220,8 @@
           "key": "src/load-LAWS.base_term_collision_is_invalid",
           "kind": "law_fill",
           "lines": [
-            76,
-            76
+            82,
+            82
           ],
           "features": [
             "calls",
@@ -67013,8 +67267,8 @@
           "key": "src/load-LAWS.base_constructor_collision_is_invalid",
           "kind": "law_fill",
           "lines": [
-            77,
-            77
+            83,
+            83
           ],
           "features": [
             "calls",
@@ -67060,8 +67314,8 @@
           "key": "src/load-LAWS.column_zero_foreign_body_is_unsupported",
           "kind": "law_fill",
           "lines": [
-            78,
-            78
+            84,
+            84
           ],
           "features": [
             "calls",
@@ -67103,8 +67357,8 @@
           "key": "src/load-LAWS.module_import_after_declaration_is_invalid",
           "kind": "law_fill",
           "lines": [
-            79,
-            79
+            85,
+            85
           ],
           "features": [
             "calls",
@@ -67146,8 +67400,8 @@
           "key": "src/load-LAWS.quoted_body_leaves_imports_to_the_lexer",
           "kind": "law_fill",
           "lines": [
-            80,
-            80
+            86,
+            86
           ],
           "features": [
             "calls",
@@ -67187,8 +67441,8 @@
           "key": "src/load-LAWS.output_names_no_file_the_load_read",
           "kind": "law_fill",
           "lines": [
-            81,
-            81
+            87,
+            87
           ],
           "features": [
             "calls",
@@ -67243,8 +67497,8 @@
           "key": "src/load-LAWS.uncanonical_output_is_refused",
           "kind": "law_fill",
           "lines": [
-            82,
-            82
+            88,
+            88
           ],
           "features": [
             "calls",
@@ -67296,8 +67550,8 @@
           "key": "src/load-LAWS.ambiguous_host_path_is_unsupported",
           "kind": "law_fill",
           "lines": [
-            83,
-            83
+            89,
+            89
           ],
           "features": [
             "calls",
@@ -67341,8 +67595,8 @@
           "key": "src/load-LAWS.canonical_host_path_can_load",
           "kind": "law_fill",
           "lines": [
-            84,
-            84
+            90,
+            90
           ],
           "features": [
             "calls",
@@ -67381,8 +67635,8 @@
           "key": "src/load-LAWS.path_query_failure_is_a_host_failure",
           "kind": "law_fill",
           "lines": [
-            85,
-            85
+            91,
+            91
           ],
           "features": [
             "calls",

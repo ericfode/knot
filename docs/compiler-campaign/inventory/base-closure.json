@@ -5947,7 +5947,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 582,
+          "declarations": 584,
           "base": 93,
           "base_intrinsics": 27,
           "foreign": 7
@@ -10729,9 +10729,27 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/imports.names",
+            "key": "src/imports.named",
             "file": "src/imports.bend",
             "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "List.is_empty",
+              "String",
+              "src/imports.names"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.names",
+            "file": "src/imports.bend",
+            "via": "src/imports.named",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10960,6 +10978,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/imports.rooted",
+            "file": "src/imports.bend",
+            "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "String.is_empty",
+              "src/imports.named"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/imports.same_file",
             "file": "src/imports.bend",
             "via": "src/load.named",
@@ -11072,15 +11107,14 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.and",
-              "Bool.not",
+              "Bool.or",
               "List",
-              "List.is_empty",
               "String",
               "String.eq",
               "src/imports.hash_head",
-              "src/imports.names",
+              "src/imports.named",
               "src/imports.relative",
+              "src/imports.rooted",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -16477,7 +16511,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 582,
+          "declarations": 584,
           "base": 93,
           "base_intrinsics": 25,
           "foreign": 7
@@ -21259,9 +21293,27 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/imports.names",
+            "key": "src/imports.named",
             "file": "src/imports.bend",
             "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "List.is_empty",
+              "String",
+              "src/imports.names"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.names",
+            "file": "src/imports.bend",
+            "via": "src/imports.named",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21490,6 +21542,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/imports.rooted",
+            "file": "src/imports.bend",
+            "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "String.is_empty",
+              "src/imports.named"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/imports.same_file",
             "file": "src/imports.bend",
             "via": "src/load.named",
@@ -21602,15 +21671,14 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.and",
-              "Bool.not",
+              "Bool.or",
               "List",
-              "List.is_empty",
               "String",
               "String.eq",
               "src/imports.hash_head",
-              "src/imports.names",
+              "src/imports.named",
               "src/imports.relative",
+              "src/imports.rooted",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -27007,7 +27075,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 512,
+          "declarations": 514,
           "base": 79,
           "base_intrinsics": 27,
           "foreign": 7
@@ -30136,9 +30204,24 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/imports.names",
+            "key": "src/imports.named",
             "file": "src/imports.bend",
             "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "List.is_empty",
+              "src/imports.names"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.names",
+            "file": "src/imports.bend",
+            "via": "src/imports.named",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30323,6 +30406,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/imports.rooted",
+            "file": "src/imports.bend",
+            "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "String.is_empty",
+              "src/imports.named"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/imports.same_file",
             "file": "src/imports.bend",
             "via": "src/load.named",
@@ -30407,13 +30504,12 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.and",
-              "Bool.not",
-              "List.is_empty",
+              "Bool.or",
               "String.eq",
               "src/imports.hash_head",
-              "src/imports.names",
+              "src/imports.named",
               "src/imports.relative",
+              "src/imports.rooted",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -34065,7 +34161,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 623,
+          "declarations": 625,
           "base": 134,
           "base_intrinsics": 31,
           "foreign": 7
@@ -38886,9 +38982,27 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/imports.names",
+            "key": "src/imports.named",
             "file": "src/imports.bend",
             "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "List.is_empty",
+              "String",
+              "src/imports.names"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/imports.names",
+            "file": "src/imports.bend",
+            "via": "src/imports.named",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -39112,6 +39226,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/imports.rooted",
+            "file": "src/imports.bend",
+            "via": "src/imports.valid_parts",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "String.is_empty",
+              "src/imports.named"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/imports.same_file",
             "file": "src/imports.bend",
             "via": "src/load.named",
@@ -39223,15 +39354,14 @@
             "unsafe": false,
             "dependencies": [
               "Bool",
-              "Bool.and",
-              "Bool.not",
+              "Bool.or",
               "List",
-              "List.is_empty",
               "String",
               "String.eq",
               "src/imports.hash_head",
-              "src/imports.names",
+              "src/imports.named",
               "src/imports.relative",
+              "src/imports.rooted",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
