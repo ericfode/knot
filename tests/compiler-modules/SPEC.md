@@ -88,8 +88,8 @@ non-string module imports after declarations remain Invalid.
 ## Literals amendment
 
 The literals increment (milestone 5) changes this contract in four places.
-The coordinator and the modules owner sign off on them; until then they are
-recorded here, not assumed accepted.
+The coordinator approved all four on 2026-09-28, granting the modules-owner
+sign-off (literals review fix round 3).
 
 - `base-load.bend::parse`: a selected Base declaration that names one of the
   closed registry's four types (U32, Nat, Char, String) or 39 primitive
