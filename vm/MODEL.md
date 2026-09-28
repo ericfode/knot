@@ -73,17 +73,21 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 
 - Effects: only `IO.print` is modelled. Applying any other foreign Action is
   `Unsupported vm foreign N`; vm-io adds the pure World.
-- Inspection reads every operand word of a prim at its pinned type, including
-  `String.append`'s moved tail, whose cells it does not traverse.
+- Inspection happens at §6's points only, over §9's extents: every prim
+  operand at its pinned type, a String whole (each SCon cell and its Char
+  word, `a` then `b`), the `b` that `String.append` moves included. The
+  model's control `inspect-append-b-whole` puts a closure in `b`'s tail;
+  check-spec's `inspect-append-b` puts it at `b`'s head, where a shallow read
+  already refuses it.
 - §8's describe charges one visit per rendered constructor (a Nat word `n`
   pays `n + 1`) and the tree's UTF-8 bytes with separators, both bounds
   inclusive, inspecting each word before charging it, as `evaluate.describe`
   does. A description that stops (a display bound or an ill-typed word) stops
   the machine with the answer still owned, like any refused transition; §8
   does not say whether it is dropped.
-- Completing Chr inspects its operand at Char, used or not, as the reference
-  evaluation's `construct` reads it; SPEC §6's list of inspection points does
-  not yet name Succ's or Chr's operand.
+- Completing Succ inspects its operand as a Nat and Chr as a U32 (the Char's
+  own immediate-or-Big test), used or not, before the `NatRange` test or any
+  allocation (§6).
 - A Nat Case makes the predecessor only for a selected Succ Branch, after the
   Scope push, and moves it into its slot (§6.1): `nat-case-big` frees its Big
   predecessor and `nat-default-big` allocates none, both under the RC audit.
@@ -103,13 +107,14 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
 - The frozen eval suites have no images until the `image` encoder exists; the
   model's differential covers the 93 goldens, their 44 frozen Book invocations,
   vm-spec's admitted plan, code-list and run controls (counted from
-  `check-spec.py`: 6, 7 and 23 at vm-spec c7250b2, each run control at the fuel
+  `check-spec.py`: 6, 7 and 41 at vm-spec 5517f26, each run control at the fuel
   frozen with it), its 13 argument controls, the model's own eight controls in
   [model-controls/](model-controls/) (a tags-mode Case on Char, immediate and
   Big, and key-mode Cases on U32 and Char at the key 0xffffffff), two display
   controls with multibyte constructor names at and beyond the byte bound, and
-  six inspection controls, each against the reference evaluation's outcome and
-  call count (`vm/evaluate.py`) and, for the seed-derived eight, the seed.
+  seven inspection controls (`append`'s whole `b` among them), each against the
+  reference evaluation's outcome and call count (`vm/evaluate.py`) and, for the
+  seed-derived eight, the seed.
 - The seed's native lane misreads a U32 comparison against a nullary call or a
   call with constant arguments when it is an operand of Base's `Bool.or` or
   `Bool.xor`: the comparison reads as True whatever its value. Either operand

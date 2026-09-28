@@ -414,7 +414,8 @@ def string_cell(+code: Code, +heap: Heap, +w: U32, next: List<&2,U32> -> Result<
   bind(List<&2,U32>,Cell,string_of(code,heap,w),next)
 
 # SPEC §9 on inspected operand words `a` and `b`; the result is allocated
-# before any operand is dropped.
+# before any operand is dropped. A String operand is read whole first, each
+# SCon cell and its Char word, `a` then `b`, even the `b` append moves.
 def computed(id: Nat, +code: Code, +heap: Heap, +a: U32, +b: U32, +x: U32, +y: U32) -> Result<W.Stop,Cell>:
   match id:
     case 0n: word_of(heap,U32.add(x,y))
@@ -452,7 +453,7 @@ def computed(id: Nat, +code: Code, +heap: Heap, +a: U32, +b: U32, +x: U32, +y: U
     case 32n: chain(List.reverse(&2,U32,code_words(digits(10n,x,Nil{}))),code,heap,immediate(0))
     case 33n: chain(List.reverse(&2,U32,code_words(digits(10n,x,Nil{}))),code,heap,immediate(0))
     case 34n: string_cell(code,heap,a,s => string_cell(code,heap,b,t => immediate_cell(heap,truth(W.same(scalars_of(s,heap),scalars_of(t,heap))))))
-    case 35n: string_cell(code,heap,a,s => chain(List.reverse(&2,U32,s),code,heap,b))
+    case 35n: string_cell(code,heap,a,s => string_cell(code,heap,b,t => chain(List.reverse(&2,U32,s),code,heap,b)))
     case 36n: string_cell(code,heap,a,s => chain(s,code,heap,immediate(0)))
     case 37n: string_cell(code,heap,a,s => word_of(heap,W.count(U32,s)))
     case 38n: string_cell(code,heap,a,s => immediate_cell(heap,truth(U32.is_eq(W.count(U32,s),0))))

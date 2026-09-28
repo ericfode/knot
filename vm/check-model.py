@@ -29,8 +29,10 @@ seed's native lane and requires:
   its run controls at the fuel frozen with each and to the run frozen with it
   (a display line by its SHA-256), and the model's own controls in
   vm/model-controls/, whose frozen values the seed and the reference evaluation
-  reproduce, and its display controls, frozen by literal review; each count is
-  check-spec's own, never a literal here;
+  reproduce, and its display controls and `inspect-append-b-whole` (a closure
+  in the tail of the `b` that append moves, read whole by SPEC section 9),
+  frozen by literal review; each count is check-spec's own or frozen with the
+  control, never a literal here;
 - the harness mutant `fuel-ignored`, which runs every run control at 1,000,000,
   killed by exactly the fuel controls whose frozen run differs there;
 - the RC audit before every transition of every golden and admitted control, no
@@ -447,6 +449,7 @@ def admitted_controls() -> list:
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
     listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
     listed += [(f'model:{k}', p, frozen) for k, p, frozen in DISPLAY_CONTROLS]
+    listed += [('model:inspect-append-b-whole', append_b_whole(plans), {**cs.ILL_TYPED, 'calls': 3})]
     require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'codes', 'run')),
             'check-spec lists admitted plan, code-list and run controls')
     require(any('fuel' in frozen for k, _, frozen in listed if k.startswith('run:')), 'check-spec freezes fuel run controls')
@@ -675,6 +678,25 @@ DISPLAY_CONTROLS = [
 ]
 
 
+def append_b_whole(plans: dict) -> dict:
+    """String.append("x", SCon{'a', id(λ)}), its result discarded, frozen by literal review of
+    SPEC sections 6 and 9: append reads the `b` it moves whole, so the closure in b's tail
+    halts it with HostFailure image (ill-typed) after 3 calls (main, id, append).
+    check-spec's inspect-append-b puts the closure at b's head, where a shallow read of b
+    already refuses it."""
+    nat, u32, char, string, boolean, flag, pair, arrow = range(8)
+    types = [*plans['string-codes']['types'][:4], plans['string-eq']['types'][0], plans['value-on']['types'][0],
+             {**PAIR, 'constructors': [{'name': 'Pair', 'fields': [flag, flag]}]}, {'kind': 'arrow', 'domain': flag, 'result': flag}]
+    tail = ['call', string, 0, [['closure', arrow, 1, 1, [], ['ref', flag, 0]]]]
+    b = ['con', string, 1, [['lit', char, 'Char', 97], tail]]
+    append = {'name': 'String.append', 'parameters': [string, string], 'result': string, 'slots': 2,
+              'body': ['prim', string, 35, [['ref', string, 0], ['ref', string, 1]]]}
+    main = {'name': 'main', 'parameters': [], 'result': boolean, 'slots': 1,
+            'body': ['let', boolean, 0, ['call', string, 1, [['lit', string, 'String', [120]], b]], ['value', boolean, 1]]}
+    return {'entry': 'book', 'representation': {'Nat': nat, 'U32': u32, 'Char': char, 'String': string, 'Bool': boolean},
+            'types': types, 'functions': [IDENTITY, append, main]}
+
+
 def seed_controls() -> dict:
     """The seed's Bun lane prints each model control's frozen value."""
     names = [name for name, _, _ in MODEL_CONTROLS]
@@ -883,6 +905,10 @@ MUTANTS = [
     ('xor-through-base', 'word', [('def xor(a: Bool, +b: Bool) -> Bool:\n  choose(Bool,a,u => Bool.not(b),u => b)',
                                    'def xor(a: Bool, +b: Bool) -> Bool:\n  Bool.xor(a,b)')],
      "W.xor is Base's Bool.xor"),
+    # vm-spec 5517f26: append reads the b it moves whole (SPEC section 9).
+    ('append-b-shallow', 'memory', [('    case 35n: string_cell(code,heap,a,s => string_cell(code,heap,b,t => chain(List.reverse(&2,U32,s),code,heap,b)))',
+                                     '    case 35n: string_cell(code,heap,a,s => chain(List.reverse(&2,U32,s),code,heap,b))')],
+     "append reads only the head of the b it moves"),
 ]
 
 
@@ -913,11 +939,12 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
     def one(entry):
         name, section, mutation, meaning = entry
         tree = build_tree(f'mutants/{name}', section, mutation)
-        bins = built(tree, ('model', 'audit', 'lanes'))
+        # vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
+        bins = built(tree, ('model', 'audit', 'lanes') if section == 'word' else ('model', 'audit'))
         observed = {'goldens': golden_runs(bins['model'], expected),
                     'invocations': invocation_runs(bins['model'], bins['audit'], expected),
                     'inspection': inspection_runs(bins['model']),
-                    'lanes': lane_runs(bins['lanes']),
+                    **({'lanes': lane_runs(bins['lanes'])} if 'lanes' in bins else {}),
                     'connectives': connective_runs(tree),
                     'fuel': fuel_runs(bins['model'], expected),
                     'controls': control_runs(bins['model'], listed),
