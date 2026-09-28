@@ -51,7 +51,7 @@ law no_checker_budget:
   for node: S.Node
   {K.check(0n,node) == Fail{S.Exhausted{"check",S.At{0,0,0,0}}} : Result<S.Error,C.Book>}
 
-law file_let_meets_only_earlier_constructors:
+law file_binders_meet_only_earlier_constructors:
   for +at: S.At
   for value: S.Node
   for body: S.Node
@@ -59,6 +59,10 @@ law file_let_meets_only_earlier_constructors:
       S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Binding{S.Token{"Off",at},1,None{},value,body}}],Nil{}),
     K.rebinds(8n,[S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},
         S.Binding{S.Token{"Off",at},1,None{},S.Variable{S.Token{"x",at}},S.Variable{S.Token{"Off",at}}}},
-      S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]}],Nil{}))
-   == (Fail{S.Invalid{"check","constructor-pattern-binder",at}},Done{Unit{}})
-   : Result<S.Error,Unit> & Result<S.Error,Unit>}
+      S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]}],Nil{}),
+    K.rebinds(8n,[S.Datatype{S.Token{"Flag",at},False{},[S.Constructor{S.Token{"Off",at},Nil{}}]},
+      S.Function{S.Token{"f",at},Nil{},S.Token{"Flag",at},S.Match{S.Token{"match",at},S.Variable{S.Token{"x",at}},
+        [S.Arm{S.Token{"case",at},S.Constructor{S.Token{"Box",at},[S.Variable{S.Token{"Off",at}}]},body}]}}],Nil{}))
+   == (Fail{S.Invalid{"check","constructor-pattern-binder",at}},Done{Unit{}},
+       Fail{S.Invalid{"check","constructor-pattern-binder",at}})
+   : Result<S.Error,Unit> & Result<S.Error,Unit> & Result<S.Error,Unit>}

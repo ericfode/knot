@@ -211,14 +211,3 @@ def field_signature(reference: ConstructorRef, types: List<&2,C.Datatype>) -> Re
   match reference:
     case ConstructorRef{type_id,+tag}:
       S.bind(C.Datatype,List<&2,C.Parameter>,type_at(types,type_id),definition => definition_fields(definition,tag))
-
-def has_tag(tag: Maybe<&2,U32>) -> Bool:
-  match tag:
-    case None{}: False{}
-    case Some{value}: True{}
-
-def constructor_named(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
-  match types:
-    case Nil{}: False{}
-    case Con{C.Datatype{token,data,ctors},tail}:
-      Bool.or(has_tag(constructor_tag(ctors,name,0)),constructor_named(tail,name))

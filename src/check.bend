@@ -286,8 +286,29 @@ def constructor_names(nodes: List<&2,S.Node>) -> List<&2,String>:
     case Con{S.Constructor{token,args},tail}: Con{S.text(token),constructor_names(tail)}
     case Con{other,tail}: constructor_names(tail)
 
-# The seed reads a let binder as a pattern: it cannot rebind a constructor
-# declared earlier in the file, while a later constructor leaves it a variable.
+def field_binders(args: List<&2,S.Node>) -> List<&2,S.Token>:
+  match args:
+    case Nil{}: Nil{}
+    case Con{S.Variable{token},tail}: Con{token,field_binders(tail)}
+    case Con{S.Promotion{token},tail}: Con{token,field_binders(tail)}
+    case Con{other,tail}: field_binders(tail)
+
+def binders(node: S.Node) -> List<&2,S.Token>:
+  match node:
+    case S.Variable{token}: [token]
+    case S.Promotion{token}: [token]
+    case S.Constructor{token,args}: field_binders(args)
+    case _: Nil{}
+
+def fresh(tokens: List<&2,S.Token>, +ctors: List<&2,String>) -> Result<S.Error,Unit>:
+  match tokens:
+    case Nil{}: Done{Unit{}}
+    case Con{+token,tail}:
+      S.choose(Result<S.Error,Unit>,named(ctors,S.text(token)),u => C.invalid(Unit,"constructor-pattern-binder",token),u =>
+        fresh(tail,ctors))
+
+# The seed parses let, arm and field binders as patterns: none may name a
+# constructor declared earlier in the file, while a later one leaves it a variable.
 # Pending nodes form one work list, so declaration order is the list order.
 def rebinds(fuel: Nat, nodes: List<&2,S.Node>, +ctors: List<&2,String>) -> Result<S.Error,Unit>:
   match fuel nodes:
@@ -297,11 +318,11 @@ def rebinds(fuel: Nat, nodes: List<&2,S.Node>, +ctors: List<&2,String>) -> Resul
     case 1n+n Con{S.Datatype{token,data,children},rest}:
       rebinds(n,rest,List.append(&2,String,constructor_names(children),ctors))
     case 1n+n Con{S.Function{token,params,result,body},rest}: rebinds(n,Con{body,rest},ctors)
-    case 1n+n Con{S.Binding{+token,q,ann,value,body},rest}:
-      S.choose(Result<S.Error,Unit>,named(ctors,S.text(token)),u => C.invalid(Unit,"constructor-pattern-binder",token),u =>
-        rebinds(n,Con{value,Con{body,rest}},ctors))
+    case 1n+n Con{S.Binding{token,q,ann,value,body},rest}:
+      S.bind(Unit,Unit,fresh([token],ctors),u => rebinds(n,Con{value,Con{body,rest}},ctors))
     case 1n+n Con{S.Match{token,value,arms},rest}: rebinds(n,Con{value,List.append(&2,S.Node,arms,rest)},ctors)
-    case 1n+n Con{S.Arm{token,pat,body},rest}: rebinds(n,Con{body,rest},ctors)
+    case 1n+n Con{S.Arm{token,pat,body},rest}:
+      S.bind(Unit,Unit,fresh(binders(pat),ctors),u => rebinds(n,Con{body,rest},ctors))
     case 1n+n Con{S.Call{token,args},rest}: rebinds(n,List.append(&2,S.Node,args,rest),ctors)
     case 1n+n Con{S.Constructor{token,args},rest}: rebinds(n,List.append(&2,S.Node,args,rest),ctors)
     case 1n+n Con{other,rest}: rebinds(n,rest,ctors)

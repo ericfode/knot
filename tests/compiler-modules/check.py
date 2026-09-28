@@ -365,7 +365,8 @@ def audit(result, fixture, base):
 
 def single_file(fixture, commands, source, name, lane):
     """The same source through the single-file CLIs, which have no qualification pass."""
-    judged = {'file': fixture['file'], 'knot': {'obligation': 'match-seed', 'requires': []}}
+    judged = {'file': fixture['file'], 'knot': {'obligation': 'match-seed',
+                                                'requires': fixture['knot'].get('requires', [])}}
     if 'exit' in fixture['plain']:
         judged = {'file': fixture['file'], 'knot': {'obligation': 'knot_expected'},
                   'knot_expected': fixture['plain']}
@@ -589,6 +590,21 @@ def fallback(+qualified: String, +bare: String, +names: Names) -> String:
      'old': 'named(ctors,S.text(token))',
      'new': 'False{}',
      'witness': 'let-single-ctor', 'plain': True, 'actual': {'exit': 0}},
+    {'name': 'file-constructor-order-ignored', 'file': 'check.bend',
+     'old': 'def file(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:\n  S.bind(Unit,C.Book,rebinds(65536n,[root],Nil{}),u => check(depth,root))',
+     'new': 'def declared(nodes: List<&2,S.Node>) -> List<&2,String>:\n  match nodes:\n    case Nil{}: Nil{}\n    case Con{S.Datatype{token,data,children},tail}: List.append(&2,String,constructor_names(children),declared(tail))\n    case Con{S.Sequence{items},tail}: List.append(&2,String,declared(items),declared(tail))\n    case Con{other,tail}: declared(tail)\n\ndef file(depth: Nat, +root: S.Node) -> Result<S.Error,C.Book>:\n  S.bind(Unit,C.Book,rebinds(65536n,[root],declared([root])),u => check(depth,root))',
+     'witness': 'field-later-ctor', 'plain': True,
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tconstructor-pattern-binder\t'}},
+    {'name': 'file-arm-binders-unchecked', 'file': 'check.bend',
+     'old': 'S.bind(Unit,Unit,fresh(binders(pat),ctors),u => rebinds(n,Con{body,rest},ctors))',
+     'new': 'rebinds(n,Con{body,rest},ctors)',
+     'witness': 'arm-earlier-ctor', 'plain': True,
+     'actual': {'exit': 3, 'diagnostic_prefix': 'Unsupported\tcheck\tvariable-pattern\t'}},
+    {'name': 'field-binder-book-wide', 'file': 'patterns.bend',
+     'old': 'def fields(nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, +parent: U32,\n  +types: List<&2,C.Datatype>, +scope: E.Scope, +origin: S.Token) -> Result<S.Error,Fields>:\n  match nodes parameters:\n    case Nil{} Nil{}: Done{Fields{scope,Nil{},Nil{}}}\n    case Con{node,+tail} Con{C.Parameter{name,+q,+type_id},+rest}:\n      binder(node,+token => mark =>\n        +actual = quantity(q,parent,mark)\n        S.bind(C.Datatype,Fields,G.type_at(types,type_id),definition =>\n          S.bind(Unit,Fields,G.quantity(token,actual,definition),u =>\n            add(scope,token,actual,type_id,bound => binding => term =>\n              S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)})))))\n    case _ _: C.invalid(Fields,"pattern-arity",origin)\n\n',
+     'new': 'def book_constructor(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:\n  match types:\n    case Nil{}: False{}\n    case Con{C.Datatype{token,data,ctors},tail}:\n      Bool.or(Maybe.is_some(&2,U32,G.constructor_tag(ctors,name,0)),book_constructor(tail,name))\n\ndef fields(nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, +parent: U32,\n  +types: List<&2,C.Datatype>, +scope: E.Scope, +origin: S.Token) -> Result<S.Error,Fields>:\n  match nodes parameters:\n    case Nil{} Nil{}: Done{Fields{scope,Nil{},Nil{}}}\n    case Con{node,+tail} Con{C.Parameter{name,+q,+type_id},+rest}:\n      binder(node,+token => mark =>\n        S.choose(Result<S.Error,Fields>,book_constructor(types,token),u => C.invalid(Fields,"constructor-pattern-binder",token),u =>\n        +actual = quantity(q,parent,mark)\n        S.bind(C.Datatype,Fields,G.type_at(types,type_id),definition =>\n          S.bind(Unit,Fields,G.quantity(token,actual,definition),u =>\n            add(scope,token,actual,type_id,bound => binding => term =>\n              S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)}))))))\n    case _ _: C.invalid(Fields,"pattern-arity",origin)\n\n',
+     'witness': 'field-cross-module-ctor',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tcheck\tconstructor-pattern-binder\t'}},
 ]
 REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'relative-to-entry', 'absent-hash-accepted', 'cycle-ignored',
@@ -598,7 +614,8 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'pattern-global-ctors-dropped', 'promoted-constructor-ignored',
                     'source-budget-counts-characters', 'import-comment-splits-anywhere',
                     'alias-keeps-glued-comment', 'header-character-ignored',
-                    'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked'}
+                    'constructor-order-ignored', 'let-binder-unchecked', 'file-let-binder-unchecked',
+                    'file-constructor-order-ignored', 'file-arm-binders-unchecked', 'field-binder-book-wide'}
 
 
 def mutants(fixtures):
