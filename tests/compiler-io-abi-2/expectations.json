@@ -1,0 +1,690 @@
+{
+  "schema": 1,
+  "profile": "knot-io-2",
+  "authority": "D17 literal review before implementation; path identity compared to unmodified campaign/modules 0111f13 foreign bodies.",
+  "reference_commit": "0111f13",
+  "reference_sha256": {
+    "path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
+    "path-identity.js": "6150ae6b016d20f2e380b6f50110e654509d5b1b822bce78c03b4c5c640d7ee2"
+  },
+  "result": "[Darwin errno, value, raw returned bytes as hex]; zero-length ranges require address 0",
+  "read_bytes": [
+    {
+      "name": "empty",
+      "hex": "",
+      "reads": [
+        [
+          "read_bytes",
+          8
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "binary",
+      "hex": "00ff80c328eda080f09f9982efbbbf",
+      "reads": [
+        [
+          "read_bytes",
+          4294967295
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          "00ff80c328eda080f09f9982efbbbf"
+        ]
+      ]
+    },
+    {
+      "name": "split-binary",
+      "hex": "f09f998200ff",
+      "reads": [
+        [
+          "read_bytes",
+          1
+        ],
+        [
+          "read_bytes",
+          2
+        ],
+        [
+          "read_bytes",
+          3
+        ],
+        [
+          "read_bytes",
+          1
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          "f0"
+        ],
+        [
+          0,
+          1,
+          "9f99"
+        ],
+        [
+          0,
+          1,
+          "8200ff"
+        ],
+        [
+          0,
+          1,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "zero-keeps-position",
+      "hex": "00ff",
+      "reads": [
+        [
+          "read_bytes",
+          0
+        ],
+        [
+          "read_bytes",
+          4294967295
+        ],
+        [
+          "read_bytes",
+          0
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          ""
+        ],
+        [
+          0,
+          1,
+          "00ff"
+        ],
+        [
+          0,
+          1,
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "shared-cursor",
+      "hex": "61c328ff62",
+      "reads": [
+        [
+          "read_bytes",
+          2
+        ],
+        [
+          "read",
+          2
+        ],
+        [
+          "read_bytes",
+          8
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          "61c3"
+        ],
+        [
+          0,
+          1,
+          "28efbfbd"
+        ],
+        [
+          0,
+          1,
+          "62"
+        ]
+      ]
+    },
+    {
+      "name": "text-then-bytes",
+      "hex": "f09f998200",
+      "reads": [
+        [
+          "read",
+          1
+        ],
+        [
+          "read_bytes",
+          4
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          "efbfbd"
+        ],
+        [
+          0,
+          1,
+          "9f998200"
+        ]
+      ]
+    },
+    {
+      "name": "all-byte-values",
+      "hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "reads": [
+        [
+          "read_bytes",
+          256
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          1,
+          "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        ]
+      ]
+    },
+    {
+      "name": "write-handle",
+      "hex": "",
+      "mode": "w",
+      "reads": [
+        [
+          "read_bytes",
+          0
+        ],
+        [
+          "read_bytes",
+          4
+        ]
+      ],
+      "expected": [
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ],
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "append-handle",
+      "hex": "",
+      "mode": "a",
+      "reads": [
+        [
+          "read_bytes",
+          4
+        ]
+      ],
+      "expected": [
+        [
+          9,
+          1,
+          "4261642066696c652064657363726970746f72"
+        ]
+      ]
+    },
+    {
+      "name": "directory",
+      "directory": true,
+      "reads": [
+        [
+          "read_bytes",
+          0
+        ],
+        [
+          "read_bytes",
+          4
+        ]
+      ],
+      "expected": [
+        [
+          21,
+          1,
+          "49732061206469726563746f7279"
+        ],
+        [
+          21,
+          1,
+          "49732061206469726563746f7279"
+        ]
+      ]
+    },
+    {
+      "name": "grow-memory",
+      "fill": {
+        "byte": 255,
+        "count": 65537
+      },
+      "reads": [
+        [
+          "read_bytes",
+          65537
+        ]
+      ],
+      "expected_fill": {
+        "errno": 0,
+        "value": 1,
+        "byte": 255,
+        "count": 65537
+      }
+    }
+  ],
+  "path_identity": [
+    {
+      "name": "empty",
+      "path": "",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "dot",
+      "path": ".",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "file",
+      "path": "file.bin",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "directory",
+      "path": "dir",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "separators",
+      "path": "./dir//./leaf",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "parent",
+      "path": "dir/../file.bin",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "file-parent",
+      "path": "file.bin/..",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "absolute",
+      "path": "$SANDBOX/file.bin",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "absolute-root",
+      "path": "$SANDBOX",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "missing",
+      "path": "missing",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "missing-child",
+      "path": "missing/leaf",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "not-directory",
+      "path": "file.bin/leaf",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "missing-before-parent",
+      "path": "missing/../link-file",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "unicode",
+      "path": "dir/🪞",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "symlink-file",
+      "path": "link-file",
+      "expected": [
+        0,
+        0,
+        ""
+      ]
+    },
+    {
+      "name": "symlink-directory",
+      "path": "link-dir/leaf",
+      "expected": [
+        0,
+        0,
+        ""
+      ]
+    },
+    {
+      "name": "symlink-before-parent",
+      "path": "link-dir/../file.bin",
+      "expected": [
+        0,
+        0,
+        ""
+      ]
+    },
+    {
+      "name": "dangling-symlink",
+      "path": "dangling",
+      "expected": [
+        0,
+        0,
+        ""
+      ]
+    },
+    {
+      "name": "symlink-outside",
+      "path": "outside",
+      "expected": [
+        0,
+        0,
+        ""
+      ]
+    },
+    {
+      "name": "hardlink",
+      "path": "hardlink",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "fifo",
+      "path": "fifo",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "case-file",
+      "path": "FILE.BIN",
+      "expected_by_case": {
+        "sensitive": [
+          0,
+          1,
+          ""
+        ],
+        "insensitive": [
+          0,
+          0,
+          ""
+        ]
+      }
+    },
+    {
+      "name": "case-directory",
+      "path": "DIR/leaf",
+      "expected_by_case": {
+        "sensitive": [
+          0,
+          1,
+          ""
+        ],
+        "insensitive": [
+          0,
+          0,
+          ""
+        ]
+      }
+    },
+    {
+      "name": "case-before-parent",
+      "path": "DIR/../file.bin",
+      "expected_by_case": {
+        "sensitive": [
+          0,
+          1,
+          ""
+        ],
+        "insensitive": [
+          0,
+          0,
+          ""
+        ]
+      }
+    },
+    {
+      "name": "nul",
+      "path": "file.bin\u0000suffix",
+      "expected": [
+        92,
+        0,
+        "496c6c6567616c20627974652073657175656e6365"
+      ]
+    },
+    {
+      "name": "too-long",
+      "path": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "expected": [
+        63,
+        0,
+        "46696c65206e616d6520746f6f206c6f6e67"
+      ]
+    }
+  ],
+  "controls": {
+    "bytes-wrong-signature": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-wrong-signature": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "bytes-unaligned-result": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-unaligned-result": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "bytes-bad-result": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-bad-result": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-bad-pointer": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-invalid-utf8": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "bytes-allocator-effect": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "identity-allocator-effect": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "unknown-exhaustion": [
+      "HostFailure",
+      "abi",
+      5
+    ],
+    "bytes-unknown-handle": [
+      "HostFailure",
+      "handle",
+      5
+    ],
+    "bytes-closed-handle": [
+      "HostFailure",
+      "handle",
+      5
+    ],
+    "identity-parent-escape": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "identity-absolute-escape": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "identity-secret-lower": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "identity-secret-upper": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "identity-secret-nested": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "identity-secret-after-missing": [
+      "HostFailure",
+      "sandbox",
+      5
+    ],
+    "bytes-transfer-limit": [
+      "Exhausted",
+      "memory",
+      4
+    ],
+    "bytes-allocator-exhaustion": [
+      "Exhausted",
+      "memory",
+      4
+    ],
+    "frame-exhaustion": [
+      "Exhausted",
+      "frames",
+      4
+    ],
+    "frame-exhaustion-stops": [
+      "Exhausted",
+      "frames",
+      4
+    ]
+  },
+  "mutants": [
+    {
+      "name": "decode-raw-bytes",
+      "witness": "binary",
+      "wrong": "UTF-8 replacement changes raw bytes"
+    },
+    {
+      "name": "ignore-path-identity",
+      "witness": "symlink-file",
+      "wrong": "Returns true for a symlink"
+    },
+    {
+      "name": "ignore-case-identity",
+      "witness": "case-file",
+      "wrong": "Returns true for a case alias on an insensitive filesystem"
+    },
+    {
+      "name": "misclassify-frames",
+      "witness": "frame-exhaustion",
+      "wrong": "Reports the step budget for frame exhaustion"
+    }
+  ]
+}
