@@ -7,16 +7,18 @@ Checks, in order:
   and section 6 require (no function reaches itself, no call_indirect);
 - every golden image runs through scripts/run-wasm-io.mjs with the output
   vm/golden/vm-expected.json fixes, and through the test build with the
-  precise Exhausted or Unsupported cause and a structural audit after every
-  transition;
+  precise Exhausted, Unsupported or HostFailure cause in the VM's own outcome
+  registers and a structural audit after every transition;
 - vm/core/fixtures.json: literal-review runs (250,000-deep non-tail recursion,
   quantum re-entry after an Action, fuel boundaries, rendering and its bounds,
   frame exhaustion, invocation errors), state-dump rows and lowered limits;
 - a 200,000-deep nested expression, generated iteratively, and the deep
   fixtures again under a 64 KiB host stack;
-- the 61 malformed-image controls vm-spec froze, refused with the reference
-  codec's first defect, and a seeded fuzz corpus of mutated goldens, where
-  every refusal matches the reference and no run traps;
+- the malformed-image controls vm-spec froze (as many as SPEC section 4
+  states), refused with the reference codec's first defect; the controls
+  vm-spec admits, loaded and run as vm/core/fixtures.json freezes them; and a
+  seeded fuzz corpus of mutated goldens, where every refusal matches the
+  reference and no run traps;
 - WAT mutants, each killed by a named fixture group through a wrong
   observation (a trap, host stack failure or timeout never counts).
 
@@ -85,7 +87,7 @@ REASONS = [
     (r'constructor count', 'constructor-count'), (r'constructor record', 'constructor-record'),
     (r'constructor tag', 'constructor-tag'), (r'constructor order', 'constructor-order'),
     (r'constant record', 'constant-record'), (r'scalar constant width', 'scalar-constant-width'),
-    (r'string code beyond plan text', 'string-code'), (r'node record', 'node-record'),
+    (r'node record', 'node-record'),
     (r'(lit|prim|default|value|con|ref|call|let|case|branch|closure|invoke|foreign) length', 'node-length'),
     (r'function record', 'function-record'), (r'function root', 'function-root'),
     (r'child offset', 'child-offset'), (r'child after parent', 'child-after-parent'),
@@ -148,13 +150,52 @@ def expected_reason(refusal: str) -> str:
 
 
 def observed_reason(result: dict) -> str | None:
-    """The VM's refusal code, from its stderr line or, for image size, its exhaustion."""
+    """The VM's refusal of the image, from its stderr line or, for image size, its
+    exhaustion. A traced run that got past vm_boot failed at run time (an `ill-typed`
+    word, SPEC section 6), which is no refusal of the image."""
+    require(result.get('booted') is not None, 'a refusal is read from a traced run')
+    if result['booted']:
+        return None
     line = result['stderr'].strip()
     if line.startswith('HostFailure\timage\t'):
         return line.split('\t')[2]
     if line == 'Exhausted\tio\tmemory' and result.get('state', {}) and result['state']['cause'] == 'image-size':
         return 'image-size'
     return None
+
+
+# ------------------------------------------------------------------ expectations
+KINDS = {1: 'steps', 2: 'memory', 3: 'frames'}  # the host's exhaustion kinds
+
+
+def expected_run(case: dict) -> dict:
+    """What the host shows for a golden (SPEC section 11): vm-expected's run, or the
+    line its outcome prints, after the output the VM owes before it."""
+    if 'exit' in case:
+        return {k: case[k] for k in ('exit', 'stdout', 'stderr')}
+    outcome, cause = case['outcome'], case['cause'].replace(' ', '\t')
+    if outcome == 'Exhausted':
+        return {'exit': 4, 'stdout': '', 'stderr': f"Exhausted\tio\t{KINDS[case['kind']]}\n"}
+    require(outcome in ('Unsupported', 'HostFailure'), f'a golden outcome {outcome}')
+    return {'exit': 3 if outcome == 'Unsupported' else 5, 'stdout': case.get('stdout', ''),
+            'stderr': f'{outcome}\t{cause}\n'}
+
+
+def expected_dump(case: dict) -> dict:
+    """The VM's own outcome registers for a golden. A HostFailure there, not only on
+    stderr, shows that the VM refused before its host call (D20), not the host."""
+    if 'exit' in case:
+        return {'outcome': 'Completed'}
+    row = {'outcome': case['outcome'], 'cause': case['cause'].split(' ')[-1]}
+    return {**row, 'kind': case['kind']} if case['outcome'] == 'Exhausted' else row
+
+
+def refusal_counts() -> tuple[int, int, int]:
+    """SPEC section 4's frozen refusals: (total, byte-level, plan-level)."""
+    text = ' '.join((HERE / 'SPEC.md').read_text().split())
+    m = re.search(r'freezes (\d+) refusals \((\d+) byte-level, (\d+) plan-level\)', text)
+    require(m, 'SPEC section 4 states its frozen refusal counts')
+    return tuple(map(int, m.groups()))
 
 
 # ------------------------------------------------------------------ runners
@@ -359,6 +400,18 @@ MUTANTS = [
        '(then (i32.rem_u (local.get $x) (local.get $y))) (else (i32.const 0))')], 'goldens'),
     ('host-stack-recursion', 'the pair memo rehashes by calling itself',
      [('(then (drop (call $pairslot (i32.sub', '(then (drop (call $entered (i32.sub')], 'shape'),
+    # vm-spec 5f9a0fd: a none slot, every u32 String code, and D20's refusal in the VM
+    ('none-slot-refused', 'a Case on a none-typed slot is refused at load',
+     [('(i32.and (i32.ne (local.get $x) (local.get $y)) (i32.ne (local.get $x) (i32.const -1)))',
+       '(i32.ne (local.get $x) (local.get $y))')], 'controls'),
+    ('string-code-refused', 'a String constant whose first code is above U+10FFFF is refused at load',
+     [('          (then (call $refuse (global.get $R_scalar_constant_width))))\n',
+       '          (then (call $refuse (global.get $R_scalar_constant_width))))\n'
+       '        (if (i32.and (i32.eq (local.get $kind) (i32.const 3)) (i32.ne (local.get $nw) (i32.const 0)))\n'
+       '          (then (if (i32.gt_u (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 0x10ffff))\n'
+       '            (then (call $refuse (global.get $R_constant_record))))))\n')], 'goldens'),
+    ('surrogate-left-to-host', 'a surrogate reaches the host call, which refuses it in the VM\'s place',
+     [('(i32.eq (i32.and (local.get $c) (i32.const 0xfffff800)) (i32.const 0xd800))', '(i32.const 0)')], 'goldens'),
 ]
 
 
@@ -406,19 +459,8 @@ def main() -> int:
         case, got, dump = expected['cases'][name], results[name], traced[name]
         state = dump['state']
         require(dump['broken'] is None, f'{name}: state audit {dump["broken"]}')
-        if 'exit' in case:
-            require((got['exit'], got['stdout'], got['stderr']) == (case['exit'], case['stdout'], case['stderr']),
-                    f'{name}: {got} differs from vm-expected')
-            require(state['outcome'] == 'Completed', f'{name}: dump outcome {state["outcome"]}')
-        elif case['outcome'] == 'Exhausted':
-            require(got['exit'] == 4 and got['stderr'] == 'Exhausted\tio\tmemory\n' and not got['stdout'],
-                    f'{name}: {got}')
-            require((state['outcome'], state['kind'], state['cause']) == ('Exhausted', case['kind'], case['cause']),
-                    f'{name}: dump {state}')
-        else:
-            require(case['outcome'] == 'Unsupported' and got['exit'] == 3 and not got['stdout'] and
-                    got['stderr'] == f"Unsupported\t{case['cause'].replace(' ', chr(9))}\n", f'{name}: {got}')
-            require(state['outcome'] == 'Unsupported', f'{name}: dump {state}')
+        require(got == expected_run(case), f'{name}: {got} differs from vm-expected {expected_run(case)}')
+        require(all(state[k] == v for k, v in expected_dump(case).items()), f'{name}: dump {state} vs {expected_dump(case)}')
         require((dump['exit'], dump['stdout']) == (got['exit'], got['stdout']), f'{name}: harness and host differ')
         goldens.append({'name': name, 'exit': got['exit'], 'stdout_sha256': sha(got['stdout'].encode()),
                         'outcome': state['outcome'], 'cause': state['cause'], 'calls': state['calls'],
@@ -480,32 +522,69 @@ def main() -> int:
     # malformed images: the frozen controls, then a seeded fuzz corpus
     plans = {p.name[:-len('.plan.json')]: json.loads(p.read_text()) for p in golden.glob('*.plan.json')}
     images = {p.stem: p.read_bytes() for p in golden.glob('*.kimg')}
-    controls = spec.byte_controls(images, digest) + [
-        (f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in spec.plan_controls(plans)]
-    require(len(controls) == 61, f'61 frozen controls, found {len(controls)}')
+    planned = spec.plan_controls(plans)  # a row without a message is one the VM MUST admit
+    byte_level = spec.byte_controls(images, digest)
+    plan_level = [(f'plan:{k}', codec.encode(p, digest), 'HostFailure image: validator: ', m) for k, p, m in planned if m]
+    total, bytes_frozen, plans_frozen = refusal_counts()
+    require((len(byte_level), len(plan_level), len(byte_level) + len(plan_level)) == (bytes_frozen, plans_frozen, total),
+            f'SPEC section 4 freezes {total} refusals ({bytes_frozen} byte-level, {plans_frozen} plan-level); '
+            f'check-spec.py yields {len(byte_level)} and {len(plan_level)}')
+    controls = byte_level + plan_level
     malformed = BUILD / 'malformed'
     malformed.mkdir()
+
+    def argv_for(name, data):
+        return [name, '1000', '--'] if int.from_bytes(data[12:16], 'little') == 1 else [name, 'main', '1000']
+
+    def traced(rows, where, timeout=600):
+        return harness([{'id': r['label'], 'wasm': str(test), 'files': {r['argv'][0]: str(where / r['argv'][0])},
+                         'argv': r['argv'], 'trace': 'yields'} for r in rows], timeout)
+
     rows = []
     for i, (label, data, _, _) in enumerate(controls):
         (malformed / f'c{i}.kimg').write_bytes(data)
-        entry = int.from_bytes(data[12:16], 'little')
         rows.append({'label': label, 'sha256': sha(data), 'reference': spec.rejected(data, reg, digest),
-                     'argv': [f'c{i}.kimg', '1000', '--'] if entry == 1 else [f'c{i}.kimg', 'main', '1000']})
+                     'argv': argv_for(f'c{i}.kimg', data)})
     got = pool(lambda r: host(module, malformed, r['argv']), rows)
-    dumped = harness([{'id': r['label'], 'wasm': str(test), 'files': {r['argv'][0]: str(malformed / r['argv'][0])},
-                       'argv': r['argv']} for r in rows])
+    dumped = traced(rows, malformed)
     refused = []
     for r, g in zip(rows, got):
-        want = expected_reason(r['reference'])
-        g['state'] = dumped[r['label']]['state']
+        code = expected_reason(r['reference'])
+        g.update(state=dumped[r['label']]['state'], booted=dumped[r['label']]['booted'])
         require(clean(g), f"control {r['label']}: {g}")
-        require(observed_reason(g) == want, f"control {r['label']}: VM {g['stderr']!r}, reference {r['reference']!r}")
-        refused.append({'control': r['label'], 'reference': r['reference'], 'vm': want, 'exit': g['exit']})
+        require(observed_reason(g) == code, f"control {r['label']}: VM {g['stderr']!r}, reference {r['reference']!r}")
+        refused.append({'control': r['label'], 'reference': r['reference'], 'vm': code, 'exit': g['exit']})
+
+    # the controls vm-spec admits (SPEC section 4): loaded, then run as literal review froze them
+    admitted = [(f'plan:{k}', codec.encode(p, digest)) for k, p, m in planned if m is None] + [
+        (label, codec.encode(p, digest)) for label, p in spec.code_controls(plans)]
+    frozen = {r['control']: r for r in fixtures['admitted']['rows']}
+    require(sorted(label for label, _ in admitted) == sorted(frozen),
+            f'admitted controls {sorted(label for label, _ in admitted)} vs frozen rows {sorted(frozen)}')
+    loaded = BUILD / 'admitted'
+    loaded.mkdir()
+    welcome = []
+    for i, (label, data) in enumerate(admitted):
+        require(spec.rejected(data, reg, digest) is None, f'admitted control {label}: the reference refuses it')
+        (loaded / f'a{i}.kimg').write_bytes(data)
+        welcome.append({'label': label, 'sha256': sha(data), 'argv': [f'a{i}.kimg', *frozen[label]['argv']]})
+    ran = pool(lambda r: host(module, loaded, r['argv']), welcome)
+    dumped = traced(welcome, loaded)
+    admissions = []
+    for r, g in zip(welcome, ran):
+        row, dump = frozen[r['label']], dumped[r['label']]
+        state = dump['state']
+        require(g == row['expect'], f"admitted control {r['label']}: {g} vs {row['expect']}")
+        require(dump['booted'] and (dump['exit'], dump['stdout']) == (g['exit'], g['stdout']),
+                f"admitted control {r['label']}: not loaded, or harness and host differ: {dump}")
+        seen = {'outcome': state['outcome'], 'kind': state['kind'], 'cause': state['cause'], 'calls': state['calls']}
+        require(all(seen[k] == v for k, v in row['dump'].items()), f"admitted control {r['label']}: {seen} vs {row['dump']}")
+        admissions.append({'control': r['label'], 'sha256': r['sha256'], 'exit': g['exit'], **row['dump']})
+
     fuzz = BUILD / 'fuzz'
     fuzz.mkdir()
     corpus = fuzz_corpus(images, reg, digest, fuzz)
-    fuzzed = harness([{'id': r['label'], 'wasm': str(test), 'files': {r['argv'][0]: str(fuzz / r['argv'][0])},
-                       'argv': r['argv']} for r in corpus], timeout=1200)
+    fuzzed = traced(corpus, fuzz, timeout=1200)
     tally = {'refused': 0, 'accepted': 0, 'reference_crash': 0}
     for r in corpus:
         g = fuzzed[r['label']]
@@ -519,24 +598,31 @@ def main() -> int:
         else:
             require(observed_reason(g) == expected_reason(ref), f"fuzz {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
             tally['refused'] += 1
-    record['malformed'] = {'controls': refused, 'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE,
-                                                         'images': len(corpus), 'corpus_sha256': sha(json.dumps(
-                                                             [r['sha256'] for r in corpus]).encode()), **tally}}
+    record['malformed'] = {'controls': refused, 'admitted': admissions,
+                           'fuzz': {'seed': FUZZ_SEED, 'per_image': FUZZ_PER_IMAGE, 'images': len(corpus),
+                                    'corpus_sha256': sha(json.dumps([r['sha256'] for r in corpus]).encode()), **tally}}
 
-    # mutants: a changed observation in their group, never a crash
+    # mutants: a changed observation in their group, never a crash. Runs use the test
+    # build, so a golden also compares the VM's own outcome registers.
     source = (HERE / 'vm.wat').read_text()
     goldens_jobs = [{'id': f'golden:{n}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')}, 'argv': golden_argv(n),
-                     'want': {k: expected['cases'][n][k] for k in ('exit', 'stdout', 'stderr') if k in expected['cases'][n]}
-                     if 'exit' in expected['cases'][n] else {'exit': results[n]['exit'], 'stdout': '', 'stderr': results[n]['stderr']}}
+                     'want': expected_run(expected['cases'][n]), 'dump': expected_dump(expected['cases'][n])}
                     for n in names]
     fixture_jobs = [{'id': f"fixture:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))} if r['image'] else {},
                      'argv': [staged(r['image']), *r['argv']], 'want': r['expect']} for r in runs]
     control_jobs = [{'id': f"control:{r['label']}", 'files': {r['argv'][0]: str(malformed / r['argv'][0])},
                      'argv': r['argv'], 'want': {'exit': g['exit'], 'stdout': g['stdout'], 'stderr': g['stderr']}}
                     for r, g in zip(rows, got)]
-    groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs,
+    admitted_jobs = [{'id': f"admitted:{r['label']}", 'files': {r['argv'][0]: str(loaded / r['argv'][0])},
+                      'argv': r['argv'], 'want': frozen[r['label']]['expect']} for r in welcome]
+    groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
               'quantum': [j for j in fixture_jobs if 'quantum' in j['id']]}
+
+    def observed_wrong(job, out):
+        shown = {k: out[k] for k in ('exit', 'stdout', 'stderr')} != job['want']
+        return shown or any(out['state'][k] != v for k, v in job.get('dump', {}).items())
+
     killed = []
     for name, breaks, edits, group in MUTANTS:
         text = source
@@ -544,16 +630,17 @@ def main() -> int:
             require(text.count(old) == 1, f'mutant {name}: edit applies once')
             text = text.replace(old, new)
         wasm = BUILD / f'mutant-{name}.wasm'
-        wasm.write_bytes(build.assemble(text))
         if group == 'shape':
+            wasm.write_bytes(build.assemble(text))
             reached = module_shape(wasm)['reaches_itself']
             require(reached is not None, f'mutant {name} survives the call-graph check')
             killed.append({'mutant': name, 'breaks': breaks, 'group': group,
                            'killed_by': [f'function {reached} reaches itself'], 'wrong_observations': 1, 'crashes': 0})
             continue
-        out = harness([{**{k: v for k, v in j.items() if k != 'want'}, 'wasm': str(wasm)} for j in groups[group]])
-        wrong = [j['id'] for j in groups[group]
-                 if clean(out[j['id']]) and {k: out[j['id']][k] for k in ('exit', 'stdout', 'stderr')} != j['want']]
+        wasm.write_bytes(build.assemble(build.test_source(text)))
+        out = harness([{**{k: v for k, v in j.items() if k not in ('want', 'dump')}, 'wasm': str(wasm)}
+                       for j in groups[group]])
+        wrong = [j['id'] for j in groups[group] if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
         crashed = [j['id'] for j in groups[group] if not clean(out[j['id']])]
         require(wrong, f'mutant {name} survives group {group} (crashes: {crashed[:5]})')
         killed.append({'mutant': name, 'breaks': breaks, 'group': group, 'killed_by': wrong[:5],
@@ -564,7 +651,8 @@ def main() -> int:
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-core passed: {len(goldens)} golden images, {len(core)} fixture runs, {len(dumps)} dump rows, "
-          f"{len(stack)} small-stack runs, {len(refused)} refused controls, {len(corpus)} fuzz images "
+          f"{len(stack)} small-stack runs, {len(refused)} refused and {len(admissions)} admitted controls, "
+          f"{len(corpus)} fuzz images "
           f"({tally['refused']} refused, {tally['accepted']} admitted, {tally['reference_crash']} reference crashes), "
           f"{len(killed)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0

@@ -90,7 +90,6 @@
   (data (i32.const 1576) "constructor-order")
   (data (i32.const 1600) "constant-record")
   (data (i32.const 1624) "scalar-constant-width")
-  (data (i32.const 1648) "string-code")
   (data (i32.const 1672) "node-record")
   (data (i32.const 1696) "node-length")
   (data (i32.const 1720) "function-record")
@@ -171,7 +170,7 @@
   (data (i32.const 3520) "NatRange")
   (data (i32.const 3544) "RCOverflow")
   (data (i32.const 3568) "display")
-  (data (i32.const 3592) "non-scalar")
+  (data (i32.const 3592) "abi")
   (data (i32.const 3616) "internal")
 
   ;; §9 prim registry (ids 0..40): arity, input representations, output
@@ -222,7 +221,6 @@
   (global $R_constructor_order i32 (i32.const 1576))
   (global $R_constant_record i32 (i32.const 1600))
   (global $R_scalar_constant_width i32 (i32.const 1624))
-  (global $R_string_code i32 (i32.const 1648))
   (global $R_node_record i32 (i32.const 1672))
   (global $R_node_length i32 (i32.const 1696))
   (global $R_function_record i32 (i32.const 1720))
@@ -303,7 +301,7 @@
   (global $R_nat_range i32 (i32.const 3520))
   (global $R_rc_overflow i32 (i32.const 3544))
   (global $R_display i32 (i32.const 3568))
-  (global $R_non_scalar i32 (i32.const 3592))
+  (global $R_abi i32 (i32.const 3592))
   (global $R_internal i32 (i32.const 3616))
 
   ;; ---------------------------------------------------------------- registers
@@ -823,7 +821,7 @@
         (local.set $i (i32.add (local.get $i) (i32.const 1)))
         (br $ctor)))
 
-    ;; constants: scalars hold one word; String codes stay within the plan's text
+    ;; constants: scalars hold one word; a String holds any u32 codes (§2)
     (local.set $at (i32.add (global.get $sK) (i32.const 1)))
     (local.set $i (i32.const 0))
     (block $end
@@ -839,16 +837,6 @@
           (then (call $refuse (global.get $R_constant_record))))
         (if (i32.and (i32.ne (local.get $kind) (i32.const 3)) (i32.ne (local.get $nw) (i32.const 1)))
           (then (call $refuse (global.get $R_scalar_constant_width))))
-        (if (i32.eq (local.get $kind) (i32.const 3))
-          (then
-            (local.set $j (i32.const 0))
-            (block $codes
-              (loop $code
-                (br_if $codes (i32.ge_u (local.get $j) (local.get $nw)))
-                (if (i32.gt_u (call $w (i32.add (i32.add (local.get $at) (i32.const 3)) (local.get $j))) (i32.const 0x10ffff))
-                  (then (call $refuse (global.get $R_string_code))))
-                (local.set $j (i32.add (local.get $j) (i32.const 1)))
-                (br $code)))))
         (local.set $at (i32.add (local.get $at) (call $w (local.get $at))))
         (local.set $i (i32.add (local.get $i) (i32.const 1)))
         (br $constant)))
@@ -1460,13 +1448,15 @@
                 (call $push (i32.const 3) (i32.add (global.get $vbase) (local.get $d)) (call $nodetype (local.get $x)) (i32.const 0))
                 (call $push (i32.const 1) (local.get $x) (local.get $d) (i32.const 0))
                 (br $kinds))
-                ;; Case: the scrutinee slot, its concrete type, then the table
+                ;; Case: the scrutinee slot, typed as the concrete scrutinee type or
+                ;; none (an erased position, inspected at that type by §6.1), then the table
                 (local.set $s (call $w (i32.add (local.get $a) (i32.const 3))))
                 (if (i32.ge_u (local.get $s) (local.get $d)) (then (call $refuse (global.get $R_case_slot))))
                 (call $use (i32.add (global.get $vbase) (local.get $s)))
                 (local.set $y (call $w (i32.add (local.get $a) (i32.const 4))))
+                (local.set $x (call $scope (i32.add (global.get $vbase) (local.get $s))))
                 (if (i32.or (i32.eq (local.get $y) (i32.const -1))
-                            (i32.ne (call $scope (i32.add (global.get $vbase) (local.get $s))) (local.get $y)))
+                            (i32.and (i32.ne (local.get $x) (local.get $y)) (i32.ne (local.get $x) (i32.const -1))))
                   (then (call $refuse (global.get $R_case_scrutinee_type))))
                 (local.set $mode (call $w (i32.add (local.get $a) (i32.const 5))))
                 (local.set $cnt (call $w (i32.add (local.get $a) (i32.const 6))))
@@ -2322,7 +2312,7 @@
         (local.set $c (call $num (i32.load offset=16 (local.get $s))))
         (if (i32.or (i32.gt_u (local.get $c) (i32.const 0x10ffff))
                     (i32.eq (i32.and (local.get $c) (i32.const 0xfffff800)) (i32.const 0xd800)))
-          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 320) (global.get $R_non_scalar))))
+          (then (call $stop (i32.const 3) (i32.const 5) (i32.const 320) (global.get $R_abi))))
         (if (i32.lt_u (local.get $c) (i32.const 0x80))
           (then (i32.store8 (local.get $o) (local.get $c)) (local.set $o (i32.add (local.get $o) (i32.const 1))))
           (else (if (i32.lt_u (local.get $c) (i32.const 0x800))

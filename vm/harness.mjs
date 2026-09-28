@@ -7,6 +7,8 @@
 //
 // Batch mode: a JSON array of jobs on stdin, one JSON result per line.
 //   {id, wasm, files: {name: path}, argv, limits?: {frames, heap}, trace?: 'yields' | 'audit'}
+// A traced result says whether vm_boot returned (`booted`): an image refusal
+// happens before, a run-time failure after.
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -76,7 +78,7 @@ export function audit(x) {
 
 export async function runVM({module, files = {}, argv = [], limits = null, trace = null}) {
   const stdout = [], stderr = [], handles = new Map(), yields = [];
-  let instance, next = 1, steps = 0, audited = 0, broken = null;
+  let instance, next = 1, steps = 0, audited = 0, broken = null, booted = null;
   const mem = () => new Uint8Array(instance.exports.memory.buffer);
   const text = (p, n) => strict.decode(mem().subarray(p, p + n));
   const alloc = bytes => {
@@ -99,7 +101,15 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
       });
       result(out, 0, argv.length, table);
     },
-    print(p, n) { stdout.push(Buffer.from(text(p, n) + '\n')); },
+    print(p, n) {
+      let line;
+      try { line = text(p, n); } catch {
+        // as the real host: text that is not scalar UTF-8 is an ABI fault
+        stderr.push(Buffer.from('HostFailure\tio\tabi\n'));
+        throw new Stop('HostFailure', 5);
+      }
+      stdout.push(Buffer.from(line + '\n'));
+    },
     die(code, p, n) {
       stderr.push(Buffer.from(text(p, n) + '\n'));
       throw new Stop('Halted', (code >>> 0) % 256);
@@ -130,7 +140,9 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     if (limits) x.vm_limits(limits.frames, BigInt(limits.heap));
     if (!trace) x.knot_main();
     else {
+      booted = false;
       x.vm_boot();
+      booted = true;
       for (;;) {
         if (trace === 'audit' && !broken) {
           broken = audit(x);
@@ -150,7 +162,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   }
   const state = x.vm_dump ? registers(x) : null;
   return {status, exit, stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString(),
-    state, steps, yields, audited, broken};
+    state, steps, yields, audited, broken, booted};
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
