@@ -72,6 +72,10 @@ GATES = (
          ('tests/compiler-classification/receipts/precision.json',)),
     Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
          ('tests/compiler-io/receipts/host.json',)),
+    Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
+         ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
+    Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
+         ('tests/compiler-selfhost/receipts/selfhost.json',)),
     Gate('literals', ('python3', 'tests/compiler-literals/check.py'),
          ('tests/compiler-literals/receipts/literals.json',)),
 )
@@ -156,11 +160,44 @@ def copy_cache(source: Path, destination: Path, identities: dict, namespace: str
             dest.write_bytes(data)
 
 
+def host_cc() -> str | None:
+    """The seed's native lane probes `$CC`, then `clang`, with `--version`. On
+    macOS `/usr/bin/clang` is an xcrun shim that intermittently prints nothing
+    under heavy parallel load, which the seed reports as "found no clang".
+    Resolve the toolchain's clang once and pass it as CC: the same compiler the
+    shim forwards to, without the per-call shim."""
+    if os.environ.get('CC'):
+        return os.environ['CC']
+    if sys.platform != 'darwin':
+        return None
+    for _ in range(3):
+        try:
+            found = subprocess.run(['xcrun', '--find', 'clang'], capture_output=True, text=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        path = found.stdout.strip()
+        if found.returncode == 0 and path and os.access(path, os.X_OK):
+            return path
+    return None
+
+
 def environment(run_dir: Path) -> tuple[dict, dict]:
     # Preserve only host tool discovery; never import credentials, dotenv files,
     # NODE_OPTIONS, shell hooks, or caller-specific Bend/network configuration.
     env = {key: os.environ[key] for key in ('PATH', 'HOME', 'SDKROOT', 'DEVELOPER_DIR',
                                           'SYSTEMROOT') if key in os.environ}
+    cc = host_cc()
+    if cc:
+        env['CC'] = cc
+        if sys.platform == 'darwin' and 'SDKROOT' not in env:
+            # The unwrapped compiler needs the SDK path that the shim supplied.
+            try:
+                sdk = subprocess.run(['xcrun', '--show-sdk-path'], capture_output=True, text=True,
+                                     timeout=60).stdout.strip()
+            except (OSError, subprocess.TimeoutExpired):
+                sdk = ''
+            if sdk:
+                env['SDKROOT'] = sdk
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()
@@ -236,6 +273,12 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
             raise ValueError('Bootstrap receipt violates its stage verdict')
         result.update(corpus=record['corpus']['files'], stages=len(stages),
                       reached=sum(s['status'] == 'reached' for s in stages))
+    if gate.name == 'selfhost':
+        status = record['counts']['status']
+        if status['fail'] or not status['pass'] or record['seed']['reproduced'] is not True:
+            raise ValueError('Selfhost receipt violates its verdict')
+        result.update(cases=len(record['cases']), passed=status['pass'], blocked=status['blocked'],
+                      d4_gaps=len(record['counts']['d4_gaps']), judge_mutants=len(record['judge_mutants']))
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
@@ -258,6 +301,11 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
         result['review'] = record['review_counts']
+    if gate.name == 'io-abi-2':
+        for key in ('read_observations', 'reference_observations', 'seed_observations', 'seed_exhausted',
+                    'mutants_killed', 'case_mode'):
+            result[key] = record[key]
+        result['parity'] = len(record['parity'])
     return result
 
 
