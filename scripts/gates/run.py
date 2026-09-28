@@ -62,6 +62,8 @@ GATES = (
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
+         ('tests/compiler-classification/receipts/precision.json',)),
 )
 
 
