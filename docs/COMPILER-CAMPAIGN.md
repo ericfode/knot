@@ -15,6 +15,7 @@ Later additions the same day:
 - "You can let claude do actual work too. i just want you to use up my codex tokens as well"
 - "Please keep the focus on self hosting first"
 - "would it it make sense to make a virtualized bend first?" … "yep this is how i want to do it! make it happen"
+- "Codex is out of tokens, so start using Claude instead. I mean, yourself with workflows."
 
 ## Definition of done
 
@@ -117,7 +118,7 @@ Parallel tracks throughout:
 ## Protocol
 
 - **One branch per increment.** Each increment gets branch `campaign/<id>` in worktree `.claude/worktrees/campaign-<id>`, created from `main`. `.toolchain` is linked to the main checkout's pinned copy.
-- **Executors.** Codex (`gpt-6-astra`, max reasoning), run with `codex exec -s workspace-write -C <worktree>`, or Claude agents. Executors commit only on their branch and never push or merge.
+- **Executors.** Claude workflows since 2026-09-27, when the Codex quota ran out. Each increment runs an implementer loop in its worktree, then the scope/gates/semantics review with adversarial verification, then fix-and-re-review rounds. Earlier increments used Codex (`gpt-6-astra`) through `codex exec -s workspace-write`. Executors commit only on their branch and never push or merge.
 - **Merge path.** The coordinator reviews each branch: diff scope, all 11 existing gates, the new gates, and targeted Perch when a key is available. It then merges to `main` and pushes.
 - **Conflicts.** Receipts that differ only in date or path are regenerated on `main` after merging.
 - **State.** Kept in [compiler-campaign/state.json](compiler-campaign/state.json).
