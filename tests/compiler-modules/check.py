@@ -424,7 +424,7 @@ def mutants(fixtures):
         target.write_text(source.replace(mutant['old'], mutant['new']))
         entry = directory / 'check-cli.bend'
         typecheck = successful([*SEED, entry, '--check-only'])
-        require(typecheck['stdout'].strip() == 'All terms check.', typecheck)
+        require(observation(typecheck) == json.loads((HERE / 'host-check-expectations.json').read_text())['observation'], typecheck)
         output = directory / 'mutant.js'
         built = successful([*SEED, entry, '-o', output])
         fixture = by_name[mutant['witness']]
@@ -453,6 +453,7 @@ def main():
     paths = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md',
              ROOT / 'src/CONTRACT.json', HOST, Path(__file__), HERE / 'expectations.json',
              HERE / 'FIXTURES.md', HERE / 'regen.py', HERE / 'regressions.json',
+             HERE / 'host-check-expectations.json',
              HERE / 'probes.json', HERE / 'pin.bend', HERE / 'pin-expectations.json']
     paths += [p for folder in ('fixtures', 'calls', 'bundle', 'regressions', 'probes')
               for p in sorted((HERE / folder).rglob('*')) if p.is_file()]
