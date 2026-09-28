@@ -187,35 +187,39 @@ law leaf_closes_frontier:
 def modes(types: List<&2,C.Datatype>, params: List<&2,C.Parameter>, body: S.Node) -> Result<S.Error,C.Checked>:
   K.run(64n,K.Expression{body,Some{0}},C.Catalog{Con{mode(),types},Nil{}},0,E.parameters(params,0,Nil{}))
 def parameter(name: String, type_id: U32) -> C.Parameter: C.Parameter{token(name),1,type_id}
+def named(name: String) -> S.Node: S.Variable{token(name)}
+def plus(name: String) -> S.Node: S.Promotion{token(name)}
 def arm(pattern: S.Node, body: S.Node) -> S.Node: S.Arm{token("case"),pattern,body}
-def on(name: String, arms: List<&2,S.Node>) -> S.Node: S.Match{token("match"),S.Variable{token(name)},arms}
-def promoting(body: S.Node) -> S.Node: on("m",[arm(S.Promotion{token("y")},body)])
+def on(value: S.Node, arms: List<&2,S.Node>) -> S.Node: S.Match{token("match"),value,arms}
+def promoting(body: S.Node) -> S.Node: on(named("m"),[arm(plus("y"),body)])
 def mode_arms() -> List<&2,S.Node>: [arm(ctor("Lo"),ctor("Lo")),arm(ctor("Hi"),ctor("Hi"))]
+def cased(level: U32, arms: List<&2,C.Term>) -> C.Term: C.Case{token("match"),level,0,arms}
 def mode_branches() -> List<&2,C.Term>:
   [C.Branch{0,Nil{},C.Value{token("Lo"),0,0}},C.Branch{1,Nil{},C.Value{token("Hi"),0,1}}]
+def wrap() -> C.Datatype: C.Datatype{token("Wrap"),False{},[C.Constructor{token("W"),[parameter("b",0)]}]}
+def wrapped(field: S.Node) -> S.Node: S.Constructor{token("W"),[field]}
+def raised_field() -> C.Binding: C.Binding{token("b"),1,2,0,True{},None{}}
+def uninhabited() -> C.Datatype: C.Datatype{token("Void"),False{},Nil{}}
 def rejected() -> Result<S.Error,C.Checked>: Fail{S.Invalid{"check","reusable-type",S.At{0,0,1,0}}}
 
 law destructured_promotion_witness:
-  {modes(Nil{},[parameter("m",0)],promoting(on("y",mode_arms()))) ==
-    Done{C.Checked{C.Case{token("match"),0,0,mode_branches()},0,Nil{}}} : Result<S.Error,C.Checked>}
+  {modes(Nil{},[parameter("m",0)],promoting(on(named("y"),mode_arms()))) ==
+    Done{C.Checked{cased(0,mode_branches()),0,Nil{}}} : Result<S.Error,C.Checked>}
 
 law destructured_field_promotion_witness:
-  {modes([C.Datatype{token("Wrap"),False{},[C.Constructor{token("W"),[parameter("b",0)]}]}],[parameter("w",1)],
-    on("w",[arm(S.Constructor{token("W"),[S.Promotion{token("b")}]},on("b",mode_arms()))])) ==
-    Done{C.Checked{C.Case{token("match"),0,0,[C.Branch{0,[C.Binding{token("b"),1,2,0,True{},None{}}],
-      C.Case{token("match"),1,0,mode_branches()}}]},0,[0]}} : Result<S.Error,C.Checked>}
+  {modes([wrap()],[parameter("w",1)],on(named("w"),[arm(wrapped(plus("b")),on(named("b"),mode_arms()))])) ==
+    Done{C.Checked{cased(0,[C.Branch{0,[raised_field()],cased(1,mode_branches())}]),0,[0]}} : Result<S.Error,C.Checked>}
 
 law bound_promotion_witness:
-  {modes(Nil{},[parameter("m",0)],promoting(S.Variable{token("y")})) == rejected() : Result<S.Error,C.Checked>}
+  {modes(Nil{},[parameter("m",0)],promoting(named("y"))) == rejected() : Result<S.Error,C.Checked>}
 
 law split_binds_promotion_witness:
-  {modes(Nil{},[parameter("m",0),parameter("w",0)],S.Match{token("match"),S.Sequence{[S.Variable{token("m")},S.Variable{token("w")}]},
-    [arm(S.Sequence{[S.Promotion{token("y")},ctor("Lo")]},ctor("Lo")),arm(S.Sequence{[S.Promotion{token("y")},ctor("Hi")]},ctor("Hi"))]}) ==
+  {modes(Nil{},[parameter("m",0),parameter("w",0)],on(S.Sequence{[named("m"),named("w")]},
+    [arm(S.Sequence{[plus("y"),ctor("Lo")]},ctor("Lo")),arm(S.Sequence{[plus("y"),ctor("Hi")]},ctor("Hi"))])) ==
     rejected() : Result<S.Error,C.Checked>}
 
 law empty_match_binds_promotion_witness:
-  {modes([C.Datatype{token("Void"),False{},Nil{}}],[parameter("m",0),parameter("v",1)],promoting(on("v",Nil{}))) ==
-    rejected() : Result<S.Error,C.Checked>}
+  {modes([uninhabited()],[parameter("m",0),parameter("v",1)],promoting(on(named("v"),Nil{}))) == rejected() : Result<S.Error,C.Checked>}
 
 # Exhaustiveness at each split: the positive matrix takes the split
 # constructor, the remainder keeps every other available constructor in order,
