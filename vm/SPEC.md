@@ -287,7 +287,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 57 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 59 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -534,8 +534,9 @@ across the two. Goldens run with 1,000,000; benchmarks with the u32 maximum,
 check precedes the fuel test, so an ill-typed Enter is `HostFailure image` at
 fuel 0 too. An Action applied to `k` is debited before its effect, and `k` is a
 separate entry: when the Action's second application meets fuel 0, nothing is
-written; when `k`'s entry does, the effect's output is already written. Eleven
-fuel run controls freeze each side (§12).
+written; when `k`'s entry does, the effect's output is already written. A Book's D22
+refusal follows the same debit, so at fuel 0 that entry is `Exhausted`, not refused (§8).
+Eleven fuel run controls freeze each side (§12), and two more the Book case.
 
 **Quantum.** When a debit makes `quantum` reach 65,536, the Enter step completes
 (the new body is ready to Eval, or the Action's continuation is pending) and
@@ -979,7 +980,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 57 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 59 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1019,7 +1020,7 @@ lane and requires:
   is read before the scalar check, so the cause is not `io abi`. A Halt's message is an
   outgoing String too: a surrogate then `id(λ)`, and `id(λ)` for the code beside a
   surrogate message, each halt `ill-typed` after 4, the code and then the whole message
-  being read before D20's scalar check. Eleven effect controls (`effect_controls`) freeze
+  being read before D20's scalar check. Thirteen effect controls (`effect_controls`) freeze
   D22 (§8) and D20 on a Halt's message. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
   `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1028,7 +1029,9 @@ lane and requires:
   surrogate) too, so D22 precedes D20; `book-print-ill-typed` (`"a"` then `id(λ)`)
   stops the same way after 5, so it precedes the inspection, and `book-args`
   (`IO.args`, foreign 0, of type `IO(List)`) after 4, so it precedes the check of the
-  foreign id; the pure `got(k(Unit{}))` (`book-continuation-called`) evaluates
+  foreign id, and `book-print` at fuel 4 (`fuel-book-effect-exact`) is refused after its 4
+  debits while at 3 (`fuel-book-effect-short`) its Action meets fuel 0 and stops
+  `Exhausted` kind 1 after 3, so D22 follows §7's fuel test; the pure `got(k(Unit{}))` (`book-continuation-called`) evaluates
   `Evaluated 8 1 On{}` after 3,
   an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
   erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
@@ -1044,7 +1047,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 70 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 53 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 55 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1057,10 +1060,11 @@ lane and requires:
   checked; an unavailable Book lane whose declared line is not checked or whose cause
   is not named; a declaration kept where check-cli prints a core; and a Book without a
   core that declared none.
-  Five survive every golden and die by a fuel control: fuel that never runs
-  out, fuel that runs out one entry early, an Action's effect before its debit
-  (which the print inspection control also counts, after 4 calls), the fuel test
-  before the operand check, and a free terminal continuation. A
+  Four survive every golden and die by a fuel control: fuel that never runs
+  out, fuel that runs out one entry early, the fuel test before the operand check,
+  and a free terminal continuation. An Action's effect before its debit dies by the
+  D20 goldens' frozen `calls` (§7) and by the print inspection control, which counts
+  it after 4 calls. A
   predecessor narrowed to 31 bits dies only by `nat-case-big`. Eighteen read less
   than their inspection extent, and exactly as much on a well-typed word, so they
   survive every golden and every other control and each dies only by its
@@ -1070,9 +1074,11 @@ lane and requires:
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it. Fourteen more, of D22, a Halt's message, keys and the debit, die
+  Char as it reads it. Sixteen more, of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
-  (by every `book-print*` control); one that names the foreign it refuses, as vm-model
+  (by every `book-print*` control); one that refuses before the debit (by every Book
+  print control and both fuel controls) or when the fuel is 0 (by `fuel-book-effect-short`
+  alone); one that names the foreign it refuses, as vm-model
   answered `Unsupported vm foreign 0` (by `book-args` alone); one that refuses only
   after the whole-extent inspection (by `book-print-ill-typed` alone), after D20's scalar check (by
   `book-print-non-scalar` and `-ill-typed`), when an Action is built (also

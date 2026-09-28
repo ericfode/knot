@@ -1504,6 +1504,8 @@ def effect_controls(plans: dict) -> list:
     then to a continuation: main, IO.print, R and the Action are 4 entries, where a Book stops,
     5 when an `id` call builds the String first.
     - `IO.args` under a Book stops the same way: D22 precedes the check of the foreign id, whatever it is.
+    - D22 follows step 1: `book-print` completes its refusal with fuel 4, its debited entries, and at fuel
+      3 its Action meets fuel 0 and stops `Exhausted` kind 1 after 3, where the fuel test precedes it.
     - Under a Program the same Action prints, from inside a pure argument, before the Program's
       own print: main, IO.print, R, the Action (writes `x`), k, got, say, IO.print, R, the
       Action (writes `t`) and the terminal continuation are 11 entries.
@@ -1556,6 +1558,9 @@ def effect_controls(plans: dict) -> list:
         ('book-print-ill-typed', image('book', bound(laundered)), {**refused, 'calls': 5}),
         ('book-args', {**image('book', ['call', 8, got, [listed]], 0, args), 'types': [*types, *args_types],
                        'representation': {**fp['representation'], 'List': 10}}, refused),
+        ('fuel-book-effect-exact', image('book', bound(text('x'))), {'fuel': 4, **refused}),
+        ('fuel-book-effect-short', image('book', bound(text('x'))),
+         {'fuel': 3, 'outcome': 'Exhausted', 'kind': 1, 'cause': 'fuel', 'calls': 3}),
         ('book-continuation-called', image('book', ['call', 8, got, [['call', 4, resume, [['value', 0, 0]]]]]),
          {'exit': 0, 'stdout': on, 'calls': 3}),
         ('book-action-dropped', image('book', ['let', 8, 0, ['call', 7, print_, [text('x')]], ['value', 8, 1]], 1),
@@ -2209,6 +2214,14 @@ EVALUATOR_MUTANTS = [
     ('book-performs-effect', [(BOOK_GUARD, '')]),
     ('book-drops-effect', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n", '            return 0\n')]),
     ('program-refuses-effect', [("        if self.entry != 'program':\n", '        if True:\n')]),
+    ('book-refuses-at-fuel-zero', [("        self.debit()\n        if kind == 'closure':",
+                                    "        if kind == 'action' and operands and self.entry != 'program' and self.fuel == 0:\n"
+                                    "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+                                    "        self.debit()\n        if kind == 'closure':")]),
+    ('book-refuses-before-debit', [("        self.debit()\n        if kind == 'closure':",
+                                    "        if kind == 'action' and operands and self.entry != 'program':\n"
+                                    "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n"
+                                    "        self.debit()\n        if kind == 'closure':")]),
     ('book-names-the-foreign', [("            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect'})\n",
                                  "            raise Halt({'outcome': 'Unsupported', 'cause': 'vm effect' if action[1] == 1"
                                  " else f'vm foreign {action[1]}'})\n")]),

@@ -380,27 +380,30 @@ follows it (§5, §10, §11) without a new image header word.
    or applied to its erased `R` is not an effect, and the Program entry, the only one
    that performs effects, performs them wherever an Action meets its continuation, even
    inside a pure argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect`
-   refuses before it reads an operand; `evaluate.book` no longer runs the effect. Eleven
-   effect controls (`effect_controls`, frozen before the change) rebuild the reviewers'
-   probes on foreign-print's types: `book-print`, `book-print-continuation-call` and
-   `book-print-twice` (bookio-1, bk-print and bookio-2) and `book-print-non-scalar`
-   (bookio-nonscalar) stop `Unsupported vm effect` after 4 calls (main, IO.print, `R`,
-   the Action), writing nothing; `book-print-ill-typed`, added to fix the order against
-   the inspection, stops the same way after 5, and `book-args` (`IO.args`, foreign 0)
-   after 4, added because vm-model answered `Unsupported vm foreign 0` for a foreign
-   that is not `IO.print`: D22 fires for every foreign id, before it is checked. The
-   pure `got(k(Unit{}))` of bk-direct (`book-continuation-called`), an Action built and
-   dropped and one applied to its erased `R` still evaluate, after 3, 2 and 3;
-   `program-print-in-value` (pg-print) prints `x` from a pure argument and then its own
-   `t` after 11 (§12). The refusal precedes both D20 and the inspection because a Book
-   performs no effect, so no operand is converted for a host call that never happens.
-   The order is this executor's reading of D22, whose text says only "before the host
-   call"; the coordinator can overrule it, and the controls then change with it. Eight
-   evaluator mutants (a Book that performs the effect, one that drops it silently, one
-   that names the foreign it refuses, one that refuses after the inspection or after
-   D20's scalar check, one that refuses when an Action is built or when it meets its
-   erased `R`, and a Program that refuses) are killed, each by a control of the group;
-   the first two by every `book-print*` control.
+   refuses before it reads an operand; `evaluate.book` no longer runs the effect.
+   Thirteen effect controls (`effect_controls`, frozen before the change) rebuild the
+   reviewers' probes on foreign-print's types: `book-print`,
+   `book-print-continuation-call` and `book-print-twice` (bookio-1, bk-print and
+   bookio-2) and `book-print-non-scalar` (bookio-nonscalar) stop `Unsupported vm effect`
+   after 4 calls (main, IO.print, `R`, the Action), writing nothing;
+   `book-print-ill-typed`, added to fix the order against the inspection, stops the same
+   way after 5, and `book-args` (`IO.args`, foreign 0) after 4, added because vm-model
+   answered `Unsupported vm foreign 0` for a foreign that is not `IO.print`: D22 fires
+   for every foreign id, before it is checked. The pure `got(k(Unit{}))` of bk-direct
+   (`book-continuation-called`), an Action built and dropped and one applied to its
+   erased `R` still evaluate, after 3, 2 and 3; `program-print-in-value` (pg-print)
+   prints `x` from a pure argument and then its own `t` after 11 (§12). Two fuel
+   controls put the refusal after step 1's fuel test: `book-print` at fuel 4 is refused
+   after its 4 debits, and at 3 its Action meets fuel 0 and stops `Exhausted` kind 1
+   after 3. The refusal precedes both D20 and the inspection because a Book performs no
+   effect, so no operand is converted for a host call that never happens. The order is
+   this executor's reading of D22, whose text says only "before the host call"; the
+   coordinator can overrule it, and the controls then change with it. Ten evaluator
+   mutants (a Book that performs the effect, one that drops it silently, one that names
+   the foreign it refuses, one that refuses before the debit or at fuel 0, one that
+   refuses after the inspection or after D20's scalar check, one that refuses when an
+   Action is built or when it meets its erased `R`, and a Program that refuses) are
+   killed, each by a control of the group; the first two by every `book-print*` control.
 22. **A stop after the debit keeps it.** The same review asked whether an Enter whose
    step 2 stops keeps step 1's debit. vm-model and evaluate.py kept it, but §7 was
    silent and no check counted the refused entry: a VM that refunded it, or counted
@@ -418,7 +421,9 @@ follows it (§5, §10, §11) without a new image header word.
    controls refuse a review that refunds the refused entry (3) and one left unfrozen;
    the evaluator mutant `effect-refusal-refunds-debit` dies by the four goldens and by
    the Book effect controls, and the rule mutant `d20-calls-unchecked` by the two
-   controls.
+   controls. Entry 15's mutant `effect-before-debit` now also dies by the D20 goldens'
+   `calls` (its refused print is debited 3 times, not 4); before, only a fuel or an
+   inspection control killed it.
 23. **A key may be 0xffffffff.** `none` is `0xffffffff`, and neither §2 nor §3 said
    whether a keys row may carry it: a decoder that read a key word as an optional index
    would drop or misread the row. §2 and §3 now say that in a Case record `none` marks only an absent tag row (mode 0) and an absent
@@ -497,7 +502,9 @@ branch brings all of them.
    (`program-print-in-value`, 11 calls, `x\nt\n`). Controls: `book-print`,
    `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar` and
    `book-args` (4 calls), `book-print-ill-typed` (5), `book-continuation-called` (3),
-   `book-action-dropped` (2) and `book-action-erased` (3). vm-model performs the print
+   `book-action-dropped` (2) and `book-action-erased` (3); `book-print` at fuel 4 is
+   refused and at fuel 3 stops `Exhausted` kind 1 after 3 (`fuel-book-effect-exact`,
+   `fuel-book-effect-short`). vm-model performs the print
    under a Book today and names a foreign that is not IO.print `Unsupported vm foreign
    N` at the Action's application; both change, D22 first for every foreign. vm-core
    refuses every foreign id but IO.print at load (CORE.md choice 2), so `book-args` is
@@ -524,7 +531,7 @@ branch brings all of them.
    Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
    seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
    or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
-   unaffected. The counts are 96 goldens and 57 run controls.
+   unaffected. The counts are 96 goldens and 59 run controls.
 
 ## Findings that need an owner
 
