@@ -962,3 +962,24 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Generic erasure needs boundary checks before projection
+
+Manual review after the first generic corpus pass found two gaps. Instantiating
+a live abstract field at `Type` or `Quant` selected an erased placeholder; local
+type syntax inside a monomorphic body could reach an InternalFailure fallback.
+Other local type aliases were mislabeled as free names. These were confirmed
+against the pinned seed, then fixed behind independent boundary expectations.
+No live Perch finding or elapsed-time claim is attached to this audit.
+
+The [kind boundaries](../tests/compiler-generics/boundaries/README.md) and
+[dispatch boundaries](../tests/compiler-generics/dispatch-boundaries/README.md)
+retain the seed observations. Live static arguments and local type normalization
+now report Unsupported before erasure; lexical bindings still shadow datatype
+names. Empty type applications are Invalid. The original fixture outcomes and
+old gate assertions remain unchanged. The separate generic-header classification
+conflict is retained as an integration blocker.
+
+Prevention: pair every erasure path with live/erased static-value controls, and
+exercise each new syntax node in both generic and monomorphic books. A passing
+capability corpus does not establish correct behavior at its dispatch boundary.

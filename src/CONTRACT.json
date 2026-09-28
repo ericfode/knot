@@ -214,5 +214,78 @@
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
     "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+  },
+  "generics": {
+    "profile": "knot-generics-1",
+    "stage": "S2 subset; not full dependent computation",
+    "catalog": "src/generic-catalog.bend",
+    "checker": "src/generics.bend",
+    "type_algebra": "src/types.bend",
+    "erasure": "src/type-erasure.bend",
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-generics/check.py",
+    "frozen_expectations": "tests/compiler-generics/expectations.json",
+    "supplemental_expectations": "tests/compiler-generics/supplemental/expectations.json",
+    "boundary_expectations": "tests/compiler-generics/boundaries/expectations.json",
+    "dispatch_expectations": "tests/compiler-generics/dispatch-boundaries/expectations.json",
+    "abi_expectations": "tests/compiler-generics/abi-expectations.json",
+    "evidence": "tests/compiler-generics/receipts/generics.json",
+    "proof_entries": [
+      "src/types-PROOF.bend",
+      "src/type-erasure-PROOF.bend"
+    ],
+    "accepted": [
+      "erased type parameters",
+      "leading erased quantity parameters",
+      "nested nominal type applications",
+      "Kind(q) and quantity meets",
+      "full and short quantity arguments",
+      "compact reusable type applications",
+      "interleaved erased arguments",
+      "generic constructor fields and flat patterns",
+      "rigid phantom parameters",
+      "first-live-parameter field descent"
+    ],
+    "quantity_semantics": {
+      "meet": "0 < 1 < 2; literal minimum, 2 identity, 0 absorber; remaining symbolic syntax stays invariant",
+      "kind_fits": "Data fits all supported kinds; Kind(&0) and Kind(&1) have the same single-use demand",
+      "datatype_arguments": "invariant",
+      "short_form": "all leading quantities default to &1 after the family definition",
+      "plus_prefix": "all leading quantities become &2, including explicit argument positions"
+    },
+    "runtime": {
+      "backend": "knot-fields-wasm-1",
+      "generic_family": "boxed cell for every instantiation; one erased representation witness also boxes nullary constructors",
+      "monomorphic_enum": "constructor ordinal",
+      "type_variable": "opaque word with representation fixed by checked instantiation",
+      "type_arguments": "checked, then erased; no live parameter, local, field slot or specialization",
+      "function_bodies": "one per source function",
+      "host_boundary": "closed monomorphic enum signatures only; other exports are internal calls"
+    },
+    "classification": {
+      "generic_header": "accepted and fully checked",
+      "closure_apply": "Unsupported parse parameter-type",
+      "template_twice": "Unsupported parse template-binder",
+      "optional_boundaries": [
+        "match-erased-type",
+        "alias-type"
+      ]
+    },
+    "unsupported": [
+      "general dependent normalization",
+      "type-returning definitions and aliases",
+      "local type or quantity bindings",
+      "live type or quantity parameters",
+      "instantiated live type or quantity arguments",
+      "value-indexed families",
+      "constructor-local type parameters",
+      "type-variable applications",
+      "pair type sugar",
+      "function types",
+      "templates",
+      "general lexicographic recursion",
+      "structured host arguments"
+    ],
+    "proof_boundary": "Universal raw substitution composition, finite quantity meet laws and erased evaluator steps with explicit fuel; differential corpus agreement is finite, not compiler soundness.",
+    "live_perch": "Coordinator-owned; executor runs offline preflight only"
   }
 }

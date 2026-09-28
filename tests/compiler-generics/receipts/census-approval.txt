@@ -1,0 +1,30 @@
+Initial source approval:
+import src/check.bend: ./generics.bend -> src/generics.bend
+NEW FILE src/generic-catalog.bend: 75 declarations
+NEW FILE src/generics.bend: 65 declarations
+widen src/LAWS.bend::generic_header:law: +literals.list,literals.u32
+new src/parse.bend::type_then:definition: calls,calls.variable,constructors,fields,generics,higher-order,matches,patterns.nested,patterns.variable,quantities.affine,quantities.arguments,types.base
+new src/parse.bend::wrap_generic:definition: constructors,fields,generics,literals.string,matches,matches.multi,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,types.base
+new src/parse.bend::plain_parameters:definition: calls,constructors,fields,generics,matches,patterns.nested,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,recursion,types.base
+widen src/parse.bend::wrap_function:definition: +calls,captures,lambdas,quantities.reusable
+new src/parse.bend::wrap_typed_function:definition: constructors,fields,generics,literals.string,matches,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,types.base
+new src/parse.bend::generic_parameter:definition: calls,captures,constructors,fields,generics,lambdas,quantities.affine,quantities.arguments,quantities.reusable,types.base
+new src/parse.bend::typed_result:definition: calls,constructors,fields,generics,literals.string,matches,patterns.nested,patterns.variable,patterns.wildcard,quantities.affine,quantities.arguments,quantities.reusable,types.base
+import src/parse.bend: ./type-parse.bend -> src/type-parse.bend
+widen src/PROOF.bend::L.generic_header:law_fill: +literals.u32
+NEW FILE src/type-erasure-LAWS.bend: 17 declarations
+NEW FILE src/type-erasure-PROOF.bend: 17 declarations
+NEW FILE src/type-erasure.bend: 12 declarations
+NEW FILE src/type-parse.bend: 21 declarations
+NEW FILE src/types-LAWS.bend: 12 declarations
+NEW FILE src/types-PROOF.bend: 12 declarations
+NEW FILE src/types.bend: 11 declarations
+
+Final boundary repair approval:
+new src/check.bend::unbound:definition: calls,constructors,fields,generics,literals.string,matches,patterns.variable,quantities.affine,quantities.arguments,types.base
+new src/check.bend::term_name:definition: calls,constructors,fields,generics,literals.u32,matches,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,types.base
+widen src/generics.bend::annotation:definition: +literals.string
+widen src/generics.bend::binding_body:definition: +literals.string
+new src/generics.bend::unbound:definition: calls,constructors,fields,generics,literals.string,matches,patterns.variable,quantities.affine,quantities.arguments,types.base
+new src/generics.bend::term_name:definition: calls,constructors,fields,generics,literals.u32,matches,patterns.variable,quantities.affine,quantities.arguments,quantities.reusable,types.base
+widen src/type-parse.bend::apply:definition: +calls,patterns.nested

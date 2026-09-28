@@ -17,7 +17,7 @@ def L.no_character_budget(c,tail):
 def L.no_parser_budget(tokens):
   {==}
 
-def L.generic_header(at,rest):
+def L.generic_header(at):
   {==}
 
 def L.multiple_scrutinees(at,rest):

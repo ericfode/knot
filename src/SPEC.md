@@ -1,4 +1,4 @@
-# Knot compiler contracts — enum and fielded Wasm
+# Knot compiler contracts — enums, fields and generics
 
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
@@ -17,6 +17,10 @@ and mutual calls retain their existing classification. Nested patterns and
 structured host arguments remain unsupported. Recursive Wasm lowering is not
 yet a qualified capability of `knot-fields-wasm-1`.
 References to nullary-only checking below describe the retained enum subprofile.
+The `knot-generics-1` extension below adds checked type/quantity application and
+erasure, using the existing fielded Wasm backend. It qualifies the generic
+corpus, including descent through the first live parameter after erased
+parameters; it does not claim the full S2 stage or general dependent checking.
 
 This is the first executable path toward S1, not the complete S1 stage or a
 self-hosted compiler. The implementation is Bend 2, built by Bend 2.0.29 at
@@ -69,18 +73,18 @@ affine reuse and live inspection of erased values are invalid.
 Duplicate arms are outside this profile and report Unsupported: the pinned
 reference can accept overlapping nullary patterns, choosing the first match.
 
-Constructor fields, recursive calls, generic/dependent types, imports, literals,
-closures, wildcard/multi-scrutinee patterns, laws, templates, foreign code and
-effects remain explicitly unsupported. This restriction leaves recursive trees
-and field-bound variables outstanding for the broader S1 stage. A recognized
-unsupported form makes no claim about the validity of its remaining contents.
+The enum subprofile excludes fields and recursive calls; the structural and
+generic extensions have their own contracts. Imports, literals, closures,
+wildcard/multi-scrutinee patterns, laws, templates, foreign code and effects
+remain unsupported here. General dependent computation remains outside the
+generic extension. A recognized unsupported form makes no claim about the
+validity of its remaining contents.
 
 The parser recognizes these out-of-profile prefixes before applying the narrower
 enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 
 | Recognized form | Phase | Code |
 | --- | --- | --- |
-| `type Name<...` generic datatype header | `parse` | `generic-datatype` |
 | `match a b...` with a second named scrutinee | `parse` | `match-scrutinees` |
 | `~name:` in a function parameter list | `parse` | `template-binder` |
 | Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
@@ -92,8 +96,12 @@ module. Malformed supported syntax still reports `Invalid`. The reviewed
 seed-accepted programs (local and hash imports separately) with six nearby
 syntax errors, fixing complete diagnostics including locations. The hash
 fixture uses a frozen local cache; it does not claim a published package.
-Six checked prefix laws quantify over source locations and unconsumed suffixes;
-they are classification laws, not a parser soundness theorem or feature support.
+Five retained checked prefix laws quantify over source locations and unconsumed
+suffixes. `generic_header` now states parser acceptance of a complete generic
+header; its filled proof remains a parser equation, not a checker soundness
+theorem. The unchanged historical generic-rejection assertion still requires
+Unsupported, so that frontend gate conflicts with this accepted capability.
+The coordinator must reconcile that assertion before integration acceptance.
 
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).
@@ -103,6 +111,91 @@ now follows declaration checking. Selecting the default enum emission profile
 still reports `Unsupported check constructor-fields` for a checked fielded book.
 Known invalid declarations or bodies can report Invalid first. Declaration
 inspection itself does not imply execution or a structured host ABI.
+
+## Generics and quantity arguments: `knot-generics-1`
+
+`types.bend` represents rigid binder indices, nominal families, type application,
+universes and quantity expressions. `generic-catalog.bend` resolves formal
+parameter domains and family kinds before resolving fields and function bodies.
+`generics.bend` checks applications by sequential capture-free substitution;
+the existing monomorphic checker remains the path for its original syntax.
+Every declaration, including unused generic functions, is checked before a
+runtime book is returned. No type application is accepted by erasing it first.
+
+Supported families have erased type parameters (`-A: Type`, `-A: Data`,
+`-A: Kind(a)`) and leading erased quantity parameters (`a`, or `-a: Quant`).
+Supported kinds are `Type`, `Data`, and `Kind(q)` with quantity literals,
+bound quantities and `<&>` meets. The type parser accepts nested applications,
+compact separators and both full and short quantity forms. A short application
+inserts `&1` for every leading quantity parameter. Prefix `+` supplies `&2` for
+all of them, including overriding explicitly written quantity arguments.
+Quantity-family short forms depend on the preceding family definition, matching
+the seed's forward-reference restriction. Plain erased-type families may be
+referenced before their declaration.
+
+Type arguments and datatype quantity arguments are invariant, including phantom
+parameters. Distinct type binders stay rigid. Kind fitting is directional:
+Data fits every supported kind, and `Kind(&0)` and `Kind(&1)` impose the same
+single-use capability. A reusable binder requires a kind known to be Data;
+unknown quantity variables do not establish that fact. Meet normalization
+reduces literals, uses `&2` as identity and `&0` as absorber, and preserves the
+seed's structural comparison of remaining symbolic expressions. Every live
+field's kind must fit its declared family's kind. Erased fields impose no live
+ownership obligation.
+
+Function calls check every argument, including erased values and type arguments.
+An erased argument consumes no affine occurrence. Substitution carries earlier
+type/quantity arguments into later parameter types and the result. It supports
+interleaved erased/live parameters, generic local annotations, parameter
+shadowing, parent reconstruction, and flat field patterns. For live self-calls,
+the first live argument must be a strict field descendant of the function's
+first live parameter. Other recursion remains Unsupported. General lexicographic
+descent, nested patterns and dependent match refinement are not added.
+
+`type-erasure.bend` projects the fully checked result into the existing `core`
+terms. A generic family always uses a boxed `[tag][live fields...]` cell, even
+when its constructors have no live fields. One synthetic erased field, argument
+and pattern binding selects that representation without adding a memory word or
+Wasm local. Closed monomorphic enums retain their ordinal representation. Values
+of an abstract type are opaque runtime words; their checked instantiation fixes
+whether the word is an enum ordinal or a cell address. There is one emitted
+function body per source function, with no instantiation-specific body or type
+argument at runtime. Original parameter levels remain stable while the emitter
+compacts live slots.
+
+Use the existing fields-profile compile driver for generic families. The default
+enum emitter retains its constructor-fields capability rejection. The host may
+invoke only entries with closed monomorphic enum arguments and results; generic
+exports and cell signatures are for compiled callers. The ABI gate inspects
+generic export arities without invoking those exports. The same one-page arena,
+exhaustion policy and absence of reclamation apply as in the fields profile.
+
+The unchanged 40-fixture seed corpus, two separately frozen supplements and
+24 added seed boundary fixtures are in `tests/compiler-generics/`. `check.py`
+compares seed results, both evaluator
+lanes and both lanes' actual Node-executed Wasm; it checks every pinned rejection
+in all three phases and preserves old output files on failure. Independent
+literal ABI expectations assert erased parameter counts. The new gate kills
+skipped substitution, a retained erased argument, an incorrect quantity meet
+and discarded excess type arguments. `types-PROOF.bend` proves substitution
+composition and the finite quantity algebra. `type-erasure-PROOF.bend` proves
+representation helpers and universal erased evaluator transitions with their
+one-step fuel adjustment. Corpus agreement is finite differential evidence,
+not a general type-erasure or compiler-correctness theorem.
+
+Unsupported boundaries include type-returning definitions/aliases, local type
+or quantity bindings, live
+type/quantity parameters or instantiated live type arguments, value-indexed
+families, constructor-local type
+parameters, type-variable application, pair type sugar, function types and
+templates. `closure-apply` and `template-twice` retain their pinned diagnostics.
+The optional `match-erased-type` and `alias-type` fixtures remain Unsupported.
+Both checker paths recognize local type values without treating them as free
+variables or internal failures. The legacy catalog inspection entry remains
+monomorphic and reports Unsupported for generic headers or typed declarations.
+Empty type-argument lists are Invalid, matching the seed.
+The original source, declaration-count and lexical-level bounds remain; generic
+resolution and body checking additionally spend the supplied checker depth.
 
 ## Binding and quantity semantics
 

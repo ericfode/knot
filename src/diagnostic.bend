@@ -56,6 +56,22 @@ def tree(fuel: Nat, node: S.Node) -> Result<S.Error,String>:
       concat([Done{"type "},Done{S.text(token)},Done{Bool.pick(String,reusable," Data("," Type(")},tree(n,S.Sequence{ctors}),Done{")"}])
     case 1n+ +n S.Function{token,params,result,body}:
       concat([Done{"def "},Done{S.text(token)},Done{"("},tree(n,S.Sequence{params}),Done{")->"},Done{S.text(result)},Done{" "},tree(n,body)])
+    case 1n+ +n S.TypeApply{token,args,q}:
+      concat([Done{Bool.pick(String,U32.is_eq(q,2),"+","")},Done{S.text(token)},Done{"<"},tree(n,S.Sequence{args}),Done{">"}])
+    case 1n+ +n S.TypeKind{token,q}:
+      concat([Done{"Kind("},tree(n,q),Done{")"}])
+    case 1n+ +n S.Quantity{token,q}: Done{String.append("&",U32.show(q))}
+    case 1n+ +n S.QuantType{token}: Done{"Quant"}
+    case 1n+ +n S.Meet{token,left,right}:
+      concat([Done{"("},tree(n,left),Done{" <&> "},tree(n,right),Done{")"}])
+    case 1n+ +n S.Generic{token,params,kind,ctors}:
+      concat([Done{"type "},Done{S.text(token)},Done{"<"},tree(n,S.Sequence{params}),Done{"> "},tree(n,kind),Done{"("},tree(n,S.Sequence{ctors}),Done{")"}])
+    case 1n+ +n S.TypedParameter{token,q,typ}:
+      concat([Done{U32.show(q)},Done{" "},Done{S.text(token)},Done{":"},tree(n,typ)])
+    case 1n+ +n S.TypedFunction{token,params,result,body}:
+      concat([Done{"def "},Done{S.text(token)},Done{"("},tree(n,S.Sequence{params}),Done{")->"},tree(n,result),Done{" "},tree(n,body)])
+    case 1n+ +n S.TypedBinding{token,q,annot,value,body}:
+      concat([Done{"let["},Done{U32.show(q)},Done{" "},Done{S.text(token)},Done{":"},tree(n,annot),Done{" "},tree(n,value),Done{"] "},tree(n,body)])
     case 1n+ +n S.Sequence{Nil{}}: Done{""}
     case 1n+ +n S.Sequence{Con{head,Nil{}}}: tree(n,head)
     case 1n+ +n S.Sequence{Con{head,tail}}:

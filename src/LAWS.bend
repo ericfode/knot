@@ -21,12 +21,16 @@ law no_parser_budget:
   for +tokens: List<&2,S.Token>
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
 
-# Prefix classification does not validate the unconsumed suffix.
+# Parser-only header acceptance; the catalog separately requires constructors.
 law generic_header:
   for +at: S.At
-  for +rest: List<&2,S.Token>
-  {P.run(1n,P.Header{S.Token{"type",at},S.Token{"Box",at}},Con{S.Token{"<",at},rest})
-    == Fail{S.Unsupported{"parse","generic-datatype",at}} : Result<S.Error,P.Parsed>}
+  {P.run(32n,P.Header{S.Token{"type",at},S.Token{"Box",at}},
+      [S.Token{"<",at},S.Token{"-",at},S.Token{"A",at},S.Token{":",at},S.Token{"Type",at},
+       S.Token{">",at},S.Token{"is",at},S.Token{"Type",at},S.Token{":",at},S.Token{"<eof>",at}])
+    == Done{P.Parsed{S.Generic{S.Token{"Box",at},
+      [S.TypedParameter{S.Token{"A",at},0,S.TypeKind{S.Token{"Type",at},S.Quantity{S.Token{"Type",at},1}}}],
+      S.TypeKind{S.Token{"Type",at},S.Quantity{S.Token{"Type",at},1}},Nil{}},[S.Token{"<eof>",at}]}}
+    : Result<S.Error,P.Parsed>}
 
 law multiple_scrutinees:
   for +at: S.At

@@ -62,6 +62,8 @@ GATES = (
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('generics', ('python3', 'tests/compiler-generics/check.py'),
+         ('tests/compiler-generics/receipts/generics.json',)),
 )
 
 
@@ -198,6 +200,15 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         return {'entries': len(entries), 'proof_holes': 0}
     if record['status'] not in ('pass', 'passed'):
         raise ValueError('Receipt does not record a completed gate')
+    if gate.name == 'generics':
+        from importlib.util import module_from_spec, spec_from_file_location
+        spec = spec_from_file_location('generics_gate', root / 'tests/compiler-generics/check.py')
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        observed = module.coverage(record)
+        if record['counts'] != observed or observed['blocked_fixtures']:
+            raise ValueError('Incomplete or inconsistent generics completion record')
+        return observed
     result = {key: len(record[key]) for key in ('fixtures', 'mutants', 'budgets', 'boundaries',
                                                'bounds', 'host_boundaries', 'rejects') if key in record}
     if gate.name in ('frontend', 'checker', 'structural', 'fields'):

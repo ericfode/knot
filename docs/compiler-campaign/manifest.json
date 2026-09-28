@@ -23,7 +23,8 @@
       "name": "frontend-parsing",
       "files": [
         "src/syntax.bend",
-        "src/parse.bend"
+        "src/parse.bend",
+        "src/type-parse.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Tokens to the bounded syntax tree; parser depth and unsupported forms."
@@ -69,7 +70,11 @@
         "src/catalog.bend",
         "src/scope.bend",
         "src/patterns.bend",
-        "src/check.bend"
+        "src/check.bend",
+        "src/generics.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Complete checking boundary and explicit unsupported capabilities."
@@ -103,7 +108,11 @@
         "src/catalog.bend",
         "src/check.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/generics.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Enum terms to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
@@ -128,7 +137,12 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
@@ -140,7 +154,8 @@
         "src/LAWS.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/PROOF.bend"
+        "src/PROOF.bend",
+        "src/type-parse.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Frontend boundary laws and their complete proof entry."
@@ -159,7 +174,12 @@
         "src/catalog.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Checker boundary and scope laws. Earlier proof-entry imports are retained in the closed local family, even when not referenced by a term."
@@ -182,7 +202,12 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source-machine and codec laws, including the earlier proof-entry chain. Oversize and external ByteOutput context remain blockers."
@@ -207,7 +232,12 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/scope.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Catalog kind laws and their complete chained proof entry; the full family exceeds the composition bound."
@@ -234,7 +264,12 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Field quantities, reconstruction, source-machine and inspection laws with the full earlier proof-entry chain. The family exceeds the composition bound."
@@ -263,10 +298,97 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/generics.bend",
+        "src/type-parse.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "generic-type-algebra",
+      "files": [
+        "src/types.bend",
+        "src/types-LAWS.bend",
+        "src/types-PROOF.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Indexed substitution with universal composition and the finite quantity meet algebra."
+    },
+    {
+      "name": "generic-type-parsing",
+      "files": [
+        "src/syntax.bend",
+        "src/type-parse.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Bounded type applications, erased domains, Kind expressions and quantity short forms."
+    },
+    {
+      "name": "generic-catalog",
+      "files": [
+        "src/generic-catalog.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/types.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Formal kinds, invariant type applications, short-form quantities and field obligations."
+    },
+    {
+      "name": "generic-checking",
+      "files": [
+        "src/generics.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/catalog.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Rigid type variables, sequential substitution, usage checking and uniform erased terms."
+    },
+    {
+      "name": "generic-erasure",
+      "files": [
+        "src/type-erasure.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Type arguments disappear; one erased witness gives every generic family a boxed layout."
+    },
+    {
+      "name": "generic-erasure-laws",
+      "files": [
+        "src/type-erasure-LAWS.bend",
+        "src/type-erasure-PROOF.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/types.bend",
+        "src/generic-catalog.bend",
+        "src/type-erasure.bend",
+        "src/eval.bend",
+        "src/wasm.bend",
+        "src/types-PROOF.bend",
+        "src/check.bend",
+        "src/wasm-bytes.bend",
+        "src/types-LAWS.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/generics.bend"
+      ],
+      "task": "src/SPEC.md",
+      "notes": "Universal evaluator erasure steps and representation laws; the complete backend proof closure may exceed the composition bound."
     }
   ]
 }

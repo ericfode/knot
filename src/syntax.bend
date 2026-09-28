@@ -26,6 +26,15 @@ type Node is Data:
   Parameter{token: Token, quantity: U32, type_name: Token}
   Datatype{token: Token, reusable: Bool, constructors: List<&2,Node>}
   Function{token: Token, parameters: List<&2,Node>, result: Token, body: Node}
+  TypeApply{token: Token, arguments: List<&2,Node>, quantity: U32}
+  TypeKind{token: Token, quantity: Node}
+  Quantity{token: Token, value: U32}
+  QuantType{token: Token}
+  Meet{token: Token, left: Node, right: Node}
+  Generic{token: Token, parameters: List<&2,Node>, kind: Node, constructors: List<&2,Node>}
+  TypedParameter{token: Token, quantity: U32, type_expr: Node}
+  TypedFunction{token: Token, parameters: List<&2,Node>, result: Node, body: Node}
+  TypedBinding{token: Token, quantity: U32, annotation: Node, value: Node, body: Node}
   Sequence{items: List<&2,Node>}
 
 def text(t: Token) -> String:

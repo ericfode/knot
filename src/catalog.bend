@@ -21,6 +21,8 @@ def names(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>) -> Result<S.Error,Uni
       S.choose(Result<S.Error,Unit>,named(seen,name),u => C.invalid(Unit,"duplicate-global",name),u => names(tail,Con{name,seen}))
     case Con{S.Function{+name,params,result,body},+tail}:
       S.choose(Result<S.Error,Unit>,named(seen,name),u => C.invalid(Unit,"duplicate-global",name),u => names(tail,Con{name,seen}))
+    case Con{S.Generic{name,params,kind,ctors},tail}: C.unsupported(Unit,"generic-datatype",name)
+    case Con{S.TypedFunction{name,params,result,body},tail}: C.unsupported(Unit,"type-expression",name)
     case _: C.internal(Unit,"declaration-node")
 
 def find_type(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Result<S.Error,TypeRef>:
@@ -158,6 +160,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))
+    case Con{S.TypedParameter{token,q,typ},tail}: C.unsupported(List<&2,C.Parameter>,"type-expression",token)
     case _: C.internal(List<&2,C.Parameter>,"field-node")
 
 def resolve_constructors(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool) -> Result<S.Error,List<&2,C.Constructor>>:

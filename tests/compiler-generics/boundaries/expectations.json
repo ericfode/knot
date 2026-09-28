@@ -1,0 +1,1436 @@
+{
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "meet-right-identity",
+      "file": "fixtures/meet-right-identity.bend",
+      "class": "positive",
+      "feature": "symbolic-quantity-normalization",
+      "intent": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison."
+      }
+    },
+    {
+      "name": "meet-left-identity",
+      "file": "fixtures/meet-left-identity.bend",
+      "class": "positive",
+      "feature": "symbolic-quantity-normalization",
+      "intent": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison."
+      }
+    },
+    {
+      "name": "meet-right-zero",
+      "file": "fixtures/meet-right-zero.bend",
+      "class": "positive",
+      "feature": "symbolic-quantity-normalization",
+      "intent": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison."
+      }
+    },
+    {
+      "name": "meet-left-zero",
+      "file": "fixtures/meet-left-zero.bend",
+      "class": "positive",
+      "feature": "symbolic-quantity-normalization",
+      "intent": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "Literal &2 is an identity and &0 absorbs a symbolic quantity before invariant datatype comparison."
+      }
+    },
+    {
+      "name": "prefix-overrides-quantity",
+      "file": "fixtures/prefix-overrides-quantity.bend",
+      "class": "positive",
+      "feature": "quantity-prefix-override",
+      "intent": "A + datatype prefix replaces every leading quantity argument with &2 before name or kind checking.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "A + datatype prefix replaces every leading quantity argument with &2 before name or kind checking."
+      }
+    },
+    {
+      "name": "prefix-overrides-undefined",
+      "file": "fixtures/prefix-overrides-undefined.bend",
+      "class": "positive",
+      "feature": "quantity-prefix-override",
+      "intent": "A + datatype prefix replaces every leading quantity argument with &2 before name or kind checking.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "A + datatype prefix replaces every leading quantity argument with &2 before name or kind checking."
+      }
+    },
+    {
+      "name": "prefix-forward-explicit",
+      "file": "fixtures/prefix-forward-explicit.bend",
+      "class": "negative",
+      "feature": "quantity-prefix-definition-order",
+      "intent": "A + datatype prefix needs the earlier family declaration even when every argument is written.",
+      "needs": [],
+      "entries": [],
+      "knot": {
+        "require": "reject",
+        "justification": "A + datatype prefix needs the earlier family declaration even when every argument is written.",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tquantity-prefix\t",
+        "knot_expected": true
+      },
+      "seed_reason": [
+        "a quantified datatype after +"
+      ]
+    },
+    {
+      "name": "prefix-forward-short",
+      "file": "fixtures/prefix-forward-short.bend",
+      "class": "negative",
+      "feature": "quantity-prefix-definition-order",
+      "intent": "A + datatype prefix needs the earlier family declaration even when every argument is written.",
+      "needs": [],
+      "entries": [],
+      "knot": {
+        "require": "reject",
+        "justification": "A + datatype prefix needs the earlier family declaration even when every argument is written.",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tquantity-prefix\t",
+        "knot_expected": true
+      },
+      "seed_reason": [
+        "a quantified datatype after +"
+      ]
+    },
+    {
+      "name": "prefix-needs-quantifier",
+      "file": "fixtures/prefix-needs-quantifier.bend",
+      "class": "negative",
+      "feature": "quantity-prefix-domain",
+      "intent": "A + datatype prefix requires at least one leading quantity parameter.",
+      "needs": [],
+      "entries": [],
+      "knot": {
+        "require": "reject",
+        "justification": "A + datatype prefix requires at least one leading quantity parameter.",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tquantity-prefix\t",
+        "knot_expected": true
+      },
+      "seed_reason": [
+        "a quantified datatype after +"
+      ]
+    },
+    {
+      "name": "boxed-live-type",
+      "file": "fixtures/boxed-live-type.bend",
+      "class": "boundary",
+      "feature": "live-static-argument-boundary",
+      "intent": "Substitution cannot turn a live generic field into an unchecked erased Type or Quant argument.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "justification": "Substitution cannot turn a live generic field into an unchecked erased Type or Quant argument.",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tlive-type-argument\t",
+        "knot_expected": true
+      }
+    },
+    {
+      "name": "boxed-live-quant",
+      "file": "fixtures/boxed-live-quant.bend",
+      "class": "boundary",
+      "feature": "live-static-argument-boundary",
+      "intent": "Substitution cannot turn a live generic field into an unchecked erased Type or Quant argument.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "justification": "Substitution cannot turn a live generic field into an unchecked erased Type or Quant argument.",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tlive-type-argument\t",
+        "knot_expected": true
+      }
+    },
+    {
+      "name": "type-valued-result",
+      "file": "fixtures/type-valued-result.bend",
+      "class": "boundary",
+      "feature": "type-level-definition-boundary",
+      "intent": "A type-returning definition remains Unsupported until type-level evaluation is implemented.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "justification": "A type-returning definition remains Unsupported until type-level evaluation is implemented.",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-definition\t",
+        "knot_expected": true
+      }
+    },
+    {
+      "name": "monomorphic-kind",
+      "file": "fixtures/monomorphic-kind.bend",
+      "class": "positive",
+      "feature": "monomorphic-kind-representation",
+      "intent": "A zero-parameter Kind(&2) family retains the enum host representation.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "A zero-parameter Kind(&2) family retains the enum host representation."
+      }
+    },
+    {
+      "name": "value-indexed-family",
+      "file": "fixtures/value-indexed-family.bend",
+      "class": "boundary",
+      "feature": "dependent-generic-boundary",
+      "intent": "Value-indexed generic families are outside this type/quantity parameter profile.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "justification": "Value-indexed generic families are outside this type/quantity parameter profile.",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\tgeneric-value-parameter\t",
+        "knot_expected": true
+      }
+    },
+    {
+      "name": "constructor-local-type",
+      "file": "fixtures/constructor-local-type.bend",
+      "class": "boundary",
+      "feature": "dependent-constructor-boundary",
+      "intent": "Constructor-local type binders remain Unsupported and cannot shadow family substitution indices.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "justification": "Constructor-local Type binders retain the structural parser boundary; they are never checked as ordinary erased value fields.",
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tparameter-type\t",
+        "knot_expected": true
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "meet-right-identity",
+        "source_sha256": "b0dcb38882cdd1c3649065c6111812ed6a14954c76d8f833aff847b28541af69",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-right-identity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-right-identity.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-right-identity--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-right-identity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-right-identity--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-right-identity.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-right-identity--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-right-identity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-right-identity--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-right-identity.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/meet-right-identity.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "meet-left-identity",
+        "source_sha256": "c5a9b4144a10395eff839ab7726da77beb04bbeeac518551b1e7bc63950971e6",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-left-identity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-left-identity.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-left-identity--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-left-identity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-left-identity--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-left-identity.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-left-identity--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-left-identity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-left-identity--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-left-identity.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/meet-left-identity.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "meet-right-zero",
+        "source_sha256": "50603180e92f4bd03c997a96c16a93ce5eff6cb49f2f9a5a79e378e01032c7fa",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-right-zero.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-right-zero.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-right-zero--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-right-zero.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-right-zero--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-right-zero.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-right-zero--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-right-zero.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-right-zero--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-right-zero.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/meet-right-zero.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "meet-left-zero",
+        "source_sha256": "1c4d90cae82dbfd0e9de42ddea35da40487442ed30ee0679deb2b79dba1342a2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-left-zero.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/meet-left-zero.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-left-zero--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-left-zero.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-left-zero--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-left-zero.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/meet-left-zero--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/meet-left-zero.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/meet-left-zero--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/meet-left-zero.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/meet-left-zero.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "prefix-overrides-quantity",
+        "source_sha256": "822ef67c28c2da26ccbe077381d18f0a771641ed457258e7f4fd132670167e05",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/prefix-overrides-quantity--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/prefix-overrides-quantity--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/prefix-overrides-quantity--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/prefix-overrides-quantity--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/prefix-overrides-quantity.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "prefix-overrides-undefined",
+        "source_sha256": "447b260de7e7ebdfa589973ff8f3f8bc873445d8d9185b2e38711f199b59dab7",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/prefix-overrides-undefined--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/prefix-overrides-undefined--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/prefix-overrides-undefined--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/prefix-overrides-undefined--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/prefix-overrides-undefined.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "prefix-forward-explicit",
+        "source_sha256": "ecda7c7fdd3470abbc72d6403116417c2e45c79c59416184bb7e484a0f44a628",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-forward-explicit.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n4 | \n5>| def same(xs: +Seq<&1,Flag>) -> Flag:\n  |                           ^\n6 |   On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-forward-explicit.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n4 | \n5>| def same(xs: +Seq<&1,Flag>) -> Flag:\n  |                           ^\n6 |   On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "prefix-forward-short",
+        "source_sha256": "7f6077531fbd1f06285dfd2a4503481a999491c2bc5ee9fd82726fe722a8eb23",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-forward-short.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n4 | \n5>| def same(xs: +Seq<Flag>) -> Flag:\n  |                        ^\n6 |   On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-forward-short.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n4 | \n5>| def same(xs: +Seq<Flag>) -> Flag:\n  |                        ^\n6 |   On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "prefix-needs-quantifier",
+        "source_sha256": "c0dc9e69511f1267eb026fa1219d95b65bb54b6f2c3470cfb3fd4fc70ba248a5",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-needs-quantifier.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n7 | \n8>| def same(xs: +Box<Flag>) -> Flag:\n  |                        ^\n9 |   On{}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/prefix-needs-quantifier.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ')'\nLocation:\n7 | \n8>| def same(xs: +Box<Flag>) -> Flag:\n  |                        ^\n9 |   On{}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "boxed-live-type",
+        "source_sha256": "e00b37213f0cc92f643ece69efeb2cecb22e78454d5bfef90dca7b0dd4fb6d86",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/boxed-live-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/boxed-live-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/boxed-live-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "boxed-live-quant",
+        "source_sha256": "c627b48adf849333f4f47e2e49f90a5c9b4d30dbf02eb07c1fc62ce502dce1da",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/boxed-live-quant.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/boxed-live-quant.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/boxed-live-quant.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "type-valued-result",
+        "source_sha256": "69ef0cd500074c527a74d19bdbd6aa82ef9fed9f169955ba5573156ead349da5",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/type-valued-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/type-valued-result.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/type-valued-result.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "monomorphic-kind",
+        "source_sha256": "0b1e3dcbad741be1894e6cd69b6f9806de8865d51e8ff55348ca9bdcd4fa3916",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/monomorphic-kind.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/monomorphic-kind.bend"
+          ],
+          "exit": 0,
+          "stdout": "Off{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/monomorphic-kind--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/monomorphic-kind.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/monomorphic-kind--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/monomorphic-kind.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/boundary-wrappers/monomorphic-kind--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/boundaries/fixtures/monomorphic-kind.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/boundary-wrappers/monomorphic-kind--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/boundaries/fixtures/monomorphic-kind.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/monomorphic-kind.bend"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "value-indexed-family",
+        "source_sha256": "bdab92018a2cf1637230208470eff5b3cadd4859cc0809a52a3efcf68785ec7a",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/value-indexed-family.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/value-indexed-family.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/value-indexed-family.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "constructor-local-type",
+        "source_sha256": "f0c930b015331ea4987b5642ba5290b53eca994fad3d50184d4e73e28521804d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/constructor-local-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/boundaries/fixtures/constructor-local-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/boundaries/fixtures/constructor-local-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "suite": "compiler-generics-erasure-abi",
+  "basis": "Literal review of the frozen seed-valid declarations before adding the kept-erased-argument mutant. A type or quantity parameter is erased, an explicit minus binder is erased, and each remaining parameter contributes one Wasm argument. No arity is derived from Knot output. These exports are inspected without invoking functions whose parameters include cells.",
+  "controls": [
+    {
+      "case": "box-unbox",
+      "source_sha256": "7363aecf8413c2abea8fb90f2ea9c30b41d7e0b71bfdfbe7eca6981db8bee5c7",
+      "export": "unbox",
+      "arity": 1,
+      "declaration": "def unbox(-A: Type, b: Box<A>) -> A:",
+      "justification": "A is erased; b is the sole live boxed argument."
+    },
+    {
+      "case": "erased-interleaved",
+      "source_sha256": "b879aa29ef3d206d4b8f396ba146b6f249da0b98c73b8db4a8e1e1e136281a6c",
+      "export": "pick_b",
+      "arity": 3,
+      "declaration": "def pick_b(x: Flag, -A: Type, y: A, -B: Type, z: B) -> B:",
+      "justification": "A and B are erased; x, y and z are the three live arguments, in that order."
+    },
+    {
+      "case": "erased-interleaved",
+      "source_sha256": "b879aa29ef3d206d4b8f396ba146b6f249da0b98c73b8db4a8e1e1e136281a6c",
+      "export": "pick_a",
+      "arity": 3,
+      "declaration": "def pick_a(x: Flag, -A: Type, y: A, -B: Type, z: B) -> A:",
+      "justification": "A and B are erased; the result's type parameter does not change the three live argument slots."
+    },
+    {
+      "case": "erased-value-arg",
+      "source_sha256": "01a25fc89d40273f333c7ae6a0d00076d4e5215690c80b65249d9d436bf96f33",
+      "export": "ghost",
+      "arity": 1,
+      "declaration": "def ghost(-A: Type, -w: A, x: Flag) -> Flag:",
+      "justification": "Both the type A and value w are erased; x is the sole live argument."
+    },
+    {
+      "case": "quantity-parity",
+      "source_sha256": "8c949440f0f3d3aa3abf7acd6f97593aa97ae72a73ce527128c40098fcc6855e",
+      "export": "parity",
+      "arity": 1,
+      "declaration": "def parity(a, -A: Kind(a), xs: Seq<a, A>) -> Parity:",
+      "justification": "The quantity parameter a and type A are erased; xs is the sole live boxed argument."
+    }
+  ]
+}

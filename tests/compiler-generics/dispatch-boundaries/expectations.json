@@ -1,0 +1,702 @@
+{
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "nested-erased-type",
+      "file": "fixtures/nested-erased-type.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An erased local type alias nested inside a match arm must reach the declared Unsupported type-level binding boundary.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "round",
+          "params": [
+            "Flag"
+          ],
+          "result": "Flag"
+        },
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-binding\t",
+        "knot_expected": true,
+        "justification": "An erased local type alias nested inside a match arm must reach the declared Unsupported type-level binding boundary."
+      }
+    },
+    {
+      "name": "local-erased-quantity",
+      "file": "fixtures/local-erased-quantity.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An erased local Quant binding is type-level computation outside the accepted profile, not an internal checker failure.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-binding\t",
+        "knot_expected": true,
+        "justification": "An erased local Quant binding is type-level computation outside the accepted profile, not an internal checker failure."
+      }
+    },
+    {
+      "name": "unannotated-erased-quantity",
+      "file": "fixtures/unannotated-erased-quantity.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "A quantity term inside an otherwise ordinary binding remains Unsupported even without a typed top-level declaration.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-term\t",
+        "knot_expected": true,
+        "justification": "A quantity term inside an otherwise ordinary binding remains Unsupported even without a typed top-level declaration."
+      }
+    },
+    {
+      "name": "unannotated-erased-type",
+      "file": "fixtures/unannotated-erased-type.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An unbound term name that denotes a declared datatype is an unsupported type value, not an invalid free variable.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-term\t",
+        "knot_expected": true,
+        "justification": "An unbound term name that denotes a declared datatype is an unsupported type value, not an invalid free variable."
+      }
+    },
+    {
+      "name": "empty-type-application",
+      "file": "fixtures/empty-type-application.bend",
+      "class": "negative",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "The seed rejects an empty type-argument list before declaration checking.",
+      "needs": [],
+      "entries": [],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\ttype-arguments\t",
+        "knot_expected": true,
+        "justification": "The seed rejects an empty type-argument list before declaration checking."
+      },
+      "seed_reason": [
+        "a term"
+      ]
+    },
+    {
+      "name": "monomorphic-type-application",
+      "file": "fixtures/monomorphic-type-application.bend",
+      "class": "negative",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An applied type expression in a monomorphic constructor field must reach the declared Unsupported boundary, never an internal failure.",
+      "needs": [],
+      "entries": [],
+      "knot": {
+        "require": "reject",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-expression\t",
+        "knot_expected": true,
+        "justification": "An applied type expression in a monomorphic constructor field must reach the declared Unsupported boundary, never an internal failure."
+      },
+      "seed_reason": [
+        "Flag with 0 parameters",
+        "Flag<Flag>"
+      ]
+    },
+    {
+      "name": "generic-local-erased-type",
+      "file": "fixtures/generic-local-erased-type.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An annotated local erased type alias remains Unsupported when another declaration selects the generic checker.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-binding\t",
+        "knot_expected": true,
+        "justification": "An annotated local erased type alias remains Unsupported when another declaration selects the generic checker."
+      }
+    },
+    {
+      "name": "generic-unannotated-erased-type",
+      "file": "fixtures/generic-unannotated-erased-type.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "The generic checker recognizes a declared datatype as an unsupported type-valued term after lexical lookup fails.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-term\t",
+        "knot_expected": true,
+        "justification": "The generic checker recognizes a declared datatype as an unsupported type-valued term after lexical lookup fails."
+      }
+    },
+    {
+      "name": "inferred-erased-type",
+      "file": "fixtures/inferred-erased-type.bend",
+      "class": "boundary",
+      "feature": "monomorphic-dispatch-type-level-boundary",
+      "intent": "An inferred erased alias of a rigid type parameter remains an unsupported local type computation.",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "unsupported",
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\ttype-level-binding\t",
+        "knot_expected": true,
+        "justification": "General local type normalization is outside the accepted contract, including aliases whose type is inferred."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "nested-erased-type",
+        "source_sha256": "3f56150fed1c389dbbb36cae7bfc748253cd7fc5a005bde99a44c9754478ed96",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "round",
+            "arguments": [
+              "Off"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": ".local/compiler-generics/dispatch-boundary-wrappers/nested-erased-type--round--Off.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.Off{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/dispatch-boundary-wrappers/nested-erased-type--round--Off.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "round",
+            "arguments": [
+              "On"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": ".local/compiler-generics/dispatch-boundary-wrappers/nested-erased-type--round--On.bend",
+            "wrapper_source": "import ../../../tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.bend as F\n\ndef main() -> F.Flag:\n  F.round(F.On{})\n",
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-generics/dispatch-boundary-wrappers/nested-erased-type--round--On.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.Off{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "Off",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/nested-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "local-erased-quantity",
+        "source_sha256": "01b94d62a139199bab051ad591a417713f5b48e85b6434bfd1fe255e09a6f364",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/local-erased-quantity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/local-erased-quantity.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/local-erased-quantity.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "unannotated-erased-quantity",
+        "source_sha256": "470f9c5d3aae82330a63d0704f732cbf53c726f721801cb953374698e6ad1274",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-quantity.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-quantity.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-quantity.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "unannotated-erased-type",
+        "source_sha256": "c018993acf8a011ca372365a3ba341e128cfa52db75a96e8c7c1c65152c2494c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "empty-type-application",
+        "source_sha256": "d8bbd8de768468d42f55cf8e1fabd7648e550d8da5fc48cd3273b184790a0a6c",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/empty-type-application.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n5 | type Holder is Type:\n6>|   Holder{value: Flag<>}\n  |                       ^\n7 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/empty-type-application.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n5 | type Holder is Type:\n6>|   Holder{value: Flag<>}\n  |                       ^\n7 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "monomorphic-type-application",
+        "source_sha256": "54806c4da91b2079131cb5738df2d819708172d2aa9adb174caddef7dc1dd180",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/monomorphic-type-application.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag with 0 parameters\n- observed : Flag<Flag>\nLocation: Holder\n5 | type Holder is Type:\n6>|   Holder{value: Flag<Flag>}\n  |                 ^^^^^^^^^\n7 | \n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/monomorphic-type-application.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag with 0 parameters\n- observed : Flag<Flag>\nLocation: Holder\n5 | type Holder is Type:\n6>|   Holder{value: Flag<Flag>}\n  |                 ^^^^^^^^^\n7 | \n"
+        },
+        "calls": []
+      },
+      {
+        "case": "generic-local-erased-type",
+        "source_sha256": "b0c39aa0ee33eeab32b18c982fece25f937deea483ea66c2fc8bff1409427556",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/generic-local-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/generic-local-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/generic-local-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "generic-unannotated-erased-type",
+        "source_sha256": "4cc6e3578ac1174069e3eb2472ecf4c5a0747ca6a57845637677e2afb20801a1",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/generic-unannotated-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/generic-unannotated-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/generic-unannotated-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "inferred-erased-type",
+        "source_sha256": "e917a1fb519d783a32cc328fadf30c049a66c4ccdd4b90b1e69e5e2ce4dfaab2",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/inferred-erased-type.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/dispatch-boundaries/fixtures/inferred-erased-type.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/dispatch-boundaries/fixtures/inferred-erased-type.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
