@@ -199,8 +199,8 @@ def review_reference(manifest, round):
         for call in fixture['calls']:
             entry = target / call['run']
             if 'cwd' in frozen:
-                # The seed receives the same literal relative spellings as Knot.
-                result = run([*SEED, frozen['entry']], bundle=frozen['bundle_arg'], cwd=fixture['cwd'])
+                # The seed receives the same literal spellings as Knot.
+                result = run([*SEED, invocation(fixture)[1]], bundle=frozen['bundle_arg'], cwd=fixture['cwd'])
             else:
                 result = run([*SEED, entry])
             normalized = {**result, **{key: result[key].replace(str(ROOT), '<ROOT>')
@@ -462,7 +462,10 @@ def single_file(fixture, commands, source, name, lane):
 def invocation(fixture):
     """Working directory, entry and bundle arguments of a module fixture."""
     if 'cwd' in fixture:
-        return Path(fixture['cwd']), fixture['entry'], fixture['bundle_arg']
+        entry = fixture['entry']
+        if 'entry' in fixture.get('absolute', []):
+            entry = str(Path(fixture['cwd']) / entry)
+        return Path(fixture['cwd']), entry, fixture['bundle_arg']
     source = HERE / fixture['file']
     if fixture.get('entry_mode') == 'relative':
         source = source.relative_to(ROOT)
@@ -700,6 +703,11 @@ MUTANTS += [
      'old': 'Bool.or(String.is_empty(bundle),String.ends_with(bundle,"/"))',
      'new': 'String.ends_with(bundle,"/")',
      'witness': 'bundle-dot', 'actual': {'exit': 0}},
+    {'name': 'root-bundle-contains-all', 'file': 'load.bend',
+     'old': 'S.choose(Action,String.eq(I.normalize(bundle),"/"),u =>',
+     'new': 'S.choose(Action,False{},u =>',
+     'witness': 'bundle-root',
+     'actual': {'exit': 2, 'diagnostic_prefix': 'Invalid\tload\timport-path\t'}},
     {'name': 'quoted-import-classified', 'file': 'imports.bend',
      'old': 'Bool.and(Bool.not(open),Bool.and(is_import,Bool.not(quoted)))',
      'new': 'Bool.and(Bool.not(open),is_import)',
@@ -744,7 +752,7 @@ REQUIRED_MUTANTS = {'diamond-loaded-twice', 'alias-reexported',
                     'climbing-target-accepted', 'climbing-root-accepted', 'working-directory-bundle-empty',
                     'quoted-import-classified', 'result-type-invalid', 'spaced-arrow-accepted',
                     'output-guard-files-ignored', 'output-guard-base-ignored', 'output-guard-single-basis',
-                    'output-query-ignored', 'output-climb-ignored'}
+                    'output-query-ignored', 'output-climb-ignored', 'root-bundle-contains-all'}
 
 
 def mutants(fixtures):

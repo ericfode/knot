@@ -258,12 +258,16 @@ def run(fuel: Nat, action: Action, +bundle: String, +characters: Nat, +depth: Na
       read_source(path,cap,missing,origin,result =>
         run(n,plan(Con{delivered(origin,received(result)),tasks},state,bundle,characters,depth),bundle,characters,depth,next))
 
+# The seed's bundle prefix is realpath(root) + "/"; for "/" that is "//", which
+# contains nothing, so the root directory has no equivalent containment here.
 def start(+path: String, +bundle: String) -> Action:
   S.choose(Action,Bool.xor(String.starts_with(path,"/"),String.starts_with(bundle,"/")),u =>
     Stopped{S.Unsupported{"load","mixed-path-roots",S.At{0,0,0,0}}},u =>
   S.choose(Action,Bool.or(I.climbs(I.normalize(path)),I.climbs(I.normalize(bundle))),u =>
     Stopped{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}},u =>
-    Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}}))
+  S.choose(Action,String.eq(I.normalize(bundle),"/"),u =>
+    Stopped{S.Unsupported{"load","root-bundle",S.At{0,0,0,0}}},u =>
+    Advance{[Visit{I.normalize(path),"",True{}}],State{Nil{},Nil{},Nil{},Q.Symbols{Nil{},Nil{}},Nil{},False{}}})))
 
 def begin(result: Result<S.Error,Unit>, +path: String, +bundle: String, characters: Nat, depth: Nat,
   next: Result<S.Error,Receipt> -> IO(Unit)) -> IO(Unit):

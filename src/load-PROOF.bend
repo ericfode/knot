@@ -46,6 +46,9 @@ def L.mixed_path_roots_are_unsupported():
 def L.climbing_paths_have_no_identity():
   {==}
 
+def L.root_bundle_is_unsupported():
+  {==}
+
 def L.working_directory_bundle_contains_local_paths():
   {==}
 

@@ -102,6 +102,9 @@ law climbing_paths_have_no_identity:
      L.Stopped{S.Unsupported{"load","path-identity",S.At{0,0,0,0}}})
     : Result<S.Error,I.Target> & L.Action & L.Action}
 
+law root_bundle_is_unsupported:
+  {L.start("/w/app/ok.bend","/.") == L.Stopped{S.Unsupported{"load","root-bundle",S.At{0,0,0,0}}} : L.Action}
+
 law working_directory_bundle_contains_local_paths:
   {I.resolve("main.bend","",I.normalize("."),"./extra/flag.bend")
     == Fail{S.Invalid{"load","import-path",S.At{0,0,0,0}}} : Result<S.Error,I.Target>}
