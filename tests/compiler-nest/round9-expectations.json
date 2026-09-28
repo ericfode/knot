@@ -1,5 +1,5 @@
 {
-  "basis": "Reviewer let-of-binder repros verbatim (11 sites in four let forms, the multi-scrutinee, default, nested and flat programs, the twins and eight fuzz hits), frozen with the pinned seed before the repair.",
+  "basis": "Reviewer let-of-binder repros verbatim (11 sites in four let forms, the multi-scrutinee, default, nested and flat programs, the twins and eight fuzz hits) and rebound dotted-binder probes (the modules review's three verbatim), frozen with the pinned seed before the repairs.",
   "seed": {
     "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
     "version": "2.0.29",
@@ -2826,6 +2826,326 @@
         "diagnostic": "Invalid\tcheck\tannotation-required\t"
       },
       "finding": "let-of-refined-binder"
+    },
+    {
+      "name": "rebound-erased-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-erased-let.bend",
+      "sha256": "51f18087d647b1418de12917dba2e12f3fc016bd72f1b5a8d46b01169bde9622",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-erased-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-erased-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-erased-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 0,
+        "outcome": "Accepted"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-field",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-field.bend",
+      "sha256": "c5a85788fced34e421927d0b0976d73fc1a4592ba3d35446a008cfc25cc0621d",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-field.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-field/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-field.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-let.bend",
+      "sha256": "4681b8fbb456f5ac40a3b45b9cfe1b2bcd31af62b9b8ee359c4ac338306d994f",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-multi",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-multi.bend",
+      "sha256": "2eaa93bf637cb9690c86c9b5366e5246d13f8f247eb1bc8a4975762161291fd9",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-multi.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-multi/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-multi.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-nested",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-nested.bend",
+      "sha256": "c60599ea15299932a47a592f931f55fcffa424e1949087626ff8c9b5e61ea5f9",
+      "fields": true,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-nested.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-nested/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-nested.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-promotion",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-promotion.bend",
+      "sha256": "9bf1019a4b31cb2f432852453ad3e2f8452ecc7d923b70fc496121607fa70378",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-promotion.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-promotion/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-promotion.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-row",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-row.bend",
+      "sha256": "f7b07f26cf4980000b51a8823de374e19cc6edda47378a0659821b00c0bdf0d3",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-row/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-row.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
+    },
+    {
+      "name": "rebound-typed-let",
+      "file": "tests/compiler-nest/round9-fixtures/rebound-typed-let.bend",
+      "sha256": "2037044e87286c515be4cc90a851b2d69dcfa6207d962f4da251f448908cce0c",
+      "fields": false,
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/round9-fixtures/rebound-typed-let.bend"
+        ],
+        "exit": 0,
+        "stdout": "Lit{}\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "ordinals": [],
+          "type_id": 0,
+          "tag": 1,
+          "result": "Lit",
+          "command": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            ".local/compiler-nest/calls/rebound-typed-let/main.bend"
+          ],
+          "observation": {
+            "exit": 0,
+            "stdout": "../../../../tests/compiler-nest/round9-fixtures/rebound-typed-let.Lit{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "finding": "dotted-binder-stopgap"
     },
     {
       "name": "twin-call-rebuilt",
