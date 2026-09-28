@@ -1,4 +1,4 @@
-import ./lib/tick.js as T
+import ./lib/flag.txt as F
 
 type Light is Type:
   Dark{}

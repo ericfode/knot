@@ -134,7 +134,11 @@ calls: 30 accepted and 18 rejected.
   emit no artifact or value. Codes are the implementer's to choose and must be
   stable. Every negative is within this rung, so `Unsupported` is wrong here.
   A module absent from the frozen bundle (`hash-absent-package`) is a
-  resolution failure. Knot never fetches.
+  resolution failure. Knot never fetches. Because only the class is checked,
+  a negative must not also fail for an incidental reason: the path-rule
+  negatives (`import-dotted-filename`, `import-non-bend`) name existing files
+  of valid Bend, and `no-base-loaded` is a monomorphic program that becomes
+  valid when `import Base` is added.
 - **`knot_expected`.** The seed accepts these forms, but they are outside the
   rung. The reviewed literal expectation is an exact diagnostic prefix. It
   introduces the phase `load`, for import resolution before parsing the

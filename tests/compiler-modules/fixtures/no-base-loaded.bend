@@ -2,5 +2,10 @@ type Light is Type:
   Dark{}
   Lit{}
 
+def see(x: Bool) -> Light:
+  match x:
+    case False{}: Dark{}
+    case True{}: Lit{}
+
 def main() -> Light:
-  Bool.pick(Light, True{}, Lit{}, Dark{})
+  see(Bool.not(True{}))

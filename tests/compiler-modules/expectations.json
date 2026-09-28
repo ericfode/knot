@@ -104,7 +104,7 @@
     "fixtures/import-comments.bend": "0becdd8f1b269dc76cf27e7f1ea1db5887d3efcd36d78c40b7b5bc5d8504d69f",
     "fixtures/import-cycle.bend": "9b5d588d5edc5d9b8f5c4c6f18a501879c122b4352c8e026ce06825a4dd84720",
     "fixtures/import-dotted-filename.bend": "328c1e4f5c5db0751f38574a49776c2b2af99f9c3d33ae51726f1be29dd54bdc",
-    "fixtures/import-non-bend.bend": "bc8ef3e446b04a3a6cc9e527e040b529993161f52dd3b7ed49aded69a33c0fb3",
+    "fixtures/import-non-bend.bend": "234d414088e92354ae8d1a9e0d73119408bb8f50691a79b4011b616de099dae8",
     "fixtures/import-without-alias.bend": "3c3aebae41f8fbd3f79c361ebc100b08628da297d594ae045be3fc6d91d88b2b",
     "fixtures/lib/chain/one.bend": "dda344ebc1e28683d6b15a5114a0cff09eff7b85a7dcf762dc52936a4eae444b",
     "fixtures/lib/chain/three.bend": "108bf174fe78a0f756f3c858e9cfd357294ac267d31edb1420cc30772b2402e5",
@@ -114,6 +114,8 @@
     "fixtures/lib/deep/a/b/leaf.bend": "aef9f9260c07de88c6038b2547d722c486d1f9e9b56690be79f0ac66ef2677cd",
     "fixtures/lib/deep/a/b/twig.bend": "2cdbaa472a8eaa1a85df6275a4ff0dddaca039bd4f6675eba8c0beeeef1f7640",
     "fixtures/lib/flag.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/flag.txt": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
+    "fixtures/lib/flag.v2.bend": "7261d24e22bf1f352c05ed96154b9436e15314d9e56f904d6ebdeffd0d292e42",
     "fixtures/lib/left.bend": "3ea506a428e59722eea1739118dc9d79fbaa54c9ac36b81cd87dba0d536a9ffb",
     "fixtures/lib/own-bool.bend": "a33406e777fe07ff9a1c2299d1c2be7ba09bdc7481e0b73449ae8102be6f9fa1",
     "fixtures/lib/right.bend": "3a6c4dd4899044d86388c1eb71276864a7d729ca33ff86905a6128baf0e0220b",
@@ -126,7 +128,7 @@
     "fixtures/module-main.bend": "6130c5d1c018d5cc22cd16acbc9792a143053ef16cbe96e15d30c2abe51c01f2",
     "fixtures/named-package.bend": "99e95b82ef0c681ff2bbad0b3cb8ff29bb317d972ea58e382f143540f7393269",
     "fixtures/nested-paths.bend": "564e88aa83c69dc3ee4cc2f2dae87f33c70f869e62a7ae660499452754a85e93",
-    "fixtures/no-base-loaded.bend": "c49c024d1d60a4271b18507540622c5af04f8523971bac791804f196b3dcb9ab",
+    "fixtures/no-base-loaded.bend": "aba549281bae671ef55646a6158821160b57e011f0e6a50422f6319eadd5b4dd",
     "fixtures/qualified-names.bend": "9a0f462ab40bdc6059435127f2e6037aa26f3ca4a77b875d2d78afc28c1e130d",
     "fixtures/same-bare-names.bend": "9a14fd5fda5787b5e99d7feaa93c11f37c688ef21e78ba55ece784cbf047565d",
     "fixtures/self-import.bend": "383d9313f72c325ce0b005fcd5f05123630b03832a35795daca90ff61abe4fb8",
@@ -441,8 +443,10 @@
       "file": "fixtures/import-dotted-filename.bend",
       "feature": "relative-paths",
       "kind": "negative",
-      "summary": "Path segments are plain names; flag.v2.bend is rejected before any file lookup.",
-      "modules": [],
+      "summary": "Path segments are plain names; flag.v2.bend exists and is valid Bend, but the path rule rejects it before any file lookup.",
+      "modules": [
+        "fixtures/lib/flag.v2.bend"
+      ],
       "result": {
         "type": "Light",
         "constructors": [
@@ -804,9 +808,9 @@
       "file": "fixtures/import-non-bend.bend",
       "feature": "import-syntax",
       "kind": "negative",
-      "summary": "An import path must end in .bend.",
+      "summary": "An import path must end in .bend; flag.txt holds valid Bend source and is still rejected.",
       "modules": [
-        "fixtures/lib/tick.js"
+        "fixtures/lib/flag.txt"
       ],
       "result": {
         "type": "Light",
@@ -828,7 +832,7 @@
           "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/import-non-bend.bend",
           "exit": 1,
           "stdout": "",
-          "stderr": "Error:\n- expected : an import of a .bend file\n- observed : './lib/tick.js'\nLocation:\n1>| import ./lib/tick.js as T\n  |        ^\n2 | \n"
+          "stderr": "Error:\n- expected : an import of a .bend file\n- observed : './lib/flag.txt'\nLocation:\n1>| import ./lib/flag.txt as F\n  |        ^\n2 | \n"
         }
       ]
     },
@@ -1288,7 +1292,7 @@
         "Base"
       ],
       "result": {
-        "type": "Light",
+        "type": "Bool",
         "constructors": [
           "Dark",
           "Lit"
@@ -1315,7 +1319,7 @@
       "file": "fixtures/no-base-loaded.bend",
       "feature": "base-import",
       "kind": "negative",
-      "summary": "Without any import of Base, Bool.pick is not a defined name.",
+      "summary": "Without any import of Base, Bool, its constructors and Bool.not are undefined; adding import Base makes the same monomorphic program valid.",
       "modules": [],
       "result": {
         "type": "Light",
@@ -1337,7 +1341,7 @@
           "command": "cd <ROOT> && BEND_NO_TELEMETRY=1 BEND_LIB=tests/compiler-modules/bundle/lib BEND_HUB=file://<ROOT>/tests/compiler-modules/bundle/hub bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts tests/compiler-modules/fixtures/no-base-loaded.bend",
           "exit": 1,
           "stdout": "",
-          "stderr": "Error:\n- expected : a defined name\n- observed : Bool.pick\nLocation: main\n5 | def main() -> Light:\n6>|   Bool.pick(Light, True{}, Lit{}, Dark{})\n  |   ^^^^^^^^^\n7 | \n"
+          "stderr": "Error:\n- message  : a declared constructor (unknown: False)\nLocation:\n6 |   match x:\n7>|     case False{}: Dark{}\n  |          ^^^^^^^\n8 |     case True{}: Lit{}\n"
         }
       ]
     },
