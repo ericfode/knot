@@ -68,49 +68,47 @@
   "in_flight": [
     {
       "id": "nest",
-      "executor": "codex",
-      "state": "implementing (relaunched after the coordinator reconciled generic-box-pattern, b42a6fd)"
+      "state": "codex fix round 2 (unsound default-region acceptance)"
     },
     {
       "id": "modules",
-      "executor": "codex",
-      "state": "implementing"
-    },
-    {
-      "id": "opt-1",
-      "executor": "codex",
-      "state": "implementing: checked core-to-core passes and bench on/off"
-    },
-    {
-      "id": "perch-context",
-      "executor": "codex",
-      "state": "implementing: datatype closure, hash-import resolution, interface summaries"
-    },
-    {
-      "id": "gpu-2",
-      "executor": "codex",
-      "state": "implementing: knot-device-records-2 with RC Data, captures and attempt identity"
-    },
-    {
-      "id": "census-2",
-      "executor": "codex",
-      "state": "implementing: accepted evidence from all suites and a self-hosting meter"
+      "state": "codex fix round 2 (symlink/case path identity -> Unsupported load path-identity; Base-namespace shadowing)"
     },
     {
       "id": "literals",
-      "state": "fixtures frozen (5a7bd5f); waits for modules"
+      "state": "codex implementing (based on campaign/modules)"
     },
     {
       "id": "generics",
-      "state": "fixtures frozen (66e8337); waits for modules and literals"
+      "state": "codex implementing"
     },
     {
-      "id": "closures, baseslice",
-      "state": "fixture suites being authored"
+      "id": "io-host",
+      "state": "codex fix round 2 (case-insensitive .env refusal); becomes the VM IO layer"
     },
     {
-      "id": "io, sugar",
-      "state": "fixture suites being authored"
+      "id": "wasm-owned",
+      "state": "codex implementing (native RC heap; informs the VM heap)"
+    },
+    {
+      "id": "closures",
+      "state": "done a1d6891; review workflow wfswsiz0q running"
+    },
+    {
+      "id": "descent-2",
+      "state": "done; reviewed: 0 blocking; integration hazards: closures partial-self-same pin must migrate to Invalid, closures must rebase onto Scope{...,aliases}, re-merge onto current campaign/nest"
+    },
+    {
+      "id": "classify-2",
+      "state": "merged; follow-up classify-3 queued: function-type return/binding annotations Unsupported, type-application only when seed commits"
+    },
+    {
+      "id": "vm-design",
+      "state": "design-panel workflow wf_68968469-dba running; its synthesis defines the VM increments (IR/image format, VM, model+laws, harness route)"
+    },
+    {
+      "id": "selfhost-gap-analysis",
+      "state": "workflow wf_35f2e149-542 running; output -> docs/compiler-campaign/SELF-HOSTING-PATH.md"
     }
   ],
   "decisions": [
@@ -206,5 +204,38 @@
   "queued_after_self_hosting": [
     "14: Unicode syntax dialect (user: 'after we are self hosting')",
     "15: metaprogramming library (user, 2026-09-27: 'add a metaprogramming library to the end of the milestones. I want to be able to dynamically generate and run code in bend from bend')"
+  ],
+  "route": "D14 VM-first: Knot compiles to a serialized image run by one small Wasm VM; fixpoint image I2 = I3; native Wasm codegen is the speed track",
+  "parked_off_path_D13": [
+    {
+      "id": "c-backend",
+      "state": "done bc51a5d, unreviewed"
+    },
+    {
+      "id": "gpu-2",
+      "state": "done e485e6d, reviewed: 0 blocking; refresh cpu.json before merge"
+    },
+    {
+      "id": "gpu-emit",
+      "state": "done b2bc39d incl. Metal receipt (53 device calls), unreviewed"
+    },
+    {
+      "id": "opt-1",
+      "state": "codex fix round 2 running"
+    },
+    {
+      "id": "opt-2",
+      "state": "codex running on campaign/opt-1"
+    },
+    {
+      "id": "bench-2",
+      "state": "done, unreviewed"
+    }
+  ],
+  "next": [
+    "read vm-design synthesis; launch VM increments (image format + C1 emitter, VM runtime + model/laws, differential vs eval.bend and seed, harness route I2=I3)",
+    "review/merge on-path branches as they finish: nest, modules, literals, generics, closures, descent-2, io-host",
+    "commit the gap analysis as docs/compiler-campaign/SELF-HOSTING-PATH.md",
+    "launch sugar, baseslice and classify-3 when their prerequisites land"
   ]
 }
