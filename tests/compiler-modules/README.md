@@ -21,6 +21,9 @@ qualified names in the freshness test, the seed's `.//` and `0x<hash>//`
 imports, and dotted binders resolved in scope.
 [Review round 7](REVIEW-ROUND-7.md) records two more: binders read in type
 positions, and declared types and functions used as terms.
+[Review round 8](REVIEW-ROUND-8.md) defers two pre-existing findings to the
+reconciliation rounds: detached constructor braces, fixed on `campaign/nest`,
+and empty datatypes, whose rule nest and `campaign/generics` state differently.
 The earlier [verification receipt](receipts/verification.json) and preflight
 receipts without `review-round2` remain historical evidence for the first round.
 
