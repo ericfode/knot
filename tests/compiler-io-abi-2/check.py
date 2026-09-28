@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Compare knot-io-2 with frozen literals and the modules foreign bodies."""
+import contextlib
 import errno
+import functools
 import hashlib
 import itertools
 import json
@@ -25,6 +27,7 @@ SEED_ENV = {**{k: v for k, v in os.environ.items() if not k.startswith('BEND_')}
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
 BUN_STACK_CELLS = 32000
 COMPLETED = {'status': 'Completed', 'exit': 0}
+SEALED = 0o100  # search without listing
 
 
 def sha(data):
@@ -36,10 +39,20 @@ def command(argv, cwd=ROOT, env=ENV):
                           capture_output=True, timeout=120 * SCALE)
 
 
+def unseal(directory):
+    """A run stopped while sealed leaves a directory that rmtree cannot list."""
+    os.chmod(directory, 0o700)
+    for top, dirs, _ in os.walk(directory):
+        for name in dirs:
+            if not os.path.islink(os.path.join(top, name)):
+                os.chmod(os.path.join(top, name), 0o700)
+
+
 def fresh(name):
     directory = WORK / name
     assert directory.is_relative_to(WORK) and directory != WORK
     if directory.exists():
+        unseal(directory)
         shutil.rmtree(directory)
     directory.mkdir(parents=True)
     return directory
@@ -61,9 +74,10 @@ def snapshot(box):
     return rows
 
 
-def identity_tree(name):
-    box = fresh(name) / 'sandbox'
-    box.mkdir()
+def identity_tree(name, unlistable=None):
+    # The probe is written beside the sandbox, so an unlistable ancestor is its grandparent.
+    box = fresh(name) / ('sealed/work/sandbox' if unlistable == 'ancestor' else 'sandbox')
+    box.mkdir(parents=True)
     (box / 'file.bin').write_bytes(b'identity\x00\xff')
     (box / 'dir').mkdir()
     (box / 'dir/leaf').write_bytes(b'leaf')
@@ -74,7 +88,42 @@ def identity_tree(name):
     (box / 'outside').symlink_to('../unread-outside')
     os.link(box / 'file.bin', box / 'hardlink')
     os.mkfifo(box / 'fifo')
+    if unlistable == 'directory':
+        (box / 'sealed').mkdir()
+        (box / 'sealed/leaf').write_bytes(b'leaf')
     return box
+
+
+@contextlib.contextmanager
+def sealed(box, unlistable):
+    """While the query runs, the named directory permits search but not listing."""
+    if not unlistable:
+        yield
+        return
+    target = {'ancestor': box.parents[1], 'directory': box / 'sealed'}[unlistable]
+    os.chmod(target, SEALED)
+    try:
+        yield
+    finally:
+        os.chmod(target, 0o700)
+
+
+@functools.cache
+def seal_mode():
+    """Mode 0100 must refuse listing; where it does not (e.g. as root) permission fixtures are unavailable."""
+    probe = fresh('seal-probe')
+    os.chmod(probe, SEALED)
+    try:
+        os.listdir(probe)
+        return 'ignored'
+    except PermissionError:
+        return 'enforced'
+    finally:
+        os.chmod(probe, 0o700)
+
+
+def available(case):
+    return not case.get('unlistable') or seal_mode() == 'enforced'
 
 
 def case_mode(box):
@@ -226,10 +275,11 @@ def seed():
 
 
 def identity_case(case, host=HOST, prefix='identity'):
-    box = identity_tree(prefix + '/' + case['name'])
+    box = identity_tree(prefix + '/' + case['name'], case.get('unlistable'))
     target = case['path'].replace('$SANDBOX', str(box.resolve()))
-    r, outcome, digest = invoke(identity_program(case['path']), box, host,
-                                [target] if '$SANDBOX' in case['path'] else [])
+    with sealed(box, case.get('unlistable')):
+        r, outcome, digest = invoke(identity_program(case['path']), box, host,
+                                    [target] if '$SANDBOX' in case['path'] else [])
     actual = observations(r, outcome)
     expected = [identity_expected(case, case_mode(box))]
     return actual, expected, {'name': case['name'], 'wasm_sha256': digest,
@@ -250,15 +300,21 @@ def references():
     built = command(['clang', '-Wall', '-Wextra', '-Werror', str(c_source), '-o', str(native)])
     assert built.returncode == 0, built.stderr.decode()
     box = identity_tree('reference-tree')
-    before, mode = snapshot(box), case_mode(box)
-    rows = []
-    for case in PLAN['path_identity']:
-        for lane, actual in foreign(native, case['path'].replace('$SANDBOX', str(box.resolve())), box):
+    trees, mode, rows = {None: (box, snapshot(box))}, case_mode(box), []
+    for case in filter(available, PLAN['path_identity']):
+        unlistable = case.get('unlistable')
+        if unlistable not in trees:
+            box = identity_tree('reference-tree-' + unlistable, unlistable)
+            trees[unlistable] = box, snapshot(box)
+        box = trees[unlistable][0]
+        with sealed(box, unlistable):
+            lanes = foreign(native, case['path'].replace('$SANDBOX', str(box.resolve())), box)
+        for lane, actual in lanes:
             assert actual == identity_expected(case, mode), (case['name'], lane, actual)
             rows.append({'name': case['name'], 'lane': lane, 'observed': actual})
-    assert snapshot(box) == before
+    assert all(snapshot(box) == before for box, before in trees.values())
     return {'status': 'pass', 'reference_commit': PLAN['reference_commit'],
-            'reference_sha256': PLAN['reference_sha256'], 'case_mode': mode,
+            'reference_sha256': PLAN['reference_sha256'], 'case_mode': mode, 'seal_mode': seal_mode(),
             'expectations_sha256': sha((HERE / 'expectations.json').read_bytes()), 'runs': rows}, native
 
 
@@ -394,6 +450,9 @@ def mutants(mode):
                 rows.append({'name': name, 'killed': False, 'unavailable': 'case-insensitive filesystem'})
                 continue
             case = next(c for c in PLAN['path_identity'] if c['name'] == mutant['witness'])
+            if not available(case):
+                rows.append({'name': name, 'killed': False, 'unavailable': 'mode 0100 does not refuse listing'})
+                continue
             actual, expected, record = identity_case(case, host, 'mutant-' + name)
         assert actual != expected, f'Survived: {name}'
         rows.append({'name': name, 'witness': mutant['witness'], 'killed': True,
@@ -422,18 +481,21 @@ def main():
     receipt.unlink(missing_ok=True)
     reference, native = references()
     (receipts / 'reference.json').write_text(json.dumps(reference, indent=2) + '\n')
-    print(f'io-abi-2 references: {len(reference["runs"])} C/JS observations, {reference["case_mode"]} filesystem', flush=True)
+    print(f'io-abi-2 references: {len(reference["runs"])} C/JS observations, {reference["case_mode"]} filesystem, '
+          f'permission seal {reference["seal_mode"]}', flush=True)
     witnesses = seed()
     print(f'io-abi-2 seed: {len(witnesses)} read_bytes lane runs', flush=True)
     if sys.argv[1:]:
         return 0
     fixtures = []
     for family, run in [('read_bytes', read_case), ('path_identity', identity_case)]:
-        for case in PLAN[family]:
+        for case in filter(available, PLAN[family]):
             actual, expected, record = run(case)
             assert actual == expected, (family, case['name'], compact(actual), compact(expected))
             fixtures.append({'family': family, **record})
-        print(f'io-abi-2 {family}: {len(PLAN[family])} fixtures', flush=True)
+        unavailable = len(PLAN[family]) - len(list(filter(available, PLAN[family])))
+        print(f'io-abi-2 {family}: {len(PLAN[family]) - unavailable} fixtures'
+              + (f', {unavailable} unavailable (permission seal ignored)' if unavailable else ''), flush=True)
     bounds = []
     for name, expected in PLAN['controls'].items():
         actual, record = control(name)
@@ -455,6 +517,7 @@ def main():
               'fixtures': fixtures, 'parity': generated, 'seed_runs': witnesses, 'host_boundaries': bounds, 'mutants': killed,
               'read_observations': sum(len(c['reads']) for c in PLAN['read_bytes']),
               'reference_observations': len(reference['runs']), 'case_mode': reference['case_mode'],
+              'seal_mode': reference['seal_mode'],
               'seed_observations': sum(len(r.get('observations', [])) for r in witnesses),
               'seed_exhausted': sum(r['status'] == 'Exhausted' for r in witnesses),
               'mutants_killed': sum(m['killed'] for m in killed),

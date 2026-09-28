@@ -2,6 +2,9 @@
   "schema": 1,
   "profile": "knot-io-2",
   "authority": "D17 literal review before implementation; path identity compared to unmodified campaign/modules 0111f13 foreign bodies.",
+  "amendments": [
+    "Review round 1, before the host change: six unlistable-directory identity fixtures (errno 13 from the foreign walk, including the root's ancestors for absolute spellings) and the skip-root-ancestors mutant."
+  ],
   "reference_commit": "0111f13",
   "reference_sha256": {
     "path-identity.c": "ff36745eaa22405bbc107f4649b50f8981dde81d0ea7a6cf76ca65d511fb3007",
@@ -546,6 +549,66 @@
         0,
         "46696c65206e616d6520746f6f206c6f6e67"
       ]
+    },
+    {
+      "name": "unlistable-ancestor-file",
+      "path": "$SANDBOX/file.bin",
+      "unlistable": "ancestor",
+      "expected": [
+        13,
+        0,
+        "5065726d697373696f6e2064656e696564"
+      ]
+    },
+    {
+      "name": "unlistable-ancestor-root",
+      "path": "$SANDBOX",
+      "unlistable": "ancestor",
+      "expected": [
+        13,
+        0,
+        "5065726d697373696f6e2064656e696564"
+      ]
+    },
+    {
+      "name": "unlistable-ancestor-relative",
+      "path": "file.bin",
+      "unlistable": "ancestor",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "unlistable-directory",
+      "path": "sealed",
+      "unlistable": "directory",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
+    },
+    {
+      "name": "unlistable-directory-entry",
+      "path": "sealed/leaf",
+      "unlistable": "directory",
+      "expected": [
+        13,
+        0,
+        "5065726d697373696f6e2064656e696564"
+      ]
+    },
+    {
+      "name": "unlistable-directory-missing",
+      "path": "sealed/missing",
+      "unlistable": "directory",
+      "expected": [
+        0,
+        1,
+        ""
+      ]
     }
   ],
   "controls": {
@@ -695,6 +758,11 @@
       "name": "misclassify-frames",
       "witness": "frame-exhaustion",
       "wrong": "Reports the step budget for frame exhaustion"
+    },
+    {
+      "name": "skip-root-ancestors",
+      "witness": "unlistable-ancestor-file",
+      "wrong": "Walks an absolute spelling from the root, answering 1 past an unlistable ancestor"
     }
   ]
 }
