@@ -74,8 +74,8 @@ reference codec and an independent reading of Knot's checked core display. It
 also checks the frozen VM expectation table; 62 refused malformed-image
 controls; 16 expectation, seven invocation, two seed-display and two bench
 controls; six admitted plan controls, seven admitted code-list controls and
-22 run controls with their frozen fuel and outcomes; nine describe-domain controls;
-the lowering of one hand-written display; 59 codec, 4 source and 20 evaluator
+23 run controls with their frozen fuel and outcomes; nine describe-domain controls;
+the lowering of one hand-written display; 59 codec, 4 source and 21 evaluator
 mutants; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

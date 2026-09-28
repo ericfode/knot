@@ -261,7 +261,7 @@ A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 62
 refusals (20 byte-level, 42 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its six admitted plan controls (three Cases on a `none` slot,
 among them `list-head-match`, and three whose arms fit their Case, among them
-`first-code`, S's shapes), its seven code-list controls and its 22 run
+`first-code`, S's shapes), its seven code-list controls and its 23 run
 controls; vm-model and vm-core MUST run each run control, at the fuel frozen with
 it, to the outcome frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -380,7 +380,7 @@ to its post-state. No row runs user code or a second host effect.
 | Return, top Bind | Pop; move the word into slot `depth`; push Scope(`depth`); `depth += 1`; Eval the body. |
 | Return, top Scope | Pop; drop slots `depth-1` down to the saved depth, zeroing them; restore depth; keep returning. |
 | Return, top Call | Pop; drop `act`; `act` = the saved caller; keep returning. |
-| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), bind the fields, `depth += f`. Eval the arm body. |
+| Eval Case | Select the arm (§6.1). Branch with `f > 0` fields: push Scope(`depth`), then bind the fields (§6.1), `depth += f`. Eval the arm body. |
 | Eval Closure | `dup` the captured slots in order; allocate the Closure; Return it. |
 | Eval Invoke | Push InvokeFunction; Eval the function. |
 | Return, top InvokeFunction | Pop. Live: push InvokeArgument holding the function; Eval the argument. Erased: `Enter(function, [])`. |
@@ -413,13 +413,28 @@ no read leaves a cell.
 ### 6.1 Case selection
 
 The scrutinee is borrowed from its slot and inspected (§6) against the Case's
-scrutinee type, whether its slot is typed so or `none`. For an Object, the
-tag and fields come from its payload; for an immediate of an
-algebraic type, the tag is `v` and there are no fields. A Nat word `n` is Zero when `n = 0`, otherwise Succ with the new
-word `n - 1` (a Big is allocated when `n - 1 >= 2^31`). A Char word is Chr with
-its own code word. In key mode, the scalar's value is compared with the keys;
-there is no field. The selected arm is `row[tag]`, or the matching key's arm, or
-else the default. Fields are `dup`ed into consecutive slots in field order.
+scrutinee type, whether its slot is typed so or `none`. Selection reads a tag and
+allocates nothing: an Object's tag is in its payload, an immediate of an algebraic
+type is tag `v`, a Nat word `n` is Zero (tag 0) when `n = 0` and otherwise Succ
+(tag 1), and a Char word is Chr (tag 0). In key mode the scalar's value is
+compared with the keys. The selected arm is `row[tag]`, or the matching key's arm,
+or else the default.
+
+A selected Branch with `f > 0` fields pushes Scope(`depth`) and then binds its
+fields into consecutive slots in field order:
+- An Object's fields, and Chr's field (the Char's own code word), are shared with
+  the scrutinee, which keeps its slot: each is `dup`ed.
+- Succ's field is the predecessor `n - 1`, a word made here and nowhere else: an
+  immediate when `n - 1 < 2^31`, otherwise a Big cell allocated now (rc 1, §5).
+  It is **moved** into its slot, never `dup`ed: the slot owns its one reference,
+  and the Scope pop drops it like any other. A Default or a Zero arm makes no
+  predecessor.
+
+The allocation follows the Scope push, so a frame-region `Exhausted` (kind 3)
+allocates nothing, and a heap `Exhausted` (kind 2) leaves the Scope pushed. Golden
+`nat-case-big` binds the Big predecessor 2^31, which its run frees only if it was
+moved; run control `nat-default-big` takes the Default of a Nat Case on 2^31 + 1
+and allocates nothing (§12).
 
 ### 6.2 Tail position
 
@@ -608,7 +623,8 @@ registry is complete.
   Succ and every conversion check the mathematical result before narrowing:
   above 2^32-1 is `Exhausted` kind 2 (`NatRange`), never U32 wraparound
   (`nat-big` and `u32-to-nat-big` inside the bound; `nat-range`, `nat-mul-range`
-  and `nat-succ-range` beyond it). A Nat Case binds `n-1` (`nat-pred`); Succ adds
+  and `nat-succ-range` beyond it). A Nat Case binds `n-1` (`nat-pred`; a Big
+  predecessor in `nat-case-big`); Succ adds
   one (`nat-succ`); `Nat.cmp` orders (`nat-cmp`).
 - `U32.to_nat`, `U32.from_nat`, `Char.from_u32` and `Char.to_u32` keep the word.
   `Char.is_space` is 9..13 or 32 (`base.bend` 1765–1768; `char-space`).
@@ -808,7 +824,7 @@ lane and requires:
   controls; `first-code` also equals the independent lowering of its `check-cli`
   display, written by hand in the literals head's grammar because no pinned head
   checks a `List<U32>` parameter;
-- 22 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 23 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -816,7 +832,9 @@ lane and requires:
   invoked erased, a live closure as main's value at phase 1 and an erased closure
   at phase 2, each `HostFailure image` (`ill-typed`) after 2, 2, 4, 2 and 3
   calls. And U32 and File named by one opaque type, `Evaluated 0 0 Off{}` after 1
-  call. A validator mutant in which `none` never fits an arrow refuses the first,
+  call; and a tags-mode Nat Case on the constant 2^31 + 1 whose Succ row is
+  `none` (`nat-default-big`), `Evaluated 1 1 On{}` from its Default after 1 call.
+  A validator mutant in which `none` never fits an arrow refuses the first,
   a generic function instantiated at an arrow type, so `fits` stays loose and §7
   checks the count. Four display controls meet §8's bounds exactly and then pass
   them by one, each after 1 call: the Nat 1,048,575 renders (1,048,576 visits)
@@ -837,11 +855,12 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 59 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe or invocation verdict or a changed observation, and 20 evaluator mutants
+  changed describe or invocation verdict or a changed observation, and 21 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five survive every golden and die only by a fuel control: fuel that never runs
   out, fuel that runs out one entry early, an Action's effect before its debit,
-  the fuel test before the operand check, and a free terminal continuation;
+  the fuel test before the operand check, and a free terminal continuation. A
+  predecessor narrowed to 31 bits dies only by `nat-case-big`;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
@@ -854,7 +873,10 @@ observations, not gate thresholds, and claim no VM speed.
 
 Later increments keep these expectations. vm-model adds checked proof entries for
 the codec round trip, bounded validator soundness, the RC edge audit and zero
-leaks. vm-core adds the iterative loader, validator, CEK machine, state dump and
+leaks. The audit runs on every golden and run control that completes: a
+predecessor `dup`ed rather than moved leaks a cell in `nat-case-big`, and one made
+before its arm is chosen leaks in `nat-default-big`. The reference evaluation has no
+RC, so this gate checks only their values. vm-core adds the iterative loader, validator, CEK machine, state dump and
 quantum re-entry, and completes the 250,000-deep workload. vm-lockstep compares
 every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.

@@ -1226,7 +1226,7 @@ def run_controls(plans: dict) -> list:
                 'types': fp['types'] + [{'kind': 'erased-arrow', 'domain': None, 'result': 4}],
                 'functions': [ident, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
     halt = ['closure', 8, 0, 0, [], ['con', 4, 1, [['lit', 1, 'U32', 0], ['value', 3, 0]]]]
-    laundered = [
+    controls = [
         ('arrow-through-identity',
          book(['invoke', 0, ['call', 1, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], [['value', 0, 1]]]),
          {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}\n', 'calls': 3}),
@@ -1251,8 +1251,19 @@ def run_controls(plans: dict) -> list:
           'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
                          'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
          {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
+        # Section 6.1: a Nat Case makes the predecessor only for a selected Succ Branch. Its
+        # Default on 2^31 + 1 is On{}; a VM that made the Big predecessor 2^31 first would
+        # leak it, which vm-model's RC audit sees and this value does not.
+        ('nat-default-big',
+         {'entry': 'book', 'representation': {'Nat': 0},
+          'types': [plans['nat-pred']['types'][0], flag],
+          'functions': [{'name': 'main', 'parameters': [], 'result': 1, 'slots': 1,
+                         'body': ['let', 1, 0, ['lit', 0, 'Nat', 2147483649],
+                                  ['case', 1, 0, 0, 'tags', [['branch', 0, 1, 0, ['value', 1, 0]], None],
+                                   ['default', ['value', 1, 1]]]]}]},
+         {'exit': 0, 'stdout': 'Evaluated\t1\t1\tOn{}\n', 'calls': 1}),
     ]
-    return [*laundered, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in laundered}})]
+    return [*controls, *display_controls(), *fuel_controls({**plans, **{label: p for label, p, _ in controls}})]
 
 
 def fuel_controls(plans: dict) -> list:
@@ -1610,6 +1621,9 @@ EVALUATOR_MUTANTS = [
                             '    code = min(code, 0x10FFFF)\n    return bytes([(0xF0 | code >> 18) & 0xFF,')]),
     ('nat-case-binds-n', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
                            '            return (0, ()) if w == 0 else (1, (w,))')]),
+    # Section 6.1: a predecessor at or above 2^31 is a Big, never an immediate's 31 bits.
+    ('nat-predecessor-narrowed', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
+                                   '            return (0, ()) if w == 0 else (1, ((w - 1) & 0x7FFFFFFF,))')]),
     ('string-literal-reversed', [('        for code in reversed(codes):', '        for code in codes:')]),
     ('captures-reversed', [("            return ('closure', node, tuple(env[s] for s in node[4]))",
                             "            return ('closure', node, tuple(env[s] for s in node[4][::-1]))")]),

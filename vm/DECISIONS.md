@@ -247,6 +247,30 @@ follows it (§5, §10, §11) without a new image header word.
    leading zeros, a ten-digit cap, the empty word as 0, other scripts' digits,
    Python's `int`) and two invocation controls are killed. vm-expected.json only
    gains rows; the earlier invocations' argv already carried `1000000` as FUEL.
+17. **A Nat Case's predecessor is moved, and made only when bound.** The same
+   re-review found §6.1 leaking. It made Succ's field `n - 1` at selection,
+   allocating a Big from 2^31, and then `dup`ed every field into its slot:
+   allocation writes rc 1, the dup made it 2, and the Scope pop left one
+   reference without an owner. That contradicted §12's zero-leak obligation and
+   left the allocation point, and with it §5's lockstep addresses, to each
+   implementer. Checked source reaches it: `nat-case-big` (seed `True{}`) binds
+   `p = 2^31` from `U32.to_nat(2147483649)` and passes it to `Nat.is_eq`. By
+   §5–§7 the Big is allocated with rc 1, `dup`ed by the Reference (2), dropped
+   when `check`'s Activation ends at its tail entry (1), `dup`ed and dropped by
+   the Intrinsic, and freed with `Nat.is_eq`'s Activation; under the old text one
+   reference remains. §6.1 now separates selection, which reads a tag and
+   allocates nothing, from binding after the Scope push. An Object's fields and
+   Chr's code word are `dup`ed, since the scrutinee keeps them. The predecessor
+   is made only for a selected Succ Branch, as an immediate below 2^31 or a Big
+   allocated then, and moved into its slot. A Default or Zero arm makes none: run
+   control `nat-default-big`, a tags-mode Nat Case on 2^31 + 1 whose Succ row is
+   `none`, would otherwise leak an eager Big. It is image-only, since the pinned
+   checker lowers `case _:` on Nat to a binding Branch. The allocation follows
+   the push, which orders frame-region (kind 3) before heap (kind 2) exhaustion.
+   The reference evaluation has no RC, so this gate checks only the two values;
+   the evaluator mutant `nat-predecessor-narrowed` (31 bits kept) survives every
+   other golden and dies by `nat-case-big`, and §12 binds vm-model's zero-leak
+   audit to both.
 
 ## Findings that need an owner
 
