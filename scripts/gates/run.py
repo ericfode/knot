@@ -166,6 +166,7 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                dependencies, 'tree-sitter-language-pack')
     temp = run_dir / 'tmp'
     temp.mkdir()
+    env.setdefault('KNOT_GATE_TIMEOUT_SCALE', os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '4'))
     env.update(BEND_NO_TELEMETRY='1', BEND_LIB=str(library), BEND_HUB='offline://disabled',
                BEND_ORIGIN='offline://disabled', PYTHONDONTWRITEBYTECODE='1',
                TREE_SITTER_LANGUAGE_PACK_CACHE_DIR=str(run_dir / 'cache'),

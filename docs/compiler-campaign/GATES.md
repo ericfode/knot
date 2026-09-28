@@ -18,6 +18,13 @@ npm run gates:verify                  # offline wrapper controls and mutants
 npm run gates -- --jobs 2 --keep-scratch
 ```
 
+Harness wall-clock guards inside the gate scripts (the seed-build and CLI
+`run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
+unless the caller sets it. These guards only catch hangs; no passing receipt
+records one firing. Under the campaign's parallel load (load average about 30
+to 50 on 18 cores) the unscaled 30-second and 45-second guards made the frontend
+and structural gates fail spuriously.
+
 Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
 requires the fourteen gates registered by the recursion, fields-wasm and census
