@@ -85,6 +85,36 @@ and the full registered constructor inventory, even when Base is not in the
 selected slice. Quoted foreign bodies remain Unsupported regardless of column;
 non-string module imports after declarations remain Invalid.
 
+## Literals amendment
+
+The literals increment (milestone 5) changes this contract in four places.
+The coordinator and the modules owner sign off on them; until then they are
+recorded here, not assumed accepted.
+
+- `base-load.bend::parse`: a selected Base declaration that names one of the
+  closed registry's four types (U32, Nat, Char, String) or 39 primitive
+  operations is replaced by its checked lowering from
+  `src/literal-base.bend`, instead of being tokenized and checked as source.
+  Unsafe and foreign declarations are still rejected first. The dependency
+  walk (`references`, `pattern_scope`) follows literal, offset and intrinsic
+  nodes.
+- `load.bend` tokenizes module files with the literal-aware
+  `literal-lex.bend`, and `describe` emits `BaseIntrinsic` rows for the
+  lowered declarations. The audit is now five row kinds: `BasePin`, `Module`,
+  `BaseChecked`, `BaseIntrinsic` and `BaseUnchecked`. The three declaration
+  inventories partition all 466 Base declarations, each in pinned source
+  order. This gate's adapter accepts the new kind, requires that partition,
+  and requires every modules book's intrinsic rows to equal its declared
+  `intrinsic_base` set (empty for every current book).
+- `qualify.bend` passes literal nodes through and walks an offset's tail
+  like any other pattern, so its binder gets round 2's constructor-binder
+  check. An intrinsic node in user source is an internal failure: user
+  syntax cannot spell one.
+- The `--bundle` defaults are raised: checker depth 512 to 4096 in check,
+  eval and compile, compile output 65,536 to 1,048,576 bytes, and the
+  audit's checker depth 512 to 4096, sufficient for the frozen 256-offset
+  literal matrix. Explicit budget arguments keep their meaning.
+
 The reading hypothesis is one explicit machine state for loading: pending
 headers, active paths, completed paths and the accumulated declaration stream.
 Qualification and Base reachability are separate mechanisms with bounded

@@ -283,7 +283,8 @@ def tampered_base(lanes, expected):
 
 def audit(result, fixture, base):
     require(result['exit'] == 0 and result['stderr'] == '', result)
-    rows = {'BasePin': [], 'Module': [], 'BaseChecked': [], 'BaseUnchecked': []}
+    # BaseIntrinsic rows are the literals increment's closed lowering registry.
+    rows = {'BasePin': [], 'Module': [], 'BaseChecked': [], 'BaseIntrinsic': [], 'BaseUnchecked': []}
     for line in result['stdout'].splitlines():
         if not line:
             continue
@@ -301,22 +302,25 @@ def audit(result, fixture, base):
             expected.add(str(((HERE if module.startswith('fixtures/') else BUNDLE) / module).resolve()))
     require(len(rows['Module']) == len(expected) and set(rows['Module']) == expected,
             ('module identity or load-once mismatch', expected, result))
-    checked, unchecked = rows['BaseChecked'], rows['BaseUnchecked']
+    checked, intrinsic, unchecked = rows['BaseChecked'], rows['BaseIntrinsic'], rows['BaseUnchecked']
     if 'Base' in fixture['modules']:
-        require(len(checked) + len(unchecked) == len(base['declarations'])
-                and set(checked).isdisjoint(unchecked)
-                and set(checked + unchecked) == set(base['declarations']),
+        inventories = checked + intrinsic + unchecked
+        require(len(inventories) == len(base['declarations'])
+                and set(inventories) == set(base['declarations']),
                 ('incomplete Base trust partition', result))
-        require(checked == [name for name in base['declarations'] if name in checked]
-                and unchecked == [name for name in base['declarations'] if name in unchecked],
+        require(all(part == [name for name in base['declarations'] if name in part]
+                    for part in (checked, intrinsic, unchecked)),
                 ('Base inventory order differs from pinned source', result))
         wanted = fixture.get('checked_base', BASE_SLICES.get(Path(fixture['file']).stem))
         if wanted is not None:
             require(set(checked) == set(wanted), ('wrong checked Base slice', wanted, result))
+        # No modules book reaches a primitive; any intrinsic row must be declared.
+        require(set(intrinsic) == set(fixture.get('intrinsic_base', [])),
+                ('undeclared Base intrinsic lowering', result))
     else:
-        require(not checked and not unchecked, ('Base loaded without an import', result))
+        require(not checked and not intrinsic and not unchecked, ('Base loaded without an import', result))
     return {'result': result, 'modules': rows['Module'],
-            'checked_base': checked, 'unchecked_base': unchecked}
+            'checked_base': checked, 'intrinsic_base': intrinsic, 'unchecked_base': unchecked}
 
 
 def fixture_observations(fixture, lanes, base):
