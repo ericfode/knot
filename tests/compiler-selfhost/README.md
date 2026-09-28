@@ -112,12 +112,17 @@ Knot's output.
   of a case's needs cannot admit the defect a twin pins, or answer a positive
   wrongly, before it flips the last need.
 - A seed-valid case that Knot calls `Invalid` in any phase is a **D4 gap**.
-  It is listed in `counts.d4_gaps`. Only the reviewed gaps in `check.py`'s
-  `D4_GAPS` table may occur, each with its pinned Invalid code; any other gap,
-  or another code on a listed case, fails the gate. The table records Knot's
-  output, not the seed's, so it is kept out of `expectations.json`. The set may
-  shrink without an edit: `counts.d4_gaps_closed` lists a table row whose gap
-  has closed, for its owner to delete.
+  It is listed in `counts.d4_gaps`. `check.py`'s `D4_GAPS` table keys each
+  reviewed gap by the missing need it belongs to. A gap is excused only while
+  that need still blocks the case, with one of the row's Invalid codes, at a
+  span that is exactly one line break of the entry file. Any other gap fails
+  the gate, including one whose need has landed. Keying by need, not by case,
+  matters when another blocker hides the gap: `layout-lambda-statements` stops
+  at `Unsupported parse parameter-type` today, and once closures parses its
+  arrow-typed parameter it reports the layout gap at its first continuation
+  line break. The table records Knot's output, not the seed's, so it is kept
+  out of `expectations.json`. `counts.d4_gaps_closed` lists a table row whose
+  need has landed, for its owner to delete.
 
 Available on this tree: `fields`, `recursion`.
 
@@ -129,11 +134,15 @@ Available on this tree: `fields`, `recursion`.
 | Blocked | 63 |
 | Fail | 0 |
 
-The five reviewed D4 gaps predate this suite (SELF-HOSTING-PATH.md, SF-01 and
-SF-02). All are owned by selfsource:
+The one reviewed D4 gap is `layout`'s, owned by selfsource. It predates this
+suite (SELF-HOSTING-PATH.md, SF-01 and SF-02). Five cases show it today, each
+spanning the first continuation line break:
 
-- `layout-call-args`, `layout-braces`, `layout-dedent-close` and `layout-comments`: `Invalid parse expected-term` at the first continuation newline (SF-01);
+- `layout-call-args`, `layout-braces`, `layout-dedent-close` and `layout-comments`: `Invalid parse expected-term` (SF-01);
 - `layout-def-header`: `Invalid parse parameter` (SF-02).
+
+Another blocker hides it on `layout-brackets`, `layout-lambda-statements` and
+`layout-choose-ladder`.
 
 The other blocked cases stop at `Unsupported`:
 
@@ -208,11 +217,12 @@ requires. The generated scale fixtures are:
    - a recorded field or count differs;
    - an unblocked case misses its requirement;
    - any case has a fault, blocked or not;
-   - a D4 gap is outside the reviewed table, or reports another code;
+   - a D4 gap that no row of a need still blocking the case excuses: another code, another span than one line break, or a need that has landed;
+   - a fixture differs from its frozen digest (gap spans are read from the entry files);
    - the needs differ;
    - a seed call lacks a lane or disagrees without review;
    - no case passes.
-5. Seventeen mutated receipts or expectations must each be rejected by the judge, for a named reason. The mutants marked *restated* rederive every recorded field from their edited observations, so only the rule under test can reject them.
+5. Twenty mutated receipts or expectations must each be rejected by the judge, for a named reason. The mutants marked *restated* rederive every recorded field from their edited observations, so only the rule under test can reject them.
    - a blocked case counted as a pass;
    - a failure relabelled as blocked;
    - a dropped call;
@@ -229,7 +239,15 @@ requires. The generated scale fixtures are:
    - a blocked positive that checks and drops a call (restated);
    - an unreviewed D4 gap on a seed-valid case (restated);
    - a reviewed D4 gap reporting another Invalid code (restated);
-   - an erased `counts.d4_gaps`.
+   - a reviewed D4 gap moved one byte off its line break (restated);
+   - a reviewed D4 gap kept after its need lands (restated);
+   - an erased `counts.d4_gaps`;
+   - a hidden gap surfacing with another code, `Invalid check type-mismatch` (restated).
+
+   The judge must also accept one restated control per hidden gap: the case
+   reports the row's first code at its first line break inside a delimiter.
+   For `layout-lambda-statements` that is `Invalid parse expected-term` at
+   `939:940:39:9`, the diagnostic closures' Knot reports.
 6. Three type-correct mutants of `src/` must be killed by an unblocked case, with a classified, non-crashing observation:
    - `reject-every-self-call` (check.bend): `nested-self-call` becomes `Unsupported check recursive-call`.
    - `admit-mistyped-constant` (check.bend): `nested-self-call-mistyped` checks.

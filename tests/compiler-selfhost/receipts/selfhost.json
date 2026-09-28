@@ -2999,11 +2999,55 @@
       "violations": 1
     },
     {
+      "name": "displaced-d4-gap",
+      "rejected": true,
+      "reason": "layout-call-args: an unreviewed D4 gap",
+      "violation": "layout-call-args: an unreviewed D4 gap: seed-valid, but Knot reported ['Invalid\\tparse\\texpected-term\\t526:527:23:25']",
+      "violations": 1
+    },
+    {
+      "name": "gap-outlives-need",
+      "rejected": true,
+      "reason": "layout-call-args: an unreviewed D4 gap",
+      "violation": "layout-call-args: an unreviewed D4 gap: seed-valid, but Knot reported ['Invalid\\tparse\\texpected-term\\t527:528:23:26']",
+      "violations": 15
+    },
+    {
       "name": "erased-d4-gaps",
       "rejected": true,
       "reason": "recorded counts.d4_gaps",
       "violation": "recorded counts.d4_gaps [] != ['layout-braces', 'layout-call-args', 'layout-comments', 'layout-dedent-close', 'layout-def-header']",
       "violations": 1
+    },
+    {
+      "name": "surfaced-other-code",
+      "rejected": true,
+      "reason": "layout-brackets: an unreviewed D4 gap",
+      "violation": "layout-brackets: an unreviewed D4 gap: seed-valid, but Knot reported ['Invalid\\tcheck\\ttype-mismatch\\t723:724:36:22']",
+      "violations": 1
+    }
+  ],
+  "judge_controls": [
+    {
+      "name": "surfaced-layout-gap",
+      "case": "layout-brackets",
+      "diagnostic": "Invalid\tparse\texpected-term\t723:724:36:22",
+      "accepted": true,
+      "violations": []
+    },
+    {
+      "name": "surfaced-layout-gap",
+      "case": "layout-lambda-statements",
+      "diagnostic": "Invalid\tparse\texpected-term\t939:940:39:9",
+      "accepted": true,
+      "violations": []
+    },
+    {
+      "name": "surfaced-layout-gap",
+      "case": "layout-choose-ladder",
+      "diagnostic": "Invalid\tparse\texpected-term\t478:479:22:15",
+      "accepted": true,
+      "violations": []
     }
   ],
   "mutants": [
@@ -3128,7 +3172,7 @@
     "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
     "src/CONTRACT.json": "b781b7b05bfdfb87d291b3c5ef13c0b8e4e994c7a1f139e84486eda5a1c71d98",
-    "tests/compiler-selfhost/check.py": "2b896aada713ad21e67082a48944693ec2e12611d73f261aaf65f17c0359d7e5",
+    "tests/compiler-selfhost/check.py": "902de6e3e354b328ec2d9e31814ae9b1cf62035e7b2d273a63e80ce6d1c7a08b",
     "tests/compiler-selfhost/regen.py": "47e08b0c31aaca41d15d7601ed54953aca2c48573c7c3e15435599fb70f66a93",
     "tests/compiler-selfhost/expectations.json": "e5dbfd7f701c603c5e4fe0bb658b62233ba7969756226e3c74312cbce1fb1e7b"
   }
