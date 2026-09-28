@@ -29,6 +29,17 @@ law type_level_definition:
   {G.resolve(1n+fuel,G.Expression{S.Variable{token}},families,symbols)
     == Fail{S.Unsupported{"check","type-level-definition",S.at(token)}} : Result<S.Error,G.Typed>}
 
+# A constructor pattern above its datatype's declaration is unknown, as in
+# the seed, although the datatype is declared later in the book.
+law pattern_order:
+  for families: List<&2,G.Family>
+  for +token: S.Token
+  for reference: G.ConstructorRef
+  for found: {G.constructor_named(families,token,0) == Done{reference} : Result<S.Error,G.ConstructorRef>}
+  for later: {G.visible(token,G.declaration(reference)) == False{} : Bool}
+  {G.pattern_constructor(families,token)
+    == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
+
 law nominal_identity:
   for +index: U32
   {E.type_id(T.Family{index}) == index : U32}

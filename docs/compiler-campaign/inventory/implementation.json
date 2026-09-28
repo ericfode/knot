@@ -125,9 +125,9 @@
   "totals": {
     "compiler": {
       "files": 40,
-      "declarations": 701,
-      "unique_declarations": 605,
-      "definitions": 450,
+      "declarations": 706,
+      "unique_declarations": 609,
+      "definitions": 453,
       "classes": 41
     },
     "frontend_files": {
@@ -50914,7 +50914,7 @@
     },
     {
       "file": "src/generic-catalog.bend",
-      "sha256": "cf39da48c0b9b777dbaadf08ab33ee41d89f098f6577932515ee7143658f7cb7",
+      "sha256": "4c4339611277b94a57a6c67cb6d5bf1ddd8b88eb99637434a32c81c1e1129ac5",
       "imports": [
         {
           "module": "Base",
@@ -52990,13 +52990,166 @@
           }
         },
         {
+          "id": "src/generic-catalog.bend::visible:definition",
+          "name": "visible",
+          "key": "src/generic-catalog.visible",
+          "kind": "definition",
+          "lines": [
+            186,
+            187
+          ],
+          "features": [
+            "calls",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "U32.is_ge",
+            "src/generic-catalog.source_offset",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "Bool",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "U32.is_ge",
+              "src/generic-catalog.source_offset"
+            ],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/generic-catalog.bend::declaration:definition",
+          "name": "declaration",
+          "key": "src/generic-catalog.declaration",
+          "kind": "definition",
+          "lines": [
+            189,
+            191
+          ],
+          "features": [
+            "constructors",
+            "fields",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine"
+          ],
+          "references": [
+            "src/generic-catalog.Constructor",
+            "src/generic-catalog.ConstructorRef",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "src/generic-catalog.ConstructorRef",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [
+              "src/generic-catalog.Constructor",
+              "src/generic-catalog.ConstructorRef"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/generic-catalog.bend::pattern_constructor:definition",
+          "name": "pattern_constructor",
+          "key": "src/generic-catalog.pattern_constructor",
+          "kind": "definition",
+          "lines": [
+            193,
+            196
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "List",
+            "Result",
+            "src/core.invalid",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/generic-catalog.constructor_named",
+            "src/generic-catalog.declaration",
+            "src/generic-catalog.visible",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 8432,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 8528,
+              "names": [
+                "reference"
+              ]
+            },
+            {
+              "offset": 8549,
+              "names": [
+                "token"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "src/core.invalid",
+              "src/generic-catalog.constructor_named",
+              "src/generic-catalog.declaration",
+              "src/generic-catalog.visible",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Done",
+              "String",
+              "U32"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/generic-catalog.bend::quantity_prefix:definition",
           "name": "quantity_prefix",
           "key": "src/generic-catalog.quantity_prefix",
           "kind": "definition",
           "lines": [
-            183,
-            186
+            198,
+            201
           ],
           "features": [
             "calls",
@@ -53048,8 +53201,8 @@
           "key": "src/generic-catalog.defaults",
           "kind": "definition",
           "lines": [
-            188,
-            191
+            203,
+            206
           ],
           "features": [
             "calls",
@@ -53104,8 +53257,8 @@
           "key": "src/generic-catalog.application_arguments",
           "kind": "definition",
           "lines": [
-            193,
-            204
+            208,
+            219
           ],
           "features": [
             "bindings",
@@ -53136,13 +53289,12 @@
             "U32.add",
             "U32.from_nat",
             "U32.is_eq",
-            "U32.is_ge",
             "U32.to_nat",
             "src/core.invalid",
             "src/generic-catalog.Parameter",
             "src/generic-catalog.defaults",
             "src/generic-catalog.quantity_prefix",
-            "src/generic-catalog.source_offset",
+            "src/generic-catalog.visible",
             "src/syntax.Error",
             "src/syntax.Node",
             "src/syntax.Token",
@@ -53159,25 +53311,25 @@
           ],
           "captures": [
             {
-              "offset": 8650,
+              "offset": 9439,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 8710,
+              "offset": 9499,
               "names": [
                 "actual",
                 "arity",
+                "declared",
                 "nodes",
                 "omitted",
                 "q",
-                "token",
-                "visible"
+                "token"
               ]
             },
             {
-              "offset": 8784,
+              "offset": 9573,
               "names": [
                 "nodes",
                 "omitted",
@@ -53186,7 +53338,7 @@
               ]
             },
             {
-              "offset": 8840,
+              "offset": 9629,
               "names": [
                 "nodes",
                 "omitted",
@@ -53194,25 +53346,25 @@
               ]
             },
             {
-              "offset": 8938,
+              "offset": 9727,
               "names": [
                 "nodes"
               ]
             },
             {
-              "offset": 8951,
+              "offset": 9740,
               "names": [
                 "actual",
                 "arity",
+                "declared",
                 "nodes",
                 "omitted",
                 "q",
-                "token",
-                "visible"
+                "token"
               ]
             },
             {
-              "offset": 9062,
+              "offset": 9852,
               "names": [
                 "nodes",
                 "omitted",
@@ -53221,7 +53373,7 @@
               ]
             },
             {
-              "offset": 9125,
+              "offset": 9915,
               "names": [
                 "token"
               ]
@@ -53237,12 +53389,11 @@
               "U32.add",
               "U32.from_nat",
               "U32.is_eq",
-              "U32.is_ge",
               "U32.to_nat",
               "src/core.invalid",
               "src/generic-catalog.defaults",
               "src/generic-catalog.quantity_prefix",
-              "src/generic-catalog.source_offset",
+              "src/generic-catalog.visible",
               "src/syntax.choose"
             ],
             "types": [
@@ -53259,8 +53410,8 @@
           "key": "src/generic-catalog.named_type",
           "kind": "definition",
           "lines": [
-            206,
-            211
+            221,
+            226
           ],
           "features": [
             "calls",
@@ -53310,14 +53461,14 @@
           ],
           "captures": [
             {
-              "offset": 9467,
+              "offset": 10257,
               "names": [
                 "domain",
                 "index"
               ]
             },
             {
-              "offset": 9507,
+              "offset": 10297,
               "names": [
                 "token"
               ]
@@ -53353,8 +53504,8 @@
           "key": "src/generic-catalog.applied_name",
           "kind": "definition",
           "lines": [
-            213,
-            217
+            228,
+            232
           ],
           "features": [
             "calls",
@@ -53417,8 +53568,8 @@
           "key": "src/generic-catalog.type_argument",
           "kind": "definition",
           "lines": [
-            219,
-            222
+            234,
+            237
           ],
           "features": [
             "calls",
@@ -53455,13 +53606,13 @@
           ],
           "captures": [
             {
-              "offset": 10183,
+              "offset": 10973,
               "names": [
                 "value"
               ]
             },
             {
-              "offset": 10200,
+              "offset": 10990,
               "names": [
                 "token"
               ]
@@ -53487,8 +53638,8 @@
           "key": "src/generic-catalog.type_value",
           "kind": "definition",
           "lines": [
-            224,
-            227
+            239,
+            242
           ],
           "features": [
             "calls",
@@ -53525,13 +53676,13 @@
           ],
           "captures": [
             {
-              "offset": 10418,
+              "offset": 11208,
               "names": [
                 "term"
               ]
             },
             {
-              "offset": 10434,
+              "offset": 11224,
               "names": [
                 "token"
               ]
@@ -53557,8 +53708,8 @@
           "key": "src/generic-catalog.result_type",
           "kind": "definition",
           "lines": [
-            229,
-            232
+            244,
+            247
           ],
           "features": [
             "calls",
@@ -53597,19 +53748,19 @@
           ],
           "captures": [
             {
-              "offset": 10602,
+              "offset": 11392,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 10691,
+              "offset": 11481,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 10754,
+              "offset": 11544,
               "names": [
                 "domain"
               ]
@@ -53638,8 +53789,8 @@
           "key": "src/generic-catalog.quantum",
           "kind": "definition",
           "lines": [
-            234,
-            237
+            249,
+            252
           ],
           "features": [
             "calls",
@@ -53680,21 +53831,21 @@
           ],
           "captures": [
             {
-              "offset": 10941,
+              "offset": 11731,
               "names": [
                 "q",
                 "token"
               ]
             },
             {
-              "offset": 11032,
+              "offset": 11822,
               "names": [
                 "q",
                 "token"
               ]
             },
             {
-              "offset": 11124,
+              "offset": 11914,
               "names": [
                 "token"
               ]
@@ -53726,8 +53877,8 @@
           "key": "src/generic-catalog.sort_value",
           "kind": "definition",
           "lines": [
-            239,
-            241
+            254,
+            256
           ],
           "features": [
             "calls",
@@ -53763,8 +53914,8 @@
           "key": "src/generic-catalog.meet_value",
           "kind": "definition",
           "lines": [
-            243,
-            245
+            258,
+            260
           ],
           "features": [
             "calls",
@@ -53803,8 +53954,8 @@
           "key": "src/generic-catalog.apply_start",
           "kind": "definition",
           "lines": [
-            247,
-            251
+            262,
+            266
           ],
           "features": [
             "calls",
@@ -53854,7 +54005,7 @@
           ],
           "captures": [
             {
-              "offset": 11746,
+              "offset": 12536,
               "names": [
                 "index",
                 "kind",
@@ -53888,8 +54039,8 @@
           "key": "src/generic-catalog.bare",
           "kind": "definition",
           "lines": [
-            254,
-            258
+            269,
+            273
           ],
           "features": [
             "calls",
@@ -53954,8 +54105,8 @@
           "key": "src/generic-catalog.apply_argument",
           "kind": "definition",
           "lines": [
-            260,
-            263
+            275,
+            278
           ],
           "features": [
             "calls",
@@ -54026,8 +54177,8 @@
           "key": "src/generic-catalog.resolve",
           "kind": "definition",
           "lines": [
-            265,
-            297
+            280,
+            312
           ],
           "features": [
             "calls",
@@ -54115,7 +54266,7 @@
           ],
           "captures": [
             {
-              "offset": 12902,
+              "offset": 13692,
               "names": [
                 "families",
                 "n",
@@ -54124,7 +54275,7 @@
               ]
             },
             {
-              "offset": 12965,
+              "offset": 13755,
               "names": [
                 "families",
                 "n",
@@ -54133,7 +54284,7 @@
               ]
             },
             {
-              "offset": 12999,
+              "offset": 13789,
               "names": [
                 "families",
                 "n",
@@ -54141,7 +54292,7 @@
               ]
             },
             {
-              "offset": 13147,
+              "offset": 13937,
               "names": [
                 "args",
                 "families",
@@ -54152,7 +54303,7 @@
               ]
             },
             {
-              "offset": 13210,
+              "offset": 14000,
               "names": [
                 "args",
                 "families",
@@ -54163,7 +54314,7 @@
               ]
             },
             {
-              "offset": 13258,
+              "offset": 14048,
               "names": [
                 "families",
                 "n",
@@ -54171,23 +54322,13 @@
               ]
             },
             {
-              "offset": 13567,
+              "offset": 14357,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 13795,
-              "names": [
-                "b",
-                "families",
-                "n",
-                "symbols",
-                "token"
-              ]
-            },
-            {
-              "offset": 13872,
+              "offset": 14585,
               "names": [
                 "b",
                 "families",
@@ -54197,20 +54338,30 @@
               ]
             },
             {
-              "offset": 13951,
+              "offset": 14662,
+              "names": [
+                "b",
+                "families",
+                "n",
+                "symbols",
+                "token"
+              ]
+            },
+            {
+              "offset": 14741,
               "names": [
                 "left",
                 "token"
               ]
             },
             {
-              "offset": 14032,
+              "offset": 14822,
               "names": [
                 "left"
               ]
             },
             {
-              "offset": 15069,
+              "offset": 15859,
               "names": [
                 "domain",
                 "families",
@@ -54226,7 +54377,7 @@
               ]
             },
             {
-              "offset": 15158,
+              "offset": 15948,
               "names": [
                 "families",
                 "index",
@@ -54241,7 +54392,7 @@
               ]
             },
             {
-              "offset": 15245,
+              "offset": 16035,
               "names": [
                 "families",
                 "n",
@@ -54308,8 +54459,8 @@
           "key": "src/generic-catalog.expression",
           "kind": "definition",
           "lines": [
-            299,
-            300
+            314,
+            315
           ],
           "features": [
             "calls",
@@ -54359,8 +54510,8 @@
           "key": "src/generic-catalog.symbols",
           "kind": "definition",
           "lines": [
-            302,
-            305
+            317,
+            320
           ],
           "features": [
             "calls",
@@ -54415,8 +54566,8 @@
           "key": "src/generic-catalog.parameter_node",
           "kind": "definition",
           "lines": [
-            307,
-            311
+            322,
+            326
           ],
           "features": [
             "calls",
@@ -54477,8 +54628,8 @@
           "key": "src/generic-catalog.parameter_value",
           "kind": "definition",
           "lines": [
-            313,
-            319
+            328,
+            334
           ],
           "features": [
             "calls",
@@ -54531,7 +54682,7 @@
           ],
           "captures": [
             {
-              "offset": 16430,
+              "offset": 17220,
               "names": [
                 "domain",
                 "kind",
@@ -54541,13 +54692,13 @@
               ]
             },
             {
-              "offset": 16554,
+              "offset": 17344,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 16631,
+              "offset": 17421,
               "names": [
                 "domain",
                 "kind",
@@ -54557,14 +54708,14 @@
               ]
             },
             {
-              "offset": 16698,
+              "offset": 17488,
               "names": [
                 "domain",
                 "next"
               ]
             },
             {
-              "offset": 16718,
+              "offset": 17508,
               "names": [
                 "token"
               ]
@@ -54599,8 +54750,8 @@
           "key": "src/generic-catalog.parameters",
           "kind": "definition",
           "lines": [
-            321,
-            330
+            336,
+            345
           ],
           "features": [
             "calls",
@@ -54655,7 +54806,7 @@
           ],
           "captures": [
             {
-              "offset": 17027,
+              "offset": 17817,
               "names": [
                 "depth",
                 "env",
@@ -54665,7 +54816,7 @@
               ]
             },
             {
-              "offset": 17037,
+              "offset": 17827,
               "names": [
                 "depth",
                 "env",
@@ -54676,7 +54827,7 @@
               ]
             },
             {
-              "offset": 17043,
+              "offset": 17833,
               "names": [
                 "depth",
                 "env",
@@ -54688,13 +54839,13 @@
               ]
             },
             {
-              "offset": 17123,
+              "offset": 17913,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 17166,
+              "offset": 17956,
               "names": [
                 "depth",
                 "env",
@@ -54707,7 +54858,7 @@
               ]
             },
             {
-              "offset": 17248,
+              "offset": 18038,
               "names": [
                 "depth",
                 "env",
@@ -54719,7 +54870,7 @@
               ]
             },
             {
-              "offset": 17299,
+              "offset": 18089,
               "names": [
                 "depth",
                 "env",
@@ -54731,7 +54882,7 @@
               ]
             },
             {
-              "offset": 17454,
+              "offset": 18244,
               "names": [
                 "domain",
                 "q",
@@ -54768,8 +54919,8 @@
           "key": "src/generic-catalog.header_parts",
           "kind": "definition",
           "lines": [
-            332,
-            337
+            347,
+            352
           ],
           "features": [
             "calls",
@@ -54850,8 +55001,8 @@
           "key": "src/generic-catalog.constructor_headers",
           "kind": "definition",
           "lines": [
-            339,
-            345
+            354,
+            360
           ],
           "features": [
             "calls",
@@ -54901,13 +55052,13 @@
           ],
           "captures": [
             {
-              "offset": 18312,
+              "offset": 19102,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 18357,
+              "offset": 19147,
               "names": [
                 "count",
                 "tail",
@@ -54915,7 +55066,7 @@
               ]
             },
             {
-              "offset": 18462,
+              "offset": 19252,
               "names": [
                 "token"
               ]
@@ -54949,8 +55100,8 @@
           "key": "src/generic-catalog.header_kind",
           "kind": "definition",
           "lines": [
-            348,
-            353
+            363,
+            368
           ],
           "features": [
             "calls",
@@ -55002,7 +55153,7 @@
           ],
           "captures": [
             {
-              "offset": 18906,
+              "offset": 19696,
               "names": [
                 "ctors",
                 "generic",
@@ -55012,13 +55163,13 @@
               ]
             },
             {
-              "offset": 18994,
+              "offset": 19784,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 19044,
+              "offset": 19834,
               "names": [
                 "ctors",
                 "generic",
@@ -55028,7 +55179,7 @@
               ]
             },
             {
-              "offset": 19123,
+              "offset": 19913,
               "names": [
                 "generic",
                 "kind",
@@ -55037,7 +55188,7 @@
               ]
             },
             {
-              "offset": 19174,
+              "offset": 19964,
               "names": [
                 "token"
               ]
@@ -55070,8 +55221,8 @@
           "key": "src/generic-catalog.header_parameters",
           "kind": "definition",
           "lines": [
-            355,
-            362
+            370,
+            377
           ],
           "features": [
             "calls",
@@ -55139,8 +55290,8 @@
           "key": "src/generic-catalog.headers",
           "kind": "definition",
           "lines": [
-            364,
-            376
+            379,
+            391
           ],
           "features": [
             "calls",
@@ -55201,7 +55352,7 @@
           ],
           "captures": [
             {
-              "offset": 20178,
+              "offset": 20968,
               "names": [
                 "depth",
                 "index",
@@ -55210,7 +55361,7 @@
               ]
             },
             {
-              "offset": 20188,
+              "offset": 20978,
               "names": [
                 "depth",
                 "index",
@@ -55220,7 +55371,7 @@
               ]
             },
             {
-              "offset": 20199,
+              "offset": 20989,
               "names": [
                 "depth",
                 "index",
@@ -55231,7 +55382,7 @@
               ]
             },
             {
-              "offset": 20208,
+              "offset": 20998,
               "names": [
                 "depth",
                 "index",
@@ -55243,7 +55394,7 @@
               ]
             },
             {
-              "offset": 20218,
+              "offset": 21008,
               "names": [
                 "ctors",
                 "depth",
@@ -55256,27 +55407,13 @@
               ]
             },
             {
-              "offset": 20300,
+              "offset": 21090,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 20340,
-              "names": [
-                "ctors",
-                "depth",
-                "generic",
-                "index",
-                "kind",
-                "params",
-                "scope",
-                "tail",
-                "token"
-              ]
-            },
-            {
-              "offset": 20409,
+              "offset": 21130,
               "names": [
                 "ctors",
                 "depth",
@@ -55290,7 +55427,21 @@
               ]
             },
             {
-              "offset": 20507,
+              "offset": 21199,
+              "names": [
+                "ctors",
+                "depth",
+                "generic",
+                "index",
+                "kind",
+                "params",
+                "scope",
+                "tail",
+                "token"
+              ]
+            },
+            {
+              "offset": 21297,
               "names": [
                 "ctors",
                 "depth",
@@ -55303,7 +55454,7 @@
               ]
             },
             {
-              "offset": 20606,
+              "offset": 21396,
               "names": [
                 "ctors",
                 "depth",
@@ -55316,7 +55467,7 @@
               ]
             },
             {
-              "offset": 20703,
+              "offset": 21493,
               "names": [
                 "depth",
                 "index",
@@ -55325,7 +55476,7 @@
               ]
             },
             {
-              "offset": 20813,
+              "offset": 21603,
               "names": [
                 "family"
               ]
@@ -55363,8 +55514,8 @@
           "key": "src/generic-catalog.token_seen",
           "kind": "definition",
           "lines": [
-            378,
-            381
+            393,
+            396
           ],
           "features": [
             "calls",
@@ -55418,8 +55569,8 @@
           "key": "src/generic-catalog.declaration_name",
           "kind": "definition",
           "lines": [
-            383,
-            389
+            398,
+            404
           ],
           "features": [
             "constructors",
@@ -55466,8 +55617,8 @@
           "key": "src/generic-catalog.unique_names",
           "kind": "definition",
           "lines": [
-            391,
-            396
+            406,
+            411
           ],
           "features": [
             "bindings",
@@ -55512,13 +55663,13 @@
           ],
           "captures": [
             {
-              "offset": 21620,
+              "offset": 22410,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 21666,
+              "offset": 22456,
               "names": [
                 "seen",
                 "tail",
@@ -55550,8 +55701,8 @@
           "key": "src/generic-catalog.unique_constructors",
           "kind": "definition",
           "lines": [
-            398,
-            402
+            413,
+            417
           ],
           "features": [
             "calls",
@@ -55593,13 +55744,13 @@
           ],
           "captures": [
             {
-              "offset": 21984,
+              "offset": 22774,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 22047,
+              "offset": 22837,
               "names": [
                 "seen",
                 "tail",
@@ -55630,8 +55781,8 @@
           "key": "src/generic-catalog.unique_families",
           "kind": "definition",
           "lines": [
-            404,
-            408
+            419,
+            423
           ],
           "features": [
             "calls",
@@ -55673,7 +55824,7 @@
           ],
           "captures": [
             {
-              "offset": 22366,
+              "offset": 23156,
               "names": [
                 "tail"
               ]
@@ -55701,8 +55852,8 @@
           "key": "src/generic-catalog.field_kinds",
           "kind": "definition",
           "lines": [
-            410,
-            417
+            425,
+            432
           ],
           "features": [
             "calls",
@@ -55761,32 +55912,13 @@
           ],
           "captures": [
             {
-              "offset": 22719,
+              "offset": 23509,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 22764,
-              "names": [
-                "domain",
-                "env",
-                "families",
-                "parent",
-                "q",
-                "seen",
-                "tail",
-                "token"
-              ]
-            },
-            {
-              "offset": 22849,
-              "names": [
-                "token"
-              ]
-            },
-            {
-              "offset": 22898,
+              "offset": 23554,
               "names": [
                 "domain",
                 "env",
@@ -55799,7 +55931,26 @@
               ]
             },
             {
-              "offset": 22958,
+              "offset": 23639,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 23688,
+              "names": [
+                "domain",
+                "env",
+                "families",
+                "parent",
+                "q",
+                "seen",
+                "tail",
+                "token"
+              ]
+            },
+            {
+              "offset": 23748,
               "names": [
                 "env",
                 "families",
@@ -55811,7 +55962,7 @@
               ]
             },
             {
-              "offset": 23052,
+              "offset": 23842,
               "names": [
                 "env",
                 "families",
@@ -55822,7 +55973,7 @@
               ]
             },
             {
-              "offset": 23111,
+              "offset": 23901,
               "names": [
                 "token"
               ]
@@ -55861,8 +56012,8 @@
           "key": "src/generic-catalog.resolve_constructors",
           "kind": "definition",
           "lines": [
-            419,
-            426
+            434,
+            441
           ],
           "features": [
             "calls",
@@ -55918,7 +56069,7 @@
           ],
           "captures": [
             {
-              "offset": 23518,
+              "offset": 24308,
               "names": [
                 "depth",
                 "env",
@@ -55929,7 +56080,7 @@
               ]
             },
             {
-              "offset": 23608,
+              "offset": 24398,
               "names": [
                 "depth",
                 "env",
@@ -55941,7 +56092,7 @@
               ]
             },
             {
-              "offset": 23725,
+              "offset": 24515,
               "names": [
                 "ps",
                 "token"
@@ -55974,8 +56125,8 @@
           "key": "src/generic-catalog.family_body",
           "kind": "definition",
           "lines": [
-            428,
-            434
+            443,
+            449
           ],
           "features": [
             "calls",
@@ -56023,7 +56174,7 @@
           ],
           "captures": [
             {
-              "offset": 24197,
+              "offset": 24987,
               "names": [
                 "generic",
                 "kind",
@@ -56032,7 +56183,7 @@
               ]
             },
             {
-              "offset": 24439,
+              "offset": 25229,
               "names": [
                 "generic",
                 "kind",
@@ -56065,8 +56216,8 @@
           "key": "src/generic-catalog.bodies",
           "kind": "definition",
           "lines": [
-            436,
-            444
+            451,
+            459
           ],
           "features": [
             "calls",
@@ -56116,7 +56267,7 @@
           ],
           "captures": [
             {
-              "offset": 25104,
+              "offset": 25894,
               "names": [
                 "depth",
                 "families",
@@ -56126,7 +56277,7 @@
               ]
             },
             {
-              "offset": 25202,
+              "offset": 25992,
               "names": [
                 "resolved"
               ]
@@ -56156,8 +56307,8 @@
           "key": "src/generic-catalog.function_parts",
           "kind": "definition",
           "lines": [
-            446,
-            450
+            461,
+            465
           ],
           "features": [
             "calls",
@@ -56216,8 +56367,8 @@
           "key": "src/generic-catalog.signatures",
           "kind": "definition",
           "lines": [
-            452,
-            464
+            467,
+            479
           ],
           "features": [
             "calls",
@@ -56279,7 +56430,7 @@
           ],
           "captures": [
             {
-              "offset": 26170,
+              "offset": 26960,
               "names": [
                 "depth",
                 "families",
@@ -56289,7 +56440,7 @@
               ]
             },
             {
-              "offset": 26180,
+              "offset": 26970,
               "names": [
                 "depth",
                 "families",
@@ -56300,7 +56451,7 @@
               ]
             },
             {
-              "offset": 26190,
+              "offset": 26980,
               "names": [
                 "depth",
                 "families",
@@ -56312,7 +56463,7 @@
               ]
             },
             {
-              "offset": 26201,
+              "offset": 26991,
               "names": [
                 "depth",
                 "families",
@@ -56325,13 +56476,13 @@
               ]
             },
             {
-              "offset": 26283,
+              "offset": 27073,
               "names": [
                 "token"
               ]
             },
             {
-              "offset": 26326,
+              "offset": 27116,
               "names": [
                 "body",
                 "depth",
@@ -56345,7 +56496,7 @@
               ]
             },
             {
-              "offset": 26428,
+              "offset": 27218,
               "names": [
                 "body",
                 "depth",
@@ -56358,7 +56509,7 @@
               ]
             },
             {
-              "offset": 26533,
+              "offset": 27323,
               "names": [
                 "body",
                 "depth",
@@ -56371,7 +56522,7 @@
               ]
             },
             {
-              "offset": 26614,
+              "offset": 27404,
               "names": [
                 "body",
                 "depth",
@@ -56384,7 +56535,7 @@
               ]
             },
             {
-              "offset": 26740,
+              "offset": 27530,
               "names": [
                 "body",
                 "domain",
@@ -56425,8 +56576,8 @@
           "key": "src/generic-catalog.definitions",
           "kind": "definition",
           "lines": [
-            466,
-            471
+            481,
+            486
           ],
           "features": [
             "calls",
@@ -56478,8 +56629,8 @@
           "key": "src/generic-catalog.catalog",
           "kind": "definition",
           "lines": [
-            475,
-            481
+            490,
+            496
           ],
           "features": [
             "bindings",
@@ -56526,7 +56677,7 @@
           ],
           "captures": [
             {
-              "offset": 27454,
+              "offset": 28244,
               "names": [
                 "depth",
                 "nodes",
@@ -56534,7 +56685,7 @@
               ]
             },
             {
-              "offset": 27523,
+              "offset": 28313,
               "names": [
                 "depth",
                 "nodes",
@@ -56542,7 +56693,7 @@
               ]
             },
             {
-              "offset": 27588,
+              "offset": 28378,
               "names": [
                 "depth",
                 "heads",
@@ -56551,7 +56702,7 @@
               ]
             },
             {
-              "offset": 27670,
+              "offset": 28460,
               "names": [
                 "depth",
                 "nodes",
@@ -56559,7 +56710,7 @@
               ]
             },
             {
-              "offset": 27768,
+              "offset": 28558,
               "names": [
                 "families"
               ]
@@ -56588,7 +56739,7 @@
     },
     {
       "file": "src/generics.bend",
-      "sha256": "9b5e989e6643bb775454244695133b399524e46c15bcafc6ad460cf8293aa305",
+      "sha256": "77bbb55552355c3f6ddfb40ee3b1655f884dbf68b1c6495e84708ccaeea5eaa2",
       "imports": [
         {
           "module": "Base",
@@ -60823,6 +60974,7 @@
             "src/generic-catalog.function_named",
             "src/generic-catalog.is_quant",
             "src/generic-catalog.is_sort",
+            "src/generic-catalog.pattern_constructor",
             "src/generic-catalog.replace",
             "src/generics.Arguments",
             "src/generics.Arms",
@@ -61523,6 +61675,7 @@
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
+              "src/generic-catalog.pattern_constructor",
               "src/generic-catalog.replace",
               "src/generics.annotation",
               "src/generics.arm_body",
@@ -75069,7 +75222,7 @@
     },
     {
       "file": "src/type-erasure-LAWS.bend",
-      "sha256": "1cce72593ca1e0cd73d9837aa7b1cda01a8037a18c1d142d9a20555adb3dbafb",
+      "sha256": "e214573c96be386c783f3c6b5b2cf05b02cf86c160417244be698bb337984fe4",
       "imports": [
         {
           "module": "Base",
@@ -75263,13 +75416,76 @@
           }
         },
         {
+          "id": "src/type-erasure-LAWS.bend::pattern_order:law",
+          "name": "pattern_order",
+          "key": "src/type-erasure-LAWS.pattern_order",
+          "kind": "law",
+          "lines": [
+            34,
+            41
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "laws",
+            "literals.string",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Done",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/generic-catalog.constructor_named",
+            "src/generic-catalog.declaration",
+            "src/generic-catalog.pattern_constructor",
+            "src/generic-catalog.visible",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/generic-catalog.constructor_named",
+            "src/generic-catalog.declaration",
+            "src/generic-catalog.pattern_constructor",
+            "src/generic-catalog.visible",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/type-erasure-LAWS.bend::nominal_identity:law",
           "name": "nominal_identity",
           "key": "src/type-erasure-LAWS.nominal_identity",
           "kind": "law",
           "lines": [
-            32,
-            34
+            43,
+            45
           ],
           "features": [
             "calls",
@@ -75303,8 +75519,8 @@
           "key": "src/type-erasure-LAWS.application_erases_argument",
           "kind": "law",
           "lines": [
-            36,
-            39
+            47,
+            50
           ],
           "features": [
             "calls",
@@ -75341,8 +75557,8 @@
           "key": "src/type-erasure-LAWS.parameter_retains_quantity",
           "kind": "law",
           "lines": [
-            41,
-            45
+            52,
+            56
           ],
           "features": [
             "calls",
@@ -75384,8 +75600,8 @@
           "key": "src/type-erasure-LAWS.plain_fields",
           "kind": "law",
           "lines": [
-            47,
-            50
+            58,
+            61
           ],
           "features": [
             "calls",
@@ -75429,8 +75645,8 @@
           "key": "src/type-erasure-LAWS.plain_arguments",
           "kind": "law",
           "lines": [
-            52,
-            55
+            63,
+            66
           ],
           "features": [
             "calls",
@@ -75470,8 +75686,8 @@
           "key": "src/type-erasure-LAWS.plain_bindings",
           "kind": "law",
           "lines": [
-            57,
-            60
+            68,
+            71
           ],
           "features": [
             "calls",
@@ -75511,8 +75727,8 @@
           "key": "src/type-erasure-LAWS.generic_fields",
           "kind": "law",
           "lines": [
-            62,
-            66
+            73,
+            77
           ],
           "features": [
             "calls",
@@ -75562,8 +75778,8 @@
           "key": "src/type-erasure-LAWS.generic_arguments",
           "kind": "law",
           "lines": [
-            68,
-            72
+            79,
+            83
           ],
           "features": [
             "calls",
@@ -75610,8 +75826,8 @@
           "key": "src/type-erasure-LAWS.generic_bindings",
           "kind": "law",
           "lines": [
-            74,
-            78
+            85,
+            89
           ],
           "features": [
             "calls",
@@ -75659,8 +75875,8 @@
           "key": "src/type-erasure-LAWS.generic_nullary_is_boxed",
           "kind": "law",
           "lines": [
-            80,
-            85
+            91,
+            96
           ],
           "features": [
             "calls",
@@ -75709,8 +75925,8 @@
           "key": "src/type-erasure-LAWS.plain_nullary_is_ordinal",
           "kind": "law",
           "lines": [
-            87,
-            91
+            98,
+            102
           ],
           "features": [
             "calls",
@@ -75754,8 +75970,8 @@
           "key": "src/type-erasure-LAWS.generic_constructor_uses_memory",
           "kind": "law",
           "lines": [
-            93,
-            96
+            104,
+            107
           ],
           "features": [
             "calls",
@@ -75804,8 +76020,8 @@
           "key": "src/type-erasure-LAWS.generic_branch_uses_memory",
           "kind": "law",
           "lines": [
-            98,
-            103
+            109,
+            114
           ],
           "features": [
             "calls",
@@ -75857,8 +76073,8 @@
           "key": "src/type-erasure-LAWS.marker_retains_live_signature",
           "kind": "law",
           "lines": [
-            105,
-            108
+            116,
+            119
           ],
           "features": [
             "calls",
@@ -75903,8 +76119,8 @@
           "key": "src/type-erasure-LAWS.erased_argument_commutes",
           "kind": "law",
           "lines": [
-            110,
-            124
+            121,
+            135
           ],
           "features": [
             "calls",
@@ -75968,8 +76184,8 @@
           "key": "src/type-erasure-LAWS.erased_field_commutes",
           "kind": "law",
           "lines": [
-            126,
-            140
+            137,
+            151
           ],
           "features": [
             "calls",
@@ -76031,8 +76247,8 @@
           "key": "src/type-erasure-LAWS.erased_pattern_commutes",
           "kind": "law",
           "lines": [
-            142,
-            156
+            153,
+            167
           ],
           "features": [
             "calls",
@@ -76096,7 +76312,7 @@
     },
     {
       "file": "src/type-erasure-PROOF.bend",
-      "sha256": "9936ad4024b00df2f30d9ad6b714d12ba3dfed0dfca024ecb7e2837d463650c2",
+      "sha256": "db075ead8ee5890e5b9859b14dea28d9e9a6321a9944e3b1314d25b2442c229f",
       "imports": [
         {
           "module": "Base",
@@ -76352,13 +76568,142 @@
           }
         },
         {
+          "id": "src/type-erasure-PROOF.bend::L.pattern_order:law_fill",
+          "name": "L.pattern_order",
+          "key": "src/type-erasure-LAWS.pattern_order",
+          "kind": "law_fill",
+          "lines": [
+            18,
+            28
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "dependent",
+            "equality",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "proofs",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "rewrites",
+            "types.base"
+          ],
+          "references": [
+            "Bool",
+            "Done",
+            "Equal.sym",
+            "Fail",
+            "False",
+            "List",
+            "Result",
+            "src/core.invalid",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/generic-catalog.constructor_named",
+            "src/generic-catalog.declaration",
+            "src/generic-catalog.pattern_constructor",
+            "src/generic-catalog.visible",
+            "src/syntax.Error",
+            "src/syntax.Invalid",
+            "src/syntax.Token",
+            "src/syntax.at",
+            "src/syntax.bind",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "Bool",
+            "List",
+            "Result",
+            "src/generic-catalog.ConstructorRef",
+            "src/generic-catalog.Family",
+            "src/generic-catalog.constructor_named",
+            "src/generic-catalog.declaration",
+            "src/generic-catalog.pattern_constructor",
+            "src/generic-catalog.visible",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.at"
+          ],
+          "captures": [
+            {
+              "offset": 792,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 793,
+              "names": [
+                "_",
+                "token"
+              ]
+            },
+            {
+              "offset": 947,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 1035,
+              "names": [
+                "r"
+              ]
+            },
+            {
+              "offset": 1048,
+              "names": [
+                "token"
+              ]
+            },
+            {
+              "offset": 1224,
+              "names": [
+                "reference",
+                "token"
+              ]
+            },
+            {
+              "offset": 1225,
+              "names": [
+                "_",
+                "reference",
+                "token"
+              ]
+            },
+            {
+              "offset": 1348,
+              "names": [
+                "reference"
+              ]
+            },
+            {
+              "offset": 1369,
+              "names": [
+                "token"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [],
+            "types": [],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/type-erasure-PROOF.bend::L.nominal_identity:law_fill",
           "name": "L.nominal_identity",
           "key": "src/type-erasure-LAWS.nominal_identity",
           "kind": "law_fill",
           "lines": [
-            18,
-            18
+            29,
+            29
           ],
           "features": [
             "calls",
@@ -76392,8 +76737,8 @@
           "key": "src/type-erasure-LAWS.application_erases_argument",
           "kind": "law_fill",
           "lines": [
-            19,
-            19
+            30,
+            30
           ],
           "features": [
             "calls",
@@ -76430,8 +76775,8 @@
           "key": "src/type-erasure-LAWS.parameter_retains_quantity",
           "kind": "law_fill",
           "lines": [
-            20,
-            20
+            31,
+            31
           ],
           "features": [
             "calls",
@@ -76473,8 +76818,8 @@
           "key": "src/type-erasure-LAWS.plain_fields",
           "kind": "law_fill",
           "lines": [
-            21,
-            21
+            32,
+            32
           ],
           "features": [
             "calls",
@@ -76518,8 +76863,8 @@
           "key": "src/type-erasure-LAWS.plain_arguments",
           "kind": "law_fill",
           "lines": [
-            22,
-            22
+            33,
+            33
           ],
           "features": [
             "calls",
@@ -76559,8 +76904,8 @@
           "key": "src/type-erasure-LAWS.plain_bindings",
           "kind": "law_fill",
           "lines": [
-            23,
-            23
+            34,
+            34
           ],
           "features": [
             "calls",
@@ -76600,8 +76945,8 @@
           "key": "src/type-erasure-LAWS.generic_fields",
           "kind": "law_fill",
           "lines": [
-            24,
-            24
+            35,
+            35
           ],
           "features": [
             "calls",
@@ -76650,8 +76995,8 @@
           "key": "src/type-erasure-LAWS.generic_arguments",
           "kind": "law_fill",
           "lines": [
-            25,
-            25
+            36,
+            36
           ],
           "features": [
             "calls",
@@ -76697,8 +77042,8 @@
           "key": "src/type-erasure-LAWS.generic_bindings",
           "kind": "law_fill",
           "lines": [
-            26,
-            26
+            37,
+            37
           ],
           "features": [
             "calls",
@@ -76745,8 +77090,8 @@
           "key": "src/type-erasure-LAWS.generic_nullary_is_boxed",
           "kind": "law_fill",
           "lines": [
-            27,
-            27
+            38,
+            38
           ],
           "features": [
             "calls",
@@ -76794,8 +77139,8 @@
           "key": "src/type-erasure-LAWS.plain_nullary_is_ordinal",
           "kind": "law_fill",
           "lines": [
-            28,
-            28
+            39,
+            39
           ],
           "features": [
             "calls",
@@ -76839,8 +77184,8 @@
           "key": "src/type-erasure-LAWS.generic_constructor_uses_memory",
           "kind": "law_fill",
           "lines": [
-            30,
-            33
+            41,
+            44
           ],
           "features": [
             "calls",
@@ -76893,8 +77238,8 @@
           "key": "src/type-erasure-LAWS.generic_branch_uses_memory",
           "kind": "law_fill",
           "lines": [
-            35,
-            38
+            46,
+            49
           ],
           "features": [
             "calls",
@@ -76950,8 +77295,8 @@
           "key": "src/type-erasure-LAWS.marker_retains_live_signature",
           "kind": "law_fill",
           "lines": [
-            40,
-            47
+            51,
+            58
           ],
           "features": [
             "calls",
@@ -77000,19 +77345,19 @@
           ],
           "captures": [
             {
-              "offset": 1661,
+              "offset": 2477,
               "names": [
                 "q"
               ]
             },
             {
-              "offset": 1704,
+              "offset": 2520,
               "names": [
                 "xs"
               ]
             },
             {
-              "offset": 1712,
+              "offset": 2528,
               "names": [
                 "xs"
               ]
@@ -77037,8 +77382,8 @@
           "key": "src/type-erasure-LAWS.erased_argument_commutes",
           "kind": "law_fill",
           "lines": [
-            49,
-            49
+            60,
+            60
           ],
           "features": [
             "calls",
@@ -77102,8 +77447,8 @@
           "key": "src/type-erasure-LAWS.erased_field_commutes",
           "kind": "law_fill",
           "lines": [
-            50,
-            50
+            61,
+            61
           ],
           "features": [
             "calls",
@@ -77165,8 +77510,8 @@
           "key": "src/type-erasure-LAWS.erased_pattern_commutes",
           "kind": "law_fill",
           "lines": [
-            51,
-            51
+            62,
+            62
           ],
           "features": [
             "calls",

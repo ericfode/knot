@@ -56,6 +56,12 @@ type-level-definition` wherever the definition is declared (law
 `type_level_definition`). A name that resolves to nothing stays `Invalid
 check unknown-type`.
 
+Declaration order follows the seed. Type names and constructor expressions
+resolve in the whole book. A quantity-prefix short form and a constructor
+pattern see only declarations above them. A pattern whose datatype comes later
+is `Invalid check unknown-constructor` (law `pattern_order`). One predicate,
+`visible`, states both bounds.
+
 ## Erasure
 
 `type-erasure.bend` projects the checked result into the existing core terms.

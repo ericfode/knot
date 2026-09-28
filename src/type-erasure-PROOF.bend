@@ -15,6 +15,17 @@ def L.type_level_definition(fuel,token,name,families,symbols,found):
         G.bare(reference,token,mode => G.resolve(fuel,mode,families,symbols))))
      == Fail{S.Unsupported{"check","type-level-definition",S.at(token)}} : Result<S.Error,G.Typed>}
   {==}
+def L.pattern_order(families,token,reference,found,later):
+  %Equal.sym(Result<S.Error,G.ConstructorRef>,G.constructor_named(families,token,0),Done{reference},found) :
+    {S.bind(G.ConstructorRef,G.ConstructorRef,_,+r =>
+      S.choose(Result<S.Error,G.ConstructorRef>,G.visible(token,G.declaration(r)),u => Done{r},u =>
+        C.invalid(G.ConstructorRef,"unknown-constructor",token)))
+     == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
+  %Equal.sym(Bool,G.visible(token,G.declaration(reference)),False{},later) :
+    {S.choose(Result<S.Error,G.ConstructorRef>,_,u => Done{reference},u =>
+      C.invalid(G.ConstructorRef,"unknown-constructor",token))
+     == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
+  {==}
 def L.nominal_identity(index): {==}
 def L.application_erases_argument(function,argument): {==}
 def L.parameter_retains_quantity(token,q,typ): {==}

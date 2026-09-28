@@ -180,6 +180,21 @@ def source_offset(token: S.Token) -> U32:
   match token:
     case S.Token{text,S.At{start,end,line,column}}: start
 
+# The seed's declaration order: a use sees a declaration at or above it.
+# It bounds quantity-prefix short forms and constructor patterns; type names
+# and constructor expressions resolve in the whole book.
+def visible(+use: S.Token, +site: S.Token) -> Bool:
+  U32.is_ge(source_offset(use),source_offset(site))
+
+def declaration(reference: ConstructorRef) -> S.Token:
+  match reference:
+    case ConstructorRef{family,tag,Constructor{token,fields}}: token
+
+def pattern_constructor(families: List<&2,Family>, +token: S.Token) -> Result<S.Error,ConstructorRef>:
+  S.bind(ConstructorRef,ConstructorRef,constructor_named(families,token,0),+reference =>
+    S.choose(Result<S.Error,ConstructorRef>,visible(token,declaration(reference)),u => Done{reference},u =>
+      C.invalid(ConstructorRef,"unknown-constructor",token)))
+
 def quantity_prefix(params: List<&2,Parameter>) -> U32:
   match params:
     case Con{Parameter{token,q,T.QuantType{}},tail}: U32.add(1,quantity_prefix(tail))
@@ -194,13 +209,13 @@ def application_arguments(+token: S.Token, +nodes: List<&2,S.Node>, +params: Lis
   +actual = U32.from_nat(List.length(&2,S.Node,nodes))
   +arity = U32.from_nat(List.length(&2,Parameter,params))
   +omitted = quantity_prefix(params)
-  +visible = U32.is_ge(source_offset(token),source_offset(name))
-  S.choose(Result<S.Error,List<&2,S.Node>>,Bool.and(U32.is_eq(q,2),Bool.or(U32.is_eq(omitted,0),Bool.not(visible))),u =>
+  +declared = visible(token,name)
+  S.choose(Result<S.Error,List<&2,S.Node>>,Bool.and(U32.is_eq(q,2),Bool.or(U32.is_eq(omitted,0),Bool.not(declared))),u =>
     C.invalid(List<&2,S.Node>,"quantity-prefix",token),u =>
     S.choose(Result<S.Error,List<&2,S.Node>>,U32.is_eq(actual,arity),u =>
       Done{S.choose(List<&2,S.Node>,U32.is_eq(q,2),u =>
         defaults(U32.to_nat(omitted),token,2,List.drop(&2,S.Node,nodes,U32.to_nat(omitted))),u => nodes)},u =>
-      S.choose(Result<S.Error,List<&2,S.Node>>,Bool.and(U32.is_eq(U32.add(actual,omitted),arity),visible),u =>
+      S.choose(Result<S.Error,List<&2,S.Node>>,Bool.and(U32.is_eq(U32.add(actual,omitted),arity),declared),u =>
         Done{defaults(U32.to_nat(omitted),token,q,nodes)},u => C.invalid(List<&2,S.Node>,"type-arity",token))))
 
 def named_type(found: Maybe<&2,Symbol>, +token: S.Token, next: Unit -> Result<S.Error,Typed>) -> Result<S.Error,Typed>:

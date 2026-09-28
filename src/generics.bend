@@ -376,7 +376,7 @@ def run(fuel: Nat, mode: Mode, +catalog: G.Catalog, +current: U32, +env: Environ
     case 1n+n Arguments{nodes,params,substitutions,index,result,token} _ _: C.invalid(Checked,"call-arity",token)
     case 1n+n Arms{Nil{},binding,family,wanted,seen,token} _ _: complete(family,seen,wanted,token)
     case 1n+ +n Arms{Con{S.Arm{+arm,S.Constructor{+name,+nodes},+body},+tail},+binding,+family,+wanted,+seen,+token} G.Catalog{+families,sigs} _:
-      S.bind(G.ConstructorRef,Checked,G.constructor_named(families,name,0),reference =>
+      S.bind(G.ConstructorRef,Checked,G.pattern_constructor(families,name),reference =>
         pattern(reference,binding,seen,arm,+tag => params =>
           S.bind(Fields,Checked,field_scope(binding,tag,params,nodes,generic(family),families,env),opened =>
             arm_body(opened,bound => +fields =>

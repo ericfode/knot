@@ -7748,7 +7748,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 524,
+          "declarations": 527,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10627,13 +10627,12 @@
               "U32.add",
               "U32.from_nat",
               "U32.is_eq",
-              "U32.is_ge",
               "U32.to_nat",
               "src/core.invalid",
               "src/generic-catalog.Parameter",
               "src/generic-catalog.defaults",
               "src/generic-catalog.quantity_prefix",
-              "src/generic-catalog.source_offset",
+              "src/generic-catalog.visible",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
@@ -10972,6 +10971,20 @@
             "dependencies": [
               "src/generic-catalog.many",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.declaration",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Constructor",
+              "src/generic-catalog.ConstructorRef",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -11731,6 +11744,31 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.pattern_constructor",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.invalid",
+              "src/generic-catalog.ConstructorRef",
+              "src/generic-catalog.Family",
+              "src/generic-catalog.constructor_named",
+              "src/generic-catalog.declaration",
+              "src/generic-catalog.visible",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.positional",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.instantiated",
@@ -11957,7 +11995,7 @@
           {
             "key": "src/generic-catalog.source_offset",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.application_arguments",
+            "via": "src/generic-catalog.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12151,6 +12189,21 @@
             "dependencies": [
               "src/generic-catalog.one",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.visible",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_ge",
+              "src/generic-catalog.source_offset",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -13432,6 +13485,7 @@
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
+              "src/generic-catalog.pattern_constructor",
               "src/generic-catalog.replace",
               "src/generics.Checked",
               "src/generics.Environment",
@@ -17714,7 +17768,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 524,
+          "declarations": 527,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -20593,13 +20647,12 @@
               "U32.add",
               "U32.from_nat",
               "U32.is_eq",
-              "U32.is_ge",
               "U32.to_nat",
               "src/core.invalid",
               "src/generic-catalog.Parameter",
               "src/generic-catalog.defaults",
               "src/generic-catalog.quantity_prefix",
-              "src/generic-catalog.source_offset",
+              "src/generic-catalog.visible",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
@@ -20938,6 +20991,20 @@
             "dependencies": [
               "src/generic-catalog.many",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.declaration",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Constructor",
+              "src/generic-catalog.ConstructorRef",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -21697,6 +21764,31 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.pattern_constructor",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.invalid",
+              "src/generic-catalog.ConstructorRef",
+              "src/generic-catalog.Family",
+              "src/generic-catalog.constructor_named",
+              "src/generic-catalog.declaration",
+              "src/generic-catalog.visible",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.positional",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.instantiated",
@@ -21923,7 +22015,7 @@
           {
             "key": "src/generic-catalog.source_offset",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.application_arguments",
+            "via": "src/generic-catalog.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22117,6 +22209,21 @@
             "dependencies": [
               "src/generic-catalog.one",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.visible",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_ge",
+              "src/generic-catalog.source_offset",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -23398,6 +23505,7 @@
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
+              "src/generic-catalog.pattern_constructor",
               "src/generic-catalog.replace",
               "src/generics.Checked",
               "src/generics.Environment",
@@ -27680,7 +27788,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 455,
+          "declarations": 458,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -29421,12 +29529,11 @@
               "U32.add",
               "U32.from_nat",
               "U32.is_eq",
-              "U32.is_ge",
               "U32.to_nat",
               "src/core.invalid",
               "src/generic-catalog.defaults",
               "src/generic-catalog.quantity_prefix",
-              "src/generic-catalog.source_offset",
+              "src/generic-catalog.visible",
               "src/syntax.choose"
             ],
             "dynamic_calls": []
@@ -29623,6 +29730,16 @@
             "dependencies": [
               "src/generic-catalog.many"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.declaration",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -30100,6 +30217,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.pattern_constructor",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.invalid",
+              "src/generic-catalog.constructor_named",
+              "src/generic-catalog.declaration",
+              "src/generic-catalog.visible",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.positional",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.instantiated",
@@ -30249,7 +30383,7 @@
           {
             "key": "src/generic-catalog.source_offset",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.application_arguments",
+            "via": "src/generic-catalog.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -30371,6 +30505,19 @@
             "unsafe": false,
             "dependencies": [
               "src/generic-catalog.one"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.visible",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_ge",
+              "src/generic-catalog.source_offset"
             ],
             "dynamic_calls": []
           },
@@ -31172,6 +31319,7 @@
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
+              "src/generic-catalog.pattern_constructor",
               "src/generic-catalog.replace",
               "src/generics.annotation",
               "src/generics.arm_body",
@@ -34089,7 +34237,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 562,
+          "declarations": 565,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -37042,13 +37190,12 @@
               "U32.add",
               "U32.from_nat",
               "U32.is_eq",
-              "U32.is_ge",
               "U32.to_nat",
               "src/core.invalid",
               "src/generic-catalog.Parameter",
               "src/generic-catalog.defaults",
               "src/generic-catalog.quantity_prefix",
-              "src/generic-catalog.source_offset",
+              "src/generic-catalog.visible",
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.Token",
@@ -37382,6 +37529,20 @@
             "dependencies": [
               "src/generic-catalog.many",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.declaration",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/generic-catalog.Constructor",
+              "src/generic-catalog.ConstructorRef",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -38125,6 +38286,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generic-catalog.pattern_constructor",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/core.invalid",
+              "src/generic-catalog.ConstructorRef",
+              "src/generic-catalog.Family",
+              "src/generic-catalog.constructor_named",
+              "src/generic-catalog.declaration",
+              "src/generic-catalog.visible",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generic-catalog.positional",
             "file": "src/generic-catalog.bend",
             "via": "src/generic-catalog.instantiated",
@@ -38351,7 +38535,7 @@
           {
             "key": "src/generic-catalog.source_offset",
             "file": "src/generic-catalog.bend",
-            "via": "src/generic-catalog.application_arguments",
+            "via": "src/generic-catalog.visible",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -38541,6 +38725,21 @@
             "dependencies": [
               "src/generic-catalog.one",
               "src/types.Expr"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/generic-catalog.visible",
+            "file": "src/generic-catalog.bend",
+            "via": "src/generic-catalog.pattern_constructor",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_ge",
+              "src/generic-catalog.source_offset",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -39811,6 +40010,7 @@
               "src/generic-catalog.function_named",
               "src/generic-catalog.is_quant",
               "src/generic-catalog.is_sort",
+              "src/generic-catalog.pattern_constructor",
               "src/generic-catalog.replace",
               "src/generics.Binding",
               "src/generics.Checked",
