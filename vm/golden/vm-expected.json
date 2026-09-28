@@ -1,5 +1,5 @@
 {
- "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound. Output that the seed Bun lane refuses as a non-scalar Char while the native lane exits 0 is D20's HostFailure io abi, divergent by contract, never agreement; the native bytes never classify it.",
+ "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound. A Program's own value classifies its output: where the reference evaluation of its plan passes IO.print a String holding a non-scalar Char, the VM writes the earlier prints and refuses that one as D20's HostFailure io abi, divergent by contract, never agreement; otherwise the VM owes the seed's output. The seed lanes are observations and never classify it.",
  "fuel": 1000000,
  "bounds": {
   "nat-range": {
@@ -1004,7 +1004,7 @@
    "cause": "io abi",
    "stdout": "",
    "basis": "divergent-by-contract (non-scalar output)",
-   "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
+   "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
   },
   "print-non-scalar-mid": {
@@ -1017,7 +1017,7 @@
    "cause": "io abi",
    "stdout": "",
    "basis": "divergent-by-contract (non-scalar output)",
-   "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
+   "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
   },
   "string-surrogate-pair": {
@@ -1054,8 +1054,69 @@
    "cause": "io abi",
    "stdout": "",
    "basis": "divergent-by-contract (non-scalar output)",
-   "reason": "D20: the seed Bun lane refuses Char 67237376; the native lane exits 0",
+   "reason": "D20: print 1 holds Char 67237376; the native lane exits 0",
    "eval_lane": "Invalid"
+  },
+  "non-scalar-code": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "55296\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Invalid"
+  },
+  "non-scalar-unprinted": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "exit": 0,
+   "stdout": "a\nnonempty\n",
+   "stderr": "",
+   "basis": "seed",
+   "eval_lane": "Invalid"
+  },
+  "print-non-scalar-second": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "a\n",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: print 2 holds Char 55296; the native lane exits 0",
+   "eval_lane": "Invalid"
+  },
+  "invoke-args": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t6\t0\tTwo{On{},Off{}}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
+  },
+  "invoke-arrow": {
+   "argv": [
+    "IMAGE",
+    "main",
+    "1000000"
+   ],
+   "exit": 0,
+   "stdout": "Evaluated\t0\t1\tOn{}\n",
+   "stderr": "",
+   "basis": "eval-cli",
+   "eval_lane": "agree"
   }
  }
 }

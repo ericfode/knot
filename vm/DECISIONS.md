@@ -106,13 +106,23 @@ follows it (§5, §10, §11) without a new image header word.
    written. The next review found the native bytes unfit to classify: the lane
    truncates the lead byte of a code at or above 2^21, so `Chr{67237376}`
    (0x401F600) prints `F0 9F 98 80`, the valid UTF-8 of U+1F600, and a rule that
-   decoded those bytes owed the emoji (`print-non-scalar-wide`). The witness is
-   now the Bun lane: it refuses the first non-scalar Char with its exact code
-   after writing the earlier output, which is what the VM writes; a native-lane
-   Program must carry it. The expectation rule refuses undeclared non-scalar
-   output (the wide code included), a divergence on output the Bun lane writes,
-   another class, a VM output other than the Bun lane's, and a native lane
-   without its Bun witness (six controls).
+   decoded those bytes owed the emoji (`print-non-scalar-wide`). Round 3 then made
+   the Bun lane the witness, but review round 4 showed that it refuses a
+   non-scalar Char where `char_new` constructs it, printed or not: it refused
+   `non-scalar-code` (native `55296\n`) and `non-scalar-unprinted` (native
+   `a\nnonempty\n`, Bun `a\n`), which print only scalars, and wrote nothing for
+   `print-non-scalar-second`, where the VM writes `a\n` first. The coordinator's
+   round-4 decision makes the program's value the classifier: the reference
+   evaluation of the plan (`evaluate.py`, §6–§10 on values) yields the Strings
+   passed to `IO.print`, and D20 applies exactly when one holds a non-scalar Char.
+   Both seed lanes are recorded observations. The native bytes must equal the
+   whole trace in the lane's own encoding, whose truncation of the lead byte from
+   2^21 was measured on 19 codes; the Bun lane's output must be a prefix of the
+   VM's. Eleven expectation controls refuse undeclared non-scalar output (the wide
+   code included), a divergence on scalar output, another class, a VM that writes
+   the non-scalar String or less than the earlier prints, the wide plan printing
+   U+1F600, a built but unprinted surrogate declared as a divergence, other native
+   bytes, Bun output beyond the VM's and a native lane without its Bun record.
 11. **Plans spell a String as its code list.** Round 3 also found the reference
    codec lossy: plans spelled String constants as JSON text, so `json.loads`
    merged a surrogate pair into U+1F600 and decode refused codes above U+10FFFF

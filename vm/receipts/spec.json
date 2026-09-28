@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28T09:31:18.318660+00:00",
+ "date": "2026-09-28T10:33:39.369257+00:00",
  "status": "passed",
  "scope": "knot-image-1 golden images and the frozen VM contract; no VM exists",
  "oracles": {
@@ -7,8 +7,8 @@
   "closures": "a1d68911d5fafe0c1033e8d5349b206e6136b29a"
  },
  "inputs": {
-  "vm/DECISIONS.md": "a73a2cd88672761eff4e8110830e7efc48fe2754c99e3036e7c305d6287f7601",
-  "vm/SPEC.md": "6711e2bfdd24be3374968c2d2ce7e401e3064f8608dc42db5d1f5f8b87f12245",
+  "vm/DECISIONS.md": "0f0aeba6c9a13d49a7f5abe37fd37607f8146391bd4a6c9c810718d76915b958",
+  "vm/SPEC.md": "83501dc9868290dd8ae8a6d5ba14e38fa79d9ac1a114287b6b5270797a9186a6",
   "vm/bench/README.md": "21a35c5bc213b64e979d7c965005f8a27cde0bb7c172664d844b0d4e08439771",
   "vm/bench/baselines.json": "3b2ff9d6849f48394402da6a8de0b6df26dd074bf577198365c5df3262f8b73f",
   "vm/bench/cps-choose.bend": "d797827d4456dd8739b17a5e40abd0a458f59c289e506ed9a439347ec6fe4489",
@@ -20,7 +20,8 @@
   "vm/bench/sha256-64k.bend": "e937474c7422356c675c41431bd21b6245f5b76be6487297841d8eec7aba4ac3",
   "vm/bench/string-scan.bend": "722b94a03300f13eab62a68a6d1b33ce0ad2af1c2c6ec6510fc29c3b8f732638",
   "vm/bench/workloads.json": "9fd4d95beb80c248f181cc1e263f66df8ef10ec40d8488c4973224270508c405",
-  "vm/check-spec.py": "a6c5ae710f17a5abb0ea114796d36ba276c0845ef0d6df446617a0b42db23dee",
+  "vm/check-spec.py": "0c48d2d80a069126bbc500a80377d09f321d702b73e1dd2b7ba1129f9442b4a2",
+  "vm/evaluate.py": "87903b603ed5e780c12c6760ba9511988fadf57550c5553bee4624d37de433e3",
   "vm/golden/bounds.json": "acaea7544a23ce7d1502dc42dfec108e799f0c909bbc29cabcc6c7ba4fc47500",
   "vm/golden/case-char.bend": "01ad3c8cbc610265544e388233496709a7f8968a106f5158aafadd9d28e6a73f",
   "vm/golden/case-char.kimg": "b1cd6edde14a81c6dc1f41c134b6441f03541d49a33f97a1235e9a2cf2a63e87",
@@ -85,10 +86,16 @@
   "vm/golden/erased-let.bend": "d6612eae198742f4c24e3b28fb5627e98c104f1c3cff06c4a4614f9b884ca2b1",
   "vm/golden/erased-let.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/erased-let.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/expectations.json": "c32c894db75cc8dba3f97c8902d1642c374aabd4f963a839afc7aac0a3698a6b",
+  "vm/golden/expectations.json": "b8f448295cfe253f6e5871b6ea11991156e1c3b141bafaa871f3dad082c68d53",
   "vm/golden/foreign-print.bend": "84b4e5fbee2bfc11a969873e55960dc377e62c901031720df869086efb809f23",
   "vm/golden/foreign-print.kimg": "89853fdad58157d4b4a37c6612070bd9f5f6c898388aa4a343a12994e7aa3e9f",
   "vm/golden/foreign-print.plan.json": "6a85a1ca46c839831f2b9dfca5ffeeffd40e4d7f0082ba4dde99f777f13cb229",
+  "vm/golden/invoke-args.bend": "c051337c36f19756ba57a437254408a6d06bb1c05d82f641ca88e62432e72491",
+  "vm/golden/invoke-args.kimg": "f47a5615f5c4a3d1716ba6293ab77688dedccf2cab06146087956bc6a98e6a19",
+  "vm/golden/invoke-args.plan.json": "e1a9239cf62ad36bc4a36c10a07dc832e6e92c116d855245f3f6bc3745e9c363",
+  "vm/golden/invoke-arrow.bend": "62eb7b66d824b393a5e7fd0ab14b6d53bea37dbb3abda8517d223039a63c9132",
+  "vm/golden/invoke-arrow.kimg": "ce43a3eb3eb943164b26c1b430aa56fcbc4679cb6d3e83130994088d37a43872",
+  "vm/golden/invoke-arrow.plan.json": "2515871527a5871b1937a72353a98afc44cad22dfe7bf693ca59da27c25f2d79",
   "vm/golden/io-bind.bend": "19f53a639ccbdb375f534346520778dee4583a253238f36cbaeaca8ecaa10e08",
   "vm/golden/io-bind.kimg": "874c2236c6cf1e6a2168af80cc141c03c8f9d9ef8b7c551891d25af2e74bbb91",
   "vm/golden/io-bind.plan.json": "0929e3acd64897d5a9e122e8de04f052a1fbbba53f6e3577559bfe76d0a609cf",
@@ -140,13 +147,22 @@
   "vm/golden/nested-call.bend": "c7b2cf22a65ca56f4e73d075a4e9b93e44af1cae4af26dccda3b8c405336a411",
   "vm/golden/nested-call.kimg": "7e995aa8f3ee2e69deeff7e88c91296d5eaec6debe157b222800c93d2c5841b3",
   "vm/golden/nested-call.plan.json": "5c2e5a77ed2431f0b749c684a0ac36a4f337b93bd7d7c51783dc650a75e43966",
+  "vm/golden/non-scalar-code.bend": "32a269c6dde771bc15a54d60f4f08f8fb589bf2fb702018ac57efc023e2a4992",
+  "vm/golden/non-scalar-code.kimg": "b674e998e9dc62bf2a48511f100c0e2ff50f7f063d721f2314449ef233139d1a",
+  "vm/golden/non-scalar-code.plan.json": "f6ce8f6ac0a266097f9181bd89964d9fa4caa457e63e1bc4ca41cd0bd98d82b8",
+  "vm/golden/non-scalar-unprinted.bend": "7480d8a077d990df7e43005115344c062b5240e98e2f5f954d65050d45a19559",
+  "vm/golden/non-scalar-unprinted.kimg": "718336deaa6f36d17cbcc35556348a086b70cc82571e3f71c70e1a141fd546f6",
+  "vm/golden/non-scalar-unprinted.plan.json": "96f7ce91f802233f35853fb4c0d6cf645132c0753b1580f440101efbc90a40e1",
   "vm/golden/pair.bend": "e49c711270c64181a864ea821943ee760ead6ba96a603fa412addca4c73222cb",
   "vm/golden/pair.kimg": "06a2caee911d17805e1fb1ca8efc6953037a5105e57f37cc5964f93856dd8169",
   "vm/golden/pair.plan.json": "f96fe9a5c65a580076074676a06bd1d454d6a978e843c1e17376d6f73a6fa57e",
-  "vm/golden/plan.json": "e0835b8634d3d089adb97bed69422539ed47f34e03833d5efdcc83fe30255bb8",
+  "vm/golden/plan.json": "4e9ec0c6dbe3d139c643ad79d4a99da2060f8b7b60d0f77dc59526d9315ce9cb",
   "vm/golden/print-non-scalar-mid.bend": "743b007555153ecaad8e2d4f30a90239476587264b278943459c7111c8e9600c",
   "vm/golden/print-non-scalar-mid.kimg": "a2a1b8be38508619bcb0552dcf8735fc57372144bc5db9c2569ca8875b6ce017",
   "vm/golden/print-non-scalar-mid.plan.json": "b8c4e81e6ade295d8bdf8c581de9624cb9d94bf17e056f6af5e742890e69fe1d",
+  "vm/golden/print-non-scalar-second.bend": "9d3ea7ee9677db310a11e833bfb02236c491344ceac8bde60bb93c93115dc2b4",
+  "vm/golden/print-non-scalar-second.kimg": "f29f6d212d6d7ad2bd9a41f2ba2f446212bd3b734cdb714591489a283ddf6a84",
+  "vm/golden/print-non-scalar-second.plan.json": "29053bd0703ad6dad5ccab0a161a46d93b7b283307abc98d681591ac7e02c97f",
   "vm/golden/print-non-scalar-wide.bend": "080630b363ff64626cbce9c294481072808a277e31816788e788557c7d5a4f3c",
   "vm/golden/print-non-scalar-wide.kimg": "3cfab2b693a35e519d187fed5e4a4d1ad7fc68478b3072847ecd4e79b3a21f64",
   "vm/golden/print-non-scalar-wide.plan.json": "9a2fe0b949dd9a6f4d504566487dbf690a4597f1381da91dc5bf1af4b423c501",
@@ -282,7 +298,7 @@
   "vm/golden/value-on.bend": "68f9c5675b153f1f72913e68254caa4779bb383a63e7b8b477e3f65500847ce3",
   "vm/golden/value-on.kimg": "c8d39eb65d5572e050c13e7e334e92fd8144de1ac27d806aca5fdb47baffce27",
   "vm/golden/value-on.plan.json": "2d6beaba61e6abbc27fa1cea7e057b128357624e5f220a715d42526c982a657a",
-  "vm/golden/vm-expected.json": "429deb28858b1859a2c702660c52728e0f2151bee36b2abce53d01c3649c38db",
+  "vm/golden/vm-expected.json": "c203b82e7dd5c3abf0df5b578ecf2dfab496da646525e0771312195b7574ba87",
   "vm/golden/write-sources.py": "e2632c0f73731e6e3ef52cc6c319cea1c38c218c5c7c0042da3a8c2594cb7623",
   "vm/oracles/closures.json.gz": "de15465bd281b9bcb9cdd582581eb5c6755de58c8a92e133d4d04b8989b7fcab",
   "vm/oracles/literals.json.gz": "55a45a022b539c4eeecfa33bfee4e19b32900af41bd671543007499966cf4397",
@@ -2466,7 +2482,7 @@
     "cause": "io abi",
     "stdout": "",
     "basis": "divergent-by-contract (non-scalar output)",
-    "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
+    "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
     "eval_lane": "Invalid"
    }
   },
@@ -2494,7 +2510,7 @@
     "cause": "io abi",
     "stdout": "",
     "basis": "divergent-by-contract (non-scalar output)",
-    "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
+    "reason": "D20: print 1 holds Char 55296; the native lane exits 0",
     "eval_lane": "Invalid"
    }
   },
@@ -2577,8 +2593,149 @@
     "cause": "io abi",
     "stdout": "",
     "basis": "divergent-by-contract (non-scalar output)",
-    "reason": "D20: the seed Bun lane refuses Char 67237376; the native lane exits 0",
+    "reason": "D20: print 1 holds Char 67237376; the native lane exits 0",
     "eval_lane": "Invalid"
+   }
+  },
+  {
+   "name": "non-scalar-code",
+   "lane": "literals",
+   "seed_lane": "native",
+   "features": [
+    "Foreign",
+    "Intrinsic",
+    "non-scalar Char"
+   ],
+   "image_sha256": "b674e998e9dc62bf2a48511f100c0e2ff50f7f063d721f2314449ef233139d1a",
+   "words": 274,
+   "plan_matches": "unavailable: Invalid\tparse\tfunction-result\t13:14:3:11; IO.print argument: checked-core",
+   "seed": "agree",
+   "eval": "Invalid",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "1000000",
+     "--"
+    ],
+    "exit": 0,
+    "stdout": "55296\n",
+    "stderr": "",
+    "basis": "seed",
+    "eval_lane": "Invalid"
+   }
+  },
+  {
+   "name": "non-scalar-unprinted",
+   "lane": "literals",
+   "seed_lane": "native",
+   "features": [
+    "Foreign",
+    "Closure",
+    "Invoke",
+    "generic",
+    "non-scalar Char"
+   ],
+   "image_sha256": "718336deaa6f36d17cbcc35556348a086b70cc82571e3f71c70e1a141fd546f6",
+   "words": 415,
+   "plan_matches": "unavailable: Invalid\tparse\tfunction-result\t113:114:8:11",
+   "seed": "agree",
+   "eval": "Invalid",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "1000000",
+     "--"
+    ],
+    "exit": 0,
+    "stdout": "a\nnonempty\n",
+    "stderr": "",
+    "basis": "seed",
+    "eval_lane": "Invalid"
+   }
+  },
+  {
+   "name": "print-non-scalar-second",
+   "lane": "literals",
+   "seed_lane": "native",
+   "features": [
+    "Foreign",
+    "Closure",
+    "Invoke",
+    "generic",
+    "Construct",
+    "non-scalar output"
+   ],
+   "image_sha256": "f29f6d212d6d7ad2bd9a41f2ba2f446212bd3b734cdb714591489a283ddf6a84",
+   "words": 368,
+   "plan_matches": "unavailable: Invalid\tparse\tfunction-result\t21:22:3:19",
+   "seed": "agree",
+   "eval": "Invalid",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "1000000",
+     "--"
+    ],
+    "outcome": "HostFailure",
+    "cause": "io abi",
+    "stdout": "a\n",
+    "basis": "divergent-by-contract (non-scalar output)",
+    "reason": "D20: print 2 holds Char 55296; the native lane exits 0",
+    "eval_lane": "Invalid"
+   }
+  },
+  {
+   "name": "invoke-args",
+   "lane": "literals",
+   "seed_lane": "bun",
+   "features": [
+    "Book invocation",
+    "erased parameter",
+    "Intrinsic"
+   ],
+   "image_sha256": "f47a5615f5c4a3d1716ba6293ab77688dedccf2cab06146087956bc6a98e6a19",
+   "words": 475,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t6\t0\tTwo{On{},Off{}}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
+   }
+  },
+  {
+   "name": "invoke-arrow",
+   "lane": "closures",
+   "seed_lane": "bun",
+   "features": [
+    "Book invocation",
+    "Closure",
+    "Invoke"
+   ],
+   "image_sha256": "ce43a3eb3eb943164b26c1b430aa56fcbc4679cb6d3e83130994088d37a43872",
+   "words": 124,
+   "plan_matches": "checked-core",
+   "seed": "agree",
+   "eval": "agree",
+   "vm": {
+    "argv": [
+     "IMAGE",
+     "main",
+     "1000000"
+    ],
+    "exit": 0,
+    "stdout": "Evaluated\t0\t1\tOn{}\n",
+    "stderr": "",
+    "basis": "eval-cli",
+    "eval_lane": "agree"
    }
   }
  ],
@@ -2605,11 +2762,11 @@
   },
   {
    "control": "expectation:non-scalar-as-agreement",
-   "refused": "print-non-scalar: the Bun lane refuses Char 55296; D20 refuses that output, so it is never seed agreement"
+   "refused": "print-non-scalar: print 1 holds Char 55296; D20 refuses that output, so it is never seed agreement"
   },
   {
    "control": "expectation:divergence-on-scalar-output",
-   "refused": "foreign-print: a non-scalar output divergence, but the Bun lane writes every Char"
+   "refused": "foreign-print: a non-scalar output divergence, but every printed Char is a scalar"
   },
   {
    "control": "expectation:divergence-other-class",
@@ -2617,15 +2774,35 @@
   },
   {
    "control": "expectation:vm-writes-non-scalar",
-   "refused": "print-non-scalar-mid: VM output 'a\ufffd\ufffd\ufffdb\\n' is not the Bun lane's ''"
+   "refused": "print-non-scalar-mid: VM output 'a\ufffd\ufffd\ufffdb\\n' is not b'', what the earlier prints write"
   },
   {
    "control": "expectation:wide-code-as-agreement",
-   "refused": "print-non-scalar-wide: the Bun lane refuses Char 67237376; D20 refuses that output, so it is never seed agreement"
+   "refused": "print-non-scalar-wide: print 1 holds Char 67237376; D20 refuses that output, so it is never seed agreement"
   },
   {
-   "control": "expectation:native-without-bun-witness",
-   "refused": "print-non-scalar-wide: a native-lane Program needs the Bun lane as its scalar witness"
+   "control": "expectation:wide-plan-as-u1f600",
+   "refused": "print-non-scalar-wide: a non-scalar output divergence, but every printed Char is a scalar"
+  },
+  {
+   "control": "expectation:unprinted-as-divergence",
+   "refused": "non-scalar-unprinted: a non-scalar output divergence, but every printed Char is a scalar"
+  },
+  {
+   "control": "expectation:second-output-from-bun",
+   "refused": "print-non-scalar-second: VM output '' is not b'a\\n', what the earlier prints write"
+  },
+  {
+   "control": "expectation:native-other-bytes",
+   "refused": "print-non-scalar: the plan prints b'\\xed\\xa0\\x80\\n' in the seed lane's encoding; the seed wrote b'\\xef\\xbf\\xbd\\n'"
+  },
+  {
+   "control": "expectation:bun-beyond-vm",
+   "refused": "non-scalar-unprinted: the Bun lane wrote 'b\\n' (exit 1); the VM writes b'a\\nnonempty\\n'"
+  },
+  {
+   "control": "expectation:native-without-bun-record",
+   "refused": "print-non-scalar-wide: a native-lane Program records its Bun lane"
   },
   {
    "control": "truncated",
@@ -3210,6 +3387,61 @@
     "stdout": "Evaluated\t0\t1\tTrue{}\n",
     "stderr": ""
    }
+  },
+  {
+   "mutant": "evaluator:scalar-admits-beyond-unicode",
+   "killed": true,
+   "by": "print-non-scalar-wide: print-non-scalar-wide: a non-scalar output divergence, but every printed Char is a scalar"
+  },
+  {
+   "mutant": "evaluator:scalar-admits-surrogates",
+   "killed": true,
+   "by": "print-non-scalar: print-non-scalar: a non-scalar output divergence, but every printed Char is a scalar"
+  },
+  {
+   "mutant": "evaluator:print-without-lf",
+   "killed": true,
+   "by": "foreign-print: foreign-print: the plan prints b'vm' in the seed lane's encoding; the seed wrote b'vm\\n'"
+  },
+  {
+   "mutant": "evaluator:native-stops-at-non-scalar",
+   "killed": true,
+   "by": "print-non-scalar: print-non-scalar: the plan prints b'' in the seed lane's encoding; the seed wrote b'\\xed\\xa0\\x80\\n'"
+  },
+  {
+   "mutant": "evaluator:wide-code-clamped",
+   "killed": true,
+   "by": "print-non-scalar-wide: print-non-scalar-wide: the plan prints b'\\xf4\\x8f\\xbf\\xbf\\n' in the seed lane's encoding; the seed wrote b'\\xf0\\x9f\\x98\\x80\\n'"
+  },
+  {
+   "mutant": "evaluator:nat-case-binds-n",
+   "killed": true,
+   "by": "nat-pred: nat-pred: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t1\\tSucc{Succ{Succ{Zero{}}}}\\n', 'calls': 2}"
+  },
+  {
+   "mutant": "evaluator:string-literal-reversed",
+   "killed": true,
+   "by": "string-reverse: string-reverse: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:captures-reversed",
+   "killed": true,
+   "by": "closure-captures: closure-captures: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t1\\t0\\tPair{Off{},On{}}\\n', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:closure-arity-unchecked",
+   "killed": true,
+   "by": "run control erased-closure-invoked-live: {'outcome': None, 'cause': None, 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:erased-entry-free",
+   "killed": true,
+   "by": "run control terminal-invoked-erased: {'outcome': 'HostFailure', 'cause': 'image ill-typed', 'calls': 3}"
+  },
+  {
+   "mutant": "evaluator:u32-sub-saturates",
+   "killed": true,
+   "by": "u32-sub-wrap: u32-sub-wrap: the reference evaluation gives {'exit': 0, 'stdout': 'Evaluated\\t0\\t0\\tFalse{}\\n', 'calls': 3}"
   }
  ],
  "code_lists": {
@@ -3244,7 +3476,7 @@
    "keys",
    "tags"
   ],
-  "program_images": 5,
-  "none_typed_nodes": 2
+  "program_images": 8,
+  "none_typed_nodes": 4
  }
 }

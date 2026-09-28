@@ -7,7 +7,9 @@ committed image equals its plan's encoding, decodes back to that plan, passes
 the validator and agrees with the oracle checker's own core display; freezes
 the VM expectation table under the Exhausted-lane rule; checks the bench
 freeze; and requires every negative control and mutant to be rejected.
-It implements no VM and evaluates no image.
+It implements no VM. The reference evaluation of each plan (evaluate.py, on
+values, not cells) supplies a Program's own output and must reproduce every
+Book expectation and run control.
 """
 from __future__ import annotations
 
@@ -37,16 +39,23 @@ VM_FUEL = 1_000_000
 RECEIPT = HERE / 'receipts/spec.json'
 EXPECTED = GOLDEN / 'vm-expected.json'
 CODEC = HERE / 'serializer.py'
+EVALUATOR = HERE / 'evaluate.py'
 
 
-def load_codec(text: str | None = None):
-    module = types.ModuleType('serializer')
-    module.__file__ = str(CODEC)
-    exec(compile(text if text is not None else CODEC.read_text(), str(CODEC), 'exec'), module.__dict__)
+def load(path: Path, text: str | None = None):
+    module = types.ModuleType(path.stem)
+    module.__file__ = str(path)
+    exec(compile(text if text is not None else path.read_text(), str(path), 'exec'), module.__dict__)
     return module
 
 
+def load_codec(text: str | None = None):
+    return load(CODEC, text)
+
+
 codec = load_codec()
+reference = load(EVALUATOR)
+sys.setrecursionlimit(20_000)  # the reference evaluation recurses on the plan's nesting
 
 
 def require(condition, detail):
@@ -595,53 +604,55 @@ def described(printed: str, quantities: dict) -> str:
 
 
 NON_SCALAR = 'non-scalar output'
-REFUSED = re.compile(r'bend: (\d+) is not a Unicode scalar value\n')
 
 
-def scalar_witness(case) -> dict:
-    """The seed's Bun lane: it writes every scalar Char and refuses a non-scalar one (exit 1)
-    after the earlier output. A native-lane Program carries it as `seed_bun`. The native
-    lane's bytes never classify output: it writes a surrogate or a code below 2^21 as
-    generalized UTF-8, but truncates the lead byte of a wider code (Chr{67237376} prints
-    the valid UTF-8 of U+1F600)."""
-    witness = case.get('seed_bun') if case.get('seed_lane') == 'native' else case['seed']
-    require(witness is not None, f"{case['name']}: a native-lane Program needs the Bun lane as its scalar witness")
-    return witness
+def written(result) -> bytes:
+    """The bytes a lane wrote: its stdout, or the hex kept for one that is not UTF-8."""
+    return bytes.fromhex(result['stdout_hex']) if 'stdout_hex' in result else result['stdout'].encode()
 
 
-def vm_expectation(case, plan, bounds, source) -> dict:
+def output_expectation(case, plan, evaluator=None) -> dict:
+    """Section 11 and D20: a Program's own value classifies its output, never a seed lane.
+
+    The reference evaluation of the plan yields the Strings it passes to IO.print, in order.
+    The VM writes each as UTF-8 and refuses the first that holds a non-scalar Char as
+    `HostFailure io abi`, before its host call. The seed lanes are recorded observations:
+    the native lane must have written the whole trace in its generalized UTF-8 (which
+    truncates the lead byte of a code from 2^21), and the Bun lane, which refuses a
+    non-scalar Char where it is constructed, printed or not, a prefix of the VM's output."""
+    ev, name, seed = evaluator or reference, case['name'], case['seed']
+    require(seed['exit'] == 0, f'{name}: program seed must succeed')
+    vm, native = ev.program(plan, VM_FUEL), ev.program(plan, VM_FUEL, 'native')
+    require(native.get('exit') == 0 and native['stdout'] == written(seed),
+            f"{name}: the plan prints {native['stdout']!r} in the seed lane's encoding; the seed wrote {written(seed)!r}")
+    bun = case.get('seed_bun') if case.get('seed_lane') == 'native' else seed
+    require(bun is not None, f'{name}: a native-lane Program records its Bun lane')
+    require(vm['stdout'].startswith(bun['stdout'].encode()) and (bun['exit'] != 0 or vm.get('exit') == 0),
+            f"{name}: the Bun lane wrote {bun['stdout']!r} (exit {bun['exit']}); the VM writes {vm['stdout']!r}")
+    argv = ['IMAGE', str(VM_FUEL), '--']
+    if vm.get('cause') == 'io abi':
+        at, code = len(vm['prints']), next(c for c in vm['prints'][-1] if not ev.scalar(c))
+        require('divergence' in case, f'{name}: print {at} holds Char {code}; D20 refuses that output, '
+                                      f'so it is never seed agreement')
+        require(case['divergence'] == NON_SCALAR, f"{name}: divergence {case['divergence']!r} is not D20's")
+        require(case.get('vm_stdout', '').encode() == vm['stdout'] and 'vm_stdout' in case,
+                f"{name}: VM output {case.get('vm_stdout')!r} is not {vm['stdout']!r}, what the earlier prints write")
+        return {'argv': argv, 'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': case['vm_stdout'],
+                'basis': f'divergent-by-contract ({NON_SCALAR})',
+                'reason': f'D20: print {at} holds Char {code}; the native lane exits 0', 'eval_lane': classify(case['eval'])}
+    require(vm.get('exit') == 0, f'{name}: the reference evaluation ends {vm}')
+    require('divergence' not in case, f'{name}: a {NON_SCALAR} divergence, but every printed Char is a scalar')
+    return {'argv': argv, 'exit': 0, 'stdout': seed['stdout'], 'stderr': '', 'basis': 'seed',
+            'eval_lane': classify(case['eval'])}
+
+
+def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:
     """The Exhausted-lane rule, applied to the frozen observations of one golden."""
     seed, ev = case['seed'], case['eval']
     fuel = VM_FUEL
     require('divergence' not in case or plan['entry'] == 'program', f"{case['name']}: only a Program's output diverges")
     if plan['entry'] == 'program':
-        require(seed['exit'] == 0, 'program seed must succeed')
-        bun = scalar_witness(case)
-        if bun['exit'] == 0:
-            require('divergence' not in case,
-                    f"{case['name']}: a {NON_SCALAR} divergence, but the Bun lane writes every Char")
-            require(bun['stdout'] == seed['stdout'], f"{case['name']}: the Bun lane writes {bun['stdout']!r}")
-            return {'argv': ['IMAGE', str(fuel), '--'], 'exit': 0, 'stdout': seed['stdout'], 'stderr': '',
-                    'basis': 'seed', 'eval_lane': classify(ev)}
-        # Section 11 and D20: the Bun lane refuses a non-scalar Char where the native lane exits
-        # 0; the VM refuses the String before its host call. The VM writes the output before
-        # that String, which is what the Bun lane wrote before its refusal.
-        refused = REFUSED.fullmatch(bun['stderr'])
-        code = int(refused[1]) if refused and bun['exit'] == 1 else None
-        require(code is not None and code < 1 << 32 and (0xD800 <= code <= 0xDFFF or code > 0x10FFFF),
-                f"{case['name']}: Bun lane {bun} is neither success nor D20's refusal")
-        require('divergence' in case, f"{case['name']}: the Bun lane refuses Char {code}; D20 refuses "
-                                      f"that output, so it is never seed agreement")
-        require(case['divergence'] == NON_SCALAR, f"{case['name']}: divergence {case['divergence']!r} is not D20's")
-        require(case.get('vm_stdout') == bun['stdout'],
-                f"{case['name']}: VM output {case.get('vm_stdout')!r} is not the Bun lane's {bun['stdout']!r}")
-        native = bytes.fromhex(seed['stdout_hex']) if 'stdout_hex' in seed else seed['stdout'].encode()
-        require(native.startswith(bun['stdout'].encode()),
-                f"{case['name']}: the native lane's output before the refused String differs")
-        return {'argv': ['IMAGE', str(fuel), '--'], 'outcome': 'HostFailure', 'cause': 'io abi',
-                'stdout': case['vm_stdout'], 'basis': f'divergent-by-contract ({NON_SCALAR})',
-                'reason': f'D20: the seed Bun lane refuses Char {code}; the native lane exits 0',
-                'eval_lane': classify(ev)}
+        return output_expectation(case, plan, evaluator)
     main = next(f for f in plan['functions'] if f['name'] == 'main')
     why = codec.undescribable(plan, main['result'])
     if why:
@@ -675,39 +686,58 @@ def vm_expectation(case, plan, bounds, source) -> dict:
             'basis': 'seed', 'eval_lane': 'Exhausted'}
 
 
-def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) -> list:
+def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict, evaluator=None) -> list:
     """What the rule must refuse: an eval lane that disagrees with the seed, a bound that is
     not Exhausted or that stands in for an Unsupported result, and a D20 classification that
-    is not the Bun lane's."""
+    is not the program's own output."""
     def row(label, seed, ev):
         return {'name': f'control:{label}', 'seed': {'exit': 0, 'stdout': seed, 'stderr': ''},
                 'eval': {'exit': 0, 'stdout': ev, 'stderr': ''}}
+
+    def without(name, *keys):
+        return {k: v for k, v in cases[name].items() if k not in keys}
+
+    def emoji(plan):
+        """print-non-scalar-wide's plan printing U+1F600, which its native bytes cannot tell apart."""
+        plan = json.loads(json.dumps(plan))
+        plan['functions'][1]['body'][3][0][3][0][3][0][3] = 0x1F600
+        return plan
     describe_bound = {'outcome': 'HostFailure', 'cause': 'invoke scalar-result',
                       'basis': 'round 1: a Book-describe bound, which section 11 no longer admits'}
+    unprinted, second = cases['non-scalar-unprinted'], cases['print-non-scalar-second']
     out = []
-    for label, name, case, table in [
-            ('eval-disagrees', 'value-on', row('eval-disagrees', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'), bounds),
+    for label, name, case, table, plan in [
+            ('eval-disagrees', 'value-on', row('eval-disagrees', 'Off{}\n', 'Evaluated\t0\t1\tOn{}\n'), bounds, None),
             ('eval-keeps-erased-field', 'erased-construct',
-             row('eval-keeps-erased-field', 'ProofBox{Off{}, On{}}\n', 'Evaluated\t1\t0\tProofBox{Off{}}\n'), bounds),
+             row('eval-keeps-erased-field', 'ProofBox{Off{}, On{}}\n', 'Evaluated\t1\t0\tProofBox{Off{}}\n'), bounds, None),
             ('eval-nat-binds-n', 'nat-pred',
-             row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds),
-            ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}),
-            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}),
-            # D20: a non-scalar seed output is a declared divergence, and only that is one.
-            ('non-scalar-as-agreement', 'print-non-scalar',
-             {k: v for k, v in cases['print-non-scalar'].items() if k not in ('divergence', 'vm_stdout')}, bounds),
+             row('eval-nat-binds-n', '2n\n', 'Evaluated\t0\t1\tSucc{Succ{Succ{Zero{}}}}\n'), bounds, None),
+            ('bound-not-exhausted', 'value-on', cases['value-on'], {**bounds, 'value-on': describe_bound}, None),
+            ('bound-for-unsupported', 'result-u32', cases['result-u32'], {**bounds, 'result-u32': describe_bound}, None),
+            # D20: a declared divergence exactly where the program prints a non-scalar Char.
+            ('non-scalar-as-agreement', 'print-non-scalar', without('print-non-scalar', 'divergence', 'vm_stdout'), bounds, None),
             ('divergence-on-scalar-output', 'foreign-print',
-             {**cases['foreign-print'], 'divergence': NON_SCALAR, 'vm_stdout': ''}, bounds),
-            ('divergence-other-class', 'print-non-scalar', {**cases['print-non-scalar'], 'divergence': 'other'}, bounds),
+             {**cases['foreign-print'], 'divergence': NON_SCALAR, 'vm_stdout': ''}, bounds, None),
+            ('divergence-other-class', 'print-non-scalar', {**cases['print-non-scalar'], 'divergence': 'other'}, bounds, None),
             ('vm-writes-non-scalar', 'print-non-scalar-mid',
-             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds),
-            # The native bytes of Chr{67237376} are valid UTF-8; only the Bun lane witnesses it.
+             {**cases['print-non-scalar-mid'], 'vm_stdout': cases['print-non-scalar-mid']['seed']['stdout']}, bounds, None),
             ('wide-code-as-agreement', 'print-non-scalar-wide',
-             {k: v for k, v in cases['print-non-scalar-wide'].items() if k not in ('divergence', 'vm_stdout')}, bounds),
-            ('native-without-bun-witness', 'print-non-scalar-wide',
-             {k: v for k, v in cases['print-non-scalar-wide'].items() if k != 'seed_bun'}, bounds)]:
+             without('print-non-scalar-wide', 'divergence', 'vm_stdout'), bounds, None),
+            # The native bytes of Chr{67237376} are those of U+1F600; the plan's value decides.
+            ('wide-plan-as-u1f600', 'print-non-scalar-wide', cases['print-non-scalar-wide'], bounds,
+             emoji(plans['print-non-scalar-wide'])),
+            # The Bun lane refuses a non-scalar Char where it is built, printed or not.
+            ('unprinted-as-divergence', 'non-scalar-unprinted',
+             {**unprinted, 'divergence': NON_SCALAR, 'vm_stdout': 'a\n'}, bounds, None),
+            ('second-output-from-bun', 'print-non-scalar-second', {**second, 'vm_stdout': second['seed_bun']['stdout']},
+             bounds, None),
+            ('native-other-bytes', 'print-non-scalar',
+             {**cases['print-non-scalar'], 'seed': {**cases['print-non-scalar']['seed'], 'stdout_hex': 'efbfbd0a'}}, bounds, None),
+            ('bun-beyond-vm', 'non-scalar-unprinted',
+             {**unprinted, 'seed_bun': {**unprinted['seed_bun'], 'stdout': 'b\n'}}, bounds, None),
+            ('native-without-bun-record', 'print-non-scalar-wide', without('print-non-scalar-wide', 'seed_bun'), bounds, None)]:
         try:
-            vm_expectation(case, plans[name], table, sources[name])
+            vm_expectation(case, plan or plans[name], table, sources[name], evaluator)
         except AssertionError as refusal:
             out.append({'control': f'expectation:{label}', 'refused': str(refusal)})
             continue
@@ -718,6 +748,24 @@ def expectation_controls(cases: dict, plans: dict, bounds: dict, sources: dict) 
 def classify(result) -> str:
     return {0: 'agree', 2: 'Invalid', 3: 'Unsupported', 4: 'Exhausted', 5: 'HostFailure',
             6: 'InternalFailure'}.get(result['exit'], 'other')
+
+
+def reproduced(name: str, plan: dict, expected: dict, evaluator=None):
+    """The reference evaluation reproduces a Book golden's expectation: its describe line, or
+    its bound's Exhausted outcome. A result section 8 cannot describe is never entered."""
+    if plan['entry'] != 'book' or expected.get('outcome') == 'Unsupported':
+        return
+    got = (evaluator or reference).book(plan, 'main', [], VM_FUEL)
+    keys = ('exit', 'stdout') if 'exit' in expected else ('outcome', 'kind', 'cause')
+    require({k: got.get(k) for k in keys} == {k: expected.get(k) for k in keys},
+            f'{name}: the reference evaluation gives {got}')
+
+
+def ran(plan: dict, frozen: dict, evaluator=None) -> dict:
+    """A run control's outcome and call count under the reference evaluation."""
+    ev = evaluator or reference
+    got = ev.book(plan, 'main', [], VM_FUEL) if plan['entry'] == 'book' else ev.program(plan, VM_FUEL)
+    return {k: got.get(k) for k in frozen}
 
 
 # ------------------------------------------------------------------ controls and mutants
@@ -1207,6 +1255,65 @@ def codec_mutants(plans, images, controls, admitted, describing, reg, digest) ->
     return results
 
 
+# Semantic mutants of the reference evaluation: each must change a golden expectation, a Book
+# value or a run control, or be refused by the rule; a crash is never a kill.
+EVALUATOR_MUTANTS = [
+    ('scalar-admits-beyond-unicode', [('    return code < 0xD800 or 0xDFFF < code <= 0x10FFFF',
+                                       '    return code < 0xD800 or 0xDFFF < code')]),
+    ('scalar-admits-surrogates', [('    return code < 0xD800 or 0xDFFF < code <= 0x10FFFF', '    return code <= 0x10FFFF')]),
+    ('print-without-lf', [("        self.stdout += b''.join(map(utf8, codes)) + b'\\n'",
+                           "        self.stdout += b''.join(map(utf8, codes))")]),
+    ('native-stops-at-non-scalar', [("        if self.policy == 'vm' and not all(map(scalar, codes)):",
+                                     '        if not all(map(scalar, codes)):')]),
+    ('wide-code-clamped', [('    return bytes([(0xF0 | code >> 18) & 0xFF,',
+                            '    code = min(code, 0x10FFFF)\n    return bytes([(0xF0 | code >> 18) & 0xFF,')]),
+    ('nat-case-binds-n', [('            return (0, ()) if w == 0 else (1, (w - 1,))',
+                           '            return (0, ()) if w == 0 else (1, (w,))')]),
+    ('string-literal-reversed', [('        for code in reversed(codes):', '        for code in codes:')]),
+    ('captures-reversed', [("            return ('closure', node, tuple(env[s] for s in node[4]))",
+                            "            return ('closure', node, tuple(env[s] for s in node[4][::-1]))")]),
+    ('closure-arity-unchecked', [("        takes = {'closure': lambda: len(operands) == f[1][2],",
+                                  "        takes = {'closure': lambda: True,")]),
+    ('erased-entry-free', [("        self.debit()\n        if kind == 'closure':",
+                            "        if operands or kind != 'closure':\n            self.debit()\n        if kind == 'closure':")]),
+    ('u32-sub-saturates', [('lambda: (x - y) & WORD,', 'lambda: max(x - y, 0),')]),
+]
+
+
+def evaluator_mutants(cases, plans, bounds, sources, table, runs) -> list:
+    """Each mutant re-derives every golden expectation, Book value and run control."""
+    source = EVALUATOR.read_text()
+    results = []
+    for name, edits in EVALUATOR_MUTANTS:
+        text = source
+        for old, new in edits:
+            require(text.count(old) == 1, f'evaluator mutant {name} is not uniquely located')
+            text = text.replace(old, new)
+        mutant, killed_by = load(EVALUATOR, text), None
+        for case_name, case in cases.items():
+            try:
+                got = vm_expectation(case, plans[case_name], bounds, sources[case_name], mutant)
+                reproduced(case_name, plans[case_name], got, mutant)
+            except AssertionError as refusal:
+                killed_by = f'{case_name}: {refusal}'
+            except Exception:
+                continue
+            else:
+                killed_by = None if got == table[case_name] else f'{case_name}: expectation {got}'
+            if killed_by:
+                break
+        for label, plan, frozen in [] if killed_by else runs:
+            try:
+                got = ran(plan, frozen, mutant)
+            except Exception:
+                continue
+            killed_by = None if got == frozen else f'run control {label}: {got}'
+            if killed_by:
+                break
+        results.append({'mutant': f'evaluator:{name}', 'killed': killed_by is not None, 'by': killed_by})
+    return results
+
+
 SOURCE_MUTANTS = [
     ('case-on', 'flip(On{})', 'flip(Off{})'),
     ('u32-wrap', 'U32.add(4294967295,1)', 'U32.add(4294967295,2)'),
@@ -1392,6 +1499,7 @@ def main() -> int:
             require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
             view = f"unavailable: {shown['stderr'].strip()}"
         table[name] = vm_expectation(case, plan, bounds, sources[name])
+        reproduced(name, plan, table[name])
         plans[name], images[name] = plan, data
         fixtures.append({'name': name, 'lane': case['lane'], 'seed_lane': case.get('seed_lane', 'bun'),
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
@@ -1407,9 +1515,11 @@ def main() -> int:
     expected = {'rule': 'SPEC section 11: the VM owes the seed value wherever the seed succeeds within the '
                         'declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. '
                         'A Book result outside section 8\'s describe domain is Unsupported, never a bound. '
-                        'Output that the seed Bun lane refuses as a non-scalar Char while the native lane exits 0 '
-                        'is D20\'s HostFailure io abi, divergent by contract, never agreement; the native bytes '
-                        'never classify it.',
+                        'A Program\'s own value classifies its output: where the reference evaluation of its plan '
+                        'passes IO.print a String holding a non-scalar Char, the VM writes the earlier prints and '
+                        'refuses that one as D20\'s HostFailure io abi, divergent by contract, never agreement; '
+                        'otherwise the VM owes the seed\'s output. The seed lanes are observations and never '
+                        'classify it.',
                 'fuel': VM_FUEL, 'bounds': bounds, 'cases': table}
     if args.write_expected:
         EXPECTED.write_text(json.dumps(expected, indent=1) + '\n')
@@ -1441,6 +1551,7 @@ def main() -> int:
         require(rejected(data, reg, digest) is None, f'run control {label}: {rejected(data, reg, digest)}')
         require(codec.decode(data, digest) == plan, f'run control {label}: decodes to another plan')
         admitted.append((f'run:{label}', data))
+        require(ran(plan, frozen) == frozen, f'run control {label}: the reference evaluation gives {ran(plan, frozen)}')
         runs[label] = {**frozen, 'image_sha256': sha(data)}
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
@@ -1455,7 +1566,8 @@ def main() -> int:
     require(text_spelling(plans, digest) is None, text_spelling(plans, digest))
 
     mutants = codec_mutants({**plans, **coded}, {**images, **{k: codec.encode(p, digest) for k, p in coded.items()}},
-                            controls, admitted, describing, reg, digest) + source_mutants(cases, built)
+                            controls, admitted, describing, reg, digest) + source_mutants(cases, built) + \
+        evaluator_mutants(cases, plans, bounds, sources, table, run_controls(plans))
     survivors = [m['mutant'] for m in mutants if not m['killed']]
     require(not survivors, f'surviving mutants {survivors}')
 

@@ -17,8 +17,9 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 86 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 91 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
+| [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
 
@@ -603,7 +604,8 @@ view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded a
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
-§11). Incoming text follows
+§11). Only output is checked: building, storing or measuring a non-scalar Char is
+pure code (§2). Incoming text follows
 the host's replacement decoding, BOM kept, one Chr per scalar. Raw input bytes
 become U32 elements 0..255.
 A byte-list write scans the **whole** list first, computes `invalid |= e >> 8`,
@@ -637,30 +639,37 @@ was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
 
 **The rule.** Wherever the seed succeeds inside the VM's declared domain and
-budgets, the VM MUST return the seed's value and effect trace. Another lane's
+budgets, the VM MUST return the seed's value and effect trace, except the output
+D20 refuses (below). Another lane's
 exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
 bound. Expected values are never regenerated from a candidate VM.
 
-**Non-scalar output (D20).** Where the seed's native lane exits 0 on output that
-holds a non-scalar Char, the VM refuses that output as `HostFailure io abi` (§10).
-The native bytes are not a faithful encoding: the lane writes a surrogate or a
-code below 2^21 as generalized UTF-8, but truncates the lead byte of a wider code,
-so they are recorded and never read to classify. The witness is the seed's Bun
-lane, which refuses the output (`bend: N is not a Unicode scalar value`, exit 1)
-after writing the output before that String; that earlier output is exactly what
-the VM writes. The golden is marked `divergent-by-contract (non-scalar output)`
-and expects the refusal; it is neither seed agreement nor a bound. A
-native-lane Program therefore carries its Bun lane. Goldens: `print-non-scalar`
-(`IO.print(SCon{Chr{55296}, SNil{}})`, ASCII source; native bytes `ED A0 80 0A`),
-`print-non-scalar-mid` (`IO.print("a\u{D800}b")`; native `61 ED A0 80 62 0A`, of
-which the VM writes nothing) and `print-non-scalar-wide` (`Chr{67237376}`, that is
-0x401F600; native `F0 9F 98 80 0A`, the valid UTF-8 of U+1F600).
+**Non-scalar output (D20).** The program's own value decides it, never a seed
+lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
+values) yields the Strings a Program passes to `IO.print`, in order. When one holds
+a non-scalar Char, the VM writes the earlier Strings and refuses that one as
+`HostFailure io abi` (§10); the golden is `divergent-by-contract (non-scalar
+output)`, neither seed agreement nor a bound. Otherwise the case is ordinary seed
+agreement, whatever Chars the program builds. The seed lanes are recorded and never
+classify. The native lane exits 0 and writes every String as generalized UTF-8,
+surrogates included, but keeps only the low 8 bits of the lead byte from 2^21, so
+`Chr{67237376}` (0x401F600) writes `F0 9F 98 80`, the UTF-8 of U+1F600; its bytes
+must equal the whole trace in that encoding. The Bun lane refuses a non-scalar Char
+where it is constructed (`bend: N is not a Unicode scalar value`, exit 1), printed
+or not; its earlier output must be a prefix of the VM's, and a native-lane Program
+records it. D20 goldens: `print-non-scalar` (`IO.print(SCon{Chr{55296}, SNil{}})`,
+ASCII source; native `ED A0 80 0A`), `print-non-scalar-mid` (`"a\u{D800}b"`; native
+`61 ED A0 80 62 0A`, of which the VM writes nothing), `print-non-scalar-wide`
+(`Chr{67237376}`; native `F0 9F 98 80 0A`) and `print-non-scalar-second` (`"a"`, then
+the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code`
+(`55296\n`) and `non-scalar-unprinted` (`a\nnonempty\n`, where the Bun lane writes
+`a\n` and refuses) build a surrogate without printing it and agree with the seed.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (72 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (74 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
@@ -673,13 +682,15 @@ describe domain (`result-u32`, `result-u32-field`, `result-char`,
 reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
-`foreign-print` and `io-bind`; and D20's refusal, with no output, for
-`print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`. For those
+`foreign-print`, `io-bind`, `non-scalar-code` and `non-scalar-unprinted`; and D20's
+refusal for `print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`,
+with no output, and for `print-non-scalar-second` after `a\n`. For those
 Programs the eval lane is not excused but unavailable: both literals `eval-cli`
 and `check-cli` report `Invalid parse function-result` for
 `def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and their plans follow §1 by hand. `io-bind` keeps Base's `IO.bind`
-and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
+relabelled, and their plans follow §1 by hand. `io-bind`, `non-scalar-unprinted`
+and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
+so their `A`-typed nodes are `none`.
 
 ## 12. Frozen evidence and later obligations
 
@@ -701,10 +712,15 @@ lane and requires:
   seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls), and every Program whose Bun lane refuses a
-  non-scalar Char a declared D20 divergence whose VM output is the Bun lane's
-  output before its refusal (six frozen expectation controls, among them the wide
-  code as agreement and a native lane without its Bun witness);
+  (two frozen expectation controls), and every Program classified by the reference
+  evaluation of its plan: a declared D20 divergence exactly where it prints a
+  non-scalar Char, with the VM output of the earlier prints, the native bytes equal
+  to the whole trace in that lane's encoding and the Bun lane's output a prefix of
+  the VM's (eleven frozen expectation controls, among them the wide code as
+  agreement, its plan printing U+1F600, a surrogate built but never printed as a
+  divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
+- the reference evaluation reproducing every Book golden's expectation and every
+  run control's outcome and call count;
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -728,7 +744,8 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 40 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe verdict or a changed observation, never a crash;
+  changed describe verdict or a changed observation, and 11 evaluator mutants
+  through a changed or refused expectation, Book value or run control, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).
