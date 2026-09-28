@@ -29,8 +29,8 @@ invalid UTF-8 argv and to inspect exit normalization before the OS masks it.
 
 A module exports exactly one unshared, 32-bit linear memory as `memory`,
 `knot_alloc(i32 bytes) -> i32 address`, and `knot_main() -> ()`. Additional guest
-exports are allowed. The memory declares a maximum no larger than 2,048 pages
-(128 MiB). A start section and imported memory are forbidden. The host validates
+exports are allowed. The memory declares a maximum no larger than 65,536 pages
+(4 GiB, the wasm32 range; decision D19). A start section and imported memory are forbidden. The host validates
 Wasm, checks imported and required exported function signatures, then instantiates
 it. Only the imports below are permitted. Unknown imports return `Unsupported`
 before any guest instruction runs.

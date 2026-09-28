@@ -13,7 +13,7 @@ const errors = Object.freeze({
   ENOTDIR: [20, 'Not a directory'], EISDIR: [21, 'Is a directory'],
   EINVAL: [22, 'Invalid argument'], EILSEQ: [92, 'Illegal byte sequence'],
 });
-const MAX_MEMORY = 128 * 1024 * 1024;
+const MAX_MEMORY = 65536 * 65536; // D19: the full wasm32 range, 65,536 pages (4 GiB)
 const MAX_TRANSFER = 16 * 1024 * 1024;
 const decoder = new TextDecoder('utf-8', {ignoreBOM: true});
 const strictDecoder = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true});
