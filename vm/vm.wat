@@ -90,6 +90,7 @@
   (data (i32.const 1576) "constructor-order")
   (data (i32.const 1600) "constant-record")
   (data (i32.const 1624) "scalar-constant-width")
+  (data (i32.const 1648) "records")
   (data (i32.const 1672) "node-record")
   (data (i32.const 1696) "node-length")
   (data (i32.const 1720) "function-record")
@@ -110,7 +111,7 @@
   (data (i32.const 2080) "program-main")
   (data (i32.const 2104) "program-representation")
   (data (i32.const 2128) "program-io")
-  (data (i32.const 2152) "limits")
+  (data (i32.const 2152) "arity")
   (data (i32.const 2176) "literal-kind")
   (data (i32.const 2200) "value-nullary")
   (data (i32.const 2224) "slot-depth")
@@ -173,6 +174,7 @@
   (data (i32.const 3592) "abi")
   (data (i32.const 3616) "internal")
   (data (i32.const 3640) "function-argument")
+  (data (i32.const 3664) "slots")
 
   ;; §9 prim registry (ids 0..40): arity, input representations, output
   ;; representation; arity 0xff marks a reserved id. Representation ids follow
@@ -222,6 +224,7 @@
   (global $R_constructor_order i32 (i32.const 1576))
   (global $R_constant_record i32 (i32.const 1600))
   (global $R_scalar_constant_width i32 (i32.const 1624))
+  (global $R_records i32 (i32.const 1648))
   (global $R_node_record i32 (i32.const 1672))
   (global $R_node_length i32 (i32.const 1696))
   (global $R_function_record i32 (i32.const 1720))
@@ -242,7 +245,7 @@
   (global $R_program_main i32 (i32.const 2080))
   (global $R_program_representation i32 (i32.const 2104))
   (global $R_program_io i32 (i32.const 2128))
-  (global $R_limits i32 (i32.const 2152))
+  (global $R_arity i32 (i32.const 2152))
   (global $R_literal_kind i32 (i32.const 2176))
   (global $R_value_nullary i32 (i32.const 2200))
   (global $R_slot_depth i32 (i32.const 2224))
@@ -305,6 +308,7 @@
   (global $R_abi i32 (i32.const 3592))
   (global $R_internal i32 (i32.const 3616))
   (global $R_function_argument i32 (i32.const 3640))
+  (global $R_slots i32 (i32.const 3664))
 
   ;; ---------------------------------------------------------------- registers
   ;; image geometry: total words, section offsets and record counts (§2)
@@ -436,6 +440,12 @@
     (global.set $mode (i32.const 3))
     (call $io_exhausted (local.get $kind))
     unreachable)
+
+  ;; §4's resource limits, each inclusive: a count above its limit is Exhausted
+  ;; kind 2 with the limit as its cause (D16), not a malformed image.
+  (func $limit (param $count i32) (param $max i32) (param $cause i32)
+    (if (i32.gt_u (local.get $count) (local.get $max))
+      (then (call $exhaust (i32.const 2) (local.get $cause)))))
 
   ;; image word i
   (func $w (param $i i32) (result i32)
@@ -692,8 +702,10 @@
         (then (call $refuse (global.get $R_section_offset))))
       (if (i32.ge_u (local.get $cursor) (global.get $W)) (then (call $refuse (global.get $R_record_length))))
       (local.set $count (call $w (local.get $cursor)))
-      (if (i32.gt_u (local.get $count) (i32.const 0x100000)) (then (call $refuse (global.get $R_record_count))))
       (local.set $at (i32.add (local.get $cursor) (i32.const 1)))
+      (if (i32.gt_u (local.get $count) (i32.shr_u (i32.sub (global.get $W) (local.get $at)) (i32.const 1)))
+        (then (call $refuse (global.get $R_record_count))))
+      (call $limit (local.get $count) (i32.const 0x100000) (global.get $R_records))
       (local.set $i (i32.const 0))
       (block $end
         (loop $record
@@ -878,6 +890,8 @@
             (br_if $bad (i32.lt_u (local.get $lx) (i32.const 5)))
             (br_if $ok (i32.eq (i32.sub (local.get $lx) (i32.const 5)) (call $w (i32.add (local.get $at) (i32.const 6))))))
           (call $refuse (global.get $R_node_length)))
+        (if (i32.eq (local.get $op) (i32.const 10))
+          (then (call $limit (call $w (i32.add (local.get $at) (i32.const 5))) (i32.const 65536) (global.get $R_slots))))
         (local.set $at (i32.add (local.get $at) (call $w (local.get $at))))
         (local.set $i (i32.add (local.get $i) (i32.const 1)))
         (br $shape)))
@@ -897,6 +911,8 @@
         (if (i32.or (i32.lt_u (local.get $len) (i32.const 5))
                     (i32.ne (call $w (i32.add (local.get $at) (i32.const 3))) (i32.sub (local.get $len) (i32.const 5))))
           (then (call $refuse (global.get $R_function_record))))
+        (call $limit (call $w (i32.add (local.get $at) (i32.const 3))) (i32.const 4096) (global.get $R_arity))
+        (call $limit (call $w (i32.add (local.get $at) (i32.const 4))) (i32.const 65536) (global.get $R_slots))
         (local.set $root (call $w (i32.add (local.get $at) (i32.const 5))))
         (if (i32.ge_u (local.get $root) (global.get $W)) (then (call $refuse (global.get $R_function_root))))
         (if (i32.ne (i32.load8_u (i32.add (global.get $mk) (local.get $root))) (i32.const 1))
@@ -1372,9 +1388,6 @@
     (local $n i32) (local $d i32) (local $t i32) (local $op i32) (local $x i32) (local $y i32)
     (local $s i32) (local $mode i32) (local $cnt i32) (local $last i32) (local $rec i32) (local $nf i32)
     (local $row i32) (local $kd i32) (local $live i32) (local $nb i32)
-    (if (i32.or (i32.gt_u (call $w (i32.add (local.get $fn) (i32.const 3))) (i32.const 4096))
-                (i32.gt_u (call $w (i32.add (local.get $fn) (i32.const 4))) (i32.const 65536)))
-      (then (call $refuse (global.get $R_limits))))
     (global.set $vbase (i32.const 0))
     (global.set $vdeep (i32.const 0))
     (local.set $n (call $w (i32.add (local.get $fn) (i32.const 3))))
