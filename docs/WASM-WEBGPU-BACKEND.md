@@ -271,3 +271,63 @@ backend as mutation kills. Preserve the original 38-case semantic regression;
 ignore its scheduling hashes/move counters, not its results or ownership checks.
 Only then connect a Knot-emitted versioned bundle and compare seed, Knot evaluator,
 Knot Wasm and device results for the newly supported source profile.
+
+## Device record contract: `knot-device-records-2`
+
+GPU increment `gpu-2` implements the D10 choice: unique Type objects and counted
+immutable Data. It leaves version 1 and the 38-case tree probe unchanged. Version
+2 has fresh CPU and null-backend shader evidence; **Metal qualification is still
+required**. See the [runtime and receipts](../research/adaptive-tasks/runtime2/README.md).
+
+The bundle has numeric `version=2`, `profile=2`, an explicit capacity/limit
+configuration, and eight-u32 instruction records. All words are little-endian.
+The [host validator](../research/adaptive-tasks/runtime2/bundle.py) rejects unknown
+version/profile/opcode as Unsupported, malformed supported fields as Invalid,
+and capacity/size overflow as Exhausted. It derives every count, stride and
+offset by checking `count <= (limit-base)/stride` before multiplication/addition.
+An optional supplied layout must match exactly; arbitrary restored state is not
+accepted. Binding bytes are bounded by the adapter and the whole-word u32 address
+ceiling. There is no two-record ceiling. Tests actually fill 1, 2, 64 and 4,096
+objects and refuse one more; separate controls cover maximal layout arithmetic
+without claiming those maximal buffers were allocated on a device.
+
+| Record | Word layout / ownership |
+|---|---|
+| Header | 32 words: capacities, checked offsets/strides, limits, status/reply, pending length, identity issuer, reader count, free count, PC/phase. Exact offsets in `runtime2/layout.json`. |
+| Object | Metadata `[identity,kind,rc,arity]`, then payload `[tag][live child identities]`; stride `5+maxArity`. RC is outside the payload. |
+| Capture | One owning identity per slot; contiguous ranges form defunctionalized environments. Type moves clear the source; extra Data holders require checked retain. |
+| Pending release | Persistent LIFO identities, each still an owning edge. Last release moves children here only after reserving the required work space. |
+| Join | `[attempt,state,arity,received,completions,code,captureBase,captureCount][ordered results]`; stride `8+maxArity`. Attempt identity is separate from object identity. |
+
+Each table ends with a checked guard word. Unused payload words remain zero.
+Scalars are boxed as nullary tagged objects; all live fields in this version are
+object identities. Object slots are reusable, but bundle-local identities are
+never reissued. Exhausting the identity issuer or a join attempt counter cannot
+wrap. These internal identities are not portable `(arena,slot,generation)`
+locators; version 1's external-locator qualification remains separate.
+
+One generic WGSL interpreter supplies execute, run and publish entry points.
+One owning writer updates a work snapshot; a separate dispatch publishes it.
+Instructions construct/share/move/open/release/clean captures, establish reader
+barriers, start/deliver/cancel/resume ordered joins, inspect tags, and check spans.
+The program driver adds branch/jump/halt/yield and an explicit quantum. Zero
+quantum preserves PC and owners; resume jumps to a saved code index. Right-before-
+left delivery retains logical order (7/9 gives the noncommutative observation
+709); n-ary completion is counted once per attempt. Stale completions preserve
+their rejected source owners. Cancellation reserves cleanup capacity before
+consuming either saved captures or arrived results.
+
+Shared Data opening preflights all acquired child edges, including repeated
+identities, before publishing any count change. Cleanup retains its pending
+stack on budget/storage exhaustion. Outstanding readers block physical opening
+and reclamation; host buffer reuse/destruction waits for submitted work. This
+serial barrier protocol is not evidence for simultaneous mutating workgroups.
+
+The [exact compiler mapping](../research/adaptive-tasks/runtime2/INTERFACE.md)
+specifies Case → branch/open, Application → captures/start/jump/deliver/resume,
+Construct → checked object allocation, and Let → move/share/release. Compiler
+emission, dynamic recursive activation allocation and attempt operand transport
+remain next-increment obligations; no `src/` semantics changed. The record gate
+compares independent Bend Bun/native and Python models, not source-generated
+Knot Wasm. The next source capability still needs seed ⇔ Knot evaluator ⇔ Knot
+Wasm ⇔ actual-device conformance.

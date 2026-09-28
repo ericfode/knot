@@ -62,6 +62,11 @@ GATES = (
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('gpu-2', ('python3', 'research/adaptive-tasks/runtime2/check.py', '--cpu-only',
+                   '--receipt', 'research/adaptive-tasks/runtime2/receipts/cpu.json'),
+         ('research/adaptive-tasks/runtime2/receipts/cpu.json',
+          'research/adaptive-tasks/runtime2/receipts/observations.txt.gz',
+          'research/adaptive-tasks/runtime2/receipts/programs.txt')),
 )
 
 

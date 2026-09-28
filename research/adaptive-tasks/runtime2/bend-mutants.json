@@ -1,0 +1,50 @@
+[
+  {
+    "name": "capture-moved-twice",
+    "file": "store.bend",
+    "old": "P.put(U32,P.put(U32,captures,src,0),dst,id)",
+    "new": "P.put(U32,captures,dst,id)",
+    "witness": "move-once",
+    "law": "move_once"
+  },
+  {
+    "name": "skip-rc-decrement",
+    "file": "store.bend",
+    "old": "P.stored(state,P.Store{next,readers,freed,P.replace(objects,id,P.Object{id,kind,U32.sub(rc,1),tag,children}),captures,rest})",
+    "new": "P.stored(state,P.Store{next,readers,freed,P.replace(objects,id,P.Object{id,kind,rc,tag,children}),captures,rest})",
+    "witness": "shared-tree-release",
+    "law": "decrement_keeps_alias"
+  },
+  {
+    "name": "double-release",
+    "file": "store.bend",
+    "old": "P.append(U32,rest,children)",
+    "new": "P.append(U32,P.append(U32,rest,children),children)",
+    "witness": "reader-suspended-cleanup",
+    "law": "cleanup_retains_work"
+  },
+  {
+    "name": "stale-attempt-accepted",
+    "file": "scheduler.bend",
+    "old": "Bool.and(U32.is_eq(current,attempt),Bool.and(U32.is_eq(phase,1),",
+    "new": "Bool.and(True{},Bool.and(U32.is_eq(phase,1),",
+    "witness": "cancel-stale-replace",
+    "law": "stale_preserves_source"
+  },
+  {
+    "name": "nary-completion-twice",
+    "file": "scheduler.bend",
+    "old": "U32.add(completions,Bool.pick(U32,U32.is_eq(U32.add(received,1),arity),1,0))",
+    "new": "U32.add(completions,Bool.pick(U32,U32.is_eq(U32.add(received,1),arity),Bool.pick(U32,U32.is_eq(arity,3),2,1),0))",
+    "witness": "nary-once",
+    "law": "nary_once"
+  },
+  {
+    "name": "offset-wrap",
+    "file": "model.bend",
+    "old": "U32.is_le(count,U32.div(U32.sub(limit,base),stride))",
+    "new": "True{}",
+    "witness": "offset-no-wrap",
+    "law": "span_overflow_preserves"
+  }
+]

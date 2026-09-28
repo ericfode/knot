@@ -460,3 +460,37 @@ Qualify that distinction with rejection retaining the incoming owner, then
 right-before-left noncommutative delivery and n-ary completion exactly once.
 R3/R7 remain necessary for reusable captures and suspended/join roots; scalar
 payloads and generation checks cannot stand in for their lifetime evidence.
+
+## GPU record revision 2 checkpoint (gpu-2, 2026-09-27)
+
+Campaign D10 adopts unique Type plus counted immutable Data. The new
+[`knot-device-records-2` runtime](../research/adaptive-tasks/runtime2/README.md)
+implements that policy in a serial generic WGSL record interpreter, independent
+Bend store/scheduler/driver models, and an independent Python graph reference.
+It preserves the earlier runtime and 38-case probe. CPU acceptance and shader
+validation are fresh; Metal acceptance remains with the coordinator.
+
+| Requirement | New evidence | Remaining acceptance |
+|---|---|---|
+| R3 | Counted Data records with RC outside `[tag][live slots]`; shared trees/lists, duplicate-edge shared opening, mixed Type/Data rebuilds; acquire overflow preserves every owner. | Real-device refinement and source-emitted lifetime decisions. |
+| R4 | Reuse physical object slots while never reissuing bundle-local identities; checked count/stride/offset arithmetic and explicit identity exhaustion. | Cross-bundle/restore issuance and portable external locators are not added; runtime-1 retains its own locator qualification. |
+| R5 | Owned capture arrays; explicit attempt/cancel/replace; stale delivery retains its source; right 9 before left 7 yields ordered 709; zero/three/64-way joins and repeated completion/resume controls. | Metal replay, emitted activation allocation and dynamic attempt operand transport. |
+| R6 | Single owning writer with separate execute/publish dispatches, bounded PC/quantum and retained captures. Storage counts 1/2/64/4096 plus refusal after full; all table layouts checked to adapter limits. | Parallel frontier/multi-workgroup scheduling; this revision makes no speed claim. |
+| R7 | Explicit resumable pending stack, budget 0/1 controls, cancellation cleanup and reader barrier; physical storage reused after release. | Actual reader-safe Metal execution and source compiler integration; undersized work storage remains explicit Exhausted. |
+
+The complete proof entry checks 28 filled model laws. Thirty-five fixture traces
+cover 4,464 transitions with 308 complete snapshots; seven programs add 29 complete
+round snapshots. Seed Bun/native agree with the independent host model, and six
+type-correct Bend semantic mutants are killed. Null-backend validation builds
+eleven shader variants/thirty-three pipelines; all ten WGSL mutant kills are unrun.
+These are finite differential and algebraic-model results, not a general runtime
+or GPU memory-model theorem.
+
+The [compiler interface](../research/adaptive-tasks/runtime2/INTERFACE.md) maps
+Case, Application, Construct and Let to the exact record operations. There is
+one active PC and immediate capture/join/attempt operands. No source compiler
+profile was widened and no source-to-device claim is made. The next increment
+must qualify its activation/attempt transport and emit a bounded source fixture
+through this validator, then compare seed, Knot evaluator, Knot Wasm and Metal.
+Live Perch remains coordinator work: all five axes are unrated and offline
+preflight reports 24 truncated declaration contexts, not a style pass.
