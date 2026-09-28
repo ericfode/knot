@@ -9,7 +9,7 @@ changes the seed oracle or weakens an existing compiler gate.
 | --- | --- | --- | --- |
 | Algebra and reading | 17 | `src/literal-PROOF.bend` | Division/remainder by zero; wide left/right shifts with explicit `n >= 32` evidence; inhabited boundary 32; String append order, length count and a length-mismatch inequality through the accumulator traversals; an escape before `{` stays an escape; surrogate and scalar sequences; decimal maximum/overflow; full-bit signed LEB; NUL; legacy literal capability boundary |
 | Core source machine | 6 | `src/literal-core-PROOF.bend` | Nat literal starts unary materialization; one successor cell; intrinsic argument state; default selection and scope; one String cell |
-| Pattern matrix | 6 | `src/literal-matrix-PROOF.bend` | Zero/one offset, Nat/String constructor expansion, stable distinct numeric test order, and a promoted alias promoting only its own column |
+| Pattern matrix | 5 | `src/literal-matrix-PROOF.bend` | Zero/one offset, Nat/String constructor expansion and stable distinct numeric test order |
 
 Every declaration is a `law` with a filled implementation in its complete proof
 entry. The wide-shift proofs use congruence over the guard's Bool decision. The
@@ -22,9 +22,9 @@ The law subjects are the actual reader, primitive evaluator, source transition
 and matrix helpers. The gate runs each complete proof entry with the pinned
 seed and requires exactly `All terms check.`. Existing complete frontend,
 checker, runtime, catalog, fields, recursion, Base and loader proof entries
-remain exercised by their unchanged campaign gates. The checker entry
-(`src/check-PROOF.bend`) gains two rebuild laws: a promoted refined value is
-rebuilt with no field uses, and an affine one keeps them.
+remain exercised by their unchanged campaign gates. The round-3 column
+promotion has no law: the literal-patterns group is at 47968 of its 48000
+composition bytes. Three frozen books and a mutant pin it instead.
 
 These laws do not prove the whole parser/checker/emitter correct, the Wasm
 interpreter equivalent to the source evaluator, memory separation for all
@@ -39,8 +39,8 @@ The gate compares seed results to the source evaluator and to emitted Wasm in
 both compiler lanes, then kills signed-compare, trapping-divide, masked-shift,
 merged-surrogates, offset-off-by-one, spaced-offset, invalid-u32-constructor,
 append-reversed, inferred-let-literal, kept-zero-offset,
-internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape,
-affine-promoted-rebuild and affine-promoted-column mutants. Mutants retain types and must produce the
+internal-literal-scrutinee, unsupported-literal-pattern, broad-unicode-escape
+and unlifted-promoted-column mutants. Mutants retain types and must produce the
 designated runtime disagreement or classification change; a broken compiler or
 incomplete observation is not a successful mutation test. A deliberately false
 `append_order` (expecting `[97,99,98]`) is rejected by the proof entry.

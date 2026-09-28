@@ -6,4 +6,3 @@ def L.offset_successor(token,tail): {==}
 def L.natural_successor(token): {==}
 def L.string_successor(token): {==}
 def L.word_order(token,body): {==}
-def L.promoted_alias_promotes_its_column(token): {==}

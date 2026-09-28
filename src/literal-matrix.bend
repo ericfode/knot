@@ -84,6 +84,19 @@ def variable(node: S.Node) -> Bool:
     case S.Promotion{token}: True{}
     case _: False{}
 
+def promoted(rows: List<&2,Row>) -> Bool:
+  match rows:
+    case Con{Row{Con{S.Promotion{token},patterns},body,aliases},tail}: True{}
+    case Con{row,tail}: promoted(tail)
+    case Nil{}: False{}
+
+# As in the seed, one `+` row promotes its column in every row.
+def promote(bindings: List<&2,C.Binding>, +level: U32, +up: Bool) -> List<&2,C.Binding>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,+id,q,typ,param,known},tail}:
+      Con{C.Binding{token,id,Bool.pick(U32,Bool.and(up,U32.is_eq(id,level)),2,q),typ,param,known},promote(tail,level,up)}
+
 def all_variables(rows: List<&2,Row>) -> Bool:
   match rows:
     case Nil{}: True{}
@@ -141,17 +154,9 @@ def renamed(value: C.Binding, token: S.Token, q: U32) -> C.Binding:
   match value:
     case C.Binding{name,level,old,typ,param,known}: C.Binding{token,level,q,typ,param,known}
 
-# A leaf's column takes its alias's quantity: the seed's `+x` promotes its scrutinee.
-def promote(bindings: List<&2,C.Binding>, +level: U32, +q: U32) -> List<&2,C.Binding>:
-  match bindings:
-    case Nil{}: Nil{}
-    case Con{C.Binding{token,+id,old,type_id,param,known},tail}:
-      Con{C.Binding{token,id,Bool.pick(U32,U32.is_eq(id,level),q,old),type_id,param,known},promote(tail,level,q)}
-
 def alias_scope(binding: C.Binding, scope: E.Scope) -> Result<S.Error,E.Scope>:
-  match binding scope:
-    case C.Binding{name,+level,+q,typ,param,known} E.Scope{bindings,next,open,live,smaller}:
-      Done{E.Scope{Con{C.Binding{name,level,q,typ,param,known},promote(bindings,level,q)},next,open,live,smaller}}
+  match scope:
+    case E.Scope{bindings,next,open,live,smaller}: Done{E.Scope{Con{binding,bindings},next,open,live,smaller}}
 
 def aliases(names: List<&2,Alias>, +scope: E.Scope) -> Result<S.Error,E.Scope>:
   match names scope:
@@ -207,15 +212,18 @@ def run(fuel: Nat, mode: Mode, +types: List<&2,C.Datatype>, +scope: E.Scope) -> 
     case 0n _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+n Rows{Nil{},columns} _: Fail{S.Invalid{"check","missing-arm",S.At{0,0,0,0}}}
     case 1n+n Rows{rows,Nil{}} _: run(n,Leaves{rows},types,scope)
-    case 1n+ +n Rows{rows,Con{+column,+columns}} _:
-      S.bind(List<&2,Row>,Plan,normalized(rows,types,type_id(column),n),+values =>
+    case 1n+ +n Rows{rows,Con{+head,+columns}} E.Scope{bindings,depth,open,live,smaller}:
+      S.bind(List<&2,Row>,Plan,normalized(rows,types,type_id(head),n),+values =>
+        +lifted = promote(bindings,level(head),promoted(values))
+        +scope : E.Scope = E.Scope{lifted,depth,open,live,smaller}
+        S.bind(C.Binding,Plan,E.find_level(lifted,level(head)),+column =>
         S.choose(Result<S.Error,Plan>,all_variables(values),u =>
           run(n,Rows{drop_column(values,column),columns},types,scope),u =>
         S.choose(Result<S.Error,Plan>,Bool.or(L.is_kind(types,type_id(column),0),L.is_kind(types,type_id(column),2)),u =>
           S.bind(Plan,Plan,run(n,Words{values,column,columns,words(values,Nil{})},types,scope),v => case_term(v,column)),u =>
           S.bind(C.Datatype,Plan,G.type_at(types,type_id(column)),definition =>
             datatype(definition,ctors => S.bind(Plan,Plan,
-              run(n,Constructors{values,column,columns,ctors,0},types,scope),v => case_term(v,column)))))))
+              run(n,Constructors{values,column,columns,ctors,0},types,scope),v => case_term(v,column))))))))
     case 1n+ +n Constructors{rows,column,columns,Nil{},tag} _:
       Done{MArms{Nil{}}}
     case 1n+ +n Constructors{+rows,+column,+columns,Con{C.Constructor{+name,+params},+ctors},+tag} E.Scope{bindings,+next,open,live,smaller}:

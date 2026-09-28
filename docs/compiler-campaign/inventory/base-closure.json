@@ -11748,24 +11748,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.promoted",
-            "file": "src/check.bend",
-            "via": "src/check.variable",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.pick",
-              "List",
-              "Result",
-              "U32",
-              "U32.is_eq",
-              "src/core.Checked",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -11891,15 +11873,13 @@
             "dependencies": [
               "Maybe",
               "Result",
-              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
+              "src/syntax.Token"
             ],
             "dynamic_calls": [
               "next"
@@ -14010,7 +13990,6 @@
               "List",
               "Result",
               "src/core.Binding",
-              "src/literal-matrix.promote",
               "src/scope.Scope",
               "src/syntax.Error"
             ],
@@ -14455,16 +14434,33 @@
           {
             "key": "src/literal-matrix.promote",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.alias_scope",
+            "via": "src/literal-matrix.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "Bool.pick",
               "List",
               "U32",
               "U32.is_eq",
               "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-matrix.promoted",
+            "file": "src/literal-matrix.bend",
+            "via": "src/literal-matrix.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/literal-matrix.Row",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -14560,6 +14556,8 @@
               "src/literal-matrix.level",
               "src/literal-matrix.normalized",
               "src/literal-matrix.opened",
+              "src/literal-matrix.promote",
+              "src/literal-matrix.promoted",
               "src/literal-matrix.specialize",
               "src/literal-matrix.specialize_word",
               "src/literal-matrix.type_id",
@@ -14568,6 +14566,7 @@
               "src/patterns.open_fields",
               "src/scope.Scope",
               "src/scope.branch",
+              "src/scope.find_level",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.bind",
@@ -25845,24 +25844,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.promoted",
-            "file": "src/check.bend",
-            "via": "src/check.variable",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.pick",
-              "List",
-              "Result",
-              "U32",
-              "U32.is_eq",
-              "src/core.Checked",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -25988,15 +25969,13 @@
             "dependencies": [
               "Maybe",
               "Result",
-              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
+              "src/syntax.Token"
             ],
             "dynamic_calls": [
               "next"
@@ -28107,7 +28086,6 @@
               "List",
               "Result",
               "src/core.Binding",
-              "src/literal-matrix.promote",
               "src/scope.Scope",
               "src/syntax.Error"
             ],
@@ -28552,16 +28530,33 @@
           {
             "key": "src/literal-matrix.promote",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.alias_scope",
+            "via": "src/literal-matrix.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "Bool.pick",
               "List",
               "U32",
               "U32.is_eq",
               "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-matrix.promoted",
+            "file": "src/literal-matrix.bend",
+            "via": "src/literal-matrix.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/literal-matrix.Row",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -28657,6 +28652,8 @@
               "src/literal-matrix.level",
               "src/literal-matrix.normalized",
               "src/literal-matrix.opened",
+              "src/literal-matrix.promote",
+              "src/literal-matrix.promoted",
               "src/literal-matrix.specialize",
               "src/literal-matrix.specialize_word",
               "src/literal-matrix.type_id",
@@ -28665,6 +28662,7 @@
               "src/patterns.open_fields",
               "src/scope.Scope",
               "src/scope.branch",
+              "src/scope.find_level",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.bind",
@@ -38714,19 +38712,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.promoted",
-            "file": "src/check.bend",
-            "via": "src/check.variable",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.pick",
-              "U32.is_eq"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -38816,9 +38801,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/check.promoted",
-              "src/scope.reference",
-              "src/syntax.bind"
+              "src/scope.reference"
             ],
             "dynamic_calls": [
               "next"
@@ -40195,9 +40178,7 @@
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
-            "dependencies": [
-              "src/literal-matrix.promote"
-            ],
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -40480,14 +40461,25 @@
           {
             "key": "src/literal-matrix.promote",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.alias_scope",
+            "via": "src/literal-matrix.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool.and",
               "Bool.pick",
               "U32.is_eq"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-matrix.promoted",
+            "file": "src/literal-matrix.bend",
+            "via": "src/literal-matrix.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -40547,6 +40539,8 @@
               "src/literal-matrix.level",
               "src/literal-matrix.normalized",
               "src/literal-matrix.opened",
+              "src/literal-matrix.promote",
+              "src/literal-matrix.promoted",
               "src/literal-matrix.specialize",
               "src/literal-matrix.specialize_word",
               "src/literal-matrix.type_id",
@@ -40554,6 +40548,7 @@
               "src/literal-types.is_kind",
               "src/patterns.open_fields",
               "src/scope.branch",
+              "src/scope.find_level",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -49615,24 +49610,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.promoted",
-            "file": "src/check.bend",
-            "via": "src/check.variable",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool.pick",
-              "List",
-              "Result",
-              "U32",
-              "U32.is_eq",
-              "src/core.Checked",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -49760,15 +49737,13 @@
             "dependencies": [
               "Maybe",
               "Result",
-              "src/check.promoted",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Term",
               "src/scope.Scope",
               "src/scope.reference",
               "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
+              "src/syntax.Token"
             ],
             "dynamic_calls": [
               "next"
@@ -51856,7 +51831,6 @@
               "List",
               "Result",
               "src/core.Binding",
-              "src/literal-matrix.promote",
               "src/scope.Scope",
               "src/syntax.Error"
             ],
@@ -52293,16 +52267,33 @@
           {
             "key": "src/literal-matrix.promote",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.alias_scope",
+            "via": "src/literal-matrix.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "Bool.and",
               "Bool.pick",
               "List",
               "U32",
               "U32.is_eq",
               "src/core.Binding"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-matrix.promoted",
+            "file": "src/literal-matrix.bend",
+            "via": "src/literal-matrix.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "src/literal-matrix.Row",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -52397,6 +52388,8 @@
               "src/literal-matrix.level",
               "src/literal-matrix.normalized",
               "src/literal-matrix.opened",
+              "src/literal-matrix.promote",
+              "src/literal-matrix.promoted",
               "src/literal-matrix.specialize",
               "src/literal-matrix.specialize_word",
               "src/literal-matrix.type_id",
@@ -52406,6 +52399,7 @@
               "src/patterns.open_fields",
               "src/scope.Scope",
               "src/scope.branch",
+              "src/scope.find_level",
               "src/syntax.At",
               "src/syntax.Error",
               "src/syntax.bind",

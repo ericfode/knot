@@ -12,10 +12,6 @@ def L.erased_occurrence_preserves_identity(token,level,type_id):
   {==}
 def L.refined_constructor_is_fresh(token,type_id,tag):
   {==}
-def L.promoted_rebuild_is_fresh(term,type_id,uses):
-  {==}
-def L.affine_rebuild_keeps_uses(term,type_id,uses):
-  {==}
 def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):

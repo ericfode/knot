@@ -63,15 +63,10 @@ def constructor(+reference: G.ConstructorRef, +args: List<&2,S.Node>, +token: S.
       S.choose(Result<S.Error,C.Checked>,Nat.is_eq(List.length(&2,S.Node,args),List.length(&2,C.Parameter,params)),u =>
         S.bind(C.Checked,C.Checked,next(Unit{}),value => constructor_result(reference,token,wanted,params,value)),u => C.invalid(C.Checked,"constructor-arity",token))
 
-# A promoted binding copies its refined value, so rebuilding it consumes no field.
-def promoted(+q: U32, value: C.Checked) -> Result<S.Error,C.Checked>:
-  match value:
-    case C.Checked{term,type_id,uses}: Done{C.Checked{term,type_id,Bool.pick(List<&2,U32>,U32.is_eq(q,2),Nil{},uses)}}
-
 def variable(+binding: C.Binding, +token: S.Token, +scope: E.Scope, next: C.Term -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match binding:
     case C.Binding{name,level,q,type_id,param,Some{C.Construct{origin,typ,tag,params,args}}}:
-      S.bind(C.Checked,C.Checked,next(C.Construct{origin,typ,tag,params,args}),value => promoted(q,value))
+      next(C.Construct{origin,typ,tag,params,args})
     case _: E.reference(binding,token,scope)
 
 def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
