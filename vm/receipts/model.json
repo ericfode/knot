@@ -1,13 +1,13 @@
 {
  "gate": "vm-model",
- "date": "2026-09-28T15:01:12+00:00",
+ "date": "2026-09-28T16:10:02+00:00",
  "status": "passed",
  "sources": {
   "model/word.bend": "a8c68780225f05f11ddb2ba8b94ca3e0d0c18e9b888cab6d9ebb1b74e91ef6fc",
   "model/decode.bend": "be532fa946a7b028ab49d4b7feb7cbb318f6ebedcdc96c510aec4ba9460ecda9",
   "model/validate.bend": "5dd4dde9b94404ee85b2bcebf9de1d87649000045af91ea34d3caecf120c0ce8",
   "model/encode.bend": "fc63bc38f60bce9d2193e7dd4602defd0905c0aab2fb5d7a7c8e0f3f605514f3",
-  "model/memory.bend": "38d81506f9dad12968b14ec5cdf93e48da4644983aaefb1770d2ee4e232df137",
+  "model/memory.bend": "288c3bbefe6cf5d5b90ad12159de774d2cbfb12b22e78fd37aa1597a6a1997af",
   "model/machine.bend": "35af9ab1c33c40d493f2b8a3d2d48964646c58ee6384db9e13bb2fabb26ffc00",
   "model/audit.bend": "e18ff95e1ae98dc8a6a4581453d891bfffcfdba6e1e6bc78198b2f0db3033947",
   "model-cli.bend": "a963b9568a1fb8658a42eb362b26d76dc1d1f71db531b28598166baacaea20d1",
@@ -593,8 +593,8 @@
  "admitted_kinds": {
   "plan": 6,
   "codes": 7,
-  "run": 23,
-  "model": 10
+  "run": 41,
+  "model": 11
  },
  "admitted": {
   "plan:case-none-parameter": {
@@ -741,6 +741,78 @@
    "outcome": "audit\tpassed\t8\tHostFailure\t1\t2",
    "calls": 2
   },
+  "run:inspect-chr": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:inspect-succ-object": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:inspect-succ-closure": {
+   "outcome": "audit\tpassed\t10\tHostFailure\t2\t2",
+   "calls": 2
+  },
+  "run:inspect-u32-to-nat": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-u32-from-nat": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-char-from-u32": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-char-to-u32": {
+   "outcome": "audit\tpassed\t14\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-append-b": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-append-char": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3",
+   "calls": 3
+  },
+  "run:inspect-length-char": {
+   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-reverse-char": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t4\t3",
+   "calls": 3
+  },
+  "run:inspect-is-empty": {
+   "outcome": "audit\tpassed\t17\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-eq-code": {
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-eq-a-ends": {
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-eq-b-ends": {
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t3",
+   "calls": 3
+  },
+  "run:inspect-halt-code": {
+   "outcome": "audit\tpassed\t18\tHostFailure\t3\t4",
+   "calls": 4
+  },
+  "run:inspect-halt-message": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t4",
+   "calls": 4
+  },
+  "run:inspect-print-after-surrogate": {
+   "outcome": "audit\tpassed\t21\tHostFailure\t3\t5",
+   "calls": 5
+  },
   "model:char-pick": {
    "outcome": "audit\tpassed\t9\tDescribed\t0\t2",
    "calls": 2
@@ -780,6 +852,10 @@
   "model:display-utf8-beyond-bound": {
    "outcome": "audit\tpassed\t3\tExhausted\t0\t1",
    "calls": 1
+  },
+  "model:inspect-append-b-whole": {
+   "outcome": "audit\tpassed\t22\tHostFailure\t4\t3",
+   "calls": 3
   }
  },
  "audit": {
@@ -1901,7 +1977,7 @@
     "goldens:nat-show",
     "goldens:recursion-tail"
    ],
-   "kills": 48,
+   "kills": 67,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -1951,7 +2027,7 @@
     "admitted:plan:key-arms-none",
     "admitted:codes:surrogate-pair"
    ],
-   "kills": 112,
+   "kills": 118,
    "law": "closure_captures_runs",
    "crashes": 0
   },
@@ -2124,11 +2200,12 @@
     "inspection:inspect-chr-used",
     "inspection:inspect-before-charge",
     "admitted:plan:case-none-parameter",
-    "admitted:plan:case-none-let"
+    "admitted:plan:case-none-let",
+    "admitted:run:inspect-chr"
    ],
-   "kills": 7,
+   "kills": 13,
    "law": null,
-   "crashes": 0
+   "crashes": 8
   },
   {
    "mutant": "char-tag",
@@ -2174,12 +2251,13 @@
    "breaks": "a target that stops the machine refunds its entry",
    "killed": true,
    "by": [
+    "admitted:run:inspect-print-after-surrogate",
     "audit:print-non-scalar",
     "audit:print-non-scalar-mid",
     "audit:print-non-scalar-wide",
     "audit:print-non-scalar-second"
    ],
-   "kills": 4,
+   "kills": 5,
    "law": null,
    "crashes": 0
   },
@@ -2230,7 +2308,7 @@
     "invocations:invoke-words:two 1000000 000000000001 0",
     "invocations:invoke-words:two 0001048576 1 0"
    ],
-   "kills": 144,
+   "kills": 163,
    "law": null,
    "crashes": 0
   },
@@ -2275,9 +2353,10 @@
    "killed": true,
    "by": [
     "inspection:inspect-chr-unused",
-    "inspection:inspect-chr-closure"
+    "inspection:inspect-chr-closure",
+    "admitted:run:inspect-chr"
    ],
-   "kills": 2,
+   "kills": 3,
    "law": "chr_inspects_its_operand",
    "crashes": 0
   },
@@ -2428,6 +2507,17 @@
    "killed": true,
    "by": [
     "connectives:base"
+   ],
+   "kills": 1,
+   "law": null,
+   "crashes": 0
+  },
+  {
+   "mutant": "append-b-shallow",
+   "breaks": "append reads only the head of the b it moves",
+   "killed": true,
+   "by": [
+    "admitted:model:inspect-append-b-whole"
    ],
    "kills": 1,
    "law": null,

@@ -936,9 +936,11 @@ def kills(base: dict, mutant: dict) -> list:
 
 
 def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> list:
+    trees = {name: build_tree(f'mutants/{name}', section, mutation) for name, section, mutation, _ in MUTANTS}
+
     def one(entry):
         name, section, mutation, meaning = entry
-        tree = build_tree(f'mutants/{name}', section, mutation)
+        tree = trees[name]
         # vm/model-lanes.bend imports word.bend alone: only a word mutant can change it.
         bins = built(tree, ('model', 'audit', 'lanes') if section == 'word' else ('model', 'audit'))
         observed = {'goldens': golden_runs(bins['model'], expected),
@@ -951,15 +953,21 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
                     'admitted': admitted_runs(bins['model'], bins['audit'], admitted),
                     'arguments': argument_runs(bins['model'], bins['audit']),
                     'audit': audit_runs(bins['audit'], expected)}
-        killed = kills(base, observed)
-        law = law_kill(tree) if name in LAW_MUTANTS else None
-        require(name not in LAW_MUTANTS or law, f'mutant {name}: PROOF.bend did not fail at a law')
         crashes = [f'{c}:{n}' for c, rows in observed.items() for n, r in rows.items()
                    if not r['agrees'] and not well_formed(r['result'])]
-        return {'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
-                'kills': len(killed), 'law': law, 'crashes': len(crashes)}
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        return list(pool.map(one, MUTANTS))
+        return kills(base, observed), crashes
+    # PROOF.bend runs single-threaded for minutes, so the law kills run beside the
+    # observations instead of after each one.
+    with ThreadPoolExecutor(max_workers=3) as proofs, ThreadPoolExecutor(max_workers=3) as pool:
+        proving = {name: proofs.submit(law_kill, trees[name]) for name in LAW_MUTANTS}
+        observed = list(pool.map(one, MUTANTS))
+        laws = {name: future.result() for name, future in proving.items()}
+    out = []
+    for (name, section, mutation, meaning), (killed, crashes) in zip(MUTANTS, observed):
+        require(name not in LAW_MUTANTS or laws[name], f'mutant {name}: PROOF.bend did not fail at a law')
+        out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
+                    'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes)})
+    return out
 
 
 # ------------------------------------------------------------------ main
