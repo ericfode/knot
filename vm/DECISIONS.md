@@ -381,7 +381,7 @@ follows it (§5, §10, §11) without a new image header word.
    that performs effects, performs them wherever an Action meets its continuation, even
    inside a pure argument of `main`. `evaluate.py` gains `Machine.entry`, and `effect`
    refuses before it reads an operand; `evaluate.book` no longer runs the effect.
-   Thirteen effect controls (`effect_controls`, frozen before the change) rebuild the
+   Fourteen effect controls (`effect_controls`, frozen before the change) rebuild the
    reviewers' probes on foreign-print's types: `book-print`,
    `book-print-continuation-call` and `book-print-twice` (bookio-1, bk-print and
    bookio-2) and `book-print-non-scalar` (bookio-nonscalar) stop `Unsupported vm effect`
@@ -437,32 +437,32 @@ follows it (§5, §10, §11) without a new image header word.
 24. **A Halt's message is an outgoing String (D20).** vm-core refuses a Halt whose
    message holds a non-scalar Char as `HostFailure io abi` before `die`, but
    `evaluate.program` returned the Halt with its codes, and nothing in §8 or §10 said
-   which was right (CORE.md, findings for the spec owner). §8's phase 3 and §10 now
-   call the message an outgoing String: the code and then the whole message are
-   inspected (§6), a message holding a non-scalar Char is refused as `HostFailure io
-   abi` before `die`, with `w` still owned and nothing written, and otherwise the VM
-   converts it, drops `w` and calls `die`. `evaluate.program` shares `outgoing` with
-   `IO.print`. `halt-surrogate` freezes the refusal after 3 calls (main, the erased `R`,
-   `k`'s closure), and two inspection controls freeze its order, a surrogate then
-   `id(λ)` and `id(λ)` for the code beside a surrogate message, each `ill-typed` after
-   4. The three mutants that skip the check, make it while reading, or make it before
-   the code die by them, each by its own control. The success path, a Halt that dies
-   with its code and message, is still unwitnessed: it needs the host's `die`, so
-   vm-io owns it.
-
+   which was right (CORE.md, findings for the spec owner). §8's phase 3 and §10 now call
+   the message an outgoing String: the code and then the whole message are inspected
+   (§6), a message holding a non-scalar Char is refused as `HostFailure io abi` before
+   `die`, with `w` still owned and nothing written, and otherwise the VM converts it,
+   drops `w` and calls `die`. `evaluate.program` shares `outgoing` with `IO.print`.
+   `halt-surrogate` freezes the refusal after 3 calls (main, the erased `R`, `k`'s
+   closure), and two inspection controls freeze its order, a surrogate then `id(λ)` and
+   `id(λ)` for the code beside a surrogate message, each `ill-typed` after 4. The
+   success side is frozen too, at the level of values that the reference evaluation
+   works at: `halt-scalar`, a Halt of code 1 whose message is `x` and U+1F600, ends with
+   `halt` 1 and that `message` after the same 3 calls, so a `die` that refused every
+   message, or every one above ASCII, differs. (The host's `die`, exit `code mod 256`
+   with the message and LF on stderr, is IO-ABI.md's; vm-io owns it through the real
+   host.) Five evaluator mutants (the check skipped, made while the message is read,
+   made before the code, and the two refusals above) die by them, each by its own
+   control. The frozen run has `halt` and `message` keys, a shape no earlier control
+   has; the harnesses that read `cs.run_controls` must map it to `die` (below).
 25. **A Book may have an unavailable core, and a Char has a tags-mode golden.**
    The round-8 hand-off left two shapes witnessed only by the codec and the model's
    agreement with `evaluate.py`: a tags-mode Case on Char (`case Chr{x}`, §3, whose
    `Chr` row binds the Char's own word) and S's Case on a List's `none`-typed head
    (`list-head-match`, whose plan was an admitted control). The seed runs both
-   (`True{}`, on its Bun and native lanes), and both pinned heads decline: `Unsupported
-   check char-constructor-pattern` and `Unsupported parse parameter-type`, exit 3
-   (DECISIONS finding 4; literals head, owner literals). They are now goldens, and the
+   (`True{}`, on its Bun and native lanes). The literals head, these goldens' lane, declines both with its `check-cli` and its `eval-cli`, exit 3: `Unsupported check char-constructor-pattern` and `Unsupported parse parameter-type` (finding 4; owner literals). The closures head answers otherwise (`Unsupported lex literal`, `Unsupported parse declaration-form`) and is not consulted. They are now goldens, and the
    gate meets them without excusing Unsupported, which §11 and D4 forbid. A Book may
    lack a checked core, as a Program already does, only where its literal review
-   declares the exact line in plan.json (`unavailable`, before observation); the
-   gate requires both heads to print it. A head that prints a core, another line,
-   another failure or no declaration is refused, and the expectation is the seed's
+   declares the exact line in plan.json (`unavailable`, before observation); the gate requires the lane's two CLIs to print it. A CLI that prints a core, another line, another failure or no declaration is refused, and the expectation is the seed's
    value with `eval_lane` `Unsupported` and `eval_unavailable` the declared line,
    basis `seed`, never agreement. Five expectation controls (an undeclared line,
    a declaration where eval-cli agrees, another line, a Program, an Invalid Book
@@ -487,31 +487,30 @@ follows it (§5, §10, §11) without a new image header word.
    `True{}`. It parses as `Unsupported` on the main-line parser (a `declaration-form`),
    never `Invalid`.
 
-
 ## What vm-model and vm-core must now follow (round 9)
 
 Each item names the SPEC text and the controls that freeze it; `check-spec.py`'s
 `run_controls`, `plan_controls` and goldens are the shared harness, so merging this
 branch brings all of them.
 
-1. **D22 (§7 step 2, §8, §10; entry 21).** Under a Book entry `Enter(Action, [k])`
-   stops `Unsupported vm effect` after its debit, before any operand is read,
-   inspected or checked for D20, before the foreign id is checked and before any host
-   call, for every foreign (`book-args`). Building an Action, dropping it and
-   applying it to its erased `R` stay free, and the Program entry is unchanged
-   (`program-print-in-value`, 11 calls, `x\nt\n`). Controls: `book-print`,
-   `book-print-continuation-call`, `book-print-twice`, `book-print-non-scalar` and
-   `book-args` (4 calls), `book-print-ill-typed` (5), `book-continuation-called` (3),
-   `book-action-dropped` (2) and `book-action-erased` (3); `book-print` at fuel 4 is
-   refused and at fuel 3 stops `Exhausted` kind 1 after 3 (`fuel-book-effect-exact`,
-   `fuel-book-effect-short`). vm-model performs the print
-   under a Book today and names a foreign that is not IO.print `Unsupported vm foreign
-   N` at the Action's application; both change, D22 first for every foreign. vm-core
-   refuses every foreign id but IO.print at load (CORE.md choice 2), so `book-args` is
-   refused before any entry today: a Book image with another foreign must load and stop
-   at the effect step with D22's cause, and the load-time refusal stays for Program
-   images until vm-io. Its Action branch in `$enter` performs the effect through
-   `$perform`; the Book guard goes before it, after `$debit`.
+1. **D22 (§7 step 2, §8, §10; entry 21).** Under a Book entry `Enter(Action, [k])` stops
+   `Unsupported vm effect` after its debit, before any operand is read, inspected or
+   checked for D20, before the foreign id is checked and before any host call, for every
+   foreign (`book-args`). Building an Action, dropping it and applying it to its erased
+   `R` stay free, and the Program entry is unchanged (`program-print-in-value`, 11
+   calls, `x\nt\n`). Controls: `book-print`, `book-print-continuation-call`,
+   `book-print-twice`, `book-print-non-scalar` and `book-args` (4 calls),
+   `book-print-ill-typed` (5), `book-continuation-called` (3), `book-action-dropped` (2)
+   and `book-action-erased` (3); `book-print` at fuel 4 is refused and at fuel 3 stops
+   `Exhausted` kind 1 after 3 (`fuel-book-effect-exact`, `fuel-book-effect-short`).
+   vm-model performs the print under a Book today and names a foreign that is not
+   IO.print `Unsupported vm foreign N` at the Action's application; both change, D22
+   first for every foreign. vm-core refuses every foreign id but IO.print at load
+   (CORE.md choice 2), so `book-args` is refused before any entry today: a Book image
+   with another foreign must load and stop at the effect step with D22's cause, and the
+   load-time refusal stays for Program images until vm-io. Its Action branch in `$enter`
+   performs the effect through `$perform`; the Book guard goes before it, after
+   `$debit`.
 2. **The debit stands (§7; entry 22).** A step 2 or 3 stop keeps step 1's debit: compare
    `calls` at every stop. The D20 rows of vm-expected.json now carry `calls` (4, 4, 4
    and 13). vm-core records each golden's `calls` but compares none to a frozen value
@@ -523,15 +522,22 @@ branch brings all of them.
    `w` dropped and `die` called (vm-core's choice 9 order is now normative). vm-core
    already refuses; vm-model's `Died` path does not. Controls: `halt-surrogate` (3
    calls), `inspect-halt-after-surrogate` and `inspect-halt-code-first` (`ill-typed`
-   after 4).
+   after 4), and `halt-scalar`, a Halt of code 1 and message `x` and U+1F600 that ends
+   `halt` 1 with that `message` after 3, so a `die` that refuses every message, or every
+   one above ASCII, differs. `halt-scalar`'s frozen run has neither `exit` nor
+   `outcome`, only `halt` and `message`: vm-core's run-control branch (`want = ... if
+   'exit' in run else expected_run(run)`) and vm-model's `agrees` read one or the other,
+   so both must map it to the host's `die` (exit `halt mod 256`, the message and LF on
+   stderr, IO-ABI.md).
 4. **A key may be 0xffffffff (§2, §3; entry 23).** `key-max` and `char-key-max` take the
-   key Branch, `key-max-miss` the Default, each after 2 calls (vm-model already has
-   its own controls).
+   key Branch, `key-max-miss` the Default, each after 2 calls (vm-model already has its
+   own controls).
 5. **Three new goldens (§11; entries 25 and 26).** `chr-pattern` (a tags-mode Case on
    Char, immediate and Big), `list-head-match` and `nat-transitions`, each owing the
    seed's `Evaluated 0 1 True{}`. Their vm-expected.json rows carry `eval_unavailable`
    or `eval_bound` beside `basis` `seed`; harnesses that read rows by key are
-   unaffected. The counts are 96 goldens and 59 run controls.
+   unaffected. The counts are 96 goldens and 60 run controls, which vm-core's gate reads
+   from SPEC §12.
 
 ## Findings that need an owner
 
@@ -559,8 +565,7 @@ branch brings all of them.
    E2E-2 today, not an A2(S) cost basis.
 4. **No Char constructor pattern.** Knot reports `Unsupported check
    char-constructor-pattern` for `case Chr{x}`. Tag dispatch on Char (§3) has its
-   golden, `chr-pattern` (entry 25), which the seed runs and both heads decline; the
-   gap stays open. Owner: literals.
+   golden, `chr-pattern` (entry 25), which the seed runs and the literals head declines; the gap stays open. Owner: literals.
 5. **The main-line parser classifies six closure goldens Invalid.** The tree's
    own `src/parse-cli.bend` (before closures merges) reports
    `Invalid parse expected-=` for the arrow-typed lets in `closure-capture-off`,

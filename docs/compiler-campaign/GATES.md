@@ -76,15 +76,15 @@ exists. It builds the pinned literals and closures heads' `eval-cli` and
 and eval-cli on 96 golden sources, and requires the frozen observations byte for
 byte. It checks each committed image against its hand-written plan, the
 reference codec and an independent reading of Knot's checked core display, save
-two Book goldens whose pinned heads answer Unsupported and whose review declares
-the line. It also checks the frozen VM expectation table; 71 refused image controls,
+two Book goldens whose lane's head (the literals one) answers Unsupported and
+whose review declares the line. It also checks the frozen VM expectation table; 71 refused image controls,
 nine of them on either side of the resource limits that are `Exhausted` kind 2; 27
 expectation, seven invocation, two seed-display, three display-lane and two bench
 controls; two excused eval-bound controls; six admitted plan controls, one admitted
-limit control, seven admitted code-list controls and 59 run controls with their frozen
+limit control, seven admitted code-list controls and 60 run controls with their frozen
 fuel, calls and outcomes (among them the D22 refusal of an effect under a Book entry
 and D20 on a Halt's message); nine describe-domain controls; 13 argument controls;
-the lowering of two hand-written displays; 70 codec, 4 source, 55 evaluator and ten
+the lowering of two hand-written displays; 70 codec, 4 source, 57 evaluator and ten
 rule mutants of `check-spec.py` itself; and the bench freeze: sources, guards, outputs and the seed-native
 measurements pinned by digest in `vm/bench/workloads.json`. It writes only
 `vm/receipts/spec.json`. `vm/SPEC.md` section 12 lists each control.

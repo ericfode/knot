@@ -1510,7 +1510,10 @@ def effect_controls(plans: dict) -> list:
       own print: main, IO.print, R, the Action (writes `x`), k, got, say, IO.print, R, the
       Action (writes `t`) and the terminal continuation are 11 entries.
     - A Halt's message is an outgoing String (D20): a lone surrogate in it stops the run as
-      `HostFailure io abi` before `die`, at the third entry (main, R, k's closure)."""
+      `HostFailure io abi` before `die`, at the third entry (main, R, k's closure). A scalar one,
+      `x` and U+1F600, reaches `die` after the same 3 entries, so the run ends with `halt` 1 and
+      that `message`, which the reference evaluation reports as values; a `die` that refused every
+      message, or every one above ASCII, would differ."""
     fp, flag = plans['foreign-print'], plans['value-on']['types'][0]
     types = [*fp['types'], flag, {'kind': 'arrow', 'domain': 8, 'result': 8}]   # 8 Flag, 9 Flag -> Flag
     print_, got, ident, resume, say = 0, 1, 2, 3, 4
@@ -1571,6 +1574,8 @@ def effect_controls(plans: dict) -> list:
          {'exit': 0, 'stdout': 'x\nt\n', 'calls': 11}),
         ('halt-surrogate', image('program', halting(['lit', 3, 'String', [0xD800]])),
          {'outcome': 'HostFailure', 'cause': 'io abi', 'stdout': '', 'calls': 3}),
+        ('halt-scalar', image('program', halting(['lit', 3, 'String', [0x78, 0x1F600]])),
+         {'halt': 1, 'message': [0x78, 0x1F600], 'stdout': '', 'calls': 3}),
     ]
 
 
@@ -2239,6 +2244,10 @@ EVALUATOR_MUTANTS = [
                                           '            return f\n')]),
     # Sections 8 and 10 (D20 on a Halt's message): read after the code, whole, then checked.
     ('halt-message-unchecked', [('            m.outgoing(message)\n', '')]),
+    ('halt-message-refused', [('            m.outgoing(message)\n', "            raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n")]),
+    ('halt-message-ascii-only', [('            m.outgoing(message)\n',
+                                  "            if not all(c < 0x80 for c in message):\n"
+                                  "                raise Halt({'outcome': 'HostFailure', 'cause': 'io abi'})\n")]),
     ('halt-message-before-code', [('            code, message = m.word(fields[0]), m.codes(fields[1])\n            m.outgoing(message)\n',
                                    '            message = m.codes(fields[1])\n            m.outgoing(message)\n'
                                    '            code = m.word(fields[0])\n')]),

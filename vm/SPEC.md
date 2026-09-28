@@ -287,7 +287,7 @@ a malformed record, and a `slots` of 65,536 that its body does not reach. vm-cor
 MUST refuse the same controls, and MUST admit its six admitted plan controls (three
 Cases on a `none` slot, among them `list-head-match`, and three whose arms fit their
 Case, among them `first-code`, S's shapes), `arity-at-limit` (an unused function of
-4,096 parameters), its seven code-list controls and its 59 run controls; vm-model and
+4,096 parameters), its seven code-list controls and its 60 run controls; vm-model and
 vm-core MUST run each run control, at the fuel frozen with it, to the outcome frozen
 with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
@@ -899,12 +899,14 @@ so their `A`-typed nodes are `none`.
 unavailable the same way, and Unsupported is still never a bound (above). `chr-pattern`,
 the first tags-mode Case on Char (`case Chr{x}`, on an immediate Char and a Big one), and
 `list-head-match`, S's Case on the head bound from a `List<Flag>` parameter, run on the
-seed (`True{}` each). Both heads exit 3 for them, with `Unsupported check
-char-constructor-pattern` and `Unsupported parse parameter-type`. The golden's literal
-review declares that exact line (`unavailable`, in plan.json before observation), and
-the gate requires both heads to print it: a head that prints a core, another line, no
-declaration, or another failure (an Invalid lane of a Book, an Unsupported one without
-its declaration) is refused. The expectation is the seed's value, basis `seed`,
+seed (`True{}` each). The golden's lane is the literals head, whose `check-cli` and
+`eval-cli` both exit 3 for them, with `Unsupported check char-constructor-pattern` and
+`Unsupported parse parameter-type`; the closures head answers otherwise (`Unsupported
+lex literal`, `Unsupported parse declaration-form`) and is not consulted. The golden's
+literal review declares that exact line (`unavailable`, in plan.json before
+observation), and the gate requires the lane's two CLIs to print it: a CLI that prints a
+core, another line, no declaration, or another failure (an Invalid lane of a Book, an
+Unsupported one without its declaration) is refused. The expectation is the seed's value, basis `seed`,
 `eval_lane` `Unsupported` and `eval_unavailable` the declared line, never agreement.
 With no checked core to compare, the plan is held to the reference evaluation against
 the seed's value; `list-head-match`'s plan also equals the lowering of a hand-written
@@ -922,7 +924,7 @@ lane and requires:
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;
 - each Book plan equal to an independent erasure and slot projection of that
-  head's `check-cli` core display (save the two whose head answers Unsupported,
+  head's `check-cli` core display (save the two whose lane's head answers Unsupported,
   declared in plan.json, §11), and each Program `main = IO.print(e)`'s argument
   equal to that projection of `e` checked as a `String` Book;
 - the eval result's type index and constructor matching the image, and its tree
@@ -948,7 +950,7 @@ lane and requires:
   more refuse an unavailable eval lane that is undeclared, declared where eval-cli
   agrees, declared as another line or on a Program, or an Invalid lane of a Book, and
   three refuse the same at the display lane (`core:`); a Book's declared line is read
-  from both heads;
+  from the lane's `check-cli` and `eval-cli`;
 - the reference evaluation reproducing every Book golden's expectation and every
   run control's outcome and call count;
 - each of the 44 frozen Book invocations of `invoke-args`, `invoke-arrow` and
@@ -980,7 +982,7 @@ lane and requires:
   admitted plan controls and `arity-at-limit`; `first-code` and `list-head-match` also
   equal the independent lowering of a `check-cli` display written by hand in the
   literals head's grammar, because no pinned head checks a `List<T>` parameter;
-- 59 admitted **run controls** (`check-spec.py run_controls`), each frozen with
+- 60 admitted **run controls** (`check-spec.py run_controls`), each frozen with
   its fuel (1,000,000 unless named) and the run §7 and §8 require, by literal
   review; the receipt records each one's argv. Through a `none`-typed identity: a
   live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
@@ -1020,7 +1022,7 @@ lane and requires:
   is read before the scalar check, so the cause is not `io abi`. A Halt's message is an
   outgoing String too: a surrogate then `id(λ)`, and `id(λ)` for the code beside a
   surrogate message, each halt `ill-typed` after 4, the code and then the whole message
-  being read before D20's scalar check. Thirteen effect controls (`effect_controls`) freeze
+  being read before D20's scalar check. Fourteen effect controls (`effect_controls`) freeze
   D22 (§8) and D20 on a Halt's message. In a Book image, `got` returns what an IO.OP
   carries and `IO.print("x")` is applied to its erased `R` and to a continuation `k`:
   `book-print`, `book-print-continuation-call` (`k` a function) and
@@ -1036,8 +1038,11 @@ lane and requires:
   an Action built and dropped (`book-action-dropped`) after 2 and one applied to its
   erased `R` (`book-action-erased`) after 3; the same Action prints under a Program
   entry from inside a pure argument of `main` (`program-print-in-value`), `x\nt\n`
-  after 11; and a Halt whose message is a lone surrogate (`halt-surrogate`) stops
-  `HostFailure io abi` before `die` after 3. Three key controls (`key_controls`)
+  after 11; a Halt whose message is a lone surrogate (`halt-surrogate`) stops
+  `HostFailure io abi` before `die` after 3; and one whose message is scalar
+  (`halt-scalar`, `x` and U+1F600) ends with `halt` 1 and that `message` after 3, the
+  reference evaluation's view of a `die` whose exit status and stderr are the host's
+  (IO-ABI.md). Three key controls (`key_controls`)
   freeze §3's key: `pick` answers `On{}` from a key Branch at 0xffffffff for the U32
   and the Char `4294967295` (`key-max`, `char-key-max`) and `Off{}` from its Default for
   0xfffffffe (`key-max-miss`), each after 2 calls;
@@ -1047,7 +1052,7 @@ lane and requires:
   and `encode`'s refusal of a String constant spelled as text;
 - 70 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe, invocation or argument verdict or a changed observation, and 55 evaluator mutants
+  changed describe, invocation or argument verdict or a changed observation, and 57 evaluator mutants
   through a changed or refused expectation, Book value or run control, never a crash.
   Five codec mutants move §4's limits: a limit reported as malformed, a limit
   exclusive, the record limit before the count's fit, the arity limit before its
@@ -1074,7 +1079,7 @@ lane and requires:
   Char words unread; `is_empty` reading one cell; `eq` stopping at the first
   difference, or reading one list only one cell past the other's length (either
   way round); a Halt's code, or its message, unread; and a print that checks each
-  Char as it reads it. Sixteen more, of D22, a Halt's message, keys and the debit, die
+  Char as it reads it. Eighteen more, of D22, a Halt's message, keys and the debit, die
   by the controls above: a Book that performs the effect and one that drops it silently
   (by every `book-print*` control); one that refuses before the debit (by every Book
   print control and both fuel controls) or when the fuel is 0 (by `fuel-book-effect-short`
@@ -1084,7 +1089,8 @@ lane and requires:
   `book-print-non-scalar` and `-ill-typed`), when an Action is built (also
   `book-action-dropped`) or when it meets its erased `R` (also `book-action-erased`); a
   Program that refuses its effects (by the golden `foreign-print`); a Halt message
-  never checked (by `halt-surrogate` alone), checked as it is read (by
+  never checked (by `halt-surrogate` alone), refused whatever it holds or above ASCII (by
+  `halt-scalar` alone), checked as it is read (by
   `inspect-halt-after-surrogate` alone) or before the code
   (by `inspect-halt-code-first` alone); a key at 0xffffffff that is absent (by `key-max`
   and `char-key-max`) or a wildcard (by `key-max-miss` alone); and a refused Action
@@ -1110,7 +1116,8 @@ every transition and the four value lanes, and derives each golden's exact call
 count; vm-rc, vm-io and vm-prims close reclamation, effects and the final registry.
 The reference evaluation performs only `IO.print`, so vm-io also owes the
 inspection controls and mutants for every other foreign's operands, the byte
-List's whole extent among them, and a Halt that dies with its code and message.
+List's whole extent among them, and a Halt's `die` through the real host (exit
+`code mod 256`, the message and LF on stderr).
 A golden of the `first-code` shape (a concrete arm beside the `none` head), seed
 `True{}`, is still owed; until then its admitted control witnesses validation and the
 hand-written lowering, not the seed. `list-head-match` has its golden (§11).
