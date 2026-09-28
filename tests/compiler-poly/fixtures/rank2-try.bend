@@ -1,4 +1,4 @@
-# The IO.pass and IO.try shapes: Act.bind at Res<Fault,A> under a rigid A, die or pure by the result.
+# The IO.pass and IO.try shapes: Act.bind at Res<Fault,A> under a rigid A, fed Act.pass(A), a generic def applied to its type argument alone.
 type Flag is Data:
   Off{}
   On{}
@@ -40,7 +40,7 @@ def Act.pass(-A: Type, r: Res<Fault,A>) -> Act(A):
     case Done{x}: Act.pure(A,x)
 
 def Act.try(-A: Type, act: Act(Res<Fault,A>)) -> Act(A):
-  Act.bind(Res<Fault,A>,A,act,r => Act.pass(A,r))
+  Act.bind(Res<Fault,A>,A,act,Act.pass(A))
 
 def lookup(f: Flag, g: Flag) -> Act(Res<Fault,Color>):
   match f:

@@ -222,8 +222,7 @@
       ],
       "mirrors": [
         "src/syntax.bend:76 choose",
-        "src/syntax.bend:98 choose",
-        "base.bend:152 IO.pure"
+        "src/syntax.bend:98 choose"
       ],
       "twin": null,
       "requires": [
@@ -365,8 +364,7 @@
         "quantities.arguments"
       ],
       "mirrors": [
-        "src/check.bend:141 call_body",
-        "src/check.bend:58 variable"
+        "src/check-cli.bend:51 choose"
       ],
       "twin": null,
       "requires": [
@@ -391,7 +389,7 @@
       ],
       "knot": {
         "require": "agree",
-        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Type arguments that are themselves arrows into a Res instance: the defunctionalized apply sees a function of functions."
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Type arguments that are themselves arrows into a Res instance: the defunctionalized apply sees a function of functions. Knot's only arrow-valued type argument is IO(Unit) in S.choose (check-cli.bend:51); this is its rank-1 edge."
       }
     },
     {
@@ -410,7 +408,6 @@
         "generics"
       ],
       "mirrors": [
-        "base.bend:152 IO.pure",
         "base.bend:155 IO.bind"
       ],
       "twin": null,
@@ -470,8 +467,7 @@
         "generics"
       ],
       "mirrors": [
-        "base.bend:155 IO.bind",
-        "src/driver.bend:55 load"
+        "base.bend:155 IO.bind"
       ],
       "twin": null,
       "requires": [
@@ -825,7 +821,7 @@
       ],
       "mirrors": [
         "base.bend:147 IO",
-        "src/driver.bend:15 checked"
+        "base.bend:155 IO.bind"
       ],
       "twin": null,
       "requires": [
@@ -989,10 +985,12 @@
       "class": "positive",
       "feature": "higher-rank",
       "increment": "poly-closures",
-      "summary": "The IO.pass and IO.try shapes: Act.bind at Res<Fault,A> under a rigid A, die or pure by the result.",
+      "summary": "The IO.pass and IO.try shapes: Act.bind at Res<Fault,A> under a rigid A, fed Act.pass(A), a generic def applied to its type argument alone.",
       "census": [
         "higher-order",
         "lambdas",
+        "calls.partial",
+        "function-values",
         "generics",
         "quantities.arguments"
       ],
@@ -1026,7 +1024,7 @@
       ],
       "knot": {
         "require": "agree",
-        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. Act.bind at Res<Fault,A> under a rigid A: the IO.try shape Knot reaches through its CLIs."
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. The Base IO.try shape, which Knot's source does not reach: Act.bind at Res<Fault,A> under a rigid A, whose f is Act.pass(A), a generic def partially applied to its erased type argument alone. driver.read_result writes the same match on a Result by hand."
       }
     },
     {
@@ -1368,8 +1366,7 @@
       ],
       "mirrors": [
         "base.bend:713 Maybe.bind",
-        "base.bend:739 Maybe.map",
-        "src/catalog.bend:50 constructor_next"
+        "base.bend:739 Maybe.map"
       ],
       "twin": null,
       "requires": [
@@ -6915,7 +6912,7 @@
       },
       {
         "case": "rank2-try",
-        "source_sha256": "7a8d794ad543a83dcb9b9209b956878d1a516166d2dab670bd823c494b4c8737",
+        "source_sha256": "f8ad5d0f2f7353a5c8e5194b4f322ec3e6299cdc51bfaafa9a21774d8d5ae015",
         "enums": {
           "Flag": [
             "Off",

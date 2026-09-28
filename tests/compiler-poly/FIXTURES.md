@@ -25,7 +25,14 @@ Changing a fixture, a case or a pinned outcome is a separately reviewed amendmen
 The scope comes from the census in
 [`implementation.json`](../../docs/compiler-campaign/inventory/implementation.json)
 under `generics`, `higher-order`, `templates` and `dependent`, plus the
-`quantities.arguments` and `quantities.polymorphic` classes. Each seed-valid
+`quantities.arguments`, `quantities.polymorphic`, `function-values` and
+`calls.partial` classes, restricted to the bundle S. VM-DESIGN.md defines S
+as `src/compile-cli.bend` and its imports: all of `src/`, the reached slice
+of the pinned Base, and the bytes package
+(`0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend`, published from
+`packages/output_builder/bytes.bend`). The census also scans five other
+published packages that S does not import. Their shapes are listed at the end
+of the appendix but are not required. Each seed-valid
 fixture mirrors named shapes in miniature, in the compact spelling Knot uses:
 no space after a comma in a call, and `case K{..}: e` on one line. Each case's
 `mirrors` field cites `path:line name`. Line numbers are those at this suite's
@@ -44,7 +51,7 @@ reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
 | `S.choose(-A: Type, c, yes: Unit -> A, no: Unit -> A)` (with `S.bind`, about 300 call sites by VM-DESIGN.md's count), instantiated at `Result<S.Error,State>`, `List<&2,Token>` and `Maybe<&2,C.Term>` | `src/syntax.bend:76`, `src/syntax.bend:98` (skip_lines), `src/lex.bend:12` (normal, four chained), `src/lex.bend:35` (step_at), `src/parse.bend:54` (wrap_call) | `choose-rigid`, `choose-result-chain` |
 | `S.bind(-A: Data, -B: Data, r: Result<Error,A>, next: A -> Result<Error,B>)` at `List<&2,S.Token>`, `P.Parsed` and `List<&2,U32>`, nested, the inner lambda capturing the outer binder | `src/syntax.bend:81`, `src/driver.bend:30` (source), `src/driver.bend:69` (ordinals), `src/lex.bend:67` (scan) | `bind-instance-chain`, `bind-rigid-caller` |
 | lambdas created inside generic code at rigid arrows: `x => f(x,R,k)` captures `f: A -> IO(B)` | `base.bend:155` (IO.bind) | `choose-rigid`, `bind-rigid-caller`, `generic-compose`, `generic-capture` |
-| curried continuations into `Result` instances, one captured in a choose thunk whose body is a let then a call | `src/patterns.bend:14` (add), `src/check.bend:165` (arm_scope), `src/parse.bend:43` (then), `src/check.bend:141` (call_body), `src/core.bend:39` (exhausted) | `curried-generic-continuation`, `generic-arrow-instances` |
+| curried continuations into `Result` instances, one captured in a choose thunk whose body is a let then a call | `src/patterns.bend:14` (add), `src/check.bend:165` (arm_scope), `src/parse.bend:43` (then), `src/check.bend:141` (call_body), `src/core.bend:39` (exhausted) | `curried-generic-continuation` |
 | `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `bind` and `die` | `base.bend:147`, `:155`, `:184` | `rank2-pure-bind`, `rank2-two-answers`, `rank2-param` |
 | `next: C.Book -> IO(Unit)` threaded through `checked`, `read_result`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
 | `IO.bind(..,opened(characters,depth))` (partial application) and `IO.bind(..,IO.args(),arguments)` (a named def) | `src/check-cli.bend:39`, `src/check-cli.bend:45`, `src/parse-cli.bend:56` | `rank2-partial-bind` |
@@ -54,7 +61,7 @@ reaches `IO`, `IO.bind`, `IO.die`, `Pair`, `Sigma`, `Result`, `List.length`,
 | `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
 | `set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, ..)`, with `refine` and `replace` passing closed lambdas whose binders shadow their own parameters | `src/scope.bend:77`, `src/scope.bend:85`, `src/scope.bend:108` | `template-set-known-thunk` |
 | `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, spelled `File & Result<..>` and destructured by `(file,result) = pair`; `Sigma`'s field `snd: B(fst)` | `base.bend:127`, `base.bend:25`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
-| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration of a package in the census scope | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
+| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration of `vec`, a package the census scans but S does not import; its `(a,b) = pair` under rigid types is also Knot's `read_pair` shape | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
 
 **Base shapes outside the reached slice, and edges.** These fixtures are not
 reached by Knot's source today. Each exercises the same machinery in a form
@@ -63,7 +70,9 @@ adversarial case that the owning increment must not reject:
 - `IO.pure`, `IO.pass` and `IO.try` (`base.bend:152`, `:187`, `:194`) are not
   in the reached slice. `src/driver.bend:39` (read_result) and `:50` (opened)
   write their bodies by hand: a match on a `Result`, then `IO.die` or the
-  continuation. They ground `rank2-pure-bind` and `rank2-try`.
+  continuation. They ground `rank2-pure-bind` and `rank2-try`. `rank2-try`
+  passes `Act.pass(A)` exactly as `IO.try` passes `IO.pass(A)`: a generic def
+  applied to its erased type argument alone, used as a function value.
 - Base's templates are not reached: `List.map(~A: Type, ~B: Type, ~f, ..)`,
   `List.filter(~A: Data, ..)`, `List.foldl(~a: Quant, ~A: Kind(a), ~B: Type, ..)`
   and `List.any` (`base.bend:807`, `:952`, `:959`, `:977`). scope.bend's
@@ -80,11 +89,15 @@ adversarial case that the owning increment must not reject:
   are Base's uses of a family that computes a type, and of a `&2` Sigma inside
   a list. `sigma-dependent` and `sigma-reusable` pin those two uses of the
   reached `Sigma`.
-- Edges with no counterpart in any source: `generic-arrow-instances` (a type
-  argument that is an arrow), `rank2-two-answers` (one action type at two
-  answers), `rank2-param` (rank-2 parameter types written out),
-  `kind-zero-arrow` (`Kind(&0)` at an arrow) and `template-generic-arg`
-  (closed `~` arguments built from generic defs).
+- Edges with no counterpart in any source:
+  - `generic-arrow-instances`: a type argument that is a rank-1 arrow. The only
+    arrow-valued type argument in `src/` is `IO(Unit)` at
+    `src/check-cli.bend:51`, which is rank-2, so the fixture cites that line as
+    its nearest shape.
+  - `rank2-two-answers`: one action type at two answers.
+  - `rank2-param`: rank-2 parameter types written out.
+  - `kind-zero-arrow`: `Kind(&0)` at an arrow.
+  - `template-generic-arg`: closed `~` arguments built from generic defs.
 - `rank2-two-answers` also instantiates `Act` at `Act(Flag)` (`Act.join`).
   That is impredicative instantiation: an erased `-A: Type` takes a rank-2
   type. Knot's source needs the same mechanism, because
@@ -476,6 +489,16 @@ boundaries, so this suite records them and does not decide them:
   needed: `io-check` (or a statement-only `do` desugaring) becomes a
   prerequisite of `vm-e2e2`, or `sugar-check` takes statement-only `do` with a
   frozen `agree` fixture.
+- **Data types that recur through their own generic instance.** Knot's AST
+  types are declared this way: `syntax.Node` (`arguments: List<&2,Node>`),
+  `core.Term` (`List<&2,Term>`), `core.Binding` (`known: Maybe<&2,Term>`) and
+  `eval.Value` (`List<&2,Value>`). No suite has such a fixture. The audit's seed
+  probe of a `Node is Data` with `Seq<&2,Node>` and `Opt<&2,Node>` fields
+  checks and runs. A `Seq<&1,Node>` field is refused
+  (`expected : Data`, `observed : Type`). The form is a datatype kind rule, so
+  it belongs to `generics` or `fields`, not to `poly-closures` or
+  `templates`. This suite does not add it. An owner needs to add the
+  positive and negative pair.
 
 ## Overlaps with other suites
 
@@ -525,6 +548,9 @@ because an implementer could reasonably expect otherwise.
   - A named generic def fits a rank-2 parameter (`ident` for
     `@-A: Type -> A -> A`). A monomorphic def does not
     (`rank2-monomorphic-arg`).
+  - A generic def applied to its erased type argument alone is a function
+    value: `Act.pass(A)` is the `f` of `Act.bind` (`rank2-try`, as in
+    `IO.try`).
   - An action is an affine closure. Running one twice, even at two different
     answer types, is reuse (`rank2-run-twice`).
   - `Act.die` drops its continuation, and a bind after it never runs its `f`
@@ -615,23 +641,34 @@ Follow the pattern of `tests/compiler-fields/check.py`.
 
 ## Census coverage
 
-The goal of `poly-fixtures` is to cover every shape that the census lists
+The goal of `poly-fixtures` is to cover every shape that S's census lists
 under `generics`, `higher-order`, `templates` and `dependent`. This table
-covers the declarations in non-law `src/` files: all 25 `higher-order`
-declarations, all 3 `templates` declarations and the 10 non-law `dependent`
-declarations, 34 in all. Law and proof files are out of scope (see Scope).
-Fixture names without a suite are in this suite.
+covers every declaration of S in those classes and in `function-values` and
+`calls.partial`, 43 in all:
+- In non-law `src/` files: all 25 `higher-order` declarations, all 3
+  `templates` declarations, the 10 non-law `dependent` declarations, the 4
+  `function-values` declarations and the 4 `calls.partial` declarations. That
+  is 42 declarations.
+- In the bytes package: its one `higher-order` declaration, `guard`.
+
+Law and proof files are out of scope (see Scope). Fixture names without a
+suite are in this suite.
 
 | Declaration | Census classes | Covered by |
 | --- | --- | --- |
+| `0xc409b77d3230ca33374caf6b0993f0cb/bytes.bend:29` guard (`packages/output_builder/bytes.bend:29`) | higher-order | `choose-result-chain` (thunks `Unit -> Res<Fault,State>`); closures `choose-thunks`. `next: Unit -> Result<Error,U32>` is a monomorphic thunk. |
 | `src/catalog.bend:50` constructor_next | higher-order | `choose-result-chain` (thunks `Unit -> Res<Fault,State>`); closures `choose-thunks` |
+| `src/check-cli.bend:39` opened | calls.partial | `rank2-partial-bind` (`opened(depth)`) |
+| `src/check-cli.bend:45` open_source | calls.partial | `rank2-partial-bind` |
+| `src/check-cli.bend:64` main | function-values | `rank2-partial-bind` (`arguments` as the `f` of a bind) |
 | `src/check.bend:51` constructor | higher-order | `choose-result-chain`; closures `choose-thunks` |
-| `src/check.bend:58` variable | higher-order | `curried-generic-continuation`, `generic-arrow-instances` |
+| `src/check.bend:58` variable | higher-order | `curried-generic-continuation` |
 | `src/check.bend:141` call_body | higher-order | `curried-generic-continuation` (a continuation over `Seq<&2,Flag>`) |
 | `src/check.bend:147` binding_body | higher-order | `curried-generic-continuation` (`add`, `next: Scope -> ..`) |
 | `src/check.bend:153` match_body | higher-order | `curried-generic-continuation` |
 | `src/check.bend:161` arm_body | higher-order | `curried-generic-continuation` (`open`) |
 | `src/check.bend:165` arm_scope | higher-order | `curried-generic-continuation` (`open`) |
+| `src/compile-cli.bend:62` main | function-values | `rank2-partial-bind` |
 | `src/core.bend:35` invalid | dependent | sugar `dependent-result` |
 | `src/core.bend:37` unsupported | dependent | sugar `dependent-result` |
 | `src/core.bend:39` exhausted | dependent | `curried-generic-continuation` (`exhausted(-A: Type)`); sugar `dependent-result` |
@@ -643,9 +680,13 @@ Fixture names without a suite are in this suite.
 | `src/driver.bend:44` read_pair | higher-order | `rank2-do-block` (boundary), `sigma-pair` |
 | `src/driver.bend:50` opened | higher-order | `rank2-continuation`, `rank2-partial-bind` |
 | `src/driver.bend:55` load | higher-order | `rank2-continuation` |
+| `src/eval-cli.bend:36` main | function-values | `rank2-partial-bind` |
 | `src/eval.bend:23` internal | dependent | sugar `dependent-result` |
 | `src/eval.bend:26` host | dependent | sugar `dependent-result` |
 | `src/eval.bend:90` host_argument | higher-order | `curried-generic-continuation` |
+| `src/parse-cli.bend:31` opened | calls.partial | `rank2-partial-bind` |
+| `src/parse-cli.bend:37` open_source | calls.partial | `rank2-partial-bind` |
+| `src/parse-cli.bend:56` main | function-values | `rank2-partial-bind` |
 | `src/parse.bend:43` then | higher-order | `curried-generic-continuation` (`open`) |
 | `src/patterns.bend:14` add | higher-order | `curried-generic-continuation` (`add`) |
 | `src/patterns.bend:21` binder | higher-order | `curried-generic-continuation` (a two-argument curried continuation) |
@@ -682,3 +723,23 @@ The fixtures write each spelling on their own carriers:
 - `Seq<Flag>` for `List<String>`;
 - `Seq<&1,Res<Fault,Flag>>` for `List<&1,T>`;
 - `do Act<Color>` for `do IO<Unit>`.
+
+**Census packages outside S.** The census also scans `int_map`, `symbols`,
+`term_store` and `vec`, plus the published copy of `vec`
+(`0xd684886d10b431b9dce6c3b2d1ef1980`). S imports none of them, so no fixture
+is required for their declarations in these classes:
+- `term_store` (41) and `vec` (34, and the same 34 in the published copy): all
+  `dependent`, meaning a type mentions an earlier erased parameter. The
+  exception is `vec`'s `unpack` (`packages/vec/main.bend:97`), which is also
+  `higher-order`. `sigma-unpack` mirrors it anyway.
+- `symbols`: `Trie.rejoin` (`packages/symbols/main.bend:35`), a monomorphic
+  `context: Trie -> Trie` applied inside a Base pair. That is closures plus
+  sugar tuples.
+- `int_map` (20): its templates, `edit_path`, `set_path`, `remove_path`,
+  `IntMap.fold`, `combine_value`, `union_step` and `IntMap.union_with`
+  (`packages/int_map/main.bend:44-107`). `edit_path` takes a template binder
+  of rank-2 type, `~join: @-T: Data -> IntMap<T> -> IntMap<T> -> IntMap<T>`.
+  `set_path` feeds it the type lambda `~(T => lo => hi => Branch{lo,hi})`, and
+  `remove_path` feeds it the generic def `~branch`. The audit's seed probe of
+  that shape checks and runs. No suite has a fixture for it. If S comes to
+  import `int_map`, it is the one shape here that no suite covers.
