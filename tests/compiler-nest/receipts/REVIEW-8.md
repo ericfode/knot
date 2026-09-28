@@ -263,6 +263,14 @@ receipts of the existing gates are left for the coordinator to refresh.
   0 for the new frontier mechanism (`kind`, `bound`, `advance`, `close`,
   `ahead`): contexts are complete and the composition is available. Wider
   selections exceed the composition byte limit (exit 3), as in round 7.
+  The whole seven changed files (287 declarations) also give exit 3: 52
+  contexts are truncated (36 by the helper limit, 11 by the caller or byte
+  limit, 5 by the file limit), and the composition is unavailable (134,878
+  of 48,000 bytes).
+- A destructuring let under a `+` row (`case +y: O{p} = y`) reports
+  `Unsupported parse destructuring-binding`, which the seed accepts. The
+  `99053a7` checker reports the same, so it predates this increment. It is a
+  non-accepting outcome (D4), left for a parser follow-up.
 - Amend `tests/compiler-recursion/SPEC.md` (finding 3), with the descent-2
   integration.
 - Decide whether expansion should short-circuit an irrefutable first row. That
