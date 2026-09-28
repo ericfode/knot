@@ -107,18 +107,22 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - A 200,000-deep nested expression runs on a 64 KiB host stack.
 - The 62 malformed-image controls and a seeded fuzz corpus of 3,720 mutated
   goldens are refused with the reference codec's first defect, and none traps.
-- The 36 controls vm-spec admits load:
+- The 54 controls vm-spec admits load:
   - 13 run as literal review froze them, and as the reference evaluation
     runs them;
-  - 23 run controls run to the outcome and call count that `check-spec.py`
-    freezes: the eleven fuel controls at their frozen fuel, the others also on
-    exactly that much fuel.
+  - all 41 run controls, as many as SPEC section 12 states, run to the outcome
+    and call count that `check-spec.py` freezes: the eleven fuel controls at
+    their frozen fuel, the others also on exactly that much fuel. Eighteen of
+    them are inspection points (SPEC section 6 and section 9's extents).
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- Thirty-one WAT mutants are each killed by a wrong observation. One restores the
+- Thirty-five WAT mutants are each killed by a wrong observation. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
-  ceiling row stays right.
+  ceiling row stays right. Four read less than an inspection extent (`append`'s
+  `b`, `is_empty` past its head, `eq` past a difference or an end, the moved
+  word of a conversion); each survives every golden and dies by its own
+  inspection controls.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.

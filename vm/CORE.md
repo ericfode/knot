@@ -113,14 +113,46 @@ adopt them or record its own, so that lockstep compares like with like.
 2. **Foreign leaves.** vm-core performs only `IO.print`. An image that
    contains any other foreign id is refused as `Unsupported vm foreign` before
    any entry: a D4 capability gap, never Invalid. vm-io lifts this.
-3. **String prims inspect before they allocate.**
-   - `eq` walks all of `a`, then all of `b`, then compares.
-   - `append` walks `a` only; `b` is moved, not read.
-   - `reverse` and `length` walk their operand.
-   - `is_empty` reads only the head cell.
+3. **Every operand is read over its whole extent (settled by SPEC §6 and
+   §9, vm-spec DECISIONS 18).** A prim inspects each operand at its §9 type, in
+   operand order, before it computes or allocates: a scalar's word, the four
+   conversions' moved word included, and a String whole, each SCon cell and
+   its Char word, head to tail, to SNil (`$scell`, walked by `$slen`).
+   - `eq` walks all of `a`, then all of `b`, and only then compares: no early
+     exit.
+   - `append` walks all of `a`, then all of the `b` it moves.
+   - `reverse`, `length` and `is_empty` walk their operand whole.
 
-   So the ill-typed word a prim reports does not depend on where a comparison
-   stops.
+   So the ill-typed word a prim reports never depends on its answer or its
+   moves. The first ill-typed word halts with `HostFailure image`
+   (`ill-typed`) before the prim computes, allocates or drops anything; the
+   halted state's frames are choice 8's.
+
+   *Amended in review round 5, to follow the spec.* This choice used to read
+   `b` of `append` not at all and only the head cell of `is_empty`, where §9
+   named no extent. vm-spec `31aeaf2` and `5517f26` made every extent whole,
+   and two of its new inspection controls, `inspect-append-b` and
+   `inspect-is-empty`, failed here after the merge
+   (.local/vm-core/logs/r5-runs-prefix.log). The mutants `append-b-unread` and
+   `is-empty-reads-one-cell` restore the old reading; `eq-exits-early` and
+   `move-prims-unread` pin two points this VM already read.
+
+   The VM inspects at exactly §6's points, and nowhere else:
+
+   | §6 point | vm.wat |
+   |---|---|
+   | a Case scrutinee | `$select`: `$num` for keys, a Nat or a Char; the tag check of an algebraic word |
+   | the operand of Succ and of Chr | `$complete`: `$num`, before the `NatRange` test or any allocation |
+   | prims 0–33, the four conversions included | `$prim`: `$num` on each operand, in operand order |
+   | String prims 34–38 | `$seq`, `$append`, `$reverse` and `$prim` walk each String with `$slen` first |
+   | an Enter's target | `$enter`: its class, then its operand count (§7) |
+   | every rendered word | `$describe`: `$num` or `$tagof` |
+   | an Action operand | `$perform` → `$utf8out`, whose `$slen` walks the whole String before the scalar check (D20) |
+   | the final IO.OP, a Halt's code and message | `$finish`: the IO.OP check, `$num` on the code, then `$utf8out` on the message |
+
+   A byte List's extent (§6, `File.write_bytes`) has no site here: vm-core
+   refuses every foreign but `IO.print` at load (choice 2), so vm-io owes it,
+   with the inspection controls §12 assigns to vm-io.
 4. **`append` on the bump arena.** It writes its L cells as one block, at the
    addresses that allocating from the last character to the first would give.
    A heap too small for the block is reported before any of it is written.
@@ -197,13 +229,13 @@ adopt them or record its own, so that lockstep compares like with like.
 13. **Chr reads its operand.** Completing `Chr{w}` inspects `w` as a U32
     (§6), as Nat's Succ does, and then yields the word itself; a Big code
     stays the same cell. A laundered non-scalar operand is `HostFailure image`
-    (`ill-typed`) there, even when the Char is never used. §6 says only that
-    Chr "yields its code word unchanged", and its Inspection list does not
-    name Construct. The reference evaluation's `construct` reads the word
-    (`word`), and vm-model froze the same reading (`5b7ea75`). Review round 3
+    (`ill-typed`) there, even when the Char is never used. Review round 3
     found the VM storing the word unread and finishing where the reference
-    halts. The `reference` fixtures compare `chr-unchecked`, `chr-closure` and
-    the control `chr-big-code` with `evaluate.book`.
+    halts; this choice followed the reference evaluation's `construct` and
+    vm-model (`5b7ea75`) while §6 did not name Construct. §6 now names the
+    Succ and Chr operand (vm-spec `31aeaf2`), and `inspect-chr` freezes it.
+    The `reference` fixtures compare `chr-unchecked`, `chr-closure` and the
+    control `chr-big-code` with `evaluate.book`.
 
 ## Findings for the spec owner
 
@@ -220,17 +252,16 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Ambiguities.** Choice 8 above is a real ambiguity in §6–§7 and needs one
   normative reading before lockstep. SPEC §8 has settled choice 6, and §6.1
   choice 5 (D17).
-- **Chr's inspection (choice 13).** §6's Inspection list should name the
-  operand of a Chr construction, which the reference evaluation reads. Until
-  then the evaluator, vm-model and vm-core agree, but §6's wording alone
-  allows a VM that does not read it.
+- **Chr's inspection (choice 13, resolved).** §6's Inspection list now names
+  the operand of a Chr construction (vm-spec `31aeaf2`).
 - **Other readings where the reference evaluation differs.** These are not
   review findings, but lockstep needs one reading of each. They came from
   review round 3's probes, re-run against this VM:
-  - `append` moves `b` unread, and `is_empty` reads one cell (choice 3).
-    `evaluate.py` reads both whole Strings, so a laundered non-String tail is
-    `ill-typed` there. `append-tail-unchecked` and `isempty-unchecked` finish
-    `On{}` and `False{}` here.
+  - `append`'s `b` and `is_empty` (resolved). The VM read `b` not at all and
+    `is_empty` only at its head, where `evaluate.py` reads both whole Strings.
+    §9 now gives every extent (vm-spec DECISIONS 18); the VM follows it
+    (choice 3). vm-spec's controls `inspect-append-b` and `inspect-is-empty`
+    freeze both points, and the VM halts `ill-typed` at each.
   - A `Halt` message holding a surrogate. The VM refuses it as `HostFailure io
     abi`: it treats the message as an outgoing String under §10. The
     reference's `program` returns the Halt with its codes.
@@ -264,8 +295,9 @@ adopt them or record its own, so that lockstep compares like with like.
   - `first-code`, `first-code-none-case` and `key-arms-none`, whose arms fit
     their Case (§3), print `True{}` after 3 calls;
   - every code list compares `False{}`.
-- **Run controls.** The 23 that check-spec.py freezes (`run_controls`)
-  load, and each runs to its frozen exit, output, outcome and `calls`:
+- **Run controls.** All 41 that check-spec.py freezes (`run_controls`), as
+  many as SPEC §12 states, load, and each runs to its frozen exit, output,
+  outcome and `calls`:
   - `arrow-through-identity` prints `On{}` after 3 calls;
   - `u32-file-alias` prints `Off{}` after 1;
   - five others fail `ill-typed` at §7's operand check;
@@ -278,7 +310,15 @@ adopt them or record its own, so that lockstep compares like with like.
     §7's boundary: each completes at its `calls`, and one unit less stops the
     last entry with `Exhausted` kind 1 after one call fewer. At 4,
     `foreign-print` has written `vm` when `k`'s entry stops; at 3 its Action's
-    second application stops before the effect.
+    second application stops before the effect;
+  - the eighteen inspection controls (vm-spec DECISIONS 18) each halt
+    `HostFailure image` (`ill-typed`) at one of §6's points (choice 3): Chr's
+    and Succ's operand after 2 calls; each conversion's moved word, `append`'s
+    `b` and `a`'s Chars, `length` and `reverse`'s Chars, `is_empty` past its
+    head, and `eq` past a differing code or past either end after 3; a
+    Program's Halt code or message after 4; and a print whose String holds a
+    closure after a surrogate after 5, having written nothing, so the cause is
+    not `io abi`.
 
   §7 puts the operand check before the fuel test. Each control without its own
   fuel is therefore run again with exactly its `calls` of fuel, to the same
@@ -360,7 +400,7 @@ adopt them or record its own, so that lockstep compares like with like.
   cycle and no `call_indirect`.
 - **Malformed images.** As above: 62 frozen controls and 3,720 fuzz images,
   with no trap.
-- **Mutants.** Thirty-one, each killed by a wrong observation in a named group
+- **Mutants.** Thirty-five, each killed by a wrong observation in a named group
   (one by a trap, below):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
@@ -382,6 +422,12 @@ adopt them or record its own, so that lockstep compares like with like.
     zero's name, a Nat word costing one visit, and each display bound
     exclusive (run controls);
   - Chr yielding its operand unread (the reference rows);
+  - `append` moving `b` unread, `is_empty` reading only its head cell, `eq`
+    reading both Strings in step and stopping at the first difference or
+    either end, and the four conversions moving their word unread (run
+    controls). Each reads exactly as much on a well-typed String or word, so
+    each survives all 93 goldens and, among the 41 run controls, dies only by
+    its own inspection controls (.local/vm-core/logs/r5-mutants-probe.log);
   - a Nat Case's predecessor made before its Scope push (the two
     `nat-pred` limited rows);
   - a cell, or an `append` block, ending exactly at 4 GiB taken as
