@@ -10,13 +10,14 @@ seed's native lane and requires:
   vm/golden/vm-expected.json (SPEC sections 8 and 11);
 - literal fuel controls (SPEC section 7): fuel 0 exhausts every golden at its
   first entry, and value-on, which makes one entry, completes on fuel 1;
-- the 61 frozen refusal controls, and a child at its parent's offset, refused
-  with check-spec's exact reason;
+- check-spec's frozen refusal controls, and a child at its parent's offset,
+  refused with check-spec's exact reason;
 - every admitted control run to its outcome and call count (SPEC sections 4 and
-  7): check-spec's three admitted plan controls and seven code-list controls, as
-  the reference evaluation (vm/evaluate.py) runs them, its seven run controls as
-  frozen, and the model's own controls in vm/model-controls/, whose frozen values
-  the seed and the reference evaluation reproduce;
+  7): check-spec's admitted plan controls and code-list controls, as the
+  reference evaluation (vm/evaluate.py) runs them, its run controls as frozen
+  (a display line by its SHA-256), and the model's own controls in
+  vm/model-controls/, whose frozen values the seed and the reference evaluation
+  reproduce; each count is check-spec's own, never a literal here;
 - the RC audit before every transition of every golden and admitted control, no
   live mortal cell after each completed run, and the reference evaluation's call
   count at the end of each run;
@@ -257,7 +258,7 @@ def controls() -> list:
     refusals = [(f'plan:{k}', codec.encode(p, DIGEST), 'HostFailure image: validator: ', m)
                 for k, p, m in cs.plan_controls(plans) if m is not None]
     listed = cs.byte_controls(images, DIGEST) + refusals
-    require(len(listed) == 61, f'{len(listed)} refusal controls, SPEC section 4 freezes 61')
+    require(refusals and len(listed) > len(refusals), 'check-spec lists byte and plan refusal controls')
     # One boundary the frozen controls leave open: a child at its own parent's
     # offset does not precede it. The reference supplies the expected reason.
     capture = images['closure-captures']
@@ -308,16 +309,18 @@ def admitted_controls() -> list:
     listed += [(k, p, None) for k, p in cs.code_controls(plans)]
     listed += [(f'run:{k}', p, frozen) for k, p, frozen in cs.run_controls(plans)]
     listed += [(f'model:{k}', p, {'exit': 0, 'stdout': line}) for k, p, line in MODEL_CONTROLS]
-    require(sum(k.startswith('plan:') for k, _, _ in listed) == 3, 'SPEC section 4 admits three plan controls')
-    require(sum(k.startswith('codes:') for k, _, _ in listed) == 7, 'SPEC section 12 freezes seven code-list controls')
-    require(sum(k.startswith('run:') for k, _, _ in listed) == 7, 'SPEC section 4 freezes seven run controls')
+    require(all(any(k.startswith(f'{kind}:') for k, _, _ in listed) for kind in ('plan', 'codes', 'run')),
+            'check-spec lists admitted plan, code-list and run controls')
     out = []
     for label, plan, frozen in listed:
         require(cs.rejected(codec.encode(plan, DIGEST), REGISTRY, DIGEST) is None, f'{label}: the reference codec refuses it')
+        # check-spec's own comparison: a display line is frozen by its SHA-256.
+        if frozen is not None:
+            observed = cs.ran(plan, frozen)
+            require(observed == frozen, f'{label}: the reference evaluation gives {observed}')
         got = reference.book(plan, 'main', [], 1000000) if plan['entry'] == 'book' else reference.program(plan, 1000000)
         if plan['entry'] == 'program':
             got = {**got, 'stdout': got['stdout'].decode('utf-8')}
-        require(frozen is None or {k: got.get(k) for k in frozen} == frozen, f'{label}: the reference evaluation gives {got}')
         out.append((label, plan, expected_run(got), got['calls']))
     return out
 
@@ -382,7 +385,11 @@ def audit_runs(audit: Path, expected: dict) -> dict:
 
 # Literal review of SPEC sections 3 and 6: a `none`-typed result fits any
 # declared type, so these images validate, and the VM must refuse the ill-typed
-# word where it is read: at a Case scrutinee, and as a prim operand.
+# word where it is read: at a Case scrutinee, as a prim operand, and as the
+# operand of a scalar constructor, whose completion reads the word it yields
+# (Chr, as the reference evaluation's `construct` does, used or not). Neither
+# the seed nor Bend source can launder a value, so the reference evaluation
+# alone reproduces them.
 FLAG = {'kind': 'data', 'name': 'Flag', 'constructors': [{'name': 'Off', 'fields': []}, {'name': 'On', 'fields': []}]}
 PAIR = {'kind': 'data', 'name': 'Pair', 'constructors': [{'name': 'Pair', 'fields': [0, 0]}]}
 IDENTITY = {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}
@@ -400,6 +407,25 @@ INSPECTION = {
                          'body': ['prim', 3, 8, [['prim', 2, 0, [['call', 2, 0, [['con', 1, 0, [['value', 0, 0], ['value', 0, 1]]]]],
                                                                ['lit', 2, 'U32', 1]]], ['lit', 2, 'U32', 2]]]}]},
 }
+# id(x: none) -> none launders a Pair or a closure into Chr's U32 operand: `c` below.
+CHR_TYPES = [FLAG, PAIR, {'kind': 'opaque', 'name': 'U32'},
+             {'kind': 'data', 'name': 'Char', 'constructors': [{'name': 'Chr', 'fields': [2]}]},
+             {'kind': 'arrow', 'domain': 0, 'result': 0}]
+
+
+def chr_of(value: list, body: list, slots: int) -> dict:
+    """main() -> Flag = let c = Chr{id(value)} in body."""
+    return {'entry': 'book', 'representation': {'U32': 2, 'Char': 3}, 'types': CHR_TYPES, 'functions': [IDENTITY, {
+        'name': 'main', 'parameters': [], 'result': 0, 'slots': slots,
+        'body': ['let', 0, 0, ['con', 3, 0, [['call', 2, 0, [value]]]], body]}]}
+
+
+PAIRED = ['con', 1, 0, [['value', 0, 0], ['value', 0, 1]]]
+INSPECTION.update({
+    'inspect-chr-unused': chr_of(PAIRED, ['value', 0, 1], 1),
+    'inspect-chr-closure': chr_of(['closure', 4, 1, 1, [], ['ref', 0, 0]], ['value', 0, 1], 1),
+    'inspect-chr-used': chr_of(PAIRED, ['case', 0, 0, 3, 'tags', [['branch', 0, 1, 1, ['value', 0, 1]]], None], 2),
+})
 
 
 def inspection_runs(model: Path) -> dict:
@@ -409,6 +435,8 @@ def inspection_runs(model: Path) -> dict:
     for name, plan in INSPECTION.items():
         data = codec.encode(plan, DIGEST)
         require(cs.rejected(data, REGISTRY, DIGEST) is None, f'{name}: the reference codec refuses it')
+        got = reference.book(plan, 'main', [], 1000000)
+        require({k: got.get(k) for k in cs.ILL_TYPED} == cs.ILL_TYPED, f'{name}: the reference evaluation gives {got}')
         path = folder / f'{name}.kimg'
         path.write_bytes(data)
         result = run([model, '--', path, 'main', '1000000'], 120)
@@ -663,6 +691,14 @@ def mutant_runs(expected: dict, listed: list, admitted: list, base: dict) -> lis
 
 # ------------------------------------------------------------------ main
 
+def kinds(rows: dict) -> dict:
+    """Controls counted by their source, the label's prefix (plan, codes, run, model)."""
+    out = {}
+    for label in rows:
+        out[label.split(':')[0]] = out.get(label.split(':')[0], 0) + 1
+    return out
+
+
 def summary(rows: dict) -> dict:
     return {'agree': sum(r['agrees'] for r in rows.values()), 'total': len(rows),
             'differ': sorted(n for n, r in rows.items() if not r['agrees'])}
@@ -710,6 +746,7 @@ def main() -> int:
         fuel=summary(base['fuel']),
         inspection={n: r['result']['stderr'].strip() for n, r in base['inspection'].items()},
         controls={n: r['reference'] for n, r in base['controls'].items()},
+        admitted_kinds=kinds(base['admitted']),
         admitted={n: {'outcome': (r['result']['stdout'] or r['result']['stderr']).strip()[:120], 'calls': r['calls']}
                   for n, r in base['admitted'].items()},
         audit={n: {'transitions': r['transitions'], 'live': r['live'], 'calls': r['calls']} for n, r in base['audit'].items()},
@@ -721,7 +758,8 @@ def main() -> int:
     swept_total = sum(r['stats']['mutations'] for r in swept.values())
     print(f"vm-model passed: {len(base['goldens'])} goldens, {len(base['invocations'])} invocations, "
           f"{len(base['fuel'])} fuel controls, "
-          f"{len(base['controls'])} refusal controls, {len(base['admitted'])} admitted controls, "
+          f"{len(base['controls'])} refusal controls, {len(base['admitted'])} admitted controls "
+          f"({', '.join(f'{n} {k}' for k, n in kinds(base['admitted']).items())}), "
           f"{len(base['audit'])} audited runs, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
