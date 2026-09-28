@@ -78,6 +78,8 @@ def L.exhaustive_matrix_witness(): {==}
 def L.irrefutable_first_row_witness(): {==}
 def L.erased_alias_stays_erased(name,alias,known): {==}
 def L.alias_preserves_descent_and_identity(name,alias): {==}
+def L.parameter_alias_promotes(name,alias): {==}
+def L.let_alias_keeps_quantity(name,alias,mark,known): {==}
 
 def L.remainder_omits_split(head,tail,ctor,split):
   Equal.cong(Bool,List<&2,S.Token>,found =>

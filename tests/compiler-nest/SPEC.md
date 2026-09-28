@@ -151,6 +151,23 @@ extending it to a call's parenthesis. `touches_witness`, `touching_brace`,
 `detached_brace` and `joined_brace_witness` in `src/LAWS.bend` state the rule;
 the fuzz draws the three gap forms as rare pattern, opener and body atoms.
 
+`round7-expectations.json` freezes 35 round-7 programs and 134 seed calls
+before the let-promotion repair. A `+` row re-quantifies only a lambda-case
+binder: 12 seed-rejected reuses of a `+` alias of an affine let (through calls,
+annotations, constructors, lets of lets, nested aliases, shadowing and
+fields) and two reused aliases of an affine parameter without a `+` row report
+`Invalid check affine-reuse`, and a `+` row on a `Type`-kind parameter stays
+`Invalid check reusable-type`. A `+` row on a let of a `Type`-kind value and
+19 other seed-accepted controls (parameter and field promotion, reusable,
+erased and shadowing lets) are accepted. `round7.py` checks both compiler
+lanes, evaluator and Wasm agreement, rejection in every phase, the matrix
+proof entry and three type-correct semantic mutants: promoting let aliases at
+the quantity site, promoting every variable column at the promote site and
+withholding the mark from parameters. `letalias.py` replays the reviewer's
+let/alias generator over random seeds 0 to 1,499 and requires seed and Knot
+agreement on acceptance and on every evaluated call. `parameter_alias_promotes`
+and `let_alias_keeps_quantity` in `src/matrix-LAWS.bend` state the rule.
+
 A new source match on a binding narrowed by an earlier default currently
 reports `Unsupported check default-scrutinee`. Carrying arbitrary residual
 constructor sets through such nested source matches is a subsequent increment;

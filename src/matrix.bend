@@ -222,9 +222,12 @@ def remarked(bindings: List<&2,C.Binding>, +level: U32, +mark: U32) -> List<&2,C
     case Con{C.Binding{token,+id,+q,type_id,param,known},tail}:
       Con{C.Binding{token,id,S.choose(U32,U32.is_eq(id,level),u => P.quantity(q,1,mark),u => q),type_id,param,known},remarked(tail,level,mark)}
 
-def alias_bound(binding: C.Binding, +token: S.Token, +mark: U32, scope: E.Scope, +types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
+# A `+` row's mark reaches only a lambda-case binder (a parameter or field), as
+# in the seed. A let binder and its aliases keep the let's declared quantity.
+def alias_bound(binding: C.Binding, +token: S.Token, +row: U32, scope: E.Scope, +types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
   match binding scope:
-    case C.Binding{name,+level,q,+type_id,param,known} E.Scope{bindings,next,open,live,smaller}:
+    case C.Binding{name,+level,q,+type_id,+param,known} E.Scope{bindings,next,open,live,smaller}:
+      +mark = S.choose(U32,param,u => row,u => 1)
       +actual = P.quantity(q,1,mark)
       S.bind(C.Datatype,E.Scope,G.type_at(types,type_id),definition =>
         S.bind(Unit,E.Scope,G.quantity(token,actual,definition),u =>

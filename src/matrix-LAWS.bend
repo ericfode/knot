@@ -136,6 +136,22 @@ law alias_preserves_descent_and_identity:
   {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,1,[flag()]) ==
     Done{E.Scope{[C.Binding{alias,1,1,0,True{},None{}},C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
 
+# A `+` row raises a lambda-case binder with every alias of its level, and
+# never raises a let binder: under any row mark, the let and its alias stay affine.
+law parameter_alias_promotes:
+  for +name: S.Token
+  for +alias: S.Token
+  {M.alias(E.Scope{[C.Binding{name,1,1,0,True{},None{}}],2,[1],True{},[1]},alias,1,2,[flag()]) ==
+    Done{E.Scope{[C.Binding{alias,1,2,0,True{},None{}},C.Binding{name,1,2,0,True{},None{}}],2,[1],True{},[1]}} : Result<S.Error,E.Scope>}
+
+law let_alias_keeps_quantity:
+  for +name: S.Token
+  for +alias: S.Token
+  for +mark: U32
+  for +known: Maybe<&2,C.Term>
+  {M.alias(E.Scope{[C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}},alias,0,mark,[flag()]) ==
+    Done{E.Scope{[C.Binding{alias,0,1,0,False{},known},C.Binding{name,0,1,0,False{},known}],1,Nil{},True{},Nil{}}} : Result<S.Error,E.Scope>}
+
 # Exhaustiveness at each split: the positive matrix takes the split
 # constructor, the remainder keeps every other available constructor in order,
 # and the negative matrix drops only rows headed by the split constructor.

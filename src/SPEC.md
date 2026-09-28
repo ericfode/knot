@@ -74,7 +74,10 @@ digits, underscores or dots. Keywords cannot be identifiers.
   such as `_x` remain ordinary binders.
   All-variable columns on the latest local binder are aliases without
   inspection. Constructor inspection of local binders and computed scrutinees
-  remain invalid at the pinned seed.
+  remain invalid at the pinned seed. A `+` row makes a lambda-case binder (a
+  parameter or field) reusable together with every alias of its level; a let
+  binder and its aliases keep the let's declared quantity under any row, so a
+  second use of a `+` alias of an affine let is affine reuse.
   Constructor columns follow binder order and close earlier parameters.
   Variable-only columns leave that frontier open, so they may be reordered.
   Local bindings close the outer frontier; matched constructors cannot be
