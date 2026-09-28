@@ -1,0 +1,507 @@
+# Poly fixture suite (campaign increment `poly-fixtures`)
+
+This suite freezes the expectations for the `poly-fixtures` increment of the
+[VM-first design](../../docs/compiler-campaign/VM-DESIGN.md). It covers the
+checker residue that Knot's own source needs and that no other frozen suite
+covers: closures and function values at generic and erased-type arrows,
+higher-rank `IO(A)`-shaped arrows, quantity-polymorphic `Kind(a)` parameters,
+template binders (`~A`), and Sigma pairs declared outside Base. Two later
+increments consume it:
+- `poly-closures` must make the `generic-arrows`, `higher-rank` and
+  `kind-polymorphism` fixtures agree;
+- `templates` must make the `templates` and `sigma` fixtures agree.
+
+The suite was written before any implementation (D4, D7) and independently of
+the implementers. Seed-valid programs take their results from the pinned
+reference interpreter, Bend 2.0.29 at `574b6d3`. Knot-specific outcomes are
+reviewed literals in `expectations.json`. No expectation comes from Knot
+output, and `regen.py` never runs Knot.
+
+The implementers wire the gate runner and do not edit these expectations.
+Changing a fixture, a case or a pinned outcome is a separately reviewed amendment.
+
+## Scope
+
+The scope comes from the census in
+[`implementation.json`](../../docs/compiler-campaign/inventory/implementation.json)
+under `generics`, `higher-order`, `templates` and `dependent`, plus the
+`quantities.arguments` and `quantities.polymorphic` classes, and from the
+reachable Base declarations that Knot's calls land in. Each seed-valid fixture
+mirrors named shapes in miniature, in the compact spelling Knot uses: no space
+after a comma in a call, and `case K{..}: e` on one line. Each case's `mirrors`
+field cites `path:line name`. Line numbers are those at this suite's base
+commit; `base.bend` is the pinned `.toolchain/bend-2.0.29-574b6d3/bend2/base.bend`.
+
+| Shape in Knot source | Where | Fixtures |
+| --- | --- | --- |
+| `S.choose(-A: Type, c, yes: Unit -> A, no: Unit -> A)` (with `S.bind`, about 300 call sites by VM-DESIGN.md's count), instantiated at `Result<S.Error,State>`, `List<&2,Token>` and `Maybe<&2,C.Term>` | `src/syntax.bend:76`, `src/syntax.bend:98` (skip_lines), `src/lex.bend:12` (normal, four chained), `src/lex.bend:35` (step_at), `src/parse.bend:54` (wrap_call) | `choose-rigid`, `choose-result-chain` |
+| `S.bind(-A: Data, -B: Data, r: Result<Error,A>, next: A -> Result<Error,B>)` at `List<&2,S.Token>`, `P.Parsed` and `List<&2,U32>`, nested, the inner lambda capturing the outer binder | `src/syntax.bend:81`, `src/driver.bend:30` (source), `src/driver.bend:69` (ordinals), `src/lex.bend:67` (scan) | `bind-instance-chain`, `bind-rigid-caller` |
+| lambdas created inside generic code at rigid arrows: `R => k => k(x)`, `x => f(x,R,k)` | `base.bend:152` (IO.pure), `base.bend:155` (IO.bind) | `choose-rigid`, `bind-rigid-caller`, `generic-compose`, `generic-capture` |
+| curried continuations into `Result` instances, one captured in a choose thunk whose body is a let then a call | `src/patterns.bend:14` (add), `src/check.bend:165` (arm_scope), `src/parse.bend:43` (then), `src/check.bend:141` (call_body), `src/core.bend:39` (exhausted) | `curried-generic-continuation`, `generic-arrow-instances` |
+| `IO(A) = @-R: Type -> @k: (A -> IO.OP<R>) -> IO.OP<R>` with `pure`, `bind`, `die`, `pass`, `try` | `base.bend:147`, `:152`, `:155`, `:184`, `:187`, `:194` | `rank2-pure-bind`, `rank2-try`, `rank2-two-answers`, `rank2-param` |
+| `next: C.Book -> IO(Unit)` threaded through `checked`, `opened` and `load`, and captured by a bind lambda | `src/driver.bend:15`, `:39`, `:50`, `:55` | `rank2-continuation`, `rank2-try` |
+| `IO.bind(..,opened(characters,depth))` (partial application) and `IO.bind(..,IO.args(),arguments)` (a named def) | `src/check-cli.bend:39`, `src/check-cli.bend:45`, `src/parse-cli.bend:56` | `rank2-partial-bind` |
+| `do IO<Unit>:` | `src/driver.bend:44` (read_pair) | `rank2-do-block` (boundary) |
+| `List.length(&2,S.Node,args)`, `List.reverse(&2,S.Token,..)` into Base's `a, -A: Kind(a)` definitions, which forward `a, A` to a helper | `src/check.bend:55`, `src/lex.bend:55` (finish), `src/eval.bend:133`, `base.bend:814`, `base.bend:835`, `base.bend:843` | `kind-closure-list`, `kind-forward`, `kind-zero-arrow` |
+| `Result<&1,&1,U32 & String,String>`, the two-quantity family `Result<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)` and its short form `Result<S.Error,A>` | `src/check-cli.bend:28`, `src/syntax.bend:81`, `base.bend:36` | `kind-two-quantities` |
+| `List<&1,Result<S.Error,String>>` folded through `S.bind` with a `Con{Done{+head},tail}` pattern | `src/diagnostic.bend:25`, `src/wasm-bytes.bend:18` | `kind-result-list` |
+| higher-order generics over `Kind(a)`: `f: A -> B` with `-A: Kind(a), -B: Kind(a)` | `base.bend:713` (Maybe.bind), `base.bend:739` (Maybe.map), `src/catalog.bend:50` (constructor_next) | `kind-higher-order` |
+| `set_known(~A: Data, ~value: A -> S.Token -> U32 -> C.Term, ..)`, with `refine` and `replace` passing closed lambdas whose binders shadow their own parameters | `src/scope.bend:77`, `src/scope.bend:85`, `src/scope.bend:108` | `template-set-known-thunk` |
+| Base templates reached from Knot: `List.map(~A,~B,~f,..)`, `List.filter(~A: Data,..)`, `List.foldl(~a: Quant, ~A: Kind(a),..)`, `List.any` | `base.bend:807`, `base.bend:952`, `base.bend:959`, `base.bend:977` | `template-map-types`, `template-filter-data`, `template-fold-quant`, `template-any-forward`, `template-generic-arg` |
+| `Sigma<a, b, -A: Kind(a), -B: @-x: A -> Kind(b)>`, `Pair(A,B) = Sigma<&1,&1,A,_ => B>`, `Exists`, and `File & Result<..>` destructured by `(file,result) = pair` | `base.bend:25`, `base.bend:127`, `base.bend:130`, `src/driver.bend:44`, `src/check-cli.bend:33` | `sigma-pair`, `sigma-dependent` |
+| `unpack(-A,-B,-R, pair: A & B, f: A -> B -> R)`, a census `dependent` and `higher-order` declaration | `packages/vec/main.bend:97` (the census records it at line 101 of the published package `0xd684886d…`) | `sigma-unpack` |
+| `List<a, Sigma<&2, a, String, _ => V>>` | `base.bend:2828` (Map.to_list) | `sigma-reusable` |
+
+Out of scope:
+- **Shapes already frozen elsewhere.** These are covered by other suites and
+  not repeated here: monomorphic closures (closures suite), `S.choose` and
+  `S.bind` with plain enum instances (`dependent-choose`, `dependent-bind`,
+  `generic-choose-bind`), the two-parameter `set_all` template, a partial call
+  and a function value at `then(-A,-B,x,next)`, `core.invalid` (sugar suite),
+  and `Kind(a)` walks over data and boxes (generics suite).
+- **Laws.** The census lists 120 `dependent` declarations in `src/`. Of these,
+  110 are law and proof declarations in `*-LAWS.bend` and `*-PROOF.bend`. Their
+  types mention earlier `for` binders inside equality types, and none is
+  reachable from a CLI entry. The other ten are covered here and in the sugar
+  suite.
+- **IO effects.** No fixture imports Base. `Act(A)` reproduces `IO(A)` with
+  fixture types (`Op<R>` for `IO.OP<R>`, `Halt{code: Fault}` for
+  `Halt{code,message}`). Foreign effects belong to the io suite and `io-check`.
+
+## Contents
+
+- `fixtures/*.bend`: 56 small programs, one shape or edge each.
+  - Every fixture is ASCII with LF line endings and no tabs. Line 1 is a
+    `# summary`, which `regen.py` checks against the case's `summary`.
+  - No fixture imports anything, not even Base. Each declares its own enums
+    (`Flag`, `Color`, `Fault`, and so on) and its own carriers. The carriers copy
+    Base's declarations: `Res<a, b, -E: Kind(a), -A: Kind(b)> is Kind(a <&> b)`,
+    `Seq<a, -A: Kind(a)> is Kind(a)`, `Opt<a, -A: Kind(a)> is Kind(a)`,
+    `Op<-R: Type> is Type` and
+    `Dep<a, b, -A: Kind(a), -B: @-x: A -> Kind(b)> is Kind(a <&> b)`.
+  - Every fixture declares `main()`. Seed-valid fixtures have a `main` plus a
+    few entries. Entries take and return only nullary enums declared in the
+    fixture, because the host boundary is enum-only. Every closure, action,
+    template instance and pair is built and consumed inside the program.
+  - Every negative is its twin plus one reviewed edit: a changed line, or an
+    added definition built from the twin's own declarations. The edit is
+    visible with `diff fixtures/<twin>.bend fixtures/<negative>.bend`. The
+    seed's error is the intended one, and the `seed_reason` substrings pin it.
+    Where a second error is unavoidable (`kind-closure-at-data`,
+    `template-quant-kind`), only the `Invalid` class is pinned.
+- `expectations.json`: all expectations, in these sections:
+  - `seed`: version, revision and launcher path. These must equal `src/CONTRACT.json`.
+  - `commands`: how every observation was produced.
+  - `requirements`: the four Knot requirement kinds, defined below.
+  - `increments`: what `poly-closures` and `templates` own.
+  - `needs`: the capability vocabulary for `requires`.
+  - `cases`: hand-reviewed metadata for each fixture. It records the class,
+    feature, owning increment, summary, census classes, mirrored shapes, twin,
+    needs and entry signatures. Negatives also record the seed's rejection
+    reason. Every case ends with its Knot outcome block. A pinned code also
+    names its `precedent`, the frozen fixture that already uses it.
+  - `observations`: generated by `regen.py`. It holds the seed file hashes and
+    the Bun version. For each fixture it holds the source hash, the enum
+    constructor orders, the `--check-only` and run results, and every entry
+    call. A call records its wrapper source, argv, exit code, exact stdout and
+    stderr, and its result `{type, constructor, tag}`. `tag` is the
+    constructor's position in its declaration.
+- `regen.py`: re-runs the seed and diffs the output against `observations`.
+
+## Regenerating and checking
+
+```sh
+python3 tests/compiler-poly/regen.py          # re-run the seed; exit 1 on any difference
+python3 tests/compiler-poly/regen.py --write  # rewrite observations only; review the diff
+```
+
+The script runs the seed as `bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts`,
+from the repository root, with `BEND_NO_TELEMETRY=1` and relative paths. Its
+recorded output does not depend on the checkout. A check takes about 15
+seconds. `--write` runs the seed twice and writes only if both passes agree.
+Wrappers are written to the ignored `.local/compiler-poly/wrappers/` directory.
+
+- **Observation shapes.** For `main`, the observation is a direct run of the
+  fixture, so stdout is unqualified (`On{}`). Every other entry is called
+  through a wrapper that imports the fixture as `F`. Its stdout therefore
+  carries the import path, `../../../tests/compiler-poly/fixtures/<case>.On{}`,
+  and `result` strips that prefix.
+- **Failure conditions.** It fails in any of these cases:
+  - the fixture files differ from the cases;
+  - a summary line differs, a fixture imports something, or `main()` is missing;
+  - a class, requirement, increment, need, census class or mirror citation is
+    malformed or inconsistent;
+  - a negative does not name a seed-valid `agree` twin of the same feature and
+    increment, or a seed-valid fixture names one;
+  - a pinned code has no precedent;
+  - the seed accepts a fixture marked `reject`, or rejects one that is not;
+  - a negative's `seed_reason` substrings are missing, meaning the seed
+    rejected it for a different reason;
+  - an entry is not declared with exactly its recorded enum parameters, or uses
+    a non-enum type;
+  - the calls of a seed-valid fixture yield only one constructor, so a constant
+    answer could pass;
+  - the seed times out;
+  - the seed identity, the seed file hashes or the Bun version changed;
+  - a recorded output contains a checkout-specific path.
+- **Bootstrapping.** `--write` never touches `cases`. After running it, read the
+  diff by hand.
+
+## Coverage matrix
+
+Classes:
+- **positive**: an ordinary program in the owning increment.
+- **edge**: an adversarial program the seed accepts.
+- **boundary**: a seed-valid program that uses a form outside the owning increment.
+- **negative**: a program the seed rejects, next to a named seed-valid twin.
+
+| Feature | Increment | Positive | Edge | Boundary | Negative |
+| --- | --- | --- | --- | --- | --- |
+| generic-arrows | poly-closures | `choose-rigid`, `choose-result-chain`, `bind-instance-chain`, `bind-rigid-caller`, `generic-compose`, `generic-capture`, `curried-generic-continuation` | `generic-arrow-instances` | - | `rigid-closure-twice`, `rigid-domain-mismatch`, `rigid-capture-twice`, `rigid-reusable-type`, `bind-arrow-instance`, `choose-branch-mismatch` |
+| higher-rank | poly-closures | `rank2-pure-bind`, `rank2-continuation`, `rank2-partial-bind`, `rank2-try` | `rank2-two-answers`, `rank2-param` | `rank2-do-block` | `rank2-rigid-answer`, `rank2-continuation-twice`, `rank2-run-twice`, `rank2-monomorphic-arg` |
+| kind-polymorphism | poly-closures | `kind-closure-list`, `kind-higher-order`, `kind-forward`, `kind-two-quantities`, `kind-result-list` | `kind-zero-arrow` | - | `kind-closure-at-data`, `kind-closure-reuse`, `kind-quantity-mismatch`, `kind-reuse-affine-result`, `kind-meet-reuse` |
+| templates | templates | `template-map-types`, `template-fold-quant`, `template-any-forward`, `template-set-known-thunk`, `template-filter-data` | `template-generic-arg` | - | `template-open-type`, `template-type-mismatch`, `template-quant-kind`, `template-plain-param`, `template-thunk-affine` |
+| sigma | templates | `sigma-pair`, `sigma-dependent`, `sigma-unpack` | `sigma-reusable` | - | `sigma-snd-mismatch`, `sigma-unrefined`, `sigma-family-live-binder`, `sigma-affine-twice`, `sigma-reuse-affine` |
+
+That makes 24 positive, 6 edge, 1 boundary and 25 negative fixtures. They
+produce 309 seed entry calls and 25 seed rejections. The 30 `agree` fixtures
+account for 304 of the calls: 208 for `poly-closures` and 96 for `templates`.
+
+The negatives cover each rejection the goal names:
+- **An affine capture used twice:** `rigid-capture-twice`, `template-thunk-affine`.
+- **A closure or action used twice:** `rigid-closure-twice`,
+  `rank2-continuation-twice`, `rank2-run-twice`, `kind-closure-reuse`,
+  `sigma-affine-twice`.
+- **A rank mismatch:** `rank2-monomorphic-arg` gives a rank-1 function where a
+  rank-2 one is expected. `rank2-rigid-answer` answers at `A` where the rigid
+  `R` is due.
+- **A wrong quantity instantiation:** `kind-quantity-mismatch`,
+  `kind-closure-at-data`, `template-quant-kind`, `bind-arrow-instance`,
+  `kind-reuse-affine-result`, `kind-meet-reuse`, `rigid-reusable-type`,
+  `sigma-reuse-affine`, `sigma-family-live-binder`.
+- **Template misuse:** `template-open-type`, `template-plain-param`,
+  `template-type-mismatch`, `template-quant-kind`.
+- **Type errors:** `rigid-domain-mismatch`, `choose-branch-mismatch`,
+  `sigma-snd-mismatch`, and `sigma-unrefined` (a dependent type that has not
+  been refined).
+
+## Knot requirements
+
+| Requirement | Meaning |
+| --- | --- |
+| `agree` | Knot checks the fixture (exit 0). For every call in `observations`, the evaluator returns the recorded `result.constructor`. Every image or VM lane that exists returns the recorded `result.tag`, under the four-lane rule of VM-DESIGN.md. |
+| `agree-or-unsupported` | Either `agree`, or exit 3 with an `Unsupported` diagnostic and no artifact. `Invalid` never qualifies, because the seed accepts. |
+| `reject` | Exit 2 (`Invalid`), never `Checked` or `Built`, and no artifact. If `diagnostic` is pinned, stderr starts with it. Otherwise the phase and code are the implementer's to choose, and are recorded when chosen. |
+
+A pinned outcome carries `knot_expected: true` and a one-line justification.
+The classification invariant holds for every fixture. When the seed accepts,
+Knot never reports `Invalid` (D4). When the seed rejects, Knot reports `Invalid`.
+
+- **Native Wasm profiles.** Native lowering is the speed track (D14). A native
+  profile may report `Unsupported` at compile for any fixture here, but never
+  `Invalid` for a seed-valid one. The `agree` lanes are check, eval and, once
+  they exist, image and VM.
+- **Reused codes.** A pinned code reuses the existing vocabulary only where
+  the seed gives the same reason as a frozen fixture that already pins it. That
+  fixture is the case's `precedent`:
+  - `affine-reuse` (closures `closure-call-twice`, `capture-affine-twice`,
+    `capture-then-use`; sugar `tuple-affine-reuse`): a closure, a continuation
+    or an action applied twice, a capture of one affine value shared by two
+    closures, and a field destructured from a `&1` pair used twice.
+  - `type-mismatch` (generics `rigid-mismatch`, `wrong-type-arg` and
+    `quantity-invariant`; closures `closure-domain-mismatch`): distinct rigid
+    variables (`B` and `A`, or `R` and `A`), an instance of the wrong shape,
+    `Seq<&2,Flag>` against `Seq<&1,Flag>`, and a function value of the wrong
+    arrow type, including the wrong rank.
+  - `reusable-type` (generics `reusable-type-param` and `meet-not-reusable`;
+    sugar `annotation-reusable-quantity`): a `+` binder at a `Type` variable, at
+    a `&1` instance, or at the meet `&2 <&> &1`.
+- **Class-only pins.** These negatives pin exit 2 only:
+  - `bind-arrow-instance`, `kind-closure-at-data` and `template-quant-kind`.
+    Each gives an arrow type where a `Data` kind is wanted. This is the reason
+    generics `kind-type-for-data` leaves open.
+  - `template-open-type`. A caller's erased type variable is an open `~`
+    argument. This is the reason sugar `template-open-argument` leaves open.
+  - `template-plain-param`. The seed refuses `~` at parse when the callee is
+    not a template. This is the reason sugar `template-forward` leaves open.
+  - `sigma-unrefined` (a stuck `Shade(f)`) and `sigma-family-live-binder` (a
+    live binder where the family wants an erased one). No frozen fixture names
+    either reason.
+- **Open boundary.** `rank2-do-block` is `do Act<Color>:`, the form of
+  `src/driver.bend:44`. `do` desugaring is not a `poly-closures` capability,
+  so that increment may report it `Unsupported`, but never `Invalid`. The
+  increment that implements `do` over IO must make it agree.
+
+In the table, `\t` stands for a tab character, as in the other compiler
+suites; `expectations.json` holds the exact strings.
+
+| Fixture | Increment | Requirement | Pinned | Precedent | Needs | Twin |
+| --- | --- | --- | --- | --- | --- | --- |
+| `choose-rigid` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `choose-result-chain` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns | - |
+| `bind-instance-chain` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns, recursion | - |
+| `bind-rigid-caller` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `generic-compose` | poly-closures | agree | - | - | closures, generics | - |
+| `generic-capture` | poly-closures | agree | - | - | closures, generics | - |
+| `generic-arrow-instances` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `curried-generic-continuation` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `rigid-closure-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, generics | `generic-compose` |
+| `rigid-domain-mismatch` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `rigid-mismatch` | closures, generics | `generic-compose` |
+| `rigid-capture-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `capture-affine-twice` | closures, fields, generics | `choose-rigid` |
+| `rigid-reusable-type` | poly-closures | reject | `Invalid\tcheck\treusable-type\t` | generics `reusable-type-param` | closures, fields, generics | `choose-rigid` |
+| `bind-arrow-instance` | poly-closures | reject | exit 2 | generics `kind-type-for-data` | closures, fields, generics, nested-patterns, recursion | `bind-instance-chain` |
+| `choose-branch-mismatch` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | closures, fields, generics, nested-patterns | `choose-result-chain` |
+| `rank2-pure-bind` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
+| `rank2-continuation` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
+| `rank2-partial-bind` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
+| `rank2-try` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns, type-level-definition | - |
+| `rank2-two-answers` | poly-closures | agree | - | - | closures, fields, generics, type-level-definition | - |
+| `rank2-param` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `rank2-do-block` | poly-closures | agree-or-unsupported | - | - | closures, do-notation, fields, generics, type-level-definition | - |
+| `rank2-rigid-answer` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `rigid-mismatch` | closures, fields, generics, type-level-definition | `rank2-pure-bind` |
+| `rank2-continuation-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, fields, generics, type-level-definition | `rank2-pure-bind` |
+| `rank2-run-twice` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, fields, generics, type-level-definition | `rank2-two-answers` |
+| `rank2-monomorphic-arg` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | closures `closure-domain-mismatch` | closures, fields, generics | `rank2-param` |
+| `kind-closure-list` | poly-closures | agree | - | - | closures, fields, generics, recursion | - |
+| `kind-higher-order` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `kind-forward` | poly-closures | agree | - | - | closures, fields, generics, recursion | - |
+| `kind-two-quantities` | poly-closures | agree | - | - | closures, fields, generics | - |
+| `kind-result-list` | poly-closures | agree | - | - | closures, fields, generics, nested-patterns, recursion | - |
+| `kind-zero-arrow` | poly-closures | agree | - | - | closures, fields, generics, recursion | - |
+| `kind-closure-at-data` | poly-closures | reject | exit 2 | generics `kind-type-for-data` | closures, fields, generics, recursion | `kind-closure-list` |
+| `kind-closure-reuse` | poly-closures | reject | `Invalid\tcheck\taffine-reuse\t` | closures `closure-call-twice` | closures, fields, generics, recursion | `kind-closure-list` |
+| `kind-quantity-mismatch` | poly-closures | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `quantity-invariant` | closures, fields, generics, recursion | `kind-forward` |
+| `kind-reuse-affine-result` | poly-closures | reject | `Invalid\tcheck\treusable-type\t` | sugar `annotation-reusable-quantity` | closures, fields, generics, recursion | `kind-forward` |
+| `kind-meet-reuse` | poly-closures | reject | `Invalid\tcheck\treusable-type\t` | generics `meet-not-reusable` | closures, fields, generics | `kind-two-quantities` |
+| `template-map-types` | templates | agree | - | - | closures, fields, generics, recursion | - |
+| `template-fold-quant` | templates | agree | - | - | closures, fields, generics, poly-closures, recursion | - |
+| `template-any-forward` | templates | agree | - | - | closures, fields, generics, poly-closures, recursion | - |
+| `template-set-known-thunk` | templates | agree | - | - | closures, fields, generics, nested-patterns, poly-closures, recursion | - |
+| `template-filter-data` | templates | agree | - | - | closures, fields, generics, recursion | - |
+| `template-generic-arg` | templates | agree | - | - | closures, fields, generics, poly-closures, recursion | - |
+| `template-open-type` | templates | reject | exit 2 | sugar `template-open-argument` | closures, fields, generics, recursion | `template-map-types` |
+| `template-type-mismatch` | templates | reject | `Invalid\tcheck\ttype-mismatch\t` | closures `closure-domain-mismatch` | closures, fields, generics, recursion | `template-map-types` |
+| `template-quant-kind` | templates | reject | exit 2 | generics `kind-type-for-data` | closures, fields, generics, poly-closures, recursion | `template-fold-quant` |
+| `template-plain-param` | templates | reject | exit 2 | sugar `template-forward` | closures, fields, generics, recursion | `template-map-types` |
+| `template-thunk-affine` | templates | reject | `Invalid\tcheck\taffine-reuse\t` | closures `capture-then-use` | closures, fields, generics, nested-patterns, poly-closures, recursion | `template-set-known-thunk` |
+| `sigma-pair` | templates | agree | - | - | closures, fields, generics, poly-closures, type-level-definition | - |
+| `sigma-dependent` | templates | agree | - | - | fields, generics, nested-patterns, type-level-definition | - |
+| `sigma-unpack` | templates | agree | - | - | closures, fields, generics, poly-closures, type-level-definition | - |
+| `sigma-reusable` | templates | agree | - | - | fields, generics | - |
+| `sigma-snd-mismatch` | templates | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
+| `sigma-unrefined` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
+| `sigma-family-live-binder` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
+| `sigma-affine-twice` | templates | reject | `Invalid\tcheck\taffine-reuse\t` | sugar `tuple-affine-reuse` | closures, fields, generics, poly-closures, type-level-definition | `sigma-pair` |
+| `sigma-reuse-affine` | templates | reject | `Invalid\tcheck\treusable-type\t` | sugar `annotation-reusable-quantity` | fields, generics | `sigma-reusable` |
+
+## Needs and blocking
+
+The **Needs** column lists capabilities outside the owning increment (`needs`
+in `expectations.json`):
+
+- `fields`: fielded constructors, checked and evaluated today.
+- `recursion`: first-parameter structural recursion (increment 1, landed).
+  Every self-call passes the descent rule, including those inside a
+  continuation lambda (`bind-instance-chain`, `ordinals`) and those that
+  forward `~` or quantity arguments unchanged before a smaller field.
+- `nested-patterns`: constructor patterns inside constructor patterns, and
+  wildcards (increment 3, nest).
+- `generics`: generic datatypes, erased type parameters and quantity arguments
+  (increment 6).
+- `closures`: monomorphic lambdas, arrow-typed parameters and function values
+  (increment 7). This suite lifts the monomorphic limit, so every
+  `poly-closures` fixture needs increment 7's machinery first.
+- `type-level-definition`: a def whose result is a type. This covers
+  `Act(A)` (the `IO(A)` shape), `Both(A,B)` (the `Pair` shape) and `Shade(f)`, a
+  family that computes by `match`. The generics suite lists this capability as
+  outside increment 6, and baseslice claims `Pair`. `poly-closures` cannot
+  deliver higher-rank `IO(A)` without it, so whichever of `poly-closures`,
+  `templates` or baseslice lands first supplies it for the others.
+- `do-notation`: `do` desugaring (`rank2-do-block` only).
+- `poly-closures`: a `templates` fixture that also builds, stores or applies a
+  closure at a generic or erased-type position:
+  - `template-set-known-thunk` and `template-thunk-affine` run a choose thunk at
+    `Opt<&2,Term>`;
+  - `template-fold-quant`, `template-quant-kind` and `template-any-forward`
+    fold a `Seq<&1,Flag -> Flag>` of closures;
+  - `template-generic-arg` passes `ident(Flag)` as a function value;
+  - `sigma-pair` and `sigma-affine-twice` store a closure in a pair component;
+  - `sigma-unpack` applies `f: A -> B -> R`.
+
+A fixture is blocked while a need it names is unavailable. The runner reports a
+blocked fixture separately. It never relabels a blocked fixture as passing, and
+never re-expects one.
+
+The `templates` increment can pass three seed-valid fixtures before
+`poly-closures` or any type-level definition lands: `template-map-types`,
+`template-filter-data` and `sigma-reusable`. The negatives next to them are
+`template-open-type`, `template-type-mismatch`, `template-plain-param` and
+`sigma-reuse-affine`. These isolate the `~` mechanics, type binders and the
+Sigma quantity rule from polymorphic closures.
+
+## Existing assertions this suite supersedes
+
+D7 keeps existing assertions unchanged, so these are recorded here and not
+edited. Each needs a reviewed superseding amendment, or selection by a separate
+profile, when the owning increment lands:
+
+- `tests/compiler-generics`:
+  - `closure-apply` pins `Unsupported\tparse\tparameter-type\t` for
+    `apply(-A: Type, -B: Type, f: A -> B, x: A)`. `generic-arrow-instances`
+    uses the same `apply` and requires `agree`. The VM design already marks
+    this pin for revisiting by `poly-closures`.
+  - `template-twice` pins `Unsupported\tparse\ttemplate-binder\t`. Every
+    `templates` fixture here requires `agree`.
+- `tests/compiler-closures`:
+  - `template-map` pins `Unsupported\tparse\ttemplate-binder\t` for a `~f`
+    binder. `template-map-types` requires `agree` for the same form with type
+    binders.
+  - `dependent-arrow` is `agree-or-unsupported` for `f: @-A: Type -> A -> A`.
+    `rank2-param` requires `agree` for that parameter type. `agree` satisfies
+    the closures pin, so nothing there changes, but `poly-closures` may no
+    longer answer `Unsupported`.
+  - The VM design records that campaign/closures defunctionalizes
+    monomorphically per arrow type. Every `generic-arrows` fixture needs that
+    limit lifted.
+- The template-binder pins that the sugar suite lists under the same heading:
+  - `tests/subsets/classification-cases.json`: `template.bend` and
+    `template-leading-pair.bend` pin `Unsupported\tparse\ttemplate-binder\t`.
+  - `src/LAWS.bend`: the `template_binder` law. It quantifies over every suffix,
+    so supporting templates falsifies it as stated. Replacing it is a
+    coordinator or user decision, and it must be made before implementation.
+- `tests/subsets/classification-cases.json`: `application-parameter.bend` pins
+  `Unsupported\tparse\tparameter-type\t` for a type application in a parameter.
+  Many fixtures here write `Seq<&2,Flag>` or `Res<Fault,A>` in a parameter. If
+  generics has not already superseded that pin when `poly-closures` lands,
+  `poly-closures` must.
+
+## Overlaps with other suites
+
+- **Closures (increment 7).** That suite owns monomorphic closures, including
+  `generic-choose-bind`, which instantiates `choose` at `Color` and at
+  `Flag -> Flag`. Here `choose` runs at the caller's rigid `A` and at
+  two-quantity instances, and `bind` at `Seq<&2,Flag>` and `Tree`. Negatives
+  reuse closures' codes and add nothing to its vocabulary.
+- **Generics (increment 6).** That suite owns `Kind(a)` over data and `Box`
+  values, `quantity-zero` with data, and the quantity meet over a data pair.
+  Here the element types are arrows (`kind-closure-list`, `kind-zero-arrow`),
+  results (`kind-result-list`) and closure payloads under a meet
+  (`kind-two-quantities`).
+- **Sugar.** That suite owns the `set_all` template (`template-set-known`),
+  the template mechanics without generics, and `(a,b)` tuple sugar over Base
+  `Pair`. Here the template is the exact `set_known` body, with a choose thunk
+  and a nested `+` pattern. The type and quantity binders are those of Base's
+  `List.map`, `List.foldl`, `List.any` and `List.filter`. The Sigma is a
+  fixture datatype, destructured by constructor patterns and lets, so that no
+  sugar resolves to Base.
+- **Baseslice (increment 8).** It checks Base's own `IO`, `Pair` and `Sigma`
+  declarations. This suite reproduces those shapes without Base, so each
+  increment can be qualified on its own.
+
+## Seed behaviours this suite freezes
+
+These behaviours were observed while writing the suite. They are recorded
+because an implementer could reasonably expect otherwise.
+
+- **Generic arrows.**
+  - A closure at a rigid arrow is still affine (`rigid-closure-twice`).
+    Captures of a rigid `A: Type` cannot be shared, and a `+` binder at such an
+    `A` is refused (`rigid-capture-twice`, `rigid-reusable-type`).
+  - A `-A: Data` parameter refuses an arrow instance (`bind-arrow-instance`).
+    The same program with `-A: Type` checks and runs.
+  - A type argument may itself be an arrow into an instance
+    (`generic-arrow-instances`), and a generic `compose` may be passed to
+    `compose` (`generic-compose`).
+- **Higher rank.**
+  - `Act(A)` unfolds to a rank-2 arrow, so an action is applied directly to its
+    answer type and continuation, as in `m(Color,c => Emit{c})` or
+    `load(f,next,Color,k)`. `Act.bind` over-applies `f(x,R,k)`.
+  - The answer type is rigid inside `R => k => ..` (`rank2-rigid-answer`).
+  - The seed's polymorphism is impredicative: `Act(Act(Flag))` and
+    `Act.join` check (`rank2-two-answers`).
+  - A named generic def fits a rank-2 parameter (`ident` for
+    `@-A: Type -> A -> A`). A monomorphic def does not
+    (`rank2-monomorphic-arg`).
+  - An action is an affine closure. Running one twice, even at two different
+    answer types, is reuse (`rank2-run-twice`).
+  - `Act.die` drops its continuation, and a bind after it never runs its `f`
+    (`rank2-pure-bind`, `chain(Off{},..)`).
+- **Kind(a).**
+  - An arrow is `Type`, so it instantiates `Kind(&1)`
+    (`kind-closure-list`), not `Kind(&2)` (`kind-closure-at-data`).
+  - `Kind(&0)` admits an arrow, and closures stored at `&0` may be built live
+    and never called (`kind-zero-arrow`).
+  - The explicit quantity argument fixes the instance: `rev(&2,Flag,xs)` refuses
+    a `Seq<&1,Flag>` (`kind-quantity-mismatch`).
+  - `Res<Fault,A>` is `Res<&1,&1,Fault,A>`; the seed prints the long form in
+    its diagnostics (`choose-branch-mismatch`).
+- **Templates.**
+  - A `~` binder may be passed on as the erased type argument of a plain
+    generic def (`template-filter-data`, `put(A,..)`).
+  - A closed `~` lambda may mention the enclosing template's own `~f`
+    (`template-any-forward`, `all`). It may also mention generic defs at
+    explicit types, including a partial application such as `~ident(Flag)`
+    (`template-generic-arg`).
+  - A caller's erased type variable is not comptime (`template-open-type`).
+  - `~` before an argument of a plain def is a parse error
+    (`template-plain-param`).
+  - Without `+payload`, `set_known` is rejected: the thunk captures `payload`
+    and the self-call passes it (`template-thunk-affine`).
+- **Sigma.**
+  - The family parameter wants an erased binder. `x => Shade(x)` fits, but the
+    def `Shade` with a live binder does not (`sigma-family-live-binder`).
+  - A match on `fst` refines the type of `snd` in each arm (`sigma-dependent`).
+    Without it, `snd` has the stuck type `Shade(f)` (`sigma-unrefined`).
+  - `Dep<&2,&2,..>` is `Data`, and `Dep<&1,&1,..>` is not
+    (`sigma-reusable`, `sigma-reuse-affine`).
+- These probes are not frozen, but they shaped the fixtures:
+  - A let of a bare constructor needs an annotation: `+blank = Blank{}` reports
+    `cannot infer`, and `+blank : Mode = Blank{}` checks.
+  - Matching a later parameter after an earlier one is accepted. Matching an
+    earlier parameter inside the arms of a later one is refused, so `render`
+    and `lookup` take the matched value first.
+  - Calling a def declared below from a live body is refused ("a filled
+    definition"), so helpers precede their callers.
+- Tags come from a syntactic reading of each fixture's enum declarations, in
+  declaration order. The seed only names the constructor.
+
+## What the implementers must wire
+
+The gate runner, its receipts and the build lanes belong to the implementers.
+Follow the pattern of `tests/compiler-fields/check.py`.
+
+1. Run `regen.py` first. It is the seed lane: fixture hashes, seed hashes and
+   all observations must still match before anything else counts.
+2. Select the cases whose `increment` is yours. Build the check and eval CLIs,
+   and the image and VM lanes once they exist. Check every selected fixture
+   that is not blocked.
+3. For `agree` fixtures, take each call in `observations`:
+   - Evaluate `eval-cli <fixture> <entry> <budget> <ordinals...>`. It must
+     yield `result.constructor`.
+   - On each image or VM lane that exists, the same call must return
+     `result.tag`.
+   - `ordinals` are the live enum arguments in parameter order. Every entry here
+     has only live enum parameters. Erased, template, function and rank-2
+     parameters of internal definitions never cross the host boundary.
+4. For `agree-or-unsupported` and `reject` fixtures, apply the requirement
+   table to every CLI phase that runs, including eval and compile.
+5. Report blocked fixtures (see Needs) separately from passes and failures.
+6. Land the reviewed amendments listed under "Existing assertions this suite
+   supersedes" in the same change, with their own review.
+
+## Limits
+
+- The seed lane is the reference interpreter. No seed-compiled binary is compared.
+- A seed-invalid fixture records only its direct rejection, because a wrapper
+  cannot import an invalid module.
+- The suite pins behaviour on finite programs. It proves no checker property,
+  no parametricity result and no soundness of the rank-2 encoding.
+- Entries are observed only through the enum host boundary. Closures, actions,
+  template instances and pairs never cross it, so their representations are
+  checked only through the enum results they determine.
+- Mirrors cite the source as it stands at this suite's base. Later edits to
+  `src/` do not invalidate the fixtures, and `regen.py` does not re-read the
+  cited lines.
+- Continuations stay short: at most three list elements and four chained
+  chooses. The suite does not measure stack depth, allocation or the cost of
+  polymorphic dispatch; that belongs to the VM benchmarks.
