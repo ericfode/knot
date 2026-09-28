@@ -2,11 +2,18 @@
   "schema": 1,
   "about": "harness-2 acceptance: the bootstrap harness run on a scratch merge of this branch and campaign/modules. Built with git merge-tree and git archive; no branch, ref or worktree was changed.",
   "commits": {
-    "campaign/harness-2": "388021e4f517f0b5313b645f382bc1d614bce66a",
+    "campaign/harness-2": "8737b5ecbc5105a530a4c262850965793f190cff",
     "campaign/modules": "0111f13352e0fe8da3332ac68072eef35dbd2de2"
   },
-  "merge_tree": "bfc7fa2426ad94aa31cb317582f8b2dd898f254a",
-  "command": "git merge-tree --write-tree <harness-2> <modules>; git archive <tree> | tar -x -C <scratch>; link .toolchain and node_modules; BEND_NO_TELEMETRY=1 python3 tests/compiler-bootstrap/check.py",
+  "merge_tree": "7d3f08f8e00c89c404f36d4710636cc091abbebb",
+  "conflicts": {
+    "files": [
+      "docs/compiler-campaign/inventory/accepted.json",
+      "docs/compiler-campaign/inventory/selfhost.json"
+    ],
+    "resolution": "campaign/modules' copies; generated census inventory, which the harness does not read"
+  },
+  "command": "git merge-tree --write-tree <harness-2> <modules>; git archive <tree> | tar -x -C <scratch>; resolve the two inventory files to campaign/modules'; link .toolchain and node_modules; BEND_NO_TELEMETRY=1 python3 tests/compiler-bootstrap/check.py",
   "status": "passed",
   "verdict": {
     "violations": [],
@@ -249,5 +256,5 @@
       "sha256": "68db09bedbc4f2f1d08a4954e0be023a766101ca03333d1ac6e7005b5328fa2c"
     }
   },
-  "progress_sha256": "1769ce8c8fb54b448287e0815b123ceebb05369eaed7defb4d913b0cb1170ec4"
+  "progress_sha256": "147d865b453ad86a4aac6136faf17be62300ce1ae7805033182b8ec7e81c63d1"
 }

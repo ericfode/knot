@@ -161,6 +161,8 @@ unavailable. S has 15 files: 13 sources, Base and ByteOutput.
 **Scratch merge with `campaign/modules`.** The harness ran on a merge of this
 branch and `campaign/modules` (`0111f13`), built with `git merge-tree` and
 `git archive` without touching any branch, ref or worktree.
+The two generated census inventory files conflict; the scratch tree takes
+`campaign/modules`' copies, which the harness does not read.
 [`evidence/modules-merge.json`](evidence/modules-merge.json) records the
 commits, the merge tree, both argvs, the stages, the audit and the receipt's
 sha256. The run passed its verdict. Both contracts carry
