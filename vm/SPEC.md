@@ -17,8 +17,9 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 86 sources, frozen observations, hand-written plans and their `.kimg` images |
-| [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
+| [golden/](golden/) | 91 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden and frozen Book invocation, derived by the rules of §8 and §11 |
+| [evaluate.py](evaluate.py) | reference evaluation of a plan on values, not cells: a Program's prints, a Book's result |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
 
@@ -127,6 +128,10 @@ A field naming another representation requires that representation declared.
 U32 and File are **opaque**:
 U32's `Word` representation is never exposed to the VM, and the encoder rejects a
 reachable non-prim body that destructures it. A File is a host handle token.
+Having no pinned shape, the two may name one opaque type (run control
+`u32-file-alias`): a U32 immediate at a File position is then a token, which the
+host refuses as `HostFailure io handle` unless it is open. A `none`-typed value
+can deliver the same word without the alias.
 
 **Constants.** Kinds 0 U32, 1 Nat, 2 Char, 3 String. The first three have `n = 1`
 and hold the full value. A String holds its exact ordered Chr codes, not UTF-8;
@@ -240,7 +245,9 @@ stack. The validator checks every function, reachable or not:
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its three admitted plan controls (a Case on a `none` slot, among
-them `list-head-match`, S's shape) and its seven code-list controls (§12).
+them `list-head-match`, S's shape), its seven code-list controls and its seven
+run controls; vm-model and vm-core MUST run each run control to the outcome
+frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -411,11 +418,16 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
 
 `Enter(target, ops)`:
 
-1. A target that is neither a function (Application) nor a Closure cell, an Action
-   cell or the terminal continuation halts with `HostFailure image` (`ill-typed`)
-   before anything else. If `fuel = 0`, stop with `Exhausted` kind 1; the pending
-   `Enter` stays in the state and no effect happens. Otherwise `fuel -= 1`,
-   `calls += 1`, `quantum += 1`.
+1. The target must be a function (Application), a Closure cell, an Action cell or
+   the terminal continuation, and must take `ops`: a Closure exactly its
+   `live_argument` operands, an Action zero or one, the terminal continuation
+   exactly one (a function's live arity is checked by §3 and §8). Otherwise the
+   step halts with `HostFailure image` (`ill-typed`) before anything else, at
+   `fuel = 0` too: a `none`-typed value can hand an Invoke an arrow of the other
+   kind, or `k` to an erased Invoke (§12's run controls). Program phases 1 and 2
+   (§8) enter through this same check. If `fuel = 0`, stop with `Exhausted`
+   kind 1; the pending `Enter` stays in the state and no effect happens.
+   Otherwise `fuel -= 1`, `calls += 1`, `quantum += 1`.
 2. By target:
    - a function: enter its body with `ops` moved into slots `0..arity-1`;
    - a Closure: enter its body with the captures `dup`ed into slots `0..n-1` and
@@ -448,22 +460,34 @@ is a Wasm-to-Wasm return and call. Test dumps show a Yield event here.
 
 ## 8. Books, Programs and Actions
 
-**Book** (`IMAGE FN FUEL [ORDINALS…]`). The VM finds `FN` by name, checks that the
-ordinals match its live arity and are nullary constructor tags of the parameter
-types, and checks that `FN`'s result type is **describable**: algebraic, with every
-live field of every constructor describable in turn. A cycle through algebraic
-types stays describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque
-type are not, so neither are the pinned Char (its U32 field) and String. These
-checks read only the image, in that order, before anything else and without
-debiting fuel.
-Failures are `HostFailure invoke unknown-export`, `argument-arity`,
-`argument-range` or `structured-argument`, as in eval-cli, and then `Unsupported
-invoke result-type`: Knot has no describe spelling for such a result, so the VM
-refuses the request instead of inventing one (§11; goldens `result-u32`,
-`result-u32-field`, `result-char` and `result-string`; the reference predicate is
-`serializer.undescribable`). The VM then pushes Top(phase 0)
-and starts with `Enter(FN, ordinals)`. Return to Top(0) halts with the result and
-prints
+**Book** (`IMAGE FN FUEL [ORDINALS…]`). These checks read only the image, in this
+order, before anything else and without debiting fuel; steps 1–3 fail as
+`HostFailure invoke` with the cause named:
+1. `FN` is found by name, else `unknown-export`.
+2. `FN`'s live parameters are walked left to right, as eval-cli walks them; an
+   erased parameter takes no ordinal. With no ordinal left, `argument-arity`. An
+   arrow parameter is `function-argument`. Otherwise the ordinal is a constructor
+   tag of the parameter's type: at or beyond its constructor count it is
+   `argument-range`, so an opaque type (U32, File) or a `none` parameter refuses
+   every ordinal; naming a constructor with a live field, `structured-argument`.
+   An admitted ordinal is that nullary constructor's immediate.
+3. Ordinals left over are `argument-arity`.
+4. `FN`'s result type must be **describable**: algebraic, with every live field of
+   every constructor describable in turn. A cycle through algebraic types stays
+   describable (Nat's `Succ{Nat}`); a `none` field, an arrow and an opaque type are
+   not, so neither are the pinned Char (its U32 field) and String. Otherwise
+   `Unsupported invoke result-type`: Knot has no describe spelling for such a
+   result, so the VM refuses the request instead of inventing one (§11; goldens
+   `result-u32`, `result-u32-field`, `result-char` and `result-string`).
+
+The reference predicate is `serializer.invocation`. The image keeps less than
+eval-cli's core, so two eval-cli answers differ by contract: eval-cli admits a U32
+ordinal 0 as the value 0, because its loader models U32 as one nullary constructor
+(`opaque-parameter`), and refuses a constructor whose fields are all erased as
+`structured-argument`, while the image has no erased field (`erased-field`).
+Goldens `invoke-args` and `invoke-arrow` freeze each cause (§12). The VM then
+pushes Top(phase 0) and starts with `Enter(FN, ordinals)`. Return to Top(0) halts
+with the result and prints
 
 ```
 Evaluated<TAB>type<TAB>tag<TAB>tree<LF>
@@ -592,7 +616,8 @@ view, and enters `k`. Outgoing Strings must be Unicode scalars and are encoded a
 canonical UTF-8, with no surrogate merging or replacement. An outgoing String that
 holds a non-scalar Char (a surrogate, or a code above U+10FFFF) halts with
 `HostFailure io abi` before the host call: none of it is encoded or written (D20,
-§11). Incoming text follows
+§11). Only output is checked: building, storing or measuring a non-scalar Char is
+pure code (§2). Incoming text follows
 the host's replacement decoding, BOM kept, one Chr per scalar. Raw input bytes
 become U32 elements 0..255.
 A byte-list write scans the **whole** list first, computes `invalid |= e >> 8`,
@@ -626,30 +651,39 @@ was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
 
 **The rule.** Wherever the seed succeeds inside the VM's declared domain and
-budgets, the VM MUST return the seed's value and effect trace. Another lane's
+budgets, the VM MUST return the seed's value and effect trace, except the output
+D20 refuses (below). Another lane's
 exhaustion never excuses the VM. A VM that exhausts early, corrupts a result or
 reports an engine trap as a budget fails. Unsupported, timeout, unknown failure
 and a missing lane are neither Exhausted nor agreement. An Unsupported outcome is
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
 bound. Expected values are never regenerated from a candidate VM.
 
-**Non-scalar output (D20).** Where the seed's native lane exits 0 on output that
-holds a non-scalar Char, the VM refuses that output as `HostFailure io abi` (§10).
-The native bytes are not a faithful encoding: the lane writes a surrogate or a
-code below 2^21 as generalized UTF-8, but truncates the lead byte of a wider code,
-so they are recorded and never read to classify. The witness is the seed's Bun
-lane, which refuses the output (`bend: N is not a Unicode scalar value`, exit 1)
-after writing the output before that String; that earlier output is exactly what
-the VM writes. The golden is marked `divergent-by-contract (non-scalar output)`
-and expects the refusal; it is neither seed agreement nor a bound. A
-native-lane Program therefore carries its Bun lane. Goldens: `print-non-scalar`
-(`IO.print(SCon{Chr{55296}, SNil{}})`, ASCII source; native bytes `ED A0 80 0A`),
-`print-non-scalar-mid` (`IO.print("a\u{D800}b")`; native `61 ED A0 80 62 0A`, of
-which the VM writes nothing) and `print-non-scalar-wide` (`Chr{67237376}`, that is
-0x401F600; native `F0 9F 98 80 0A`, the valid UTF-8 of U+1F600).
+**Non-scalar output (D20).** The program's own value decides it, never a seed
+lane. The reference evaluation of the plan ([evaluate.py](evaluate.py), §6–§10 on
+values) yields the Strings a Program passes to output effects, in order. It
+implements `IO.print`, the only effect the goldens use; any other foreign or a
+Halt fails the gate and counts as neither agreement nor D20. When one String holds
+a non-scalar Char, the VM writes the earlier Strings and refuses that one as
+`HostFailure io abi` (§10); the golden is `divergent-by-contract (non-scalar
+output)`, neither seed agreement nor a bound. Otherwise the case is ordinary seed
+agreement, whatever Chars the program builds. The seed lanes are recorded and never
+classify. The native lane exits 0 and writes every String as generalized UTF-8,
+surrogates included, but keeps only the low 8 bits of the lead byte from 2^21, so
+`Chr{67237376}` (0x401F600) writes `F0 9F 98 80`, the UTF-8 of U+1F600; its bytes
+must equal the whole trace in that encoding. The Bun lane refuses a non-scalar Char
+where it is constructed (`bend: N is not a Unicode scalar value`, exit 1), printed
+or not; its earlier output must be a prefix of the VM's, and a native-lane Program
+records it. D20 goldens: `print-non-scalar` (`IO.print(SCon{Chr{55296}, SNil{}})`,
+ASCII source; native `ED A0 80 0A`), `print-non-scalar-mid` (`"a\u{D800}b"`; native
+`61 ED A0 80 62 0A`, of which the VM writes nothing), `print-non-scalar-wide`
+(`Chr{67237376}`; native `F0 9F 98 80 0A`) and `print-non-scalar-second` (`"a"`, then
+the lone surrogate; the VM writes `a\n`, the Bun lane nothing). `non-scalar-code`
+(`55296\n`) and `non-scalar-unprinted` (`a\nnonempty\n`, where the Bun lane writes
+`a\n` and refuses) build a surrogate without printing it and agree with the seed.
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
-golden: the eval-cli line where eval agrees with the seed (72 goldens), agreement
+golden: the eval-cli line where eval agrees with the seed (74 goldens), agreement
 meaning that eval's tree equals the seed's printed value in §8's spelling (no
 spaces, erased fields dropped by the golden's declarations, a Nat unary); the seed's
 value rendered by §8 where eval is excused (`nat-big`, `u32-to-nat-big`);
@@ -662,13 +696,15 @@ describe domain (`result-u32`, `result-u32-field`, `result-char`,
 reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
-`foreign-print` and `io-bind`; and D20's refusal, with no output, for
-`print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`. For those
+`foreign-print`, `io-bind`, `non-scalar-code` and `non-scalar-unprinted`; and D20's
+refusal for `print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`,
+with no output, and for `print-non-scalar-second` after `a\n`. For those
 Programs the eval lane is not excused but unavailable: both literals `eval-cli`
 and `check-cli` report `Invalid parse function-result` for
 `def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
-relabelled, and their plans follow §1 by hand. `io-bind` keeps Base's `IO.bind`
-and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
+relabelled, and their plans follow §1 by hand. `io-bind`, `non-scalar-unprinted`
+and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
+so their `A`-typed nodes are `none`.
 
 ## 12. Frozen evidence and later obligations
 
@@ -676,7 +712,8 @@ and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
 lane and requires:
 - every golden source's hash, and a byte-identical re-execution of the seed and
   eval-cli observations frozen in `golden/expectations.json` (a stdout that is not
-  UTF-8 kept as hex; a D20 golden's Bun cross-check too);
+  UTF-8 kept as hex; a native-lane Program's Bun lane and each frozen Book
+  invocation's eval-cli answer too);
 - the registry re-derived from the literals snapshot;
 - each committed `.kimg` equal to its plan's encoding, decoding back to the plan,
   and passing validation;
@@ -690,10 +727,21 @@ lane and requires:
   seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls), and every Program whose Bun lane refuses a
-  non-scalar Char a declared D20 divergence whose VM output is the Bun lane's
-  output before its refusal (six frozen expectation controls, among them the wide
-  code as agreement and a native lane without its Bun witness);
+  (two frozen expectation controls), and every Program classified by the reference
+  evaluation of its plan: a declared D20 divergence exactly where it prints a
+  non-scalar Char, with the VM output of the earlier prints, the native bytes equal
+  to the whole trace in that lane's encoding and the Bun lane's output a prefix of
+  the VM's (eleven frozen expectation controls, among them the wide code as
+  agreement, its plan printing U+1F600, a surrogate built but never printed as a
+  divergence, and the Bun lane's empty output as `print-non-scalar-second`'s);
+- the reference evaluation reproducing every Book golden's expectation and every
+  run control's outcome and call count;
+- each of the 28 frozen Book invocations of `invoke-args` and `invoke-arrow`
+  equal to its literal review and to §8: `serializer.invocation`'s verdict, or the
+  reference evaluation's describe line for the entered function; eval-cli's frozen
+  answer agrees except where a declared `opaque-parameter` or `erased-field`
+  divergence names the image loss the gate derives (five frozen invocation
+  controls);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
@@ -701,13 +749,24 @@ lane and requires:
   `none`-typed node covered;
 - all 61 refusals of §4 with their frozen reasons, and its three admitted plan
   controls;
+- seven admitted **run controls** (`check-spec.py run_controls`), each frozen
+  with the run §7 requires, by literal review. Through a `none`-typed identity: a
+  live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
+  closure invoked live, a live closure invoked erased, the terminal continuation
+  invoked erased, a live closure as main's value at phase 1 and an erased closure
+  at phase 2, each `HostFailure image` (`ill-typed`) after 2, 2, 4, 2 and 3
+  calls. And U32 and File named by one opaque type, `Evaluated 0 0 Off{}` after 1
+  call. A validator mutant in which `none` never fits an arrow refuses the first,
+  a generic function instantiated at an arrow type, so `fits` stays loose and §7
+  checks the count;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 39 codec mutants and 4 source mutants killed through a changed image, a decode
+- 46 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
-  changed describe verdict or a changed observation, never a crash;
+  changed describe or invocation verdict or a changed observation, and 11 evaluator mutants
+  through a changed or refused expectation, Book value or run control, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
   and `parse-cli.json` equal to the digests pinned in `bench/workloads.json`; a
   re-measurement is refused until a reviewed commit re-pins it (two controls).

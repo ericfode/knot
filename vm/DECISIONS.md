@@ -2,7 +2,8 @@
 
 D15–D18 were adopted at `454bf30` in `docs/COMPILER-CAMPAIGN.md`. The wording below
 is what [SPEC.md](SPEC.md) implements; it refines the adopted rows without
-changing their direction. This executor does not edit the campaign decision table.
+changing their direction. This executor does not edit the campaign decision table,
+except the D20 row, rewritten at the coordinator's round-4 direction.
 D19, adopted on main after this branch's base (`b926a3c`), replaces the 2,048-page
 (128 MiB) memory bound with a declared 65,536-page (4 GiB) maximum; the spec
 follows it (§5, §10, §11) without a new image header word.
@@ -106,13 +107,23 @@ follows it (§5, §10, §11) without a new image header word.
    written. The next review found the native bytes unfit to classify: the lane
    truncates the lead byte of a code at or above 2^21, so `Chr{67237376}`
    (0x401F600) prints `F0 9F 98 80`, the valid UTF-8 of U+1F600, and a rule that
-   decoded those bytes owed the emoji (`print-non-scalar-wide`). The witness is
-   now the Bun lane: it refuses the first non-scalar Char with its exact code
-   after writing the earlier output, which is what the VM writes; a native-lane
-   Program must carry it. The expectation rule refuses undeclared non-scalar
-   output (the wide code included), a divergence on output the Bun lane writes,
-   another class, a VM output other than the Bun lane's, and a native lane
-   without its Bun witness (six controls).
+   decoded those bytes owed the emoji (`print-non-scalar-wide`). Round 3 then made
+   the Bun lane the witness, but review round 4 showed that it refuses a
+   non-scalar Char where `char_new` constructs it, printed or not: it refused
+   `non-scalar-code` (native `55296\n`) and `non-scalar-unprinted` (native
+   `a\nnonempty\n`, Bun `a\n`), which print only scalars, and wrote nothing for
+   `print-non-scalar-second`, where the VM writes `a\n` first. The coordinator's
+   round-4 decision makes the program's value the classifier: the reference
+   evaluation of the plan (`evaluate.py`, §6–§10 on values) yields the Strings
+   passed to `IO.print`, and D20 applies exactly when one holds a non-scalar Char.
+   Both seed lanes are recorded observations. The native bytes must equal the
+   whole trace in the lane's own encoding, whose truncation of the lead byte from
+   2^21 was measured on 19 codes; the Bun lane's output must be a prefix of the
+   VM's. Eleven expectation controls refuse undeclared non-scalar output (the wide
+   code included), a divergence on scalar output, another class, a VM that writes
+   the non-scalar String or less than the earlier prints, the wide plan printing
+   U+1F600, a built but unprinted surrogate declared as a divergence, other native
+   bytes, Bun output beyond the VM's and a native lane without its Bun record.
 11. **Plans spell a String as its code list.** Round 3 also found the reference
    codec lossy: plans spelled String constants as JSON text, so `json.loads`
    merged a surrogate pair into U+1F600 and decode refused codes above U+10FFFF
@@ -120,6 +131,41 @@ follows it (§5, §10, §11) without a new image header word.
    spelling, and seven admitted code-list controls and two goldens
    (`string-surrogate-pair`, seed `False{}`; `string-beyond-unicode`, seed `1n`)
    pin §2's "every u32 code, in order". No committed image changed.
+12. **Enter checks its operand count.** The next review laundered arrows through
+   `id(x: none) -> none`: `fits` lets a `none` value flow into either arrow kind,
+   so validation admits an erased closure invoked live, a live closure invoked
+   erased (its body reads a slot never filled) and a Program's `k` invoked erased
+   (`Enter(terminal, [])`), and §7 said nothing about any of them. §7 step 1 now
+   halts with `HostFailure image` (`ill-typed`) before the fuel test unless a
+   Closure takes exactly its `live_argument` operands, an Action zero or one and
+   the terminal continuation one; Program phases 1 and 2 use the same check.
+   `fits` stays loose: a generic function instantiated at an arrow type returns
+   a `none`-typed value into an arrow-typed node (§3). No golden exercises that
+   (every golden still validates when `none` never fits an arrow), so the run
+   control `arrow-through-identity`, `id(λx. x)(On{})`, is the one that kills
+   such a mutant. The same review showed that U32 and File may name one opaque
+   type; that is admitted, with an ordinary run, because the pair has no pinned
+   shape and a `none` value already delivers a U32 word to a File position,
+   where the host refuses an unknown token as `HostFailure io handle`. Seven run
+   controls freeze these runs for vm-model and vm-core.
+13. **Book invocations follow eval-cli's walk.** Review round 4 found §8's "as in
+   eval-cli" unwitnessed and out of order: no golden passed an ordinal, and
+   eval-cli walks the live parameters left to right, so `f 5` with a missing
+   second ordinal is `argument-range`, and `h 1 0` with a leftover is
+   `structured-argument`. §8 now states that walk: `unknown-export`; per live
+   parameter, a missing ordinal (`argument-arity`), an arrow (`function-argument`,
+   the closures head's cause), a tag at or beyond the constructor count
+   (`argument-range`) and a constructor with a live field (`structured-argument`);
+   then leftover ordinals (`argument-arity`); last the describe domain. An opaque
+   type has no constructor, so U32 and File refuse every ordinal: admitting a U32
+   ordinal as a scalar would also forge File tokens, since the two may name one
+   opaque type (run control `u32-file-alias`). A `none` parameter refuses for the
+   same reason. The pinned heads check neither File nor generic Book parameters
+   (`Unsupported parse declaration-form` and `parameter-type`), so those two
+   verdicts rest on this rule alone. Goldens `invoke-args` (23 invocations) and
+   `invoke-arrow` (5) freeze every cause beside eval-cli's answers, the reference
+   predicate is `serializer.invocation`, and six codec mutants of its order are
+   killed.
 
 ## Findings that need an owner
 
@@ -157,13 +203,16 @@ follows it (§5, §10, §11) without a new image header word.
    The bootstrap gate enforces D4 only on `src/`, so it passes, but its corpus now
    records these outcomes: its `progress.json` and `reference.json` receipts drift
    semantically, and this increment leaves them unrefreshed as shared receipts.
-   Measured by the gate runner on this branch after merging main (`481bb31`)
-   against main's committed receipt, the parse histogram moves from 785 to 876
-   files: `Parsed` 144 to 162, `Unsupported lex literal` 185 to 210,
-   `Unsupported parse declaration-form` 239 to 280, `parameter-type` 57 to 58,
+   Measured by the gate runner on this branch in review round 4 (after `fc17357`)
+   against main's committed receipt, the parse histogram moves from 785 to 882
+   files: `Parsed` 144 to 162, `Unsupported lex literal` 185 to 213,
+   `Unsupported parse declaration-form` 239 to 282, `parameter-type` 57 to 59,
    `Invalid parse expected-=` 2 to 6 and `Invalid parse function-result` 8 to 10.
    Exactly these six goldens account for the new Invalid rows; the 23 goldens of
-   review round 1, the 3 of round 2 and the 4 of round 3 all end Unsupported. **When the coordinator refreshes these
+   review round 1, the 3 of round 2, the 4 of round 3 and the 5 of round 4 all
+   end Unsupported. The six rows added since round 3's count of 876 (three `lex
+   literal`, two `declaration-form`, one `parameter-type`) are round 4's five
+   goldens and round 3's later `print-non-scalar-wide`. **When the coordinator refreshes these
    receipts, the six Invalid rows must not be accepted as a baseline.** Owner:
    merge-wave, whose closures merge should turn them into parses or Unsupported
    first; otherwise the refresh records them as known D4 debt with that owner.
@@ -198,3 +247,14 @@ follows it (§5, §10, §11) without a new image header word.
    `Digest` explicitly in the live style pass or record it as unresolved in the
    style state. The task context is unavailable (`missing_task_context`), which is
    advisory; the composition is available (18,837 of 48,000 bytes).
+10. **eval-cli reads what the image drops at invocation.** Both answers are
+   recorded as declared divergences on `invoke-args`, and knot-vm-1 follows the
+   image (§8). (a) The literals `eval-cli` admits `is_zero 0` for an
+   `x: U32` parameter as the value 0, because its loader models U32 as one
+   nullary constructor `#U32`, while refusing every other U32 ordinal as
+   `argument-range` (`opaque-parameter`). (b) It refuses `real 0`, where
+   constructor 0 of `Ghost{-proof: Flag}` has only an erased field, as
+   `structured-argument`, since it counts erased fields; the image has none and
+   admits the value (`erased-field`). Under D4 neither is a source error. The
+   owner is literals, or merge-wave when the invocation walk is shared; the fix
+   is to walk live fields and treat U32 as having no ordinal.

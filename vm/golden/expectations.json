@@ -1874,6 +1874,496 @@
         "stdout": "",
         "stderr": "bend: 67237376 is not a Unicode scalar value\n"
       }
+    },
+    {
+      "name": "non-scalar-code",
+      "source": "vm/golden/non-scalar-code.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "55296\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Intrinsic",
+        "non-scalar Char"
+      ],
+      "sha256": "32a269c6dde771bc15a54d60f4f08f8fb589bf2fb702018ac57efc023e2a4992",
+      "seed": {
+        "exit": 0,
+        "stdout": "55296\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "non-scalar-unprinted",
+      "source": "vm/golden/non-scalar-unprinted.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout": "a\nnonempty\n",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "non-scalar Char"
+      ],
+      "sha256": "7480d8a077d990df7e43005115344c062b5240e98e2f5f954d65050d45a19559",
+      "seed": {
+        "exit": 0,
+        "stdout": "a\nnonempty\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t113:114:8:11\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "a\n",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "print-non-scalar-second",
+      "source": "vm/golden/print-non-scalar-second.bend",
+      "lane": "literals",
+      "seed_lane": "native",
+      "seed_stdout_hex": "610aeda0800a",
+      "seed_bun_stderr": "bend: 55296 is not a Unicode scalar value\n",
+      "divergence": "non-scalar output",
+      "vm_stdout": "a\n",
+      "features": [
+        "Foreign",
+        "Closure",
+        "Invoke",
+        "generic",
+        "Construct",
+        "non-scalar output"
+      ],
+      "sha256": "9d3ea7ee9677db310a11e833bfb02236c491344ceac8bde60bb93c93115dc2b4",
+      "seed": {
+        "exit": 0,
+        "stdout": "a\n\ufffd\ufffd\ufffd\n",
+        "stderr": "",
+        "stdout_hex": "610aeda0800a"
+      },
+      "eval": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Invalid\tparse\tfunction-result\t21:22:3:19\n"
+      },
+      "seed_bun": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "bend: 55296 is not a Unicode scalar value\n"
+      }
+    },
+    {
+      "name": "invoke-args",
+      "source": "vm/golden/invoke-args.bend",
+      "lane": "literals",
+      "seed_stdout": "Two{On{}, Off{}}\n",
+      "features": [
+        "Book invocation",
+        "erased parameter",
+        "Intrinsic"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "two",
+            "1",
+            "0"
+          ],
+          "vm": "Two{On{},Off{}}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t6\t0\tTwo{On{},Off{}}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-arity\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "0",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-arity\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "5"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "5",
+            "0",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "two",
+            "1",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "succ",
+            "0"
+          ],
+          "vm": "Succ{Zero{}}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t1\tSucc{Zero{}}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "succ",
+            "1"
+          ],
+          "vm": "HostFailure invoke structured-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "succ",
+            "1",
+            "0"
+          ],
+          "vm": "HostFailure invoke structured-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "succ",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "size",
+            "0"
+          ],
+          "vm": "Zero{}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t1\t0\tZero{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "size",
+            "1"
+          ],
+          "vm": "HostFailure invoke structured-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "code",
+            "0"
+          ],
+          "vm": "HostFailure invoke structured-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "code",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "is_zero",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "divergence": "opaque-parameter",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t0\t1\tTrue{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "is_zero",
+            "7"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "real",
+            "0"
+          ],
+          "vm": "Off{}",
+          "divergence": "erased-field",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tstructured-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "real",
+            "1"
+          ],
+          "vm": "On{}",
+          "eval": {
+            "exit": 0,
+            "stdout": "Evaluated\t5\t1\tOn{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "argv": [
+            "real",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "text",
+            "1"
+          ],
+          "vm": "Unsupported invoke result-type",
+          "eval": {
+            "exit": 6,
+            "stdout": "",
+            "stderr": "InternalFailure\teval\tresult-tag\n"
+          }
+        },
+        {
+          "argv": [
+            "text",
+            "2"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "absent"
+          ],
+          "vm": "HostFailure invoke unknown-export",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tunknown-export\n"
+          }
+        },
+        {
+          "argv": [
+            "main",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-arity",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-arity\n"
+          }
+        }
+      ],
+      "sha256": "c051337c36f19756ba57a437254408a6d06bb1c05d82f641ca88e62432e72491",
+      "seed": {
+        "exit": 0,
+        "stdout": "Two{On{}, Off{}}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t6\t0\tTwo{On{},Off{}}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "invoke-arrow",
+      "source": "vm/golden/invoke-arrow.bend",
+      "lane": "closures",
+      "seed_stdout": "On{}\n",
+      "features": [
+        "Book invocation",
+        "Closure",
+        "Invoke"
+      ],
+      "invocations": [
+        {
+          "argv": [
+            "feed",
+            "1",
+            "0"
+          ],
+          "vm": "HostFailure invoke function-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tfunction-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "feed",
+            "1",
+            "0",
+            "0"
+          ],
+          "vm": "HostFailure invoke function-argument",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\tfunction-argument\n"
+          }
+        },
+        {
+          "argv": [
+            "feed",
+            "1"
+          ],
+          "vm": "HostFailure invoke argument-arity",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-arity\n"
+          }
+        },
+        {
+          "argv": [
+            "feed",
+            "2",
+            "0"
+          ],
+          "vm": "HostFailure invoke argument-range",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-range\n"
+          }
+        },
+        {
+          "argv": [
+            "feed"
+          ],
+          "vm": "HostFailure invoke argument-arity",
+          "eval": {
+            "exit": 5,
+            "stdout": "",
+            "stderr": "HostFailure\tinvoke\targument-arity\n"
+          }
+        }
+      ],
+      "sha256": "62eb7b66d824b393a5e7fd0ab14b6d53bea37dbb3abda8517d223039a63c9132",
+      "seed": {
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "eval": {
+        "exit": 0,
+        "stdout": "Evaluated\t0\t1\tOn{}\n",
+        "stderr": ""
+      }
     }
   ]
 }
