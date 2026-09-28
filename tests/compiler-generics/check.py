@@ -49,6 +49,8 @@ SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-bo
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
+# Harness hang guard only, as in the other gates; the runner scales it under load.
+TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
 ENV = {**os.environ, 'BEND_NO_TELEMETRY': '1',
        'BEND_HUB': 'offline://disabled', 'BEND_ORIGIN': 'offline://disabled'}
 
@@ -148,7 +150,7 @@ def run(argv, timeout=60):
     command = [str(x) for x in argv]
     try:
         process = subprocess.run(command, cwd=ROOT, env=ENV, text=True,
-                                 capture_output=True, timeout=timeout)
+                                 capture_output=True, timeout=timeout * TIMEOUT_SCALE)
     except subprocess.TimeoutExpired:
         return {'argv': command, 'exit': None, 'outcome': 'harness-timeout',
                 'stdout': '', 'stderr': ''}
