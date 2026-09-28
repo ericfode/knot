@@ -1,0 +1,559 @@
+{
+  "suite": "compiler-generics/marked-binders",
+  "increment": "6: generics and quantity arguments (S2), review round 3",
+  "basis": "Frozen before the repair (D4, D7). Observations are the pinned seed interpreter output recorded by regen.py; cases hold reviewed literals. Nothing is derived from Knot.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "cases": [
+    {
+      "name": "marked-reusable-binder",
+      "file": "fixtures/marked-reusable-binder.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "A reusable-marked bare binder `+a` in a book with no generic family.",
+      "twin": "unmarked-binder",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "marked-erased-binder",
+      "file": "fixtures/marked-erased-binder.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "An erased-marked bare binder `-a` in a book with no generic family.",
+      "twin": "unmarked-binder",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "unmarked-binder",
+      "file": "fixtures/unmarked-binder.bend",
+      "class": "positive",
+      "feature": "quantity-binder",
+      "intent": "An unmarked bare quantity binder in a book with no generic family.",
+      "twin": "marked-reusable-binder",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "An unmarked bare binder is a quantity parameter; the seed's result fixes the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "marked-reusable-function",
+      "file": "fixtures/marked-reusable-function.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "A reusable-marked bare binder `+a` quantifying a generic function.",
+      "twin": "unmarked-function",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "marked-erased-function",
+      "file": "fixtures/marked-erased-function.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "An erased-marked bare binder `-a` quantifying a generic function.",
+      "twin": "unmarked-function",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "unmarked-function",
+      "file": "fixtures/unmarked-function.bend",
+      "class": "positive",
+      "feature": "quantity-binder",
+      "intent": "An unmarked bare quantity binder quantifying a generic function.",
+      "twin": "marked-reusable-function",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "An unmarked bare binder is a quantity parameter; the seed's result fixes the evaluator and Wasm results."
+      }
+    },
+    {
+      "name": "marked-reusable-header",
+      "file": "fixtures/marked-reusable-header.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "A reusable-marked bare binder `+a` in a family header.",
+      "twin": "unmarked-header",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "marked-erased-header",
+      "file": "fixtures/marked-erased-header.bend",
+      "class": "negative",
+      "feature": "quantity-binder",
+      "intent": "An erased-marked bare binder `-a` in a family header.",
+      "twin": "unmarked-header",
+      "needs": [],
+      "entries": [],
+      "seed_reason": [
+        "- expected : ':'\n",
+        "- observed : ','\n"
+      ],
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tparse\tparameter\t",
+        "knot_expected": true,
+        "justification": "The seed reads a marked binder as the start of `name: Type` and rejects the `,` where it expects `:`. Only an unmarked bare binder is a quantity parameter, so Knot reports the marked binder as a parameter missing its type, Invalid parse parameter at that `,`; before the repair it dropped the mark, accepted the binder as an erased quantity, and compiled the book."
+      }
+    },
+    {
+      "name": "unmarked-header",
+      "file": "fixtures/unmarked-header.bend",
+      "class": "positive",
+      "feature": "quantity-binder",
+      "intent": "An unmarked bare quantity binder in a family header.",
+      "twin": "marked-reusable-header",
+      "needs": [],
+      "entries": [
+        {
+          "name": "main",
+          "params": [],
+          "result": "Flag"
+        }
+      ],
+      "knot": {
+        "require": "agree",
+        "justification": "An unmarked bare binder is a quantity parameter; the seed's result fixes the evaluator and Wasm results."
+      }
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "marked-reusable-binder",
+        "source_sha256": "ef5367c15eae81e4cdcc3eb9bf6117823d487e84f92b16af68e1ed6c66f426b8",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-binder.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| def pick(+a, x: Flag) -> Flag:\n  |            ^\n6 |   x\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-binder.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| def pick(+a, x: Flag) -> Flag:\n  |            ^\n6 |   x\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "marked-erased-binder",
+        "source_sha256": "723b3561c75e83ecb6462de57b7b08d29812100ff1277e4d5e5aff04715ea52d",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-binder.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| def pick(-a, x: Flag) -> Flag:\n  |            ^\n6 |   x\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-binder.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| def pick(-a, x: Flag) -> Flag:\n  |            ^\n6 |   x\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "unmarked-binder",
+        "source_sha256": "ac56cfc6e4bbed7b2e1ed4c4c4f5abe8dbdc23b339c7e9e1cd48c2d7ffca45fa",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-binder.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-binder.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/marked-binders/fixtures/unmarked-binder.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "marked-reusable-function",
+        "source_sha256": "eccdc11825555736ea438ec9e23e4a91e97233b09f2d368d4bafd97b4a1ac604",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-function.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| def head(+a, -A: Kind(a), xs: Seq<a,A>, d: A) -> A:\n   |            ^\n10 |   match xs:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-function.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| def head(+a, -A: Kind(a), xs: Seq<a,A>, d: A) -> A:\n   |            ^\n10 |   match xs:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "marked-erased-function",
+        "source_sha256": "cce749d33617b78929891bd095ecd2f71c31065eaca0a2d49f432d4209368823",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-function.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| def head(-a, -A: Kind(a), xs: Seq<a,A>, d: A) -> A:\n   |            ^\n10 |   match xs:\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-function.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| def head(-a, -A: Kind(a), xs: Seq<a,A>, d: A) -> A:\n   |            ^\n10 |   match xs:\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "unmarked-function",
+        "source_sha256": "b366d073e5081927c76ccc612d5d28f371551a4c6db9fc89d88c1628ba2e99cd",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-function.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-function.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/marked-binders/fixtures/unmarked-function.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "marked-reusable-header",
+        "source_sha256": "3d8c1c245cd5bd9db2bfefe94e5815a80b947a8cc36c7fc602ee1fd774ecb83e",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-header.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| type Box<+a, -A: Kind(a)> is Kind(a):\n   |            ^\n10 |   Box{value: A}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-reusable-header.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n 8 | \n 9>| type Box<+a, -A: Kind(a)> is Kind(a):\n   |            ^\n10 |   Box{value: A}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "marked-erased-header",
+        "source_sha256": "50c702cc3f5680b041002357f0885ebdcb2c1eb831c678d0554de503e640a4c3",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-header.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| type Box<-a, -A: Kind(a)> is Kind(a):\n  |            ^\n6 |   Box{value: A}\n"
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/marked-erased-header.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n4 | \n5>| type Box<-a, -A: Kind(a)> is Kind(a):\n  |            ^\n6 |   Box{value: A}\n"
+        },
+        "calls": []
+      },
+      {
+        "case": "unmarked-header",
+        "source_sha256": "dea880fbcb42c63c500dc3a170870df03cd73228ef302c43514da0a878b245ca",
+        "enums": {
+          "Flag": [
+            "Off",
+            "On"
+          ]
+        },
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-header.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/marked-binders/fixtures/unmarked-header.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": null,
+            "wrapper_source": null,
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-generics/marked-binders/fixtures/unmarked-header.bend"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": "",
+            "result": {
+              "type": "Flag",
+              "constructor": "On",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
