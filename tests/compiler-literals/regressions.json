@@ -1,0 +1,436 @@
+{
+  "purpose": "D7 freeze of the confirmed review-round-1 findings before their fixes.",
+  "generator": "python3 tests/compiler-literals/regressions.py --write",
+  "seed_sha256": {
+    "bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "fixtures": [
+    {
+      "name": "offset-adjacent",
+      "file": "tests/compiler-literals/regressions/offset-adjacent.bend",
+      "sha256": "0d74a77dc65f7372d6c823e6cb056c0f767632a7198b7ca81d50ad494dd81417",
+      "finding": "offset adjacency control",
+      "covers": "1n+ p, 1n+ +p, 1n++p and 3n+ x remain offsets",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ],
+        "Size": [
+          "Empty",
+          "Three"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-adjacent.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "argument_constructors": [],
+          "type": "Answer",
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-literals/regressions/offset-adjacent.bend"
+            ],
+            "exit": 0,
+            "stdout": "Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_space",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_space-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_space(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_space-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_space",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_space-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_space(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_space-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_promotion",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_promotion-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_promotion(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_promotion-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_promotion",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_promotion-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_promotion(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_promotion-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_join",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_join-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_join(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_join-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "after_join",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-after_join-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.after_join(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-after_join-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.Yes{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sum",
+          "arguments": [
+            0
+          ],
+          "argument_constructors": [
+            "Empty"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-sum-Empty.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.sum(F.Empty{})\n"
+          },
+          "constructor": "No",
+          "tag": 0,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-sum-Empty.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.No{}\n",
+            "stderr": ""
+          }
+        },
+        {
+          "export": "sum",
+          "arguments": [
+            1
+          ],
+          "argument_constructors": [
+            "Three"
+          ],
+          "type": "Answer",
+          "wrapper": {
+            "path": ".local/compiler-literals/regression-calls/offset-adjacent-sum-Three.bend",
+            "source": "import ../../../tests/compiler-literals/regressions/offset-adjacent.bend as F\n\ndef main() -> F.Answer:\n  F.sum(F.Three{})\n"
+          },
+          "constructor": "Yes",
+          "tag": 1,
+          "seed": {
+            "command": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-literals/regression-calls/offset-adjacent-sum-Three.bend"
+            ],
+            "exit": 0,
+            "stdout": "../../../tests/compiler-literals/regressions/offset-adjacent.Yes{}\n",
+            "stderr": ""
+          }
+        }
+      ],
+      "knot": {
+        "outcome": "agree",
+        "exit": 0,
+        "meaning": "checks; the evaluator and the Wasm module return each call's seed tag"
+      }
+    },
+    {
+      "name": "offset-spaced-expression",
+      "file": "tests/compiler-literals/regressions/offset-spaced-expression.bend",
+      "sha256": "978bb5a5a4c5fea5af063d8f8584da5b91a5c30f43b500d5d6d1306c4e41840e",
+      "finding": "offset adjacency",
+      "covers": "the expression 3n + x",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-expression.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a + b : Nat))\nLocation:\n13 | def five(x: Nat) -> Answer:\n14>|   answer(Nat.is_eq(3n + x, 5n))\n   |                       ^\n15 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-expression.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a + b : Nat))\nLocation:\n13 | def five(x: Nat) -> Answer:\n14>|   answer(Nat.is_eq(3n + x, 5n))\n   |                       ^\n15 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      }
+    },
+    {
+      "name": "offset-spaced-pattern",
+      "file": "tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+      "sha256": "d58bb8c4f133bf7c643262d9aad97e1661dea76cf82358aad5632a7f0283c8e1",
+      "finding": "offset adjacency",
+      "covers": "case 1n + p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a + b : Nat))\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n + p: Yes{}\n   |             ^\n12 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a + b : Nat))\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n + p: Yes{}\n   |             ^\n12 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      }
+    },
+    {
+      "name": "offset-spaced-promotion-expression",
+      "file": "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+      "sha256": "9600d1f6568c2f76d49a152cb02aa5fca560e5dbdc45378540243153f2fc8d62",
+      "finding": "offset adjacency",
+      "covers": "the expression 3n +x",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a bound variable\n- observed : x^-1\nContext:\n- x : Nat\nLocation: five\n13 | def five(x: Nat) -> Answer:\n14>|   answer(Nat.is_eq(3n +x, 5n))\n   |                       ^^\n15 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-promotion-expression.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a bound variable\n- observed : x^-1\nContext:\n- x : Nat\nLocation: five\n13 | def five(x: Nat) -> Answer:\n14>|   answer(Nat.is_eq(3n +x, 5n))\n   |                       ^^\n15 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      }
+    },
+    {
+      "name": "offset-spaced-promotion-pattern",
+      "file": "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+      "sha256": "b747c1a1cbf57395ed528ed21d62781c760a01f6efa6582b0dfb43691f0d171d",
+      "finding": "offset adjacency",
+      "covers": "case 1n +p",
+      "enums": {
+        "Answer": [
+          "No",
+          "Yes"
+        ]
+      },
+      "seed_check": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : '1n +p'\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n +p: Yes{}\n   |          ^^^^^\n12 | \n"
+      },
+      "seed_run": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-literals/regressions/offset-spaced-promotion-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : 1 patterns (one per scrutinee)\n- observed : '1n +p'\nLocation:\n10 |     case 0n: No{}\n11>|     case 1n +p: Yes{}\n   |          ^^^^^\n12 | \n"
+      },
+      "knot_expected": {
+        "outcome": "Unsupported",
+        "exit": 3,
+        "artifact": false,
+        "diagnostic_prefix": "Unsupported\tparse\toperator\t",
+        "justification": "Seed-invalid: a Nat offset needs `+` adjacent to its literal, so a separated `+` is operator sugar, which Knot does not check; D4 forbids an Invalid claim."
+      }
+    }
+  ]
+}

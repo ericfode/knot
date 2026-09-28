@@ -313,17 +313,21 @@ def main():
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((HERE / 'expectations.json').read_text())
     supplemental = json.loads((HERE / 'supplemental.json').read_text())
+    regressions = json.loads((HERE / 'regressions.json').read_text())
     inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HOST,
               Path(__file__), HERE / 'expectations.json', HERE / 'regen.py', HERE / 'supplemental.json',
-              HERE / 'supplemental.py', HERE / 'FIXTURES.md',
+              HERE / 'supplemental.py', HERE / 'regressions.json', HERE / 'regressions.py', HERE / 'FIXTURES.md',
               ROOT / 'tests/compiler-modules/host-check-expectations.json', *sorted((ROOT / 'src/host').glob('*'))]
     inputs += sorted((HERE / 'fixtures').glob('*.bend')) + sorted((HERE / 'supplemental').glob('*.bend'))
+    inputs += sorted((HERE / 'regressions').glob('*.bend'))
     record = {'status': 'incomplete', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'seed': manifest['seed'], 'inputs': {p.relative_to(ROOT).as_posix(): digest(p) for p in inputs}}
     try:
         record['reference_verification'] = success(['python3', HERE / 'regen.py'])
         record['supplemental_verification'] = success(['python3', HERE / 'supplemental.py'])
-        require(supplemental['seed_sha256'] == manifest['seed']['sha256'], 'Seed identity differs')
+        record['regression_verification'] = success(['python3', HERE / 'regressions.py'])
+        require(supplemental['seed_sha256'] == manifest['seed']['sha256'] == regressions['seed_sha256'],
+                'Seed identity differs')
         record['tools'] = {tool: success([tool, '--version'])['stdout'].strip() for tool in ('bun', 'node', 'python3')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
         record['base'] = base_inventory()
@@ -334,10 +338,10 @@ def main():
             record['proofs'].append({'entry': entry, 'result': r})
         lanes = build_lanes(record)
         record['fixtures'] = []
-        for f in [*manifest['fixtures'], *supplemental['fixtures']]:
+        for f in [*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']]:
             record['fixtures'].append(fixture(f, lanes, record['base'], manifest['seed']['sha256']['bend2/base.bend']))
         record['boundaries'] = boundaries(lanes)
-        record['mutants'] = mutants(manifest['fixtures'])
+        record['mutants'] = mutants([*manifest['fixtures'], *supplemental['fixtures'], *regressions['fixtures']])
         require(all(digest(ROOT / path) == h for path, h in record['inputs'].items()), 'Inputs changed during literals gate')
         fs = record['fixtures']
         ls = [lane for f in fs for lane in f['lanes'].values()]
