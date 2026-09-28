@@ -245,7 +245,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "4524a1995c08a41c717d2b31c3d1f5bb1c1b30bdfbaafb69dfda7b1844438e78"
+      "sha256": "a59b66ddacc231a903af177d2916c5903375e55141458fe49756b1235ea49ad1"
     },
     {
       "lane": "native",
@@ -263,7 +263,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "5876f43e786ead142db2a895d63b8abd9ca5afed3f1e3d2a7631038022cf50b7"
+      "sha256": "f26141087591212e6216ec8ae45b260863c7e15ccbcc900b52531e2d300a2d1c"
     },
     {
       "lane": "native",
@@ -281,7 +281,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "ca7f0c9afd11f599b4f8d06505494271825e13d50df94e2387d3e4dea2f01575"
+      "sha256": "554894c44d484a4346dd3b238cb7065e00d7f5580a94be974b37213a7ddc555b"
     },
     {
       "lane": "bun",
@@ -299,7 +299,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "6525526d3eaf125133d92df4eae5dd79e1c915286c2853b22eda786cd464720a"
+      "sha256": "1d17de1fecff5b85a9f5eea59406c522808b6fa7e57fa9512fc59bab9aa39358"
     },
     {
       "lane": "bun",
@@ -317,7 +317,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "4dd0c8617174137ada183b27b1b9021f325b811065d8d15fb090bce7fed46dab"
+      "sha256": "ed67e0c80afbeb9269a8185042eddd2632bcca755234aa9cc2b2aa75f782246c"
     },
     {
       "lane": "bun",
@@ -335,31 +335,31 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "b05eb0aa4e6b8b58a6f8ea845206ff124edc449120ad1f83945e0a7aaed3bfa2"
+      "sha256": "e67b05836bc105c985a20ca58768bb2d41921a90542feaf2075a29bac9d566a1"
     }
   ],
   "counts": {
     "abi_arity_observations": 10,
     "abi_module_probes": 8,
-    "agreed_fixtures": 27,
+    "agreed_fixtures": 28,
     "blocked_fixtures": 0,
-    "byte_identical_modules": 27,
-    "check_observations": 132,
-    "compile_observations": 132,
-    "evaluator_agreements": 278,
+    "byte_identical_modules": 28,
+    "check_observations": 184,
+    "compile_observations": 184,
+    "evaluator_agreements": 284,
     "execution_lanes": 2,
-    "fixtures": 66,
-    "mutant_lane_kills": 8,
-    "mutants": 4,
-    "negative_phase_observations": 234,
-    "preserved_artifacts": 78,
-    "proof_entries": 3,
-    "rejected_fixtures": 23,
-    "seed_calls": 165,
-    "seed_invalid": 23,
-    "seed_valid": 43,
-    "unsupported_fixtures": 16,
-    "wasm_agreements": 278
+    "fixtures": 92,
+    "mutant_lane_kills": 18,
+    "mutants": 9,
+    "negative_phase_observations": 384,
+    "preserved_artifacts": 128,
+    "proof_entries": 4,
+    "rejected_fixtures": 31,
+    "seed_calls": 185,
+    "seed_invalid": 31,
+    "seed_valid": 61,
+    "unsupported_fixtures": 33,
+    "wasm_agreements": 284
   },
   "date": "<normalized-date>",
   "fixtures": [
@@ -18037,46 +18037,2747 @@
       "source": "tests/compiler-generics/dispatch-boundaries/fixtures/inferred-erased-type.bend",
       "source_sha256": "e917a1fb519d783a32cc328fadf30c049a66c4ccdd4b90b1e69e5e2ce4dfaab2",
       "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "calls": [
+            {
+              "entry": "main",
+              "eval": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-generics/gate/eval.js",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "On",
+                "tag": 1,
+                "type": "Flag"
+              },
+              "ordinals": [],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-bun.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            },
+            {
+              "entry": "pick",
+              "eval": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-generics/gate/eval.js",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "pick",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "Off",
+                "tag": 0,
+                "type": "Flag"
+              },
+              "ordinals": [
+                0
+              ],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-bun.wasm",
+                  "pick",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"pick\",\"arguments\":[0],\"result\":0,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            },
+            {
+              "entry": "pick",
+              "eval": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-generics/gate/eval.js",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "pick",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "On",
+                "tag": 1,
+                "type": "Flag"
+              },
+              "ordinals": [
+                1
+              ],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-bun.wasm",
+                  "pick",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"pick\",\"arguments\":[1],\"result\":1,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            }
+          ],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nmk(1:0)->1=case $0 [0=>v1.0{v0.0};1=>v1.1{v0.0}]\nread(1:1)->0=case $0 [0(0 $0:0;)=>v0.0;1(0 $0:0;)=>v0.1]\npick(1:0)->0=call1(call0($0:0))\nmain()->0=call2(v0.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t206\n"
+          },
+          "disassembly": {
+            "argv": [
+              "wasm2wat",
+              "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-bun.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "(module\n  (type (;0;) (func (param i32) (result i32)))\n  (type (;1;) (func (param i32) (result i32)))\n  (type (;2;) (func (param i32) (result i32)))\n  (type (;3;) (func (result i32)))\n  (type (;4;) (func (param i32) (result i32)))\n  (func (;0;) (type 0) (param i32) (result i32)\n    (local i32)\n    local.get 0\n    i32.const 0\n    i32.eq\n    if (result i32)  ;; label = @1\n      i32.const 4\n      call 4\n      local.set 1\n      local.get 1\n      i32.const 0\n      i32.store\n      local.get 1\n    else\n      i32.const 4\n      call 4\n      local.set 1\n      local.get 1\n      i32.const 1\n      i32.store\n      local.get 1\n    end)\n  (func (;1;) (type 1) (param i32) (result i32)\n    (local i32)\n    local.get 0\n    i32.load\n    local.set 1\n    local.get 1\n    i32.const 0\n    i32.eq\n    if (result i32)  ;; label = @1\n      i32.const 0\n    else\n      i32.const 1\n    end)\n  (func (;2;) (type 2) (param i32) (result i32)\n    local.get 0\n    call 0\n    call 1)\n  (func (;3;) (type 3) (result i32)\n    i32.const 1\n    call 2)\n  (func (;4;) (type 4) (param i32) (result i32)\n    (local i32)\n    global.get 0\n    local.set 1\n    local.get 0\n    i32.const 65536\n    global.get 0\n    i32.sub\n    i32.gt_u\n    if  ;; label = @1\n      unreachable\n    end\n    global.get 0\n    local.get 0\n    i32.add\n    global.set 0\n    local.get 1)\n  (memory (;0;) 1 1)\n  (global (;0;) (mut i32) (i32.const 0))\n  (export \"mk\" (func 0))\n  (export \"read\" (func 1))\n  (export \"pick\" (func 2))\n  (export \"main\" (func 3)))\n"
+          },
+          "disposition": "agreed",
+          "module_sha256": "bac4f57809727d0bc3e5fbe1090beb2c845570a8f54a89ad8511af49b5c6a11b"
+        },
+        "native": {
+          "calls": [
+            {
+              "entry": "main",
+              "eval": {
+                "argv": [
+                  "$ROOT/.local/compiler-generics/gate/eval",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "main",
+                  "1048576"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "On",
+                "tag": 1,
+                "type": "Flag"
+              },
+              "ordinals": [],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-native.wasm",
+                  "main"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            },
+            {
+              "entry": "pick",
+              "eval": {
+                "argv": [
+                  "$ROOT/.local/compiler-generics/gate/eval",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "pick",
+                  "1048576",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t0\tOff{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "Off",
+                "tag": 0,
+                "type": "Flag"
+              },
+              "ordinals": [
+                0
+              ],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-native.wasm",
+                  "pick",
+                  "0"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"pick\",\"arguments\":[0],\"result\":0,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            },
+            {
+              "entry": "pick",
+              "eval": {
+                "argv": [
+                  "$ROOT/.local/compiler-generics/gate/eval",
+                  "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+                  "pick",
+                  "1048576",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Evaluated\t0\t1\tOn{}\n"
+              },
+              "evaluator_agreed": true,
+              "expected": {
+                "constructor": "On",
+                "tag": 1,
+                "type": "Flag"
+              },
+              "ordinals": [
+                1
+              ],
+              "wasm": {
+                "argv": [
+                  "node",
+                  "$ROOT/scripts/run-wasm.mjs",
+                  "--profile=knot-fields-wasm-1",
+                  "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-native.wasm",
+                  "pick",
+                  "1"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "{\"validated\":true,\"export\":\"pick\",\"arguments\":[1],\"result\":1,\"bytes\":206}\n"
+              },
+              "wasm_agreed": true
+            }
+          ],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nmk(1:0)->1=case $0 [0=>v1.0{v0.0};1=>v1.1{v0.0}]\nread(1:1)->0=case $0 [0(0 $0:0;)=>v0.0;1(0 $0:0;)=>v0.1]\npick(1:0)->0=call1(call0($0:0))\nmain()->0=call2(v0.1)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Built\t206\n"
+          },
+          "disassembly": {
+            "argv": [
+              "wasm2wat",
+              "$ROOT/.local/compiler-generics/gate/explicit-quantity-family-native.wasm"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "(module\n  (type (;0;) (func (param i32) (result i32)))\n  (type (;1;) (func (param i32) (result i32)))\n  (type (;2;) (func (param i32) (result i32)))\n  (type (;3;) (func (result i32)))\n  (type (;4;) (func (param i32) (result i32)))\n  (func (;0;) (type 0) (param i32) (result i32)\n    (local i32)\n    local.get 0\n    i32.const 0\n    i32.eq\n    if (result i32)  ;; label = @1\n      i32.const 4\n      call 4\n      local.set 1\n      local.get 1\n      i32.const 0\n      i32.store\n      local.get 1\n    else\n      i32.const 4\n      call 4\n      local.set 1\n      local.get 1\n      i32.const 1\n      i32.store\n      local.get 1\n    end)\n  (func (;1;) (type 1) (param i32) (result i32)\n    (local i32)\n    local.get 0\n    i32.load\n    local.set 1\n    local.get 1\n    i32.const 0\n    i32.eq\n    if (result i32)  ;; label = @1\n      i32.const 0\n    else\n      i32.const 1\n    end)\n  (func (;2;) (type 2) (param i32) (result i32)\n    local.get 0\n    call 0\n    call 1)\n  (func (;3;) (type 3) (result i32)\n    i32.const 1\n    call 2)\n  (func (;4;) (type 4) (param i32) (result i32)\n    (local i32)\n    global.get 0\n    local.set 1\n    local.get 0\n    i32.const 65536\n    global.get 0\n    i32.sub\n    i32.gt_u\n    if  ;; label = @1\n      unreachable\n    end\n    global.get 0\n    local.get 0\n    i32.add\n    global.set 0\n    local.get 1)\n  (memory (;0;) 1 1)\n  (global (;0;) (mut i32) (i32.const 0))\n  (export \"mk\" (func 0))\n  (export \"read\" (func 1))\n  (export \"pick\" (func 2))\n  (export \"main\" (func 3)))\n"
+          },
+          "disposition": "agreed",
+          "module_sha256": "bac4f57809727d0bc3e5fbe1090beb2c845570a8f54a89ad8511af49b5c6a11b"
+        }
+      },
+      "module_bytes_identical": true,
+      "name": "explicit-quantity-family",
+      "requirement": {
+        "justification": "Seed-valid program inside increment 6; every call must match the seed.",
+        "require": "agree"
+      },
+      "seed_calls": 3,
+      "source": "tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend",
+      "source_sha256": "ad1f52e3e765a2a1475cec766e2fa5bdfaa230bad3fd3dcd19e8d885d8f5447d",
+      "status": "agreed"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-parameter-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-parameter-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t89:92:9:12\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-family-parameter",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend",
+      "source_sha256": "55b5c09d5a7585303e6e4f3f58c0bab70e153d32c3721bc846c4a9ff253778d2",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-field-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-field-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t108:111:10:12\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-family-field",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-family-field.bend",
+      "source_sha256": "4d41372dc59f1f6a1a9458b900b08879d4f39027b02885d0e69c05bee36046a0",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-annotation-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-annotation-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t201:204:17:6\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-family-annotation",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend",
+      "source_sha256": "a121fbf4c6d6adc973dbd04cea20654624e995023a41da58243a6bdb40abad46",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-result-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-result-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t96:99:9:19\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-family-result",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-family-result.bend",
+      "source_sha256": "c3be02437278119c61f6d41627e71acaa77831ddd22f1143511643f587cbf461",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-static-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-family-static-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t239:242:20:10\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-family-static",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-family-static.bend",
+      "source_sha256": "f15a5e88f6a576d5d6c45d5f978d5eeac16685c75fa70c1315015ccd16ed8486",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-two-quantity-family-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/bare-two-quantity-family-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\ttype-arity\t95:98:9:12\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "bare-two-quantity-family",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend",
+      "source_sha256": "1e35b74cfb4c6774a6ef8bdb580004a15eadbda03a7873651bcaa50b8211a958",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-parameter-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-parameter-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "value-argument-parameter",
+      "requirement": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend",
+      "source_sha256": "9882fcb066740cf86bad341164d6f06d9618695e29a779913264a36cc3d48052",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-binding-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-binding-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t102:103:9:11\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "value-argument-binding",
+      "requirement": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend",
+      "source_sha256": "74d5f0d54b15f037bd09d52117a383c9672c78681d2253d77788323dd63e7fef",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-result-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-result-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t92:93:8:20\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "value-argument-result",
+      "requirement": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend",
+      "source_sha256": "8b530f595c9c32ade2b73905e6cb72c03e36995dffee5c549aa7733e95a594bf",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-live-result-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-live-result-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t91:92:8:20\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "value-argument-live-result",
+      "requirement": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend",
+      "source_sha256": "6dd4e36a4475b9e33cda69335b1d560a788c4a922d9d816c362a26a36d98e906",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-second-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+              "$ROOT/.local/compiler-generics/gate/value-argument-second-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-argument\t110:111:8:26\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "value-argument-second",
+      "requirement": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend",
+      "source_sha256": "6b93ab736f08b58a0050e40abf1d1d3bc0624ffd2fd62593e9aa15323755c2de",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-generic-absurd-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-generic-absurd-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-generic-absurd",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend",
+      "source_sha256": "386383afca41143250b4faad6e28fa2c44ad24221e8cb8e6311607c72f374ecf",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-generic-family-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-generic-family-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-generic-family",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend",
+      "source_sha256": "d763707e1d9b60afad1059694115ee482edfff2cb1dbd6a050a2498a8560e5f2",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-quantity-family-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-quantity-family-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-quantity-family",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend",
+      "source_sha256": "39efe8f53103a180e53bcd1df923941a5c349d4781f5f5a9f0c4bb07f76e3ac0",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-kind-family-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-kind-family-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-kind-family",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend",
+      "source_sha256": "aab8d94295aaaf7c712eceba2539a94383211e4e44c55f33f604dc10f100f5cb",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-type-generic-book-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-type-generic-book-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-type-generic-book",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend",
+      "source_sha256": "a32e425841c72cb7e7f5d54a33f0951facf938580c214acf5293cf45a5061739",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-type-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-type-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-type",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-type.bend",
+      "source_sha256": "9d351e107f3d63266a91132dfaa570b383d7902c372cd3bc60f6c821d1e6a61c",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-data-absurd-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+              "$ROOT/.local/compiler-generics/gate/empty-data-absurd-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "empty-data-absurd",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend",
+      "source_sha256": "bb404a585bf3400d1d51173640c8206508cfd5fe76ccfbc548055fc5522a35b4",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-live-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-live-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "def-reference-live",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/def-references/fixtures/def-reference-live.bend",
+      "source_sha256": "a88cb9777081f633a9dd6f39585e19a5d1e4ce281695529805351dfd2c46ad43",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-erased-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-erased-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "def-reference-erased",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend",
+      "source_sha256": "0cad3f3ed25688062c6440a58152a63ca7ec59a8be49e04cc99e889508a37613",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-forward-erased-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-forward-erased-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t165:169:12:14\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "def-reference-forward-erased",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend",
+      "source_sha256": "3214261bb12016e009b444128a53dd26654d2306ca05358e28f1c29bd0dcbb55",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-monomorphic-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-monomorphic-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t84:87:9:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "def-reference-monomorphic",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend",
+      "source_sha256": "fd0862a01e779b8e77dcca14240adc9023a0cc570417b22eda21244c7dfdea9d",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-erased-monomorphic-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+              "$ROOT/.local/compiler-generics/gate/def-reference-erased-monomorphic-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          },
+          "disposition": "unsupported",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t133:136:12:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "def-reference-erased-monomorphic",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "seed_calls": 1,
+      "source": "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend",
+      "source_sha256": "45097bd949c10e98b278091e0f3819e89123ca2adf24a04da50229f80a90fbfa",
+      "status": "unsupported"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+              "$ROOT/.local/compiler-generics/gate/function-value-mismatch-bun.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+              "$ROOT/.local/compiler-generics/gate/function-value-mismatch-native.wasm"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tcheck\tdef-reference\t87:89:9:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "function-value-mismatch",
+      "requirement": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed rejects the function value against Flag. Knot does not type definition references, so it reports the reference Unsupported: never accepted, a precision loss against the seed's type mismatch.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend",
+      "source_sha256": "6a5f4a0239bd7be0d4c7634be5d36f4b6a0f6a1d8e34d37b1b977893ca5dc3cc",
+      "status": "rejected"
+    },
+    {
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/check.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/compile.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+              "$ROOT/.local/compiler-generics/gate/free-name-control-bun.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/eval.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "calls": [],
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/check",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/compile",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+              "$ROOT/.local/compiler-generics/gate/free-name-control-native.wasm"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          },
+          "disposition": "rejected",
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/eval",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+              "main",
+              "1048576"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:91:9:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "free-name-control",
+      "requirement": {
+        "diagnostic": "Invalid\tcheck\tfree-name\t",
+        "exit": 2,
+        "justification": "The name resolves to no binding, datatype or definition, and the seed rejects it: Invalid check free-name, unchanged by the definition-reference rule.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "seed_calls": 0,
+      "source": "tests/compiler-generics/def-references/fixtures/free-name-control.bend",
+      "source_sha256": "82a6b7f49b430a51cb0049b16dd010d9521c6ecef642d614c635ec32ddbe12a7",
+      "status": "rejected"
     }
   ],
   "inputs": {
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
-    "src/CONTRACT.json": "df7897a29dc07839ec9889505826d5f2b35e44570850bf00eb6d1e84d2e6e913",
-    "src/LAWS.bend": "80ad15b775cb0abe4f503925ae3e64030c932ddf9a9513a51d45ddb42303a830",
-    "src/PROOF.bend": "e71ccfcf7757703a5909974ed46a070c543e033f73f1e50f5fbd2840090037fd",
-    "src/SPEC.md": "1ea35cad854803ab8fee6842c5826644c0b48e80577e21cfb4e334cdcca13f5a",
-    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
-    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
-    "src/catalog.bend": "db95a2452c2a80105fd0b15ca6ce2c67d39db9a0026d5c407ca1b0d65934353d",
-    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
-    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
-    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
-    "src/check.bend": "c3846a3498fe8f7ba5e6e81db0113a7ea2c92529aa412703eb1faf63789fc3f6",
+    "src/CONTRACT.json": "1b32a472c07d62c220f5be9d4c57170cfa0bc41fac54bec9df0cd2639ef0bd41",
+    "src/LAWS.bend": "9192f627d9e674dcb4a8bd4d67d69bd3264b3b739ddabdb4b2dc169c4fa2e9e0",
+    "src/PROOF.bend": "32cf4b277d5627f953d32b02619942fe42329aff528758d9651975c843d48446",
+    "src/SPEC.md": "0f1bad1bd8b03be56c0b6085f7d8cc7740400e39a8165e39774cac457aa1f4a1",
+    "src/catalog-LAWS.bend": "d8312b56bcd24c7331b849c6f36df4076c1d28123ec204cdd09c3823c9b69235",
+    "src/catalog-PROOF.bend": "c090b3b28f5cb9080c579e0ad09461ae2f26d65f1270ee6a5dc00385629df665",
+    "src/catalog.bend": "959861062e04dd17520816e9891252e34298a49b9eb9c226d9a89a85a6b70973",
+    "src/check-LAWS.bend": "267fbccdac610172180cd96894c003373ee65d7bf88c886c32eb711fbdea9c34",
+    "src/check-PROOF.bend": "2234bd5a1e1a63b6f9b4d33b673736cf1727f055088c9602333f111bedbc95c6",
+    "src/check-cli.bend": "71467b10cd99d818bae0d98cab2ec599bbccae2c3e3a59b495b37b727f1472ee",
+    "src/check-dispatch.bend": "9e74f55f8fdf0d794cb87450abaf9d396ffafe73c78780bea0d4d353458f33e5",
+    "src/check.bend": "fcf4b71281b4ca7e7bdd565d90256c7183fe8232d2389bacbbd6430d7a57af33",
     "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
     "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
     "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
     "src/diagnostic.bend": "073c12d215e98f0a1685ca452162d4f08cc8beaca39d6c9f020b246ca5771695",
-    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/driver.bend": "3582cf03bbad87063d7f273130370b0073bf2631de5c75c0b38f90d24546ff47",
     "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
     "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
     "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
     "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
-    "src/generic-catalog.bend": "867834c7a663df6ff6050bb9abcb2c35c422344fabf6e7d96ff610e1a82aca7d",
-    "src/generics.bend": "fd82520a6e04e56a3d203ef237120b9cff8b5fe20623110901a72ff9eb318a06",
+    "src/generic-catalog.bend": "76d923bce6bde27ef81bf47753378ff5d1afbb7e8b8c0ff0ddc7f9719fa0325c",
+    "src/generics.bend": "9b5e989e6643bb775454244695133b399524e46c15bcafc6ad460cf8293aa305",
     "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
     "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "4766365d9c552e6f77c2506a6ec4c587699f74e2c0f13a0adaa59867862641c5",
+    "src/parse.bend": "379c88570712f9db220794b1e19bb275a2ac4fe6bd45d0b03fa346f31076d269",
     "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
     "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
     "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
     "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
     "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
-    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/scope.bend": "a36dbebfa9d8b5498e2484f2a21f9819130330824829e1ea7dd1c61797eb0c79",
     "src/syntax.bend": "9d4fb41d5c9707c4e3f736666f707c4b1e9f2f926f366250a1bb3b820730eea4",
-    "src/type-erasure-LAWS.bend": "aeb9420e29e361ac03c60aea2cf097a68de588e6345c85d20f0a700c4c9be3f9",
-    "src/type-erasure-PROOF.bend": "d22ba9e779564433c99a8565eaf5dbe601bc1e82d15fd2c2ccdc9b014794dc65",
+    "src/type-erasure-LAWS.bend": "b9db85fbf0f276b53e143edb3a8278aabddca82ebde578f3d93bf747ec559569",
+    "src/type-erasure-PROOF.bend": "a3f959f232cab4ec55896fa873a7b207483dc810ce7e698e26809185ad66d212",
     "src/type-erasure.bend": "8957823fcb719463c14ea3f63b934ea8b9a494ab81c7090acd3f47148cf52cbd",
-    "src/type-parse.bend": "bfe87a076b2a89ff62b62ca680bb26f12a20adb44db1319c5813a5cb90f4b8de",
+    "src/type-parse.bend": "50a6349df85fef8df9dda32054255fc2efd093d5553577412986392a7e9c4eac",
     "src/types-LAWS.bend": "4ca28bccb97831e118050b939e727aab92b0da430c13ba5ed4c6f672bbf286ab",
     "src/types-PROOF.bend": "7ee78ebbdadd7b4182ea43a5a169b541e1fd1edcefa9ef2ee2e14d30f8c11f17",
     "src/types.bend": "5cc9fd37d13c4b194c9ce2b3aff6368de5bd5d1efd9e11bfb2f4aca9d776b513",
@@ -18084,6 +20785,15 @@
     "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
     "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7",
     "tests/compiler-generics/abi-expectations.json": "a93afb40fade3ee647a8800441ac26c86941d19a83f43adb0a06eb0eb643f4d7",
+    "tests/compiler-generics/bare-families/expectations.json": "d1e9886a20dc49f91088090ba259e5b11cdf70b381165d408ce0faede3a4186f",
+    "tests/compiler-generics/bare-families/fixtures/bare-family-annotation.bend": "a121fbf4c6d6adc973dbd04cea20654624e995023a41da58243a6bdb40abad46",
+    "tests/compiler-generics/bare-families/fixtures/bare-family-field.bend": "4d41372dc59f1f6a1a9458b900b08879d4f39027b02885d0e69c05bee36046a0",
+    "tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend": "55b5c09d5a7585303e6e4f3f58c0bab70e153d32c3721bc846c4a9ff253778d2",
+    "tests/compiler-generics/bare-families/fixtures/bare-family-result.bend": "c3be02437278119c61f6d41627e71acaa77831ddd22f1143511643f587cbf461",
+    "tests/compiler-generics/bare-families/fixtures/bare-family-static.bend": "f15a5e88f6a576d5d6c45d5f978d5eeac16685c75fa70c1315015ccd16ed8486",
+    "tests/compiler-generics/bare-families/fixtures/bare-two-quantity-family.bend": "1e35b74cfb4c6774a6ef8bdb580004a15eadbda03a7873651bcaa50b8211a958",
+    "tests/compiler-generics/bare-families/fixtures/explicit-quantity-family.bend": "ad1f52e3e765a2a1475cec766e2fa5bdfaa230bad3fd3dcd19e8d885d8f5447d",
+    "tests/compiler-generics/bare-families/regen.py": "33b0aa8b7b55b64caf0849a517716ef31a3f83c91918eb62d7870311197aa8a1",
     "tests/compiler-generics/boundaries/expectations.json": "92fd5bce82d0e63e313906761194ae65a45fccdf999531847f58995f79818655",
     "tests/compiler-generics/boundaries/fixtures/boxed-live-quant.bend": "c627b48adf849333f4f47e2e49f90a5c9b4d30dbf02eb07c1fc62ce502dce1da",
     "tests/compiler-generics/boundaries/fixtures/boxed-live-type.bend": "e00b37213f0cc92f643ece69efeb2cecb22e78454d5bfef90dca7b0dd4fb6d86",
@@ -18101,7 +20811,16 @@
     "tests/compiler-generics/boundaries/fixtures/type-valued-result.bend": "69ef0cd500074c527a74d19bdbd6aa82ef9fed9f169955ba5573156ead349da5",
     "tests/compiler-generics/boundaries/fixtures/value-indexed-family.bend": "bdab92018a2cf1637230208470eff5b3cadd4859cc0809a52a3efcf68785ec7a",
     "tests/compiler-generics/boundaries/regen.py": "9fe7f4d7a8024413e01fa7d632420565f3df8bfcc756b9a5daa34ebc6fa58140",
-    "tests/compiler-generics/check.py": "16301fcf868fe094c867ec16ea071aff8ef7a8dab8a58a7e4d08f28ae3aef53b",
+    "tests/compiler-generics/check.py": "a72e864a0fdaf311c4568780f62612eceed5890aff80426673eb7e2e913e4344",
+    "tests/compiler-generics/def-references/expectations.json": "65a53df687db5eb68c44cc69506f8e958cfe8988b882e9a17c71093a7abcc12d",
+    "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend": "45097bd949c10e98b278091e0f3819e89123ca2adf24a04da50229f80a90fbfa",
+    "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend": "0cad3f3ed25688062c6440a58152a63ca7ec59a8be49e04cc99e889508a37613",
+    "tests/compiler-generics/def-references/fixtures/def-reference-forward-erased.bend": "3214261bb12016e009b444128a53dd26654d2306ca05358e28f1c29bd0dcbb55",
+    "tests/compiler-generics/def-references/fixtures/def-reference-live.bend": "a88cb9777081f633a9dd6f39585e19a5d1e4ce281695529805351dfd2c46ad43",
+    "tests/compiler-generics/def-references/fixtures/def-reference-monomorphic.bend": "fd0862a01e779b8e77dcca14240adc9023a0cc570417b22eda21244c7dfdea9d",
+    "tests/compiler-generics/def-references/fixtures/free-name-control.bend": "82a6b7f49b430a51cb0049b16dd010d9521c6ecef642d614c635ec32ddbe12a7",
+    "tests/compiler-generics/def-references/fixtures/function-value-mismatch.bend": "6a5f4a0239bd7be0d4c7634be5d36f4b6a0f6a1d8e34d37b1b977893ca5dc3cc",
+    "tests/compiler-generics/def-references/regen.py": "0eab00086b7b1dd100def25aebbacfa7117cf6aa4f1b8e275d63af694b9a8d7d",
     "tests/compiler-generics/dispatch-boundaries/expectations.json": "a32a0501bbdd4d68f26cbfcd1f739b1bc6d31368d2d4e20c3e494156521cac7f",
     "tests/compiler-generics/dispatch-boundaries/fixtures/empty-type-application.bend": "d8bbd8de768468d42f55cf8e1fabd7648e550d8da5fc48cd3273b184790a0a6c",
     "tests/compiler-generics/dispatch-boundaries/fixtures/generic-local-erased-type.bend": "b0c39aa0ee33eeab32b18c982fece25f937deea483ea66c2fc8bff1409427556",
@@ -18113,6 +20832,15 @@
     "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-quantity.bend": "470f9c5d3aae82330a63d0704f732cbf53c726f721801cb953374698e6ad1274",
     "tests/compiler-generics/dispatch-boundaries/fixtures/unannotated-erased-type.bend": "c018993acf8a011ca372365a3ba341e128cfa52db75a96e8c7c1c65152c2494c",
     "tests/compiler-generics/dispatch-boundaries/regen.py": "d59f2a02521a07b634aa75f66d67be991f275af6b4f765c6bf6466647f956b33",
+    "tests/compiler-generics/empty-families/expectations.json": "98a573c521bd3312d27c7342b4259cc1c36ddc7078d4ef3036d91c769e260843",
+    "tests/compiler-generics/empty-families/fixtures/empty-data-absurd.bend": "bb404a585bf3400d1d51173640c8206508cfd5fe76ccfbc548055fc5522a35b4",
+    "tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend": "386383afca41143250b4faad6e28fa2c44ad24221e8cb8e6311607c72f374ecf",
+    "tests/compiler-generics/empty-families/fixtures/empty-generic-family.bend": "d763707e1d9b60afad1059694115ee482edfff2cb1dbd6a050a2498a8560e5f2",
+    "tests/compiler-generics/empty-families/fixtures/empty-kind-family.bend": "aab8d94295aaaf7c712eceba2539a94383211e4e44c55f33f604dc10f100f5cb",
+    "tests/compiler-generics/empty-families/fixtures/empty-quantity-family.bend": "39efe8f53103a180e53bcd1df923941a5c349d4781f5f5a9f0c4bb07f76e3ac0",
+    "tests/compiler-generics/empty-families/fixtures/empty-type-generic-book.bend": "a32e425841c72cb7e7f5d54a33f0951facf938580c214acf5293cf45a5061739",
+    "tests/compiler-generics/empty-families/fixtures/empty-type.bend": "9d351e107f3d63266a91132dfaa570b383d7902c372cd3bc60f6c821d1e6a61c",
+    "tests/compiler-generics/empty-families/regen.py": "8a017ae9d4ea6fc37fcd14816433d5c953b33fa07eccdec8777e739a1d1d32e6",
     "tests/compiler-generics/expectations.json": "e19c064e52094bf06fd12a8527682ed3824a70a36af99458c2f561b2511d7e52",
     "tests/compiler-generics/fixtures/affine-dup-data.bend": "150fccee98e9b08ee7013390a059a73c3e0953468d64d7e677246697bd6faa12",
     "tests/compiler-generics/fixtures/affine-dup-type.bend": "e6c1dcda6ed3ed40266fcad2f474112f7988997f3c7eb0e0639f7b422561f80f",
@@ -18158,7 +20886,14 @@
     "tests/compiler-generics/supplemental/expectations.json": "4236f393cd07ebca969b09c241bcb987e53181407a6aaad67ff3ba8125b27c64",
     "tests/compiler-generics/supplemental/fixtures/compact-reusable.bend": "ad87e9febb1509eace93ad99d4903aba7202452650bc9a119815152548093226",
     "tests/compiler-generics/supplemental/fixtures/meet-short-form.bend": "4f19f2553b7e8ad1df3900ee55668965806d4f0254cfcabd4f078b65652917d5",
-    "tests/compiler-generics/supplemental/regen.py": "36cc90793b2fc117ea21543ee6c974b4898af7534155f7d4bf9b139e2026ac92"
+    "tests/compiler-generics/supplemental/regen.py": "36cc90793b2fc117ea21543ee6c974b4898af7534155f7d4bf9b139e2026ac92",
+    "tests/compiler-generics/value-arguments/expectations.json": "d7e3286fc9237b225d38ba35048267a92985554ae39c5306098da9e2ff55a0cb",
+    "tests/compiler-generics/value-arguments/fixtures/value-argument-binding.bend": "74d5f0d54b15f037bd09d52117a383c9672c78681d2253d77788323dd63e7fef",
+    "tests/compiler-generics/value-arguments/fixtures/value-argument-live-result.bend": "6dd4e36a4475b9e33cda69335b1d560a788c4a922d9d816c362a26a36d98e906",
+    "tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend": "9882fcb066740cf86bad341164d6f06d9618695e29a779913264a36cc3d48052",
+    "tests/compiler-generics/value-arguments/fixtures/value-argument-result.bend": "8b530f595c9c32ade2b73905e6cb72c03e36995dffee5c549aa7733e95a594bf",
+    "tests/compiler-generics/value-arguments/fixtures/value-argument-second.bend": "6b93ab736f08b58a0050e40abf1d1d3bc0624ffd2fd62593e9aa15323755c2de",
+    "tests/compiler-generics/value-arguments/regen.py": "4266f2e2fc4c903a5ad2c93d8c91a7e0fc48b383ba8112e1872f5caeee0ce342"
   },
   "mutants": [
     {
@@ -18198,7 +20933,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "0a6ad63f6709b7fca0d7c0fac5182ebc832f7fb82e224779c1a70d1204375f2e"
+          "sha256": "ce09d0ace74e7bfb0916b8b41693e61531441a7a10549c33f70d864ed00efc88"
         },
         "native": {
           "actual": {
@@ -18225,14 +20960,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "baece6617919ebbf72d86cbbcfa83cb45f707d5f1965242d21dba5aad2f8f75e"
+          "sha256": "920f59037af10faafa0d852f4de1af5513a19d1b325684b084014927394acc59"
         }
       },
       "name": "skipped-substitution",
       "new": "T.normalize(value)",
       "old": "T.normalize(T.subst(value,substitutions))",
       "phase": "check",
-      "source_sha256": "f21f59431eab23f5de73b352e7f4393b82723d3c7c57806006cb4ad2648d2381",
+      "source_sha256": "2745ede1af0f5f5e082d2eca3b2d63c41a4a662ae14c534f0d5e3ceda9261d2f",
       "typecheck": {
         "argv": [
           "bun",
@@ -18308,7 +21043,7 @@
             "stdout": "Built\t176\n"
           },
           "outcome": "semantic-kill",
-          "sha256": "0bc30e7050bff89971471fdc5e4fb2755cbcc262802226efb39f7bb16c26aa10"
+          "sha256": "6bcf183197f3c3eeb00b022b93e961524c1205cb20c7656986433e18fdf4138e"
         },
         "native": {
           "actual": {
@@ -18348,7 +21083,7 @@
             "stdout": "Built\t176\n"
           },
           "outcome": "semantic-kill",
-          "sha256": "dec706cf03ac68c6db92575a245e2df7dd57ee7c8f41b141cc87bb678a544495"
+          "sha256": "1140f8896138c4b49ca1fc28b25534cd3be922f68fbfd7ca2e9985af1a730e47"
         }
       },
       "name": "erased-argument-live",
@@ -18410,7 +21145,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "aa6c08ed72856002120d7def7357d82b2583f2f5bd2f7e1ec5800fad1aa5c662"
+          "sha256": "2740acd68a7305abcafb01b87461f64f303f7847b7879a428bf1afab6a312f31"
         },
         "native": {
           "actual": {
@@ -18437,7 +21172,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "dd3faadfca69ba4e831825eed8c6c56d402371b106d070a9798fbcd119f61e43"
+          "sha256": "4916bb19d74fd4bf85c0f40394a55ca0aab9dc154effd69a1b3ff6dbe12e75e5"
         }
       },
       "name": "wrong-quantity-meet",
@@ -18498,7 +21233,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "fe7166063ba46378a2be5120c8e5ff7ccff46d953c7c1139e8e24362db212d05"
+          "sha256": "7a1f518851f42d67368c057d2a99920e703b9825a67b7c31a0f98b07132ca2bf"
         },
         "native": {
           "actual": {
@@ -18525,14 +21260,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "89250f8d76eaffd71438101d638566dd96572cebe669f7863fccc401bd9f2cf0"
+          "sha256": "4b21b186a8a5e6e86c7c9c11e31d60b586db625f0b1ed09d814363e7a7f2047a"
         }
       },
       "name": "missing-arity-check",
       "new": "Done{List.take(&2,S.Node,nodes,U32.to_nat(arity))}",
       "old": "C.invalid(List<&2,S.Node>,\"type-arity\",token)",
       "phase": "check",
-      "source_sha256": "5bb334661fcc9e9c6a6d0a784660728597c8fb00e25f4201b341430fe512b703",
+      "source_sha256": "551d8d4e756ad58b276b23a35a53ef7ac39656a500afaa3ca0c25ea0fc2e2689",
       "typecheck": {
         "argv": [
           "bun",
@@ -18546,6 +21281,451 @@
         "stdout": "All terms check.\n"
       },
       "witness": "type-arity"
+    },
+    {
+      "actual": {
+        "contains": "Checked\n",
+        "exit": 0
+      },
+      "expected": {
+        "diagnostic": "Invalid\tcheck\ttype-arity\t",
+        "exit": 2,
+        "justification": "A family name stands for an instance only through an explicit Name<..> application; the seed rejects a bare name whose parameters are all quantities. Type arity is increment 6, so Knot reports Invalid check type-arity.",
+        "knot_expected": true,
+        "require": "reject"
+      },
+      "file": "generic-catalog.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/mutant.js",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(0 $0:0;)=>v0.0;1(0 $0:0;)=>v0.1]\nmain()->0=call0(v1.1{v0.0})\n\n"
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/mutant.js"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "5e99cad87ce0751ecc758b86fd3ec9f4003bdf13402cd363d07e3b93aa60f4c0"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/mutant",
+              "$ROOT/tests/compiler-generics/bare-families/fixtures/bare-family-parameter.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Checked\nread(1:1)->0=case $0 [0(0 $0:0;)=>v0.0;1(0 $0:0;)=>v0.1]\nmain()->0=call0(v1.1{v0.0})\n\n"
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/bare-quantity-default/mutant"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "abf3b94632640710cf6c15c29fb5aed34437ad835659b5797eb7b7cca1c2d666"
+        }
+      },
+      "name": "bare-quantity-default",
+      "new": "reference => apply_start(reference,token,Nil{},1,",
+      "old": "reference => bare(reference,token,",
+      "phase": "check",
+      "source_sha256": "82e0f75a14db66172c4571da7460b9ad027a678fa01cc7f30d9c2418e9fa269c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/bare-quantity-default/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "bare-family-parameter"
+    },
+    {
+      "actual": {
+        "diagnostic": "Invalid\tparse\tterm-argument\t",
+        "exit": 2
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tparse\tterm-argument\t",
+        "exit": 3,
+        "justification": "The seed accepts a value-indexed family applied to a constructor value. Value-indexed families are outside knot-generics-1, so the term-shaped type argument is Unsupported parse term-argument (D4); before the repair Knot reported Invalid parse type-argument-separator.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "file": "type-parse.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/mutant.js",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/mutant.js"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "ef7b3c13a6ae35c184c168d04e4831fd593676f196dcec23c04f1d82fb51a350"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/mutant",
+              "$ROOT/tests/compiler-generics/value-arguments/fixtures/value-argument-parameter.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tparse\tterm-argument\t89:90:8:18\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/term-argument-invalid/mutant"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "3f2e2b2fc43c6de9e2039004e4ee5567ee56a5adfd7880c79fe94006f9b78982"
+        }
+      },
+      "name": "term-argument-invalid",
+      "new": "Fail{S.Invalid{\"parse\",\"term-argument\",S.at(h)}}",
+      "old": "Fail{S.Unsupported{\"parse\",\"term-argument\",S.at(h)}}",
+      "phase": "check",
+      "source_sha256": "c044e9d05334331ff045bad5482a1384f2f5e9906651f7dfc9cc43676e94c406",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/term-argument-invalid/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "value-argument-parameter"
+    },
+    {
+      "actual": {
+        "diagnostic": "Invalid\tcheck\tempty-datatype\t",
+        "exit": 2
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "file": "generic-catalog.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/mutant.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/mutant.js"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "c930e231faaa398ce8b84c1adc5326ad20282de42fc7610f0eba13b8215fd7a7"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/mutant",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-generic-absurd.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tempty-datatype\t40:45:5:5\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/empty-family-invalid/mutant"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "d35a9e90f16e9586195b93cb5f77b82fbf45721742aaed987611fae91738a9e8"
+        }
+      },
+      "name": "empty-family-invalid",
+      "new": "C.invalid(Family,\"empty-datatype\",token)",
+      "old": "C.unsupported(Family,\"empty-datatype\",token)",
+      "phase": "check",
+      "source_sha256": "efc6c34b724c6143e2c93d9883b1c600fbed9b1cf5b410477bc4d1d12ab2141b",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/empty-family-invalid/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "empty-generic-absurd"
+    },
+    {
+      "actual": {
+        "diagnostic": "Invalid\tcheck\tempty-datatype\t",
+        "exit": 2
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tcheck\tempty-datatype\t",
+        "exit": 3,
+        "justification": "The seed accepts a datatype without constructors; it is the domain of absurd elimination. Knot represents no empty family and checks no zero-arm match, so the declaration is Unsupported check empty-datatype (D4); before the repair Knot reported Invalid check empty-datatype.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "file": "catalog.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/mutant.js",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/mutant.js"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "2496b685a3d422569f93eaad720bf01999a1154559e2982c89baa0ad11fbeb03"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/mutant",
+              "$ROOT/tests/compiler-generics/empty-families/fixtures/empty-type.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tempty-datatype\t40:44:5:5\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/mutant"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "cb8b9cfcb69cb3e6e5df0ec59b79893f7739ffa1d243e262783970f5ed05fdf3"
+        }
+      },
+      "name": "empty-datatype-invalid",
+      "new": "C.invalid(C.Datatype,\"empty-datatype\",name)",
+      "old": "C.unsupported(C.Datatype,\"empty-datatype\",name)",
+      "phase": "check",
+      "source_sha256": "ca5ca2252fd1f4562756282a110683c2c16333ee33404cda3664a0589853fbb9",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/empty-datatype-invalid/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "empty-type"
+    },
+    {
+      "actual": {
+        "diagnostic": "Invalid\tcheck\tfree-name\t",
+        "exit": 2
+      },
+      "expected": {
+        "diagnostic": "Unsupported\tcheck\tdef-reference\t",
+        "exit": 3,
+        "justification": "The seed accepts a bare reference to a zero-arity definition as its value. A definition used as a first-class value is outside Knot's first-order term profile, so the name is Unsupported check def-reference (D4); before the repair Knot reported Invalid check free-name.",
+        "knot_expected": true,
+        "require": "unsupported"
+      },
+      "file": "scope.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/mutant.js",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/mutant.js"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "f87c9e81bf85c677c18e5253379146e0779457cd736b56378eabd83b89c8783e"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/mutant",
+              "$ROOT/tests/compiler-generics/def-references/fixtures/def-reference-live.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tcheck\tfree-name\t84:87:9:2\n",
+            "stdout": ""
+          },
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/def-reference-free/mutant"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "34625bc88c0b1bde6ca437779e3a2390fdd94f9413053fe6420ccac8c7c0ded9"
+        }
+      },
+      "name": "def-reference-free",
+      "new": "Fail{error}",
+      "old": "unbound(B,F,function(token),token,\"def-reference\",Fail{error})",
+      "phase": "check",
+      "source_sha256": "579326764f44b94912e793f488e9f5f02139c599efee79a3e90d1caa1ee0d856",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/def-reference-free/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "def-reference-live"
     }
   ],
   "profile": "knot-generics-1",
@@ -18585,6 +21765,20 @@
           "bun",
           ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
           "$ROOT/src/type-erasure-PROOF.bend"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    },
+    {
+      "entry": "src/catalog-PROOF.bend",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/catalog-PROOF.bend"
         ],
         "exit": 0,
         "outcome": "success",
@@ -18633,6 +21827,46 @@
       "outcome": "success",
       "stderr": "",
       "stdout": "regen: PASS 9 fixtures (7 seed-valid, 2 seed-invalid), 9 entry calls, identical to expectations.json\n"
+    },
+    {
+      "argv": [
+        "python3",
+        "$ROOT/tests/compiler-generics/bare-families/regen.py"
+      ],
+      "exit": 0,
+      "outcome": "success",
+      "stderr": "",
+      "stdout": "regen: PASS 7 fixtures (1 seed-valid, 6 seed-invalid), 3 entry calls, identical to expectations.json\n"
+    },
+    {
+      "argv": [
+        "python3",
+        "$ROOT/tests/compiler-generics/value-arguments/regen.py"
+      ],
+      "exit": 0,
+      "outcome": "success",
+      "stderr": "",
+      "stdout": "regen: PASS 5 fixtures (5 seed-valid, 0 seed-invalid), 5 entry calls, identical to expectations.json\n"
+    },
+    {
+      "argv": [
+        "python3",
+        "$ROOT/tests/compiler-generics/empty-families/regen.py"
+      ],
+      "exit": 0,
+      "outcome": "success",
+      "stderr": "",
+      "stdout": "regen: PASS 7 fixtures (7 seed-valid, 0 seed-invalid), 7 entry calls, identical to expectations.json\n"
+    },
+    {
+      "argv": [
+        "python3",
+        "$ROOT/tests/compiler-generics/def-references/regen.py"
+      ],
+      "exit": 0,
+      "outcome": "success",
+      "stderr": "",
+      "stdout": "regen: PASS 7 fixtures (5 seed-valid, 2 seed-invalid), 5 entry calls, identical to expectations.json\n"
     }
   ],
   "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
