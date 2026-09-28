@@ -120,6 +120,23 @@ follows it (§5, §10, §11) without a new image header word.
    spelling, and seven admitted code-list controls and two goldens
    (`string-surrogate-pair`, seed `False{}`; `string-beyond-unicode`, seed `1n`)
    pin §2's "every u32 code, in order". No committed image changed.
+12. **Enter checks its operand count.** The next review laundered arrows through
+   `id(x: none) -> none`: `fits` lets a `none` value flow into either arrow kind,
+   so validation admits an erased closure invoked live, a live closure invoked
+   erased (its body reads a slot never filled) and a Program's `k` invoked erased
+   (`Enter(terminal, [])`), and §7 said nothing about any of them. §7 step 1 now
+   halts with `HostFailure image` (`ill-typed`) before the fuel test unless a
+   Closure takes exactly its `live_argument` operands, an Action zero or one and
+   the terminal continuation one; Program phases 1 and 2 use the same check.
+   `fits` stays loose: a generic function instantiated at an arrow type returns
+   a `none`-typed value into an arrow-typed node (§3). No golden exercises that
+   (every golden still validates when `none` never fits an arrow), so the run
+   control `arrow-through-identity`, `id(λx. x)(On{})`, is the one that kills
+   such a mutant. The same review showed that U32 and File may name one opaque
+   type; that is admitted, with an ordinary run, because the pair has no pinned
+   shape and a `none` value already delivers a U32 word to a File position,
+   where the host refuses an unknown token as `HostFailure io handle`. Seven run
+   controls freeze these runs for vm-model and vm-core.
 
 ## Findings that need an owner
 

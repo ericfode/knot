@@ -903,6 +903,61 @@ def plan_controls(plans: dict) -> list:
     ]
 
 
+ILL_TYPED = {'outcome': 'HostFailure', 'cause': 'image ill-typed'}
+
+
+def run_controls(plans: dict) -> list:
+    """(label, plan, frozen run) for images the validator MUST admit and the VM MUST run to
+    the frozen outcome, by literal review of section 7: `calls` counts successful debits.
+    A generic function instantiated at an arrow type returns a `none`-typed value into an
+    arrow-typed node (section 3), so `none` fits either arrow kind, and an identity can
+    launder an arrow of the other kind into an Invoke or a Program phase, or the terminal
+    continuation into an erased Invoke; section 7's operand check refuses each Enter before
+    its debit."""
+    flag = plans['value-on']['types'][0]
+    live, erased = {'kind': 'arrow', 'domain': 0, 'result': 0}, {'kind': 'erased-arrow', 'domain': None, 'result': 0}
+    ident = {'name': 'id', 'parameters': [None], 'result': None, 'slots': 1, 'body': ['ref', None, 0]}
+
+    def book(body):
+        return {'entry': 'book', 'types': [flag, live, erased],
+                'functions': [ident, {'name': 'main', 'parameters': [], 'result': 0, 'slots': 0, 'body': body}]}
+
+    def program(body):
+        """foreign-print's types: 4 IO.OP, 5 Unit -> IO.OP, 6 (5) -> IO.OP, 7 IO(Unit); 8 is
+        an erased arrow to IO.OP."""
+        fp = plans['foreign-print']
+        return {'entry': 'program', 'representation': fp['representation'],
+                'types': fp['types'] + [{'kind': 'erased-arrow', 'domain': None, 'result': 4}],
+                'functions': [ident, {'name': 'main', 'parameters': [], 'result': 7, 'slots': 0, 'body': body}]}
+    halt = ['closure', 8, 0, 0, [], ['con', 4, 1, [['lit', 1, 'U32', 0], ['value', 3, 0]]]]
+    return [
+        ('arrow-through-identity',
+         book(['invoke', 0, ['call', 1, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], [['value', 0, 1]]]),
+         {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}\n', 'calls': 3}),
+        ('erased-closure-invoked-live',
+         book(['invoke', 0, ['call', 1, 0, [['closure', 2, 0, 0, [], ['value', 0, 1]]]], [['value', 0, 0]]]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('live-closure-invoked-erased',
+         book(['invoke', 0, ['call', 2, 0, [['closure', 1, 1, 1, [], ['ref', 0, 0]]]], []]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('terminal-invoked-erased',
+         program(['closure', 7, 0, 0, [], ['closure', 6, 1, 1, [], ['invoke', 4, ['call', 8, 0, [['ref', 5, 0]]], []]]]),
+         {**ILL_TYPED, 'calls': 4}),
+        # Program phases 1 and 2 enter main's value through the same check.
+        ('phase-one-live',
+         program(['call', 7, 0, [['closure', 6, 1, 1, [], ['invoke', 4, ['ref', 5, 0], [['value', 0, 0]]]]]]),
+         {**ILL_TYPED, 'calls': 2}),
+        ('phase-two-erased', program(['closure', 7, 0, 0, [], ['call', 6, 0, [halt]]]), {**ILL_TYPED, 'calls': 3}),
+        # U32 and File, the one representation pair without a pinned shape, may name one
+        # opaque type; the run is ordinary.
+        ('u32-file-alias',
+         {'entry': 'book', 'representation': {'U32': 1, 'File': 1}, 'types': [flag, {'kind': 'opaque', 'name': 'U32'}],
+          'functions': [{'name': 'main', 'parameters': [], 'result': 0, 'slots': 1,
+                         'body': ['let', 0, 0, ['lit', 1, 'U32', 7], ['value', 0, 0]]}]},
+         {'exit': 0, 'stdout': 'Evaluated\t0\t0\tOff{}\n', 'calls': 1}),
+    ]
+
+
 def describe_controls(plans: dict) -> list:
     """(label, type table, result type, section 8's frozen verdict) for the Book describe
     domain: None where the VM describes the result, else why it reports Unsupported."""
@@ -1037,6 +1092,11 @@ CODEC_MUTANTS = [
     ('describe-admits-none', [("            return f'none-typed {at}'", "            continue")]),
     ('describe-admits-arrows', [("        if kind != 'data':\n", "        if kind in ('arrow', 'erased-arrow'):\n"
                                                               "            continue\n        if kind != 'data':\n")]),
+    # A `none` value that never fits an arrow refuses a generic function instantiated at one.
+    ('validator-none-never-arrow', [("        if declared is None or actual is None or declared == actual:\n            return True\n",
+                                     "        if declared == actual:\n            return True\n"
+                                     "        if declared is None or actual is None:\n"
+                                     "            return kind(declared) not in arrows and kind(actual) not in arrows\n")]),
     # Review round 3: a String constant is its code list at every step.
     ('encode-through-json-text', [("        data = u32_list(value) if kind == 'String' else u32_list([value])",
                                    "        data = [ord(c) for c in json.loads(json.dumps(''.join(map(chr, value))))] "
@@ -1333,6 +1393,13 @@ def main() -> int:
         boundaries.append({'control': label, 'refused': got})
     for label, data in admitted:
         require(rejected(data, reg, digest) is None, f'admitted control {label}: {rejected(data, reg, digest)}')
+    runs = {}
+    for label, plan, frozen in run_controls(plans):
+        data = codec.encode(plan, digest)
+        require(rejected(data, reg, digest) is None, f'run control {label}: {rejected(data, reg, digest)}')
+        require(codec.decode(data, digest) == plan, f'run control {label}: decodes to another plan')
+        admitted.append((f'run:{label}', data))
+        runs[label] = {**frozen, 'image_sha256': sha(data)}
     describing = describe_controls(plans)
     verdicts = describe_verdicts(describing)
     for label, _, _, verdict in describing:
@@ -1353,7 +1420,7 @@ def main() -> int:
     record['bench'] = check_bench(built)
     boundaries += bench_controls(built)
     record.update(status='passed', fixtures=fixtures, boundaries=boundaries,
-                  admitted=[label for label, _ in admitted], describe=verdicts, mutants=mutants,
+                  admitted=[label for label, _ in admitted], runs=runs, describe=verdicts, mutants=mutants,
                   code_lists={'round_trip': sorted(coded), 'text_spelling': 'refused by encode'},
                   coverage={'opcodes': sorted(opcodes), 'case_modes': sorted(modes),
                             'program_images': sum(p['entry'] == 'program' for p in plans.values()),
@@ -1361,7 +1428,8 @@ def main() -> int:
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(record, indent=1) + '\n')
     print(f"vm-spec passed: {len(fixtures)} golden images, {len(boundaries)} refused controls, "
-          f"{len(admitted)} admitted controls ({len(coded)} code lists), {len(verdicts)} describe controls, "
+          f"{len(admitted)} admitted controls ({len(coded)} code lists, {len(runs)} runs), "
+          f"{len(verdicts)} describe controls, "
           f"{len(mutants)} killed mutants; {RECEIPT.relative_to(ROOT)}")
     return 0
 

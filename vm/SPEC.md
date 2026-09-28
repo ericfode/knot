@@ -127,6 +127,10 @@ A field naming another representation requires that representation declared.
 U32 and File are **opaque**:
 U32's `Word` representation is never exposed to the VM, and the encoder rejects a
 reachable non-prim body that destructures it. A File is a host handle token.
+Having no pinned shape, the two may name one opaque type (run control
+`u32-file-alias`): a U32 immediate at a File position is then a token, which the
+host refuses as `HostFailure io handle` unless it is open. A `none`-typed value
+can deliver the same word without the alias.
 
 **Constants.** Kinds 0 U32, 1 Nat, 2 Char, 3 String. The first three have `n = 1`
 and hold the full value. A String holds its exact ordered Chr codes, not UTF-8;
@@ -240,7 +244,8 @@ stack. The validator checks every function, reachable or not:
 A refused image is `HostFailure image` with a reason. `check-spec.py` freezes 61
 refusals (20 byte-level, 41 plan-level); vm-core MUST refuse the same controls,
 and MUST admit its three admitted plan controls (a Case on a `none` slot, among
-them `list-head-match`, S's shape) and its seven code-list controls (§12).
+them `list-head-match`, S's shape), its seven code-list controls and its seven
+run controls, each of which it then runs to the outcome frozen with it (§7, §12).
 Validation establishes these rules, not type soundness: a `none`-typed value may
 be instantiated at any type (§3), so the VM's inspection (§6) and entry check
 (§7) refuse the rest at run time as `HostFailure image` (`ill-typed`).
@@ -411,11 +416,16 @@ the callee, so a tail loop reuses its cell. A non-tail entry pushes Call(`act`).
 
 `Enter(target, ops)`:
 
-1. A target that is neither a function (Application) nor a Closure cell, an Action
-   cell or the terminal continuation halts with `HostFailure image` (`ill-typed`)
-   before anything else. If `fuel = 0`, stop with `Exhausted` kind 1; the pending
-   `Enter` stays in the state and no effect happens. Otherwise `fuel -= 1`,
-   `calls += 1`, `quantum += 1`.
+1. The target must be a function (Application), a Closure cell, an Action cell or
+   the terminal continuation, and must take `ops`: a Closure exactly its
+   `live_argument` operands, an Action zero or one, the terminal continuation
+   exactly one (a function's live arity is checked by §3 and §8). Otherwise the
+   step halts with `HostFailure image` (`ill-typed`) before anything else, at
+   `fuel = 0` too: a `none`-typed value can hand an Invoke an arrow of the other
+   kind, or `k` to an erased Invoke (§12's run controls). Program phases 1 and 2
+   (§8) enter through this same check. If `fuel = 0`, stop with `Exhausted`
+   kind 1; the pending `Enter` stays in the state and no effect happens.
+   Otherwise `fuel -= 1`, `calls += 1`, `quantum += 1`.
 2. By target:
    - a function: enter its body with `ops` moved into slots `0..arity-1`;
    - a Closure: enter its body with the captures `dup`ed into slots `0..n-1` and
@@ -701,11 +711,21 @@ lane and requires:
   `none`-typed node covered;
 - all 61 refusals of §4 with their frozen reasons, and its three admitted plan
   controls;
+- seven admitted **run controls** (`check-spec.py run_controls`), each frozen
+  with the run §7 requires, by literal review. Through a `none`-typed identity: a
+  live closure invoked live, `Evaluated 0 1 On{}` after 3 calls; an erased
+  closure invoked live, a live closure invoked erased, the terminal continuation
+  invoked erased, a live closure as main's value at phase 1 and an erased closure
+  at phase 2, each `HostFailure image` (`ill-typed`) after 2, 2, 4, 2 and 3
+  calls. And U32 and File named by one opaque type, `Evaluated 0 0 Off{}` after 1
+  call. A validator mutant in which `none` never fits an arrow refuses the first,
+  a generic function instantiated at an arrow type, so `fits` stays loose and §7
+  checks the count;
 - seven admitted code-list controls, each decoding back to its plan through the
   decode CLI's JSON text: a surrogate pair beside U+1F600 (two constants, never
   merged), each alone, a lone surrogate, U+10FFFF, U+110000 and the u32 maximum;
   and `encode`'s refusal of a String constant spelled as text;
-- 39 codec mutants and 4 source mutants killed through a changed image, a decode
+- 40 codec mutants and 4 source mutants killed through a changed image, a decode
   that differs from its plan, a changed refusal, a refused admitted control, a
   changed describe verdict or a changed observation, never a crash;
 - the bench sources, guards and recorded outputs unchanged, and `baselines.json`
