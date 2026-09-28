@@ -368,3 +368,46 @@ Perch is not applicable: no owned executable declaration or law packet changed,
 so no new model request or semantic-pass claim is made. Remaining runtime probes,
 policy selection, general compiled allocation and generated GPU validation remain
 future work.
+
+
+## GPU runtime campaign checkpoint (2026-09-27)
+
+The bounded [record interpreter](../research/adaptive-tasks/runtime/README.md)
+adds implementations and independent Bend controls for **R4** and **R6** under
+[`knot-device-records-1`](WASM-WEBGPU-BACKEND.md#device-record-contract-knot-device-records-1).
+The original tree probe, published packages and compiler sources are unchanged.
+
+| Obligation | Added controls | Current evidence |
+| --- | --- | --- |
+| R4 | Two-slot reuse; old, foreign, copied and out-of-range locators; occupied/full rejection retains incoming owners; ceilings 0/1 force retirement; unrelated live slot survives | Six literal-controlled cases, 30 commands, existing independent Bend store model on Bun/native; shader validation only |
+| R6 | Capacities 0/1/2; rejected full offer preserves queue and owner; duplicate offer; physical reversal; zero quantum; suspend/wait/wake/complete; invalid and unsupported commands; all three phase snapshots | Ten literal-controlled cases, 32 commands, independent Bend frontier model on Bun/native; eight filled laws and seven CPU semantic mutants killed; shader validation only |
+| Device mutations | Retain extracted payload, ignore arena/generation, generation wrap, consume full-queue owner, duplicate compaction, change destination, read before publication, advance zero quantum | Nine WGSL mutants typecheck and create pipelines; hardware kills are **unrun** |
+| R5 | General affine captures and n-ary joins | Deferred; no owning environment, Data lifetime, attempt identity or cancellation/drop implementation yet |
+
+The proof boundary is explicit: two quantified equations (zero slice and unsupported-slot preservation) and six
+concrete normalization laws. Reusable model records describe observed ownership;
+they do not by themselves establish generic affine payload storage. The GPU
+scheduler and two task invocations are bounded feasibility code, not a production
+allocator or throughput result. Source compilation and Knot evaluator/Wasm
+execution of these new runtime records are not implemented.
+
+The executor's Metal adapter request returned null despite the host reporting an
+Apple M5 Max. Dawn's null backend validated 10 variants / 30 pipelines and executed
+zero device cases. Consequently R4/R6 device qualification, before/after agreement
+of the old 38 cases, and WGSL mutant kills remain pending. This checkpoint does
+not close the R4/R6 end-to-end rows above. The next owner must run the retained
+commands with Metal access before promoting the candidate layout.
+
+Plain `check.py`, `gpu/check.mjs` and `codegen/generate.py` replays now write under
+ignored `.local/adaptive-tasks/`; `--out-dir` selects another destination and
+`--update-receipts` explicitly refreshes retained artifacts. Device receipt
+comparison preserves fixture identity, case parameters, results, ownership,
+bounds and deterministic phase observations, excluding raw state hashes and
+logical-worker movement. Historical receipts retain their original provenance.
+
+R5 must wait for a mixed-field owning environment and explicit attempt identity:
+a stale completion after cancel/replace can target a still-live join generation.
+Qualify that distinction with rejection retaining the incoming owner, then
+right-before-left noncommutative delivery and n-ary completion exactly once.
+R3/R7 remain necessary for reusable captures and suspended/join roots; scalar
+payloads and generation checks cannot stand in for their lifetime evidence.

@@ -1,0 +1,9 @@
+Parent baseline at 185b7d5; original check.py before edits. GPU npm dependency installed offline.
+Traceback (most recent call last):
+  File "/Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/research/adaptive-tasks/check.py", line 107, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/research/adaptive-tasks/check.py", line 83, in main
+    gpu=run(['node',HERE/'gpu/check.mjs']); assert gpu['exit']==0,gpu
+                                                   ^^^^^^^^^^^^^^
+AssertionError: {'exit': 1, 'stdout': '', 'stderr': "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: hardware adapter unavailable\n    at file:///Users/ericfode/src/knot/.claude/worktrees/campaign-gpu-runtime/research/adaptive-tasks/gpu/check.mjs:60:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: null,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v22.22.3\n", 'seconds': 0.5171148329973221}

@@ -4,17 +4,35 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { parseArgs } from 'node:util';
 import { create, globals } from 'webgpu';
+import { compareReceipts } from './observations.mjs';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=resolve(here,'../../..');
 const sha=x=>createHash('sha256').update(x).digest('hex');
 const NONE=0xffffffff, SENTINEL=0xdeadbeef;
 const MAX_NODES=4096, OP_WORDS=12, TASK_WORDS=16;
-const override=process.argv[2];
+const {values:options,positionals}=parseArgs({allowPositionals:true,options:{
+  'out-dir':{type:'string'},'update-receipts':{type:'boolean',default:false},
+  'compare-receipt':{type:'string'},help:{type:'boolean',default:false},
+}});
+if(options.help) {
+  console.log('Usage: node gpu/check.mjs [shader.wgsl] [--out-dir DIR | --update-receipts] [--compare-receipt FILE]');
+  console.log('Default output: .local/adaptive-tasks/replay/gpu.json; no tracked receipt is rewritten.');
+  process.exit(0);
+}
+assert(positionals.length<=1,'at most one shader override');
+assert(!(options['out-dir']&&options['update-receipts']),'choose --out-dir or --update-receipts');
+const out=resolve(options['out-dir']??(options['update-receipts']?
+  resolve(here,'../receipts'):resolve(root,'.local/adaptive-tasks/replay')));
+const baseline=options['compare-receipt']?
+  JSON.parse(await readFile(resolve(options['compare-receipt']),'utf8')):null;
+const override=positionals[0];
 const shader=await readFile(override??resolve(here,'tasks.wgsl'),'utf8');
 const fixturesText=execFileSync(resolve(root,'scripts/bend-reference'),
-  [resolve(here,'../fixtures.bend')],{cwd:root,encoding:'utf8',timeout:60000});
+  [resolve(here,'../fixtures.bend')],{cwd:root,encoding:'utf8',timeout:60000,
+    env:{...process.env,BEND_NO_TELEMETRY:'1'}});
 const fixtures=fixturesText.trim().split('\n').map(JSON.parse);
 
 function word(x) { assert(Number.isInteger(x)&&x>=0&&x<=NONE,'invalid U32'); return x; }
@@ -148,7 +166,7 @@ async function run(fixture,{quantum=3,adaptive=true,capacity,maxRounds=512}={}) 
     const rootOp=p.records[p.root];
     const completionOrder=rootOp[0]===1?{
       left:states[rootOp[1]*TASK_WORDS+14],right:states[rootOp[2]*TASK_WORDS+14]}:null;
-    return {name:fixture.name,quantum,adaptive,capacity,nodes:n,rounds,dispatches,peakFrontier:peak,
+    return {name:fixture.name,quantum,adaptive,capacity,maxRounds,nodes:n,rounds,dispatches,peakFrontier:peak,
       logicalWorkerMoves:sum(7),workerVisits:sum(8),machineSteps:sum(9),completionOrder,
       stateSha256:sha(new Uint8Array(states.buffer)),result,
       allDestinationsPreserved:true,frontierCanaryPreserved:true,frontierCapacitySuffixPreserved:true,
@@ -177,7 +195,7 @@ try {
   cases.push(await run(fixtures[0])); // fresh run after failures; all buffers re-created
   assert.throws(()=>pack([99]),/unsupported/);
   assert.throws(()=>pack([0,1,-1]),/invalid U32/);
-  const receipt={status:'pass',date:new Date().toISOString(),scope:'handwritten WGSL task-contract probe; no Bend-source compiler',
+  const receipt={schema:'knot-adaptive-device-receipt-v2',status:'pass',date:new Date().toISOString(),scope:'handwritten WGSL task-contract probe; no Bend-source compiler',
     webgpuVersion:'0.6.1',node:process.version,platform:process.platform,arch:process.arch,
     adapter:{vendor:adapter.info.vendor,architecture:adapter.info.architecture,device:adapter.info.device,
       description:adapter.info.description,isFallbackAdapter:adapter.info.isFallbackAdapter,backend:'metal'},
@@ -185,8 +203,13 @@ try {
     dispatches:cases.reduce((a,c)=>a+c.dispatches,0),cases,
     shaderCompilationErrors:0,validationErrors:0,unsupportedOpcodeRejected:true,invalidIntegerRejected:true,
     performanceClaim:false};
-  await mkdir(resolve(here,'../receipts'),{recursive:true});
-  if(!override)await writeFile(resolve(here,'../receipts/gpu.json'),JSON.stringify(receipt,null,2)+'\n');
+  if(baseline)receipt.semanticComparison={baseline:resolve(options['compare-receipt']),
+    ...compareReceipts(baseline,receipt)};
+  if(!override) {
+    await mkdir(out,{recursive:true});
+    await writeFile(resolve(out,'gpu.json'),JSON.stringify(receipt,null,2)+'\n');
+  }
   console.log(JSON.stringify({status:'pass',adapter:receipt.adapter,cases:cases.length,dispatches:receipt.dispatches,
-    maxLogicalWorkerMoves:Math.max(...cases.map(c=>c.logicalWorkerMoves)),performanceClaim:false}));
+    maxLogicalWorkerMoves:Math.max(...cases.map(c=>c.logicalWorkerMoves)),performanceClaim:false,
+    receipt:override?null:resolve(out,'gpu.json'),semanticComparison:receipt.semanticComparison??null}));
 } finally { device.destroy(); gpu=null; }
