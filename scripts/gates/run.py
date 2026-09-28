@@ -62,6 +62,8 @@ GATES = (
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('lint:verify', ('npm', 'run', '-s', 'lint:verify')),
+    Gate('closures', ('python3', 'tests/compiler-closures/check.py'),
+         ('tests/compiler-closures/receipts/closures.json',)),
 )
 
 
@@ -211,6 +213,9 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         result['bound_observations'] = sum(len(row[field]['stdout'].splitlines()) for row in record['bounds'])
     if gate.name == 'owned-store':
         result.update(cases=record['case_count'], literal_witnesses=record['literal_witnesses'], execution_lanes=2)
+    if gate.name == 'closures':
+        result.update(record['counts'])
+        result['proof_entries'] = len(record['proofs'])
     if gate.name == 'flat-store':
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())

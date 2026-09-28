@@ -12,6 +12,7 @@ type Error is Data:
 
 type Token is Data:
   Token{text: String, at: At}
+  Arrow{domain: Token, result: Token}
 
 # The parser has a single recursive tree. Declaration/sequence variants never
 # appear in checked expressions; the resolver validates that invariant.
@@ -20,6 +21,8 @@ type Node is Data:
   Promotion{token: Token}
   Constructor{token: Token, arguments: List<&2,Node>}
   Call{token: Token, arguments: List<&2,Node>}
+  Lambda{token: Token, quantity: U32, body: Node}
+  Apply{token: Token, function: Node, arguments: List<&2,Node>}
   Binding{token: Token, quantity: U32, annotation: Maybe<&2,Token>, value: Node, body: Node}
   Match{token: Token, value: Node, arms: List<&2,Node>}
   Arm{token: Token, pattern: Node, body: Node}
@@ -31,18 +34,22 @@ type Node is Data:
 def text(t: Token) -> String:
   match t:
     case Token{s,a}: s
+    case Arrow{domain,result}: String.concat(["(",text(domain),"->",text(result),")"])
 
 def at(t: Token) -> At:
   match t:
     case Token{s,a}: a
+    case Arrow{domain,result}: at(domain)
 
 def column(t: Token) -> U32:
   match t:
     case Token{s,At{lo,hi,line,col}}: col
+    case Arrow{domain,result}: column(domain)
 
 def line(t: Token) -> U32:
   match t:
     case Token{s,At{lo,hi,line,col}}: line
+    case Arrow{domain,result}: line(domain)
 
 def here(ts: List<&2,Token>) -> At:
   match ts:

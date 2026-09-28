@@ -1,0 +1,58 @@
+{
+  "basis": "Each wrong result is compared with an immutable seed call or with the separately frozen supplemental layout and tail controls. Source mutants are checked before execution in both compiler lanes.",
+  "mutants": [
+    {
+      "name": "wrong-dispatch-arm",
+      "phase": "compile",
+      "file": "closure.bend",
+      "old": "C.Branch{tag,fields(captures,Shift{binder}),body}",
+      "new": "C.Branch{0,fields(captures,Shift{binder}),body}",
+      "case": "defunc-sites",
+      "entry": "site",
+      "arguments": [0, 0, 0]
+    },
+    {
+      "name": "capture-dropped",
+      "phase": "compile",
+      "file": "closure.bend",
+      "old": "Con{C.Reference{token,level(rename,id),typ},capture_args(tail,rename)}",
+      "new": "Con{C.Value{token,typ,0},capture_args(tail,rename)}",
+      "case": "return-closure",
+      "entry": "chained",
+      "arguments": [1, 1]
+    },
+    {
+      "name": "affine-capture-duplicated",
+      "phase": "check",
+      "file": "closure-check.bend",
+      "old": "typ,E.remove(uses,level)",
+      "new": "typ,Nil{}",
+      "case": "capture-affine-twice"
+    },
+    {
+      "name": "erased-capture-stored-live",
+      "phase": "compile",
+      "replacements": [
+        {
+          "file": "wasm.bend",
+          "old": "u => lower(n,Cell{tail,params,slots,tag},heap,functions,locals,next,cap),u =>",
+          "new": "u => lower(n,Cell{tail,params,Con{next,slots},tag},heap,functions,locals,U32.add(next,1),cap),u =>"
+        },
+        {
+          "file": "wasm.bend",
+          "old": "u => lower(n,TailUnpack{rest,pointer,offset,body},heap,functions,locals,next,cap),u =>",
+          "new": "u => lower(n,TailUnpack{rest,pointer,U32.add(offset,4),body},heap,functions,locals,next,cap),u =>"
+        }
+      ],
+      "case": "erased-layout"
+    },
+    {
+      "name": "tail-call-not-tail",
+      "phase": "compile",
+      "file": "wasm.bend",
+      "old": "instruction(cap,18,index)",
+      "new": "instruction(cap,16,index)",
+      "case": "deep-tail"
+    }
+  ]
+}

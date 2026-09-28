@@ -183,6 +183,10 @@
         {
           "module": "./core.bend",
           "file": "src/core.bend"
+        },
+        {
+          "module": "./closure-types.bend",
+          "file": "src/closure-types.bend"
         }
       ],
       "declarations": {
@@ -487,6 +491,7 @@
           "types.base"
         ],
         "src/catalog.bend::field_type:definition": [
+          "bindings",
           "calls",
           "captures",
           "constructors",
@@ -558,6 +563,7 @@
           "types.base"
         ],
         "src/catalog.bend::catalog:definition": [
+          "bindings",
           "calls",
           "captures",
           "constructors",
@@ -614,6 +620,7 @@
           "constructors",
           "fields",
           "generics",
+          "literals.string",
           "matches",
           "patterns.variable",
           "quantities.affine",
@@ -657,6 +664,13 @@
           "quantities.arguments",
           "quantities.reusable",
           "recursion",
+          "types.base"
+        ],
+        "src/catalog.bend::arrow_id:definition": [
+          "calls",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
           "types.base"
         ]
       }
@@ -1119,6 +1133,10 @@
         {
           "module": "./patterns.bend",
           "file": "src/patterns.bend"
+        },
+        {
+          "module": "./closure-check.bend",
+          "file": "src/closure-check.bend"
         }
       ],
       "declarations": {
@@ -1260,6 +1278,7 @@
           "constructors",
           "fields",
           "generics",
+          "literals.string",
           "matches",
           "patterns.nested",
           "patterns.variable",
@@ -1536,6 +1555,72 @@
           "literals.string",
           "matches",
           "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check.bend::split_call:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/check.bend::missing:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/check.bend::apply_type:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/check.bend::function_type:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/check.bend::lambda_body:definition": [
+          "calls",
+          "calls.variable",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
           "patterns.variable",
           "patterns.wildcard",
           "quantities.affine",
@@ -2640,6 +2725,7 @@
           "constructors",
           "fields",
           "generics",
+          "literals.string",
           "matches",
           "patterns.variable",
           "quantities.affine",
@@ -2756,6 +2842,19 @@
           "literals.string",
           "matches",
           "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/eval.bend::apply_argument:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
           "types.base"
@@ -3712,6 +3811,10 @@
         {
           "module": "./syntax.bend",
           "file": "src/syntax.bend"
+        },
+        {
+          "module": "./closure-types.bend",
+          "file": "src/closure-types.bend"
         }
       ],
       "declarations": {
@@ -3789,6 +3892,50 @@
           "quantities.arguments",
           "types.base"
         ],
+        "src/parse.bend::typed:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/parse.bend::lambda_plain:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/parse.bend::lambda_prefix:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/parse.bend::prepend:definition": [
           "constructors",
           "fields",
@@ -3815,6 +3962,18 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse.bend::wrap_apply:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
           "types.base"
         ],
         "src/parse.bend::wrap_type:definition": [
@@ -3917,6 +4076,38 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/parse.bend::parameter_type:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse.bend::result_body:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/parse.bend::template_parameter:definition": [
           "calls",
           "captures",
@@ -3948,6 +4139,17 @@
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse.bend::compound:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "recursion",
           "types.base"
         ],
         "src/parse.bend::reply:definition": [
@@ -4692,13 +4894,17 @@
         ],
         "src/scope.bend::lookup:definition": [
           "calls",
+          "captures",
           "constructors",
           "fields",
           "generics",
+          "lambdas",
+          "literals.string",
           "matches",
           "patterns.variable",
           "quantities.affine",
           "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ],
         "src/scope.bend::occurrence:definition": [
@@ -4952,36 +5158,46 @@
           "types.data"
         ],
         "src/syntax.bend::text:definition": [
+          "calls",
           "constructors",
           "fields",
+          "literals.list",
+          "literals.string",
           "matches",
           "patterns.variable",
           "quantities.affine",
+          "recursion",
           "types.base"
         ],
         "src/syntax.bend::at:definition": [
+          "calls",
           "constructors",
           "fields",
           "matches",
           "patterns.variable",
-          "quantities.affine"
+          "quantities.affine",
+          "recursion"
         ],
         "src/syntax.bend::column:definition": [
+          "calls",
           "constructors",
           "fields",
           "matches",
           "patterns.nested",
           "patterns.variable",
           "quantities.affine",
+          "recursion",
           "types.base"
         ],
         "src/syntax.bend::line:definition": [
+          "calls",
           "constructors",
           "fields",
           "matches",
           "patterns.nested",
           "patterns.variable",
           "quantities.affine",
+          "recursion",
           "types.base"
         ],
         "src/syntax.bend::here:definition": [
@@ -5262,6 +5478,10 @@
         {
           "module": "./wasm-bytes.bend",
           "file": "src/wasm-bytes.bend"
+        },
+        {
+          "module": "./closure.bend",
+          "file": "src/closure.bend"
         }
       ],
       "declarations": {
@@ -5504,6 +5724,20 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/wasm.bend::tail_called:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
         "src/wasm.bend::call_body:definition": [
           "calls",
           "calls.variable",
@@ -5628,6 +5862,7 @@
           "fields",
           "generics",
           "lambdas",
+          "literals.list",
           "literals.nat",
           "literals.string",
           "literals.u32",
@@ -5674,6 +5909,20 @@
           "types.base"
         ],
         "src/wasm.bend::body:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/wasm.bend::closure_body:definition": [
           "calls",
           "captures",
           "constructors",
@@ -5819,7 +6068,7 @@
           "quantities.arguments",
           "types.base"
         ],
-        "src/wasm.bend::profiled:definition": [
+        "src/wasm.bend::assembled:definition": [
           "bindings",
           "calls",
           "captures",
@@ -5834,6 +6083,31 @@
           "quantities.reusable",
           "types.base"
         ],
+        "src/wasm.bend::profiled:definition": [
+          "calls",
+          "constructors",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/wasm.bend::lowered:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
         "src/wasm.bend::emit_profile:definition": [
           "calls",
           "captures",
@@ -5841,7 +6115,6 @@
           "fields",
           "generics",
           "lambdas",
-          "literals.u32",
           "matches",
           "patterns.variable",
           "quantities.affine",
@@ -6342,6 +6615,2025 @@
           "proofs",
           "quantities.affine",
           "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-check-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        },
+        {
+          "module": "./closure-check.bend",
+          "file": "src/closure-check.bend"
+        },
+        {
+          "module": "./eval.bend",
+          "file": "src/eval.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-check-LAWS.bend::discard_is_not_a_reference:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::closure_application_is_a_computed_scrutinee:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::lambda_is_a_computed_scrutinee:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::affine_capture_is_transferred:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::affine_capture_cannot_be_consumed_twice:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::erased_argument_has_no_live_read:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::erased_read_has_no_live_capture:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::close_starts_with_an_empty_environment:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::erased_capture_skips_lookup:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::apply_evaluates_the_function_first:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::apply_closure_retains_its_environment:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-LAWS.bend::apply_enters_the_body_without_a_return_frame:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-check-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./closure-check-LAWS.bend",
+          "file": "src/closure-check-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-check-PROOF.bend::L.discard_is_not_a_reference:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.closure_application_is_a_computed_scrutinee:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.lambda_is_a_computed_scrutinee:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.affine_capture_is_transferred:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.affine_capture_cannot_be_consumed_twice:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.erased_argument_has_no_live_read:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.erased_read_has_no_live_capture:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.close_starts_with_an_empty_environment:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.erased_capture_skips_lookup:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.apply_evaluates_the_function_first:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.apply_closure_retains_its_environment:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check-PROOF.bend::L.apply_enters_the_body_without_a_return_frame:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-check.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./catalog.bend",
+          "file": "src/catalog.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-check.bend::Reads:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-check.bend::Scan:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-check.bend::Prefix:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-check.bend::Typed:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-check.bend::exact_arity:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-check.bend::named:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::signature:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::require_arrow:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::arrow:definition": [
+          "calls",
+          "captures",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::arrow_id:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::unite:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine"
+        ],
+        "src/closure-check.bend::empty:definition": [
+          "constructors",
+          "fields"
+        ],
+        "src/closure-check.bend::captured:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::call_scan:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-check.bend::scan:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::captures:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::site:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure-check.bend::close:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::sealed:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::lambda_scope:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::lambda_type:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::prefix_head:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine"
+        ],
+        "src/closure-check.bend::prefix:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::invoke:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::slots:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::references:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::eta_close:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::eta:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::save:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-check.bend::saved:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::partial:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-check.bend::arity_kind:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-check.bend::arity:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./closure.bend",
+          "file": "src/closure.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-LAWS.bend::capture_arity:law": [
+          "calls",
+          "dependent",
+          "equality",
+          "generics",
+          "laws",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-LAWS.bend::capture_quantity:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-LAWS.bend::close_has_one_cell:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-LAWS.bend::invoke_has_one_dispatch:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "laws",
+          "literals.list",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-LAWS.bend::outer_levels_are_unchanged:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "laws",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-LAWS.bend::rewrite_exhaustion:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./closure.bend",
+          "file": "src/closure.bend"
+        },
+        {
+          "module": "./closure-LAWS.bend",
+          "file": "src/closure-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-PROOF.bend::L.capture_arity:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-PROOF.bend::L.capture_quantity:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-PROOF.bend::L.close_has_one_cell:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-PROOF.bend::L.invoke_has_one_dispatch:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "proofs",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-PROOF.bend::L.outer_levels_are_unchanged:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "proofs",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-PROOF.bend::L.rewrite_exhaustion:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-types-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./closure-types.bend",
+          "file": "src/closure-types.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-types-LAWS.bend::arrow_location:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "laws",
+          "quantities.affine",
+          "quantities.reusable"
+        ],
+        "src/closure-types-LAWS.bend::arrow_kind:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "laws",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure-types-LAWS.bend::signature_end:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "laws",
+          "quantities.reusable"
+        ],
+        "src/closure-types-LAWS.bend::signature_step:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types-LAWS.bend::interned_arrow_is_stable:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types-LAWS.bend::no_type_budget:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-types-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./closure-types-LAWS.bend",
+          "file": "src/closure-types-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-types-PROOF.bend::L.arrow_location:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "proofs",
+          "quantities.affine",
+          "quantities.reusable"
+        ],
+        "src/closure-types-PROOF.bend::L.arrow_kind:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "proofs",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure-types-PROOF.bend::L.signature_end:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "proofs",
+          "quantities.reusable"
+        ],
+        "src/closure-types-PROOF.bend::L.signature_step:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types-PROOF.bend::L.interned_arrow_is_stable:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types-PROOF.bend::L.no_type_budget:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure-types.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure-types.bend::Read:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-types.bend::Mode:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.data"
+        ],
+        "src/closure-types.bend::Interned:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-types.bend::then:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-types.bend::unsupported:definition": [
+          "calls",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "types.base",
+          "types.type"
+        ],
+        "src/closure-types.bend::read:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::token:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine"
+        ],
+        "src/closure-types.bend::reusable:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure-types.bend::find:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::found:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types.bend::append:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types.bend::then_intern:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-types.bend::with_types:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "higher-order",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure-types.bend::intern:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::intern_all:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::signature:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::annotation:definition": [
+          "constructors",
+          "fields",
+          "generics",
+          "literals.list",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure-types.bend::occurrences:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::complete:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure-types.bend::arrows:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::arrow:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure-types.bend::arrow_id:definition": [
+          "calls",
+          "generics",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/closure.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        }
+      ],
+      "declarations": {
+        "src/closure.bend::Inventory:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure.bend::Dispatch:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure.bend::Rename:datatype": [
+          "fields",
+          "quantities.affine",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure.bend::Plan:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/closure.bend::internal:definition": [
+          "constructors",
+          "dependent",
+          "fields",
+          "generics",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.erased",
+          "types.base",
+          "types.type"
+        ],
+        "src/closure.bend::includes:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::remember:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::contains:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::retain:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::add_site:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::add_arrow:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure.bend::scan:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::inventory:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::site_ids:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::dispatches:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::lookup:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::site_index:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::ordinal:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::level:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::capture_params:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::capture_args:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::fields:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::pack:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::apply:definition": [
+          "constructors",
+          "fields",
+          "literals.list",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/closure.bend::sequence:definition": [
+          "calls",
+          "calls.variable",
+          "constructors",
+          "fields",
+          "generics",
+          "higher-order",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure.bend::rewrite:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::functions:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::constructors:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::types:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::dispatch_arm:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/closure.bend::arms:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::dispatcher:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.u32",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::dispatchers:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/closure.bend::prepare:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/closure.bend::run:definition": [
+          "bindings",
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ]
       }

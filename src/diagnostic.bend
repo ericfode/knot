@@ -44,6 +44,10 @@ def tree(fuel: Nat, node: S.Node) -> Result<S.Error,String>:
       concat([Done{S.text(token)},Done{"{"},tree(n,S.Sequence{args}),Done{"}"}])
     case 1n+ +n S.Call{token,args}:
       concat([Done{S.text(token)},Done{"("},tree(n,S.Sequence{args}),Done{")"}])
+    case 1n+ +n S.Lambda{token,q,body}:
+      concat([Done{"lambda["},Done{U32.show(q)},Done{" "},Done{S.text(token)},Done{"] "},tree(n,body)])
+    case 1n+ +n S.Apply{token,function,args}:
+      concat([Done{"apply["},tree(n,function),Done{"]("},tree(n,S.Sequence{args}),Done{")"}])
     case 1n+ +n S.Binding{token,q,annot,value,body}:
       concat([Done{"let["},Done{U32.show(q)},Done{" "},Done{S.text(token)},Done{annotation(annot)},Done{" "},tree(n,value),Done{"] "},tree(n,body)])
     case 1n+ +n S.Match{token,value,arms}:

@@ -6,12 +6,15 @@ import ./core.bend as C
 type Value is Data:
   Value{type_id: U32, tag: U32}
   Object{type_id: U32, tag: U32, fields: List<&2,Value>}
+  Closure{site: U32, type_id: U32, level: U32, body: C.Term, environment: List<&2,Entry>}
 type Entry is Data:
   Entry{level: U32, value: Value}
 type Frame is Data:
   Bind{level: U32, body: C.Term, environment: List<&2,Entry>}
   Argument{parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, level: U32, caller: List<&2,Entry>, callee: List<&2,Entry>, body: C.Term}
   Field{type_id: U32, tag: U32, parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,Value>}
+  ApplyArgument{argument: C.Term, environment: List<&2,Entry>}
+  ApplyBody{level: U32, body: C.Term, environment: List<&2,Entry>}
 type State is Data:
   Fields{type_id: U32, tag: U32, parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, environment: List<&2,Entry>, values: List<&2,Value>, frames: List<&2,Frame>}
   Unpack{parameters: List<&2,C.Binding>, values: List<&2,Value>, environment: List<&2,Entry>, body: C.Term, frames: List<&2,Frame>}
@@ -19,6 +22,7 @@ type State is Data:
   Return{value: Value, frames: List<&2,Frame>}
   Arguments{parameters: List<&2,C.Parameter>, arguments: List<&2,C.Term>, level: U32, caller: List<&2,Entry>, callee: List<&2,Entry>, body: C.Term, frames: List<&2,Frame>}
   HostArguments{parameters: List<&2,C.Parameter>, arguments: List<&2,U32>, level: U32, environment: List<&2,Entry>, body: C.Term}
+  Capture{site: U32, type_id: U32, level: U32, bindings: List<&2,C.Binding>, body: C.Term, caller: List<&2,Entry>, environment: List<&2,Entry>, frames: List<&2,Frame>}
 
 def internal(-A: Type, code: String) -> Result<S.Error,A>:
   Fail{S.Internal{"eval",code}}
@@ -59,6 +63,7 @@ def select_value(value: Value, arms: List<&2,C.Term>) -> Result<S.Error,C.Term>:
   match value:
     case Value{type_id,tag}: select(arms,tag)
     case Object{type_id,tag,fields}: select(arms,tag)
+    case Closure{site,typ,level,body,env}: internal(C.Term,"closure-scrutinee")
 
 def enter_branch(value: Value, branch: C.Term, env: List<&2,Entry>, frames: List<&2,Frame>) -> Result<S.Error,State>:
   match value branch:
@@ -86,6 +91,8 @@ def enum_tag(types: List<&2,C.Datatype>, +index: U32, +tag: U32) -> Result<S.Err
     case Nil{}: internal(Unit,"type-index")
     case Con{C.Datatype{name,data,+ctors},+tail}:
       S.choose(Result<S.Error,Unit>,U32.is_eq(index,0),u => host_constructor(ctors,tag),u => enum_tag(tail,U32.sub(index,1),tag))
+    case Con{C.Arrow{token,domain,result},+tail}:
+      S.choose(Result<S.Error,Unit>,U32.is_eq(index,0),u => host(Unit,"function-argument"),u => enum_tag(tail,U32.sub(index,1),tag))
 
 def host_argument(args: List<&2,U32>, type_id: U32, types: List<&2,C.Datatype>, next: U32 -> Result<S.Error,State>) -> Result<S.Error,State>:
   match args:
@@ -103,6 +110,12 @@ def unpack_live(values: List<&2,Value>, level: U32, params: List<&2,C.Binding>, 
     case Nil{}: internal(State,"missing-field")
     case Con{value,rest}: Done{Unpack{params,rest,Con{Entry{level,value},env},body,frames}}
 
+def apply_argument(value: Value, argument: C.Term, caller: List<&2,Entry>, frames: List<&2,Frame>) -> Result<S.Error,State>:
+  match value:
+    case Closure{site,typ,level,body,captured}:
+      Done{Evaluate{argument,caller,Con{ApplyBody{level,body,captured},frames}}}
+    case _: internal(State,"application-value")
+
 # Each step either advances one source-machine transition or reports a failure.
 # Erased initializers and arguments are skipped before entering Evaluate.
 def step(state: State, +book: C.Book) -> Result<S.Error,State>:
@@ -115,6 +128,10 @@ def step(state: State, +book: C.Book) -> Result<S.Error,State>:
       S.bind(Value,State,lookup(env,level),value => Done{Return{value,frames}})
     case Evaluate{C.Application{token,index,type_id,+args},+env,+frames} C.Book{types,functions}:
       S.bind(C.Function,State,function_at(functions,index),function => Done{enter(function,args,env,frames)})
+    case Evaluate{C.Closure{token,site,typ,level,q,domain,captures,body},env,frames} _:
+      Done{Capture{site,typ,level,captures,body,env,Nil{},frames}}
+    case Evaluate{C.Invoke{token,arrow,typ,function,argument},+env,frames} _:
+      Done{Evaluate{function,env,Con{ApplyArgument{argument,env},frames}}}
     case Evaluate{C.Let{token,+level,q,type_id,+value,+body},+env,+frames} _:
       S.choose(Result<S.Error,State>,U32.is_eq(q,0),u => Done{Evaluate{body,env,frames}},u =>
         Done{Evaluate{value,env,Con{Bind{level,body,env},frames}}})
@@ -128,7 +145,16 @@ def step(state: State, +book: C.Book) -> Result<S.Error,State>:
       Done{Arguments{params,args,U32.add(level,1),caller,Con{Entry{level,value},callee},body,rest}}
     case Return{value,Con{Field{type_id,tag,params,args,env,values},frames}} _:
       Done{Fields{type_id,tag,params,args,env,Con{value,values},frames}}
+    case Return{value,Con{ApplyArgument{argument,caller},frames}} _:
+      apply_argument(value,argument,caller,frames)
+    case Return{value,Con{ApplyBody{level,body,env},frames}} _:
+      Done{Evaluate{body,Con{Entry{level,value},env},frames}}
     case Return{value,Nil{}} _: Done{Return{value,Nil{}}}
+    case Capture{site,typ,level,Nil{},body,caller,env,frames} _:
+      Done{Return{Closure{site,typ,level,body,env},frames}}
+    case Capture{+site,+typ,+level,Con{C.Binding{token,+id,q,domain,param,known},+tail},+body,+caller,+env,+frames} _:
+      S.choose(Result<S.Error,State>,U32.is_eq(q,0),u => Done{Capture{site,typ,level,tail,body,caller,env,frames}},u =>
+        S.bind(Value,State,lookup(caller,id),value => Done{Capture{site,typ,level,tail,body,caller,Con{Entry{id,value},env},frames}}))
     case Fields{type_id,tag,Nil{},Nil{},env,values,frames} _:
       Done{Return{Object{type_id,tag,List.reverse(&2,Value,values)},frames}}
     case Fields{+type_id,+tag,Con{C.Parameter{token,q,typ},+params},Con{+head,+args},+env,+values,+frames} _:
@@ -182,6 +208,8 @@ def result_name(types: List<&2,C.Datatype>, +index: U32, +tag: U32) -> Result<S.
     case Nil{}: internal(String,"result-type")
     case Con{C.Datatype{name,data,+ctors},+tail}:
       S.choose(Result<S.Error,String>,U32.is_eq(index,0),u => constructor_name(ctors,tag),u => result_name(tail,U32.sub(index,1),tag))
+    case Con{C.Arrow{token,domain,result},+tail}:
+      S.choose(Result<S.Error,String>,U32.is_eq(index,0),u => host(String,"function-result"),u => result_name(tail,U32.sub(index,1),tag))
 
 type Display is Data:
   One{value: Value}
@@ -204,6 +232,7 @@ def render(fuel: Nat, pending: List<&2,Display>, +types: List<&2,C.Datatype>, +c
     case 1n+n Con{One{Object{type_id,tag,+fields}},+tail}:
       S.bind(String,String,result_name(types,type_id,tag),name =>
         render(n,Con{Text{String.append(name,"{")},Con{Many{fields},Con{Text{"}"},tail}}},types,capacity,parts))
+    case 1n+n Con{One{Closure{site,typ,level,body,env}},tail}: host(String,"function-result")
     case 1n+n Con{Many{Nil{}},tail}: render(n,tail,types,capacity,parts)
     case 1n+n Con{Many{Con{head,Nil{}}},tail}: render(n,Con{One{head},tail},types,capacity,parts)
     case 1n+n Con{Many{Con{head,rest}},tail}:
@@ -216,6 +245,7 @@ def identity(value: Value) -> String:
   match value:
     case Value{type_id,tag}: String.concat([U32.show(type_id),"\t",U32.show(tag),"\t"])
     case Object{type_id,tag,fields}: String.concat([U32.show(type_id),"\t",U32.show(tag),"\t"])
+    case Closure{site,typ,level,body,env}: String.concat([U32.show(typ),"\t",U32.show(site),"\t"])
 
 def describe(+value: Value, book: C.Book) -> Result<S.Error,String>:
   match book:

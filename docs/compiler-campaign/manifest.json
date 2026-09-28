@@ -23,7 +23,9 @@
       "name": "frontend-parsing",
       "files": [
         "src/syntax.bend",
-        "src/parse.bend"
+        "src/parse.bend",
+        "src/closure-types.bend",
+        "src/core.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Tokens to the bounded syntax tree; parser depth and unsupported forms."
@@ -44,7 +46,8 @@
       "files": [
         "src/syntax.bend",
         "src/core.bend",
-        "src/catalog.bend"
+        "src/catalog.bend",
+        "src/closure-types.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Ordered type, constructor and field signatures; kinds and declaration bounds."
@@ -56,7 +59,8 @@
         "src/core.bend",
         "src/scope.bend",
         "src/catalog.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/closure-types.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Lexical levels, quantities, pattern frontier and field bindings."
@@ -69,7 +73,9 @@
         "src/catalog.bend",
         "src/scope.bend",
         "src/patterns.bend",
-        "src/check.bend"
+        "src/check.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Complete checking boundary and explicit unsupported capabilities."
@@ -103,7 +109,10 @@
         "src/catalog.bend",
         "src/check.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/closure.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Enum terms to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
@@ -128,7 +137,10 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend",
+        "src/closure.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
@@ -140,7 +152,9 @@
         "src/LAWS.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/PROOF.bend"
+        "src/PROOF.bend",
+        "src/closure-types.bend",
+        "src/core.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Frontend boundary laws and their complete proof entry."
@@ -159,7 +173,9 @@
         "src/catalog.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/closure-check.bend",
+        "src/closure-types.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Checker boundary and scope laws. Earlier proof-entry imports are retained in the closed local family, even when not referenced by a term."
@@ -182,7 +198,9 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source-machine and codec laws, including the earlier proof-entry chain. Oversize and external ByteOutput context remain blockers."
@@ -207,7 +225,9 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/scope.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Catalog kind laws and their complete chained proof entry; the full family exceeds the composition bound."
@@ -234,7 +254,9 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/closure-types.bend",
+        "src/closure-check.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Field quantities, reconstruction, source-machine and inspection laws with the full earlier proof-entry chain. The family exceeds the composition bound."
@@ -263,10 +285,52 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/closure-check.bend",
+        "src/closure-types.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "First-parameter descent laws for structural self-calls, proved over the fields and runtime proof chain. The family exceeds the composition bound."
+    },
+    {
+      "name": "closure-types",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/closure-types.bend",
+        "src/closure-types-LAWS.bend",
+        "src/closure-types-PROOF.bend"
+      ],
+      "task": "tests/compiler-closures/SPEC.md",
+      "notes": "Monomorphic arrow parsing, kind and interned identity; explicit and synthetic signature types."
+    },
+    {
+      "name": "closure-checking",
+      "files": [
+        "src/core.bend",
+        "src/scope.bend",
+        "src/closure-check.bend",
+        "src/closure-check-LAWS.bend",
+        "src/closure-check-PROOF.bend",
+        "src/eval.bend",
+        "src/syntax.bend",
+        "src/catalog.bend",
+        "src/closure-types.bend"
+      ],
+      "task": "tests/compiler-closures/SPEC.md",
+      "notes": "Capture reads and affine uses, curried applications, saved partial arguments and independent closure evaluation."
+    },
+    {
+      "name": "closure-lowering",
+      "files": [
+        "src/core.bend",
+        "src/closure.bend",
+        "src/closure-LAWS.bend",
+        "src/closure-PROOF.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-closures/SPEC.md",
+      "notes": "Per-function-type closure records, dense site tags and apply dispatchers; corpus agreement is separate from helper laws."
     }
   ]
 }

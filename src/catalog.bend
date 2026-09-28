@@ -1,6 +1,7 @@
 import Base
 import ./syntax.bend as S
 import ./core.bend as C
+import ./closure-types.bend as F
 
 type TypeRef is Data:
   TypeRef{index: U32, definition: C.Datatype}
@@ -27,10 +28,8 @@ def find_type(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Result
   match types:
     case Nil{}: C.invalid(TypeRef,"unknown-type",name)
     case Con{+head,+tail}:
-      match head:
-        case C.Datatype{token,data,ctors}:
-          S.choose(Result<S.Error,TypeRef>,String.eq(S.text(token),S.text(name)),u =>
-            Done{TypeRef{index,head}},u => find_type(tail,name,U32.add(index,1)))
+      S.choose(Result<S.Error,TypeRef>,String.eq(S.text(F.token(head)),S.text(name)),u =>
+        Done{TypeRef{index,head}},u => find_type(tail,name,U32.add(index,1)))
 
 def find_function(sigs: List<&2,C.Signature>, +name: S.Token, +index: U32) -> Result<S.Error,FunctionRef>:
   match sigs:
@@ -57,6 +56,7 @@ def find_constructor(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) ->
     case Nil{}: C.invalid(ConstructorRef,"unknown-constructor",name)
     case Con{C.Datatype{token,data,ctors},+tail}:
       constructor_next(constructor_tag(ctors,name,0),index,u => find_constructor(tail,name,U32.add(index,1)))
+    case Con{C.Arrow{token,domain,result},tail}: find_constructor(tail,name,U32.add(index,1))
 
 def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Constructor>>:
   match nodes:
@@ -94,12 +94,16 @@ def unique_constructors(types: List<&2,C.Datatype>, seen: List<&2,S.Token>) -> R
     case Nil{}: Done{Unit{}}
     case Con{C.Datatype{name,data,tokens},+tail}:
       S.bind(List<&2,S.Token>,Unit,distinct_constructors(tokens,seen),next => unique_constructors(tail,next))
+    case Con{C.Arrow{name,domain,result},tail}: unique_constructors(tail,seen)
 
 def quantity(+token: S.Token, +q: U32, definition: C.Datatype) -> Result<S.Error,Unit>:
   match definition:
     case C.Datatype{name,data,ctors}:
       S.choose(Result<S.Error,Unit>,U32.is_gt(q,2),u => C.internal(Unit,"quantity-range"),u =>
         S.choose(Result<S.Error,Unit>,Bool.and(U32.is_eq(q,2),Bool.not(data)),u => C.invalid(Unit,"reusable-type",token),u => Done{Unit{}}))
+    case C.Arrow{name,domain,result}:
+      S.choose(Result<S.Error,Unit>,U32.is_gt(q,2),u => C.internal(Unit,"quantity-range"),u =>
+        S.choose(Result<S.Error,Unit>,U32.is_eq(q,2),u => C.invalid(Unit,"reusable-type",token),u => Done{Unit{}}))
 
 def parameter_type(+token: S.Token, +q: U32, reference: TypeRef) -> Result<S.Error,C.Parameter>:
   match reference:
@@ -141,11 +145,10 @@ def field_kind(+data: Bool, +q: U32, +child: Bool) -> Bool:
 def field_type(+token: S.Token, +q: U32, +data: Bool, reference: TypeRef) -> Result<S.Error,C.Parameter>:
   match reference:
     case TypeRef{+index,+definition}:
-      match definition:
-        case C.Datatype{name,+child,ctors}:
-          S.bind(Unit,C.Parameter,quantity(token,q,definition),u =>
-            S.choose(Result<S.Error,C.Parameter>,field_kind(data,q,child),u =>
-              Done{C.Parameter{token,q,index}},u => C.invalid(C.Parameter,"data-field-kind",token)))
+      +child = F.reusable(definition)
+      S.bind(Unit,C.Parameter,quantity(token,q,definition),u =>
+        S.choose(Result<S.Error,C.Parameter>,field_kind(data,q,child),u =>
+          Done{C.Parameter{token,q,index}},u => C.invalid(C.Parameter,"data-field-kind",token)))
 
 def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
   +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
@@ -187,8 +190,10 @@ def catalog(root: S.Node) -> Result<S.Error,C.Catalog>:
       S.bind(Unit,C.Catalog,names(nodes,Nil{}),u =>
         S.bind(List<&2,C.Datatype>,C.Catalog,collect_types(nodes,0),+headers =>
           S.bind(Unit,C.Catalog,unique_constructors(headers,Nil{}),u =>
-            S.bind(List<&2,C.Datatype>,C.Catalog,resolve_types(nodes,headers),+types =>
-              S.bind(List<&2,C.Signature>,C.Catalog,collect_signatures(nodes,types,0),sigs => Done{C.Catalog{types,sigs}})))))
+            S.bind(List<&2,C.Datatype>,C.Catalog,F.complete(S.Sequence{nodes},headers),+registry =>
+              S.bind(List<&2,C.Datatype>,C.Catalog,resolve_types(nodes,registry),resolved =>
+                +types = List.append(&2,C.Datatype,resolved,F.arrows(registry))
+                S.bind(List<&2,C.Signature>,C.Catalog,collect_signatures(nodes,types,0),sigs => Done{C.Catalog{types,sigs}}))))))
     case _: C.internal(C.Catalog,"book-node")
 
 def type_at(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
@@ -206,6 +211,7 @@ def fields_at(ctors: List<&2,C.Constructor>, +tag: U32) -> Result<S.Error,List<&
 def definition_fields(definition: C.Datatype, tag: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match definition:
     case C.Datatype{token,data,ctors}: fields_at(ctors,tag)
+    case C.Arrow{token,domain,result}: C.internal(List<&2,C.Parameter>,"function-constructor")
 
 def field_signature(reference: ConstructorRef, types: List<&2,C.Datatype>) -> Result<S.Error,List<&2,C.Parameter>>:
   match reference:
@@ -222,3 +228,7 @@ def constructor_named(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
     case Nil{}: False{}
     case Con{C.Datatype{token,data,ctors},tail}:
       Bool.or(has_tag(constructor_tag(ctors,name,0)),constructor_named(tail,name))
+    case Con{C.Arrow{token,domain,result},tail}: constructor_named(tail,name)
+
+def arrow_id(types: List<&2,C.Datatype>, domain: U32, result: U32) -> Result<S.Error,U32>:
+  F.arrow_id(types,domain,result)

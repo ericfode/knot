@@ -53,7 +53,8 @@
     "constructors_per_type": 256,
     "fields_per_constructor": 256,
     "parameters_per_function": 256,
-    "lexical_levels_per_scope": 4096
+    "lexical_levels_per_scope": 4096,
+    "interned_types": 4096
   },
   "wasm": {
     "binary_version": 1,
@@ -107,7 +108,7 @@
   "trust_inventory": "research/compiler-wasm/TRUST.md",
   "later_milestones": [
     "owned field storage and reclamation (R3/R7)",
-    "recursive Wasm lowering",
+    "broader recursive Wasm qualification beyond the closure corpus",
     "broader recursion beyond first-parameter field descent",
     "GPU source lowering",
     "full self-hosting"
@@ -118,7 +119,7 @@
     "evidence": "tests/compiler-recursion/receipts/recursion.json",
     "checker": true,
     "independent_evaluator": true,
-    "wasm": false,
+    "wasm": "Qualified on closure-list, cps-fold and partial-self-call under knot-fields-wasm-1; broader recursion evidence remains separate.",
     "rule": "First checked self-call argument must be a Reference to a strict field descendant of parameter 0; matches propagate descendant levels.",
     "other_self_calls": "Unsupported check recursive-call",
     "forward_and_mutual_calls": "Unchanged; live forward calls are Invalid check forward-live-call."
@@ -171,11 +172,11 @@
       "maximum_pages": 1,
       "bytes": 65536,
       "initial_bump": 0,
-      "guard": "unsigned size > 65536 - bump; only unreachable in the profile",
+      "guard": "unsigned size > 65536 - bump; sole reachable unreachable for valid inhabited host signatures",
       "allocation": "Arguments saved before allocation; stores after bounded pointer advance",
       "lifetime": "Instance lifetime; immutable initialized cells; no free, reset, growth or reclamation"
     },
-    "exports": "All original functions, unchanged indices; allocator appended and unexported; no memory or global exports.",
+    "exports": "All original functions at unchanged indices; per-arrow dispatchers and allocator appended and unexported; no memory or global exports.",
     "host_precondition": "Checked Knot module of selected profile; invoke only enum-only live parameter/result signatures with valid per-type ordinals. Structured functions are for compiled callers. Adapter cannot enforce signature provenance.",
     "host_command": "node scripts/run-wasm.mjs --profile=knot-fields-wasm-1 module export [live-ordinals...]",
     "host_outcomes": {
@@ -200,10 +201,11 @@
       "i32.add",
       "i32.sub",
       "i32.gt_u",
-      "unreachable"
+      "unreachable",
+      "return_call"
     ],
     "imports": [],
-    "recursion": false,
+    "recursion": "First-parameter descending self-calls in the closure gate, including captured descendants and partial self-calls.",
     "owned_storage_reclamation": false,
     "unmet_runtime_requirements": [
       "R3",
@@ -213,6 +215,45 @@
     "frozen_expectations": "tests/compiler-fields-wasm/expectations.json",
     "proof_entry": "tests/compiler-fields-wasm/PROOF.bend",
     "proof_boundary": "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement.",
-    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py"
+    "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-fields-wasm/check.py",
+    "closures": {
+      "contract": "src/SPEC.md#closures-and-higher-order-code",
+      "evidence": "tests/compiler-closures/receipts/closures.json",
+      "gate": "BEND_NO_TELEMETRY=1 python3 tests/compiler-closures/check.py",
+      "function_types": "Monomorphic, right-associative A -> B; always Type, never Data; parenthesized domains supported.",
+      "terms": [
+        "x => body",
+        "+x => body",
+        "variable calls",
+        "named function values",
+        "partial and curried application",
+        "returned closures",
+        "function fields and lists",
+        "continuation passing"
+      ],
+      "capture_semantics": "Affine captures are consumed at closure construction; alternatives share usage maxima. Erased reads are checked but have no runtime slot. Promoted Data captures may be shared.",
+      "core": "Arrow registry plus Closure (code identity, binder and free-variable descriptors) and Invoke (arrow identity, callee, argument).",
+      "evaluator": "Independent explicit closure environment and application frames. Closing reads each live capture once; application binds the argument and enters the stored body.",
+      "wasm": "One closure datatype and one apply dispatcher per used function type; dense constructor tag plus live captures in the existing 4-byte cell layout. No function pointers or tables.",
+      "tail_calls": "return_call in tail position through lets and branches for closure-containing books; initializer and argument calls remain call. Existing closure-free bytes remain unchanged.",
+      "empty_function_type": "An apply dispatcher with no inhabitant sites contains unreachable. Forged function handles are outside the enum-only host ABI.",
+      "host_boundary": "Function values do not cross the host boundary. eval-cli reports HostFailure invoke function-argument or function-result for such requests.",
+      "proof_entries": [
+        "src/closure-types-PROOF.bend",
+        "src/closure-check-PROOF.bend",
+        "src/closure-PROOF.bend"
+      ],
+      "proof_boundary": "Checked type/representation/quantity and evaluator-step laws; finite differential corpus, not a general defunctionalization or checker-soundness theorem.",
+      "blocked_fixture": "generic-choose-bind retains its agree requirement; 19 seed calls blocked on generics.",
+      "unsupported": [
+        "generics",
+        "dependent arrows",
+        "lambda-match shorthand",
+        "do-notation",
+        "templates",
+        "partial application with an erased remaining parameter"
+      ],
+      "enum_profile": "Actual closure terms report Unsupported compile closures under Enum; Arrow metadata alone does not affect enum emission."
+    }
   }
 }

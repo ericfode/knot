@@ -26,7 +26,7 @@
     {
       "suite": "catalog",
       "manifest": "tests/compiler-structural/cases.json",
-      "manifest_sha256": "9edb772692afc47cb7d5834a48fa6e79f7a8fc6ea892d93236e0ae19d62a25f3",
+      "manifest_sha256": "21e28087f5b95d6e785b7f1cd36a8c60fd4aeb33aa2ef0bff6d727d5f0f79951",
       "gate": "tests/compiler-structural/check.py",
       "gate_sha256": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
       "fixtures": 16
@@ -489,6 +489,7 @@
             "catalog:tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
             "catalog:tests/compiler-structural/fixtures/field-quantities.bend",
             "catalog:tests/compiler-structural/fixtures/forward-field-type.bend",
+            "catalog:tests/compiler-structural/fixtures/function-field.bend",
             "catalog:tests/compiler-structural/fixtures/mutual-types.bend",
             "catalog:tests/compiler-structural/fixtures/plain-field.bend",
             "catalog:tests/compiler-structural/fixtures/recursive-tree.bend"
@@ -708,6 +709,7 @@
             "catalog:tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
             "catalog:tests/compiler-structural/fixtures/field-quantities.bend",
             "catalog:tests/compiler-structural/fixtures/forward-field-type.bend",
+            "catalog:tests/compiler-structural/fixtures/function-field.bend",
             "catalog:tests/compiler-structural/fixtures/mutual-types.bend",
             "catalog:tests/compiler-structural/fixtures/plain-field.bend",
             "catalog:tests/compiler-structural/fixtures/recursive-tree.bend"
@@ -851,8 +853,10 @@
           "evidence": []
         },
         "catalog": {
-          "status": "no-positive-fixture-evidence",
-          "evidence": []
+          "status": "observed-in-successful-fixtures",
+          "evidence": [
+            "catalog:tests/compiler-structural/fixtures/function-field.bend"
+          ]
         },
         "check": {
           "status": "no-positive-fixture-evidence",
@@ -1561,6 +1565,7 @@
             "catalog:tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
             "catalog:tests/compiler-structural/fixtures/field-quantities.bend",
             "catalog:tests/compiler-structural/fixtures/forward-field-type.bend",
+            "catalog:tests/compiler-structural/fixtures/function-field.bend",
             "catalog:tests/compiler-structural/fixtures/mutual-types.bend",
             "catalog:tests/compiler-structural/fixtures/plain-field.bend",
             "catalog:tests/compiler-structural/fixtures/recursive-tree.bend"
@@ -1996,6 +2001,7 @@
             "catalog:tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
             "catalog:tests/compiler-structural/fixtures/field-quantities.bend",
             "catalog:tests/compiler-structural/fixtures/forward-field-type.bend",
+            "catalog:tests/compiler-structural/fixtures/function-field.bend",
             "catalog:tests/compiler-structural/fixtures/mutual-types.bend",
             "catalog:tests/compiler-structural/fixtures/plain-field.bend",
             "catalog:tests/compiler-structural/fixtures/recursive-tree.bend"
@@ -2099,6 +2105,7 @@
             "catalog:tests/compiler-structural/fixtures/data-erased-type.bend",
             "catalog:tests/compiler-structural/fixtures/duplicate-field-across-constructors.bend",
             "catalog:tests/compiler-structural/fixtures/field-quantities.bend",
+            "catalog:tests/compiler-structural/fixtures/function-field.bend",
             "catalog:tests/compiler-structural/fixtures/mutual-types.bend",
             "catalog:tests/compiler-structural/fixtures/plain-field.bend"
           ]
@@ -4224,17 +4231,17 @@
       },
       "stages": {
         "catalog": {
-          "outcome": "Unsupported",
+          "outcome": "Catalogued",
           "expectation": {
-            "exit": 3,
-            "diagnostic": "Unsupported\tparse\tparameter-type\t"
+            "exit": 0,
+            "stdout": "Catalogued\n0 Flag Data{0 Off[];1 On[];}\n1 Box Type{0 Box[f@58:59:5:6=1:2;];}"
           }
         },
         "compile": {
           "outcome": "Unsupported",
           "expectation": {
             "exit": 3,
-            "diagnostic": "Unsupported\tparse\tparameter-type\t"
+            "diagnostic": "Unsupported\tcheck\tconstructor-fields\t"
           }
         }
       },

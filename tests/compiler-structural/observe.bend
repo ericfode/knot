@@ -25,6 +25,7 @@ def types(items: List<&2,C.Datatype>, +index: U32) -> String:
     case Nil{}: ""
     case Con{C.Datatype{token,data,ctors},tail}:
       String.concat([U32.show(index)," ",S.text(token),Bool.pick(String,data," Data{"," Type{"),constructors(ctors,0),"}\n",types(tail,U32.add(index,1))])
+    case Con{C.Arrow{token,domain,result},tail}: types(tail,U32.add(index,1))
 
 def catalog(result: Result<S.Error,C.Catalog>) -> IO(Unit):
   match result:

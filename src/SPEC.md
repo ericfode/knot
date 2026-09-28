@@ -1,4 +1,4 @@
-# Knot compiler contracts — enum and fielded Wasm
+# Knot compiler contracts — enums, fields and closures
 
 The default Wasm contract remains `knot-enum-1`. The checker and independent
 evaluator additionally implement `knot-structural-terms-1`, specified in
@@ -14,8 +14,9 @@ adds structural self-calls to checking and evaluation: the first checked argumen
 must be a reference to a field of parameter 0, directly or through further
 matches. Other self-calls report `Unsupported check recursive-call`; forward
 and mutual calls retain their existing classification. Nested patterns and
-structured host arguments remain unsupported. Recursive Wasm lowering is not
-yet a qualified capability of `knot-fields-wasm-1`.
+structured host arguments remain unsupported. The closure gate additionally
+qualifies those descending calls in higher-order programs under
+`knot-fields-wasm-1`; the finite corpus is described below.
 References to nullary-only checking below describe the retained enum subprofile.
 
 This is the first executable path toward S1, not the complete S1 stage or a
@@ -145,11 +146,12 @@ consulted 2026-09-26. Only the stated MVP subset is used.
 
 ## Fielded Wasm profile: `knot-fields-wasm-1`
 
-This profile accepts the same completely checked acyclic books as
+This profile accepts the completely checked structural books of
 `knot-structural-terms-1`: monomorphic constructor fields, flat field patterns,
 parent reconstruction, `Type`/`Data` quantities and erased fields. It adds no
-checker bypass. Recursion, nested patterns, imports and the other unsupported
-forms remain unsupported. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
+checker bypass. The closure extension below adds higher-order code and qualifies
+its descending self-calls. Nested patterns, imports and the other unsupported
+forms retain their separate boundaries. `wasm.emit_profile(Fields{},book,depth,bytes)` requires
 a checked book, as does the original `wasm.emit` entry. `emit` still selects
 `Enum{}`; `check.enum_profile` and its existing capability law remain unchanged.
 
@@ -169,7 +171,9 @@ A module containing a fielded datatype adds memory and global sections:
 `[1,3,5,6,7,10]`. Memory has exactly one page (65,536 bytes, min=max=1). The
 mutable i32 bump starts at zero; zero is a valid cell address. The appended,
 unexported allocator checks `size > 65536 - bump` before advancing the bump.
-That guard contains the profile's sole `unreachable`. An allocation ending at
+That guard is the only reachable `unreachable` for valid inhabited host signatures;
+the closure extension also emits an unreachable dispatcher for a function type
+with no constructor sites. An allocation ending at
 65,536 succeeds; an allocation beyond the remaining space traps before writing.
 Cells stay immutable after initialization, so reusable Data may share addresses.
 There is no memory growth, free, reset, reclamation, generation tracking or
@@ -183,8 +187,8 @@ When the book has no fielded constructors, no allocator, memory or global is
 emitted; the 25 enum corpus modules remain byte-identical, in both profiles and
 both compiler lanes, with sections `[1,3,7,10]`.
 
-All original function indices and exports are retained; only the allocator is
-appended. **Host precondition:** invoke only functions whose live parameters and
+All original function indices and exports are retained. Closure dispatchers and
+the allocator are appended and unexported. **Host precondition:** invoke only functions whose live parameters and
 result have enum-only datatypes, supplying each parameter's valid constructor
 ordinal. Functions taking or returning cells are for compiled callers. The host
 adapter does not carry source signatures and cannot enforce this precondition;
@@ -216,6 +220,89 @@ Its frozen seed observations, enum hashes, five checked helper/erasure laws,
 instruction whitelist, persistent-instance arena boundaries and four
 type-correct semantic mutants are independent evidence, not a general compiler
 correctness or memory-refinement theorem. See its [report and limits](../tests/compiler-fields-wasm/README.md).
+
+## Closures and higher-order code
+
+The checker and evaluator accept monomorphic, right-associative `A -> B` types,
+including parenthesized domains such as `(Flag -> Flag) -> Flag`. Function types
+have kind `Type`; reusable function binders and live function fields in a `Data`
+datatype are Invalid. The retained enum profile still reports
+`Unsupported compile closures` for actual closure terms. Select `Fields{}` for
+execution. Arrow metadata alone leaves the old enum modules byte-identical.
+
+Lambdas have the source shapes `x => body` and `+x => body`. They check against
+an expected arrow; an unannotated lambda initializer is Invalid
+`annotation-required`. A promoted binder must have a `Data` domain. The binder
+shadows earlier names. `_` discards its argument without introducing or shadowing
+a name. Lambda bodies can contain bindings and further lambdas;
+matches in those bodies are Invalid `unmatchable-binder`, as in the seed.
+Closure applications and literal lambdas used as match scrutinees are Invalid
+`computed-scrutinee`.
+Live calls inside a lambda still obey definition order and structural descent.
+
+Function values may be passed, returned, held in `Type` constructors or lists,
+and consumed through variable calls. Application is curried: `f(a,b)` applies
+both arrows, and `g(a)(b)` observes a returned closure. Named functions can be
+used as values or partially applied. Supplied partial arguments are evaluated
+and saved once, in order, when forming the closure. A partial self-call must
+already supply a descending first argument; delaying the call does not bypass
+that rule. An erased remaining parameter requires a dependent function type
+and reports `Unsupported check function-quantity` in this profile.
+
+The core retains original datatype IDs and interns arrow types after them.
+Its `Closure` term records a code identity, binder level, domain, quantity,
+checked body and free-variable descriptors. `Invoke` records the arrow identity,
+callee and argument. Live affine usage in a lambda body is transferred to the
+construction of its closure. Building two closures over one affine value is
+Invalid `affine-reuse`, even if a later chooser invokes only one. A promoted
+`Data` parameter or field can be captured by several thunks. Erased expressions
+remain scope/type checked and consume no affine usage; erased-only captures
+retain a descriptor with quantity zero and occupy no runtime slot.
+
+The evaluator creates an explicit captured environment. Application evaluates
+the callee and then the argument, binds the argument in the captured environment, and enters the
+stored body without adding a return frame. It never runs the defunctionalized
+book or Wasm instructions. Closure values are internal: host function arguments
+or results report HostFailure, while ordinary enum observations retain the
+existing format.
+
+Before Wasm emission, `closure.bend` replaces each used arrow type with a closure
+datatype, with one constructor per lambda or eta-expansion site. Each cell is
+`[dense site tag][live captures]`. Fields keep capture order and erased captures
+have neither storage nor evaluation. A single apply dispatcher for that type
+matches the tag, binds captures and the argument to the original lexical
+levels, and runs the site's body. This is defunctionalization, with no function
+pointers, indirect calls or tables. Source functions keep their original
+indices; dispatchers and the allocator are hidden from exports. Even a closure
+without live captures is a tag-only cell. An arrow type used by an uncalled
+function may have no sites; its dispatcher is unreachable for any value a
+checked source program can construct. Forged host function handles are outside
+the enum-only host precondition.
+
+Closure-containing modules use `return_call` in actual tail positions, including
+match arms and let bodies. Calls in arguments and initializers keep `call`.
+The frozen continuation probe constructs and invokes 2,048 continuations under
+a reduced Node stack. This establishes that bounded execution and kills an
+ordinary-call mutant; it is not an unbounded space theorem. The unchanged
+65,536-byte bump arena still limits allocation and provides no reclamation.
+
+The registry admits at most 4,096 interned types, independently of the existing
+256 source datatype limit. Type inventory and type syntax have bounded traversals;
+closure inventory and rewriting share the selected emitter-depth ceiling and
+report Exhausted if it is insufficient. Lexical-level limits remain 4,096.
+Code identity combines the source function index, source offset and eta ordinal;
+Wasm constructor tags are separate dense ordinals and never encode that identity
+as a signed i32 constant.
+
+The [closure gate](../tests/compiler-closures/GATE.md) reruns all 42 immutable seed
+fixtures and 292 calls before comparing native/Bun Knot evaluators and actual
+Node Wasm. It records unsupported boundaries and the `generic-choose-bind`
+prerequisite separately. That fixture's 19 calls remain blocked until generics
+land; its expectations are unchanged. Supplemental seed-fixed erasure and deep
+continuation probes, complete checked proofs and five type-correct semantic
+mutants qualify the available monomorphic capability. The laws establish local
+type, capture, lowering and evaluator-step equations; finite corpus agreement
+is separate evidence, not a general compiler-correctness theorem.
 
 ## Outcomes and budgets
 

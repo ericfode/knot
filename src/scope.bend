@@ -48,9 +48,10 @@ def find(bindings: List<&2,C.Binding>, +name: S.Token) -> Result<S.Error,C.Bindi
         case C.Binding{token,level,q,type_id,param,known}:
           S.choose(Result<S.Error,C.Binding>,String.eq(S.text(token),S.text(name)),u => Done{head},u => find(tail,name))
 
-def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
+def lookup(scope: Scope, +name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
-    case Scope{bindings,level,from,live,smaller}: find(bindings,name)
+    case Scope{bindings,level,from,live,smaller}:
+      S.choose(Result<S.Error,C.Binding>,S.matches(name,"_"),u => C.invalid(C.Binding,"free-name",name),u => find(bindings,name))
 
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:
@@ -125,6 +126,7 @@ def parameters(params: List<&2,C.Parameter>, +index: U32, +bindings: List<&2,C.B
 
 def matchable(binding: C.Binding, +token: S.Token, scope: Scope) -> Result<S.Error,C.Binding>:
   match binding scope:
+    case C.Binding{name,level,q,type_id,False{},known} _: C.invalid(C.Binding,"unmatchable-binder",token)
     case C.Binding{+name,+level,+q,+type_id,+param,None{}} Scope{bindings,next,from,live,smaller}:
       S.choose(Result<S.Error,C.Binding>,U32.is_eq(q,0),u => C.invalid(C.Binding,"erased-scrutinee",token),u =>
         S.choose(Result<S.Error,C.Binding>,Bool.and(param,contains(from,level)),u =>
@@ -137,4 +139,6 @@ def scrutinee(node: S.Node, +scope: Scope) -> Result<S.Error,C.Binding>:
       S.bind(C.Binding,C.Binding,lookup(scope,token),binding => matchable(binding,token,scope))
     case S.Constructor{token,args}: C.invalid(C.Binding,"constructor-scrutinee",token)
     case S.Call{token,args}: C.invalid(C.Binding,"computed-scrutinee",token)
+    case S.Apply{token,function,args}: C.invalid(C.Binding,"computed-scrutinee",token)
+    case S.Lambda{token,q,body}: C.invalid(C.Binding,"computed-scrutinee",token)
     case _: C.internal(C.Binding,"scrutinee-node")

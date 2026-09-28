@@ -962,3 +962,35 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+## 2026-09-27 — Closure transition and rejection boundaries
+
+Closure implementation initially specialized the evaluator's Return clause on
+the returned value, which prevented existing quantified return-frame laws from
+reducing. Moving closure discrimination into `eval.apply_argument` restored the
+old proof entries without weakening their statements. Run the complete imported
+proof entry after extending a machine datatype; checking only new laws misses
+that interaction.
+
+Adversarial review then found missing Apply/Lambda scrutinee classifications and
+discard binders incorrectly resolving or shadowing a global `_()`. The initial
+discard guard fixed free-name rejection but needed the paired global-name
+control to preserve seed-valid behavior. Eleven independent regressions were
+frozen from the seed before the respective repairs. The evidence and boundaries
+are in [the closure law packet](../tests/compiler-closures/LAW_REVIEW.md) and
+[the regression manifest](../tests/compiler-closures/regressions.json).
+
+Harness iteration also exposed an over-specific exhaustion phase expectation,
+a generated entry overwriting its own import, and input drift during concurrent
+gate runs. The final gate distinguishes exhaustion phases according to the
+selected boundary, uses a separate generated entry and refuses a passing
+receipt if its input hashes change. Finish source/document writers before the
+final scratch run. These are deterministic review findings, not live Perch
+findings; no provider call or elapsed-time claim is attached.
+
+The complete runner also caught a compatibility regression missed by the
+high-budget closure corpus: routing ordinary named calls through two new modes
+exhausted an unchanged fields fixture at its fixed checker-depth boundary.
+Exact-arity calls now keep the original direct path. Preserve boundary witnesses
+when extending a fuelled machine; a high-budget differential pass does not
+establish the old resource contract.

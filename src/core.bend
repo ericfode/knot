@@ -5,6 +5,7 @@ type Constructor is Data:
   Constructor{token: S.Token, fields: List<&2,Parameter>}
 type Datatype is Data:
   Datatype{token: S.Token, reusable: Bool, constructors: List<&2,Constructor>}
+  Arrow{token: S.Token, domain: U32, result: U32}
 type Parameter is Data:
   Parameter{token: S.Token, quantity: U32, type_id: U32}
 type Signature is Data:
@@ -19,6 +20,8 @@ type Term is Data:
   Construct{token: S.Token, type_id: U32, tag: U32, fields: List<&2,Parameter>, arguments: List<&2,Term>}
   Reference{token: S.Token, level: U32, type_id: U32}
   Application{token: S.Token, index: U32, type_id: U32, arguments: List<&2,Term>}
+  Closure{token: S.Token, site: U32, type_id: U32, level: U32, quantity: U32, domain: U32, captures: List<&2,Binding>, body: Term}
+  Invoke{token: S.Token, arrow: U32, type_id: U32, function: Term, argument: Term}
   Let{token: S.Token, level: U32, quantity: U32, type_id: U32, value: Term, body: Term}
   Case{token: S.Token, level: U32, type_id: U32, arms: List<&2,Term>}
   Branch{tag: U32, fields: List<&2,Binding>, body: Term}

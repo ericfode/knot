@@ -19,6 +19,10 @@ def term(fuel: Nat, value: C.Term) -> Result<S.Error,String>:
     case 1n+ +n C.Reference{token,level,type_id}: Done{String.concat(["$",U32.show(level),":",U32.show(type_id)])}
     case 1n+ +n C.Application{token,index,type_id,args}:
       D.concat([Done{"call"},Done{U32.show(index)},Done{"("},term(n,C.Sequence{args}),Done{")"}])
+    case 1n+ +n C.Closure{token,site,type_id,level,q,domain,captures,body}:
+      D.concat([Done{"close"},Done{U32.show(site)},Done{":"},Done{U32.show(type_id)},Done{"["},Done{binders(captures)},Done{"] "},Done{U32.show(q)},Done{" $"},Done{U32.show(level)},Done{"=>"},term(n,body)])
+    case 1n+ +n C.Invoke{token,arrow,type_id,function,argument}:
+      D.concat([Done{"apply"},Done{U32.show(arrow)},Done{"("},term(n,function),Done{";"},term(n,argument),Done{")"}])
     case 1n+ +n C.Let{token,level,q,type_id,value,body}:
       D.concat([Done{"let"},Done{U32.show(q)},Done{" $"},Done{U32.show(level)},Done{":"},Done{U32.show(type_id)},Done{"="},term(n,value),Done{" in "},term(n,body)])
     case 1n+ +n C.Case{token,level,type_id,arms}:
