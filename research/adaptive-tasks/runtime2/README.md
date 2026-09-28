@@ -30,6 +30,25 @@ and the Python oracle audits the whole owning graph after every command. The
 other fixtures compare complete state after every transition. No elapsed-time
 or speed claim is inferred from these runs.
 
+## Device qualification (coordinator, 2026-09-27)
+
+The executor's sandbox had no adapter. The coordinator ran the default device
+command on the host's Metal adapter (Apple M5 Max, `metal-3`, not a fallback):
+`python3 research/adaptive-tasks/runtime2/check.py --receipt
+research/adaptive-tasks/runtime2/receipts/device-metal.json`.
+
+Results:
+
+- **Runtime2 on Metal:** passes. It covers 35 cases and 7 programs over 29
+  rounds, with 4,464 commands, 8,986 dispatches and 674 observations. The run
+  used 11 shader variants (33 pipelines) and killed **10 of 10** WGSL semantic
+  mutants.
+- **Runtime-1 on Metal:** still passes. That is 16 cases, with 9 of 9 mutants
+  killed.
+- **Old 38-case harness:** compares equal to its `185b7d5` baseline.
+
+No speed claim is made.
+
 ## Reproduce
 
 ```sh
