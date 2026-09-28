@@ -1,5 +1,5 @@
 {
- "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound. A non-scalar Char the seed writes as generalized UTF-8 is D20's HostFailure io abi, divergent by contract, never agreement.",
+ "rule": "SPEC section 11: the VM owes the seed value wherever the seed succeeds within the declared domain and budgets; eval-cli supplies the describe text where it agrees with the seed. A Book result outside section 8's describe domain is Unsupported, never a bound. Output that the seed Bun lane refuses as a non-scalar Char while the native lane exits 0 is D20's HostFailure io abi, divergent by contract, never agreement; the native bytes never classify it.",
  "fuel": 1000000,
  "bounds": {
   "nat-range": {
@@ -1004,7 +1004,7 @@
    "cause": "io abi",
    "stdout": "",
    "basis": "divergent-by-contract (non-scalar output)",
-   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 0",
+   "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
   },
   "print-non-scalar-mid": {
@@ -1017,7 +1017,7 @@
    "cause": "io abi",
    "stdout": "",
    "basis": "divergent-by-contract (non-scalar output)",
-   "reason": "D20: the seed native lane writes a non-scalar Char as generalized UTF-8 at byte 1",
+   "reason": "D20: the seed Bun lane refuses Char 55296; the native lane exits 0",
    "eval_lane": "Invalid"
   },
   "string-surrogate-pair": {
@@ -1043,6 +1043,19 @@
    "stderr": "",
    "basis": "eval-cli",
    "eval_lane": "agree"
+  },
+  "print-non-scalar-wide": {
+   "argv": [
+    "IMAGE",
+    "1000000",
+    "--"
+   ],
+   "outcome": "HostFailure",
+   "cause": "io abi",
+   "stdout": "",
+   "basis": "divergent-by-contract (non-scalar output)",
+   "reason": "D20: the seed Bun lane refuses Char 67237376; the native lane exits 0",
+   "eval_lane": "Invalid"
   }
  }
 }

@@ -17,7 +17,7 @@ Knot oracles. Neither head is an integrated literals-plus-closures compiler.
 |---|---|
 | [registry.json](registry.json) | prim ids, foreign ids, representation order, pinned Base digest |
 | [serializer.py](serializer.py) | reference codec: `encode`, an independent `decode`, and `validate` |
-| [golden/](golden/) | 85 sources, frozen observations, hand-written plans and their `.kimg` images |
+| [golden/](golden/) | 86 sources, frozen observations, hand-written plans and their `.kimg` images |
 | [golden/vm-expected.json](golden/vm-expected.json) | what the VM must print for each golden, derived by the rule of §11 |
 | [bench/](bench/) | six frozen speed workloads, seed-native baselines, parse-cli counts |
 | [check-spec.py](check-spec.py) | gate `vm-spec` |
@@ -633,16 +633,20 @@ and a missing lane are neither Exhausted nor agreement. An Unsupported outcome i
 D4's refusal of a form Knot does not handle: a recorded capability gap, never a
 bound. Expected values are never regenerated from a candidate VM.
 
-**Non-scalar output (D20).** Where the seed's native lane writes a non-scalar Char
-as generalized UTF-8 and exits 0, the VM refuses the output as `HostFailure io
-abi` (§10). The golden records the native bytes, is marked
-`divergent-by-contract (non-scalar output)` and expects the refusal, with the
-output written before that String; it is neither seed agreement nor a bound. The
-seed's Bun lane refuses the same output (`bend: 55296 is not a Unicode scalar
-value`, exit 1) and is recorded as a cross-check. Goldens: `print-non-scalar`
-(`IO.print(SCon{Chr{55296}, SNil{}})`, ASCII source; native bytes `ED A0 80 0A`)
-and `print-non-scalar-mid` (`IO.print("a\u{D800}b")`; native `61 ED A0 80 62 0A`,
-of which the VM writes nothing).
+**Non-scalar output (D20).** Where the seed's native lane exits 0 on output that
+holds a non-scalar Char, the VM refuses that output as `HostFailure io abi` (§10).
+The native bytes are not a faithful encoding: the lane writes a surrogate or a
+code below 2^21 as generalized UTF-8, but truncates the lead byte of a wider code,
+so they are recorded and never read to classify. The witness is the seed's Bun
+lane, which refuses the output (`bend: N is not a Unicode scalar value`, exit 1)
+after writing the output before that String; that earlier output is exactly what
+the VM writes. The golden is marked `divergent-by-contract (non-scalar output)`
+and expects the refusal; it is neither seed agreement nor a bound. A
+native-lane Program therefore carries its Bun lane. Goldens: `print-non-scalar`
+(`IO.print(SCon{Chr{55296}, SNil{}})`, ASCII source; native bytes `ED A0 80 0A`),
+`print-non-scalar-mid` (`IO.print("a\u{D800}b")`; native `61 ED A0 80 62 0A`, of
+which the VM writes nothing) and `print-non-scalar-wide` (`Chr{67237376}`, that is
+0x401F600; native `F0 9F 98 80 0A`, the valid UTF-8 of U+1F600).
 
 [golden/vm-expected.json](golden/vm-expected.json) applies the rule to every
 golden: the eval-cli line where eval agrees with the seed (72 goldens), agreement
@@ -659,10 +663,10 @@ reports the `InternalFailure eval result-tag` defect recorded in DECISIONS.md
 each time), derived from the
 image's type table and never listed as a bound; the seed's stdout for the Programs
 `foreign-print` and `io-bind`; and D20's refusal, with no output, for
-`print-non-scalar` and `print-non-scalar-mid`. For those Programs the eval lane is not excused but
-unavailable: both literals `eval-cli` and `check-cli` report
-`Invalid parse function-result` for `def main() -> IO(Unit)`, a program the seed
-runs. Under D4 that should be Unsupported; it is recorded as observed, not
+`print-non-scalar`, `print-non-scalar-mid` and `print-non-scalar-wide`. For those
+Programs the eval lane is not excused but unavailable: both literals `eval-cli`
+and `check-cli` report `Invalid parse function-result` for
+`def main() -> IO(Unit)`, a program the seed runs. Under D4 that should be Unsupported; it is recorded as observed, not
 relabelled, and their plans follow §1 by hand. `io-bind` keeps Base's `IO.bind`
 and `IO.pure` unspecialized, so its `A`-typed nodes are `none`.
 
@@ -686,8 +690,10 @@ lane and requires:
   seed's printed value, byte for byte where it is not UTF-8;
 - `vm-expected.json` equal to the rule of §11 applied to the frozen observations,
   with every bound Exhausted and no bound standing in for an Unsupported result
-  (two frozen expectation controls), and every non-scalar seed output a declared
-  D20 divergence whose VM output precedes it (four frozen expectation controls);
+  (two frozen expectation controls), and every Program whose Bun lane refuses a
+  non-scalar Char a declared D20 divergence whose VM output is the Bun lane's
+  output before its refusal (six frozen expectation controls, among them the wide
+  code as agreement and a native lane without its Bun witness);
 - §8's describe domain on nine frozen type controls: Flag, Nat and an erased-field
   box are describable; a U32 root, a U32 field, Char, String, a List of flags
   (`none` field) and an arrow are Unsupported;
