@@ -3875,30 +3875,30 @@
         "target": "js"
       },
       "totals": {
-        "declarations": 773,
-        "compiler": 657,
+        "declarations": 776,
+        "compiler": 660,
         "packages": 14,
         "base": 102,
-        "check": 429,
-        "wasm": 429,
+        "check": 430,
+        "wasm": 430,
         "covered_by_requirements": {
-          "check": 756,
-          "wasm": 756
+          "check": 759,
+          "wasm": 759
         }
       },
       "missing": {
         "check": [
           {
             "feature": "lambdas",
-            "declarations": 230
+            "declarations": 232
           },
           {
             "feature": "captures",
-            "declarations": 225
+            "declarations": 227
           },
           {
             "feature": "matches.multi",
-            "declarations": 74
+            "declarations": 75
           },
           {
             "feature": "higher-order",
@@ -3938,7 +3938,7 @@
           },
           {
             "feature": "function-values",
-            "declarations": 4
+            "declarations": 3
           },
           {
             "feature": "templates",
@@ -3948,15 +3948,15 @@
         "wasm": [
           {
             "feature": "lambdas",
-            "declarations": 230
+            "declarations": 232
           },
           {
             "feature": "captures",
-            "declarations": 225
+            "declarations": 227
           },
           {
             "feature": "matches.multi",
-            "declarations": 74
+            "declarations": 75
           },
           {
             "feature": "higher-order",
@@ -3996,7 +3996,7 @@
           },
           {
             "feature": "function-values",
-            "declarations": 4
+            "declarations": 3
           },
           {
             "feature": "templates",
@@ -10807,6 +10807,44 @@
           }
         },
         {
+          "key": "src/check.arm_pattern",
+          "file": "src/check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/check.arm_scope",
           "file": "src/check.bend",
           "origin": "compiler",
@@ -15081,33 +15119,6 @@
           }
         },
         {
-          "key": "src/literal-base.installed",
-          "file": "src/literal-base.bend",
-          "origin": "compiler",
-          "boundary": "source",
-          "features": [
-            "calls",
-            "constructors",
-            "fields",
-            "imports.base",
-            "imports.local",
-            "literals.u32",
-            "matches",
-            "patterns.nested",
-            "patterns.variable",
-            "quantities.affine",
-            "types.base"
-          ],
-          "missing": {
-            "check": [],
-            "wasm": []
-          },
-          "missing_requirements": {
-            "check": [],
-            "wasm": []
-          }
-        },
-        {
           "key": "src/literal-base.intrinsic",
           "file": "src/literal-base.bend",
           "origin": "compiler",
@@ -15340,6 +15351,35 @@
           }
         },
         {
+          "key": "src/literal-check.declares",
+          "file": "src/literal-check.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/literal-check.literal",
           "file": "src/literal-check.bend",
           "origin": "compiler",
@@ -15381,21 +15421,25 @@
           "boundary": "source",
           "features": [
             "calls",
-            "function-values",
+            "captures",
             "generics",
             "imports.base",
             "imports.local",
-            "literals.u32",
+            "lambdas",
+            "literals.string",
             "quantities.affine",
             "quantities.arguments",
+            "quantities.reusable",
             "types.base"
           ],
           "missing": {
             "check": [
-              "function-values"
+              "captures",
+              "lambdas"
             ],
             "wasm": [
-              "function-values"
+              "captures",
+              "lambdas"
             ]
           },
           "missing_requirements": {
@@ -15435,23 +15479,22 @@
           }
         },
         {
-          "key": "src/literal-check.type_id",
+          "key": "src/literal-check.spells",
           "file": "src/literal-check.bend",
           "origin": "compiler",
           "boundary": "source",
           "features": [
             "calls",
-            "captures",
             "constructors",
             "fields",
             "generics",
             "imports.base",
             "imports.local",
-            "lambdas",
-            "literals.string",
+            "literals.u32",
             "matches",
-            "patterns.nested",
+            "matches.multi",
             "patterns.variable",
+            "patterns.wildcard",
             "quantities.affine",
             "quantities.arguments",
             "quantities.reusable",
@@ -15459,12 +15502,10 @@
           ],
           "missing": {
             "check": [
-              "captures",
-              "lambdas"
+              "matches.multi"
             ],
             "wasm": [
-              "captures",
-              "lambdas"
+              "matches.multi"
             ]
           },
           "missing_requirements": {
@@ -16856,6 +16897,46 @@
           }
         },
         {
+          "key": "src/literal-types.find",
+          "file": "src/literal-types.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "lambdas",
+            "literals.string",
+            "literals.u32",
+            "matches",
+            "patterns.nested",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [
+              "captures",
+              "lambdas"
+            ],
+            "wasm": [
+              "captures",
+              "lambdas"
+            ]
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
           "key": "src/literal-types.installed",
           "file": "src/literal-types.bend",
           "origin": "compiler",
@@ -17004,6 +17085,30 @@
             "quantities.arguments",
             "quantities.reusable",
             "recursion",
+            "types.base"
+          ],
+          "missing": {
+            "check": [],
+            "wasm": []
+          },
+          "missing_requirements": {
+            "check": [],
+            "wasm": []
+          }
+        },
+        {
+          "key": "src/literal-types.primitive_type",
+          "file": "src/literal-types.bend",
+          "origin": "compiler",
+          "boundary": "source",
+          "features": [
+            "calls",
+            "generics",
+            "imports.base",
+            "imports.local",
+            "literals.u32",
+            "quantities.affine",
+            "quantities.arguments",
             "types.base"
           ],
           "missing": {
@@ -31437,8 +31542,8 @@
     }
   },
   "inputs": {
-    "docs/compiler-campaign/inventory/implementation.json": "da92994a6031f6996af2255400be2e4410cf2c496b7ffec518fa9c6cdc419517",
-    "docs/compiler-campaign/inventory/base-closure.json": "998bc6aa61d3b285ea89c38697f673d66031fe2fea891d1a2ff3984cf77bb837",
-    "docs/compiler-campaign/inventory/accepted.json": "3b27d2ad0955ec4726882fe5556d8dceb62de8b14f0e120821f6c6dc3e6b00e8"
+    "docs/compiler-campaign/inventory/implementation.json": "965a341a5c33c54e36fabd855d6ae2910b928e357009003749953301f8919ebc",
+    "docs/compiler-campaign/inventory/base-closure.json": "d69e2d3c18f90de6040ae04bf938f543833a1c9666c704e4e8df52fd00eb3eac",
+    "docs/compiler-campaign/inventory/accepted.json": "86fde664acceded4de8f3c01896f8c11749ebe0dd3baccf8a12c82be91624c94"
   }
 }

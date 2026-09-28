@@ -73,20 +73,32 @@ General nested patterns and `Chr{...}` patterns remain outside this increment.
 Base spells U32 as `U32{data: Word(32n)}`, but an installed U32 is unboxed
 bits, so that constructor reports `Unsupported\tcheck\tu32-constructor` in
 patterns and expressions. A literal checks against the installed primitive
-of its kind. Without Base, a book's own datatype named Nat or U32 is not
-installed; a literal typed by it reports
-`Unsupported\tcheck\tliteral-base-type`. The seed accepts `2n` for an own
-Zero/Succ Nat and rejects `3` for an own `U32 is Data: Z{}`.
+of its kind; Base installs it for every literal a book uses. Without Base
+nothing is installed, and the seed spells the literal by bare constructor
+names instead, as the matrix expands it: `0n` as `Zero{}`, `2n` and `1n+p`
+through `Succ`, `""` as `SNil{}`. Knot keys this case on the absent
+primitive, not on a type name, and does not interpret the spelling:
+- a literal or offset, in an expression or as a match arm, whose target
+  datatype declares the spelled constructor reports
+  `Unsupported\tcheck\tliteral-base-type`, whatever the type is called
+  (Nat, N, A.T, String, T);
+- a target that declares no such constructor, or no target at all, reports
+  `Invalid\tcheck\tunknown-type` at the literal, as the seed rejects it;
+- a U32 or Char literal spells Base's `Word`, which Knot does not model, so
+  it is Unsupported against any target.
+The seed accepts `2n` for an own Zero/Succ Nat and rejects `3` for an own
+`U32 is Data: Z{}`.
 
 Literals and Nat offsets are constructor values that check against a known
 type; like the seed, Knot infers none. An unannotated binding such as `n = 3`,
 `+s = "ab"` or `n = 2n+m` reports `Invalid\tcheck\tannotation-required`, as a
 bare constructor does; `n : U32 = 3` checks. A literal or offset scrutinee
 (`match 3:`, `match 1n+m:`) reports `Invalid\tcheck\tconstructor-scrutinee`.
-A datatype scrutinee never enters the primitive matrix, so a literal or offset
-arm there reports `Invalid\tcheck\tpattern-type`, and a literal inside a
-constructor field pattern reports `Unsupported\tcheck\tnested-field-pattern`,
-as a nested constructor does.
+A datatype scrutinee never enters the primitive matrix. With Base, a literal
+or offset arm there reports `Invalid\tcheck\tpattern-type`; without it, the
+arm takes the spelled-constructor rule above. A literal inside a constructor
+field pattern reports `Unsupported\tcheck\tnested-field-pattern`, as a nested
+constructor does.
 
 The checked core gains Literal, Intrinsic and Default. U32/Char expressions use
 the existing scalar Value term. The independent evaluator interprets this core
@@ -203,26 +215,27 @@ npm run -s gates:verify
 
 The new gate builds native and Bun versions of check/eval/compile. It requires:
 
-- 108 fixture books, 468 fresh seed calls, 216 checks and 216 primary compilations.
+- 125 fixture books, 481 fresh seed calls, 250 checks and 250 primary compilations.
 - 886 agreeing evaluator observations and 886 matching Node/Wasm observations;
-  148 additional evaluator rejections, giving 1034 evaluator observations total.
+  182 additional evaluator rejections, giving 1068 evaluator observations total.
 - 34 byte-identical native/Bun module pairs and 68 complete Base trust audits.
-- 148 rejected-compilation output-preservation probes and 148 additional
+- 182 rejected-compilation output-preservation probes and 182 additional
   compilations proving no artifact is created at an absent output path.
 - 5 result books and 61 frozen displays: 122 exact evaluator displays across
   both lanes, lane-equal, and 5 byte-identical native/Bun module pairs. The
   Node host observes enum results only, so these calls have no Wasm lane.
 - Eight budget/host probes, including four preserved outputs on exhaustion.
-- Three complete proof entries, 32 filled laws; 21 type-correct semantic
-  mutants: five Wasm value kills, twelve verdict kills and six evaluator kills.
-  The two dead-arm laws live in `src/check-LAWS.bend`, beside the checker they
-  describe, and the checker gate proves them.
+- Three complete proof entries, 32 filled laws; 23 type-correct semantic
+  mutants: five Wasm value kills, fourteen verdict kills and six evaluator kills.
+  The two dead-arm laws and the five own-type literal laws live in
+  `src/check-LAWS.bend`, beside the checker they describe, and the checker
+  gate proves them.
 
 The mutant witnesses are frozen calls: unsigned compare across the high bit,
 zero divisor, shift by 32, surrogate equality and the 255/256 Nat offset edge.
 Each mutant compiler must typecheck, build and emit a valid module. Four kills
 are explicit wrong enum results; the division mutant must reach the real Wasm
-`divide by zero` trap. Twelve verdict mutants change a frozen book's
+`divide by zero` trap. Fourteen verdict mutants change a frozen book's
 classification: dropping the offset adjacency test compiles `case 1n + p` to
 `Built`; restoring the catalog lookup reports the U32 constructor as
 `Invalid`; inferring a literal's type compiles `n = 3` to `Built`; keeping
@@ -237,7 +250,10 @@ leaf in the live walk rejects the seed-valid dead-arm-u32-duplicate as
 `Invalid check type-mismatch`; walking dead leaves before live ones reports
 the seed-invalid live-arm-u32-default as `Unsupported check dead-arm`; and
 restoring Invalid for a literal typed by a book's own datatype rejects the
-seed-valid own-nat-literal as `Invalid check literal-base-type`. The evaluator-only `append-reversed` mutant changes no emitted byte;
+seed-valid own-nat-literal as `Invalid check literal-base-type`; skipping the
+literal-arm type check rejects the seed-valid own-nat-zero-pattern as
+`Invalid check pattern-type`; and ignoring the spelled constructor rejects the
+seed-valid own-n-literal-expr as `Invalid check unknown-type`. The evaluator-only `append-reversed` mutant changes no emitted byte;
 its evaluator answers No for `"ab" ++ ""` = `"ab"`. Three display mutants
 are killed by an exact wrong display: skipping the primitive dispatch prints
 `'\0'` as `Chr{}` again, escaping both quotes everywhere prints `'"'` as

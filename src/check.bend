@@ -117,6 +117,19 @@ def pattern(node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,G.Const
     case S.Offset{token,count,tail}: C.invalid(G.ConstructorRef,"pattern-type",token)
     case _: C.internal(G.ConstructorRef,"pattern-node")
 
+# A literal arm first takes its type against the scrutinee (L.primitive_type),
+# spelled as the matrix spells it; an installed primitive then spells no
+# constructor of this datatype.
+def arm_pattern(node: S.Node, +types: List<&2,C.Datatype>, +type_id: U32) -> Result<S.Error,G.ConstructorRef>:
+  match node:
+    case S.Literal{+token,+kind,+number,+text}:
+      S.bind(U32,G.ConstructorRef,L.primitive_type(types,kind,token,Some{type_id},M.literal(S.Literal{token,kind,number,text})),id =>
+        pattern(S.Literal{token,kind,number,text},types))
+    case S.Offset{+token,+count,+tail}:
+      S.bind(U32,G.ConstructorRef,L.primitive_type(types,1,token,Some{type_id},M.literal(S.Offset{token,count,tail})),id =>
+        pattern(S.Offset{token,count,tail},types))
+    case _: pattern(node,types)
+
 def pattern_id(reference: G.ConstructorRef, +type_id: U32, +seen: List<&2,U32>, +token: S.Token) -> Result<S.Error,U32>:
   match reference:
     case G.ConstructorRef{actual,+tag}:
@@ -133,7 +146,7 @@ def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +type_id: U32,
     case Nil{}:
       S.bind(C.Datatype,Unit,enum_at(types,type_id),definition => complete_arms(definition,seen,token))
     case Con{S.Arm{+arm,pat,body},+tail}:
-      S.bind(G.ConstructorRef,Unit,pattern(pat,types),reference =>
+      S.bind(G.ConstructorRef,Unit,arm_pattern(pat,types,type_id),reference =>
         S.bind(U32,Unit,pattern_id(reference,type_id,seen,arm),tag => patterns(tail,types,type_id,Con{tag,seen},token)))
     case _: C.internal(Unit,"arm-node")
 
@@ -248,10 +261,12 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n MatrixLeaves{Con{head,+tail},+target} _ _:
       S.bind(C.Checked,C.Checked,run(n,Matrix{head,target,False{}},catalog,current,scope),first =>
         S.bind(C.Checked,C.Checked,run(n,MatrixLeaves{tail,target},catalog,current,scope),rest => matrix_retained(first,rest)))
-    case 1n+ +n Expression{S.Literal{+token,kind,number,text},wanted} C.Catalog{types,sigs} _:
-      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types),value => annotated(wanted,token,target => expected(token,Some{target},value)))
-    case 1n+ +n Expression{S.Offset{+token,count,tail},wanted} _ _:
-      annotated(wanted,token,target => run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},catalog,current,scope))
+    case 1n+ +n Expression{S.Literal{+token,+kind,+number,+text},+wanted} C.Catalog{+types,sigs} _:
+      S.bind(C.Checked,C.Checked,L.literal(token,kind,number,text,types,wanted,M.literal(S.Literal{token,kind,number,text})),value => annotated(wanted,token,target => expected(token,Some{target},value)))
+    case 1n+ +n Expression{S.Offset{+token,+count,+tail},wanted} C.Catalog{+types,sigs} _:
+      annotated(wanted,token,+target =>
+        S.bind(U32,C.Checked,L.primitive_type(types,1,token,Some{target},M.literal(S.Offset{token,count,tail})),id =>
+          run(n,Expression{S.Intrinsic{token,R.NAdd{},[S.Literal{token,1,count,Nil{}},tail]},Some{target}},catalog,current,scope)))
     case 1n+ +n Expression{S.Intrinsic{+token,+op,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.TypeRef,C.Checked,G.find_type(types,LB.token(O.output(op)),0),reference =>
         intrinsic_type(reference,+id =>

@@ -418,8 +418,8 @@ must touch its literal (`1n+p`); a separated `+` is operator sugar,
 parsed offset always spells a successor. Literals and Nat offsets check against
 a known type, as bare constructors do: an unannotated binding (`n = 3`,
 `n = 2n+m`) is `Invalid check annotation-required`, a literal or offset
-scrutinee is `Invalid check constructor-scrutinee`, and a literal or offset arm
-on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
+scrutinee is `Invalid check constructor-scrutinee`, and with Base a literal or
+offset arm on a datatype scrutinee is `Invalid check pattern-type`. A literal field pattern
 is `Unsupported check nested-field-pattern`. As in the seed, a row that binds
 a matrix column with `+` (`+x`, `1n+ +p`, `SCon{c, +t}`) promotes that column
 in every row of the match, and so every field opened from it. The binder, the
@@ -430,9 +430,16 @@ continuation does: a `+` on a field (`Succ{+p}`) does not let a catch-all use
 the column twice. `Chr{...}` patterns and broader
 nested pattern support are still Unsupported. The Base constructor `U32{data: Word(32n)}` has
 no representation in the unboxed U32 and is `Unsupported check u32-constructor`
-in patterns and expressions. A literal typed by a book's own datatype named
-U32, Nat, Char or String, rather than the installed primitive, is
-`Unsupported check literal-base-type`.
+in patterns and expressions. Base installs the primitive of every literal a
+book uses. Without it nothing is installed, and the seed spells a literal by
+bare constructor names, as the matrix expands it (`Zero`/`Succ`,
+`SNil`/`SCon`), or, for U32 and Char, by Base's `Word`. The case is keyed on
+the absent primitive, not on a type name. A literal or offset, in an
+expression or as an arm, whose target datatype declares the spelled
+constructor, and a U32 or Char literal with any target, is
+`Unsupported check literal-base-type`. A target that declares no spelled
+constructor, or no target at all, is `Invalid check unknown-type` at the
+literal.
 
 Hash-verified Base supplies a closed lowering registry: four primitive types
 and 39 operations. Calls retain explicit typed quantities. Intrinsic nodes and

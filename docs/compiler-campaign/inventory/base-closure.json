@@ -8061,7 +8061,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 773,
+          "declarations": 776,
           "base": 102,
           "base_intrinsics": 27,
           "foreign": 7
@@ -10999,6 +10999,29 @@
             ]
           },
           {
+            "key": "src/check.arm_pattern",
+            "file": "src/check.bend",
+            "via": "src/check.patterns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/check.pattern",
+              "src/core.Datatype",
+              "src/literal-check.primitive_type",
+              "src/literal-matrix.literal",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.arm_scope",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -11706,9 +11729,9 @@
               "String",
               "U32",
               "Unit",
+              "src/check.arm_pattern",
               "src/check.complete_arms",
               "src/check.enum_at",
-              "src/check.pattern",
               "src/check.pattern_id",
               "src/core.Datatype",
               "src/core.internal",
@@ -11860,10 +11883,12 @@
               "src/literal-base.token",
               "src/literal-check.arguments",
               "src/literal-check.literal",
+              "src/literal-check.primitive_type",
               "src/literal-check.result",
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
               "src/patterns.branch",
               "src/primitive-op.Op",
@@ -13583,22 +13608,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-base.installed",
-            "file": "src/literal-base.bend",
-            "via": "src/literal-check.type_id",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "U32",
-              "U32.is_eq",
-              "src/syntax.At",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/literal-base.intrinsic",
             "file": "src/literal-base.bend",
             "via": "src/literal-base.declaration",
@@ -13623,7 +13632,7 @@
           {
             "key": "src/literal-base.kind_name",
             "file": "src/literal-base.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13745,6 +13754,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-check.declares",
+            "file": "src/literal-check.bend",
+            "via": "src/literal-check.spells",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/catalog.ConstructorRef",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-check.literal",
             "file": "src/literal-check.bend",
             "via": "src/check.run",
@@ -13754,15 +13780,16 @@
             "dependencies": [
               "Bool.or",
               "List",
+              "Maybe",
               "Result",
               "U32",
               "U32.is_eq",
               "src/core.Checked",
               "src/core.Datatype",
               "src/core.Term",
-              "src/literal-base.kind_name",
               "src/literal-check.primitive_type",
               "src/syntax.Error",
+              "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -13772,21 +13799,27 @@
           {
             "key": "src/literal-check.primitive_type",
             "file": "src/literal-check.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "Result",
               "String",
               "U32",
-              "src/catalog.find_type",
               "src/core.Datatype",
-              "src/literal-base.token",
-              "src/literal-check.type_id",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/literal-base.kind_name",
+              "src/literal-check.spells",
+              "src/literal-types.present",
+              "src/literal-types.primitive_type",
               "src/syntax.Error",
-              "src/syntax.bind"
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -13811,22 +13844,21 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-check.type_id",
+            "key": "src/literal-check.spells",
             "file": "src/literal-check.bend",
             "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Result",
-              "String",
+              "Bool",
+              "List",
+              "Maybe",
               "U32",
-              "src/catalog.TypeRef",
+              "src/catalog.find_constructor",
               "src/core.Datatype",
-              "src/core.unsupported",
-              "src/literal-base.installed",
-              "src/syntax.Error",
-              "src/syntax.choose"
+              "src/literal-check.declares",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -14285,7 +14317,7 @@
           {
             "key": "src/literal-matrix.literal",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.normalize",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14485,7 +14517,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.fields",
+            "via": "src/literal-matrix.literal",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14683,6 +14715,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.find",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -14757,7 +14811,7 @@
           {
             "key": "src/literal-types.present",
             "file": "src/literal-types.bend",
-            "via": "src/literal-matrix.lookup",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14770,6 +14824,24 @@
               "src/core.Datatype",
               "src/literal-types.installed",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.primitive_type",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-check.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Datatype",
+              "src/literal-types.find",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -22160,7 +22232,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 773,
+          "declarations": 776,
           "base": 102,
           "base_intrinsics": 25,
           "foreign": 7
@@ -25098,6 +25170,29 @@
             ]
           },
           {
+            "key": "src/check.arm_pattern",
+            "file": "src/check.bend",
+            "via": "src/check.patterns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/check.pattern",
+              "src/core.Datatype",
+              "src/literal-check.primitive_type",
+              "src/literal-matrix.literal",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.arm_scope",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -25805,9 +25900,9 @@
               "String",
               "U32",
               "Unit",
+              "src/check.arm_pattern",
               "src/check.complete_arms",
               "src/check.enum_at",
-              "src/check.pattern",
               "src/check.pattern_id",
               "src/core.Datatype",
               "src/core.internal",
@@ -25959,10 +26054,12 @@
               "src/literal-base.token",
               "src/literal-check.arguments",
               "src/literal-check.literal",
+              "src/literal-check.primitive_type",
               "src/literal-check.result",
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
               "src/patterns.branch",
               "src/primitive-op.Op",
@@ -27682,22 +27779,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-base.installed",
-            "file": "src/literal-base.bend",
-            "via": "src/literal-check.type_id",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "U32",
-              "U32.is_eq",
-              "src/syntax.At",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/literal-base.intrinsic",
             "file": "src/literal-base.bend",
             "via": "src/literal-base.declaration",
@@ -27722,7 +27803,7 @@
           {
             "key": "src/literal-base.kind_name",
             "file": "src/literal-base.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27844,6 +27925,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-check.declares",
+            "file": "src/literal-check.bend",
+            "via": "src/literal-check.spells",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/catalog.ConstructorRef",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-check.literal",
             "file": "src/literal-check.bend",
             "via": "src/check.run",
@@ -27853,15 +27951,16 @@
             "dependencies": [
               "Bool.or",
               "List",
+              "Maybe",
               "Result",
               "U32",
               "U32.is_eq",
               "src/core.Checked",
               "src/core.Datatype",
               "src/core.Term",
-              "src/literal-base.kind_name",
               "src/literal-check.primitive_type",
               "src/syntax.Error",
+              "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -27871,21 +27970,27 @@
           {
             "key": "src/literal-check.primitive_type",
             "file": "src/literal-check.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "Result",
               "String",
               "U32",
-              "src/catalog.find_type",
               "src/core.Datatype",
-              "src/literal-base.token",
-              "src/literal-check.type_id",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/literal-base.kind_name",
+              "src/literal-check.spells",
+              "src/literal-types.present",
+              "src/literal-types.primitive_type",
               "src/syntax.Error",
-              "src/syntax.bind"
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -27910,22 +28015,21 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-check.type_id",
+            "key": "src/literal-check.spells",
             "file": "src/literal-check.bend",
             "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Result",
-              "String",
+              "Bool",
+              "List",
+              "Maybe",
               "U32",
-              "src/catalog.TypeRef",
+              "src/catalog.find_constructor",
               "src/core.Datatype",
-              "src/core.unsupported",
-              "src/literal-base.installed",
-              "src/syntax.Error",
-              "src/syntax.choose"
+              "src/literal-check.declares",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -28384,7 +28488,7 @@
           {
             "key": "src/literal-matrix.literal",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.normalize",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28584,7 +28688,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.fields",
+            "via": "src/literal-matrix.literal",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28782,6 +28886,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.find",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -28856,7 +28982,7 @@
           {
             "key": "src/literal-types.present",
             "file": "src/literal-types.bend",
-            "via": "src/literal-matrix.lookup",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28869,6 +28995,24 @@
               "src/core.Datatype",
               "src/literal-types.installed",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.primitive_type",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-check.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Datatype",
+              "src/literal-types.find",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },
@@ -36259,7 +36403,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 688,
+          "declarations": 691,
           "base": 85,
           "base_intrinsics": 27,
           "foreign": 7
@@ -38241,6 +38385,21 @@
             ]
           },
           {
+            "key": "src/check.arm_pattern",
+            "file": "src/check.bend",
+            "via": "src/check.patterns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/check.pattern",
+              "src/literal-check.primitive_type",
+              "src/literal-matrix.literal",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.arm_scope",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -38690,9 +38849,9 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "src/check.arm_pattern",
               "src/check.complete_arms",
               "src/check.enum_at",
-              "src/check.pattern",
               "src/check.pattern_id",
               "src/core.internal",
               "src/syntax.bind"
@@ -38795,9 +38954,11 @@
               "src/literal-base.token",
               "src/literal-check.arguments",
               "src/literal-check.literal",
+              "src/literal-check.primitive_type",
               "src/literal-check.result",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
               "src/patterns.branch",
               "src/primitive.output",
@@ -39905,18 +40066,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-base.installed",
-            "file": "src/literal-base.bend",
-            "via": "src/literal-check.type_id",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "U32.is_eq"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/literal-base.intrinsic",
             "file": "src/literal-base.bend",
             "via": "src/literal-base.declaration",
@@ -39937,7 +40086,7 @@
           {
             "key": "src/literal-base.kind_name",
             "file": "src/literal-base.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40025,6 +40174,18 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-check.declares",
+            "file": "src/literal-check.bend",
+            "via": "src/literal-check.spells",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_eq"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-check.literal",
             "file": "src/literal-check.bend",
             "via": "src/check.run",
@@ -40034,7 +40195,6 @@
             "dependencies": [
               "Bool.or",
               "U32.is_eq",
-              "src/literal-base.kind_name",
               "src/literal-check.primitive_type",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -40044,15 +40204,18 @@
           {
             "key": "src/literal-check.primitive_type",
             "file": "src/literal-check.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/catalog.find_type",
-              "src/literal-base.token",
-              "src/literal-check.type_id",
-              "src/syntax.bind"
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/literal-base.kind_name",
+              "src/literal-check.spells",
+              "src/literal-types.present",
+              "src/literal-types.primitive_type",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -40069,16 +40232,15 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-check.type_id",
+            "key": "src/literal-check.spells",
             "file": "src/literal-check.bend",
             "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/core.unsupported",
-              "src/literal-base.installed",
-              "src/syntax.choose"
+              "src/catalog.find_constructor",
+              "src/literal-check.declares"
             ],
             "dynamic_calls": []
           },
@@ -40388,7 +40550,7 @@
           {
             "key": "src/literal-matrix.literal",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.normalize",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40502,7 +40664,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.fields",
+            "via": "src/literal-matrix.literal",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40639,6 +40801,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.find",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "U32.add",
+              "src/literal-types.installed",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -40695,7 +40873,7 @@
           {
             "key": "src/literal-types.present",
             "file": "src/literal-types.bend",
-            "via": "src/literal-matrix.lookup",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -40704,6 +40882,18 @@
               "Bool.or",
               "src/literal-types.installed",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.primitive_type",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-check.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/literal-types.find"
             ],
             "dynamic_calls": []
           },
@@ -45890,7 +46080,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 811,
+          "declarations": 814,
           "base": 140,
           "base_intrinsics": 31,
           "foreign": 7
@@ -48882,6 +49072,29 @@
             ]
           },
           {
+            "key": "src/check.arm_pattern",
+            "file": "src/check.bend",
+            "via": "src/check.patterns",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "src/catalog.ConstructorRef",
+              "src/check.pattern",
+              "src/core.Datatype",
+              "src/literal-check.primitive_type",
+              "src/literal-matrix.literal",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.arm_scope",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -49575,9 +49788,9 @@
               "U32",
               "Unit",
               "src/catalog.ConstructorRef",
+              "src/check.arm_pattern",
               "src/check.complete_arms",
               "src/check.enum_at",
-              "src/check.pattern",
               "src/check.pattern_id",
               "src/core.Datatype",
               "src/core.internal",
@@ -49728,10 +49941,12 @@
               "src/literal-base.token",
               "src/literal-check.arguments",
               "src/literal-check.literal",
+              "src/literal-check.primitive_type",
               "src/literal-check.result",
               "src/literal-matrix.Plan",
               "src/literal-matrix.compile",
               "src/literal-matrix.enabled",
+              "src/literal-matrix.literal",
               "src/literal-matrix.lookup",
               "src/patterns.Fields",
               "src/patterns.branch",
@@ -51436,21 +51651,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-base.installed",
-            "file": "src/literal-base.bend",
-            "via": "src/literal-check.type_id",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "U32.is_eq",
-              "src/syntax.At",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/literal-base.intrinsic",
             "file": "src/literal-base.bend",
             "via": "src/literal-base.declaration",
@@ -51474,7 +51674,7 @@
           {
             "key": "src/literal-base.kind_name",
             "file": "src/literal-base.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -51594,6 +51794,23 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-check.declares",
+            "file": "src/literal-check.bend",
+            "via": "src/literal-check.spells",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Result",
+              "U32",
+              "U32.is_eq",
+              "src/catalog.ConstructorRef",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-check.literal",
             "file": "src/literal-check.bend",
             "via": "src/check.run",
@@ -51603,15 +51820,16 @@
             "dependencies": [
               "Bool.or",
               "List",
+              "Maybe",
               "Result",
               "U32",
               "U32.is_eq",
               "src/core.Checked",
               "src/core.Datatype",
               "src/core.Term",
-              "src/literal-base.kind_name",
               "src/literal-check.primitive_type",
               "src/syntax.Error",
+              "src/syntax.Node",
               "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -51621,22 +51839,26 @@
           {
             "key": "src/literal-check.primitive_type",
             "file": "src/literal-check.bend",
-            "via": "src/literal-check.literal",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "List",
+              "Maybe",
               "Result",
-              "String",
               "U32",
-              "src/catalog.TypeRef",
-              "src/catalog.find_type",
               "src/core.Datatype",
-              "src/literal-base.token",
-              "src/literal-check.type_id",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/literal-base.kind_name",
+              "src/literal-check.spells",
+              "src/literal-types.present",
+              "src/literal-types.primitive_type",
               "src/syntax.Error",
-              "src/syntax.bind"
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -51660,21 +51882,21 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/literal-check.type_id",
+            "key": "src/literal-check.spells",
             "file": "src/literal-check.bend",
             "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Result",
+              "Bool",
+              "List",
+              "Maybe",
               "U32",
-              "src/catalog.TypeRef",
+              "src/catalog.find_constructor",
               "src/core.Datatype",
-              "src/core.unsupported",
-              "src/literal-base.installed",
-              "src/syntax.Error",
-              "src/syntax.choose"
+              "src/literal-check.declares",
+              "src/syntax.Node"
             ],
             "dynamic_calls": []
           },
@@ -52126,7 +52348,7 @@
           {
             "key": "src/literal-matrix.literal",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.normalize",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52323,7 +52545,7 @@
           {
             "key": "src/literal-matrix.retoken",
             "file": "src/literal-matrix.bend",
-            "via": "src/literal-matrix.fields",
+            "via": "src/literal-matrix.literal",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52520,6 +52742,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/literal-types.find",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-types.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "U32.add",
+              "src/core.Datatype",
+              "src/literal-types.installed",
+              "src/syntax.Error",
+              "src/syntax.choose",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/literal-types.installed",
             "file": "src/literal-types.bend",
             "via": "src/literal-types.kind",
@@ -52592,7 +52836,7 @@
           {
             "key": "src/literal-types.present",
             "file": "src/literal-types.bend",
-            "via": "src/literal-matrix.lookup",
+            "via": "src/literal-check.primitive_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -52605,6 +52849,24 @@
               "src/core.Datatype",
               "src/literal-types.installed",
               "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/literal-types.primitive_type",
+            "file": "src/literal-types.bend",
+            "via": "src/literal-check.primitive_type",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Datatype",
+              "src/literal-types.find",
+              "src/syntax.Error"
             ],
             "dynamic_calls": []
           },

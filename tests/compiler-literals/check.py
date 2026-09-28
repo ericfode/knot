@@ -335,6 +335,12 @@ MUTANTS = [
     {'name': 'invalid-own-primitive', 'file': 'literal-check.bend',
      'old': 'C.unsupported(U32,"literal-base-type",token)', 'new': 'C.invalid(U32,"literal-base-type",token)',
      'fixture': 'own-nat-literal', 'verdict': (2, 'Invalid\tcheck\tliteral-base-type\t')},
+    {'name': 'invalid-own-pattern', 'file': 'check.bend',
+     'old': 'arm_pattern(pat,types,type_id)', 'new': 'pattern(pat,types)',
+     'fixture': 'own-nat-zero-pattern', 'verdict': (2, 'Invalid\tcheck\tpattern-type\t')},
+    {'name': 'unspelled-own-target', 'file': 'literal-check.bend',
+     'old': 'declares(G.find_constructor(types,name,0),id)', 'new': 'False{}',
+     'fixture': 'own-n-literal-expr', 'verdict': (2, 'Invalid\tcheck\tunknown-type\t')},
     # Display mutants: the frozen wrong display is the kill; any other output is not.
     {'name': 'constructor-tag-display', 'file': 'eval.bend', 'lane': 'eval',
      'old': 'shape(L.kind(definition),definition,value)', 'new': 'shape(None{},definition,value)',

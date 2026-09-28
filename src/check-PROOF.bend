@@ -20,3 +20,13 @@ def L.dead_arm_invalid(phase,code,at):
   {==}
 def L.dead_arm_exhausted(phase,at):
   {==}
+def L.installed_literal_type(token,target,spelling):
+  {==}
+def L.spelled_own_literal(token,fields):
+  {==}
+def L.unspelled_literal(token,fields):
+  {==}
+def L.word_spells_any_target(token,number,ctors):
+  {==}
+def L.untargeted_literal(token,spelling):
+  {==}

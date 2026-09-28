@@ -942,6 +942,14 @@
         {
           "module": "./check.bend",
           "file": "src/check.bend"
+        },
+        {
+          "module": "./literal-check.bend",
+          "file": "src/literal-check.bend"
+        },
+        {
+          "module": "./literal-matrix.bend",
+          "file": "src/literal-matrix.bend"
         }
       ],
       "declarations": {
@@ -1065,6 +1073,82 @@
           "fields",
           "generics",
           "laws",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::installed_literal_type:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::spelled_own_literal:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::unspelled_literal:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::word_spells_any_target:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-LAWS.bend::untargeted_literal:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "literals.u32",
+          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
@@ -1206,6 +1290,78 @@
           "fields",
           "generics",
           "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.installed_literal_type:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.spelled_own_literal:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.unspelled_literal:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.word_spells_any_target:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check-PROOF.bend::L.untargeted_literal:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
@@ -1496,6 +1652,22 @@
           "generics",
           "lambdas",
           "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/check.bend::arm_pattern:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.u32",
           "matches",
           "patterns.variable",
           "patterns.wildcard",
@@ -12241,14 +12413,11 @@
         }
       ],
       "declarations": {
-        "src/literal-check.bend::type_id:definition": [
+        "src/literal-check.bend::declares:definition": [
           "calls",
-          "captures",
           "constructors",
           "fields",
           "generics",
-          "lambdas",
-          "literals.string",
           "matches",
           "patterns.nested",
           "patterns.variable",
@@ -12257,13 +12426,30 @@
           "quantities.reusable",
           "types.base"
         ],
-        "src/literal-check.bend::primitive_type:definition": [
+        "src/literal-check.bend::spells:definition": [
           "calls",
-          "function-values",
+          "constructors",
+          "fields",
           "generics",
           "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/literal-check.bend::primitive_type:definition": [
+          "calls",
+          "captures",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ],
         "src/literal-check.bend::literal:definition": [
