@@ -82,9 +82,16 @@ adversarial case that the owning increment must not reject:
   reached `Sigma`.
 - Edges with no counterpart in any source: `generic-arrow-instances` (a type
   argument that is an arrow), `rank2-two-answers` (one action type at two
-  answers, and `Act(Act(Flag))`), `rank2-param` (rank-2 parameter types
-  written out), `kind-zero-arrow` (`Kind(&0)` at an arrow) and
-  `template-generic-arg` (closed `~` arguments built from generic defs).
+  answers), `rank2-param` (rank-2 parameter types written out),
+  `kind-zero-arrow` (`Kind(&0)` at an arrow) and `template-generic-arg`
+  (closed `~` arguments built from generic defs).
+- `rank2-two-answers` also instantiates `Act` at `Act(Flag)` (`Act.join`).
+  That is impredicative instantiation: an erased `-A: Type` takes a rank-2
+  type. Knot's source needs the same mechanism, because
+  `S.choose(IO(Unit),..)` instantiates `choose`'s `-A` at `IO(Unit)`
+  (`src/check-cli.bend:51`, `src/parse-cli.bend:43`,
+  `src/compile-cli.bend:44`). So `poly-closures` owns it, and the fixture is
+  `agree`, not a boundary.
 
 Out of scope:
 - **Shapes already frozen elsewhere.** These are covered by other suites and
@@ -324,14 +331,14 @@ suites; `expectations.json` holds the exact strings.
 | `template-quant-kind` | templates | reject | exit 2 | generics `kind-type-for-data` | closures, fields, generics, poly-closures, recursion | `template-fold-quant` |
 | `template-plain-param` | templates | reject | exit 2 | sugar `template-forward` | closures, fields, generics, recursion | `template-map-types` |
 | `template-thunk-affine` | templates | reject | `Invalid\tcheck\taffine-reuse\t` | closures `capture-then-use` | closures, fields, generics, nested-patterns, poly-closures, recursion | `template-set-known-thunk` |
-| `sigma-pair` | templates | agree | - | - | closures, fields, generics, poly-closures, type-level-definition | - |
+| `sigma-pair` | templates | agree | - | - | closures, destructuring-let, fields, generics, poly-closures, type-level-definition | - |
 | `sigma-dependent` | templates | agree | - | - | fields, generics, nested-patterns, type-level-definition | - |
-| `sigma-unpack` | templates | agree | - | - | closures, fields, generics, poly-closures, type-level-definition | - |
+| `sigma-unpack` | templates | agree | - | - | closures, destructuring-let, fields, generics, poly-closures, type-level-definition | - |
 | `sigma-reusable` | templates | agree | - | - | fields, generics | - |
 | `sigma-snd-mismatch` | templates | reject | `Invalid\tcheck\ttype-mismatch\t` | generics `wrong-type-arg` | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
 | `sigma-unrefined` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
 | `sigma-family-live-binder` | templates | reject | exit 2 | - | fields, generics, nested-patterns, type-level-definition | `sigma-dependent` |
-| `sigma-affine-twice` | templates | reject | `Invalid\tcheck\taffine-reuse\t` | sugar `tuple-affine-reuse` | closures, fields, generics, poly-closures, type-level-definition | `sigma-pair` |
+| `sigma-affine-twice` | templates | reject | `Invalid\tcheck\taffine-reuse\t` | sugar `tuple-affine-reuse` | closures, destructuring-let, fields, generics, poly-closures, type-level-definition | `sigma-pair` |
 | `sigma-reuse-affine` | templates | reject | `Invalid\tcheck\treusable-type\t` | sugar `annotation-reusable-quantity` | fields, generics | `sigma-reusable` |
 
 ## Needs and blocking
@@ -351,6 +358,13 @@ in `expectations.json`):
 - `closures`: monomorphic lambdas, arrow-typed parameters and function values
   (increment 7). This suite lifts the monomorphic limit, so every
   `poly-closures` fixture needs increment 7's machinery first.
+- `destructuring-let`: a destructuring let of a constructor, `Pack{a,b} = p`.
+  It is how this suite spells `(a,b) = pair` (`src/driver.bend:45`,
+  `packages/vec/main.bend:98`) on its own Sigma, without Base. `sugar-check`
+  owns the form (sugar `destructure-constructor`). Until it lands, Knot reports
+  `Unsupported\tparse\tdestructuring-binding\t` (`src/parse.bend:134`), so
+  `sigma-pair`, `sigma-unpack` and `sigma-affine-twice` stay blocked. The
+  last one pins `affine-reuse` on a `g` that the let binds.
 - `type-level-definition`: a def whose result is a type. This covers
   `Act(A)` (the `IO(A)` shape), `Both(A,B)` (the `Pair` shape) and `Shade(f)`, a
   family that computes by `match`. The generics suite lists this capability as
@@ -375,11 +389,21 @@ blocked fixture separately. It never relabels a blocked fixture as passing, and
 never re-expects one.
 
 The `templates` increment can pass three seed-valid fixtures before
-`poly-closures` or any type-level definition lands: `template-map-types`,
-`template-filter-data` and `sigma-reusable`. The negatives next to them are
-`template-open-type`, `template-type-mismatch`, `template-plain-param` and
-`sigma-reuse-affine`. These isolate the `~` mechanics, type binders and the
-Sigma quantity rule from polymorphic closures.
+`poly-closures`, `sugar-check` or any type-level definition lands:
+`template-map-types`, `template-filter-data` and `sigma-reusable`. The
+negatives next to them are `template-open-type`, `template-type-mismatch`,
+`template-plain-param` and `sigma-reuse-affine`. These isolate the `~`
+mechanics, type binders and the Sigma quantity rule from polymorphic closures.
+
+The Sigma fixtures also use the family machinery that declares a Sigma: an
+erased parameter of arrow kind (`-B: @-x: A -> Kind(b)`), a dependent field
+type (`snd: B(fst)`) and its refinement by `match`, and a type-level lambda
+passed as a type argument (`_ => Color`, `x => Shade(x)`). No need names it,
+because `templates` owns it (`increments.templates` in `expectations.json`).
+Only the sigma fixtures use it, and Sigma is the form `templates` delivers.
+The closures suite's unowned need `dependent-function-types` names a
+different form: a term-level arrow `@-A: Type -> A -> A`. `poly-closures`
+takes that one (`rank2-param`).
 
 ## Existing assertions this suite supersedes
 
@@ -411,11 +435,31 @@ profile, when the owning increment lands:
   - `src/LAWS.bend`: the `template_binder` law. It quantifies over every suffix,
     so supporting templates falsifies it as stated. Replacing it is a
     coordinator or user decision, and it must be made before implementation.
-- `tests/subsets/classification-cases.json`: `application-parameter.bend` pins
-  `Unsupported\tparse\tparameter-type\t` for a type application in a parameter.
-  Many fixtures here write `Seq<&2,Flag>` or `Res<Fault,A>` in a parameter. If
-  generics has not already superseded that pin when `poly-closures` lands,
-  `poly-closures` must.
+- The destructuring pins that the sugar suite lists under the same heading.
+  `sigma-pair`, `sigma-unpack` and `sigma-affine-twice` write `Pack{..} = p`
+  and need `destructuring-let`, so `sugar-check` supersedes these, not this
+  suite. They are listed so that neither side misses them:
+  - `tests/subsets/classification-cases.json`: `destructure.bend` pins
+    `Unsupported\tparse\tdestructuring-binding\t` for `Cell{value} = x`;
+  - `src/LAWS.bend`: the `destructuring_binding` law, which states that prefix
+    is `Unsupported` for every suffix.
+- The generic-datatype and type-application pins in
+  `tests/subsets/classification-cases.json`. Every fixture here declares a
+  generic datatype and applies it in parameters, results and typed lets
+  (`curried-generic-continuation.bend:49`, `sigma-reusable.bend:31`,
+  `sigma-reuse-affine.bend:39`). If generics has not already superseded these
+  pins when `poly-closures` or `templates` lands, that increment must:
+  - `generic.bend`: `Unsupported\tparse\tgeneric-datatype\t`;
+  - `application-parameter.bend`: `Unsupported\tparse\tparameter-type\t`;
+  - `application-return.bend` and `application-binding.bend`:
+    `Unsupported\tparse\ttype-application\t`;
+  - `application-parameter-after-prefix.bend`,
+    `application-return-after-prefix.bend` and
+    `application-binding-after-prefix.bend`. These are seed-invalid programs
+    whose malformed type application (`List<)`, `List<:`, `List< =`) comes after
+    the prefix, so Knot pins them `Unsupported`. Once Knot parses type
+    applications, it reaches the malformation. Its answer then becomes that
+    later error, an `Invalid`, rather than the pinned `Unsupported`.
 
 ## Open questions for the coordinator
 
@@ -476,7 +520,8 @@ because an implementer could reasonably expect otherwise.
     `load(f,next,Color,k)`. `Act.bind` over-applies `f(x,R,k)`.
   - The answer type is rigid inside `R => k => ..` (`rank2-rigid-answer`).
   - The seed's polymorphism is impredicative: `Act(Act(Flag))` and
-    `Act.join` check (`rank2-two-answers`).
+    `Act.join` check (`rank2-two-answers`). Knot's source relies on it for
+    `S.choose(IO(Unit),..)`.
   - A named generic def fits a rank-2 parameter (`ident` for
     `@-A: Type -> A -> A`). A monomorphic def does not
     (`rank2-monomorphic-arg`).

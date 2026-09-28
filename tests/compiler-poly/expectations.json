@@ -25,8 +25,8 @@
     "reject": "Exit 2 (Invalid), never Checked or Built, and no artifact is written. With a diagnostic pinned, stderr starts with it; otherwise the phase and code are the implementer's, recorded when chosen."
   },
   "increments": {
-    "poly-closures": "Closures and function values at generic and erased-type arrows, higher-rank IO(A), quantity-polymorphic Kind(a) parameters (VM-DESIGN.md increment table).",
-    "templates": "Template binders (~A) and Sigma destructuring, as used by scope.bend and the compiler (VM-DESIGN.md increment table)."
+    "poly-closures": "Closures and function values at generic and erased-type arrows, higher-rank IO(A), quantity-polymorphic Kind(a) parameters (VM-DESIGN.md increment table). This includes instantiating an erased type parameter at a rank-2 type, as Knot's source does with S.choose(IO(Unit),..) (check-cli.bend:51, parse-cli.bend:43, compile-cli.bend:44).",
+    "templates": "Template binders (~A) and Sigma destructuring, as used by scope.bend and the compiler (VM-DESIGN.md increment table). This includes the family machinery a Sigma is declared with: an erased parameter of arrow kind (-B: @-x: A -> Kind(b)), a dependent field type (snd: B(fst)) and its refinement by match, and a type-level lambda passed as a type argument (_ => Color, x => Shade(x)). Only the sigma fixtures use it."
   },
   "needs": {
     "fields": "Fielded constructors: checked and evaluated today.",
@@ -34,6 +34,7 @@
     "nested-patterns": "Constructor patterns inside constructor patterns and wildcards (increment 3, nest).",
     "generics": "Generic datatypes, erased type parameters and quantity arguments (increment 6).",
     "closures": "Monomorphic lambdas, arrow-typed parameters and function values (increment 7).",
+    "destructuring-let": "A destructuring let of a constructor, Pack{a,b} = p: the spelling of (a,b) = pair in driver.bend:45 and vec unpack on this suite's own Sigma. sugar-check owns the form (sugar destructure-constructor); until it lands Knot reports Unsupported parse destructuring-binding (classification destructure.bend, the destructuring_binding law).",
     "type-level-definition": "A def whose result is a type (Act(A), Both(A,B), Shade(f)). Base IO(A) and Pair are such defs; the generics suite lists them outside increment 6, and baseslice claims Pair. poly-closures needs it for Act(A); whichever increment lands first supplies it.",
     "do-notation": "Statement-only do blocks, a statement then the tail action, the only do form in src/ (driver.bend:46, check-cli.bend:35, parse-cli.bend:27, compile-cli.bend:17). The io suite requires agree for them over IO (io-check, with vm-e2e3). No suite requires them over another monad, and io pins the <-/return form Unsupported (do-bind). rank2-do-block only.",
     "poly-closures": "A templates-increment fixture that also exercises lambdas or function values at generic arrows."
@@ -1083,7 +1084,7 @@
       ],
       "knot": {
         "require": "agree",
-        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. The erased answer R is instantiated at two types, and Act at Act(Flag) (join): polymorphism is not predicative in the seed."
+        "justification": "Seed-valid, inside poly-closures: every call must match the seed through check and eval. The erased answer R is instantiated at two types, and Act at Act(Flag) (join). That is impredicative instantiation, the mechanism Knot's source needs for S.choose(IO(Unit),..) at check-cli.bend:51, parse-cli.bend:43 and compile-cli.bend:44, so poly-closures owns it."
       }
     },
     {
@@ -2321,6 +2322,7 @@
       "twin": null,
       "requires": [
         "closures",
+        "destructuring-let",
         "fields",
         "generics",
         "poly-closures",
@@ -2433,6 +2435,7 @@
       "twin": null,
       "requires": [
         "closures",
+        "destructuring-let",
         "fields",
         "generics",
         "poly-closures",
@@ -2483,6 +2486,7 @@
       "twin": "sigma-pair",
       "requires": [
         "closures",
+        "destructuring-let",
         "fields",
         "generics",
         "poly-closures",

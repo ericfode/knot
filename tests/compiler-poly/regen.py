@@ -40,7 +40,7 @@ TIMEOUT = 60
 CLASSES = {'positive': {'agree'}, 'edge': {'agree'},
            'boundary': {'agree-or-unsupported', 'unsupported'}, 'negative': {'reject'}}
 INCREMENTS = {'poly-closures', 'templates'}
-NEEDS = {'fields', 'recursion', 'nested-patterns', 'generics', 'closures',
+NEEDS = {'fields', 'recursion', 'nested-patterns', 'generics', 'closures', 'destructuring-let',
          'type-level-definition', 'do-notation', 'poly-closures'}
 MIRROR = re.compile(r'(src/[\w-]+\.bend|packages/[\w/-]+\.bend|base\.bend):[1-9]\d* [\w.]+')
 LEAKS = ('/Users/', '/home/', '/private/', '/tmp/', '.claude/worktrees', str(ROOT))
