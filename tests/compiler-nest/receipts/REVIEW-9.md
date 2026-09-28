@@ -263,8 +263,11 @@ harness noise, as in round 8.
 ## Gates
 
 `BEND_NO_TELEMETRY=1 npm run -s gates` exited 0 with **28/28 gates passed** on
-`d53c8e5`, the committed tree this report describes apart from this report and
-the run summary (`run-464w94pj`, 954.1 s; `round9-final-gates.json.gz`). Receipts:
+`d53c8e5` (`run-464w94pj`, 954.1 s; `round9-final-gates.json.gz`). The tip differs
+from that tree only in files that no gate reads: this report,
+`round9-probescan.json`, `round9-final-gates.json.gz`, `round9-preflight.txt`
+(the whole-file addition) and the campaign `state.json`. `census --check`,
+`lint:verify` and `perch-context` were rerun on the tip and passed. Receipts:
 66 identical, 23 semantic and 9 volatile-only. `npm run -s gates:verify` passed
 its 19 tests. All eight `src/*PROOF.bend` entries print `All terms check.`
 
@@ -327,6 +330,15 @@ pattern-matrix groups) has about 300 bytes before the context bound.
 - The modules round's scope-aware dotted-binder rule (above).
 - The declaration-list line-break gap, which belongs to the selfhost `layout` need.
 - Both D21 laws are unchanged, and both remain required open obligations.
+- Three selfhost seed-rejected twins (`layout-call-args-comma`,
+  `layout-comments-swallowed`, `layout-dedent-close-extra`) moved from Invalid to
+  `Unsupported parse line-break`. The `layout` need excuses them today, since it
+  still blocks them; when it lands, the selfsource owner will meet `line-break`
+  where the frozen Invalid diagnostics are.
+- Amend `tests/compiler-recursion/SPEC.md` (round 8, finding 3), with the
+  campaign/descent-2 integration, which replaces the descent rule.
+- Decide whether expansion should short-circuit an irrefutable first row. That
+  would discharge the total D21 law and change the frozen `matrix-work` control.
 - The destructuring let under a `+` row (`case +y: O{p} = y`) is still
   `Unsupported parse destructuring-binding`, a non-accepting outcome the seed
   does not share; it predates this increment.
