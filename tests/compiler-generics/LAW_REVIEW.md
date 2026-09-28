@@ -56,9 +56,11 @@ remain coordinator-owned. Offline preflight supplies context coverage and
 blockers only; there are no conceptual compression, Delight, memetic identity,
 Anticipation or Payoff ratings yet.
 
-The dispatch boundary corpus fixes local type/quantity forms before repairing
-their diagnostics. Both checker paths preserve lexical shadowing, recognize a
-global datatype only after lexical lookup fails (one shared `scope.bend` rule,
+The dispatch boundary corpus fixes local type/quantity forms and their
+diagnostics. It was committed with those repairs in `f39ba7e`, and its Knot
+pins await review ([BOUNDARY-PINS.md](BOUNDARY-PINS.md)). Both checker
+paths preserve lexical shadowing, recognize a global datatype only after
+lexical lookup fails (one shared `scope.bend` rule,
 `term_name`), and reject local type-level normalization as Unsupported.
 `check-dispatch.bend` chooses the path per book. Empty type-argument lists
 are seed-invalid.

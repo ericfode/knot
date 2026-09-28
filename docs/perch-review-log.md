@@ -1064,8 +1064,14 @@ Manual review after the first generic corpus pass found two gaps. Instantiating
 a live abstract field at `Type` or `Quant` selected an erased placeholder; local
 type syntax inside a monomorphic body could reach an InternalFailure fallback.
 Other local type aliases were mislabeled as free names. These were confirmed
-against the pinned seed, then fixed behind independent boundary expectations.
-No live Perch finding or elapsed-time claim is attached to this audit.
+against the pinned seed and fixed. *Corrected 2026-09-28 (generics review
+round 4):* this entry first said the gaps were "fixed behind independent
+boundary expectations". Those 24 expectations were committed in `f39ba7e`,
+together with the fixes. Git history therefore cannot show that they came
+first. Their Knot phase/code pins were also chosen by the implementer, and
+they await the coordinator's review
+([BOUNDARY-PINS.md](../tests/compiler-generics/BOUNDARY-PINS.md)). No live
+Perch finding or elapsed-time claim is attached to this audit.
 
 The [kind boundaries](../tests/compiler-generics/boundaries/README.md) and
 [dispatch boundaries](../tests/compiler-generics/dispatch-boundaries/README.md)

@@ -30,13 +30,13 @@ values are opaque words; their checked instantiations determine whether the
 word holds an ordinal or a cell address. Each source function has one emitted
 body, with erased arguments absent from its live signature.
 
-| Independent expectations | Fixtures | Seed calls | Origin |
+| Expectation corpus | Fixtures | Seed calls | Origin |
 | --- | ---: | ---: | --- |
 | Original corpus | 40 | 122 | Unchanged source, outcomes and regeneration script from the integration base |
 | Two-quantity short form | 1 | 4 | Frozen before implementation in `16d5d22` |
 | Compact reusable binder | 1 | 4 | Frozen before implementation in `629c51f` |
-| Kind and representation boundaries | 15 | 26 | Seed probes and literal Unsupported boundaries |
-| Local type-value and dispatch boundaries | 9 | 9 | Fixed before their corresponding boundary repairs |
+| Kind and representation boundaries | 15 | 26 | Committed together with the checker in `f39ba7e`; seed side reproducible, Knot pins chosen by the implementer ([pin review](BOUNDARY-PINS.md)) |
+| Local type-value and dispatch boundaries | 9 | 9 | Committed together with the checker in `f39ba7e`; git cannot show that they preceded their repairs ([pin review](BOUNDARY-PINS.md)) |
 | [Bare family names](bare-families/README.md) | 7 | 3 | Frozen in `0c4eb10` before the arity repair |
 | [Value arguments](value-arguments/README.md) | 5 | 5 | Frozen in `58afc10` before the term-argument repair |
 | [Empty families](empty-families/README.md) | 7 | 7 | Frozen in `cfad5c4` before the empty-datatype repair |

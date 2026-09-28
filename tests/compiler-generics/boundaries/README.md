@@ -1,10 +1,16 @@
 # Generic checker boundaries
 
 These 15 fixtures supplement the original immutable generics corpus. Their
-expectations come from the pinned Bend 2.0.29 interpreter and explicit review
-of Knot's supported boundary. They cover concrete disagreements found while
-reviewing the new type algebra and generic checker. The original 40 fixtures
-and the two supplemental fixtures remain unchanged.
+seed observations come from the pinned Bend 2.0.29 interpreter. The implementer
+chose their Knot phase/code pins. The fixtures cover concrete disagreements
+found while reviewing the new type algebra and generic checker. The original
+40 fixtures and the two supplemental fixtures remain unchanged.
+
+**Provenance.** This corpus was committed in `f39ba7e`, together with the
+checker that satisfies it and the contract text that its pins cite. Git history
+does not show it frozen before any repair. `regen.py` reproduces the seed side.
+The Knot pins await the coordinator's literal review. Each pin's mapping to the
+contract and to earlier sources is in [BOUNDARY-PINS.md](../BOUNDARY-PINS.md).
 
 `expectations.json` freezes 12 seed-valid programs, three seed rejections and
 26 seed entry calls. Knot must run seven programs, reject three invalid
